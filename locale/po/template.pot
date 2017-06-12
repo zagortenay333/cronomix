@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-06-11 14:05+0200\n"
+"POT-Creation-Date: 2017-06-12 14:53+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -36,23 +36,23 @@ msgstr ""
 msgid "Alarm Message..."
 msgstr ""
 
-#: ../sections/alarms.js:525 ../sections/todo.js:1703
+#: ../sections/alarms.js:525 ../sections/todo.js:1692
 msgid "Delete"
 msgstr ""
 
 #: ../sections/alarms.js:533 ../sections/pomodoro.js:618
-#: ../sections/timer.js:547 ../sections/todo.js:1715 ../sections/todo.js:3292
+#: ../sections/timer.js:545 ../sections/todo.js:1705 ../sections/todo.js:3283
 msgid "Cancel"
 msgstr ""
 
 #: ../sections/alarms.js:534 ../sections/pomodoro.js:617
-#: ../sections/timer.js:548 ../sections/todo.js:1718 ../sections/todo.js:2660
-#: ../sections/todo.js:2976 ../sections/todo.js:3140 ../sections/todo.js:3295
+#: ../sections/timer.js:546 ../sections/todo.js:1708 ../sections/todo.js:2650
+#: ../sections/todo.js:2967 ../sections/todo.js:3131 ../sections/todo.js:3286
 msgid "Ok"
 msgstr ""
 
 #: ../sections/pomodoro.js:92 ../sections/pomodoro.js:202 ../Settings.ui:570
-#: ../Settings.ui:1812
+#: ../Settings.ui:1814
 msgid "Pomodoro"
 msgstr ""
 
@@ -109,7 +109,7 @@ msgstr ""
 msgid "Stopwatch"
 msgstr ""
 
-#: ../sections/stopwatch.js:103 ../sections/todo.js:2659
+#: ../sections/stopwatch.js:103 ../sections/todo.js:2649
 msgid "Reset"
 msgstr ""
 
@@ -121,156 +121,156 @@ msgstr ""
 msgid "Pause"
 msgstr ""
 
-#: ../sections/timer.js:94 ../sections/timer.js:232 ../Settings.ui:482
+#: ../sections/timer.js:92 ../sections/timer.js:230 ../Settings.ui:482
 #: ../Settings.ui:1063
 msgid "Timer"
 msgstr ""
 
-#: ../sections/timer.js:373
+#: ../sections/timer.js:371
 msgid "Timer expired!"
 msgstr ""
 
-#: ../sections/timer.js:525
+#: ../sections/timer.js:523
 msgid "Timer message..."
 msgstr ""
 
-#: ../sections/todo.js:259
+#: ../sections/todo.js:256
 msgid "Loading..."
 msgstr ""
 
-#: ../sections/todo.js:269
+#: ../sections/todo.js:266
 msgid "Select todo file in settings..."
 msgstr ""
 
-#: ../sections/todo.js:295
+#: ../sections/todo.js:292
 msgid "Add New Task..."
 msgstr ""
 
-#: ../sections/todo.js:1665
+#: ../sections/todo.js:1654
 msgid "Task..."
 msgstr ""
 
-#: ../sections/todo.js:1710
+#: ../sections/todo.js:1700
 msgid "Archive"
 msgstr ""
 
-#: ../sections/todo.js:2199
+#: ../sections/todo.js:2189
 msgid "completed:"
 msgstr ""
 
-#: ../sections/todo.js:2204 ../sections/todo.js:2220 ../sections/todo.js:2228
+#: ../sections/todo.js:2194 ../sections/todo.js:2210 ../sections/todo.js:2218
 msgid "created:"
 msgstr ""
 
-#: ../sections/todo.js:2257 ../sections/todo.js:2496
+#: ../sections/todo.js:2247 ../sections/todo.js:2486
 msgid "due:"
 msgstr ""
 
-#: ../sections/todo.js:2490 ../sections/todo.js:3381
+#: ../sections/todo.js:2480 ../sections/todo.js:3372
 msgid "today"
 msgstr ""
 
-#: ../sections/todo.js:2492
+#: ../sections/todo.js:2482
 #, javascript-format
 msgid "%d day ago"
 msgid_plural "%d days ago"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../sections/todo.js:2494
+#: ../sections/todo.js:2484
 #, javascript-format
 msgid "in %d day"
 msgid_plural "in %d days"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../sections/todo.js:2587
+#: ../sections/todo.js:2577
 msgid "Add custom filter..."
 msgstr ""
 
-#: ../sections/todo.js:2621
+#: ../sections/todo.js:2611
 msgid "Show only hidden tasks"
 msgstr ""
 
-#: ../sections/todo.js:2629
+#: ../sections/todo.js:2619
 #, javascript-format
 msgid "%d hidden task"
 msgid_plural "%d hidden tasks"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../sections/todo.js:2643
+#: ../sections/todo.js:2633
 msgid "Invert filters"
 msgstr ""
 
-#: ../sections/todo.js:2812
+#: ../sections/todo.js:2803
 msgid "No Priority"
 msgstr ""
 
-#: ../sections/todo.js:2815
+#: ../sections/todo.js:2806
 msgid "Completed"
 msgstr ""
 
-#: ../sections/todo.js:2825
+#: ../sections/todo.js:2816
 #, javascript-format
 msgid "%d task"
 msgid_plural "%d tasks"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../sections/todo.js:3063
+#: ../sections/todo.js:3054
 msgid "Sort by Priority"
 msgstr ""
 
-#: ../sections/todo.js:3064
+#: ../sections/todo.js:3055
 msgid "Sort by Creation Date"
 msgstr ""
 
-#: ../sections/todo.js:3065
+#: ../sections/todo.js:3056
 msgid "Sort by Completion Date"
 msgstr ""
 
-#: ../sections/todo.js:3066
+#: ../sections/todo.js:3057
 msgid "Sort by Due Date"
 msgstr ""
 
-#: ../sections/todo.js:3093
+#: ../sections/todo.js:3084
 msgid "Ascending"
 msgstr ""
 
-#: ../sections/todo.js:3107
+#: ../sections/todo.js:3098
 msgid "Descending"
 msgstr ""
 
-#: ../sections/todo.js:3252
+#: ../sections/todo.js:3243
 msgid "Delete all completed tasks"
 msgstr ""
 
-#: ../sections/todo.js:3265
+#: ../sections/todo.js:3256
 msgid "Archive all complete tasks to done.txt and delete them"
 msgstr ""
 
-#: ../sections/todo.js:3366
+#: ../sections/todo.js:3357
 msgid "Nothing found..."
 msgstr ""
 
-#: ../sections/todo.js:3383
+#: ../sections/todo.js:3374
 msgid "last 3 days"
 msgstr ""
 
-#: ../sections/todo.js:3385
+#: ../sections/todo.js:3376
 msgid "this week"
 msgstr ""
 
-#: ../sections/todo.js:3387
+#: ../sections/todo.js:3378
 msgid "this month"
 msgstr ""
 
-#: ../sections/todo.js:3389
+#: ../sections/todo.js:3380
 msgid "this year"
 msgstr ""
 
-#: ../sections/todo.js:3820
+#: ../sections/todo.js:3813
 msgid "To track time, select a dir for csv files in the settings."
 msgstr ""
 
@@ -279,8 +279,8 @@ msgid "Unique name"
 msgstr ""
 
 #: ../Settings.ui:57 ../Settings.ui:1024 ../Settings.ui:1317
-#: ../Settings.ui:1773 ../Settings.ui:2082 ../Settings.ui:2550
-#: ../Settings.ui:2600 ../Settings.ui:2638
+#: ../Settings.ui:1775 ../Settings.ui:2086 ../Settings.ui:2551
+#: ../Settings.ui:2601 ../Settings.ui:2639
 msgid "not set"
 msgstr ""
 
@@ -320,7 +320,7 @@ msgstr ""
 msgid "Enabled Sections"
 msgstr ""
 
-#: ../Settings.ui:614 ../Settings.ui:2121
+#: ../Settings.ui:614 ../Settings.ui:2125
 msgid "Alarms"
 msgstr ""
 
@@ -333,7 +333,7 @@ msgid "General"
 msgstr ""
 
 #: ../Settings.ui:767 ../Settings.ui:1123 ../Settings.ui:1416
-#: ../Settings.ui:1872 ../Settings.ui:2181
+#: ../Settings.ui:1874 ../Settings.ui:2185
 msgid "Show in separate menu"
 msgstr ""
 
@@ -342,42 +342,42 @@ msgid "Show seconds"
 msgstr ""
 
 #: ../Settings.ui:855 ../Settings.ui:1211 ../Settings.ui:1504
-#: ../Settings.ui:2225
+#: ../Settings.ui:2229
 msgid "Panel Item Mode"
 msgstr ""
 
 #: ../Settings.ui:869 ../Settings.ui:1225 ../Settings.ui:1518
-#: ../Settings.ui:2239
+#: ../Settings.ui:2243
 msgid "Icon only"
 msgstr ""
 
 #: ../Settings.ui:870 ../Settings.ui:1226 ../Settings.ui:1519
-#: ../Settings.ui:2240
+#: ../Settings.ui:2244
 msgid "Text only"
 msgstr ""
 
 #: ../Settings.ui:871 ../Settings.ui:1227 ../Settings.ui:1520
-#: ../Settings.ui:2241
+#: ../Settings.ui:2245
 msgid "Icon and Text"
 msgstr ""
 
-#: ../Settings.ui:906 ../Settings.ui:1553 ../Settings.ui:1964
+#: ../Settings.ui:906 ../Settings.ui:1555 ../Settings.ui:1968
 msgid "Notification sound"
 msgstr ""
 
-#: ../Settings.ui:966 ../Settings.ui:1259 ../Settings.ui:1715
-#: ../Settings.ui:2024 ../Settings.ui:2490
+#: ../Settings.ui:966 ../Settings.ui:1259 ../Settings.ui:1717
+#: ../Settings.ui:2028 ../Settings.ui:2491
 msgid "Keyboard shortcuts"
 msgstr ""
 
-#: ../Settings.ui:1007 ../Settings.ui:1300 ../Settings.ui:1756
-#: ../Settings.ui:2065 ../Settings.ui:2533
+#: ../Settings.ui:1007 ../Settings.ui:1300 ../Settings.ui:1758
+#: ../Settings.ui:2069 ../Settings.ui:2534
 msgid "Open this section"
 msgstr ""
 
-#: ../Settings.ui:1019 ../Settings.ui:1312 ../Settings.ui:1768
-#: ../Settings.ui:2077 ../Settings.ui:2545 ../Settings.ui:2595
-#: ../Settings.ui:2633
+#: ../Settings.ui:1019 ../Settings.ui:1312 ../Settings.ui:1770
+#: ../Settings.ui:2081 ../Settings.ui:2546 ../Settings.ui:2596
+#: ../Settings.ui:2634
 msgid ""
 "Examples:\n"
 "<super><ctrl><alt><shift>t\n"
@@ -385,34 +385,34 @@ msgid ""
 "F3"
 msgstr ""
 
-#: ../Settings.ui:1615
+#: ../Settings.ui:1617
 msgid "Stop time tracking when pomo is paused"
 msgstr ""
 
-#: ../Settings.ui:1660
+#: ../Settings.ui:1662
 msgid "Execute custom script when pomo pauses/starts"
 msgstr ""
 
-#: ../Settings.ui:1916
+#: ../Settings.ui:1918
 msgid "Snooze duration (sec)"
 msgstr ""
 
-#: ../Settings.ui:2293
+#: ../Settings.ui:2297
 msgid "Task width (px)"
 msgstr ""
 
-#: ../Settings.ui:2323
+#: ../Settings.ui:2327
 msgid "Todo files"
 msgstr ""
 
-#: ../Settings.ui:2583
+#: ../Settings.ui:2584
 msgid "Open this section to add task"
 msgstr ""
 
-#: ../Settings.ui:2651
+#: ../Settings.ui:2652
 msgid "Open this section to search tasks"
 msgstr ""
 
-#: ../Settings.ui:2689
+#: ../Settings.ui:2690
 msgid "Todo / Time Tracker"
 msgstr ""
