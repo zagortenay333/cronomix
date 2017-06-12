@@ -3,6 +3,8 @@
 A [todo.txt manager](https://github.com/ginatrapani/todo.txt-cli/wiki/The-Todo.txt-Format),
 time tracker, timer, stopwatch, pomodoro, and alarms gnome-shell extension.
 
+Cinnamon applet version: https://github.com/zagortenay333/timepp__cinnamon
+
 ---
 
 ### Installation
