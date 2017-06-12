@@ -1,0 +1,10 @@
+{
+    "shell-version": ["3.24"],
+    "name": "Time ++",
+    "uuid": "timepp@zagortenay333",
+    "description": "A todo.txt manager, time tracker, timer, stopwatch, pomodoro, and alarm clock",
+    "original-author": "https://github.com/zagortenay333",
+    "url": "https://github.com/zagortenay333/timepp",
+    "gettext-domain": "gnome-shell-extensions",
+    "version": -1
+}

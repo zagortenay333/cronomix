@@ -1,0 +1,382 @@
+/* ======================================
+ * ! panel items
+ * ====================================== */
+.timepp-panel-box .timer-panel-item {}
+.timepp-panel-box .stopwatch-panel-item {}
+.timepp-panel-box .pomo-panel-item {}
+.timepp-panel-box .alarm-panel-item {}
+.timepp-panel-box .todo-panel-item {}
+.timepp-panel-box .unicon-panel-item {}
+
+.timepp-panel-box-content {}
+
+.timepp-panel-box .panel-button            { margin-right: 2px; }
+.timepp-panel-box .panel-button:last-child { margin-right: 0; }
+
+.timepp-panel-box .panel-button-content {
+    spacing: 6px;
+    padding: 0 8px;
+}
+
+.timepp-panel-box .system-status-icon {
+    padding: 0;
+    margin: 0;
+}
+
+/*
+ * The 'on' selector is added when a timer is running in the corresponding
+ * section. I.e., the timer/stopwatch/pomodoro are running, at least one alarm
+ * is turned on, and time is tracked on at least one task in the todo.
+ */
+.timepp-panel-box .on StLabel,
+.timepp-panel-box .on StIcon {
+    color: #f47e00;
+}
+
+/* The 'done' selector is added to the todo item when all tasks are done. */
+.timepp-panel-box .todo-panel-item.done StLabel,
+.timepp-panel-box .todo-panel-item.done StIcon  {
+    color: #009a4b;
+}
+
+
+/* ======================================
+ * ! general
+ * ====================================== */
+
+/* use this selector to override .popup-menu */
+.timepp-menu {}
+
+.timepp-menu StIcon {
+    icon-size: 16px;
+}
+
+.timepp-content-box {
+    min-width: 22em;
+}
+
+.timepp-menu .section {}
+
+.timepp-menu .section .header {
+    font-weight: bold;
+}
+
+.timepp-menu .section .header * {
+    spacing: .7em;
+}
+
+.timepp-menu .view-box {
+    padding: 1em 1.5em;
+}
+
+.timepp-menu StEntry {
+    width: 22em;
+}
+
+.timepp-menu .view-box-content {
+    background: rgba(125, 125, 125, .15);
+    border-radius: 2px;
+    padding: .5em 1em;
+    spacing: .7em;
+}
+
+/* Used in view-boxes */
+.timepp-menu .row {
+    padding: .5em 1.3em;
+    spacing: 1em;
+}
+
+.timepp-menu .row.days {
+    spacing: .1em;
+}
+
+.timepp-menu .button.day {
+    padding-right: .7em;
+    padding-left: .7em;
+}
+
+.timepp-menu .close-icon:hover,
+.timepp-menu .close-icon:focus {
+    color: #e22b2b;
+}
+
+.timepp-menu .radiobutton StBin {
+    background-image: url('img/radiobutton.svg');
+    height: 16px;
+    width: 16px;
+}
+
+.timepp-menu .radiobutton:checked StBin {
+    background-image: url('img/radiobutton-checked.svg');
+}
+
+.timepp-menu .toggle-switch:focus,
+.timepp-menu .radiobutton:focus StBin {
+    outline: 2px #aaa;
+}
+
+.timepp-separator {
+    min-height: 2em;
+}
+
+.timepp-menu .option-box,
+.timepp-menu .btn-box {
+    spacing: .5em;
+}
+
+.multiline-entry-scrollbox {
+    max-width: 12em;
+}
+
+.timepp-menu .numpicker {
+    padding: 4px 6px 4px 12px;
+    spacing: 4px;
+    min-height: 32px; /* two 16px icons stacked on top of each other */
+}
+
+.timepp-menu .numpicker StLabel {
+    text-shadow: 0 0 transparent;
+}
+
+.numpicker-counter {
+    padding-left: 4px 2px 4px 8px;
+}
+
+.numpicker-arrow-box {
+    padding-left: 4px 8px 4px 2px;
+}
+
+.numpicker-arrow {}
+
+.numpicker-arrow:focus StIcon,
+.numpicker-arrow:hover StIcon,
+.timepp-menu .settings-icon:focus,
+.timepp-menu .settings-icon:hover {
+    color: #5a94dc;
+}
+
+
+/* ======================================
+ * ! timer pane
+ * ====================================== */
+.timepp-menu .timer-section {}
+
+
+/* ======================================
+ * ! stopwatch pane
+ * ====================================== */
+.timepp-menu .stopwatch-section {}
+
+.timepp-menu .stopwatch-section .btn-reset {}
+.timepp-menu .stopwatch-section .btn-lap {}
+.timepp-menu .stopwatch-section .btn-start {}
+.timepp-menu .stopwatch-section .btn-stop {}
+
+.timepp-menu .stopwatch-section .laps-scrollview {}
+
+
+.timepp-menu .stopwatch-section .laps-item {
+    padding: .4em;
+}
+
+.timepp-menu .stopwatch-section .laps-item-counter {
+    font-weight: bold;
+}
+
+.timepp-menu .stopwatch-section .laps-item-time {
+}
+
+
+/* ======================================
+ * ! pomodoro pane
+ * ====================================== */
+.timepp-menu .pomo-section {}
+
+.timepp-menu .pomo-section .btn-new {}
+.timepp-menu .pomo-section .btn-break {}
+.timepp-menu .pomo-section .btn-start {}
+.timepp-menu .pomo-section .btn-stop {}
+
+
+.timepp-menu .pomo-section .pomo-counter {
+    color: #38ae72;
+    font-weight: bold;
+}
+
+
+/* ======================================
+ * ! alarms pane
+ * ====================================== */
+.timepp-menu .alarm-section {}
+.timepp-menu .alarms-container {}
+
+.timepp-menu .alarm-section .alarms-content-box {
+    spacing: .4em;
+}
+
+.timepp-menu .alarm-section .btn-delete {}
+.timepp-menu .alarm-section .btn-dismiss {}
+.timepp-menu .alarm-section .btn-ok {}
+
+.timepp-menu .alarm-section .numpicker-box {}
+.timepp-menu .alarm-section .numpicker-box {}
+
+.timepp-menu .alarm-section .entry-container {}
+
+.timepp-menu .alarm-section .alarm-item {
+    background: rgba(125, 125, 125, .15);
+    border-radius: 2px;
+    padding: .8em;
+}
+
+.timepp-menu .alarm-section .alarm-item .view-box {
+    padding: 0;
+}
+
+.timepp-menu .alarm-section .alarm-item .view-box .popup-menu-item {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.timepp-menu .alarm-section .alarm-item-content {}
+.timepp-menu .alarm-section .alarm-item-header {}
+
+.timepp-menu .alarm-section .alarm-item-message {
+    padding-top: .4em;
+}
+
+.timepp-menu .alarm-section .alarm-item-time {
+    font-weight: bold;
+}
+
+
+/* ======================================
+ * ! todo pane
+ * ====================================== */
+
+/* These properties only work if they are specified on the
+ * 'timepp-menu todo-section' selector.
+ * They control the colors of the task markup.
+ */
+.timepp-menu .todo-section {
+    context-color: #009a4b;
+    project-color: #f47e00;
+    link-color:    #5a94dc;
+}
+
+.timepp-menu .todo-section .loading-msg,
+.timepp-menu .todo-section .no-todo-file-msg,
+.timepp-menu .todo-section .add-task {
+    font-weight: bold;
+}
+
+.timepp-menu .todo-section .tracker-pause-icon,
+.timepp-menu .todo-section .filter-icon.active {
+    color: #f47e00;
+}
+
+.timepp-menu .todo-section .settings-content-box {}
+
+.timepp-menu .todo-section .tasks-container {}
+.timepp-menu .todo-section .tasks-content-box {
+    spacing: .4em;
+}
+
+.timepp-menu .todo-section .task-item {
+    padding: 6px 6px 6px 9px;
+    background: rgba(125, 125, 125, .15);
+    border-radius: 2px;
+
+    /*
+     * .task-item will have a single capital letter A-Z selector based on
+     * priority, or the selector 'completed' if it's checked away.
+     * E.g., task-item.completed, task-item.A, task-item.D, etc...
+     */
+
+    /*
+     * .task-item will have the 'hidden-task' selector if it has the 'h:1'
+     * (hidden) extension.
+     */
+}
+
+.timepp-menu .todo-section .task-item.hidden-task {
+    background: rgba(15, 15, 15, .25);
+}
+
+.timepp-menu .todo-section .task-item.A {
+    border-color: #e22b2b;
+    border-left-width: 3px;
+}
+
+.timepp-menu .todo-section .task-item.B {
+    border-color: #f47e00;
+    border-left-width: 3px;
+}
+
+.timepp-menu .todo-section .task-item.C {
+    border-color: #8b5bff;
+    border-left-width: 3px;
+}
+
+.timepp-menu .todo-section .task-item.D {
+    border-color: #009a4b;
+    border-left-width: 3px;
+}
+
+.timepp-menu .todo-section .task-item.A .priority-label { color: #e22b2b; }
+.timepp-menu .todo-section .task-item.B .priority-label { color: #f47e00; }
+.timepp-menu .todo-section .task-item.C .priority-label { color: #8b5bff; }
+.timepp-menu .todo-section .task-item.D .priority-label { color: #009a4b; }
+
+.timepp-menu .todo-section .task-item-content {
+    spacing: .3em;
+}
+
+
+.timepp-menu .todo-section .description-label {}
+.timepp-menu .todo-section .date-label {}
+
+.timepp-menu .todo-section .priority-label,
+.timepp-menu .todo-section .due-date-label {
+    font-weight: bold;
+}
+
+.timepp-menu .todo-section .due-date-label {
+    color: #e22b2b;
+}
+
+.timepp-menu .todo-section .icon-bin {}
+
+.timepp-menu .todo-section .delete-complete-tasks-label {
+    font-weight: bold;
+    color: #e22b2b;
+}
+
+.timepp-menu .todo-section .task-item StButton:hover,
+.timepp-menu .todo-section .task-item StButton:focus,
+.timepp-menu .todo-section .header StButton:hover,
+.timepp-menu .todo-section .header StButton:focus {
+    color: #5a94dc;
+}
+
+.timepp-menu .todo-section .task-item-header {
+    spacing: .4em;
+}
+
+.timepp-menu .todo-section .archive-complete-tasks-label {}
+.timepp-menu .todo-section .stats-window {
+    max-width: 600px;
+}
+
+.timepp-menu .todo-section .stats-item-title {}
+.timepp-menu .todo-section .stats-item-body {
+    padding-left: 3em;
+}
+
+.timepp-menu .todo-section .filter-window-item {
+    max-width: 32em;
+}
+
+.timepp-menu .todo-section .completion-box {
+    spacing: .2em;
+}

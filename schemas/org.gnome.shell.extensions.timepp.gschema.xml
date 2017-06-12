@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<schemalist gettext-domain="gnome-shell-extensions">
+    <enum id="org.gnome.shell.extensions.timepp.position-in-panel">
+        <value value="0" nick="Left"/>
+        <value value="1" nick="Center"/>
+        <value value="2" nick="Right"/>
+    </enum>
+
+    <enum id="org.gnome.shell.extensions.timepp.panel-mode">
+        <value value="0" nick="Icon"/>
+        <value value="1" nick="Text"/>
+        <value value="2" nick="Icon and Text"/>
+    </enum>
+
+    <schema path="/org/gnome/shell/extensions/timepp/" id="org.gnome.shell.extensions.timepp">
+        <!-- ======================================
+        @@@  General
+        ======================================= -->
+        <key name="unicon-mode" type="b">
+            <default>false</default>
+            <description>Show single icon in panel</description>
+        </key>
+
+        <key name="panel-item-position" enum="org.gnome.shell.extensions.timepp.position-in-panel">
+            <default>"Right"</default>
+            <description>Position in panel</description>
+        </key>
+
+        <key name="timer-enabled" type="b">
+            <default>true</default>
+            <description>Enabled this section</description>
+        </key>
+
+        <key name="stopwatch-enabled" type="b">
+            <default>true</default>
+            <description>Enabled this section</description>
+        </key>
+
+        <key name="pomodoro-enabled" type="b">
+            <default>true</default>
+            <description>Enabled this section</description>
+        </key>
+
+        <key name="alarms-enabled" type="b">
+            <default>true</default>
+            <description>Enabled this section</description>
+        </key>
+
+        <key name="todo-enabled" type="b">
+            <default>true</default>
+            <description>Enabled this section</description>
+        </key>
+
+
+        <!-- ======================================
+        @@@  Timer
+        ======================================= -->
+        <key name="timer-separate-menu" type="b">
+            <default>false</default>
+            <description>Show in separate menu</description>
+        </key>
+
+        <key name="timer-show-seconds" type="b">
+            <default>false</default>
+            <description>Show in separate menu</description>
+        </key>
+
+        <key name="timer-panel-mode" enum="org.gnome.shell.extensions.timepp.panel-mode">
+            <default>"Icon and Text"</default>
+            <description>Position in panel</description>
+        </key>
+
+        <key name="timer-sound-file-path" type="s">
+            <default>""</default>
+            <description>Sound file path</description>
+        </key>
+
+        <key name="timer-play-sound" type="b">
+            <default>false</default>
+            <description>Play sound with notification</description>
+        </key>
+
+        <key name="timer-keybinding-open" type="as">
+            <default><![CDATA[[""]]]></default>
+            <description>Open this section</description>
+        </key>
+
+
+        <!-- ======================================
+        @@@  Stopwatch
+        ======================================= -->
+        <key name="stopwatch-separate-menu" type="b">
+            <default>false</default>
+            <description>Show in separate menu</description>
+        </key>
+
+        <key name="stopwatch-show-seconds" type="b">
+            <default>false</default>
+            <description>Show in separate menu</description>
+        </key>
+
+        <key name="stopwatch-panel-mode" enum="org.gnome.shell.extensions.timepp.panel-mode">
+            <default>"Icon and Text"</default>
+            <description>Position in panel</description>
+        </key>
+
+        <key name="stopwatch-keybinding-open" type="as">
+            <default><![CDATA[[""]]]></default>
+            <description>Open this section</description>
+        </key>
+
+
+        <!-- ======================================
+        @@@  Pomodoro
+        ======================================= -->
+        <key name="pomodoro-separate-menu" type="b">
+            <default>false</default>
+            <description>Show in separate menu</description>
+        </key>
+
+        <key name="pomodoro-show-seconds" type="b">
+            <default>false</default>
+            <description>Show in separate menu</description>
+        </key>
+
+        <key name="pomodoro-panel-mode" enum="org.gnome.shell.extensions.timepp.panel-mode">
+            <default>"Icon and Text"</default>
+            <description>Position in panel</description>
+        </key>
+
+        <key name="pomodoro-sound-file-path" type="s">
+            <default>""</default>
+            <description>Sound file path</description>
+        </key>
+
+        <key name="pomodoro-play-sound" type="b">
+            <default>false</default>
+            <description>Play sound with notification</description>
+        </key>
+
+        <key name="pomodoro-stop-tracking" type="b">
+            <default>false</default>
+            <description>Stop time tracking when pomo is paused</description>
+        </key>
+
+        <key name="pomodoro-exec-script" type="b">
+            <default>false</default>
+            <description>Execute custom script when pomo pauses/starts</description>
+        </key>
+
+        <key name="pomodoro-script-path" type="s">
+            <default>""</default>
+            <description>Path to custom script</description>
+        </key>
+
+        <key name="pomodoro-keybinding-open" type="as">
+            <default><![CDATA[[""]]]></default>
+            <description>Open this section</description>
+        </key>
+
+
+        <!-- ======================================
+        @@@  Alarms
+        ======================================= -->
+        <key name="alarms-separate-menu" type="b">
+            <default>true</default>
+            <description>Show in separate menu</description>
+        </key>
+
+        <key name="alarms-sound-file-path" type="s">
+            <default>""</default>
+            <description>Sound file path</description>
+        </key>
+
+        <key name="alarms-play-sound" type="b">
+            <default>false</default>
+            <description>Play sound with notification</description>
+        </key>
+
+        <key name="alarms-snooze-duration" type="i">
+            <default>300</default>
+            <description>Snooze duration</description>
+        </key>
+
+        <key name="alarms-keybinding-open" type="as">
+            <default><![CDATA[[""]]]></default>
+            <description>Open this section</description>
+        </key>
+
+
+        <!-- ======================================
+        @@@  Todo and Time Tracker
+        ======================================= -->
+        <key name="todo-separate-menu" type="b">
+            <default>true</default>
+            <description>Show in separate menu</description>
+        </key>
+
+        <key name="todo-panel-mode" enum="org.gnome.shell.extensions.timepp.panel-mode">
+            <default>"Icon and Text"</default>
+            <description>Position in panel</description>
+        </key>
+
+        <key name="todo-task-width" type="i">
+            <default>300</default>
+            <description>Snooze duration</description>
+        </key>
+
+        <key name="todo-current" type="a{ss}">
+            <default>{}</default>
+            <description>Current todo files and corresponding done file and csv dir</description>
+        </key>
+
+        <key name="todo-files" type="aa{ss}">
+            <default>[]</default>
+            <description>Array of todo files structs</description>
+        </key>
+
+        <key name="todo-keybinding-open" type="as">
+            <default><![CDATA[[""]]]></default>
+            <description>Open this section</description>
+        </key>
+
+        <key name="todo-keybinding-open-to-add" type="as">
+            <default><![CDATA[[""]]]></default>
+            <description>Open this section to add new task</description>
+        </key>
+
+        <key name="todo-keybinding-open-to-search" type="as">
+            <default><![CDATA[[""]]]></default>
+            <description>Open this section to search task</description>
+        </key>
+    </schema>
+</schemalist>
