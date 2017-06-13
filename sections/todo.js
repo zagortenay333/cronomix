@@ -499,7 +499,7 @@ const Todo = new Lang.Class({
             this.todo_txt_file = Gio.file_new_for_path(
                 path.replace(/^.+?\/\//, ''));
 
-            if (! this.todo_txt_file.query_exists(null))
+            if (!this.todo_txt_file || !this.todo_txt_file.query_exists(null))
                 this.cache_file.create(Gio.FileCreateFlags.NONE, null);
 
             if (this.todo_file_monitor)
@@ -528,7 +528,7 @@ const Todo = new Lang.Class({
     },
 
     _store_cache: function () {
-        if (! this.cache_file.query_exists(null))
+        if (!this.cache_file || !this.cache_file.query_exists(null))
             this.cache_file.create(Gio.FileCreateFlags.NONE, null);
 
         this.cache_file.replace_contents(JSON.stringify(this.cache, null, 2),
@@ -543,7 +543,7 @@ const Todo = new Lang.Class({
         let len = this.tasks.length;
         for (let i = 0; i < len; i++) res += this.tasks[i].task_str + '\n';
 
-        if (! this.todo_txt_file.query_exists(null))
+        if (!this.todo_txt_file || !this.todo_txt_file.query_exists(null))
             this.cache_file.create(Gio.FileCreateFlags.NONE, null);
 
         this.todo_txt_file.replace_contents(res, null, false,
@@ -687,7 +687,7 @@ const Todo = new Lang.Class({
                 let done_path = current.done_file.replace(/^.+?\/\//, '');
                 let done_file = Gio.file_new_for_path(done_path);
 
-                if (! done_txt_file.query_exists(null))
+                if (!done_txt_file || !done_txt_file.query_exists(null))
                     done_txt_file.create(Gio.FileCreateFlags.NONE, null);
 
                 let append_stream = done_txt_file.append_to(
@@ -974,7 +974,7 @@ const Todo = new Lang.Class({
                     let done_txt_file = Gio.file_new_for_path(
                         done_file_path.replace(/^.+?\/\//, ''));
 
-                    if (! done_txt_file.query_exists(null))
+                    if (!done_txt_file || !done_txt_file.query_exists(null))
                         done_txt_file.create(Gio.FileCreateFlags.NONE, null);
 
                     let append_stream = done_txt_file.append_to(
@@ -3554,12 +3554,24 @@ const TimeTracker = new Lang.Class({
         this.stop_all_tracking();
         this._stop_timers();
 
+        if (this.daily_csv_file_monitor) {
+            this.daily_csv_file_monitor.cancel();
+            this.daily_csv_file_monitor = null;
+        }
+
+        if (this.yearly_csv_file_monitor) {
+            this.yearly_csv_file_monitor.cancel();
+            this.yearly_csv_file_monitor = null;
+        }
+
 
         if (! this.csv_dir) return;
 
 
+        // ensure tracker dir
         Util.spawnCommandLine("mkdir -p  %s".format(
             this.csv_dir.replace(/^.+?\/\//, '')));
+
 
         // Archive the yearly csv file each year
         let today  = new Date();
@@ -3593,6 +3605,10 @@ const TimeTracker = new Lang.Class({
         if (! this.csv_dir) return;
 
 
+        // ensure tracker dir
+        Util.spawnCommandLine("mkdir -p  %s".format(
+            this.csv_dir.replace(/^.+?\/\//, '')));
+
         try {
             Util.spawnCommandLine("mkdir -p  %s".format(
                 this.csv_dir.replace(/^.+?\/\//, '')));
@@ -3601,7 +3617,7 @@ const TimeTracker = new Lang.Class({
                 this.csv_dir.replace(/^.+?\/\//, '') +
                 '/' + (new Date().getFullYear()) + '__time_tracker.csv');
 
-            if (! this.yearly_csv_file.query_exists(null))
+            if (!this.yearly_csv_file || !this.yearly_csv_file.query_exists(null))
                 this.yearly_csv_file.create(Gio.FileCreateFlags.NONE, null);
 
             this.yearly_csv_file_monitor = this.yearly_csv_file.monitor_file(
@@ -3655,6 +3671,10 @@ const TimeTracker = new Lang.Class({
         if (! this.csv_dir) return;
 
 
+        // ensure tracker dir
+        Util.spawnCommandLine("mkdir -p  %s".format(
+            this.csv_dir.replace(/^.+?\/\//, '')));
+
         try {
             Util.spawnCommandLine("mkdir -p  %s".format(
                 this.csv_dir.replace(/^.+?\/\//, '')));
@@ -3662,7 +3682,7 @@ const TimeTracker = new Lang.Class({
             this.daily_csv_file = Gio.file_new_for_path(
                 this.csv_dir.replace(/^.+?\/\//, '') + '/TODAY__time_tracker.csv');
 
-            if (! this.daily_csv_file.query_exists(null))
+            if (!this.daily_csv_file || !this.daily_csv_file.query_exists(null))
                 this.daily_csv_file.create(Gio.FileCreateFlags.NONE, null);
 
             this.daily_csv_file_monitor = this.daily_csv_file.monitor_file(
@@ -3753,7 +3773,7 @@ const TimeTracker = new Lang.Class({
         }
 
         try {
-            if (! this.daily_csv_file.query_exists(null))
+            if (!this.daily_csv_file || !this.daily_csv_file.query_exists(null))
                 this.daily_csv_file.create(Gio.FileCreateFlags.NONE, null);
 
             this.daily_csv_file.replace_contents(projects + tasks, null, false,
