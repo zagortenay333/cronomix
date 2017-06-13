@@ -3554,17 +3554,9 @@ const TimeTracker = new Lang.Class({
         this.stop_all_tracking();
         this._stop_timers();
 
-        if (this.yearly_csv_file_monitor) {
-            this.yearly_csv_file_monitor.cancel();
-            this.yearly_csv_file_monitor = null;
-        }
-
-        if (this.daily_csv_file_monitor) {
-            this.daily_csv_file_monitor.cancel();
-            this.daily_csv_file_monitor = null;
-        }
 
         if (! this.csv_dir) return;
+
 
         Util.spawnCommandLine("mkdir -p  %s".format(
             this.csv_dir.replace(/^.+?\/\//, '')));
@@ -3591,6 +3583,11 @@ const TimeTracker = new Lang.Class({
     _init_yearly_csv_map: function () {
         this.yearly_csv_file = null;
         this.yearly_csv_map.clear();
+
+        if (this.yearly_csv_file_monitor) {
+            this.yearly_csv_file_monitor.cancel();
+            this.yearly_csv_file_monitor = null;
+        }
 
 
         if (! this.csv_dir) return;
@@ -3649,6 +3646,11 @@ const TimeTracker = new Lang.Class({
         this.daily_csv_file = null;
         this.daily_csv_map.clear();
 
+        if (this.daily_csv_file_monitor) {
+            this.daily_csv_file_monitor.cancel();
+            this.daily_csv_file_monitor = null;
+        }
+
 
         if (! this.csv_dir) return;
 
@@ -3684,7 +3686,6 @@ const TimeTracker = new Lang.Class({
                 return;
             }
         }
-
 
         let it, key, type;
 
@@ -3734,6 +3735,8 @@ const TimeTracker = new Lang.Class({
         let line, hh, mm;
 
         for (let [k, v] of this.daily_csv_map.entries()) {
+            if (v.time < 60) continue;
+
             hh = '' + Math.floor(v.time / 3600);
             hh = (hh.length === 1) ? ('0' + hh) : hh;
 
@@ -3925,17 +3928,19 @@ const TimeTracker = new Lang.Class({
 
         let yearly_records = this.yearly_csv_map.get(needle);
         yearly_records     = yearly_records ? yearly_records.records : null;
+
         let todays_record  = this.daily_csv_map.get(needle);
+        todays_record      = todays_record ? todays_record.time : 0;
 
         if (! yearly_records && ! todays_record) return null;
 
         let stats = {
             name            : needle,
-            today           : todays_record ? todays_record.time : 0,
-            last_three_days : 0,
-            this_week       : 0,
-            this_month      : 0,
-            this_year       : 0,
+            today           : todays_record,
+            last_three_days : todays_record,
+            this_week       : todays_record,
+            this_month      : todays_record,
+            this_year       : todays_record,
         };
 
         if (! yearly_records) return stats;
@@ -3947,10 +3952,9 @@ const TimeTracker = new Lang.Class({
             ['this_year',       new Date().getFullYear() + '-01-01'],
         ];
 
-        let acc = todays_record ? todays_record.time : 0;
+        let acc = todays_record;
         let i   = yearly_records.length;
         let j, it;
-
 
         while (i--) {
             it   = yearly_records[i];
@@ -3958,9 +3962,10 @@ const TimeTracker = new Lang.Class({
 
             j = dates.length;
 
-            while (j--)
+            while (j--) {
                 if (dates[j][1] <= it.date) stats[ dates[j][0] ] = acc;
                 else dates.splice(j, 1);
+            }
         }
 
         return stats;
