@@ -199,7 +199,7 @@ const Todo = new Lang.Class({
             project : 'magenta',
             context : 'green',
             link    : 'blue',
-        }
+        };
 
 
         // @SPEED
@@ -214,7 +214,7 @@ const Todo = new Lang.Class({
             if (!this.isOpen) return;
             this.isOpen = false;
             this.emit('open-state-changed', false);
-        }
+        };
 
 
         //
@@ -268,7 +268,6 @@ const Todo = new Lang.Class({
         this.no_todo_file_msg.actor.hide();
         this.no_todo_file_msg.label.can_focus = true;
         this.no_todo_file_msg.actor.can_focus = false;
-
 
 
         //
@@ -932,7 +931,6 @@ const Todo = new Lang.Class({
             else       this.priorities.delete(task.priority);
 
 
-            try {
             i = task.contexts.length;
             while (i--) {
                 it = task.contexts[i];
@@ -950,7 +948,6 @@ const Todo = new Lang.Class({
                 if (n > 1) this.projects.set(it, --n);
                 else       this.projects.delete(it);
             }
-} catch (e) {Main.notify("", "" + e)}
 
             i = this.tasks.length;
             while (i--) {
@@ -1787,8 +1784,9 @@ const TaskEditor = new Lang.Class({
         this.curr_selected_completion = this.completion_menu_content.first_child;
     },
 
-    // @needle:   string (a context or project)
-    // @haystack: map    (of all contexts or projects);
+    // @needle   : string (a context or project)
+    // @haystack : map    (of all contexts or projects);
+    //
     // If @needle is a context, then the @haystack has to be the map of all
     // contexts. Likewise for projects.
     _find_completions: function (needle, haystack) {
@@ -1949,7 +1947,7 @@ const TaskItem = new Lang.Class({
 
 
         // The values of this.priority are:
-        // (~) if hidden (x) if completed, (_) if no priority, else (A-Z).
+        // (~) if hidden, (x) if completed, (_) if no priority, else (A-Z).
         this.priority        = '(_)';
         this.projects        = [];
         this.contexts        = [];
@@ -2221,7 +2219,7 @@ const TaskItem = new Lang.Class({
         }
 
         //
-        // Also, parse the due:date tag if found.
+        // Parse description
         //
         for (let i = desc_pos; i < len; i++) {
             if (REG_CONTEXT.test(words[i])) {
@@ -2547,7 +2545,7 @@ const TaskFiltersWindow = new Lang.Class({
 
 
         //
-        // draw
+        // actor
         //
         this.actor = new St.Bin({ x_fill: true, style_class: 'view-box filter-window' });
 
