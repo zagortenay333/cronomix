@@ -491,16 +491,12 @@ const Todo = new Lang.Class({
             this.show_view__no_todo_file();
             return;
         }
-        else this.show_view__loading();
 
         let path = current.todo_file;
 
         try {
             this.todo_txt_file = Gio.file_new_for_path(
                 path.replace(/^.+?\/\//, ''));
-
-            if (!this.todo_txt_file || !this.todo_txt_file.query_exists(null))
-                this.cache_file.create(Gio.FileCreateFlags.NONE, null);
 
             if (this.todo_file_monitor)
                 this.todo_file_monitor.cancel();
@@ -510,8 +506,18 @@ const Todo = new Lang.Class({
 
             this.todo_file_monitor.connect(
                 'changed', Lang.bind(this, this._on_todo_file_changed));
+
+            if (!this.todo_txt_file || !this.todo_txt_file.query_exists(null)) {
+                this.show_view__no_todo_file();
+                return;
+            }
         }
-        catch (e) { logError(e); }
+        catch (e) {
+            logError(e);
+            return;
+        }
+
+        this.show_view__loading();
 
         let [, lines] = this.todo_txt_file.load_contents(null);
         lines = String(lines).trim().split(/\n|\r/);
@@ -561,9 +567,19 @@ const Todo = new Lang.Class({
             return;
         }
 
-        if (event_type !== undefined &&
-            event_type !== Gio.FileMonitorEvent.CHANGES_DONE_HINT)
+        if (event_type === Gio.FileMonitorEvent.DELETED ||
+            event_type === Gio.FileMonitorEvent.MOVED   ||
+            event_type === Gio.FileMonitorEvent.CREATED) {
+
+            this._init_todo_file();
             return;
+        }
+
+        if (event_type !== undefined &&
+            event_type !== Gio.FileMonitorEvent.CHANGES_DONE_HINT) {
+
+            return;
+        }
 
         this._init_todo_file();
     },
