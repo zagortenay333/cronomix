@@ -2441,6 +2441,8 @@ const TaskItem = new Lang.Class({
         let old_prio = this.priority;
 
         if (this.completion_checkbox.checked) {
+            this.delegate.time_tracker.stop_tracking(this);
+
             if (this.priority !== '(_)') {
                 this.task_str = 'x ' +
                                 date_yyyymmdd() +
