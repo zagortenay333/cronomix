@@ -1768,32 +1768,31 @@ const TaskEditor = new Lang.Class({
 
     // @word: string (a context or project)
     _show_completions: function (word) {
-        let completions = [];
+        let completions;
 
         if (word[0] === '@')
             completions = this._find_completions(word, this.delegate.contexts);
         else if (word[0] === '+')
             completions = this._find_completions(word, this.delegate.projects);
 
-
         if (completions.length === 0) {
             this.completion_menu.hide();
+            return;
         }
-        else {
-            this.completion_menu_content.remove_all_children();
-            this.completion_menu.show();
 
-            for (let i = 0; i < completions.length; i++)  {
-                let item = new St.Button({ label: completions[i], reactive: true, track_hover: true, x_align: St.Align.START, style_class: 'row popup-menu-item' });
-                this.completion_menu_content.add_child(item);
+        this.completion_menu_content.remove_all_children();
+        this.completion_menu.show();
 
-                item.connect('notify::hover', (item) => {
-                    this._on_completion_hovered(item);
-                });
-                item.connect('clicked', (item) => {
-                    this._on_completion_selected();
-                });
-            }
+        for (let i = 0; i < completions.length; i++)  {
+            let item = new St.Button({ label: completions[i], reactive: true, track_hover: true, x_align: St.Align.START, style_class: 'row popup-menu-item' });
+            this.completion_menu_content.add_child(item);
+
+            item.connect('notify::hover', (item) => {
+                this._on_completion_hovered(item);
+            });
+            item.connect('clicked', (item) => {
+                this._on_completion_selected();
+            });
         }
 
         this.completion_menu_content.first_child.pseudo_class = 'active';
@@ -1835,7 +1834,7 @@ const TaskEditor = new Lang.Class({
     // Get the word that the cursor is currently on or null if the word is not
     // a context/project.
     _get_current_word: function () {
-        let text = this.entry.entry.text;
+        let text = this.entry.entry.get_text();
 
         if (! text) return;
 
