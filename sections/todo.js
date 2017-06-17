@@ -1768,14 +1768,14 @@ const TaskEditor = new Lang.Class({
 
     // @word: string (a context or project)
     _show_completions: function (word) {
-        let completions;
+        let completions = null;
 
         if (word[0] === '@')
             completions = this._find_completions(word, this.delegate.contexts);
         else if (word[0] === '+')
             completions = this._find_completions(word, this.delegate.projects);
 
-        if (completions.length === 0) {
+        if (!completions || completions.length === 0) {
             this.completion_menu.hide();
             return;
         }
