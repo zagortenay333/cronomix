@@ -3819,7 +3819,7 @@ const TimeTracker = new Lang.Class({
         let d       = new Date();
         let day_pos = (7 - Shell.util_get_week_start() + d.getDay()) % 7;
 
-        d.setDate(d.getDate() - day_pos + 1);
+        d.setDate(d.getDate() - day_pos);
 
         return d.toISOString().substr(0, 10);
     },
