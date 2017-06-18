@@ -4,13 +4,13 @@ const GLib     = imports.gi.GLib;
 const Lang     = imports.lang;
 
 
-const Gettext = imports.gettext.domain('timepp');
-const _       = Gettext.gettext;
-
-
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me             = ExtensionUtils.getCurrentExtension();
 const Convenience    = Me.imports.lib.convenience;
+
+
+const Gettext = imports.gettext.domain(Me.metadata['gettext-domain']);
+const _       = Gettext.gettext;
 
 
 const Settings = new Lang.Class({

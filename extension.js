@@ -18,7 +18,6 @@ const CONVENIENCE   = ME.imports.lib.convenience;
 const PANEL_ITEM    = ME.imports.lib.panel_item;
 const ICON_FROM_URI = ME.imports.lib.icon_from_uri;
 
-
 const Timer     = ME.imports.sections.timer;
 const Stopwatch = ME.imports.sections.stopwatch;
 const Pomodoro  = ME.imports.sections.pomodoro;
@@ -26,7 +25,11 @@ const Alarms    = ME.imports.sections.alarms;
 const Todo      = ME.imports.sections.todo;
 
 
-const Gettext  = imports.gettext.domain('gnome-shell-extensions');
+const Gettext = imports.gettext;
+
+Gettext.textdomain(ME.metadata['gettext-domain']);
+Gettext.bindtextdomain(ME.metadata['gettext-domain'], ME.dir.get_path() + '/locale');
+
 const _        = Gettext.gettext;
 const ngettext = Gettext.ngettext;
 
@@ -427,13 +430,11 @@ const Timepp = new Lang.Class({
 // =====================================================================
 // @@@ Init
 // =====================================================================
-function init() {
-    CONVENIENCE.initTranslations();
-}
+function init() {}
 
 let timepp;
 
-function enable() {
+function enable () {
     timepp = new Timepp;
 
     let pos;
@@ -454,7 +455,7 @@ function enable() {
     }
 }
 
-function disable() {
+function disable () {
     timepp.destroy();
     timepp = null;
 }
