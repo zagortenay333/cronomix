@@ -230,7 +230,8 @@ const Alarms = new Lang.Class({
 
         editor.connect('cancel', () => {
             this.add_alarm_item.actor.show();
-            this.alarms_scroll_wrapper.actor.show();
+            if (this.alarms_scroll_content.get_n_children() > 0)
+                this.alarms_scroll_wrapper.actor.show();
             this.add_alarm_item.actor.grab_key_focus();
             editor.actor.destroy();
         });
