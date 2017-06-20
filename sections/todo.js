@@ -128,11 +128,11 @@ const Todo = new Lang.Class({
 
         // Track all the priorities, contexts, and projects across all tasks.
         //
-        // @key:   string  (a context/project/priority)
-        // @value: natural (number of tasks that have that @key)
+        // @key   : string  (a context/project/priority)
+        // @value : natural (number of tasks that have that @key)
         //
         // The values of a priority can be:
-        // (~) if hidden (x) if completed, (_) if no priority, else (A-Z).
+        // (~) if hidden, (x) if completed, (_) if no priority, else (A-Z).
         this.priorities = new Map();
         this.contexts   = new Map();
         this.projects   = new Map();
@@ -146,6 +146,7 @@ const Todo = new Lang.Class({
         // @NOTE
         // this.tasks, this.tasks_viewport and the popup menu are the
         // only places where refs to task objects can be held.
+        // this.search_dictionary will hold refs only for duration of a search.
         //
         // All task objects.
         this.tasks = [];
@@ -182,12 +183,12 @@ const Todo = new Lang.Class({
         this.add_tasks_to_menu_proc_id   = null;
 
 
-        // The mainloop id of the _on_day_started_loop. If null, the loop is not
-        // running.
+        // The mainloop id of the _on_day_started_loop.
+        // If null, the loop is not running.
         this.on_day_started_loop_id = null;
 
 
-        // The special css properties 'context-color', 'project-color', and
+        // The custom css properties 'context-color', 'project-color', and
         // 'link-color' can be used in the themes css file to style the task
         // markup.
         //
@@ -460,7 +461,11 @@ const Todo = new Lang.Class({
                         },
                     },
                 };
-        } catch (e) { logError(e); }
+        }
+        catch (e) {
+            logError(e);
+            return;
+        }
 
         this.view_manager = new ViewManager(this.ext, this);
         this.time_tracker = new TimeTracker(this.ext, this);
@@ -773,7 +778,7 @@ const Todo = new Lang.Class({
         });
 
         // We always search all tasks no matter what filters are active, so
-        // render all tasks when we show the search.
+        // add all tasks to the popup menu.
         this._add_tasks_to_menu(true, true);
     },
 
@@ -878,7 +883,6 @@ const Todo = new Lang.Class({
             n = this.priorities.get(task.priority);
             this.priorities.set(task.priority, n ? ++n : 1);
 
-
             // Decrement the global count of new contexts/projects that have
             // been removed during the edit or remove them if no other tasks
             // have them.
@@ -946,7 +950,6 @@ const Todo = new Lang.Class({
             if (n > 1) this.priorities.set(task.priority, --n);
             else       this.priorities.delete(task.priority);
 
-
             i = task.contexts.length;
             while (i--) {
                 it = task.contexts[i];
@@ -965,6 +968,8 @@ const Todo = new Lang.Class({
                 else       this.projects.delete(it);
             }
 
+            // We only remove the ref from this.tasks since this.tasks_viewport
+            // and the popup menu will be flushed with the sort_tasks func.
             i = this.tasks.length;
             while (i--) {
                 if (this.tasks[i].task_str === task.task_str)
@@ -1088,18 +1093,18 @@ const Todo = new Lang.Class({
         });
     },
 
-    // @update_tasks_viewport: bool
-    // @ignore_filters:  bool
+    // @update_tasks_viewport : bool
+    // @ignore_filters        : bool
     //
     // This is the only function that can add task actors to the popup menu.
     //
     // If @update_tasks_viewport is true, then the tasks viewport will be
-    // reubuil (i.e., all tasks will be run through the filter test again.)
+    // rebuilt (i.e., all tasks will be run through the filter test again.)
     //
-    //  @ignore_filters only makes sense if @update_tasks_viewport is true.
+    // @ignore_filters only makes sense if @update_tasks_viewport is true.
     _add_tasks_to_menu: function (update_tasks_viewport, ignore_filters) {
-        update_tasks_viewport = !! update_tasks_viewport;
-        ignore_filters        = !! ignore_filters;
+        update_tasks_viewport = Boolean(update_tasks_viewport);
+        ignore_filters        = Boolean(ignore_filters);
 
         if (this.add_tasks_to_menu_proc_id) {
             Mainloop.source_remove(this.add_tasks_to_menu_proc_id);
@@ -1261,7 +1266,9 @@ const Todo = new Lang.Class({
         this._store_cache();
 
         this._update_filter_icon();
-        if (this.view_manager.current_view === View.DEFAULT) this._add_tasks_to_menu(true);
+
+        if (this.view_manager.current_view === View.DEFAULT)
+            this._add_tasks_to_menu(true);
     },
 
     _sort_tasks: function () {
@@ -1283,10 +1290,16 @@ const Todo = new Lang.Class({
             case SortType.COMPLETION_DATE: if (!k) k = 'completion_date';
             case SortType.DUE_DATE:        if (!k) k = 'due_date';
             case '': {
-                if (this.cache.sort.sort_order === SortOrder.DESCENDING)
-                    compare_func = (a, b) => +(a[k] < b[k]) || +(a[k] === b[k]) - 1;
-                else
-                    compare_func = (a, b) => +(a[k] > b[k]) || +(a[k] === b[k]) - 1;
+                if (this.cache.sort.sort_order === SortOrder.DESCENDING) {
+                    compare_func = (a, b) => {
+                        return +(a[k] < b[k]) || +(a[k] === b[k]) - 1;
+                    };
+                }
+                else {
+                    compare_func = (a, b) => {
+                        return +(a[k] > b[k]) || +(a[k] === b[k]) - 1;
+                    };
+                }
 
                 break;
             }
@@ -1295,7 +1308,6 @@ const Todo = new Lang.Class({
         }
 
         this.tasks.sort(compare_func);
-
         this._add_tasks_to_menu(true);
         this._update_sort_icon();
     },
@@ -1404,24 +1416,18 @@ const Todo = new Lang.Class({
         let t = 86400 - Math.round((d.getTime() - d.setHours(0,0,2,0)) / 1000);
 
         this.on_day_started_loop_id = Mainloop.timeout_add_seconds(t, () => {
-            //
             // We only emit here, or else we will emit every time the ext
             // gets reloaded. In that case it couldn't be used by functions
             // that deal with persistent data. On the other hand, this may never
             // execute if the ext is removed before midnight and added back
             // after.
-            //
             this.emit('new-day');
-
 
             // Update all due dates.
             let i = this.tasks.length;
             while (i--) this.tasks[i].update_due_date();
 
-
-            //
             // reset
-            //
             this.on_day_started_loop_id = null;
             this._on_day_started_loop();
         });
@@ -1437,14 +1443,14 @@ const Todo = new Lang.Class({
             this.settings.get_int('todo-task-width');
     },
 
-    // Try to update the markup_color object. Returns true if the object has been
-    // updated; otherwise, false.
+    // Try to update the markup_color object.
+    // Returns true if the object has been updated, else false.
     _update_markup_colors: function () {
         let update_needed = false;
 
         ['context', 'project', 'link'].forEach((it) => {
             let [success, col] = this.actor.get_theme_node()
-                                           .lookup_color(it + '-color', false);
+                                 .lookup_color(it + '-color', false);
 
             if (success) {
                 col = col.to_string().substr(0, 7);
@@ -2187,11 +2193,9 @@ const TaskItem = new Lang.Class({
         let len      = words.length;
         let desc_pos = 0;
 
-        //
         // Parse the 'header' (everything except the description) and store the
         // offset of the description.
         // desc_pos is the index of the first word of desc in the words array.
-        //
         if (words[0] === 'x') {
             this.completion_checkbox.checked = true;
             this.actor.add_style_class_name('completed');
@@ -3375,24 +3379,19 @@ const TimeTrackerStatView = new Lang.Class({
             return;
         }
 
-
         let it, markup = '';
+        let titles = this._gen_titles();
 
         for (let i = 0, len = stats.length; i < len; i++) {
             it = stats[i];
 
             markup +=
-                '<b>' + it.name + '</b>:' +
-                '\n\n    ' +
-                '<b>'+_('today')+'</b>        :  ' + this._format(it.today) +
-                '\n    ' +
-                '<b>'+_('last 3 days')+'</b>  :  ' + this._format(it.last_three_days) +
-                '\n    ' +
-                '<b>'+_('this week')+'</b>    :  ' + this._format(it.this_week) +
-                '\n    ' +
-                '<b>'+_('this month')+'</b>   :  ' + this._format(it.this_month) +
-                '\n    ' +
-                '<b>'+_('this year')+'</b>    :  ' + this._format(it.this_year);
+                '<b>' + it.name + '</b>:'                             + '\n\n' +
+                '    ' + titles[0] + this._format(it.today)           + '\n' +
+                '    ' + titles[1] + this._format(it.last_three_days) + '\n' +
+                '    ' + titles[2] + this._format(it.this_week)       + '\n' +
+                '    ' + titles[3] + this._format(it.this_month)      + '\n' +
+                '    ' + titles[4] + this._format(it.this_year);
 
             if (i !== len - 1 && len > 1) markup += '\n\n\n\n';
         }
@@ -3405,6 +3404,31 @@ const TimeTrackerStatView = new Lang.Class({
         text.clutter_text.line_wrap_mode = Pango.WrapMode.WORD_CHAR;
 
         text.clutter_text.set_markup('<tt>' + markup + '</tt>');
+    },
+
+    _gen_titles: function () {
+        let titles = [
+            '<b>'+_('today')+'</b>',
+            '<b>'+_('last 3 days')+'</b>',
+            '<b>'+_('this week')+'</b>',
+            '<b>'+_('this month')+'</b>',
+            '<b>'+_('this year')+'</b>',
+        ];
+
+        let longest = titles[0].length;
+
+        for (let i = 1; i < titles.length; i++) {
+            longest = (titles[i].length > longest) ? titles[i].length : longest;
+        }
+
+        longest += 2;
+
+        for (let i = 0; i < titles.length; i++) {
+            let diff  = longest - titles[i].length;
+            titles[i] = titles[i] + Array(diff).join(' ') + ':  ';
+        }
+
+        return titles;
     },
 
     _format: function (seconds) {
@@ -3819,7 +3843,7 @@ const TimeTracker = new Lang.Class({
         let d       = new Date();
         let day_pos = (7 - Shell.util_get_week_start() + d.getDay()) % 7;
 
-        d.setDate(d.getDate() - day_pos);
+        d.setDate(d.getDate() - day_pos + 1);
 
         return d.toISOString().substr(0, 10);
     },
