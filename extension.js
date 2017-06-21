@@ -52,7 +52,7 @@ const Timepp = new Lang.Class({
     Extends : PanelMenu.Button,
 
     _init: function () {
-        this.parent(0.5, _("Timepp"));
+        this.parent(0.5, _('Timepp'));
 
 
         this.settings = new CONVENIENCE.getSettings('org.gnome.shell.extensions.timepp');
@@ -203,7 +203,7 @@ const Timepp = new Lang.Class({
     //     - If @section is not a sep menu, we show all non-separate menus that
     //       are enabled.
     open_menu: function (section) {
-        if (! section) {
+        if (this.unicon_panel_item.actor.visible) {
             this.menu.sourceActor = this.unicon_panel_item.actor;
 
             this.unicon_panel_item.menu_toggled(true);
@@ -248,7 +248,7 @@ const Timepp = new Lang.Class({
         }
 
         this._update_separators();
-        this.menu.open(false);
+        this.menu.open();
     },
 
     _update_separators: function () {
