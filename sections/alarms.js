@@ -501,7 +501,7 @@ const AlarmEditor = new Lang.Class({
         //
         this.alarm_entry_container = new St.BoxLayout({ vertical: true, style_class: 'row entry-container' });
         this.content_box.add_actor(this.alarm_entry_container);
-        this.entry = new MULTIL_ENTRY.MultiLineEntry(_('Alarm Message...'), false, true);
+        this.entry = new MULTIL_ENTRY.MultiLineEntry(_('Alarm Message...'), false, false);
 
         this.alarm_entry_container.add_actor(this.entry.actor);
 
