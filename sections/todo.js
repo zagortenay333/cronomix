@@ -859,14 +859,13 @@ const Todo = new Lang.Class({
         if (task) this.time_tracker.stop_tracking(task);
 
         editor.connect('edit-task', (_, task_str) => {
-            let start = Date.now();
             let was_hidden   = task.hidden;
             let old_task_str = task.task_str;
             let old_priority = task.priority;
             let old_contexts = task.contexts;
             let old_projects = task.projects;
 
-            let it, i, n;
+            let i, n, it, len;
 
             task.update_task(task_str);
 
@@ -886,8 +885,7 @@ const Todo = new Lang.Class({
             // Decrement the global count of new contexts/projects that have
             // been removed during the edit or remove them if no other tasks
             // have them.
-            i = old_contexts.length;
-            while (i--) {
+            for (i = 0, len = old_contexts.length; i < len; i++) {
                 it = old_contexts[i];
 
                 if (task.contexts.indexOf(it) === -1) {
@@ -897,8 +895,7 @@ const Todo = new Lang.Class({
                 }
             }
 
-            i = old_projects.length;
-            while (i--) {
+            for (i = 0, len = old_projects.length; i < len; i++) {
                 it = old_projects[i];
 
                 if (task.projects.indexOf(it) === -1) {
@@ -910,8 +907,7 @@ const Todo = new Lang.Class({
 
             // Increment the global count of new contexts/projects that have
             // been added during the edit or add them if they don't exist.
-            i = task.contexts.length;
-            while (i--) {
+            for (i = 0, len = task.contexts.length; i < len; i++) {
                 it = task.contexts[i];
 
                 if (old_contexts.indexOf(it) === -1) {
@@ -920,8 +916,7 @@ const Todo = new Lang.Class({
                 }
             }
 
-            i = task.projects.length;
-            while (i--) {
+            for (i = 0, len = task.projects.length; i < len; i++) {
                 it = task.projects[i];
 
                 if (old_projects.indexOf(it) === -1) {
@@ -941,7 +936,7 @@ const Todo = new Lang.Class({
         });
 
         editor.connect('delete-task', (_, do_archive) => {
-            let it, i, n;
+            let i, n, it, len;
 
             // Decrement number of tasks with this priority/context/project,
             // or remove the entry from the global vars if no other tasks
@@ -950,8 +945,7 @@ const Todo = new Lang.Class({
             if (n > 1) this.priorities.set(task.priority, --n);
             else       this.priorities.delete(task.priority);
 
-            i = task.contexts.length;
-            while (i--) {
+            for (i = 0, len = task.contexts.length; i < len; i++) {
                 it = task.contexts[i];
                 n  = this.contexts.get(it);
 
@@ -959,8 +953,7 @@ const Todo = new Lang.Class({
                 else       this.contexts.delete(it);
             }
 
-            i = task.projects.length;
-            while (i--) {
+            for (i = 0, len = task.projects.length; i < len; i++) {
                 it = task.projects[i];
                 n  = this.projects.get(it);
 
@@ -970,10 +963,11 @@ const Todo = new Lang.Class({
 
             // We only remove the ref from this.tasks since this.tasks_viewport
             // and the popup menu will be flushed with the sort_tasks func.
-            i = this.tasks.length;
-            while (i--) {
-                if (this.tasks[i].task_str === task.task_str)
+            for (i = 0, len = this.tasks.length; i < len; i++) {
+                if (this.tasks[i].task_str === task.task_str) {
                     this.tasks.splice(i, 1);
+                    break;
+                }
             }
 
             if (do_archive) {
@@ -1015,7 +1009,7 @@ const Todo = new Lang.Class({
         });
 
         editor.connect('add-task', (_, task_str) => {
-            this._add_task(task_str, this.tasks);
+            this._add_task(task_str);
             this.tasks.unshift(this.tasks.pop());
 
             this._update_filters();
@@ -1037,19 +1031,18 @@ const Todo = new Lang.Class({
         if (task_str.trim() === '') return;
 
         let task = new TaskItem(this.ext, this, task_str);
+
         this.tasks.push(task);
 
         // Store any priorities, contexts, or projects into the global vars.
-        let i, it;
+        let i, it, len;
 
-        i = task.projects.length;
-        while (i--) {
+        for (i = 0, len = task.projects.length; i < len; i++) {
             it = this.projects.get(task.projects[i]);
             this.projects.set(task.projects[i], it ? ++it : 1);
         }
 
-        i = task.contexts.length;
-        while (i--) {
+        for (i = 0, len = task.contexts.length; i < len; i++) {
             it = this.contexts.get(task.contexts[i]);
             this.contexts.set(task.contexts[i], it ? ++it : 1);
         }
@@ -1064,14 +1057,19 @@ const Todo = new Lang.Class({
     // @todo_txt: array (of strings, each string is a line in todo.txt file)
     // @callback: func
     _create_task_objects: function (todo_txt, callback) {
+        let n = todo_txt.length;
+
+        // this.tasks = new Array(n);
+
         if (this.add_tasks_to_menu_proc_id) {
             Mainloop.source_remove(this.add_tasks_to_menu_proc_id);
             this.add_tasks_to_menu_proc_id = null;
         }
 
-        let n = Math.min(todo_txt.length, 21);
+        n = Math.min(n, 21);
+        let i = 0;
 
-        for (var i = 0; i < n; i++)
+        for (; i < n; i++)
             this._add_task(todo_txt[i]);
 
         this.create_tasks_proc_id = Mainloop.idle_add(() => {
@@ -1177,31 +1175,31 @@ const Todo = new Lang.Class({
 
         if (! this.has_active_filters()) return true;
 
-        let i, arr;
+        let i, arr, len;
 
         arr = this.cache.filters.active_filters.priorities;
-        i = arr.length;
-        while (i--)
+        for (i = 0, len = arr.length; i < len; i++) {
             if (arr[i] === task.priority)
                 return !this.cache.filters.invert_filters;
+        }
 
         arr = this.cache.filters.active_filters.contexts;
-        i = arr.length;
-        while (i--)
+        for (i = 0, len = arr.length; i < len; i++) {
             if (task.contexts.indexOf(arr[i]) !== -1)
                 return !this.cache.filters.invert_filters;
+        }
 
         arr = this.cache.filters.active_filters.projects;
-        i = arr.length;
-        while (i--)
+        for (i = 0, len = arr.length; i < len; i++) {
             if (task.projects.indexOf(arr[i]) !== -1)
                 return !this.cache.filters.invert_filters;
+        }
 
         arr = this.cache.filters.active_filters.custom;
-        i = arr.length;
-        while (i--)
+        for (i = 0, len = arr.length; i < len; i++) {
             if (FUZZ.fuzzy_search_v1(arr[i], task.task_str) !== null)
                 return !this.cache.filters.invert_filters;
+        }
 
         return this.cache.filters.invert_filters;
     },
@@ -1222,19 +1220,31 @@ const Todo = new Lang.Class({
 
     // Check if there are any redundant active filters and remove them.
     _update_filters: function () {
-        let i, arr;
+        let i, arr, len;
 
         arr = this.cache.filters.active_filters.priorities;
-        i = arr.length;
-        while (i--) if (! this.priorities.has(arr[i])) arr.splice(i, 1);
+        for (i = 0, len = arr.length; i < len; i++) {
+            if (! this.priorities.has(arr[i])) {
+                arr.splice(i, 1);
+                len--; i--;
+            }
+        }
 
         arr = this.cache.filters.active_filters.contexts;
-        i = arr.length;
-        while (i--) if (! this.contexts.has(arr[i])) arr.splice(i, 1);
+        for (i = 0, len = arr.length; i < len; i++) {
+            if (! this.contexts.has(arr[i])) {
+                arr.splice(i, 1);
+                len--; i--;
+            }
+        }
 
         arr = this.cache.filters.active_filters.projects;
-        i = arr.length;
-        while (i--) if (! this.projects.has(arr[i])) arr.splice(i, 1);
+        for (i = 0, len = arr.length; i < len; i++) {
+            if (! this.projects.has(arr[i])) {
+                arr.splice(i, 1);
+                len--; i--;
+            }
+        }
 
         this._update_filter_icon();
     },
@@ -1350,23 +1360,23 @@ const Todo = new Lang.Class({
     },
 
     _do_search: function (pattern, search_space) {
-        this.tasks_viewport = [];
-
         let reduced_results = [];
-        let score;
-        let i = search_space.length;
+        let i, len, score;
 
-        while (i--) {
+        for (i = 0, len = search_space.length; i < len; i++) {
             score = FUZZ.fuzzy_search_v1(pattern, search_space[i].task_str.toLowerCase());
-            if (score === null) continue;
-            reduced_results.push({idx: i, score: score});
+            if (score !== null) reduced_results.push([i, score]);
         }
 
-        reduced_results.sort((a, b) => b.score - a.score);
+        reduced_results.sort((a, b) => b[1] - a[1]);
 
-        i = reduced_results.length;
-        while (i--)
-            this.tasks_viewport[i] = search_space[reduced_results[i].idx];
+        len = reduced_results.length;
+
+        this.tasks_viewport = new Array(len);
+
+        for (i = 0; i < len; i++) {
+            this.tasks_viewport[i] = search_space[ reduced_results[i][0] ];
+        }
 
         this.search_dictionary.set(pattern, this.tasks_viewport);
         this._add_tasks_to_menu();
@@ -1424,8 +1434,9 @@ const Todo = new Lang.Class({
             this.emit('new-day');
 
             // Update all due dates.
-            let i = this.tasks.length;
-            while (i--) this.tasks[i].update_due_date();
+            for (let i = 0, len = this.tasks.length; i < len; i++) {
+                this.tasks[i].update_due_date();
+            }
 
             // reset
             this.on_day_started_loop_id = null;
@@ -1438,9 +1449,11 @@ const Todo = new Lang.Class({
     },
 
     _update_task_width: function () {
-        let i = this.tasks.length;
-        while (i--) this.tasks[i].actor.width =
-            this.settings.get_int('todo-task-width');
+        let width = this.settings.get_int('todo-task-width');
+
+        for (let i = 0, len = this.tasks.length; i < len; i++) {
+            this.tasks[i].actor.width = width;
+        }
     },
 
     // Try to update the markup_color object.
@@ -2466,8 +2479,7 @@ const TaskItem = new Lang.Class({
             let prio  = '';
             let words = this.task_str.split(/ +/);
 
-            let i = words.length;
-            while (i--) {
+            for (let i = 0, len = words.length; i < len; i++) {
                 if (REG_PRIO_TAG.test(words[i])) {
                     prio = '(' + words[i][4] + ') ';
                     words.splice(i, 1);
@@ -2739,13 +2751,13 @@ const TaskFiltersWindow = new Lang.Class({
         this.show_hidden_tasks_toggle.setToggleState(
             this.delegate.cache.filters.show_hidden);
 
-        let i, key, value, item, check;
+        let i, len, key, value, item, check;
 
         //
         // custom filters
         //
         i = this.delegate.cache.filters.custom_filters.length;
-        while (i--) {
+        for (i = 0; i < len; i++) {
             value = this.delegate.cache.filters.custom_filters[i];
             check = this.active_filters.custom.indexOf(value) === -1 ? false : true;
             item  = this._new_filter_item(check, value, null, true);
@@ -2803,11 +2815,10 @@ const TaskFiltersWindow = new Lang.Class({
 
     _reset_all: function () {
         for (var k in this.filter_register) {
-            if (this.filter_register.hasOwnProperty(k)) {
-                let i = this.filter_register[k].length;
-                while (i--)
-                    this.filter_register[k][i].checkbox.actor.checked = false;
-            }
+            if (! this.filter_register.hasOwnProperty(k)) continue;
+
+            for (let i = 0, len = this.filter_register[k].length; i < len; i++)
+                this.filter_register[k][i].checkbox.actor.checked = false;
         }
     },
 
@@ -2874,14 +2885,12 @@ const TaskFiltersWindow = new Lang.Class({
     // Remove objects from the filter_register whose actors have been destroyed.
     // We can detect which one it is by checking whether the label.text is null.
     _clean_filter_register: function () {
-        let i, k;
+        for (let k in this.filter_register) {
+            if (! this.filter_register.hasOwnProperty(k)) continue;
 
-        for (k in this.filter_register) {
-            if (this.filter_register.hasOwnProperty(k)) {
-                i = this.filter_register[k].length;
-                while (i--)
-                    if (this.filter_register[k][i].label.text === null)
-                        this.filter_register[k].splice(i, 1);
+            for (let i=0, len = this.filter_register[k].length; i < len; i++) {
+                if (this.filter_register[k][i].label.text === null)
+                    this.filter_register[k].splice(i, 1);
             }
         }
     },
@@ -2905,22 +2914,18 @@ const TaskFiltersWindow = new Lang.Class({
             },
         };
 
-        let i, k;
+        let i, k, len;
 
         for (k in this.filter_register) {
-            if (this.filter_register.hasOwnProperty(k)) {
-                i = this.filter_register[k].length;
+            if (! this.filter_register.hasOwnProperty(k)) continue;
 
-                while (i--) {
-                    if (this.filter_register[k][i].checkbox.actor.checked)
-                        res.active_filters[k].push(
-                            this.filter_register[k][i].filter);
-                }
+            for (i = 0, len = this.filter_register[k].length; i < len; i++) {
+                if (this.filter_register[k][i].checkbox.actor.checked)
+                    res.active_filters[k].push(this.filter_register[k][i].filter);
             }
         }
 
-        i = this.filter_register.custom.length;
-        while (i--) {
+        for (i = 0, len = this.filter_register.custom.length; i < len; i++) {
             res.custom_filters.push(this.filter_register.custom[i].filter);
         }
 
@@ -3169,8 +3174,7 @@ const TaskSortWindow = new Lang.Class({
 
 
         let it;
-        let i = this.sort_types.length;
-        while (i--) {
+        for (let i = 0, len = this.sort_types.length; i < len; i++) {
             it = this.sort_types[i];
 
             if (it.sort_type === this.delegate.cache.sort.sort_type) {
@@ -3899,9 +3903,7 @@ const TimeTracker = new Lang.Class({
         }
 
         if (task.projects) {
-            let i = task.projects.length;
-
-            while (i--) {
+            for (let i = 0, len = task.projects.length; i < len; i++) {
                 val = this.daily_csv_map.get(task.projects[i]);
 
                 if (val) {
@@ -3922,10 +3924,10 @@ const TimeTracker = new Lang.Class({
         this.number_of_tracked_tasks++;
         this._start_timers();
 
-        let i = this.delegate.tasks.length;
-        while (i--)
+        for (let i = 0, len = this.delegate.tasks.length; i < len; i++) {
             if (this.delegate.tasks[i].task_str === task.task_str)
                 this.delegate.tasks[i].on_tracker_started();
+        }
 
         this.delegate.panel_item.actor.add_style_class_name('on');
     },
@@ -3942,18 +3944,17 @@ const TimeTracker = new Lang.Class({
 
         if (task.projects) {
             let proj;
-            let i = task.projects.length;
 
-            while (i--) {
+            for (let i = 0, len = task.projects.length; i < len; i++) {
                 proj = this.daily_csv_map.get(task.projects[i]);
                 if (--proj.tracked_children === 0) proj.tracking = false;
             }
         }
 
-        let i = this.delegate.tasks.length;
-        while (i--)
+        for (let i = 0, len = this.delegate.tasks.length; i < len; i++) {
             if (this.delegate.tasks[i].task_str === task.task_str)
                 this.delegate.tasks[i].on_tracker_stopped();
+        }
 
         if (this.number_of_tracked_tasks === 0)
             this.delegate.panel_item.actor.remove_style_class_name('on');
@@ -4205,8 +4206,8 @@ const ViewManager = new Lang.Class({
             this.show_tasks_proc_id = null;
         }
 
-        let i = this.delegate.tasks_viewport.length;
-        while (i--) this.delegate.tasks_viewport[i].actor.visible = false;
+        for (let i = 0, len = this.delegate.tasks_viewport.length; i < len; i++)
+            this.delegate.tasks_viewport[i].actor.visible = false;
     },
 });
 Signals.addSignalMethods(ViewManager.prototype);
