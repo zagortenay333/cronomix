@@ -2242,13 +2242,17 @@ const TaskItem = new Lang.Class({
         //
         for (let i = desc_pos; i < len; i++) {
             if (REG_CONTEXT.test(words[i])) {
-                this.contexts.push(words[i]);
+                if (this.contexts.indexOf(words[i]) === -1) {
+                    this.contexts.push(words[i]);
+                }
                 words[i] = '<span foreground="' +
                            this.delegate.markup_colors.context +
                            '"><b>' + words[i] + '</b></span>';
             }
             else if (REG_PROJ.test(words[i])) {
-                this.projects.push(words[i]);
+                if (this.projects.indexOf(words[i]) === -1) {
+                    this.projects.push(words[i]);
+                }
                 words[i] = '<span foreground="' +
                            this.delegate.markup_colors.project +
                            '"><b>' + words[i] + '</b></span>';
