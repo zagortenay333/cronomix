@@ -10,6 +10,9 @@ Cinnamon applet version: https://github.com/zagortenay333/timepp__cinnamon
 ### Installation
 
 * You can install this extension from the [gnome-shell extensions site](https://extensions.gnome.org/extension/1238/time/).
+  > NOTE:  
+  > Since it takes some time for the extension to be reviewed, the version on this site might be out of date and contain
+  > bugs that have already been fixed. Consider using the github version.
 
 * You can install it manually by cloning/downloading this repo into your `~/.local/share/gnome-shell/extensions` dir
 and renaming the downloaded folder to `timepp@zagortenay333`.
