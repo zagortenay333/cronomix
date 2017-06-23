@@ -125,7 +125,7 @@ todo.txt manager.
 
 ### Lock Screen
 
-**Note that all gnome-shell extension get disabled in the lock screen**.
+**Note that all gnome-shell extensions get disabled in the lock screen**.
 
 Alarms, stopwatch and other timers won't work when the screen is locked.
 
