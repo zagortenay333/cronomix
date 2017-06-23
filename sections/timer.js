@@ -19,7 +19,7 @@ const ExtensionUtils = imports.misc.extensionUtils;
 const ME = ExtensionUtils.getCurrentExtension();
 
 
-const SIG_MANAGER    = ME.imports.lib.signal_manager;
+const SIG_MANAGER   = ME.imports.lib.signal_manager;
 const PANEL_ITEM    = ME.imports.lib.panel_item;
 const ICON_FROM_URI = ME.imports.lib.icon_from_uri;
 const NUM_PICKER    = ME.imports.lib.num_picker;
@@ -28,7 +28,7 @@ const MULTIL_ENTRY  = ME.imports.lib.multiline_entry;
 
 const CACHE_FILE = GLib.get_home_dir() + '/.cache/timepp_gnome_shell_extension/timepp_timer.json';
 const TIMER_ICON         = '/img/timer-symbolic.svg';
-const TIMER_MAX_DURATION = 86400;
+const TIMER_MAX_DURATION = 86400000000; // 24 hours in miliseconds
 
 
 const TimerState = {
@@ -53,13 +53,12 @@ const Timer = new Lang.Class({
         this.ext_dir  = ext_dir;
         this.settings = settings;
 
-
         this.sigm = new SIG_MANAGER.SignalManager();
-
 
         this.keybindings     = [];
         this.timer_state     = TimerState.OFF;
-        this.timer_duration  = 0; // in seconds
+        this.timer_duration  = 0; // in microseconds
+        this.end_time        = 0; // used for computing elapsed time
         this.tic_mainloop_id = null;
         this.section_enabled = this.settings.get_boolean('timer-enabled');
         this.separate_menu   = this.settings.get_boolean('timer-separate-menu');
@@ -195,6 +194,8 @@ const Timer = new Lang.Class({
     },
 
     _start: function () {
+        this.end_time = GLib.get_monotonic_time() + this.timer_duration;
+
         if (this.tic_mainloop_id) {
             Mainloop.source_remove(this.tic_mainloop_id);
             this.tic_mainloop_id = null;
@@ -262,7 +263,7 @@ const Timer = new Lang.Class({
             this._expired();
         }
         else {
-            this.timer_duration -= 1;
+            this.timer_duration = this.end_time - GLib.get_monotonic_time();
             this._slider_update();
             this._update_time_display();
 
@@ -273,10 +274,8 @@ const Timer = new Lang.Class({
     },
 
     _slider_released: function () {
-        if (!this.timer_duration)
-            this._off();
-        else
-            this._start();
+        if (this.timer_duration < 1) this._off();
+        else                         this._start();
     },
 
     _slider_changed: function (slider, value) {
@@ -322,26 +321,24 @@ const Timer = new Lang.Class({
     },
 
     _update_time_display: function () {
+        let time = Math.floor(this.timer_duration / 1000000);
+
         // If the seconds are not shown, we need to make the timer '1-indexed'
         // in respect to minutes. I.e., 00:00:34 becomes 00:01.
         if (this.settings.get_boolean('timer-show-seconds')) {
-            let time = this.timer_duration;
-
-            let hr  = Math.floor(time / 3600);
-            let min = Math.floor(time % 3600 / 60);
-            let sec = time % 60;
-
-            this.header.label.text = "%02d:%02d:%02d".format(hr, min, sec);
+            this.header.label.text = "%02d:%02d:%02d".format(
+                Math.floor(time / 3600),
+                Math.floor(time % 3600 / 60),
+                time % 60
+            );
         }
         else {
-            let time = this.timer_duration;
-
             if (time % 3600 !== 0) time += 60;
 
-            let hr  = Math.floor(time / 3600);
-            let min = Math.floor(time % 3600 / 60);
-
-            this.header.label.text = "%02d:%02d".format(hr, min);
+            this.header.label.text = "%02d:%02d".format(
+                Math.floor(time / 3600),
+                Math.floor(time % 3600 / 60)
+            );
         }
 
         if (this.panel_item.label.visible)

@@ -1164,7 +1164,7 @@ F3</property>
                                           <object class="GtkLabel">
                                             <property name="visible">True</property>
                                             <property name="can_focus">False</property>
-                                            <property name="label" translatable="yes">Show seconds</property>
+                                            <property name="label" translatable="yes">Format</property>
                                           </object>
                                           <packing>
                                             <property name="expand">False</property>
@@ -1173,9 +1173,15 @@ F3</property>
                                           </packing>
                                         </child>
                                         <child>
-                                          <object class="GtkSwitch" id="stopwatch-show-seconds-switch">
+                                          <object class="GtkComboBoxText" id="stopwatch-clock-format-combo">
                                             <property name="visible">True</property>
-                                            <property name="can_focus">True</property>
+                                            <property name="can_focus">False</property>
+                                            <property name="active">0</property>
+                                            <items>
+                                              <item translatable="yes">hours:min</item>
+                                              <item translatable="yes">hours:min:sec</item>
+                                              <item translatable="yes">hours:min:sec:milisec</item>
+                                            </items>
                                           </object>
                                           <packing>
                                             <property name="expand">False</property>

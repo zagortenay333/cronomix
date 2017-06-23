@@ -60,7 +60,8 @@ const Pomodoro = new Lang.Class({
         this.pomo_phase      = PomoState.STOPPED;
         this.tic_mainloop_id = null;
         this.timer_state     = false;
-        this.timer_duration  = 0;
+        this.timer_duration  = 0; // in microseconds
+        this.end_time        = 0; // used for computing elapsed time
         this.section_enabled = this.settings.get_boolean('pomodoro-enabled');
         this.separate_menu   = this.settings.get_boolean('pomodoro-separate-menu');
         this.cache_file      = null;
@@ -186,9 +187,9 @@ const Pomodoro = new Lang.Class({
             else
                 this.cache = {
                     pomo_counter    : 0,
-                    pomo_duration   : 1500,
-                    short_break     : 300,
-                    long_break      : 900,
+                    pomo_duration   : 150000000,
+                    short_break     : 300000000,
+                    long_break      : 900000000,
                     long_break_rate : 4,
                 };
         } catch (e) { logError(e); }
@@ -265,6 +266,7 @@ const Pomodoro = new Lang.Class({
     },
 
     _start: function () {
+        this.end_time = GLib.get_monotonic_time() + this.timer_duration;
         this.button_stop.grab_key_focus();
         this.timer_state = true;
         this.pomo_phase  = PomoState.POMO;
@@ -294,6 +296,7 @@ const Pomodoro = new Lang.Class({
     _start_new_pomo: function () {
         this.timer_state    = true;
         this.timer_duration = this.cache.pomo_duration;
+        this.end_time       = GLib.get_monotonic_time() + this.timer_duration;
         this.pomo_phase     = PomoState.POMO;
         this._toggle_buttons();
         this._panel_item_UI_update();
@@ -377,7 +380,7 @@ const Pomodoro = new Lang.Class({
             this._timer_expired();
         }
         else {
-            this.timer_duration -= 1;
+            this.timer_duration = this.end_time - GLib.get_monotonic_time();
             this._update_time_display();
         }
 
@@ -387,27 +390,25 @@ const Pomodoro = new Lang.Class({
     },
 
     _update_time_display: function () {
+        let time = Math.floor(this.timer_duration / 1000000);
+
         // If the seconds are not shown, we need to make the timer '1-indexed'
         // with respect to minutes. I.e., 00:00:34 becomes 00:01.
         if (this.settings.get_boolean('pomodoro-show-seconds')) {
-            let time = this.timer_duration;
-
-            let hr  = Math.floor(time / 3600);
-            let min = Math.floor(time % 3600 / 60);
-            let sec = time % 60;
-
-            this.header.label.text = "%02d:%02d:%02d".format(hr, min, sec);
+            this.header.label.text = "%02d:%02d:%02d".format(
+                Math.floor(time / 3600),
+                Math.floor(time % 3600 / 60),
+                time % 60
+            );
         }
         else {
-            let time = this.timer_duration;
-
             if (time !== 0 && time !== this.cache.pomo_duration)
                 time += 60;
 
-            let hr  = Math.floor(time / 3600);
-            let min = Math.floor(time % 3600 / 60);
-
-            this.header.label.text = "%02d:%02d".format(hr, min);
+            this.header.label.text = "%02d:%02d".format(
+                Math.floor(time / 3600),
+                Math.floor(time % 3600 / 60)
+            );
         }
 
         if (this.panel_item.label.visible)
@@ -442,10 +443,7 @@ const Pomodoro = new Lang.Class({
             params.soundFile = sound_file;
         }
 
-        let notif = new MessageTray.Notification(source,
-                                                 msg,
-                                                 this.cache.notif_msg,
-                                                 params);
+        let notif = new MessageTray.Notification(source, msg, '', params);
 
         notif.setUrgency(MessageTray.Urgency.CRITICAL);
 
@@ -560,7 +558,7 @@ const PomodoroSettings = new Lang.Class({
         this.pomo_dur_mm_picker = new NUM_PICKER.NumPicker(1, null);
         this.pomo_duration.add_actor(this.pomo_dur_mm_picker.actor);
 
-        this.pomo_dur_mm_picker._set_counter(Math.floor(pomo_cache.pomo_duration / 60));
+        this.pomo_dur_mm_picker._set_counter(Math.floor(pomo_cache.pomo_duration / 60000000));
 
 
         //
@@ -575,7 +573,7 @@ const PomodoroSettings = new Lang.Class({
         this.short_break_mm_picker = new NUM_PICKER.NumPicker(1, null);
         this.short_break.add_actor(this.short_break_mm_picker.actor);
 
-        this.short_break_mm_picker._set_counter(Math.floor(pomo_cache.short_break / 60));
+        this.short_break_mm_picker._set_counter(Math.floor(pomo_cache.short_break / 60000000));
 
 
         //
@@ -590,7 +588,7 @@ const PomodoroSettings = new Lang.Class({
         this.long_break_mm_picker = new NUM_PICKER.NumPicker(1, null);
         this.long_break.add_actor(this.long_break_mm_picker.actor);
 
-        this.long_break_mm_picker._set_counter(Math.floor(pomo_cache.long_break / 60));
+        this.long_break_mm_picker._set_counter(Math.floor(pomo_cache.long_break / 60000000));
 
 
         //
@@ -625,9 +623,9 @@ const PomodoroSettings = new Lang.Class({
         // listen
         //
         this.button_ok.connect('clicked', Lang.bind(this, function() {
-            pomo_cache.pomo_duration   = this.pomo_dur_mm_picker.counter * 60;
-            pomo_cache.short_break     = this.short_break_mm_picker.counter * 60;
-            pomo_cache.long_break      = this.long_break_mm_picker.counter * 60;
+            pomo_cache.pomo_duration   = this.pomo_dur_mm_picker.counter * 60000000;
+            pomo_cache.short_break     = this.short_break_mm_picker.counter * 60000000;
+            pomo_cache.long_break      = this.long_break_mm_picker.counter * 60000000;
             pomo_cache.long_break_rate = this.long_break_rate_picker.counter;
 
             this.emit('ok', this.clear_item_checkbox.actor.checked);

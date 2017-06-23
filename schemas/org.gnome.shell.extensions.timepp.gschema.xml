@@ -13,6 +13,12 @@
         <value value="2" nick="Icon and Text"/>
     </enum>
 
+    <enum id="org.gnome.shell.extensions.timepp.clock-format">
+        <value value="0" nick="h:m"/>
+        <value value="1" nick="h:m:s"/>
+        <value value="2" nick="h:m:s:ms"/>
+    </enum>
+
     <schema path="/org/gnome/shell/extensions/timepp/" id="org.gnome.shell.extensions.timepp">
         <!-- ======================================
         @@@  General
@@ -95,9 +101,9 @@
             <description>Show in separate menu</description>
         </key>
 
-        <key name="stopwatch-show-seconds" type="b">
-            <default>false</default>
-            <description>Show in separate menu</description>
+        <key name="stopwatch-clock-format" enum="org.gnome.shell.extensions.timepp.clock-format">
+            <default>"h:m:s"</default>
+            <description>Clock Format</description>
         </key>
 
         <key name="stopwatch-panel-mode" enum="org.gnome.shell.extensions.timepp.panel-mode">

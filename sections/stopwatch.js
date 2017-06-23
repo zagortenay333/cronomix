@@ -32,6 +32,13 @@ const StopwatchState = {
 };
 
 
+const ClockFormat = {
+    H_M      : 0,
+    H_M_S    : 1,
+    H_M_S_MS : 2,
+};
+
+
 // =====================================================================
 // @@@ Main
 //
@@ -47,10 +54,10 @@ const Stopwatch = new Lang.Class({
         this.ext_dir  = ext_dir;
         this.settings = settings;
 
-
         this.sigm = new SIG_MANAGER.SignalManager();
 
-
+        this.clock_format    = this.settings.get_enum('stopwatch-clock-format');
+        this.start_time      = 0;
         this.keybindings     = [];
         this.lap_count       = 0;
         this.section_enabled = this.settings.get_boolean('timer-enabled');
@@ -66,7 +73,18 @@ const Stopwatch = new Lang.Class({
         //
         this.panel_item = new PANEL_ITEM.PanelItem(ext.menu);
 
-        this.panel_item.set_label(this.settings.get_boolean('stopwatch-show-seconds') ? '00:00:00' : '00:00');
+        switch (this.clock_format) {
+            case ClockFormat.H_M:
+                this.panel_item.set_label('00:00');
+                break;
+            case ClockFormat.H_M_S:
+                this.panel_item.set_label('00:00:00');
+                break;
+            case ClockFormat.H_M_S_MS:
+                this.panel_item.set_label('00:00:00:0000');
+                break;
+        }
+
         this.panel_item.actor.add_style_class_name('stopwatch-panel-item');
         this._update_panel_icon_name();
         this._toggle_panel_mode();
@@ -140,8 +158,9 @@ const Stopwatch = new Lang.Class({
         this.sigm.connect(this.settings, 'changed::stopwatch-separate-menu', () => {
             this.separate_menu = this.settings.get_boolean('stopwatch-separate-menu');
         });
-        this.sigm.connect(this.settings, 'changed::stopwatch-show-seconds', () => {
-            this._update_time_display();
+        this.sigm.connect(this.settings, 'changed::stopwatch-clock-format', () => {
+            this.clock_format = this.settings.get_enum('stopwatch-clock-format');
+            this.panel_item.set_label(this._time_format_str());
         });
         this.sigm.connect(this.settings, 'changed::stopwatch-panel-mode', () => {
             this._toggle_panel_mode();
@@ -179,7 +198,7 @@ const Stopwatch = new Lang.Class({
             else {
                 this.cache = {
                     state : StopwatchState.RESET,
-                    time  : 0,
+                    time  : 0, // in microseconds
                     laps  : [],
                 };
             }
@@ -212,6 +231,7 @@ const Stopwatch = new Lang.Class({
     },
 
     _start: function (actor, event) {
+        this.start_time = GLib.get_monotonic_time() - this.cache.time;
         this.button_pause.grab_key_focus();
         this.cache.state = StopwatchState.RUNNING;
         this._store_cache();
@@ -256,13 +276,7 @@ const Stopwatch = new Lang.Class({
         this.cache.time = 0;
         this._store_cache();
         this.lap_count = 0;
-        if (this.panel_item.label.visible) {
-            if (this.settings.get_boolean('stopwatch-show-seconds'))
-                this.panel_item.set_label('00:00:00');
-            else
-                this.panel_item.set_label('00:00');
-        }
-
+        this._update_time_display();
         this._toggle_buttons();
         this._panel_item_UI_update();
         this._destroy_laps();
@@ -276,18 +290,43 @@ const Stopwatch = new Lang.Class({
             this._start();
     },
 
+    _tic: function () {
+        this.cache.time = GLib.get_monotonic_time() - this.start_time;
+        this._update_time_display();
+
+        if (this.clock_format === ClockFormat.H_M_S_MS) {
+            this.tic_mainloop_id = Mainloop.timeout_add(1, () => {
+                this._tic();
+            });
+        }
+        else {
+            this.tic_mainloop_id = Mainloop.timeout_add_seconds(1, () => {
+                this._tic();
+            });
+        }
+    },
+
     _update_time_display: function () {
-        let hr  = Math.floor(this.cache.time / 3600);
-        let min = Math.floor(this.cache.time % 3600 / 60);
-        let sec = (this.cache.time % 60);
+        this.time_display.label.text = this._time_format_str();
+        this.panel_item.set_label(this.time_display.label.text);
+    },
 
-        if (this.settings.get_boolean('stopwatch-show-seconds'))
-            this.time_display.label.text = "%02d:%02d:%02d".format(hr, min, sec);
-        else
-            this.time_display.label.text = "%02d:%02d".format(hr, min);
+    _time_format_str: function () {
+        let t  = Math.floor(this.cache.time / 1000);
+        let ms = t % 1000;
+        t      = Math.floor(t / 1000);
+        let h  = Math.floor(t / 3600);
+        t      = t % 3600;
+        let m  = Math.floor(t / 60);
+        let s  = t % 60;
 
-        if (this.panel_item.label.visible) {
-            this.panel_item.set_label(this.time_display.label.text);
+        switch (this.clock_format) {
+            case ClockFormat.H_M:
+                return "%02d:%02d".format(h, m);
+            case ClockFormat.H_M_S:
+                return "%02d:%02d:%02d".format(h, m, s);
+            case ClockFormat.H_M_S_MS:
+                return "%02d:%02d:%02d:%04d".format(h, m, s, ms);
         }
     },
 
@@ -310,19 +349,13 @@ const Stopwatch = new Lang.Class({
         lap.add_actor(lap_count);
 
         if (typeof(lap_time) !== 'string') {
-            let hr  = Math.floor(this.cache.time / 3600);
-            let min = Math.floor(this.cache.time % 3600 / 60);
-            let sec = this.cache.time % 60;
-
-            let str =  "%02d:%02d:%02d".format(hr, min, sec);
-
+            let str  = this._time_format_str();
             lap_time = new St.Label({text: str, style_class: 'laps-item-time'});
-
             this.cache.laps.push(str);
             this._store_cache();
         }
         else {
-            lap_time = new St.Label({text: String(lap_time), style_class: 'laps-item-time'});
+            lap_time = new St.Label({text: '' + lap_time, style_class: 'laps-item-time'});
         }
 
         lap.add_actor(lap_time);
@@ -360,15 +393,6 @@ const Stopwatch = new Lang.Class({
                 this.button_start.add_style_pseudo_class('last-child');
                 break;
         }
-    },
-
-    _tic: function () {
-        this.cache.time++;
-        this._update_time_display();
-
-        this.tic_mainloop_id = Mainloop.timeout_add_seconds(1, () => {
-            this._tic();
-        });
     },
 
     _periodic_time_backup: function () {

@@ -387,11 +387,12 @@ const Settings = new Lang.Class({
             'active',
             Gio.SettingsBindFlags.DEFAULT);
 
-        this.settings.bind(
-            'stopwatch-show-seconds',
-            this.builder.get_object('stopwatch-show-seconds-switch'),
-            'active',
-            Gio.SettingsBindFlags.DEFAULT);
+        this.builder.get_object('stopwatch-clock-format-combo')
+            .set_active(this.settings.get_enum('stopwatch-clock-format'));
+        this.builder.get_object('stopwatch-clock-format-combo').connect('changed',
+            (widget) => {
+                this.settings.set_enum('stopwatch-clock-format', widget.get_active());
+            });
 
         this.builder.get_object('stopwatch-panel-mode-combo')
             .set_active(this.settings.get_enum('stopwatch-panel-mode'));
