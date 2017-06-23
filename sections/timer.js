@@ -458,6 +458,8 @@ const Timer = new Lang.Class({
     },
 
     disable_section: function () {
+        if (! this.section_enabled) return;
+
         this._stop();
         this._store_cache();
         this.sigm.disconnect_all();

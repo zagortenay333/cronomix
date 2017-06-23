@@ -412,6 +412,8 @@ const Alarms = new Lang.Class({
     },
 
     disable_section: function () {
+        if (! this.section_enabled) return;
+
         for (let i = 0, len = this.cache.alarms.length; i < len; i++) {
             let it = this.cache.alarms[i];
 

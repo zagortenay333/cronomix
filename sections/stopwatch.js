@@ -60,8 +60,8 @@ const Stopwatch = new Lang.Class({
         this.start_time      = 0;
         this.keybindings     = [];
         this.lap_count       = 0;
-        this.section_enabled = this.settings.get_boolean('timer-enabled');
-        this.separate_menu   = this.settings.get_boolean('timer-separate-menu');
+        this.section_enabled = this.settings.get_boolean('stopwatch-enabled');
+        this.separate_menu   = this.settings.get_boolean('stopwatch-separate-menu');
         this.cache_file      = null;
         this.cache           = null;
         this.time_backup_mainloop_id = null;
@@ -454,6 +454,8 @@ const Stopwatch = new Lang.Class({
     },
 
     disable_section: function () {
+        if (! this.section_enabled) return;
+
         if (this.time_backup_mainloop_id) {
             Mainloop.source_remove(this.time_backup_mainloop_id);
             this.time_backup_mainloop_id = null;

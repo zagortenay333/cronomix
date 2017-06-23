@@ -500,6 +500,8 @@ const Pomodoro = new Lang.Class({
     },
 
     disable_section: function () {
+        if (! this.section_enabled) return;
+
         if (this.tic_mainloop_id) {
             Mainloop.source_remove(this.tic_mainloop_id);
             this.tic_mainloop_id = null;
