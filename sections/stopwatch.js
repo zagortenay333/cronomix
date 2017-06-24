@@ -168,9 +168,8 @@ const Stopwatch = new Lang.Class({
         this.sigm.connect(this.settings, 'changed::stopwatch-keybinding-open', () => {
             this._toggle_keybindings();
         });
-        this.sigm.connect(this.panel_item, 'click', Lang.bind(this, function () {
-            this.emit('toggle-menu');
-        }));
+        this.sigm.connect(this.panel_item, 'left-click', () => { this.ext.toggle_menu(this); });
+        this.sigm.connect(this.panel_item, 'right-click', () => { this.ext.toggle_context_menu(this); });
         this.sigm.connect(this.panel_item, 'middle-click', Lang.bind(this, this._stopwatch_toggle));
         this.sigm.connect(this.button_start, 'clicked', Lang.bind(this, this._start));
         this.sigm.connect(this.button_reset, 'clicked', Lang.bind(this, this._reset));

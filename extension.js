@@ -18,11 +18,12 @@ const CONVENIENCE   = ME.imports.lib.convenience;
 const PANEL_ITEM    = ME.imports.lib.panel_item;
 const ICON_FROM_URI = ME.imports.lib.icon_from_uri;
 
-const Timer     = ME.imports.sections.timer;
-const Stopwatch = ME.imports.sections.stopwatch;
-const Pomodoro  = ME.imports.sections.pomodoro;
-const Alarms    = ME.imports.sections.alarms;
-const Todo      = ME.imports.sections.todo;
+const ContextMenu = ME.imports.sections.context_menu;
+const Timer       = ME.imports.sections.timer;
+const Stopwatch   = ME.imports.sections.stopwatch;
+const Pomodoro    = ME.imports.sections.pomodoro;
+const Alarms      = ME.imports.sections.alarms;
+const Todo        = ME.imports.sections.todo;
 
 
 const Gettext = imports.gettext;
@@ -108,6 +109,13 @@ const Timepp = new Lang.Class({
 
 
         //
+        // context menu
+        //
+        this.context_menu = new ContextMenu.ContextMenu(this);
+        this.content_box.add_actor(this.context_menu.actor);
+
+
+        //
         // init sections
         //
         this.timer_section = new Timer.Timer(this, ME.path, this.settings);
@@ -165,26 +173,11 @@ const Timepp = new Lang.Class({
         this.settings.connect('changed::unicon-mode', () => {
             this._toggle_unicon_mode();
         });
-        this.unicon_panel_item.connect('click', () => {
+        this.unicon_panel_item.connect('left-click', () => {
             this.toggle_menu();
-        });
-        this.timer_section.connect('toggle-menu', () => {
-            this.toggle_menu(this.timer_section);
-        });
-        this.stopwatch_section.connect('toggle-menu', () => {
-            this.toggle_menu(this.stopwatch_section);
-        });
-        this.pomodoro_section.connect('toggle-menu', () => {
-            this.toggle_menu(this.pomodoro_section);
         });
         this.pomodoro_section.connect('stop-time-tracking', () => {
             this.emit('stop-time-tracking');
-        });
-        this.alarms_section.connect('toggle-menu', () => {
-            this.toggle_menu(this.alarms_section);
-        });
-        this.todo_section.connect('toggle-menu', () => {
-            this.toggle_menu(this.todo_section);
         });
     },
 
@@ -203,6 +196,8 @@ const Timepp = new Lang.Class({
     //     - If @section is not a sep menu, we show all non-separate menus that
     //       are enabled.
     open_menu: function (section) {
+        this.context_menu.actor.hide();
+
         if (this.unicon_panel_item.actor.visible) {
             this.menu.sourceActor = this.unicon_panel_item.actor;
 
@@ -226,7 +221,7 @@ const Timepp = new Lang.Class({
 
                 if (name !== section.__name__) {
                     section.actor.hide();
-                    section.panel_item.menu_toggled(false)
+                    section.panel_item.menu_toggled(false);
                 }
             }
         }
@@ -238,15 +233,37 @@ const Timepp = new Lang.Class({
 
                 if ( section.separate_menu || (! section.section_enabled) ) {
                     section.actor.hide();
-                    section.panel_item.menu_toggled(false)
+                    section.panel_item.menu_toggled(false);
                 }
                 else {
                     section.actor.show();
-                    section.panel_item.menu_toggled(true)
+                    section.panel_item.menu_toggled(true);
                 }
             }
         }
 
+        this._update_separators();
+        this.menu.open();
+    },
+
+    toggle_context_menu: function (section) {
+        if (this.menu.isOpen && this.context_menu.actor.visible) {
+            this.menu.close();
+
+            for (let i = 0, len = this.section_register.length; i < len; i++) {
+                this.section_register[i].panel_item.menu_toggled(false);
+            }
+
+            return;
+        }
+
+        for (let i = 0, len = this.section_register.length; i < len; i++) {
+            this.section_register[i].actor.hide();
+            this.section_register[i].panel_item.menu_toggled(true);
+        }
+
+        this.context_menu.actor.show();
+        this.menu.sourceActor = section.panel_item.actor;
         this._update_separators();
         this.menu.open();
     },

@@ -416,7 +416,8 @@ const Todo = new Lang.Class({
         this.sigm.connect(this.settings, 'changed::todo-keybinding-open-to-search', () => {
             this._toggle_keybindings();
         });
-        this.sigm.connect(this.panel_item, 'click', () => { this.emit('toggle-menu'); });
+        this.sigm.connect(this.panel_item, 'left-click', () => { this.ext.toggle_menu(this); });
+        this.sigm.connect(this.panel_item, 'right-click', () => { this.ext.toggle_context_menu(this); });
         this.sigm.connect(this.add_task_button, 'clicked', () => { this.show_view__task_editor(); });
         this.sigm.connect(this.filter_button, 'clicked', () => { this.show_view__filters(); });
         this.sigm.connect(this.sort_button, 'clicked', () => { this.show_view__sort(); });

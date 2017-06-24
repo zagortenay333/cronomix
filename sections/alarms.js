@@ -126,8 +126,11 @@ const Alarms = new Lang.Class({
         this.sigm.connect(this.settings, 'changed::alarms-keybinding-open', () => {
             this._toggle_keybindings();
         });
-        this.sigm.connect(this.panel_item, 'click', () => {
-            this.emit('toggle-menu');
+        this.sigm.connect(this.panel_item, 'left-click', () => {
+            this.ext.toggle_menu(this);
+        });
+        this.sigm.connect(this.panel_item, 'right-click', () => {
+            this.ext.toggle_context_menu(this);
         });
         this.sigm.connect(this.add_alarm_item, 'activate', () => {
             this.alarm_editor();
