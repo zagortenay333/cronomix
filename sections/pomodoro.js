@@ -187,7 +187,7 @@ const Pomodoro = new Lang.Class({
             else
                 this.cache = {
                     pomo_counter    : 0,
-                    pomo_duration   : 150000000,
+                    pomo_duration   : 1500000000, // microseconds
                     short_break     : 300000000,
                     long_break      : 900000000,
                     long_break_rate : 4,
