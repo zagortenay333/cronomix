@@ -235,8 +235,8 @@ const Timer = new Lang.Class({
     },
 
     _expired: function () {
-        this._send_notif();
         this._off();
+        this._send_notif();
     },
 
     _timer_toggle: function () {
@@ -258,8 +258,10 @@ const Timer = new Lang.Class({
     },
 
     _tic: function () {
-        if (this.timer_duration < 1) {
+        if (this.timer_duration < 1000000) {
+            this.tic_mainloop_id = null;
             this._expired();
+            return;
         }
         else {
             this.timer_duration = this.end_time - GLib.get_monotonic_time();
@@ -568,7 +570,7 @@ const TimerSettings = new Lang.Class({
         let min = this.min.counter * 60;
         let sec = this.sec ? this.sec.counter : 0;
 
-        return hr + min + sec;
+        return (hr + min + sec) * 1000000;
     },
 });
 Signals.addSignalMethods(TimerSettings.prototype);

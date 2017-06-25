@@ -315,6 +315,7 @@ const Pomodoro = new Lang.Class({
             this.timer_duration = this.cache.short_break;
         }
 
+        this.end_time = GLib.get_monotonic_time() + this.timer_duration;
         this._maybe_exec_custom_script();
         this._maybe_stop_tracking();
         this.timer_state = true;
@@ -375,13 +376,14 @@ const Pomodoro = new Lang.Class({
     },
 
     _tic: function () {
-        if (this.timer_duration < 1) {
+        if (this.timer_duration < 1000000) {
+            this.tic_mainloop_id = null;
             this._timer_expired();
+            return;
         }
-        else {
-            this.timer_duration = this.end_time - GLib.get_monotonic_time();
-            this._update_time_display();
-        }
+
+        this.timer_duration = this.end_time - GLib.get_monotonic_time();
+        this._update_time_display();
 
         this.tic_mainloop_id = Mainloop.timeout_add_seconds(1, () => {
             this._tic();
@@ -444,7 +446,8 @@ const Pomodoro = new Lang.Class({
 
         let notif = new MessageTray.Notification(source, msg, '', params);
 
-        notif.setUrgency(MessageTray.Urgency.CRITICAL);
+        notif.setUrgency(MessageTray.Urgency.HIGH);
+        notif.setTransient(true);
 
         source.notify(notif);
     },
