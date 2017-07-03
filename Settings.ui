@@ -945,6 +945,55 @@
                                     </child>
                                   </object>
                                 </child>
+                                <child>
+                                  <object class="GtkListBoxRow">
+                                    <property name="width_request">100</property>
+                                    <property name="height_request">40</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="activatable">False</property>
+                                    <property name="selectable">False</property>
+                                    <child>
+                                      <object class="GtkBox">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">False</property>
+                                        <property name="margin_left">10</property>
+                                        <property name="margin_right">10</property>
+                                        <property name="margin_top">10</property>
+                                        <property name="margin_bottom">10</property>
+                                        <child>
+                                          <object class="GtkLabel">
+                                            <property name="visible">True</property>
+                                            <property name="can_focus">False</property>
+                                            <property name="label" translatable="yes">Notification style</property>
+                                          </object>
+                                          <packing>
+                                            <property name="expand">False</property>
+                                            <property name="fill">True</property>
+                                            <property name="position">0</property>
+                                          </packing>
+                                        </child>
+                                        <child>
+                                          <object class="GtkComboBoxText" id="timer-notif-style-combo">
+                                            <property name="visible">True</property>
+                                            <property name="can_focus">False</property>
+                                            <property name="active">0</property>
+                                            <items>
+                                              <item translatable="yes">Standard</item>
+                                              <item translatable="yes">Fullscreen</item>
+                                            </items>
+                                          </object>
+                                          <packing>
+                                            <property name="expand">False</property>
+                                            <property name="fill">True</property>
+                                            <property name="pack_type">end</property>
+                                            <property name="position">1</property>
+                                          </packing>
+                                        </child>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
                               </object>
                             </child>
                             <child type="label_item">
@@ -1014,6 +1063,56 @@
                                         </child>
                                         <child>
                                           <object class="GtkEntry" id="timer-keybinding-open">
+                                            <property name="visible">True</property>
+                                            <property name="can_focus">True</property>
+                                            <property name="tooltip_text" translatable="yes">Examples:
+&lt;super&gt;&lt;ctrl&gt;&lt;alt&gt;&lt;shift&gt;t
+&lt;shift&gt;super
+F3</property>
+                                            <property name="truncate_multiline">True</property>
+                                            <property name="placeholder_text" translatable="yes">not set</property>
+                                          </object>
+                                          <packing>
+                                            <property name="expand">False</property>
+                                            <property name="fill">True</property>
+                                            <property name="pack_type">end</property>
+                                            <property name="position">1</property>
+                                          </packing>
+                                        </child>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkListBoxRow">
+                                    <property name="width_request">100</property>
+                                    <property name="height_request">40</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="activatable">False</property>
+                                    <property name="selectable">False</property>
+                                    <child>
+                                      <object class="GtkBox">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">False</property>
+                                        <property name="margin_left">10</property>
+                                        <property name="margin_right">10</property>
+                                        <property name="margin_top">10</property>
+                                        <property name="margin_bottom">10</property>
+                                        <child>
+                                          <object class="GtkLabel">
+                                            <property name="visible">True</property>
+                                            <property name="can_focus">False</property>
+                                            <property name="label" translatable="yes">Open in fullscreen</property>
+                                          </object>
+                                          <packing>
+                                            <property name="expand">False</property>
+                                            <property name="fill">True</property>
+                                            <property name="position">0</property>
+                                          </packing>
+                                        </child>
+                                        <child>
+                                          <object class="GtkEntry" id="timer-keybinding-open-fullscreen">
                                             <property name="visible">True</property>
                                             <property name="can_focus">True</property>
                                             <property name="tooltip_text" translatable="yes">Examples:
@@ -1333,6 +1432,56 @@ F3</property>
                                     </child>
                                   </object>
                                 </child>
+                                <child>
+                                  <object class="GtkListBoxRow">
+                                    <property name="width_request">100</property>
+                                    <property name="height_request">40</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="activatable">False</property>
+                                    <property name="selectable">False</property>
+                                    <child>
+                                      <object class="GtkBox">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">False</property>
+                                        <property name="margin_left">10</property>
+                                        <property name="margin_right">10</property>
+                                        <property name="margin_top">10</property>
+                                        <property name="margin_bottom">10</property>
+                                        <child>
+                                          <object class="GtkLabel">
+                                            <property name="visible">True</property>
+                                            <property name="can_focus">False</property>
+                                            <property name="label" translatable="yes">Open in fullscreen</property>
+                                          </object>
+                                          <packing>
+                                            <property name="expand">False</property>
+                                            <property name="fill">True</property>
+                                            <property name="position">0</property>
+                                          </packing>
+                                        </child>
+                                        <child>
+                                          <object class="GtkEntry" id="stopwatch-keybinding-open-fullscreen">
+                                            <property name="visible">True</property>
+                                            <property name="can_focus">True</property>
+                                            <property name="tooltip_text" translatable="yes">Examples:
+&lt;super&gt;&lt;ctrl&gt;&lt;alt&gt;&lt;shift&gt;t
+&lt;shift&gt;super
+F3</property>
+                                            <property name="truncate_multiline">True</property>
+                                            <property name="placeholder_text" translatable="yes">not set</property>
+                                          </object>
+                                          <packing>
+                                            <property name="expand">False</property>
+                                            <property name="fill">True</property>
+                                            <property name="pack_type">end</property>
+                                            <property name="position">1</property>
+                                          </packing>
+                                        </child>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
                               </object>
                             </child>
                             <child type="label_item">
@@ -1620,6 +1769,55 @@ F3</property>
                                           <object class="GtkLabel">
                                             <property name="visible">True</property>
                                             <property name="can_focus">False</property>
+                                            <property name="label" translatable="yes">Notification style</property>
+                                          </object>
+                                          <packing>
+                                            <property name="expand">False</property>
+                                            <property name="fill">True</property>
+                                            <property name="position">0</property>
+                                          </packing>
+                                        </child>
+                                        <child>
+                                          <object class="GtkComboBoxText" id="pomodoro-notif-style-combo">
+                                            <property name="visible">True</property>
+                                            <property name="can_focus">False</property>
+                                            <property name="active">0</property>
+                                            <items>
+                                              <item translatable="yes">Standard</item>
+                                              <item translatable="yes">Fullscreen</item>
+                                            </items>
+                                          </object>
+                                          <packing>
+                                            <property name="expand">False</property>
+                                            <property name="fill">True</property>
+                                            <property name="pack_type">end</property>
+                                            <property name="position">1</property>
+                                          </packing>
+                                        </child>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkListBoxRow">
+                                    <property name="width_request">100</property>
+                                    <property name="height_request">40</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="activatable">False</property>
+                                    <property name="selectable">False</property>
+                                    <child>
+                                      <object class="GtkBox">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">False</property>
+                                        <property name="margin_left">10</property>
+                                        <property name="margin_right">10</property>
+                                        <property name="margin_top">10</property>
+                                        <property name="margin_bottom">10</property>
+                                        <child>
+                                          <object class="GtkLabel">
+                                            <property name="visible">True</property>
+                                            <property name="can_focus">False</property>
                                             <property name="label" translatable="yes">Stop time tracking when pomo is paused</property>
                                           </object>
                                           <packing>
@@ -1771,6 +1969,56 @@ F3</property>
                                         </child>
                                         <child>
                                           <object class="GtkEntry" id="pomodoro-keybinding-open">
+                                            <property name="visible">True</property>
+                                            <property name="can_focus">True</property>
+                                            <property name="tooltip_text" translatable="yes">Examples:
+&lt;super&gt;&lt;ctrl&gt;&lt;alt&gt;&lt;shift&gt;t
+&lt;shift&gt;super
+F3</property>
+                                            <property name="truncate_multiline">True</property>
+                                            <property name="placeholder_text" translatable="yes">not set</property>
+                                          </object>
+                                          <packing>
+                                            <property name="expand">False</property>
+                                            <property name="fill">True</property>
+                                            <property name="pack_type">end</property>
+                                            <property name="position">1</property>
+                                          </packing>
+                                        </child>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkListBoxRow">
+                                    <property name="width_request">100</property>
+                                    <property name="height_request">40</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="activatable">False</property>
+                                    <property name="selectable">False</property>
+                                    <child>
+                                      <object class="GtkBox">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">False</property>
+                                        <property name="margin_left">10</property>
+                                        <property name="margin_right">10</property>
+                                        <property name="margin_top">10</property>
+                                        <property name="margin_bottom">10</property>
+                                        <child>
+                                          <object class="GtkLabel">
+                                            <property name="visible">True</property>
+                                            <property name="can_focus">False</property>
+                                            <property name="label" translatable="yes">Open in fullscreen</property>
+                                          </object>
+                                          <packing>
+                                            <property name="expand">False</property>
+                                            <property name="fill">True</property>
+                                            <property name="position">0</property>
+                                          </packing>
+                                        </child>
+                                        <child>
+                                          <object class="GtkEntry" id="pomodoro-keybinding-open-fullscreen">
                                             <property name="visible">True</property>
                                             <property name="can_focus">True</property>
                                             <property name="tooltip_text" translatable="yes">Examples:
@@ -2005,6 +2253,55 @@ F3</property>
                                           <packing>
                                             <property name="expand">False</property>
                                             <property name="fill">False</property>
+                                            <property name="pack_type">end</property>
+                                            <property name="position">1</property>
+                                          </packing>
+                                        </child>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkListBoxRow">
+                                    <property name="width_request">100</property>
+                                    <property name="height_request">40</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="activatable">False</property>
+                                    <property name="selectable">False</property>
+                                    <child>
+                                      <object class="GtkBox">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">False</property>
+                                        <property name="margin_left">10</property>
+                                        <property name="margin_right">10</property>
+                                        <property name="margin_top">10</property>
+                                        <property name="margin_bottom">10</property>
+                                        <child>
+                                          <object class="GtkLabel">
+                                            <property name="visible">True</property>
+                                            <property name="can_focus">False</property>
+                                            <property name="label" translatable="yes">Notification style</property>
+                                          </object>
+                                          <packing>
+                                            <property name="expand">False</property>
+                                            <property name="fill">True</property>
+                                            <property name="position">0</property>
+                                          </packing>
+                                        </child>
+                                        <child>
+                                          <object class="GtkComboBoxText" id="alarms-notif-style-combo">
+                                            <property name="visible">True</property>
+                                            <property name="can_focus">False</property>
+                                            <property name="active">0</property>
+                                            <items>
+                                              <item translatable="yes">Standard</item>
+                                              <item translatable="yes">Fullscreen</item>
+                                            </items>
+                                          </object>
+                                          <packing>
+                                            <property name="expand">False</property>
+                                            <property name="fill">True</property>
                                             <property name="pack_type">end</property>
                                             <property name="position">1</property>
                                           </packing>

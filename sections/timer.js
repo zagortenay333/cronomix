@@ -19,6 +19,7 @@ const ExtensionUtils = imports.misc.extensionUtils;
 const ME = ExtensionUtils.getCurrentExtension();
 
 
+const FULLSCREEN    = ME.imports.lib.fullscreen;
 const SIG_MANAGER   = ME.imports.lib.signal_manager;
 const PANEL_ITEM    = ME.imports.lib.panel_item;
 const ICON_FROM_URI = ME.imports.lib.icon_from_uri;
@@ -28,7 +29,8 @@ const MULTIL_ENTRY  = ME.imports.lib.multiline_entry;
 
 const CACHE_FILE = GLib.get_home_dir() + '/.cache/timepp_gnome_shell_extension/timepp_timer.json';
 const TIMER_ICON         = '/img/timer-symbolic.svg';
-const TIMER_MAX_DURATION = 86400000000; // 24 hours in miliseconds
+const TIMER_MAX_DURATION = 86400000000; // 24 hours in microseconds
+const TIMER_EXPIRED_MSG  = _('Timer Expired!');
 
 
 const TimerState = {
@@ -37,12 +39,17 @@ const TimerState = {
     OFF     : 'OFF',
 };
 
+const NotifStyle = {
+    STANDARD   : 0,
+    FULLSCREEN : 1,
+};
+
 
 // =====================================================================
 // @@@ Main
 //
 // @ext      : obj    (main extension object)
-// @ext_dir  : string (extenstion dir path)
+// @ext_dir  : string (extension dir path)
 // @settings : obj    (extension settings)
 // =====================================================================
 const Timer = new Lang.Class({
@@ -55,15 +62,21 @@ const Timer = new Lang.Class({
 
         this.sigm = new SIG_MANAGER.SignalManager();
 
-        this.keybindings     = [];
+        this.section_enabled = this.settings.get_boolean('timer-enabled');
+        this.separate_menu   = this.settings.get_boolean('timer-separate-menu');
         this.timer_state     = TimerState.OFF;
         this.timer_duration  = 0; // in microseconds
         this.end_time        = 0; // used for computing elapsed time
+        this.keybindings     = [];
         this.tic_mainloop_id = null;
-        this.section_enabled = this.settings.get_boolean('timer-enabled');
-        this.separate_menu   = this.settings.get_boolean('timer-separate-menu');
         this.cache_file      = null;
         this.cache           = null;
+
+        this.fullscreen = new TimerFullscreen(
+            this.ext, this, this.settings.get_int('timer-fullscreen-monitor-pos'));
+
+        this.fullscreen.set_banner_text(
+            this.settings.get_boolean('timer-show-seconds') ? '00:00:00' : '00:00');
 
 
         //
@@ -90,23 +103,27 @@ const Timer = new Lang.Class({
         //
         this.header = new PopupMenu.PopupMenuItem(_('Timer'), { hover: false, activate: false, style_class: 'header' });
         this.header.actor.can_focus = false;
+        this.header.label.add_style_class_name('clock');
         this.actor.add_actor(this.header.actor);
 
         this.option_box = new St.BoxLayout({ y_align: Clutter.ActorAlign.CENTER, x_align: Clutter.ActorAlign.END, style_class: 'option-box' });
         this.header.actor.add(this.option_box, {expand: true});
 
         this.toggle = new PopupMenu.Switch('');
-        this.toggle_bin = new St.Button({ y_align: St.Align.MIDDLE });
+        this.toggle_bin = new St.Button({ visible: false, can_focus: true, y_align: St.Align.MIDDLE });
         this.toggle_bin.add_actor(this.toggle.actor);
         this.option_box.add(this.toggle_bin);
 
-        this.toggle.actor.can_focus = false;
-        this.toggle_bin.hide();
+        this.fullscreen_bin  = new St.Button({ can_focus: true, y_align: St.Align.MIDDLE, x_align: St.Align.END, style_class: 'fullscreen-icon' });
+        this.option_box.add(this.fullscreen_bin);
+        this.fullscreen_icon = new St.Icon({ icon_name: 'view-fullscreen-symbolic' });
+        this.fullscreen_bin.add_actor(this.fullscreen_icon);
 
         this.settings_icon = new St.Icon({ icon_name: 'open-menu-symbolic' });
         this.settings_bin  = new St.Button({ can_focus: true, y_align: St.Align.MIDDLE, x_align: St.Align.END, style_class: 'settings-icon' });
         this.settings_bin.add_actor(this.settings_icon);
         this.option_box.add(this.settings_bin);
+
 
 
         //
@@ -134,6 +151,9 @@ const Timer = new Lang.Class({
             this._toggle_section();
         }); // don't put this signal into the signal manager
 
+        this.sigm.connect(this.fullscreen, 'monitor-changed', () => {
+            this.settings.set_int('timer-fullscreen-monitor-pos', this.fullscreen.monitor);
+        });
         this.sigm.connect(this.settings, 'changed::timer-separate-menu', () => {
             this.separate_menu = this.settings.get_boolean('timer-separate-menu');
         });
@@ -148,17 +168,15 @@ const Timer = new Lang.Class({
         });
         this.sigm.connect(this.panel_item, 'left-click', () => { this.ext.toggle_menu(this); });
         this.sigm.connect(this.panel_item, 'right-click', () => { this.ext.toggle_context_menu(this); });
-        this.sigm.connect(this.panel_item, 'middle-click', Lang.bind(this, this._timer_toggle));
-        this.sigm.connect(this.toggle_bin, 'clicked', Lang.bind(this, this._timer_toggle));
+        this.sigm.connect(this.panel_item, 'middle-click', Lang.bind(this, this.toggle_timer));
+        this.sigm.connect(this.toggle_bin, 'clicked', Lang.bind(this, this.toggle_timer));
+        this.sigm.connect(this.fullscreen_bin, 'clicked', Lang.bind(this, this._show_fullscreen));
         this.sigm.connect(this.settings_bin, 'clicked', Lang.bind(this, this._show_settings));
-        this.sigm.connect(this.slider, 'value-changed', Lang.bind(this, this._slider_changed));
-        this.sigm.connect(this.slider, 'drag-end', Lang.bind(this, this._slider_released));
-        this.sigm.connect(this.slider.actor, 'scroll-event', Lang.bind(this, this._slider_released));
+        this.sigm.connect(this.slider, 'value-changed', Lang.bind(this, this.slider_changed));
+        this.sigm.connect(this.slider, 'drag-end', Lang.bind(this, this.slider_released));
+        this.sigm.connect(this.slider.actor, 'scroll-event', Lang.bind(this, this.slider_released));
         this.sigm.connect(this.slider_item.actor, 'button-press-event', Lang.bind(this, function(actor, event) {
-            return this.slider.startDragging(event);
-        }));
-        this.sigm.connect(this.slider_item.actor, 'key-press-event', Lang.bind(this, function(actor, event) {
-            return this.slider.onKeyPressEvent(actor, event);
+            this.slider.startDragging(event);
         }));
 
 
@@ -177,9 +195,14 @@ const Timer = new Lang.Class({
             else {
                 this.cache = {
                     notif_msg: '',
+                    last_manually_set_time: 30000000,
                 };
             }
         } catch (e) { logError(e); }
+
+        if (! this.fullscreen)
+            this.fullscreen = new TimerFullscreen(
+                this.ext, this, this.settings.get_int('timer-fullscreen-monitor-pos'));
 
         this._toggle_keybindings();
     },
@@ -192,133 +215,86 @@ const Timer = new Lang.Class({
             null, false, Gio.FileCreateFlags.REPLACE_DESTINATION, null);
     },
 
-    _start: function () {
-        this.end_time = GLib.get_monotonic_time() + this.timer_duration;
+    toggle_timer: function () {
+        if (this.timer_state === TimerState.STOPPED)
+            this.start_timer();
+        else if (this.timer_state === TimerState.RUNNING)
+            this.stop_timer();
+        else
+            return;
+    },
 
+    start_timer: function (time) {
         if (this.tic_mainloop_id) {
             Mainloop.source_remove(this.tic_mainloop_id);
             this.tic_mainloop_id = null;
         }
+
+        this.timer_duration = time || this.timer_duration;
+        this.end_time       = GLib.get_monotonic_time() + this.timer_duration;
 
         this.timer_state = TimerState.RUNNING;
+
+        this._update_time_display();
+        this._tic();
+
+        this.fullscreen.on_timer_started();
         this.toggle.setToggleState('checked');
         this.toggle_bin.show();
-        this.toggle.actor.reactive  = true;
-        this.toggle.actor.can_focus = true;
-        this._tic();
-        this._panel_item_UI_update();
+        this.panel_item.actor.add_style_class_name('on');
     },
 
-    _stop: function () {
+    stop_timer: function () {
         if (this.tic_mainloop_id) {
             Mainloop.source_remove(this.tic_mainloop_id);
             this.tic_mainloop_id = null;
         }
 
+        this.fullscreen.on_timer_stopped();
         this.timer_state = TimerState.STOPPED;
         this.toggle.setToggleState('');
-        this._panel_item_UI_update();
+        this.panel_item.actor.remove_style_class_name('on');
     },
 
-    _off: function () {
+    off_timer: function () {
         if (this.tic_mainloop_id) {
             Mainloop.source_remove(this.tic_mainloop_id);
             this.tic_mainloop_id = null;
         }
 
+        this.fullscreen.on_timer_off();
         this.timer_state = TimerState.OFF;
         this.header.label.text = _('Timer');
         this.toggle_bin.hide();
-        this.toggle.actor.reactive  = false;
-        this.toggle.actor.can_focus = false;
-        this._panel_item_UI_update();
+        this.panel_item.actor.remove_style_class_name('on');
     },
 
-    _expired: function () {
-        this._off();
+    _on_timer_expired: function () {
+        this.off_timer();
+        this.fullscreen.on_timer_expired();
         this._send_notif();
-    },
-
-    _timer_toggle: function () {
-        if (this.timer_state === TimerState.STOPPED)
-            this._start();
-        else if (this.timer_state === TimerState.RUNNING)
-            this._stop();
-        else
-            return;
-
-        this._panel_item_UI_update();
-    },
-
-    _panel_item_UI_update: function () {
-        if (this.timer_state === TimerState.RUNNING)
-            this.panel_item.actor.add_style_class_name('on');
-        else
-            this.panel_item.actor.remove_style_class_name('on');
     },
 
     _tic: function () {
         if (this.timer_duration < 1000000) {
+            this.timer_duration = 0;
             this.tic_mainloop_id = null;
-            this._expired();
+            this._on_timer_expired();
             return;
         }
-        else {
-            this.timer_duration = this.end_time - GLib.get_monotonic_time();
-            this._slider_update();
-            this._update_time_display();
 
-            this.tic_mainloop_id = Mainloop.timeout_add_seconds(1, () => {
-                this._tic();
-            });
-        }
+        this._update_time_display();
+        this._update_slider();
+
+        this.timer_duration = this.end_time - GLib.get_monotonic_time();
+
+        this.tic_mainloop_id = Mainloop.timeout_add_seconds(1, () => {
+            this._tic();
+        });
     },
 
-    _slider_released: function () {
-        if (this.timer_duration < 1) this._off();
-        else                         this._start();
-    },
-
-    _slider_changed: function (slider, value) {
-        this._stop();
-
-        if (value < 1) {
-            // Make rate of change of the timer duration an exponential curve.
-            // This allows for finer tuning when the duration is smaller.
-            let y = (Math.pow(2, (10 * value)) - 1) / (Math.pow(2, 10) - 1);
-
-            // Change the increment of the slider based on how far it's dragged.
-            // If the seconds are not shown, the increments must be multiples
-            // of 60s.
-            let step;
-            if (this.settings.get_boolean('timer-show-seconds')) {
-                if      (value < .05) step = 15;
-                else if (value < .5)  step = 30;
-                else if (value < .8)  step = 60;
-                else                  step = 3600;
-            } else {
-                if      (value < .7)  step = 59;
-                else if (value < .9)  step = 1800;
-                else                  step = 3600;
-            }
-
-            this.timer_duration = Math.floor(y * TIMER_MAX_DURATION / step) * step;
-            this._update_time_display();
-        } else {
-            // fix for when the slider has been dragged past the limit
-            this.timer_duration = TIMER_MAX_DURATION;
-            this._update_time_display();
-        }
-    },
-
-    _slider_update: function () {
-        // Update slider based on the timer_duration.
-        // Use this when the timer_duration changes without using the slider.
-        // This function is the inverse of the function that is used to calc the
-        // timer_duration based on the slider.
-        let x = this.timer_duration / TIMER_MAX_DURATION;
-        let y = (Math.log(x * (Math.pow(2, 10) - 1) +1)) / Math.log(2) / 10;
-        this.slider.setValue(y);
+    _update_panel_icon_name: function() {
+        ICON_FROM_URI.icon_from_uri(this.panel_item.icon, TIMER_ICON, this.ext_dir);
     },
 
     _update_time_display: function () {
@@ -342,11 +318,109 @@ const Timer = new Lang.Class({
             );
         }
 
-        if (this.panel_item.label.visible)
-            this.panel_item.set_label(this.header.label.text);
+        this.panel_item.set_label(this.header.label.text);
+        this.fullscreen.set_banner_text(this.header.label.text);
+    },
+
+    _update_slider: function () {
+        // Update slider based on the timer_duration.
+        // Use this when the timer_duration changes without using the slider.
+        // This function is the inverse of the function that is used to calc the
+        // timer_duration based on the slider.
+        let x = this.timer_duration / TIMER_MAX_DURATION;
+        let y = (Math.log(x * (Math.pow(2, 10) - 1) +1)) / Math.log(2) / 10;
+        this.slider.setValue(y);
+        this.fullscreen.slider.setValue(y);
+    },
+
+    _update_time_display: function () {
+        let time = Math.floor(this.timer_duration / 1000000);
+
+        // If the seconds are not shown, we need to make the timer '1-indexed'
+        // in respect to minutes. I.e., 00:00:34 becomes 00:01.
+        if (this.settings.get_boolean('timer-show-seconds')) {
+            this.header.label.text = "%02d:%02d:%02d".format(
+                Math.floor(time / 3600),
+                Math.floor(time % 3600 / 60),
+                time % 60
+            );
+        }
+        else {
+            if (time % 3600 !== 0) time += 60;
+
+            this.header.label.text = "%02d:%02d".format(
+                Math.floor(time / 3600),
+                Math.floor(time % 3600 / 60)
+            );
+        }
+
+        this.panel_item.set_label(this.header.label.text);
+        this.fullscreen.set_banner_text(this.header.label.text);
+    },
+
+    slider_released: function () {
+        if (this.timer_duration < 1000000) {
+            this.off_timer();
+        }
+        else {
+            this.start_timer();
+            this.cache.last_manually_set_time = this.timer_duration;
+            this._store_cache();
+        }
+    },
+
+    slider_changed: function (slider, value) {
+        this.stop_timer();
+
+        if (value < 1) {
+            // Make rate of change of the timer duration an exponential curve.
+            // This allows for finer tuning when the duration is smaller.
+            let y = (Math.pow(2, (10 * value)) - 1) / (Math.pow(2, 10) - 1);
+
+            // Change the increment of the slider based on how far it's dragged.
+            // If the seconds are not shown, the increments must be multiples
+            // of 60s.
+            let step;
+
+            if (this.settings.get_boolean('timer-show-seconds')) {
+                if      (value < .05) step = 15;
+                else if (value < .5)  step = 30;
+                else if (value < .8)  step = 60;
+                else                  step = 3600;
+            }
+            else {
+                if      (value < .7)  step = 59;
+                else if (value < .9)  step = 1800;
+                else                  step = 3600;
+            }
+
+            this.timer_duration =
+                Math.floor(y * TIMER_MAX_DURATION / step) * step;
+
+            this._update_time_display();
+        }
+        else { // slider has been dragged past the limit
+            this.timer_duration = TIMER_MAX_DURATION;
+            this._update_time_display();
+        }
     },
 
     _send_notif: function () {
+        let sound_file = this.settings.get_string('timer-sound-file-path')
+                                      .replace(/^.+?\/\//, '');
+
+        if (this.settings.get_boolean('timer-play-sound') && sound_file) {
+            global.play_sound_file(0, sound_file, 'timer-notif', null);
+        }
+
+        if (this.settings.get_enum('timer-notif-style') === NotifStyle.FULLSCREEN) {
+            this.fullscreen.open();
+            return;
+        }
+
+        if (this.fullscreen.is_open)
+            return;
+
         let source = new MessageTray.Source();
         Main.messageTray.add(source);
 
@@ -358,15 +432,8 @@ const Timer = new Lang.Class({
             gicon        : icon.gicon,
         };
 
-        let sound_file = this.settings.get_string('timer-sound-file-path')
-                                      .replace(/^.+?\/\//, '');
-
-        if (this.settings.get_boolean('timer-play-sound') && sound_file) {
-            params.soundFile = sound_file;
-        }
-
         let notif = new MessageTray.Notification(source,
-                                                 _('Timer expired!'),
+                                                 TIMER_EXPIRED_MSG,
                                                  this.cache.notif_msg,
                                                  params);
 
@@ -385,7 +452,7 @@ const Timer = new Lang.Class({
         this.header.actor.hide();
         this.slider_item.actor.hide();
 
-        settings.connect('ok', Lang.bind(this, function (actor, time, notif_msg) {
+        settings.connect('ok', (actor, time, notif_msg) => {
             this.actor.grab_key_focus();
             settings.actor.destroy();
             this.header.actor.show();
@@ -396,21 +463,30 @@ const Timer = new Lang.Class({
 
             if (time) {
                 this.timer_duration = time;
-                this._slider_update();
-                this._start();
+                this.start_timer();
+                this._update_slider();
+                this.cache.last_manually_set_time = time;
+                this._store_cache();
             }
-        }));
+        });
 
-        settings.connect('cancel', Lang.bind(this, function () {
+        settings.connect('cancel', () => {
             this.actor.grab_key_focus();
             settings.actor.destroy();
             this.header.actor.show();
             this.slider_item.actor.show();
-        }));
+        });
     },
 
-    _update_panel_icon_name: function() {
-        ICON_FROM_URI.icon_from_uri(this.panel_item.icon, TIMER_ICON, this.ext_dir);
+    _show_fullscreen: function () {
+        this.ext.menu.close();
+
+        if (! this.fullscreen) {
+            this.fullscreen = new TimerFullscreen(
+                this.ext, this, this.settings.get_int('timer-fullscreen-monitor-pos'));
+        }
+
+        this.fullscreen.open();
     },
 
     _toggle_panel_mode: function () {
@@ -434,11 +510,29 @@ const Timer = new Lang.Class({
                 Meta.KeyBindingFlags.NONE,
                 Shell.ActionMode.NORMAL,
                 () => { this.ext.open_menu(this); });
-        }
-        else {
+        } else {
             let i = this.keybindings.indexOf('timer-keybinding-open');
             if (i !== -1) {
                 Main.wm.removeKeybinding('timer-keybinding-open');
+                this.keybindings.splice(i, 1);
+            }
+        }
+
+        if (!disable_all &&
+            this.settings.get_strv('timer-keybinding-open-fullscreen')[0] !== '') {
+
+            this.keybindings.push('timer-keybinding-open-fullscreen');
+
+            Main.wm.addKeybinding(
+                'timer-keybinding-open-fullscreen',
+                this.settings,
+                Meta.KeyBindingFlags.NONE,
+                Shell.ActionMode.NORMAL,
+                () => { this._show_fullscreen(); });
+        } else {
+            let i = this.keybindings.indexOf('timer-keybinding-open-fullscreen');
+            if (i !== -1) {
+                Main.wm.removeKeybinding('timer-keybinding-open-fullscreen');
                 this.keybindings.splice(i, 1);
             }
         }
@@ -461,10 +555,12 @@ const Timer = new Lang.Class({
     disable_section: function () {
         if (! this.section_enabled) return;
 
-        this._stop();
+        this.stop_timer();
         this._store_cache();
         this.sigm.disconnect_all();
         this._toggle_keybindings(true);
+        this.fullscreen.destroy();
+        this.fullscreen = null;
     },
 });
 Signals.addSignalMethods(Timer.prototype);
@@ -551,12 +647,12 @@ const TimerSettings = new Lang.Class({
         //
         // listen
         //
-        this.button_ok.connect('clicked', Lang.bind(this, function () {
+        this.button_ok.connect('clicked', () => {
             this.emit('ok', this._get_time(), this.entry.entry.get_text());
-        }));
-        this.button_cancel.connect('clicked', Lang.bind(this, function () {
+        })
+        this.button_cancel.connect('clicked', () => {
             this.emit('cancel');
-        }));
+        });
         this.entry.entry.connect('queue-redraw', () => {
             this.entry.scroll_box.vscrollbar_policy = Gtk.PolicyType.NEVER;
 
@@ -574,3 +670,134 @@ const TimerSettings = new Lang.Class({
     },
 });
 Signals.addSignalMethods(TimerSettings.prototype);
+
+
+
+// =====================================================================
+// @@@ Timer fullscreen interface
+//
+// @ext       : ext class
+// @show_secs : bool
+// @monitor   : int
+//
+// signals: 'monitor-changed'
+// =====================================================================
+const TimerFullscreen = new Lang.Class({
+    Name    : 'Timepp.TimerFullscreen',
+    Extends : FULLSCREEN.Fullscreen,
+
+    _init: function (ext, delegate, monitor) {
+        this.parent(monitor);
+
+        this.ext      = ext;
+        this.delegate = delegate;
+
+        this.default_style_class = this.actor.style_class;
+
+        this.slider = new Slider.Slider(0);
+        this.bottom_box.add_child(this.slider.actor);
+        this.slider.actor.can_focus = true;
+
+
+        this.toggle_bin = new St.Button({ can_focus: true, y_align: St.Align.MIDDLE });
+        this.top_box.insert_child_at_index(this.toggle_bin, 0);
+        this.toggle_bin.hide();
+
+        this.toggle = new PopupMenu.Switch('');
+        this.toggle_bin.add_actor(this.toggle.actor);
+
+
+        //
+        // listen
+        //
+        this.toggle_bin.connect('clicked', () => {
+            this.delegate.toggle_timer();
+        });
+        this.slider.connect('drag-end', () => {
+            this.delegate.slider_released();
+        });
+        this.slider.actor.connect('scroll-event', () => {
+            this.delegate.slider_released();
+        });
+        this.slider.connect('value-changed', (slider, val) => {
+            this.delegate.slider_changed(slider, val);
+            this.actor.remove_style_class_name('timer-expired');
+        });
+        this.actor.connect('key-release-event', (_, event) => {
+            switch (event.get_key_symbol()) {
+                case Clutter.KEY_space:
+                    if (this.delegate.timer_state !== TimerState.OFF)
+                        this.delegate.toggle_timer();
+                    return Clutter.EVENT_STOP;
+                case Clutter.KEY_r:
+                case Clutter.KEY_BackSpace:
+                    this.delegate.start_timer(this.delegate.cache.last_manually_set_time);
+                    return Clutter.EVENT_STOP;
+                case Clutter.KEY_1:
+                    this.delegate.start_timer(60000000);
+                    return Clutter.EVENT_STOP;
+                case Clutter.KEY_2:
+                    this.delegate.start_timer(2 * 60000000);
+                    return Clutter.EVENT_STOP;
+                case Clutter.KEY_3:
+                    this.delegate.start_timer(3 * 60000000);
+                    return Clutter.EVENT_STOP;
+                case Clutter.KEY_4:
+                    this.delegate.start_timer(4 * 60000000);
+                    return Clutter.EVENT_STOP;
+                case Clutter.KEY_5:
+                    this.delegate.start_timer(5 * 60000000);
+                    return Clutter.EVENT_STOP;
+                case Clutter.KEY_6:
+                    this.delegate.start_timer(6 * 60000000);
+                    return Clutter.EVENT_STOP;
+                case Clutter.KEY_7:
+                    this.delegate.start_timer(7 * 60000000);
+                    return Clutter.EVENT_STOP;
+                case Clutter.KEY_8:
+                    this.delegate.start_timer(8 * 60000000);
+                    return Clutter.EVENT_STOP;
+                case Clutter.KEY_9:
+                    this.delegate.start_timer(9 * 60000000);
+                    return Clutter.EVENT_STOP;
+                case Clutter.KEY_0:
+                    this.delegate.start_timer(10 * 60000000);
+                    return Clutter.EVENT_STOP;
+                default:
+                    return Clutter.EVENT_PROPAGATE;
+            }
+        });
+    },
+
+    close: function () {
+        if (this.delegate.timer_state === TimerState.OFF) {
+            this.actor.style_class = this.default_style_class;
+            this.set_banner_text(
+                this.delegate.settings.get_boolean('timer-show-seconds') ? '00:00:00' : '00:00');
+        }
+
+        this.parent();
+    },
+
+    on_timer_started: function () {
+        this.actor.style_class = this.default_style_class;
+        this.toggle.setToggleState('checked');
+        this.toggle_bin.show();
+    },
+
+    on_timer_stopped: function () {
+        this.actor.style_class = this.default_style_class + ' timer-stopped';
+        this.toggle.setToggleState('');
+    },
+
+    on_timer_off: function () {
+        this.toggle_bin.hide();
+    },
+
+    on_timer_expired: function () {
+        let msg = this.delegate.cache.notif_msg ? '\n\n' + this.delegate.cache.notif_msg : '';
+        this.set_banner_text(TIMER_EXPIRED_MSG + msg);
+        this.actor.style_class = this.default_style_class + ' timer-expired';
+    },
+});
+Signals.addSignalMethods(TimerFullscreen.prototype);

@@ -423,7 +423,6 @@ const Timepp = new Lang.Class({
     needs_scrollbar: function () {
         let [min_height, nat_height] = this.menu.actor.get_preferred_height(-1);
         let max_height = this.menu.actor.get_theme_node().get_max_height();
-
         return max_height >= 0 && min_height >= max_height;
     },
 
@@ -452,7 +451,7 @@ function init () {}
 let timepp;
 
 function enable () {
-    timepp = new Timepp;
+    timepp = new Timepp();
 
     let pos;
 
@@ -461,12 +460,10 @@ function enable () {
             pos = Main.panel._leftBox.get_n_children();
             Main.panel.addToStatusArea('timepp', timepp, pos, 'left');
             break;
-
         case PanelPosition.CENTER:
             pos = Main.panel._centerBox.get_n_children();
             Main.panel.addToStatusArea('timepp', timepp, pos, 'center');
             break;
-
         case PanelPosition.RIGHT:
             Main.panel.addToStatusArea('timepp', timepp, 0, 'right');
     }

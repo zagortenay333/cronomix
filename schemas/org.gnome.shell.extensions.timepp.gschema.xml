@@ -13,6 +13,11 @@
         <value value="2" nick="Icon and Text"/>
     </enum>
 
+    <enum id="org.gnome.shell.extensions.timepp.notif-style">
+        <value value="0" nick="Standard"/>
+        <value value="1" nick="Fullscreen"/>
+    </enum>
+
     <enum id="org.gnome.shell.extensions.timepp.clock-format">
         <value value="0" nick="h:m"/>
         <value value="1" nick="h:m:s"/>
@@ -62,6 +67,11 @@
         <!-- ======================================
         @@@  Timer
         ======================================= -->
+        <key name="timer-fullscreen-monitor-pos" type="i">
+            <default>0</default>
+            <description>Monitor on which the fullscreen is shown</description>
+        </key>
+
         <key name="timer-separate-menu" type="b">
             <default>false</default>
             <description>Show in separate menu</description>
@@ -82,6 +92,11 @@
             <description>Sound file path</description>
         </key>
 
+        <key name="timer-notif-style" enum="org.gnome.shell.extensions.timepp.notif-style">
+            <default>"Standard"</default>
+            <description>Notification style</description>
+        </key>
+
         <key name="timer-play-sound" type="b">
             <default>false</default>
             <description>Play sound with notification</description>
@@ -92,10 +107,20 @@
             <description>Open this section</description>
         </key>
 
+        <key name="timer-keybinding-open-fullscreen" type="as">
+            <default><![CDATA[[""]]]></default>
+            <description>Open this section in fullscreen</description>
+        </key>
+
 
         <!-- ======================================
         @@@  Stopwatch
         ======================================= -->
+        <key name="stopwatch-fullscreen-monitor-pos" type="i">
+            <default>0</default>
+            <description>Monitor on which the fullscreen is shown</description>
+        </key>
+
         <key name="stopwatch-separate-menu" type="b">
             <default>false</default>
             <description>Show in separate menu</description>
@@ -116,10 +141,20 @@
             <description>Open this section</description>
         </key>
 
+        <key name="stopwatch-keybinding-open-fullscreen" type="as">
+            <default><![CDATA[[""]]]></default>
+            <description>Open this section in fullscreen</description>
+        </key>
+
 
         <!-- ======================================
         @@@  Pomodoro
         ======================================= -->
+        <key name="pomodoro-fullscreen-monitor-pos" type="i">
+            <default>0</default>
+            <description>Monitor on which the fullscreen is shown</description>
+        </key>
+
         <key name="pomodoro-separate-menu" type="b">
             <default>false</default>
             <description>Show in separate menu</description>
@@ -138,6 +173,11 @@
         <key name="pomodoro-sound-file-path" type="s">
             <default>""</default>
             <description>Sound file path</description>
+        </key>
+
+        <key name="pomodoro-notif-style" enum="org.gnome.shell.extensions.timepp.notif-style">
+            <default>"Standard"</default>
+            <description>Notification style</description>
         </key>
 
         <key name="pomodoro-play-sound" type="b">
@@ -165,10 +205,20 @@
             <description>Open this section</description>
         </key>
 
+        <key name="pomodoro-keybinding-open-fullscreen" type="as">
+            <default><![CDATA[[""]]]></default>
+            <description>Open this section in fullscreen</description>
+        </key>
+
 
         <!-- ======================================
         @@@  Alarms
         ======================================= -->
+        <key name="alarms-fullscreen-monitor-pos" type="i">
+            <default>0</default>
+            <description>Monitor on which the fullscreen is shown</description>
+        </key>
+
         <key name="alarms-separate-menu" type="b">
             <default>true</default>
             <description>Show in separate menu</description>
@@ -182,6 +232,11 @@
         <key name="alarms-play-sound" type="b">
             <default>false</default>
             <description>Play sound with notification</description>
+        </key>
+
+        <key name="alarms-notif-style" enum="org.gnome.shell.extensions.timepp.notif-style">
+            <default>"Standard"</default>
+            <description>Notification style</description>
         </key>
 
         <key name="alarms-snooze-duration" type="i">

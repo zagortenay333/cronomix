@@ -345,6 +345,13 @@ const Settings = new Lang.Class({
                 this.settings.set_string('timer-sound-file-path', widget.get_uri());
             });
 
+        this.builder.get_object('timer-notif-style-combo')
+            .set_active(this.settings.get_enum('timer-notif-style'));
+        this.builder.get_object('timer-notif-style-combo').connect('changed',
+            (widget) => {
+                this.settings.set_enum('timer-notif-style', widget.get_active());
+            });
+
         this.settings.bind(
             'timer-play-sound',
             this.builder.get_object('timer-play-sound-switch'),
@@ -374,6 +381,26 @@ const Settings = new Lang.Class({
                     else
                         entry["secondary-icon-name"] = "";
                     this.settings.set_strv('timer-keybinding-open', ['']);
+                }
+            });
+
+        this.builder.get_object('timer-keybinding-open-fullscreen')
+            .set_text(this.settings.get_strv('timer-keybinding-open-fullscreen')[0]);
+        this.builder.get_object('timer-keybinding-open-fullscreen').connect('changed',
+            (entry) => {
+                let [key, mods] = Gtk.accelerator_parse(entry.get_text());
+
+                if (Gtk.accelerator_valid(key, mods)) {
+                    entry["secondary-icon-name"] = null;
+                    let shortcut = Gtk.accelerator_name(key, mods);
+                    this.settings.set_strv('timer-keybinding-open-fullscreen', [shortcut]);
+                }
+                else {
+                    if (entry.get_text() !== '')
+                        entry["secondary-icon-name"] = "dialog-warning-symbolic";
+                    else
+                        entry["secondary-icon-name"] = "";
+                    this.settings.set_strv('timer-keybinding-open-fullscreen', ['']);
                 }
             });
 
@@ -421,6 +448,26 @@ const Settings = new Lang.Class({
                 }
             });
 
+        this.builder.get_object('stopwatch-keybinding-open-fullscreen')
+            .set_text(this.settings.get_strv('stopwatch-keybinding-open-fullscreen')[0]);
+        this.builder.get_object('stopwatch-keybinding-open-fullscreen').connect('changed',
+            (entry) => {
+                let [key, mods] = Gtk.accelerator_parse(entry.get_text());
+
+                if (Gtk.accelerator_valid(key, mods)) {
+                    entry["secondary-icon-name"] = null;
+                    let shortcut = Gtk.accelerator_name(key, mods);
+                    this.settings.set_strv('stopwatch-keybinding-open-fullscreen', [shortcut]);
+                }
+                else {
+                    if (entry.get_text() !== '')
+                        entry["secondary-icon-name"] = "dialog-warning-symbolic";
+                    else
+                        entry["secondary-icon-name"] = "";
+                    this.settings.set_strv('stopwatch-keybinding-open-fullscreen', ['']);
+                }
+            });
+
 
         //
         // Pomodoro
@@ -451,6 +498,13 @@ const Settings = new Lang.Class({
         this.builder.get_object('pomodoro-sound-chooser')
             .connect('selection-changed', (widget) => {
                 this.settings.set_string('pomodoro-sound-file-path', widget.get_uri());
+            });
+
+        this.builder.get_object('pomodoro-notif-style-combo')
+            .set_active(this.settings.get_enum('pomodoro-notif-style'));
+        this.builder.get_object('pomodoro-notif-style-combo').connect('changed',
+            (widget) => {
+                this.settings.set_enum('pomodoro-notif-style', widget.get_active());
             });
 
         this.settings.bind(
@@ -498,6 +552,26 @@ const Settings = new Lang.Class({
                 }
             });
 
+        this.builder.get_object('pomodoro-keybinding-open-fullscreen')
+            .set_text(this.settings.get_strv('pomodoro-keybinding-open-fullscreen')[0]);
+        this.builder.get_object('pomodoro-keybinding-open-fullscreen').connect('changed',
+            (entry) => {
+                let [key, mods] = Gtk.accelerator_parse(entry.get_text());
+
+                if (Gtk.accelerator_valid(key, mods)) {
+                    entry["secondary-icon-name"] = null;
+                    let shortcut = Gtk.accelerator_name(key, mods);
+                    this.settings.set_strv('pomodoro-keybinding-open-fullscreen', [shortcut]);
+                }
+                else {
+                    if (entry.get_text() !== '')
+                        entry["secondary-icon-name"] = "dialog-warning-symbolic";
+                    else
+                        entry["secondary-icon-name"] = "";
+                    this.settings.set_strv('pomodoro-keybinding-open-fullscreen', ['']);
+                }
+            });
+
 
         //
         // Alarms
@@ -515,6 +589,13 @@ const Settings = new Lang.Class({
         this.builder.get_object('alarms-sound-chooser')
             .connect('selection-changed', (widget) => {
                 this.settings.set_string('alarms-sound-file-path', widget.get_uri());
+            });
+
+        this.builder.get_object('alarms-notif-style-combo')
+            .set_active(this.settings.get_enum('alarms-notif-style'));
+        this.builder.get_object('alarms-notif-style-combo').connect('changed',
+            (widget) => {
+                this.settings.set_enum('alarms-notif-style', widget.get_active());
             });
 
         this.settings.bind(

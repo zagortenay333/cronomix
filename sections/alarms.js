@@ -18,6 +18,7 @@ const ExtensionUtils = imports.misc.extensionUtils;
 const ME = ExtensionUtils.getCurrentExtension();
 
 
+const FULLSCREEN     = ME.imports.lib.fullscreen;
 const SIG_MANAGER    = ME.imports.lib.signal_manager;
 const PANEL_ITEM     = ME.imports.lib.panel_item;
 const ICON_FROM_URI  = ME.imports.lib.icon_from_uri;
@@ -32,6 +33,11 @@ const ALARM_ICON = '/img/alarms-symbolic.svg';
 const EDIT_ICON  = '/img/edit-symbolic.svg';
 
 
+const NotifStyle = {
+    STANDARD   : 0,
+    FULLSCREEN : 1,
+};
+
 
 /*
  * time_str : string (time in hh:mm 24h format. E.g., '13:44')
@@ -43,8 +49,50 @@ const EDIT_ICON  = '/img/edit-symbolic.svg';
  */
 
 
+// @BUG
+// There is an issue with resizing when using pango's wrap mode together with a
+// scrollview. The label does not seem to get resized properly and as a result
+// to container doesn't either, which leads various issues.
+//
+// The issue does not appear if the scrollbar is visible, so it doesn't need to
+// be used all the time and is not a performance issue.
+//
+// The needs_scrollbar func will not return a correct value because of this.
+// Also, sometimes the bottom actor might be cut off, or extra padding might be
+// added...
+//
+// This func needs to be used at a time when the actor is already drawn, or else
+// it will not work.
+function resize_label (label) {
+    let theme_node = label.get_theme_node();
+    let alloc_box  = label.get_allocation_box();
+
+    // gets the acutal width of the box
+    let width = alloc_box.x2 - alloc_box.x1;
+
+    // remove paddings and borders
+    width = theme_node.adjust_for_width(width);
+
+    // nat_height is the minimum height needed to fit the multiline text
+    // **excluding** the vertical paddings/borders.
+    let [min_height, nat_height] = label.clutter_text.get_preferred_height(width);
+
+    // The vertical padding can only be calculated once the box is painted.
+    // nat_height_adjusted is the minimum height needed to fit the multiline
+    // text **including** vertical padding/borders.
+    let [min_height_adjusted, nat_height_adjusted] = theme_node.adjust_preferred_height(min_height, nat_height);
+    let vert_padding = nat_height_adjusted - nat_height;
+
+    label.set_height(nat_height + vert_padding);
+}
+
+
 // =====================================================================
 // @@@ Main
+//
+// @ext      : obj    (main extension object)
+// @ext_dir  : string (extension dir path)
+// @settings : obj    (extension settings)
 // =====================================================================
 const Alarms = new Lang.Class({
     Name: 'Timepp.Alarms',
@@ -54,13 +102,13 @@ const Alarms = new Lang.Class({
         this.ext_dir  = ext_dir;
         this.settings = settings;
 
+        this.sigm       = new SIG_MANAGER.SignalManager();
+        this.fullscreen = new AlarmFullscreen(
+            this.ext, this, this.settings.get_int('alarms-fullscreen-monitor-pos'));
 
-        this.sigm = new SIG_MANAGER.SignalManager();
-
-
-        this.keybindings     = [];
         this.section_enabled = this.settings.get_boolean('alarms-enabled');
         this.separate_menu   = this.settings.get_boolean('alarms-separate-menu');
+        this.keybindings     = [];
         this.cache_file      = null;
         this.cache           = null;
 
@@ -120,6 +168,9 @@ const Alarms = new Lang.Class({
             this._toggle_section();
         }); // don't put this signal into the signal manager
 
+        this.sigm.connect(this.fullscreen, 'monitor-changed', () => {
+            this.settings.set_int('alarms-fullscreen-monitor-pos', this.fullscreen.monitor);
+        });
         this.sigm.connect(this.settings, 'changed::alarms-separate-menu', () => {
             this.separate_menu = this.settings.get_boolean('alarms-separate-menu');
         });
@@ -166,6 +217,10 @@ const Alarms = new Lang.Class({
 
         for (var i = 0, len = this.cache.alarms.length; i < len; i++)
             this._add_alarm(i);
+
+        if (! this.fullscreen)
+            this.fullscreen = new AlarmFullscreen(
+                this.ext, this, this.settings.get_int('alarms-fullscreen-monitor-pos'));
 
         this._toggle_keybindings();
         this._update_panel_item_UI();
@@ -217,7 +272,7 @@ const Alarms = new Lang.Class({
                 editor.actor.destroy();
 
                 if (alarm.ID) Mainloop.source_remove(alarm.ID);
-                this._schedule_alarm(alarm);
+                this.schedule_alarm(alarm);
                 this._store_cache();
             });
 
@@ -259,7 +314,7 @@ const Alarms = new Lang.Class({
             alarm = a;
         }
 
-        this._schedule_alarm(alarm);
+        this.schedule_alarm(alarm);
 
         this._update_panel_item_UI();
 
@@ -269,7 +324,7 @@ const Alarms = new Lang.Class({
 
         alarm_item.connect('alarm-toggled', Lang.bind(this, function () {
             if (alarm.ID) Mainloop.source_remove(alarm.ID);
-            if (alarm.toggle) this._schedule_alarm(alarm);
+            if (alarm.toggle) this.schedule_alarm(alarm);
             this._update_panel_item_UI();
             this._store_cache();
         }));
@@ -299,7 +354,7 @@ const Alarms = new Lang.Class({
     // the future.
     // If @time is not given, the alarm will be scheduled according to it's
     // time_str.
-    _schedule_alarm: function (alarm, time) {
+    schedule_alarm: function (alarm, time) {
         if (! alarm.toggle) return;
 
         if (! time) {
@@ -320,12 +375,24 @@ const Alarms = new Lang.Class({
         alarm.ID = Mainloop.timeout_add_seconds(time, () => {
             if (alarm.days.indexOf(new Date().getDay()) >= 0) {
                 this._send_notif(alarm);
-                this._schedule_alarm(alarm);
+                this.schedule_alarm(alarm);
             }
         });
     },
 
     _send_notif: function (alarm) {
+        let sound_file = this.settings.get_string('alarms-sound-file-path')
+                                      .replace(/^.+?\/\//, '');
+
+        if (this.settings.get_boolean('alarms-play-sound') && sound_file) {
+            global.play_sound_file(0, sound_file, 'alarms-notif', null);
+        }
+
+        if (this.settings.get_enum('alarms-notif-style') === NotifStyle.FULLSCREEN) {
+            this.fullscreen.fire_alarm(alarm);
+            return;
+        }
+
         let source = new MessageTray.Source();
         Main.messageTray.add(source);
 
@@ -340,13 +407,6 @@ const Alarms = new Lang.Class({
             gicon        : icon.gicon,
         };
 
-        let sound_file = this.settings.get_string('alarms-sound-file-path')
-                                      .replace(/^.+?\/\//, '');
-
-        if (this.settings.get_boolean('alarms-play-sound') && sound_file) {
-            params.soundFile = sound_file;
-        }
-
         let notif = new MessageTray.Notification(source,
                                                  title,
                                                  alarm.msg,
@@ -356,7 +416,7 @@ const Alarms = new Lang.Class({
 
         notif.addAction(_('Snooze'), () => {
             if (alarm.ID) Mainloop.source_remove(alarm.ID);
-            this._schedule_alarm(alarm,
+            this.schedule_alarm(alarm,
                 this.settings.get_int('alarms-snooze-duration'));
         });
 
@@ -430,6 +490,8 @@ const Alarms = new Lang.Class({
         this._store_cache();
         this.sigm.disconnect_all();
         this._toggle_keybindings(true);
+        this.fullscreen.destroy();
+        this.fullscreen = null;
     },
 });
 Signals.addSignalMethods(Alarms.prototype);
@@ -455,6 +517,9 @@ const AlarmEditor = new Lang.Class({
         //
         // container
         //
+        this.ext = ext;
+        this.alarm = alarm;
+
         this.actor = new St.Bin({ x_fill: true, style_class: 'view-box' });
 
         this.content_box = new St.BoxLayout({ x_expand: true, vertical: true, style_class: 'view-box-content'});
@@ -506,18 +571,24 @@ const AlarmEditor = new Lang.Class({
         //
         this.alarm_entry_container = new St.BoxLayout({ vertical: true, style_class: 'row entry-container' });
         this.content_box.add_actor(this.alarm_entry_container);
-        this.entry = new MULTIL_ENTRY.MultiLineEntry(_('Alarm Message...'), false, false);
+        this.entry = new MULTIL_ENTRY.MultiLineEntry(_('Alarm Message...'), true, false);
+
+        this.entry.scroll_box.vscrollbar_policy = Gtk.PolicyType.NEVER;
+        this.entry.scroll_box.hscrollbar_policy = Gtk.PolicyType.NEVER;
 
         this.alarm_entry_container.add_actor(this.entry.actor);
 
         if (alarm) {
-            Meta.later_add(Meta.LaterType.BEFORE_REDRAW, Lang.bind(this, function() {
+            // @HACK
+            // Pretty much the only way to make the entry fit the multiline text
+            // properly...
+            Meta.later_add(Meta.LaterType.BEFORE_REDRAW, () => {
                 this.entry.entry.set_text(alarm.msg);
-            }));
+            });
 
-            Meta.later_add(Meta.LaterType.BEFORE_REDRAW, Lang.bind(this, function() {
+            Meta.later_add(Meta.LaterType.BEFORE_REDRAW, () => {
                 this.entry._resize_entry();
-            }));
+            });
         }
 
 
@@ -564,6 +635,12 @@ const AlarmEditor = new Lang.Class({
         });
         this.button_cancel.connect('clicked', () => {
             this.emit('cancel');
+        });
+        this.entry.entry.connect('queue-redraw', () => {
+            this.entry.scroll_box.vscrollbar_policy = Gtk.PolicyType.NEVER;
+
+            if (this.ext.needs_scrollbar())
+                this.entry.scroll_box.vscrollbar_policy = Gtk.PolicyType.ALWAYS;
         });
     },
 
@@ -665,7 +742,7 @@ const AlarmItem = new Lang.Class({
         //
         this.toggle_bin.connect('clicked', () => { this._on_toggle(); });
         this.edit_bin.connect('clicked',   () => { this._on_edit(); });
-        this.actor.connect('queue-redraw', () => { this._resize_alarm_item(); });
+        this.actor.connect('queue-redraw', () => { resize_label(this.msg); });
         this.actor.connect('enter-event',  () => { this.edit_bin.show(); });
         this.actor.connect('event', (actor, event) => {
             this._on_event(actor, event);
@@ -680,31 +757,6 @@ const AlarmItem = new Lang.Class({
 
     _on_edit: function () {
         this.delegate.alarm_editor(this);
-    },
-
-    _resize_alarm_item: function () {
-        let theme_node = this.msg.get_theme_node();
-        let alloc_box  = this.msg.get_allocation_box();
-
-        // gets the acutal width of the box
-        let width = alloc_box.x2 - alloc_box.x1;
-
-        // remove paddings and borders
-        width = theme_node.adjust_for_width(width);
-
-        // nat_height is the minimum height needed to fit the multiline text
-        // **excluding** the vertical paddings/borders.
-        let [min_height, nat_height] = this.msg.clutter_text.get_preferred_height(width);
-
-        // The vertical padding can only be calculated once the box is painted.
-        // nat_height_adjusted is the minimum height needed to fit the multiline
-        // text **including** vertical padding/borders.
-        if (this.msg_vert_padding < 0) {
-            let [min_height_adjusted, nat_height_adjusted] = theme_node.adjust_preferred_height(min_height, nat_height);
-            this.msg_vert_padding = nat_height_adjusted - nat_height;
-        }
-
-        this.msg.set_height(nat_height + this.msg_vert_padding);
     },
 
     _on_event: function (actor, event) {
@@ -739,3 +791,144 @@ const AlarmItem = new Lang.Class({
     },
 });
 Signals.addSignalMethods(AlarmItem.prototype);
+
+
+
+// =====================================================================
+// @@@ Alarm fullscreen interface
+//
+// @ext       : ext class
+// @show_secs : bool
+// @monitor   : int
+//
+// signals: 'monitor-changed'
+// =====================================================================
+const AlarmFullscreen = new Lang.Class({
+    Name    : 'Timepp.AlarmFullscreen',
+    Extends : FULLSCREEN.Fullscreen,
+
+    _init: function (ext, delegate, monitor) {
+        this.parent(monitor);
+        this.actor.add_style_class_name('alarm');
+
+        this.ext      = ext;
+        this.delegate = delegate;
+
+        this.alarms = [];
+
+
+        //
+        // multi alarm view
+        //
+        this.alarm_cards_container = new St.BoxLayout({ vertical: true, x_expand: true, x_align: Clutter.ActorAlign.CENTER });
+        this.middle_box.insert_child_at_index(this.alarm_cards_container, 0);
+
+        this.alarm_cards_scroll = new St.ScrollView({ y_expand: true, style_class: 'vfade' });
+        this.alarm_cards_container.add_actor(this.alarm_cards_scroll);
+
+        this.alarm_cards_scroll.hscrollbar_policy = Gtk.PolicyType.NEVER;
+
+        this.alarm_cards_scroll_bin = new St.BoxLayout({ y_expand: true, y_align: Clutter.ActorAlign.CENTER, vertical: true, style_class: 'alarm-cards-container'});
+        this.alarm_cards_scroll.add_actor(this.alarm_cards_scroll_bin);
+
+
+        //
+        // title
+        //
+        this.title = new St.Label({ x_expand: true, x_align: Clutter.ActorAlign.CENTER, style_class: 'main-title' });
+        this.middle_box.insert_child_at_index(this.title, 0);
+
+
+        //
+        // snooze button
+        //
+        this.button_box = new St.BoxLayout({ x_expand: true, y_expand: true, style_class: 'btn-box', x_align: Clutter.ActorAlign.CENTER, y_align: Clutter.ActorAlign.CENTER, });
+        this.bottom_box.add_child(this.button_box)
+        this.button_snooze = new St.Button({ can_focus: true, label: _('Snooze'), style_class: 'button' });
+        this.button_box.add_child(this.button_snooze);
+
+
+        //
+        // listen
+        //
+        this.button_snooze.connect('clicked', () => {
+            if (this.alarms[0].ID) Mainloop.source_remove(this.alarms[0].ID);
+
+            this.delegate.schedule_alarm(this.alarms[0],
+                this.delegate.settings.get_int('alarms-snooze-duration'));
+
+            this.close();
+
+            return Clutter.EVENT_STOP;
+        });
+        this.actor.connect('key-release-event', (_, event) => {
+            switch (event.get_key_symbol()) {
+                default:
+                    return Clutter.EVENT_PROPAGATE;
+            }
+        });
+    },
+
+    close: function () {
+        this.alarms = [];
+        this.alarm_cards_scroll_bin.destroy_all_children();
+        this.parent();
+    },
+
+    fire_alarm: function (alarm) {
+        this.alarms.push(alarm);
+
+        // TRANSLATORS: %s is a time string in the format HH:MM (e.g., 13:44)
+        let title = _('Alarm at %s').format(alarm.time_str);
+        let msg   = alarm.msg.trim();
+
+        this._add_alarm_card(title, msg)
+
+        if (this.alarms.length === 1) {
+            this.bottom_box.show();
+            this.alarm_cards_container.hide();
+            this.banner_container.show();
+
+            if (msg) {
+                this.title.text = title;
+                this.set_banner_text(msg);
+            }
+            else {
+                this.set_banner_text(title);
+            }
+        }
+        else {
+            this.bottom_box.hide();
+            this.alarm_cards_container.show();
+            this.banner_container.hide();
+            this.title.text =
+                ngettext('%d alarm went off!', '%d alarms went off!', this.alarms.length)
+                .format(this.alarms.length);
+        }
+
+        this.open();
+    },
+
+    _add_alarm_card: function (title, msg) {
+        let alarm_card = new St.BoxLayout({ vertical: true, style_class: 'alarm-card' });
+        this.alarm_cards_scroll_bin.add_child(alarm_card);
+
+        alarm_card.add_child(new St.Label({ text: title, style_class: 'title' }));
+
+        let body;
+
+        if (msg) {
+            body = new St.Label({ text: msg, y_align: St.Align.END, x_align: St.Align.START, style_class: 'body'});
+            alarm_card.add_child(body);
+            body.clutter_text.ellipsize        = Pango.EllipsizeMode.NONE;
+            body.clutter_text.single_line_mode = false;
+            body.clutter_text.line_wrap        = true;
+            body.clutter_text.line_wrap_mode   = Pango.WrapMode.WORD_CHAR;
+        }
+
+        alarm_card.connect('queue-redraw', () => {
+            resize_label(body);
+        });
+    },
+});
+Signals.addSignalMethods(AlarmFullscreen.prototype);

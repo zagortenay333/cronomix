@@ -100,8 +100,50 @@ function date_yyyymmdd () {
 }
 
 
+// @BUG
+// There is an issue with resizing when using pango's wrap mode together with a
+// scrollview. The label does not seem to get resized properly and as a result
+// to container doesn't either, which leads various issues.
+//
+// The issue does not appear if the scrollbar is visible, so it doesn't need to
+// be used all the time and is not a performance issue.
+//
+// The needs_scrollbar func will not return a correct value because of this.
+// Also, sometimes the bottom actor might be cut off, or extra padding might be
+// added...
+//
+// This func needs to be used at a time when the actor is already drawn, or else
+// it will not work.
+function resize_label (label) {
+    let theme_node = label.get_theme_node();
+    let alloc_box  = label.get_allocation_box();
+
+    // gets the acutal width of the box
+    let width = alloc_box.x2 - alloc_box.x1;
+
+    // remove paddings and borders
+    width = theme_node.adjust_for_width(width);
+
+    // nat_height is the minimum height needed to fit the multiline text
+    // **excluding** the vertical paddings/borders.
+    let [min_height, nat_height] = label.clutter_text.get_preferred_height(width);
+
+    // The vertical padding can only be calculated once the box is painted.
+    // nat_height_adjusted is the minimum height needed to fit the multiline
+    // text **including** vertical padding/borders.
+    let [min_height_adjusted, nat_height_adjusted] = theme_node.adjust_preferred_height(min_height, nat_height);
+    let vert_padding = nat_height_adjusted - nat_height;
+
+    label.set_height(nat_height + vert_padding);
+}
+
+
 // =====================================================================
 // @@@ Main
+//
+// @ext      : obj    (main extension object)
+// @ext_dir  : string (extension dir path)
+// @settings : obj    (extension settings)
 // =====================================================================
 const Todo = new Lang.Class({
     Name: 'Timepp.Todo',
@@ -1783,7 +1825,7 @@ const TaskEditor = new Lang.Class({
         this.completion_menu_content.connect('queue-redraw', () => {
             this.completion_menu.vscrollbar_policy = Gtk.PolicyType.NEVER;
 
-            if (ext.needs_scrollbar())
+            if (this.ext.needs_scrollbar())
                 this.completion_menu.vscrollbar_policy = Gtk.PolicyType.ALWAYS;
         });
     },
@@ -2074,7 +2116,13 @@ const TaskItem = new Lang.Class({
         // listen
         //
         this.actor.connect('queue-redraw', () => {
-            this._resize_msg();
+            if (this.delegate.tasks_scroll.vscrollbar_visible ||
+                ! this.delegate.tasks_scroll_wrapper.visible) {
+
+                return;
+            }
+
+            resize_label(this.msg);
         });
         this.actor.connect('event', (actor, event) => {
             this._on_event(actor, event);
@@ -2362,43 +2410,6 @@ const TaskItem = new Lang.Class({
             return word;
         else
             return null;
-    },
-
-    // @BUG
-    // There is an issue with resizing when using pango's wrap mode.
-    // It seems that the clutter text height will sometimes* be computed to be
-    // bigger than it's actual height by 1 line. This leads to an ugly padding
-    // at the bottom of the popup menu, which gets bigger as more items are
-    // incorrectly computed.
-    //
-    // * By sometimes, it seems only when the text is one char away from being
-    // wrapped.
-    //
-    // The issue does not occur if the scrollbar is visible, so we only resize
-    // items while the scrollbar isn't shown and after that nop out for
-    // performance reasons.
-    _resize_msg: function () {
-        if (this.delegate.tasks_scroll.vscrollbar_visible ||
-            ! this.delegate.tasks_scroll_wrapper.visible) {
-
-            return;
-        }
-
-        let theme_node = this.msg.get_theme_node();
-        let alloc_box  = this.msg.get_allocation_box();
-        let width      = theme_node.adjust_for_width(alloc_box.x2 - alloc_box.x1);
-
-        let [min_height, nat_height] =
-            this.msg.clutter_text.get_preferred_height(width);
-
-        if (this.msg_vert_padding < 0) {
-            let [min_height_adjusted, nat_height_adjusted] =
-                theme_node.adjust_preferred_height(min_height, nat_height);
-
-            this.msg_vert_padding = nat_height_adjusted - nat_height;
-        }
-
-        this.msg.set_height(nat_height + this.msg_vert_padding);
     },
 
     _on_event: function (actor, event) {

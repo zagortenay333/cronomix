@@ -38,6 +38,47 @@ some useful links.
 
 ---
 
+### Fullscreen Interface
+
+This applet has a fullscreen interface, which can be used to control a
+corresponding section as well as replace regular notifications.
+
+The interface has multi-monitor support, and it can be opened _(and brought into
+focus)_ via a keyboard shortcut.
+
+When inside the interface some keyboard shortcuts are available.
+
+**All:**
+
+| Shortcuts | Description  |
+| --------- | ------------ |
+| <kbd>Tab</kbd> | navigate |
+| <kbd>Esc</kbd> | close fullscreen |
+
+**Timer:**
+
+| Shortcuts | Description  |
+| --------- | ------------ |
+| <kbd>space</kbd> | stop/start timer |
+| <kbd>r</kbd>, <kbd>Backspace</kbd> | start timer at the last manually  set time |
+| <kbd>1</kbd> ... <kbd>9</kbd> and <kbd>0</kbd> | start timer at the time specified by a num key.<br/> _(1 = 1min, 2 = 2min, ..., 0 = 10min)_ |
+
+**Stopwatch:**
+
+| Shortcuts | Description  |
+| --------- | ------------ |
+| <kbd>space</kbd>                   | stop/start timer |
+| <kbd>l</kbd>, <kbd>Enter</kbd>     | make lap |
+| <kbd>r</kbd>, <kbd>Backspace</kbd> | reset |
+
+**Pomodoro:**
+
+| Shortcuts | Description  |
+| --------- | ------------ |
+| <kbd>space</kbd> | stop/start timer |
+
+---
+
 ### Todo.txt Manager
 
 Some of the features of the todo.txt manager are:
@@ -137,5 +178,5 @@ Alarms, stopwatch and other timers won't work when the screen is locked.
 
 ---
 
-![preview](https://i.imgur.com/bhf1SSG.png)
+![preview](https://i.imgur.com/mLAve7V.png)
 <sup>**Preview info:** [Gnome-Shell theme](https://github.com/zagortenay333/ciliora-tertia-shell)</sup>

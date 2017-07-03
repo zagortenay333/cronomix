@@ -1,6 +1,6 @@
-/* ======================================
- * ! panel items
- * ====================================== */
+/* =====================================================================
+ * @@@ panel items
+ * ===================================================================== */
 .timepp-panel-box .timer-panel-item {}
 .timepp-panel-box .stopwatch-panel-item {}
 .timepp-panel-box .pomo-panel-item {}
@@ -40,12 +40,11 @@
 }
 
 
-/* ======================================
- * ! general
- * ====================================== */
 
-/* use this selector to override .popup-menu */
-.timepp-menu {}
+/* =====================================================================
+ * @@@ general
+ * ===================================================================== */
+.timepp-menu {} /* use this selector to override .popup-menu */
 
 .timepp-menu StIcon {
     icon-size: 16px;
@@ -63,6 +62,10 @@
 
 .timepp-menu .section .header * {
     spacing: .7em;
+}
+
+.timepp-menu .section .header .clock {
+    margin-right: 2em;
 }
 
 .timepp-menu .view-box {
@@ -156,15 +159,151 @@
 }
 
 
-/* ======================================
- * ! timer pane
- * ====================================== */
+
+/* =====================================================================
+ * @@@ fullscreen interface general
+ * ===================================================================== */
+.timepp-fullscreen {
+    background-color: rgba(0, 0, 0, .9);
+    color: white;
+}
+
+.timepp-fullscreen .content {}
+
+.timepp-fullscreen .top-box {}
+
+.timepp-fullscreen .top-box > * {
+    padding: 1em 1.2em;
+}
+
+.timepp-fullscreen .middle-box,
+.timepp-fullscreen .bottom-box {
+    padding: 2em 1.2em;
+}
+
+.timepp-fullscreen .slider {
+    min-height: 37px;
+    -slider-height: 0;
+    -slider-background-color: transparent;
+    -slider-active-background-color: transparent;
+    -slider-border-color: rgba(255, 255, 255, 0.2);
+    -slider-active-border-color: #5a94dc;
+    -slider-border-width: 3px;
+    -slider-handle-radius: 6px;
+    color: #5a94dc;
+    border-image: none;
+    border: 0;
+}
+
+.timepp-fullscreen *:focus {
+    outline: 2px rgba(255, 255, 255, .5);
+}
+
+.timepp-fullscreen .monitor-icon StIcon {
+    icon-size: 16px;
+}
+
+.timepp-fullscreen .monitor-icon:checked StIcon,
+.timepp-fullscreen .monitor-icon:hover StIcon {
+    color: #5a94dc;
+}
+
+.timepp-fullscreen .monitor-icon:checked {
+    outline: none;
+}
+
+.timepp-fullscreen .close-icon StIcon {
+    icon-size: 32px;
+}
+
+.timepp-fullscreen .close-icon:hover StIcon {
+    color: #e22b2b;
+}
+
+.timepp-fullscreen StScrollBar {
+    padding: 0;
+}
+
+.timepp-fullscreen StScrollView.vfade StScrollBar {
+    margin-left: 1em;
+}
+
+.timepp-fullscreen StScrollBar StButton#hhandle,
+.timepp-fullscreen StScrollBar StButton#vhandle  {
+    border-image: none;
+    background-color: rgba(255, 255, 255, .2);
+    border-radius: 2px;
+}
+
+.timepp-fullscreen StScrollBar StButton#hhandle:active,
+.timepp-fullscreen StScrollBar StButton#vhandle:active,
+.timepp-fullscreen StScrollBar StButton#hhandle:hover,
+.timepp-fullscreen StScrollBar StButton#vhandle:hover {
+    background-color: rgba(255, 255, 255, .5);
+}
+
+.timepp-fullscreen .toggle-switch {
+    height: 20px;
+    width: 42px;
+    background-size: contain;
+}
+
+.timepp-fullscreen .toggle-switch-us, .toggle-switch-intl {
+    background-image: url("img/switch-off.svg");
+}
+
+.timepp-fullscreen .toggle-switch-us:checked, .toggle-switch-intl:checked {
+    background-image: url("img/switch-on.svg");
+}
+
+.timepp-fullscreen .btn-box {
+    spacing: 1em;
+}
+
+.timepp-fullscreen .button {
+    border-image: none;
+    box-shadow: none;
+    border: 0;
+
+    background-color: rgba(255, 255, 255, .2);
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 2px;
+    padding: .7em 2em;
+    -natural-hpadding: 2em;
+    -st-natural-width: 6em;
+}
+
+.timepp-fullscreen .button:hover {
+    outline: none;
+    background-color: rgba(255, 255, 255, .5);
+}
+
+
+
+/* =====================================================================
+ * @@@ timer
+ * ===================================================================== */
 .timepp-menu .timer-section {}
 
+.timepp-fullscreen.timer-expired {
+    background-color: rgba(226, 43, 43, .9);
+}
 
-/* ======================================
- * ! stopwatch pane
- * ====================================== */
+.timepp-fullscreen.timer-stopped .banner-label {
+    color: rgba(255, 255, 255, .3);
+}
+
+.timepp-fullscreen.timer-expired .close-icon:hover StIcon {
+    color: rgba(0, 0, 0, .5);
+}
+
+
+
+/* =====================================================================
+ * @@@ stopwatch
+ * ===================================================================== */
 .timepp-menu .stopwatch-section {}
 
 .timepp-menu .stopwatch-section .btn-reset {}
@@ -172,24 +311,21 @@
 .timepp-menu .stopwatch-section .btn-start {}
 .timepp-menu .stopwatch-section .btn-stop {}
 
-.timepp-menu .stopwatch-section .laps-scrollview {}
+.timepp-menu .stopwatch-section .laps-box {}
 
-
-.timepp-menu .stopwatch-section .laps-item {
-    padding: .4em;
+.timepp-fullscreen .laps-scrollview {
+    margin: 1em 0 1em 4em;
+    font-size: 30px;
 }
 
-.timepp-menu .stopwatch-section .laps-item-counter {
-    font-weight: bold;
-}
-
-.timepp-menu .stopwatch-section .laps-item-time {
+.timepp-fullscreen .laps-scrollview StScrollBar {
+    margin-left: 3em;
 }
 
 
-/* ======================================
- * ! pomodoro pane
- * ====================================== */
+/* =====================================================================
+ * @@@ pomodoro
+ * ===================================================================== */
 .timepp-menu .pomo-section {}
 
 .timepp-menu .pomo-section .btn-new {}
@@ -203,10 +339,51 @@
     font-weight: bold;
 }
 
+.timepp-fullscreen.pomo-running .close-icon:hover StIcon,
+.timepp-fullscreen.pomo-short-break .close-icon:hover StIcon,
+.timepp-fullscreen.pomo-long-break .close-icon:hover StIcon {
+    color: rgba(0, 0, 0, .5);
+}
 
-/* ======================================
- * ! alarms pane
- * ====================================== */
+.timepp-menu .pomo-section .pomo-phase-label {
+}
+
+.timepp-fullscreen .pomo-phase-label {
+    font-size: 32px;
+}
+
+.timepp-fullscreen.pomo-stopped .banner-label {
+    color: rgba(255, 255, 255, .3);
+}
+
+.timepp-fullscreen.pomo-running {
+    background-color: rgba(226, 43, 43, .9);
+}
+
+.timepp-fullscreen.pomo-long-break,
+.timepp-fullscreen.pomo-short-break {
+    background-color: rgba(0, 154, 75, .9);
+}
+
+.timepp-fullscreen.pomo-running .button,
+.timepp-fullscreen.pomo-long-break .button,
+.timepp-fullscreen.pomo-short-break .button {
+    background-color: rgba(0, 0, 0, .3);
+}
+
+.timepp-fullscreen.pomo-running .button:hover,
+.timepp-fullscreen.pomo-long-break .button:hover,
+.timepp-fullscreen.pomo-short-break .button:hover {
+    background-color: rgba(0, 0, 0, .7);
+}
+
+.timepp-fullscreen.pomo-stopped {}
+
+
+
+/* =====================================================================
+ * @@@ alarms
+ * ===================================================================== */
 .timepp-menu .alarm-section {}
 .timepp-menu .alarms-container {}
 
@@ -249,11 +426,67 @@
     font-weight: bold;
 }
 
+.timepp-fullscreen.alarm {
+    background-color: rgba(226, 43, 43, .9);
+}
 
-/* ======================================
- * ! todo pane
- * ====================================== */
+.timepp-fullscreen.alarm .close-icon:hover StIcon {
+    color: rgba(0, 0, 0, .5);
+}
 
+.timepp-fullscreen.alarm StScrollBar StButton#hhandle,
+.timepp-fullscreen.alarm StScrollBar StButton#vhandle  {
+    border-image: none;
+    background-color: rgba(0, 0, 0, .3);
+    border-radius: 2px;
+}
+
+.timepp-fullscreen.alarm StScrollBar StButton#hhandle:active,
+.timepp-fullscreen.alarm StScrollBar StButton#vhandle:active,
+.timepp-fullscreen.alarm StScrollBar StButton#hhandle:hover,
+.timepp-fullscreen.alarm StScrollBar StButton#vhandle:hover {
+    background-color: rgba(0, 0, 0, .7);
+}
+
+.timepp-fullscreen.alarm .button {
+    background-color: rgba(0, 0, 0, .3);
+}
+
+.timepp-fullscreen.alarm .button:hover {
+    background-color: rgba(0, 0, 0, .7);
+}
+
+.timepp-fullscreen .main-title {
+    font-size: 32px;
+    padding-bottom: 2em;
+}
+
+.timepp-fullscreen .alarm-cards-container {
+    spacing: 1em;
+}
+
+.timepp-fullscreen .alarm-card {
+    width: 240px;
+    padding: 1em;
+    background-color: rgba(0, 0, 0, .3);
+    border-radius: 2px;
+}
+
+.timepp-fullscreen .alarm-card .title {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.timepp-fullscreen .alarm-card .body {
+    margin-top: 1em;
+    font-size: 14px;
+}
+
+
+
+/* =====================================================================
+ * @@@ todo
+ * ===================================================================== */
 /* These properties only work if they are specified on the
  * 'timepp-menu todo-section' selector.
  * They control the colors of the task markup.
