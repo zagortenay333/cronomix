@@ -278,7 +278,6 @@ const Timer = new Lang.Class({
     _tic: function () {
         if (this.timer_duration < 1000000) {
             this.timer_duration = 0;
-            this.tic_mainloop_id = null;
             this._on_timer_expired();
             return;
         }
