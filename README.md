@@ -1,7 +1,7 @@
-<h1 align="center">Time ++ <img src="img/banner.png"/></h1>
+# Time ++ ![banner](img/banner.png)
 
-<h4 align="center">A <a href="https://github.com/ginatrapani/todo.txt-cli/wiki/The-Todo.txt-Format"> todo.txt manager</a>,
-time tracker, timer, stopwatch, pomodoro, and alarms gnome-shell extension.</h4>
+**A <a href="https://github.com/ginatrapani/todo.txt-cli/wiki/The-Todo.txt-Format"> todo.txt manager</a>,
+time tracker, timer, stopwatch, pomodoro, and alarms gnome-shell extension.**
 
 ---
 
