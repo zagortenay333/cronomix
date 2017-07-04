@@ -2,17 +2,14 @@
 
 <h1 align="center">Time ++</h1>
 
-
-**A [todo.txt
-manager](https://github.com/ginatrapani/todo.txt-cli/wiki/The-Todo.txt-Format),
-time tracker, timer, stopwatch, pomodoro, and alarms gnome-shell extension.**
+<h4 align="center">A <a href="https://github.com/ginatrapani/todo.txt-cli/wiki/The-Todo.txt-Format"> todo.txt manager</a>,
+time tracker, timer, stopwatch, pomodoro, and alarms gnome-shell extension.</h4>
 
 ---
 
 ### Installation
 
-* You can install this extension from the [gnome-shell extensions
-* site](https://extensions.gnome.org/extension/1238/time/).
+* You can install this extension from the [gnome-shell extensions site](https://extensions.gnome.org/extension/1238/time/).
   > **NOTE**:  
   > Since it takes some time for the extension to be reviewed, the version on
   > this site might be out of date and contain
