@@ -3,8 +3,6 @@
 A [todo.txt manager](https://github.com/ginatrapani/todo.txt-cli/wiki/The-Todo.txt-Format),
 time tracker, timer, stopwatch, pomodoro, and alarms gnome-shell extension.
 
-Cinnamon applet version: https://github.com/zagortenay333/timepp__cinnamon
-
 ---
 
 ### Installation
@@ -60,7 +58,7 @@ When in fullscreen, some keyboard shortcuts are available.
 | Shortcuts | Description  |
 | --------- | ------------ |
 | <kbd>space</kbd> | stop/start timer |
-| <kbd>r</kbd>, <kbd>Backspace</kbd> | start timer at the last manually  set time |
+| <kbd>r</kbd> or <kbd>Backspace</kbd> | start timer at the last manually  set time |
 | <kbd>1</kbd> ... <kbd>9</kbd> and <kbd>0</kbd> | start timer at the time specified by a num key.<br/> _(1 = 1min, 2 = 2min, ..., 0 = 10min)_ |
 
 **Stopwatch:**
@@ -68,8 +66,8 @@ When in fullscreen, some keyboard shortcuts are available.
 | Shortcuts | Description  |
 | --------- | ------------ |
 | <kbd>space</kbd>                   | stop/start timer |
-| <kbd>l</kbd>, <kbd>Enter</kbd>     | make lap |
-| <kbd>r</kbd>, <kbd>Backspace</kbd> | reset |
+| <kbd>l</kbd> or <kbd>Enter</kbd>     | make lap |
+| <kbd>r</kbd> or <kbd>Backspace</kbd> | reset |
 
 **Pomodoro:**
 
