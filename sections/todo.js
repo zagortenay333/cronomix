@@ -458,6 +458,13 @@ const Todo = new Lang.Class({
         this.sigm.connect(this.settings, 'changed::todo-keybinding-open-to-search', () => {
             this._toggle_keybindings();
         });
+        this.sigm.connect(this.panel_item.actor, 'key-focus-in', () => {
+            // user has right-clicked to show the context menu
+            if (this.ext.menu.isOpen && this.ext.context_menu.actor.visible)
+                return;
+
+            this.ext.open_menu(this);
+        });
         this.sigm.connect(this.panel_item, 'left-click', () => { this.ext.toggle_menu(this); });
         this.sigm.connect(this.panel_item, 'right-click', () => { this.ext.toggle_context_menu(this); });
         this.sigm.connect(this.add_task_button, 'clicked', () => { this.show_view__task_editor(); });
@@ -468,10 +475,10 @@ const Todo = new Lang.Class({
         this.sigm.connect(this.stats_button, 'clicked', () => { this.show_view__time_tracker_stats(); });
         this.sigm.connect(this.clear_button, 'clicked', () => { this.show_view__clear_completed(); });
         this.sigm.connect(this.search_entry, 'secondary-icon-clicked', () => { this.show_view__default(); });
+        this.sigm.connect(this.actor, 'style-changed', () => { this._update_markup_colors(); });
         this.sigm.connect(this.search_entry.clutter_text, 'text-changed', () => {
             Mainloop.idle_add(() => this._search());
         });
-        this.sigm.connect(this.actor, 'style-changed', () => { this._update_markup_colors(); });
 
 
         if (this.section_enabled) this._init__finish();
@@ -1622,6 +1629,19 @@ const Todo = new Lang.Class({
                 this.keybindings.splice(i, 1);
             }
         }
+    },
+
+    on_section_open_state_changed: function (state) {
+        if (state) {
+            this.panel_item.actor.add_style_pseudo_class('checked');
+            this.panel_item.actor.can_focus = false;
+        }
+        else {
+            this.panel_item.actor.remove_style_pseudo_class('checked');
+            this.panel_item.actor.can_focus = true;
+        }
+
+        this.emit('section-open-state-changed', state);
     },
 
     _toggle_section: function () {
@@ -4105,7 +4125,8 @@ const ViewManager = new Lang.Class({
         this.close_callback     = () => false;
         this.show_tasks_proc_id = null;
 
-        this.ext.menu.connect('open-state-changed', (_, state) => {
+        // @SPEED
+        this.delegate.connect('section-open-state-changed', (_, state) => {
             if (this.current_view === View.LOADING ||
                 this.current_view === View.NO_TODO_FILE) {
 
@@ -4113,9 +4134,12 @@ const ViewManager = new Lang.Class({
             }
 
             if (state) {
-                if (this.delegate.tasks_scroll_wrapper.visible) this._show_tasks();
+                if (this.delegate.tasks_scroll_wrapper.visible)
+                    this._show_tasks();
             }
-            else if (this.delegate.tasks_scroll_wrapper.visible) this._hide_tasks();
+            else if (this.delegate.tasks_scroll_wrapper.visible) {
+                this._hide_tasks();
+            }
 
             return Clutter.EVENT_PROPAGATE;
         });
@@ -4123,8 +4147,8 @@ const ViewManager = new Lang.Class({
 
     // @view:
     //   is an object of the form: { view_name      : View,
-    //                               actors         : array
-    //                               focused_actors : object
+    //                               actors         : array,
+    //                               focused_actors : object,
     //                               close_callback : func, }
     //
     // When calling this function all properties must be provided.

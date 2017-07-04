@@ -181,6 +181,13 @@ const Pomodoro = new Lang.Class({
         this.sigm.connect(this.settings, 'changed::pomodoro-keybinding-open', () => {
             this._toggle_keybindings();
         });
+        this.sigm.connect(this.panel_item.actor, 'key-focus-in', () => {
+            // user has right-clicked to show the context menu
+            if (this.ext.menu.isOpen && this.ext.context_menu.actor.visible)
+                return;
+
+            this.ext.open_menu(this);
+        });
         this.sigm.connect(this.panel_item, 'left-click', () => { this.ext.toggle_menu(this); });
         this.sigm.connect(this.panel_item, 'right-click', () => { this.ext.toggle_context_menu(this); });
         this.sigm.connect(this.panel_item, 'middle-click', Lang.bind(this, this.timer_toggle));
@@ -626,6 +633,19 @@ const Pomodoro = new Lang.Class({
                 this.keybindings.splice(i, 1);
             }
         }
+    },
+
+    on_section_open_state_changed: function (state) {
+        if (state) {
+            this.panel_item.actor.add_style_pseudo_class('checked');
+            this.panel_item.actor.can_focus = false;
+        }
+        else {
+            this.panel_item.actor.remove_style_pseudo_class('checked');
+            this.panel_item.actor.can_focus = true;
+        }
+
+        this.emit('section-open-state-changed', state);
     },
 
     _toggle_section: function () {
