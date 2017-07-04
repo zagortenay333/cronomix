@@ -1,18 +1,25 @@
-# Time ++ ![icon banner](img/banner.png)
+<h4 align="center"><img src="img/banner.png"/></h4>
 
-A [todo.txt manager](https://github.com/ginatrapani/todo.txt-cli/wiki/The-Todo.txt-Format),
-time tracker, timer, stopwatch, pomodoro, and alarms gnome-shell extension.
+<h1 align="center">Time ++</h1>
+
+
+**A [todo.txt
+manager](https://github.com/ginatrapani/todo.txt-cli/wiki/The-Todo.txt-Format),
+time tracker, timer, stopwatch, pomodoro, and alarms gnome-shell extension.**
 
 ---
 
 ### Installation
 
-* You can install this extension from the [gnome-shell extensions site](https://extensions.gnome.org/extension/1238/time/).
+* You can install this extension from the [gnome-shell extensions
+* site](https://extensions.gnome.org/extension/1238/time/).
   > **NOTE**:  
-  > Since it takes some time for the extension to be reviewed, the version on this site might be out of date and contain
+  > Since it takes some time for the extension to be reviewed, the version on
+  > this site might be out of date and contain
   > bugs that have already been fixed. Consider using the github version.
 
-* You can install it manually by cloning/downloading this repo into your `~/.local/share/gnome-shell/extensions` dir
+* You can install it manually by cloning/downloading this repo into your
+* `~/.local/share/gnome-shell/extensions` dir
 and renaming the downloaded dir to `timepp@zagortenay333`.
 
 ---
@@ -44,36 +51,60 @@ corresponding section as well as replace regular notifications.
 The interface has multi-monitor support, and it can be opened _(and brought into
 focus)_ via a keyboard shortcut.
 
-When in fullscreen, some keyboard shortcuts are available.
+When in fullscreen, some keyboard shortcuts are available:
 
-**All:**
+<table>
+    <th align="left" colspan="2">All</th>
+    <tr>
+        <td><kbd>Tab</kbd></td>
+        <td>navigate</td>
+    </tr>
+    <tr>
+        <td><kbd>Enter</kbd></td>
+        <td>close fullscreen</td>
+    </tr>
+</table>
 
-| Shortcuts | Description  |
-| --------- | ------------ |
-| <kbd>Tab</kbd> | navigate |
-| <kbd>Esc</kbd> | close fullscreen |
+<table>
+    <th align="left" colspan="2">Timer</th>
+    <tr>
+        <td><kbd>space</kbd></td>
+        <td>stop/start timer</td>
+    </tr>
+    <tr>
+        <td><kbd>r</kbd> or <kbd>Backspace</kbd></td>
+        <td>start timer at the last manually set time</td>
+    </tr>
+    <tr>
+        <td><kbd>1</kbd> ... <kbd>9</kbd> and <kbd>0</kbd></td>
+        <td>start timer at the time specified by a num key.<br/><i>1=1min,
+2=2min, ..., 0=10min</i></td>
+    </tr>
+</table>
 
-**Timer:**
+<table>
+    <th align="left" colspan="2">Stopwatch</th>
+    <tr>
+        <td><kbd>space</kbd></td>
+        <td>stop/start timer</td>
+    </tr>
+    <tr>
+        <td><kbd>l</kbd> or <kbd>Enter</kbd></td>
+        <td>lap</td>
+    </tr>
+    <tr>
+        <td><kbd>r</kbd> or <kbd>Backspace</kbd></td>
+        <td>reset</td>
+    </tr>
+</table>
 
-| Shortcuts | Description  |
-| --------- | ------------ |
-| <kbd>space</kbd> | stop/start timer |
-| <kbd>r</kbd> or <kbd>Backspace</kbd> | start timer at the last manually  set time |
-| <kbd>1</kbd> ... <kbd>9</kbd> and <kbd>0</kbd> | start timer at the time specified by a num key.<br/> _(1 = 1min, 2 = 2min, ..., 0 = 10min)_ |
-
-**Stopwatch:**
-
-| Shortcuts | Description  |
-| --------- | ------------ |
-| <kbd>space</kbd>                   | stop/start timer |
-| <kbd>l</kbd> or <kbd>Enter</kbd>     | make lap |
-| <kbd>r</kbd> or <kbd>Backspace</kbd> | reset |
-
-**Pomodoro:**
-
-| Shortcuts | Description  |
-| --------- | ------------ |
-| <kbd>space</kbd> | stop/start timer |
+<table>
+    <th align="left" colspan="2">Pomodoro</th>
+    <tr>
+        <td><kbd>space</kbd></td>
+        <td>stop/start timer</td>
+    </tr>
+</table>
 
 ---
 
@@ -91,15 +122,32 @@ Some of the features of the todo.txt manager are:
 * Deleting all completed tasks and optionally storing them into a done.txt file.
 * Switching between different views via keyboard shortcuts.
 
-The todo.txt manager also supports the `h:1` extension for hiding a task and the
-`due|DUE:yyyy-mm-dd` extension.
+Supported extensions are:
+
+<table>
+    <tr>
+        <td><code>h:1</code></td>
+        <td>
+            Hides an extension by default<br/>
+            <i>
+            Among other things, can be used to populate the todo manager<br/>
+            with context/project keywords for autocompletion.
+            </i>
+        </td>
+    </tr>
+    <tr>
+        <td><code>due|DUE:yyyy-mm-dd</code></td>
+        <td>Sets a due date on a task.</td>
+    </tr>
+</table>
 
 ---
 
 ### Time Tracker
 
 The time tracker is built into the todo.txt manager and allows you to track the
-time spent on a particular task as well as the time spent on a particular project.
+time spent on a particular task as well as the time spent on a particular
+project.
 
 When pressing the play button to track a task, all projects associated with that
 task will also be tracked.
@@ -137,9 +185,6 @@ date, time spent (hh:mm), type ('++' = project, '()' = task), task or project
 2017-02-05, 02:03, (), "(A) Watch the world burn."
 2017-02-05, 02:03, (), "x 2017-02-05 Catch Joker."
 2017-02-05, 02:03, (), "(Z) Take the trash out."
-.
-.
-.
 ```
 
 ---
@@ -175,6 +220,7 @@ todo.txt manager.
 Alarms, stopwatch and other timers won't work when the screen is locked.
 
 ---
-
+ 
 ![preview](https://i.imgur.com/mLAve7V.png)
-<sup>**Preview info:** [Gnome-Shell theme](https://github.com/zagortenay333/ciliora-tertia-shell)</sup>
+<sup>**Preview info:** [Gnome-Shell
+theme](https://github.com/zagortenay333/ciliora-tertia-shell)</sup>
