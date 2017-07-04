@@ -15,14 +15,14 @@ Cinnamon applet version: https://github.com/zagortenay333/timepp__cinnamon
   > bugs that have already been fixed. Consider using the github version.
 
 * You can install it manually by cloning/downloading this repo into your `~/.local/share/gnome-shell/extensions` dir
-and renaming the downloaded folder to `timepp@zagortenay333`.
+and renaming the downloaded dir to `timepp@zagortenay333`.
 
 ---
 
 ### Compatibility
 
 The latest version of this extension is on the master branch, and it supports
-gnome-shell version `3.24`.
+gnome-shell version **`3.24`**.
 
 ---
 
@@ -40,13 +40,13 @@ some useful links.
 
 ### Fullscreen Interface
 
-This applet has a fullscreen interface, which can be used to control a
+This extension has a fullscreen interface, which can be used to control a
 corresponding section as well as replace regular notifications.
 
 The interface has multi-monitor support, and it can be opened _(and brought into
 focus)_ via a keyboard shortcut.
 
-When inside the interface some keyboard shortcuts are available.
+When in fullscreen, some keyboard shortcuts are available.
 
 **All:**
 
