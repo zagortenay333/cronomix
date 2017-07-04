@@ -13,8 +13,7 @@ time tracker, timer, stopwatch, pomodoro, and alarms gnome-shell extension.**
   > this site might be out of date and contain
   > bugs that have already been fixed. Consider using the github version.
 
-* You can install it manually by cloning/downloading this repo into your
-* `~/.local/share/gnome-shell/extensions` dir
+* You can install it manually by cloning/downloading this repo into your `~/.local/share/gnome-shell/extensions` dir
 and renaming the downloaded dir to `timepp@zagortenay333`.
 
 ---
