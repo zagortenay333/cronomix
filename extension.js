@@ -342,9 +342,6 @@ const Timepp = new Lang.Class({
         }
     },
 
-    _add_separator: function () {
-    },
-
     _toggle_unicon_mode: function () {
         if (this.settings.get_boolean('unicon-mode')) {
             this.unicon_panel_item.actor.show();
