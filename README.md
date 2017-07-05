@@ -54,7 +54,7 @@ When in fullscreen, some keyboard shortcuts are available:
         <td>navigate</td>
     </tr>
     <tr>
-        <td><kbd>Enter</kbd></td>
+        <td><kbd>Esc</kbd></td>
         <td>close fullscreen</td>
     </tr>
 </table>
