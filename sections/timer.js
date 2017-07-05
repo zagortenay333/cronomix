@@ -283,14 +283,14 @@ const Timer = new Lang.Class({
     },
 
     _tic: function () {
+        this._update_slider();
+        this._update_time_display();
+
         if (this.timer_duration < 1000000) {
             this.timer_duration = 0;
             this._on_timer_expired();
             return;
         }
-
-        this._update_time_display();
-        this._update_slider();
 
         this.timer_duration = this.end_time - GLib.get_monotonic_time();
 
