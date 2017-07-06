@@ -2050,10 +2050,11 @@ const TaskItem = new Lang.Class({
         this.priority        = '(_)';
         this.projects        = [];
         this.contexts        = [];
-        this.creation_date   = '9999-99-99'; // use this value if not set
-        this.completion_date = '9999-99-99'; // use this value if not set
-        this.due_date        = '9999-99-99'; // use this value if not set
-        this.hidden          = false;        // h:1 extension
+        // For sorting purposes, we set the dates to this when they don't exist.
+        this.creation_date   = '0000-00-00';
+        this.completion_date = '0000-00-00';
+        this.due_date        = '0000-00-00';
+        this.hidden          = false; // h:1 extension
 
 
         // used for resizing
@@ -2539,7 +2540,7 @@ const TaskItem = new Lang.Class({
     },
 
     update_due_date: function () {
-        if (this.due_date === '9999-99-99') return;
+        if (this.due_date === '0000-00-00') return;
 
         let due  = Date.parse(this.due_date + 'T00:00:00');
         let diff = Math.ceil((due - Date.now()) / 86400000);
@@ -2562,9 +2563,9 @@ const TaskItem = new Lang.Class({
         this.priority               = '(_)';
         this.projects               = [];
         this.contexts               = [];
-        this.creation_date          = '9999-99-99';
-        this.completion_date        = '9999-99-99';
-        this.due_date               = '9999-99-99';
+        this.creation_date          = '0000-00-00';
+        this.completion_date        = '0000-00-00';
+        this.due_date               = '0000-00-00';
         this.prio_label.visible     = false;
         this.prio_label.text        = '';
         this.due_date_label.visible = false;
