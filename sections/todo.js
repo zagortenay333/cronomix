@@ -1031,8 +1031,10 @@ const Todo = new Lang.Class({
     // This func should not be called many times in a row. The idea is to add,
     // delete, or edit all tasks first and then call this func once.
     //
-    // It will handle various things like updating the todo.txt file, updating
-    // the stats obj, showing or hiding various icons, etc...
+    // It will handle various things like updating the stats obj, showing or
+    // hiding various icons, sorting tasks, etc...
+    //
+    // This func will not write tasks to todo.txt file.
     on_tasks_changed: function () {
         //
         // Update stats obj
