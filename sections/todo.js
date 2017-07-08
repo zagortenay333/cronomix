@@ -217,6 +217,9 @@ const Todo = new Lang.Class({
         // - To EDIT a task, create a new task_str and call the task objects'
         //   method update_task with the new string, and call on_tasks_changed()
         //   soon after that.
+        //
+        // Note that on_tasks_changed() does not update the todo.txt file. Use
+        // write_tasks_to_file() for that.
 
 
         // All task objects.
@@ -674,7 +677,7 @@ const Todo = new Lang.Class({
         });
     },
 
-    _store_cache: function () {
+    store_cache: function () {
         if (!this.cache_file || !this.cache_file.query_exists(null))
             this.cache_file.create(Gio.FileCreateFlags.NONE, null);
 
@@ -682,9 +685,7 @@ const Todo = new Lang.Class({
             null, false, Gio.FileCreateFlags.REPLACE_DESTINATION, null);
     },
 
-    _write_tasks_to_file: function () {
-        return;
-
+    write_tasks_to_file: function () {
         this.file_monitor_handler_block = true;
 
         let res = '';
@@ -791,6 +792,7 @@ const Todo = new Lang.Class({
 
             this.tasks = incompleted_tasks;
             this.on_tasks_changed();
+            this.write_tasks_to_file();
             this.show_view__default();
         });
 
@@ -808,6 +810,7 @@ const Todo = new Lang.Class({
             this.archive_tasks(completed_tasks);
             this.tasks = incompleted_tasks;
             this.on_tasks_changed();
+            this.write_tasks_to_file();
             this.show_view__default();
         });
 
@@ -908,7 +911,7 @@ const Todo = new Lang.Class({
 
         sort_window.connect('update-sort', (_, new_sort_obj) => {
             this.cache.sort = new_sort_obj;
-            this._store_cache();
+            this.store_cache();
             this.sort_tasks();
             this.show_view__default();
         });
@@ -926,7 +929,7 @@ const Todo = new Lang.Class({
 
         filters_window.connect('update-filters', (_, new_filters) => {
             this.cache.filters = new_filters;
-            this._store_cache();
+            this.store_cache();
             this._update_filter_icon();
             this.add_tasks_to_menu(true);
             this.show_view__default();
@@ -949,6 +952,7 @@ const Todo = new Lang.Class({
             this.tasks.push(new TaskItem(this.ext, this, task_str));
             this.tasks.unshift(this.tasks.pop()); // insert at the beggining
             this.on_tasks_changed();
+            this.write_tasks_to_file();
             this.show_view__default();
         });
 
@@ -963,12 +967,14 @@ const Todo = new Lang.Class({
             }
 
             this.on_tasks_changed();
+            this.write_tasks_to_file();
             this.show_view__default();
         });
 
         editor.connect('edit-task', (_, task_str) => {
             task.update_task(task_str);
             this.on_tasks_changed();
+            this.write_tasks_to_file();
             this.show_view__default();
         });
 
@@ -1020,6 +1026,7 @@ const Todo = new Lang.Class({
 
     // This func must be called soon after 1 or more tasks have been added, or
     // removed from this.tasks array or when they have been edited.
+    // This func will not write update the todo.txt file
     //
     // This func should not be called many times in a row. The idea is to add,
     // delete, or edit all tasks first and then call this func once.
@@ -1112,7 +1119,6 @@ const Todo = new Lang.Class({
         //
         this.clear_button.visible = this.stats.priorities.has('(x)');
         this.sort_tasks();
-        this._write_tasks_to_file();
     },
 
     // Add actors of task objects from this.tasks_viewport to the popup menu.
@@ -1312,7 +1318,7 @@ const Todo = new Lang.Class({
         if (arr.indexOf(keyword) !== -1) return;
 
         arr.push(keyword);
-        this._store_cache();
+        this.store_cache();
 
         this._update_filter_icon();
 
@@ -2071,6 +2077,7 @@ const TaskItem = new Lang.Class({
         this.completion_checkbox.connect('clicked', () => {
             this.toggle_task();
             this.delegate.on_tasks_changed();
+            this.delegate.write_tasks_to_file();
         });
     },
 
