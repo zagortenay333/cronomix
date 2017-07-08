@@ -87,7 +87,7 @@ const Timer = new Lang.Class({
         this.panel_item.set_label(this.settings.get_boolean('timer-show-seconds') ? '00:00:00' : '00:00');
         this.panel_item.actor.add_style_class_name('timer-panel-item');
         this._update_panel_icon_name();
-        this._toggle_panel_mode();
+        this._toggle_panel_item_mode();
 
         ext.panel_item_box.add_actor(this.panel_item.actor);
 
@@ -148,7 +148,7 @@ const Timer = new Lang.Class({
         //
         this.settings.connect('changed::timer-enabled', () => {
             this.section_enabled = this.settings.get_boolean('timer-enabled');
-            this._toggle_section();
+            this.toggle_section();
         }); // don't put this signal into the signal manager
 
         this.sigm.connect(this.fullscreen, 'monitor-changed', () => {
@@ -161,7 +161,7 @@ const Timer = new Lang.Class({
             this._update_time_display();
         });
         this.sigm.connect(this.settings, 'changed::timer-panel-mode', () => {
-            this._toggle_panel_mode();
+            this._toggle_panel_item_mode();
         });
         this.sigm.connect(this.settings, 'changed::timer-keybinding-open', () => {
             this._toggle_keybindings();
@@ -187,11 +187,49 @@ const Timer = new Lang.Class({
         }));
 
 
-        if (this.section_enabled) this._init__finish();
+        if (this.section_enabled) this.enable_section();
         else                      this.sigm.disconnect_all();
     },
 
-    _init__finish: function () {
+    on_section_open_state_changed: function (state) {
+        if (state) {
+            this.panel_item.actor.add_style_pseudo_class('checked');
+            this.panel_item.actor.can_focus = false;
+        }
+        else {
+            this.panel_item.actor.remove_style_pseudo_class('checked');
+            this.panel_item.actor.can_focus = true;
+        }
+
+        this.emit('section-open-state-changed', state);
+    },
+
+    toggle_section: function () {
+        if (this.section_enabled) {
+            this.panel_item.actor.show();
+            this.actor.show();
+            this.sigm.connect_all();
+            this.enable_section();
+        }
+        else {
+            this.panel_item.actor.hide();
+            this.actor.hide();
+            this.disable_section();
+        }
+    },
+
+    disable_section: function () {
+        if (! this.section_enabled) return;
+
+        this.stop_timer();
+        this._store_cache();
+        this.sigm.disconnect_all();
+        this._toggle_keybindings(true);
+        this.fullscreen.destroy();
+        this.fullscreen = null;
+    },
+
+    enable_section: function () {
         try {
             this.cache_file = Gio.file_new_for_path(CACHE_FILE);
 
@@ -495,7 +533,7 @@ const Timer = new Lang.Class({
         this.fullscreen.open();
     },
 
-    _toggle_panel_mode: function () {
+    _toggle_panel_item_mode: function () {
         if (this.settings.get_enum('timer-panel-mode') === 0)
             this.panel_item.set_mode('icon');
         else if (this.settings.get_enum('timer-panel-mode') === 1)
@@ -542,44 +580,6 @@ const Timer = new Lang.Class({
                 this.keybindings.splice(i, 1);
             }
         }
-    },
-
-    on_section_open_state_changed: function (state) {
-        if (state) {
-            this.panel_item.actor.add_style_pseudo_class('checked');
-            this.panel_item.actor.can_focus = false;
-        }
-        else {
-            this.panel_item.actor.remove_style_pseudo_class('checked');
-            this.panel_item.actor.can_focus = true;
-        }
-
-        this.emit('section-open-state-changed', state);
-    },
-
-    _toggle_section: function () {
-        if (this.section_enabled) {
-            this.panel_item.actor.show();
-            this.actor.show();
-            this.sigm.connect_all();
-            this._init__finish();
-        }
-        else {
-            this.panel_item.actor.hide();
-            this.actor.hide();
-            this.disable_section();
-        }
-    },
-
-    disable_section: function () {
-        if (! this.section_enabled) return;
-
-        this.stop_timer();
-        this._store_cache();
-        this.sigm.disconnect_all();
-        this._toggle_keybindings(true);
-        this.fullscreen.destroy();
-        this.fullscreen = null;
     },
 });
 Signals.addSignalMethods(Timer.prototype);

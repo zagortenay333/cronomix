@@ -175,7 +175,7 @@ const Stopwatch = new Lang.Class({
         //
         this.settings.connect('changed::stopwatch-enabled', () => {
             this.section_enabled = this.settings.get_boolean('stopwatch-enabled');
-            this._toggle_section();
+            this.toggle_section();
         }); // don't put this signal into the signal manager
 
         this.sigm.connect(this.fullscreen, 'monitor-changed', () => {
@@ -218,11 +218,54 @@ const Stopwatch = new Lang.Class({
         });
 
 
-        if (this.section_enabled) this._init__finish();
+        if (this.section_enabled) this.enable_section();
         else                      this.sigm.disconnect_all();
     },
 
-    _init__finish: function () {
+    on_section_open_state_changed: function (state) {
+        if (state) {
+            this.panel_item.actor.add_style_pseudo_class('checked');
+            this.panel_item.actor.can_focus = false;
+        }
+        else {
+            this.panel_item.actor.remove_style_pseudo_class('checked');
+            this.panel_item.actor.can_focus = true;
+        }
+
+        this.emit('section-open-state-changed', state);
+    },
+
+    toggle_section: function () {
+        if (this.section_enabled) {
+            this.panel_item.actor.show();
+            this.actor.show();
+            this.sigm.connect_all();
+            this.enable_section();
+        }
+        else {
+            this.panel_item.actor.hide();
+            this.actor.hide();
+            this.disable_section();
+        }
+    },
+
+    disable_section: function () {
+        if (! this.section_enabled) return;
+
+        if (this.time_backup_mainloop_id) {
+            Mainloop.source_remove(this.time_backup_mainloop_id);
+            this.time_backup_mainloop_id = null;
+        }
+
+        if (this.cache.state === StopwatchState.RUNNING) this.pause();
+        this._store_cache();
+        this.sigm.disconnect_all();
+        this._toggle_keybindings(true);
+        this.fullscreen.destroy();
+        this.fullscreen = null;
+    },
+
+    enable_section: function () {
         try {
             this.cache_file = Gio.file_new_for_path(CACHE_FILE);
 
@@ -536,49 +579,6 @@ const Stopwatch = new Lang.Class({
                 this.keybindings.splice(i, 1);
             }
         }
-    },
-
-    on_section_open_state_changed: function (state) {
-        if (state) {
-            this.panel_item.actor.add_style_pseudo_class('checked');
-            this.panel_item.actor.can_focus = false;
-        }
-        else {
-            this.panel_item.actor.remove_style_pseudo_class('checked');
-            this.panel_item.actor.can_focus = true;
-        }
-
-        this.emit('section-open-state-changed', state);
-    },
-
-    _toggle_section: function () {
-        if (this.section_enabled) {
-            this.panel_item.actor.show();
-            this.actor.show();
-            this.sigm.connect_all();
-            this._init__finish();
-        }
-        else {
-            this.panel_item.actor.hide();
-            this.actor.hide();
-            this.disable_section();
-        }
-    },
-
-    disable_section: function () {
-        if (! this.section_enabled) return;
-
-        if (this.time_backup_mainloop_id) {
-            Mainloop.source_remove(this.time_backup_mainloop_id);
-            this.time_backup_mainloop_id = null;
-        }
-
-        if (this.cache.state === StopwatchState.RUNNING) this.pause();
-        this._store_cache();
-        this.sigm.disconnect_all();
-        this._toggle_keybindings(true);
-        this.fullscreen.destroy();
-        this.fullscreen = null;
     },
 });
 Signals.addSignalMethods(Stopwatch.prototype);

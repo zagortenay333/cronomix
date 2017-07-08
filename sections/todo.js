@@ -76,13 +76,25 @@ const View = {
 };
 
 
+//
+// Each task has a priority assigned to it at any time.
+// The values of a priority are (in order of precedence):
+//
+//   '(~)'   if the task is hidden
+//   '(x)'   if the task is completed
+//   '(A-Z)' if the task has an actual priority
+//   '(_)'   if the task has no priority
+//
+
+
 const REG_CONTEXT  = /^@.+$/;
 const REG_PROJ     = /^\+.+$/;
 const REG_PRIO     = /^\([A-Z]\)$/;
-const REG_TAG      = /^[^:]+:[^:]+$/;
+const REG_EXT      = /^[^:]+:[^:]+$/;
 const REG_DATE     = /^\d{4}-\d{2}-\d{2}$/;
-const REG_PRIO_TAG = /^(?:pri|PRI):[A-Z]$/;
-const REG_DUE_TAG  = /^(?:due|DUE):\d{4}-\d{2}-\d{2}$/;
+const REG_PRIO_EXT = /^(?:pri|PRI):[A-Z]$/;
+const REG_HIDE_EXT = /^h:1$/;
+const REG_DUE_EXT  = /^(?:due|DUE):\d{4}-\d{2}-\d{2}$/;
 const REG_URL      = /^(?:(?:https?|ftp):\/\/)?(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,}))\.?)(?::\d{2,5})?(?:[/?#]\S*)?$/;
 
 
@@ -159,25 +171,24 @@ const Todo = new Lang.Class({
         this.separate_menu   = this.settings.get_boolean('todo-separate-menu');
         this.cache_file      = null;
         this.cache           = null;
-        this.time_tracker    = null;
         this.sigm            = new SIG_MANAGER.SignalManager();
 
 
-        // Used for switching between different views (stat_view, sort_view,
-        // filter_view, etc...)
+        // These are initiated with the enabled_section func.
+        this.time_tracker = null;
         this.view_manager = null;
 
 
-        // Track all the priorities, contexts, and projects across all tasks.
-        //
-        // @key   : string  (a context/project/priority)
-        // @value : natural (number of tasks that have that @key)
-        //
-        // The values of a priority can be:
-        // (~) if hidden, (x) if completed, (_) if no priority, else (A-Z).
-        this.priorities = new Map();
-        this.contexts   = new Map();
-        this.projects   = new Map();
+        // Track how many tasks have a particular proj/context/prio, a
+        // recurrence, etc...
+        this.stats = {
+            // the maps have the structure:
+            // @key : string  (a context/project/priority)
+            // @val : natural (number of tasks that have that @key)
+            priorities : new Map(),
+            contexts   : new Map(),
+            projects   : new Map(),
+        };
 
 
         // A GFile to the todo.txt file, GMonitor.
@@ -186,10 +197,28 @@ const Todo = new Lang.Class({
 
 
         // @NOTE
-        // this.tasks, this.tasks_viewport and the popup menu are the
-        // only places where refs to task objects can be held.
-        // this.search_dictionary will hold refs only for duration of a search.
         //
+        // this.tasks, this.tasks_viewport and the popup menu are the
+        // only places where refs to task objects can be held for longer periods
+        // of time.
+        // If a task has been permanently removed from this.tasks, then it has
+        // to be also removed from this.tasks_viewport and the popup_menu.
+        // Removing a task object from all 3 of those is expected to delete that
+        // object.
+        //
+        // - To ADD a task, create the object and add it to this.tasks and call
+        //   this.on_tasks_changed() soon after that.
+        //   When creating a large number of tasks all at once, it's best to use
+        //   the async func this.create_tasks().
+        //
+        // - To DELETE a task, remove the object from this.tasks and call
+        //   on_tasks_changed() soon after that.
+        //
+        // - To EDIT a task, create a new task_str and call the task objects'
+        //   method update_task with the new string, and call on_tasks_changed()
+        //   soon after that.
+
+
         // All task objects.
         this.tasks = [];
 
@@ -203,8 +232,8 @@ const Todo = new Lang.Class({
         // This is used by the _do_search func to store search queries and their
         // results for the duration of the search.
         //
-        // @key   : string (a search query)
-        // @value : array  (of tasks that match the search query)
+        // @key : string (a search query)
+        // @val : array  (of tasks that match the search query)
         this.search_dictionary = new Map();
 
 
@@ -213,16 +242,10 @@ const Todo = new Lang.Class({
 
 
         // @SPEED
-        // Since the functions '_create_tasks', '_add_tasks_to_menu', and
-        // '_show_tasks' could take a lot of time to finish depending on the num
-        // of tasks and could end up blocking the UI for too long, they are
-        // async.
-        // Race conditions can be resolved by removing them from the mainloop.
-        //
-        // These variables hold the mainloop source id's of the corresponding
-        // funcs. If null, the corresponding proc is not running.
-        this.create_task_objects_proc_id = null;
-        this.add_tasks_to_menu_proc_id   = null;
+        // Mainloop source id's of the corresponding async funcs.
+        // If null, the corresponding func is not running.
+        this.create_tasks_mainloop_id      = null;
+        this.add_tasks_to_menu_mainloop_id = null;
 
 
         // The mainloop id of the _on_day_started_loop.
@@ -247,7 +270,7 @@ const Todo = new Lang.Class({
 
         // @SPEED
         // Tweak this function to completely disable animations when closing
-        // this ext in order to avoid lag when there are lots of items.
+        // the popup menu in order to avoid lag when there are lots of items.
         this.ext.menu.close = function (_) {
             if (this._boxPointer.actor.visible) {
                 this._boxPointer.hide(false, Lang.bind(this, function() {
@@ -266,8 +289,8 @@ const Todo = new Lang.Class({
         this.panel_item = new PANEL_ITEM.PanelItem(ext.menu);
 
         this.panel_item.actor.add_style_class_name('todo-panel-item');
-        this._update_panel_icon_name();
-        this._toggle_panel_mode();
+        ICON_FROM_URI.icon_from_uri(this.panel_item.icon, CustomIcon.TODO, this.ext_dir);
+        this._toggle_panel_item_mode();
 
         ext.panel_item_box.add_actor(this.panel_item.actor);
 
@@ -428,11 +451,13 @@ const Todo = new Lang.Class({
         //
         this.settings.connect('changed::todo-enabled', () => {
             this.section_enabled = this.settings.get_boolean('todo-enabled');
-            this._toggle_section();
+            this.toggle_section();
         }); // don't put this signal into the signal manager
 
         this.sigm.connect(this.settings, 'changed::todo-files', () => {
-            this._update_file_switch_icon();
+            let todo_files = this.settings.get_value('todo-files').deep_unpack();
+            if (todo_files.length > 1) this.file_switcher_button.show();
+            else                       this.file_switcher_button.hide();
         });
         this.sigm.connect(this.settings, 'changed::todo-separate-menu', () => {
             this.separate_menu = this.settings.get_boolean('todo-separate-menu');
@@ -441,10 +466,12 @@ const Todo = new Lang.Class({
             this._update_time_display();
         });
         this.sigm.connect(this.settings, 'changed::todo-panel-mode', () => {
-            this._toggle_panel_mode();
+            this._toggle_panel_item_mode();
         });
         this.sigm.connect(this.settings, 'changed::todo-task-width', () => {
-            this._update_task_width();
+            let width = this.settings.get_int('todo-task-width');
+            for (let i = 0, len = this.tasks.length; i < len; i++)
+                this.tasks[i].actor.width = width;
         });
         this.sigm.connect(this.settings, 'changed::todo-current', () => {
             this._on_todo_file_changed();
@@ -481,11 +508,38 @@ const Todo = new Lang.Class({
         });
 
 
-        if (this.section_enabled) this._init__finish();
+        if (this.section_enabled) this.enable_section();
         else                      this.sigm.disconnect_all();
     },
 
-    _init__finish: function () {
+    on_section_open_state_changed: function (state) {
+        if (state) {
+            this.panel_item.actor.add_style_pseudo_class('checked');
+            this.panel_item.actor.can_focus = false;
+        }
+        else {
+            this.panel_item.actor.remove_style_pseudo_class('checked');
+            this.panel_item.actor.can_focus = true;
+        }
+
+        this.emit('section-open-state-changed', state);
+    },
+
+    toggle_section: function () {
+        if (this.section_enabled) {
+            this.panel_item.actor.show();
+            this.actor.show();
+            this.sigm.connect_all();
+            this.enable_section();
+        }
+        else {
+            this.panel_item.actor.hide();
+            this.actor.hide();
+            this.disable_section();
+        }
+    },
+
+    enable_section: function () {
         try {
             this.cache_file = Gio.file_new_for_path(CACHE_FILE);
 
@@ -525,20 +579,58 @@ const Todo = new Lang.Class({
         this._toggle_keybindings();
     },
 
+    disable_section: function () {
+        if (! this.section_enabled) return;
+
+        this.sigm.disconnect_all();
+        this._toggle_keybindings(true);
+        this.tasks          = [];
+        this.tasks_viewport = [];
+        this.tasks_scroll_content.remove_all_children();
+
+        if (this.todo_file_monitor) {
+            this.todo_file_monitor.cancel();
+            this.todo_file_monitor = null;
+        }
+
+        if (this.create_tasks_mainloop_id) {
+            Mainloop.source_remove(this.create_tasks_mainloop_id);
+            this.create_tasks_mainloop_id = null;
+        }
+
+        if (this.add_tasks_to_menu_mainloop_id) {
+            Mainloop.source_remove(this.add_tasks_to_menu_mainloop_id);
+            this.add_tasks_to_menu_mainloop_id = null;
+        }
+
+        if (this.on_day_started_loop_id) {
+            Mainloop.source_remove(this.on_day_started_loop_id);
+            this.on_day_started_loop_id = null;
+        }
+
+        if (this.time_tracker) {
+            this.time_tracker.close();
+            this.time_tracker = null;
+        }
+
+        if (this.view_manager) {
+            this.view_manager = null;
+        }
+    },
+
     _init_todo_file: function () {
         // reset
-        if (this.section_enabled) {
-            this.tasks          = [];
-            this.tasks_viewport = [];
-            this.tasks_scroll_content.remove_all_children();
-            this.priorities.clear();
-            this.contexts.clear();
-            this.projects.clear();
-            if (this.todo_file_monitor) {
-                this.todo_file_monitor.cancel();
-                this.todo_file_monitor = null;
-            }
+        this.tasks_scroll_content.remove_all_children();
+        this.tasks          = [];
+        this.tasks_viewport = [];
+        this.stats.priorities.clear();
+        this.stats.contexts.clear();
+        this.stats.projects.clear();
+        if (this.todo_file_monitor) {
+            this.todo_file_monitor.cancel();
+            this.todo_file_monitor = null;
         }
+
 
         let current = this.settings.get_value('todo-current').deep_unpack();
 
@@ -568,6 +660,7 @@ const Todo = new Lang.Class({
             }
         }
         catch (e) {
+            this.show_view__no_todo_file();
             logError(e);
             return;
         }
@@ -577,13 +670,8 @@ const Todo = new Lang.Class({
         let [, lines] = this.todo_txt_file.load_contents(null);
         lines = String(lines).trim().split(/\n|\r/);
 
-        this._create_task_objects(lines, () => {
-            this._update_panel_item_label();
-            this._update_clear_icon();
-            this._update_sort_icon();
-            this._update_filters();
-            this._update_file_switch_icon();
-            this._sort_tasks();
+        this.create_tasks(lines, () => {
+            this.on_tasks_changed();
             this.show_view__default();
         });
     },
@@ -639,40 +727,6 @@ const Todo = new Lang.Class({
         this._init_todo_file();
     },
 
-    _update_panel_item_label: function () {
-        let n_complete   = this.priorities.get('(x)') || 0;
-        let n_hidden     = this.priorities.get('(~)') || 0;
-        let n_incomplete = this.tasks.length - n_complete - n_hidden;
-        this.panel_item.set_label('' + n_incomplete);
-
-        if (n_incomplete) this.panel_item.actor.remove_style_class_name('done');
-        else this.panel_item.actor.add_style_class_name('done');
-    },
-
-    _update_file_switch_icon: function () {
-        let todo_files = this.settings.get_value('todo-files').deep_unpack();
-        if (todo_files.length > 1) this.file_switcher_button.show();
-        else                       this.file_switcher_button.hide();
-    },
-
-    _update_clear_icon: function () {
-        this.clear_button.visible = this.priorities.has('(x)');
-    },
-
-    _update_sort_icon: function () {
-        if (this.cache.sort.sort_order === SortOrder.ASCENDING)
-            ICON_FROM_URI.icon_from_uri(this.sort_icon, CustomIcon.SORT_ASCENDING, this.ext_dir);
-        else
-            ICON_FROM_URI.icon_from_uri(this.sort_icon, CustomIcon.SORT_DESCENDING, this.ext_dir);
-    },
-
-    _update_filter_icon: function () {
-        if (this.has_active_filters())
-            this.filter_button.add_style_class_name('active');
-        else
-            this.filter_button.remove_style_class_name('active');
-    },
-
     show_view__no_todo_file: function () {
         this.panel_item.set_mode('icon');
         this.panel_item.actor.remove_style_class_name('done');
@@ -698,8 +752,9 @@ const Todo = new Lang.Class({
             focused_actor  : this.loading_msg.label,
             close_callback : () => {
                 this.loading_msg.actor.hide();
-                this._update_panel_icon_name();
-                this._toggle_panel_mode();
+                ICON_FROM_URI.icon_from_uri(
+                    this.panel_item.icon, CustomIcon.TODO, this.ext_dir);
+                this._toggle_panel_item_mode();
             },
         });
     },
@@ -727,53 +782,32 @@ const Todo = new Lang.Class({
         });
 
         box.connect('delete-all', () => {
-            let res = [];
+            let incompleted_tasks = [];
 
-            for (let i = 0, len = this.tasks.length; i < len; i++)
+            for (let i = 0, len = this.tasks.length; i < len; i++) {
                 if (this.tasks[i].priority !== '(x)')
-                    res.push(this.tasks[i]);
+                    incompleted_tasks.push(this.tasks[i]);
+            }
 
-            this.tasks = res;
-            this.priorities.delete('(x)');
-            this._update_clear_icon();
-            this._write_tasks_to_file();
-            this._add_tasks_to_menu(true);
-
+            this.tasks = incompleted_tasks;
+            this.on_tasks_changed();
             this.show_view__default();
         });
 
         box.connect('archive-all', () => {
-            let incomplete = [];
-            let complete   = [];
+            let completed_tasks   = [];
+            let incompleted_tasks = [];
 
             for (let i = 0, len = this.tasks.length; i < len; i++) {
                 if (this.tasks[i].priority !== '(x)')
-                    incomplete.push(this.tasks[i]);
+                    incompleted.push(this.tasks[i]);
                 else
-                    complete.push(this.tasks[i].task_str);
+                    completed.push(this.tasks[i]);
             }
 
-            try {
-                let current   = this.settings.get_value('todo-current').deep_unpack();
-                let done_path = current.done_file.replace(/^.+?\/\//, '');
-                let done_file = Gio.file_new_for_path(done_path);
-
-                if (!done_txt_file || !done_txt_file.query_exists(null))
-                    done_txt_file.create(Gio.FileCreateFlags.NONE, null);
-
-                let append_stream = done_txt_file.append_to(
-                    Gio.FileCreateFlags.NONE, null);
-
-                append_stream.write_all(complete.join('\n'), null);
-            }
-            catch (e) { logError(e); }
-
-            this.tasks = incomplete;
-            this.priorities.delete('(x)');
-            this._update_clear_icon();
-            this._write_tasks_to_file();
-            this._add_tasks_to_menu(true);
-
+            this.archive_tasks(completed);
+            this.tasks = incompleted;
+            this.on_tasks_changed();
             this.show_view__default();
         });
 
@@ -806,9 +840,9 @@ const Todo = new Lang.Class({
     },
 
     show_view__search: function () {
-        if (this.add_tasks_to_menu_proc_id) {
-            Mainloop.source_remove(this.add_tasks_to_menu_proc_id);
-            this.add_tasks_to_menu_proc_id = null;
+        if (this.add_tasks_to_menu_mainloop_id) {
+            Mainloop.source_remove(this.add_tasks_to_menu_mainloop_id);
+            this.add_tasks_to_menu_mainloop_id = null;
         }
 
         this.view_manager.show_view({
@@ -823,13 +857,13 @@ const Todo = new Lang.Class({
                 this.search_dictionary.clear();
                 this.search_entry_bin.actor.hide();
                 this.tasks_scroll_wrapper.hide();
-                this._add_tasks_to_menu(true);
+                this.add_tasks_to_menu(true);
             },
         });
 
         // We always search all tasks no matter what filters are active, so
         // add all tasks to the popup menu.
-        this._add_tasks_to_menu(true, true);
+        this.add_tasks_to_menu(true, true);
     },
 
     show_view__file_switcher: function () {
@@ -875,7 +909,7 @@ const Todo = new Lang.Class({
         sort_window.connect('update-sort', (_, new_sort_obj) => {
             this.cache.sort = new_sort_obj;
             this._store_cache();
-            this._sort_tasks();
+            this.sort_tasks();
             this.show_view__default();
         });
     },
@@ -891,7 +925,10 @@ const Todo = new Lang.Class({
         });
 
         filters_window.connect('update-filters', (_, new_filters) => {
-            this.change_filter_object(new_filters);
+            this.cache.filters = new_filters;
+            this._store_cache();
+            this._update_filter_icon();
+            this.add_tasks_to_menu(true);
             this.show_view__default();
         });
     },
@@ -908,166 +945,30 @@ const Todo = new Lang.Class({
 
         if (task) this.time_tracker.stop_tracking(task);
 
-        editor.connect('edit-task', (_, task_str) => {
-            let was_hidden   = task.hidden;
-            let old_task_str = task.task_str;
-            let old_priority = task.priority;
-            let old_contexts = task.contexts;
-            let old_projects = task.projects;
-
-            let i, n, it, len;
-
-            task.update_task(task_str);
-
-            // Decrement the global count of this priority or remove it if no
-            // other task has it.
-            if (! was_hidden) {
-                n = this.priorities.get(old_priority);
-                if (n > 1) this.priorities.set(old_priority, --n);
-                else this.priorities.delete(old_priority);
-            }
-
-            // We don't want to add the priority to global statistics if the
-            // task is hidden.
-            n = this.priorities.get(task.priority);
-            this.priorities.set(task.priority, n ? ++n : 1);
-
-            // Decrement the global count of new contexts/projects that have
-            // been removed during the edit or remove them if no other tasks
-            // have them.
-            for (i = 0, len = old_contexts.length; i < len; i++) {
-                it = old_contexts[i];
-
-                if (task.contexts.indexOf(it) === -1) {
-                    n = this.contexts.get(it);
-                    if (n > 1) this.contexts.set(it, --n);
-                    else this.contexts.delete(it);
-                }
-            }
-
-            for (i = 0, len = old_projects.length; i < len; i++) {
-                it = old_projects[i];
-
-                if (task.projects.indexOf(it) === -1) {
-                    n = this.projects.get(it);
-                    if (n > 1) this.projects.set(it, --n);
-                    else this.projects.delete(it);
-                }
-            }
-
-            // Increment the global count of new contexts/projects that have
-            // been added during the edit or add them if they don't exist.
-            for (i = 0, len = task.contexts.length; i < len; i++) {
-                it = task.contexts[i];
-
-                if (old_contexts.indexOf(it) === -1) {
-                    n = this.contexts.get(it);
-                    this.contexts.set(it, n ? ++n : 1);
-                }
-            }
-
-            for (i = 0, len = task.projects.length; i < len; i++) {
-                it = task.projects[i];
-
-                if (old_projects.indexOf(it) === -1) {
-                    n = this.projects.get(it);
-                    this.projects.set(it, n ? ++n : 1);
-                }
-            }
-
-            this.time_tracker.update_record_name(old_task_str, task.task_str);
-            this._update_filters();
-            this._sort_tasks();
-            this._update_panel_item_label();
-            this._update_clear_icon();
-            this._write_tasks_to_file();
-
+        editor.connect('add-task', (_, task_str) => {
+            this.tasks.push(new TaskItem(this.ext, this, task_str));
+            this.tasks.unshift(this.tasks.pop()); // insert at the beggining
+            this.on_tasks_changed();
             this.show_view__default();
         });
 
         editor.connect('delete-task', (_, do_archive) => {
-            let i, n, it, len;
+            if (do_archive) this.archive_tasks([task]);
 
-            // Decrement number of tasks with this priority/context/project,
-            // or remove the entry from the global vars if no other tasks
-            // have them.
-            n = this.priorities.get(task.priority);
-            if (n > 1) this.priorities.set(task.priority, --n);
-            else       this.priorities.delete(task.priority);
-
-            for (i = 0, len = task.contexts.length; i < len; i++) {
-                it = task.contexts[i];
-                n  = this.contexts.get(it);
-
-                if (n > 1) this.contexts.set(it, --n);
-                else       this.contexts.delete(it);
-            }
-
-            for (i = 0, len = task.projects.length; i < len; i++) {
-                it = task.projects[i];
-                n  = this.projects.get(it);
-
-                if (n > 1) this.projects.set(it, --n);
-                else       this.projects.delete(it);
-            }
-
-            // We only remove the ref from this.tasks since this.tasks_viewport
-            // and the popup menu will be flushed with the sort_tasks func.
-            for (i = 0, len = this.tasks.length; i < len; i++) {
-                if (this.tasks[i].task_str === task.task_str) {
+            for (let i = 0, len = this.tasks.length; i < len; i++) {
+                if (this.tasks[i] === task) {
                     this.tasks.splice(i, 1);
                     break;
                 }
             }
 
-            if (do_archive) {
-                if (! task.completion_checkbox.checked) {
-                    if (task.priority !== '(_)') {
-                        task.task_str = 'x ' +
-                                        date_yyyymmdd() +
-                                        task.task_str.slice(3) +
-                                        ' pri:' + task.priority[1];
-                    }
-                    else
-                        task.task_str = 'x ' + date_yyyymmdd() + ' ' + task.task_str;
-                }
-
-                let done_file_path = this.settings.get_value('todo-current')
-                                     .deep_unpack().done_file;
-
-                try {
-                    let done_txt_file = Gio.file_new_for_path(
-                        done_file_path.replace(/^.+?\/\//, ''));
-
-                    if (!done_txt_file || !done_txt_file.query_exists(null))
-                        done_txt_file.create(Gio.FileCreateFlags.NONE, null);
-
-                    let append_stream = done_txt_file.append_to(
-                        Gio.FileCreateFlags.NONE, null);
-
-                    append_stream.write_all(task.task_str + '\n', null);
-                } catch (e) { logError(e); }
-            }
-
-            this._update_filters();
-            this._sort_tasks();
-            this._update_panel_item_label();
-            this._update_clear_icon();
-            this._write_tasks_to_file();
-
+            this.on_tasks_changed();
             this.show_view__default();
         });
 
-        editor.connect('add-task', (_, task_str) => {
-            this._add_task(task_str);
-            this.tasks.unshift(this.tasks.pop());
-
-            this._update_filters();
-            this._sort_tasks();
-            this._update_panel_item_label();
-            this._update_clear_icon();
-            this._write_tasks_to_file();
-
+        editor.connect('edit-task', (_, task_str) => {
+            task.update_task(task_str);
+            this.on_tasks_changed();
             this.show_view__default();
         });
 
@@ -1076,88 +977,158 @@ const Todo = new Lang.Class({
         });
     },
 
-    // @task_str: string (a single line in the todo.txt file)
-    _add_task: function (task_str) {
-        if (task_str.trim() === '') return;
-
-        let task = new TaskItem(this.ext, this, task_str);
-
-        this.tasks.push(task);
-
-        // Store any priorities, contexts, or projects into the global vars.
-        let i, it, len;
-
-        for (i = 0, len = task.projects.length; i < len; i++) {
-            it = this.projects.get(task.projects[i]);
-            this.projects.set(task.projects[i], it ? ++it : 1);
-        }
-
-        for (i = 0, len = task.contexts.length; i < len; i++) {
-            it = this.contexts.get(task.contexts[i]);
-            this.contexts.set(task.contexts[i], it ? ++it : 1);
-        }
-
-        it = this.priorities.get(task.priority);
-        this.priorities.set(task.priority, it ? ++it : 1);
-    },
-
-    // Create objects from the todo_txt file, and add them to the task_objects
-    // array.
+    // Create task objects from the given task strings and add them to the
+    // this.tasks array.
     //
-    // @todo_txt: array (of strings, each string is a line in todo.txt file)
-    // @callback: func
-    _create_task_objects: function (todo_txt, callback) {
-        let n = todo_txt.length;
-
-        // this.tasks = new Array(n);
-
-        if (this.add_tasks_to_menu_proc_id) {
-            Mainloop.source_remove(this.add_tasks_to_menu_proc_id);
-            this.add_tasks_to_menu_proc_id = null;
+    // Make sure to call this.on_tasks_changed() soon after calling this func.
+    //
+    // @todo_strings : array (of strings; each string is a line in todo.txt file)
+    // @callback     : func
+    create_tasks: function (todo_strings, callback) {
+        if (this.add_tasks_to_menu_mainloop_id) {
+            Mainloop.source_remove(this.add_tasks_to_menu_mainloop_id);
+            this.add_tasks_to_menu_mainloop_id = null;
         }
 
-        n = Math.min(n, 21);
+        let n = Math.min(todo_strings.length, 21);
         let i = 0;
 
-        for (; i < n; i++)
-            this._add_task(todo_txt[i]);
+        for (; i < n; i++) {
+            if (todo_strings[i].trim() === '') continue;
+            this.tasks.push(new TaskItem(this.ext, this, todo_strings[i]));
+        }
 
-        this.create_tasks_proc_id = Mainloop.idle_add(() => {
-            this._create_task_objects__finish(i, todo_txt, callback);
+        this.create_tasks_mainloop_id = Mainloop.idle_add(() => {
+            this._create_tasks__finish(i, todo_strings, callback);
         });
     },
 
-    _create_task_objects__finish: function (i, todo_txt, callback) {
-        if (i === todo_txt.length) {
-            this.create_tasks_proc_id = null;
+    _create_tasks__finish: function (i, todo_strings, callback) {
+        if (i === todo_strings.length) {
+            this.create_tasks_mainloop_id = null;
             if (typeof(callback) === 'function') callback();
             return;
         }
 
-        this._add_task(todo_txt[i]);
+        if (todo_strings[i].trim() !== '')
+            this.tasks.push(new TaskItem(this.ext, this, todo_strings[i]));
 
-        this.create_tasks_proc_id = Mainloop.idle_add(() => {
-            this._create_task_objects__finish(++i, todo_txt, callback);
+        this.create_tasks_mainloop_id = Mainloop.idle_add(() => {
+            this._create_tasks__finish(++i, todo_strings, callback);
         });
     },
 
-    // @update_tasks_viewport : bool
-    // @ignore_filters        : bool
+    // This func must be called soon after 1 or more tasks have been added, or
+    // removed from this.tasks array or when they have been edited.
     //
-    // This is the only function that can add task actors to the popup menu.
+    // It will handle various things like updating the todo.txt file, updating
+    // the stats obj, showing or hiding various icons, etc...
+    on_tasks_changed: function () {
+        //
+        // Update stats obj
+        //
+        {
+            let i, j, n, it, len;
+
+            this.stats.priorities.clear();
+            this.stats.projects.clear();
+            this.stats.contexts.clear();
+
+            for (i = 0, len = this.tasks.length; i < len; i++) {
+                it = this.tasks[i];
+
+                for (j = 0; j < it.projects.length; j++) {
+                    n = this.stats.projects.get(it.projects[j]);
+                    this.stats.projects.set(it.projects[j], n ? ++n : 1);
+                }
+
+                for (j = 0; j < it.contexts.length; j++) {
+                    n = this.stats.contexts.get(it.contexts[j]);
+                    this.stats.contexts.set(it.contexts[j], n ? ++n : 1);
+                }
+
+                n = this.stats.priorities.get(it.priority);
+                this.stats.priorities.set(it.priority, n ? ++n : 1);
+            }
+        }
+
+
+        //
+        // update panel label
+        //
+        {
+            let n_complete   = this.stats.priorities.get('(x)') || 0;
+            let n_hidden     = this.stats.priorities.get('(~)') || 0;
+            let n_incomplete = this.tasks.length - n_complete - n_hidden;
+
+            this.panel_item.set_label('' + n_incomplete);
+
+            if (n_incomplete)
+                this.panel_item.actor.remove_style_class_name('done');
+            else
+                this.panel_item.actor.add_style_class_name('done');
+        }
+
+
+        //
+        // Check if there are any redundant active filters and remove them.
+        //
+        {
+            let i, arr, len;
+
+            arr = this.cache.filters.active_filters.priorities;
+            for (i = 0, len = arr.length; i < len; i++) {
+                if (! this.stats.priorities.has(arr[i])) {
+                    arr.splice(i, 1);
+                    len--; i--;
+                }
+            }
+
+            arr = this.cache.filters.active_filters.contexts;
+            for (i = 0, len = arr.length; i < len; i++) {
+                if (! this.stats.contexts.has(arr[i])) {
+                    arr.splice(i, 1);
+                    len--; i--;
+                }
+            }
+
+            arr = this.cache.filters.active_filters.projects;
+            for (i = 0, len = arr.length; i < len; i++) {
+                if (! this.stats.projects.has(arr[i])) {
+                    arr.splice(i, 1);
+                    len--; i--;
+                }
+            }
+
+            this._update_filter_icon();
+        }
+
+
+        //
+        // rest
+        //
+        this.clear_button.visible = this.stats.priorities.has('(x)');
+        this.sort_tasks();
+        this._write_tasks_to_file();
+    },
+
+    // Add actors of task objects from this.tasks_viewport to the popup menu.
+    // Only this function should be used to add task actors to the popup menu.
     //
     // If @update_tasks_viewport is true, then the tasks viewport will be
     // rebuilt (i.e., all tasks will be run through the filter test again.)
     //
-    // @ignore_filters only makes sense if @update_tasks_viewport is true.
-    _add_tasks_to_menu: function (update_tasks_viewport, ignore_filters) {
+    // @update_tasks_viewport : bool
+    // @ignore_filters        : bool (only makes sense if @update_tasks_viewport
+    //                                is true)
+    add_tasks_to_menu: function (update_tasks_viewport, ignore_filters) {
+        if (this.add_tasks_to_menu_mainloop_id) {
+            Mainloop.source_remove(this.add_tasks_to_menu_mainloop_id);
+            this.add_tasks_to_menu_mainloop_id = null;
+        }
+
         update_tasks_viewport = Boolean(update_tasks_viewport);
         ignore_filters        = Boolean(ignore_filters);
-
-        if (this.add_tasks_to_menu_proc_id) {
-            Mainloop.source_remove(this.add_tasks_to_menu_proc_id);
-            this.add_tasks_to_menu_proc_id = null;
-        }
 
         this.tasks_scroll.vscrollbar_policy = Gtk.PolicyType.NEVER;
         this.tasks_scroll.get_vscroll_bar().get_adjustment().set_value(0);
@@ -1181,19 +1152,22 @@ const Todo = new Lang.Class({
                                    this.tasks_scroll_wrapper.visible;
         }
 
-        this.add_tasks_to_menu_proc_id = Mainloop.idle_add(() => {
-           this._add_tasks_to_menu__finish(n, arr, update_tasks_viewport, ignore_filters);
+        this.add_tasks_to_menu_mainloop_id = Mainloop.idle_add(() => {
+           this._add_tasks_to_menu__finish(n, arr, update_tasks_viewport,
+                                           ignore_filters, false);
         });
     },
 
-    _add_tasks_to_menu__finish: function (i, arr, update_tasks_viewport, ignore_filters, scrollbar_shown) {
+    _add_tasks_to_menu__finish: function (i, arr, update_tasks_viewport,
+                                          ignore_filters, scrollbar_shown) {
+
         if (!scrollbar_shown && this.ext.needs_scrollbar()) {
             this.tasks_scroll.vscrollbar_policy = Gtk.PolicyType.ALWAYS;
             scrollbar_shown = true;
         }
 
         if (i === arr.length) {
-            this.add_tasks_to_menu_proc_id = null;
+            this.add_tasks_to_menu_mainloop_id = null;
             return;
         }
 
@@ -1208,11 +1182,64 @@ const Todo = new Lang.Class({
         arr[i].actor.visible = this.ext.menu.isOpen &&
                                this.tasks_scroll_wrapper.visible;
 
-        this.add_tasks_to_menu_proc_id = Mainloop.idle_add(() => {
-            this._add_tasks_to_menu__finish(++i, arr, update_tasks_viewport, ignore_filters);
+        this.add_tasks_to_menu_mainloop_id = Mainloop.idle_add(() => {
+            this._add_tasks_to_menu__finish(++i, arr, update_tasks_viewport,
+                                            ignore_filters, scrollbar_shown);
         });
     },
 
+    // Append the task strings of each given task to the current done.txt file.
+    //
+    // If a given task is not completed, it's task string will be updated to
+    // show that it's completed prior to been appended to the done.txt file.
+    //
+    // The task objects will not be changed.
+    //
+    // @tasks: array (of task objects)
+    archive_tasks: function (tasks) {
+        let task_strings = [];
+
+        let task;
+        for (let i = 0, len = tasks.length; i < len; i++) {
+            task = tasks[i];
+
+            if (! task.completion_checkbox.checked) {
+                if (task.priority !== '(_)') {
+                    task_strings.push('x ' +
+                                      date_yyyymmdd() +
+                                      task.task_str.slice(3) +
+                                      ' pri:' + task.priority[1]);
+                }
+                else {
+                    task_strings.push('x ' +
+                                      date_yyyymmdd() + ' ' + task.task_str);
+                }
+            }
+            else {
+                tasks_strings.push(task.task_str);
+            }
+        }
+
+        try {
+            let current   = this.settings.get_value('todo-current').deep_unpack();
+            let done_path = current.done_file.replace(/^.+?\/\//, '');
+            let done_file = Gio.file_new_for_path(done_path);
+
+            if (!done_txt_file || !done_txt_file.query_exists(null))
+                done_txt_file.create(Gio.FileCreateFlags.NONE, null);
+
+            let append_stream = done_txt_file.append_to(
+                Gio.FileCreateFlags.NONE, null);
+
+            append_stream.write_all(task_strings.join('\n'), null);
+        }
+        catch (e) { logError(e); }
+    },
+
+    // A predicate used to determine whether a task inside the this.tasks array
+    // will be added to the this.tasks_viewport array (i.e., whether it can be
+    // visible to the user).
+    //
     // @task: obj (a task object)
     //
     // If invert_filters is false, return true if at least one filter is matched.
@@ -1268,50 +1295,9 @@ const Todo = new Lang.Class({
         return false;
     },
 
-    // Check if there are any redundant active filters and remove them.
-    _update_filters: function () {
-        let i, arr, len;
-
-        arr = this.cache.filters.active_filters.priorities;
-        for (i = 0, len = arr.length; i < len; i++) {
-            if (! this.priorities.has(arr[i])) {
-                arr.splice(i, 1);
-                len--; i--;
-            }
-        }
-
-        arr = this.cache.filters.active_filters.contexts;
-        for (i = 0, len = arr.length; i < len; i++) {
-            if (! this.contexts.has(arr[i])) {
-                arr.splice(i, 1);
-                len--; i--;
-            }
-        }
-
-        arr = this.cache.filters.active_filters.projects;
-        for (i = 0, len = arr.length; i < len; i++) {
-            if (! this.projects.has(arr[i])) {
-                arr.splice(i, 1);
-                len--; i--;
-            }
-        }
-
-        this._update_filter_icon();
-    },
-
-    // @new_filters: obj (An obj with same properties as this.cache.filters.)
-    //
-    // Replace the entire filters obj in this.cache.filters with @new_filters.
-    change_filter_object: function (new_filters) {
-        this.cache.filters = new_filters;
-        this._store_cache();
-        this._update_filter_icon();
-        this._add_tasks_to_menu(true);
-    },
-
-    // @keyword: string (A priority, context, or project.)
-    //
     // Add keyword as new active filter if it doesn't exist already.
+    //
+    // @keyword: string (priority, context, or project)
     activate_filter: function (keyword) {
         if (REG_PRIO.test(keyword))
             var arr = this.cache.filters.active_filters.priorities;
@@ -1328,12 +1314,20 @@ const Todo = new Lang.Class({
         this._update_filter_icon();
 
         if (this.view_manager.current_view === View.DEFAULT)
-            this._add_tasks_to_menu(true);
+            this.add_tasks_to_menu(true);
     },
 
-    _sort_tasks: function () {
-        let compare_func;
-        let k;
+    _update_filter_icon: function () {
+        if (this.has_active_filters())
+            this.filter_button.add_style_class_name('active');
+        else
+            this.filter_button.remove_style_class_name('active');
+    },
+
+    // This func will sort this.tasks array as well as call add_task_to_menu to
+    // rebuild this.tasks_viewport.
+    sort_tasks: function () {
+        let key, compare_func;
 
         switch (this.cache.sort.sort_type) {
             case SortType.PRIORITY: {
@@ -1346,18 +1340,18 @@ const Todo = new Lang.Class({
                 break;
             }
 
-            case SortType.CREATION_DATE:   if (!k) k = 'creation_date';
-            case SortType.COMPLETION_DATE: if (!k) k = 'completion_date';
-            case SortType.DUE_DATE:        if (!k) k = 'due_date';
+            case SortType.CREATION_DATE:   if (!key) key = 'creation_date';
+            case SortType.COMPLETION_DATE: if (!key) key = 'completion_date';
+            case SortType.DUE_DATE:        if (!key) key = 'due_date';
             case '': {
                 if (this.cache.sort.sort_order === SortOrder.DESCENDING) {
                     compare_func = (a, b) => {
-                        return +(a[k] < b[k]) || +(a[k] === b[k]) - 1;
+                        return +(a[key] < b[key]) || +(a[key] === b[key]) - 1;
                     };
                 }
                 else {
                     compare_func = (a, b) => {
-                        return +(a[k] > b[k]) || +(a[k] === b[k]) - 1;
+                        return +(a[key] > b[key]) || +(a[key] === b[key]) - 1;
                     };
                 }
 
@@ -1368,8 +1362,17 @@ const Todo = new Lang.Class({
         }
 
         this.tasks.sort(compare_func);
-        this._add_tasks_to_menu(true);
-        this._update_sort_icon();
+        this.add_tasks_to_menu(true);
+
+        // update sort icon
+        Meta.later_add(Meta.LaterType.BEFORE_REDRAW, () => {
+            if (this.cache.sort.sort_order === SortOrder.ASCENDING)
+                ICON_FROM_URI.icon_from_uri(this.sort_icon,
+                                    CustomIcon.SORT_ASCENDING, this.ext_dir);
+            else
+                ICON_FROM_URI.icon_from_uri(this.sort_icon,
+                                    CustomIcon.SORT_DESCENDING, this.ext_dir);
+        });
     },
 
     // Each search query and the corresponding array of results (task objects)
@@ -1383,9 +1386,9 @@ const Todo = new Lang.Class({
         if (this.view_manager.current_view !== View.SEARCH)
             return;
 
-        if (this.add_tasks_to_menu_proc_id) {
-            Mainloop.source_remove(this.add_tasks_to_menu_proc_id);
-            this.add_tasks_to_menu_proc_id = null;
+        if (this.add_tasks_to_menu_mainloop_id) {
+            Mainloop.source_remove(this.add_tasks_to_menu_mainloop_id);
+            this.add_tasks_to_menu_mainloop_id = null;
         }
 
         let pattern = this.search_entry.text.trim().toLowerCase();
@@ -1393,7 +1396,7 @@ const Todo = new Lang.Class({
         if (pattern === '') {
             this.last_search_pattern = '';
             this.tasks_viewport = this.tasks;
-            this._add_tasks_to_menu();
+            this.add_tasks_to_menu();
             return;
         }
 
@@ -1402,7 +1405,7 @@ const Todo = new Lang.Class({
 
         if (! search_needed) {
             this.tasks_viewport = search_space;
-            this._add_tasks_to_menu();
+            this.add_tasks_to_menu();
             return;
         }
 
@@ -1429,12 +1432,9 @@ const Todo = new Lang.Class({
         }
 
         this.search_dictionary.set(pattern, this.tasks_viewport);
-        this._add_tasks_to_menu();
+        this.add_tasks_to_menu();
     },
 
-    // returns [search_needed, search_space]
-    // search_needed: bool
-    // search_space:  array (of task objects)
     _find_prev_search_results: function (pattern) {
         let res = '';
 
@@ -1445,24 +1445,6 @@ const Todo = new Lang.Class({
         if (pattern === res) return [false, this.search_dictionary.get(res)];
         else if (res)        return [true,  this.search_dictionary.get(res)];
         else                 return [true,  this.tasks];
-    },
-
-    on_task_checkbox_clicked: function (old_prio, task) {
-        this.add_task_button.grab_key_focus();
-
-        // Update the global metadata vars
-        let old_n = this.priorities.get(old_prio);
-        if (old_n > 1) this.priorities.set(old_prio, --old_n);
-        else           this.priorities.delete(old_prio);
-
-        let new_n = this.priorities.get(task.priority);
-        this.priorities.set(task.priority, new_n ? ++new_n : 1);
-
-        this._update_filters();
-        this._sort_tasks();
-        this._update_panel_item_label();
-        this._update_clear_icon();
-        this._write_tasks_to_file();
     },
 
     _on_day_started_loop: function () {
@@ -1494,20 +1476,6 @@ const Todo = new Lang.Class({
         });
     },
 
-    _update_panel_icon_name: function () {
-        ICON_FROM_URI.icon_from_uri(this.panel_item.icon, CustomIcon.TODO, this.ext_dir);
-    },
-
-    _update_task_width: function () {
-        let width = this.settings.get_int('todo-task-width');
-
-        for (let i = 0, len = this.tasks.length; i < len; i++) {
-            this.tasks[i].actor.width = width;
-        }
-    },
-
-    // Try to update the markup_color object.
-    // Returns true if the object has been updated, else false.
     _update_markup_colors: function () {
         let update_needed = false;
 
@@ -1515,13 +1483,13 @@ const Todo = new Lang.Class({
             let [success, col] = this.actor.get_theme_node()
                                  .lookup_color(it + '-color', false);
 
-            if (success) {
-                col = col.to_string().substr(0, 7);
+            if (! success) return;
 
-                if (this.markup_colors[it] !== col) {
-                    this.markup_colors[it] = col;
-                    update_needed = true;
-                }
+            col = col.to_string().substr(0, 7);
+
+            if (this.markup_colors[it] !== col) {
+                this.markup_colors[it] = col;
+                update_needed = true;
             }
         });
 
@@ -1539,7 +1507,7 @@ const Todo = new Lang.Class({
         }
     },
 
-    _toggle_panel_mode: function () {
+    _toggle_panel_item_mode: function () {
         if (this.settings.get_enum('todo-panel-mode') === 0)
             this.panel_item.set_mode('icon');
         else if (this.settings.get_enum('todo-panel-mode') === 1)
@@ -1630,79 +1598,13 @@ const Todo = new Lang.Class({
             }
         }
     },
-
-    on_section_open_state_changed: function (state) {
-        if (state) {
-            this.panel_item.actor.add_style_pseudo_class('checked');
-            this.panel_item.actor.can_focus = false;
-        }
-        else {
-            this.panel_item.actor.remove_style_pseudo_class('checked');
-            this.panel_item.actor.can_focus = true;
-        }
-
-        this.emit('section-open-state-changed', state);
-    },
-
-    _toggle_section: function () {
-        if (this.section_enabled) {
-            this.panel_item.actor.show();
-            this.actor.show();
-            this.sigm.connect_all();
-            this._init__finish();
-        }
-        else {
-            this.panel_item.actor.hide();
-            this.actor.hide();
-            this.disable_section();
-        }
-    },
-
-    disable_section: function () {
-        if (! this.section_enabled) return;
-
-        this.sigm.disconnect_all();
-        this._toggle_keybindings(true);
-        this.tasks          = [];
-        this.tasks_viewport = [];
-        this.tasks_scroll_content.remove_all_children();
-
-        if (this.todo_file_monitor) {
-            this.todo_file_monitor.cancel();
-            this.todo_file_monitor = null;
-        }
-
-        if (this.create_task_objects_proc_id) {
-            Mainloop.source_remove(this.create_task_objects_proc_id);
-            this.create_task_objects_proc_id = null;
-        }
-
-        if (this.add_tasks_to_menu_proc_id) {
-            Mainloop.source_remove(this.add_tasks_to_menu_proc_id);
-            this.add_tasks_to_menu_proc_id = null;
-        }
-
-        if (this.on_day_started_loop_id) {
-            Mainloop.source_remove(this.on_day_started_loop_id);
-            this.on_day_started_loop_id = null;
-        }
-
-        if (this.time_tracker) {
-            this.time_tracker.close();
-            this.time_tracker = null;
-        }
-
-        if (this.view_manager) {
-            this.view_manager = null;
-        }
-    },
 });
 Signals.addSignalMethods(Todo.prototype);
 
 
 
 // =====================================================================
-// @@@ The window used for adding/editing a task.
+// @@@ UI used for editing a task string.
 //
 // @ext      : obj (main extension object)
 // @delegate : obj (main section object)
@@ -1711,10 +1613,12 @@ Signals.addSignalMethods(Todo.prototype);
 // @signals:
 //   - 'add-task'    (returns task string)
 //   - 'edit-task'   (returns task string)
-//   - 'delete-task'
+//   - 'delete-task' (returns bool; if true, the task is to be archived as well)
 //   - 'cancel'
 //
-// If @task is provided, then the entry will be prepopulated with the task_str.
+// If @task is provided, then the entry will be prepopulated with the task_str
+// of that task object and the signals 'delete-task' and 'edit-task' will be
+// used instead of 'add-task'.
 // =====================================================================
 const TaskEditor = new Lang.Class({
     Name: 'Timepp.TaskEditor',
@@ -1855,9 +1759,9 @@ const TaskEditor = new Lang.Class({
         let completions = null;
 
         if (word[0] === '@')
-            completions = this._find_completions(word, this.delegate.contexts);
+            completions = this._find_completions(word, this.delegate.stats.contexts);
         else if (word[0] === '+')
-            completions = this._find_completions(word, this.delegate.projects);
+            completions = this._find_completions(word, this.delegate.stats.projects);
 
         if (!completions || completions.length === 0) {
             this.completion_menu.hide();
@@ -2045,8 +1949,6 @@ const TaskItem = new Lang.Class({
         this.task_str = task_str;
 
 
-        // The values of this.priority are:
-        // (~) if hidden, (x) if completed, (_) if no priority, else (A-Z).
         this.priority        = '(_)';
         this.projects        = [];
         this.contexts        = [];
@@ -2055,11 +1957,7 @@ const TaskItem = new Lang.Class({
         this.completion_date = '0000-00-00';
         this.due_date        = '0000-00-00';
         this.hidden          = false; // h:1 extension
-
-
-        // used for resizing
-        this.msg_vert_padding = -1;
-        // Project, context, or url under mouse pointer, null if none of those.
+        // Project/context/url below mouse pointer, null if none of those.
         this.current_keyword = null;
 
 
@@ -2166,7 +2064,7 @@ const TaskItem = new Lang.Class({
                 global.screen.set_cursor(Meta.Cursor.DEFAULT);
         });
         this.completion_checkbox.connect('clicked', () => {
-            this._on_checkbox_clicked();
+            this.toggle_task();
         });
     },
 
@@ -2274,13 +2172,20 @@ const TaskItem = new Lang.Class({
     },
 
     _parse_task_str: function () {
+        //
+        // The 'header' is part of the task_str at the start that includes
+        // the 'x' (checked) sign, the priority, and the completion/creation
+        // dates.
+        // The 'description' is everything else.
+        //
+
         let words    = this.task_str.split(/ +/);
         let len      = words.length;
-        let desc_pos = 0;
+        let desc_pos = 0; // idx of first word of 'description' in words arr
 
-        // Parse the 'header' (everything except the description) and store the
-        // offset of the description.
-        // desc_pos is the index of the first word of desc in the words array.
+        //
+        // Parse 'header'
+        //
         if (words[0] === 'x') {
             this.completion_checkbox.checked = true;
             this.actor.add_style_class_name('completed');
@@ -2288,12 +2193,12 @@ const TaskItem = new Lang.Class({
 
             if (REG_DATE.test(words[1])) {
                 this.completion_date      = words[1];
-                this.date_labels.text    += _('completed:') + words[1] + ' ';
+                this.date_labels.text    += _('completed:') + words[1] + '   ';
                 this.date_labels.visible  = true;
 
                 if (REG_DATE.test(words[2])) {
                     this.creation_date        = words[2];
-                    this.date_labels.text    += _('created:') + words[2] + ' ';
+                    this.date_labels.text    += _('created:') + words[2] + '   ';
                     this.date_labels.visible  = true;
                     desc_pos                  = 3;
                 }
@@ -2309,7 +2214,7 @@ const TaskItem = new Lang.Class({
 
             if (REG_DATE.test(words[1])) {
                 this.creation_date        = words[1];
-                this.date_labels.text    += _('created:') + words[1] + ' ';
+                this.date_labels.text    += _('created:') + words[1] + '   ';
                 this.date_labels.visible  = true;
                 desc_pos                  = 2;
             }
@@ -2317,56 +2222,59 @@ const TaskItem = new Lang.Class({
         }
         else if (REG_DATE.test(words[0])) {
             this.creation_date       = words[0];
-            this.date_labels.text   += _('created:') + words[0] + ' ';
+            this.date_labels.text   += _('created:') + words[0] + '   ';
             this.date_labels.visible = true;
             desc_pos                 = 1;
         }
 
         //
-        // Parse description
+        // Parse 'description'
         //
+        let word;
         for (let i = desc_pos; i < len; i++) {
-            if (REG_CONTEXT.test(words[i])) {
-                if (this.contexts.indexOf(words[i]) === -1) {
-                    this.contexts.push(words[i]);
+            word = words[i];
+
+            if (REG_CONTEXT.test(word)) {
+                if (this.contexts.indexOf(word) === -1) {
+                    this.contexts.push(word);
                 }
                 words[i] = '<span foreground="' +
                            this.delegate.markup_colors.context +
-                           '"><b>' + words[i] + '</b></span>';
+                           '"><b>' + word + '</b></span>';
             }
-            else if (REG_PROJ.test(words[i])) {
-                if (this.projects.indexOf(words[i]) === -1) {
-                    this.projects.push(words[i]);
+            else if (REG_PROJ.test(word)) {
+                if (this.projects.indexOf(word) === -1) {
+                    this.projects.push(word);
                 }
                 words[i] = '<span foreground="' +
                            this.delegate.markup_colors.project +
-                           '"><b>' + words[i] + '</b></span>';
+                           '"><b>' + word + '</b></span>';
             }
-            else if (REG_URL.test(words[i])) {
+            else if (REG_URL.test(word)) {
                 words[i] = '<span foreground="' +
                            this.delegate.markup_colors.link +
-                           '"><u>' + words[i] + '</u></span>';
+                           '"><u>' + word + '</u></span>';
             }
-            else if (REG_TAG.test(words[i])) {
-                if (REG_DUE_TAG.test(words[i]) && !this.hidden) {
-                    this.due_date = words[i].slice(4);
-                    this.due_date_label.text += _('due:') + words[i].slice(4);
+            else if (REG_EXT.test(word)) {
+                if (REG_DUE_EXT.test(word) && !this.hidden) {
+                    this.due_date = word.slice(4);
+                    this.due_date_label.text   += _('due:') + word.slice(4);
                     this.due_date_label.visible = true;
                     this.update_due_date();
 
                     words.splice(i, 1);
                     i--; len--;
                 }
-                else if (words[i] === 'h:1') {
-                    this.hidden = true;
-                    this.actor.add_style_class_name('hidden-task');
-                    this.completion_checkbox.checked = false;
-                    this.completion_checkbox.hide();
+                else if (REG_HIDE_EXT.test(word)) {
                     this.priority = '(~)';
+                    this.hidden = true;
+                    this.completion_checkbox.checked = false;
+                    this.actor.add_style_class_name('hidden-task');
+                    this.completion_checkbox.hide();
                     this.prio_label.hide();
                     this.due_date_label.hide();
                     this.date_labels.hide();
-                    if (this.edit_icon_bin) this.edit_icon_bin.visible = false;
+                    if (this.edit_icon_bin) this.edit_icon_bin.hide();
 
                     let icon_incognito_bin = new St.Button({ can_focus: true });
                     this.header.insert_child_at_index(icon_incognito_bin, 0);
@@ -2381,7 +2289,7 @@ const TaskItem = new Lang.Class({
                     words.splice(i, 1);
                     i--; len--;
                 }
-                else if (REG_PRIO_TAG.test(words[i])) {
+                else if (REG_PRIO_EXT.test(word)) {
                     words.splice(i, 1);
                     i--; len--;
                 }
@@ -2490,47 +2398,6 @@ const TaskItem = new Lang.Class({
         }
     },
 
-    _on_checkbox_clicked: function () {
-        this._hide_header_icons();
-
-        let old_prio = this.priority;
-
-        if (this.completion_checkbox.checked) {
-            this.delegate.time_tracker.stop_tracking(this);
-
-            if (this.priority !== '(_)') {
-                this.task_str = 'x ' +
-                                date_yyyymmdd() +
-                                this.task_str.slice(3) +
-                                ' pri:' + this.priority[1];
-            }
-            else
-                this.task_str = 'x ' + date_yyyymmdd() + ' ' + this.task_str;
-
-            this.priority = '(x)';
-            this.update_task();
-        }
-        else {
-            let prio  = '';
-            let words = this.task_str.split(/ +/);
-
-            for (let i = 0, len = words.length; i < len; i++) {
-                if (REG_PRIO_TAG.test(words[i])) {
-                    prio = '(' + words[i][4] + ') ';
-                    words.splice(i, 1);
-                    break;
-                }
-            }
-
-            if (REG_DATE.test(words[1])) words.splice(0, 2);
-            else                         words.splice(0, 1);
-
-            this.update_task(prio + words.join(' '));
-        }
-
-        this.delegate.on_task_checkbox_clicked(old_prio, this);
-    },
-
     on_tracker_started: function () {
         this._show_tracker_running_icon();
     },
@@ -2556,8 +2423,52 @@ const TaskItem = new Lang.Class({
         this.due_date_label.text = _('due:') + this.due_date + ' (' + abs + ')';
     },
 
+    toggle_task: function () {
+        this._hide_header_icons();
+
+        let old_prio = this.priority;
+
+        if (this.completion_checkbox.checked) {
+            this.delegate.time_tracker.stop_tracking(this);
+
+            if (this.priority !== '(_)') {
+                this.task_str = 'x ' +
+                                date_yyyymmdd() +
+                                this.task_str.slice(3) +
+                                ' pri:' + this.priority[1];
+            }
+            else
+                this.task_str = 'x ' + date_yyyymmdd() + ' ' + this.task_str;
+
+            this.priority = '(x)';
+            this.update_task();
+        }
+        else {
+            let prio  = '';
+            let words = this.task_str.split(/ +/);
+
+            for (let i = 0, len = words.length; i < len; i++) {
+                if (REG_PRIO_EXT.test(words[i])) {
+                    prio = '(' + words[i][4] + ') ';
+                    words.splice(i, 1);
+                    break;
+                }
+            }
+
+            if (REG_DATE.test(words[1])) words.splice(0, 2);
+            else                         words.splice(0, 1);
+
+            this.update_task(prio + words.join(' '));
+        }
+
+        this.delegate.on_tasks_changed();
+    },
+
     update_task: function (task_str) {
-        if (task_str) this.task_str = task_str;
+        if (task_str) {
+            this.delegate.time_tracker.update_record_name(this.task_str, task_str);
+            this.task_str = task_str;
+        }
 
         // reset
         this.priority               = '(_)';
@@ -2581,6 +2492,7 @@ const TaskItem = new Lang.Class({
         }
 
         this._parse_task_str();
+        this.delegate.on_tasks_changed();
     },
 });
 Signals.addSignalMethods(TaskItem.prototype);
@@ -2607,7 +2519,8 @@ const TaskFiltersWindow = new Lang.Class({
         this.active_filters = delegate.cache.filters.active_filters;
 
 
-        // Keywords contains the contexts, projects, and custom filters.
+        // We store all filter item objects here.
+        // I.e., those objects created by the _new_filter_item() func.
         this.filter_register = {
             priorities : [],
             contexts   : [],
@@ -2626,7 +2539,7 @@ const TaskFiltersWindow = new Lang.Class({
 
 
         //
-        // filter sectors
+        // filters
         //
         this.filter_sectors_scroll = new St.ScrollView({ style_class: 'vfade' });
         this.content_box.add_actor(this.filter_sectors_scroll);
@@ -2637,36 +2550,20 @@ const TaskFiltersWindow = new Lang.Class({
         this.filter_sectors_scroll_box = new St.BoxLayout({ vertical: true });
         this.filter_sectors_scroll.add_actor(this.filter_sectors_scroll_box);
 
-
-        //
-        // custom filters sector
-        //
-        this.custom_filters = new St.BoxLayout({ vertical: true, x_expand: true, style_class: 'row filter-settings-sector' });
-        this.filter_sectors_scroll_box.add_actor(this.custom_filters);
+        this.custom_filters_box = new St.BoxLayout({ vertical: true, x_expand: true, style_class: 'row filter-settings-sector' });
+        this.filter_sectors_scroll_box.add_actor(this.custom_filters_box);
 
         this.entry = new MULTIL_ENTRY.MultiLineEntry(_('Add custom filter...'), false, true);
-        this.custom_filters.add_child(this.entry.actor);
+        this.custom_filters_box.add_child(this.entry.actor);
 
+        this.priority_filters_box = new St.BoxLayout({ vertical: true, x_expand: true, style_class: 'row filter-settings-sector' });
+        this.filter_sectors_scroll_box.add_actor(this.priority_filters_box);
 
-        //
-        // priorities sector
-        //
-        this.priorities = new St.BoxLayout({ vertical: true, x_expand: true, style_class: 'row filter-settings-sector' });
-        this.filter_sectors_scroll_box.add_actor(this.priorities);
+        this.context_filters_box = new St.BoxLayout({ vertical: true, x_expand: true, style_class: 'row filter-settings-sector' });
+        this.filter_sectors_scroll_box.add_actor(this.context_filters_box);
 
-
-        //
-        // contexts sector
-        //
-        this.contexts = new St.BoxLayout({ vertical: true, x_expand: true, style_class: 'row filter-settings-sector' });
-        this.filter_sectors_scroll_box.add_actor(this.contexts);
-
-
-        //
-        // projects sector
-        //
-        this.projects = new St.BoxLayout({ vertical: true, x_expand: true, style_class: 'row filter-settings-sector' });
-        this.filter_sectors_scroll_box.add_actor(this.projects);
+        this.project_filters_box = new St.BoxLayout({ vertical: true, x_expand: true, style_class: 'row filter-settings-sector' });
+        this.filter_sectors_scroll_box.add_actor(this.project_filters_box);
 
 
         this._add_separator(this.content_box);
@@ -2684,7 +2581,7 @@ const TaskFiltersWindow = new Lang.Class({
         let hidden_count_label = new St.Label({ y_align: Clutter.ActorAlign.CENTER, style_class: 'popup-inactive-menu-item', pseudo_class: 'insensitive' });
         this.show_hidden_tasks_item.add_child(hidden_count_label);
 
-        let n = this.delegate.priorities.get('(~)') || 0;
+        let n = this.delegate.stats.priorities.get('(~)') || 0;
         hidden_count_label.text =
             ngettext('%d hidden task', '%d hidden tasks', n).format(n);
 
@@ -2735,7 +2632,7 @@ const TaskFiltersWindow = new Lang.Class({
         this.entry.entry.clutter_text.connect('key-focus-in', () => {
             SCROLL_TO_ITEM.scroll(this.filter_sectors_scroll,
                                   this.filter_sectors_scroll_box,
-                                  this.custom_filters);
+                                  this.custom_filters_box);
         });
         this.entry.entry.clutter_text.connect('activate', () => {
             if (! this.entry.entry.text) return;
@@ -2746,8 +2643,9 @@ const TaskFiltersWindow = new Lang.Class({
                     return;
             }
 
-            let item = this._new_filter_item(true, this.entry.entry.text, null, true);
-            this.custom_filters.add_child(item.actor);
+            let item = this._new_filter_item(true, this.entry.entry.text, 0,
+                                             true, this.custom_filters_box);
+            this.custom_filters_box.add_child(item.actor);
             this.filter_register.custom.push(item);
             this.entry.entry.text = '';
         });
@@ -2786,29 +2684,32 @@ const TaskFiltersWindow = new Lang.Class({
         this.show_hidden_tasks_toggle.setToggleState(
             this.delegate.cache.filters.show_hidden);
 
+
         let i, len, key, value, item, check;
+
 
         //
         // custom filters
         //
-        i = this.delegate.cache.filters.custom_filters.length;
+        len = this.delegate.cache.filters.custom_filters.length;
         for (i = 0; i < len; i++) {
             value = this.delegate.cache.filters.custom_filters[i];
             check = this.active_filters.custom.indexOf(value) === -1 ? false : true;
-            item  = this._new_filter_item(check, value, null, true);
-            this.custom_filters.add_child(item.actor);
+            item  = this._new_filter_item(check, value, 0, true, this.custom_filters_box);
+            this.custom_filters_box.add_child(item.actor);
             this.filter_register.custom.push(item);
         }
+
 
         //
         // priorities
         //
-        this._add_separator(this.priorities);
+        this._add_separator(this.priority_filters_box);
 
-        for ([key, value] of this.delegate.priorities.entries()) {
+        for ([key, value] of this.delegate.stats.priorities.entries()) {
             if (key === '(~)') continue; // skip hidden tasks here
             check = this.active_filters.priorities.indexOf(key) === -1 ? false : true;
-            item = this._new_filter_item(check, key, value);
+            item = this._new_filter_item(check, key, value, 0, this.priority_filters_box);
             this.filter_register.priorities.push(item);
         }
 
@@ -2817,47 +2718,57 @@ const TaskFiltersWindow = new Lang.Class({
         });
 
         for (i = 0; i < this.filter_register.priorities.length; i++)
-            this.priorities.add_child(this.filter_register.priorities[i].actor);
+            this.priority_filters_box.add_child(this.filter_register.priorities[i].actor);
+
 
         //
         // contexts
         //
-        this._add_separator(this.contexts);
+        this._add_separator(this.context_filters_box);
 
-        for ([key, value] of this.delegate.contexts.entries()) {
+        for ([key, value] of this.delegate.stats.contexts.entries()) {
             check = this.active_filters.contexts.indexOf(key) === -1 ? false : true;
-            item  = this._new_filter_item(check, key, value);
-            this.contexts.add_child(item.actor);
+            item  = this._new_filter_item(check, key, value, 0, this.context_filters_box);
+            this.context_filters_box.add_child(item.actor);
             this.filter_register.contexts.push(item);
         }
+
 
         //
         // projects
         //
-        this._add_separator(this.projects);
+        this._add_separator(this.project_filters_box);
 
-        for ([key, value] of this.delegate.projects.entries()) {
+        for ([key, value] of this.delegate.stats.projects.entries()) {
             check = this.active_filters.projects.indexOf(key) === -1 ? false : true;
-            item  = this._new_filter_item(check, key, value);
-            this.projects.add_child(item.actor);
+            item  = this._new_filter_item(check, key, value, 0, this.project_filters_box);
+            this.project_filters_box.add_child(item.actor);
             this.filter_register.projects.push(item);
         }
 
+
+        //
         // hide the sections that don't have any items
-        let arr = [this.priorities, this.contexts, this.projects];
-        arr.forEach((it) => it.get_n_children() === 1 && it.hide());
+        //
+        [
+            this.priority_filters_box,
+            this.context_filters_box,
+            this.project_filters_box,
+        ].forEach((it) => it.get_n_children() === 1 && it.hide());
     },
 
     _reset_all: function () {
-        for (var k in this.filter_register) {
-            if (! this.filter_register.hasOwnProperty(k)) continue;
+        for (let items in this.filter_register) {
+            if (! this.filter_register.hasOwnProperty(items)) continue;
 
-            for (let i = 0, len = this.filter_register[k].length; i < len; i++)
-                this.filter_register[k][i].checkbox.actor.checked = false;
+            items = this.filter_register[items];
+
+            for (let i = 0, len = items.length; i < len; i++)
+                items[i].checkbox.actor.checked = false;
         }
     },
 
-    _new_filter_item: function (is_checked, label, count, is_deletable) {
+    _new_filter_item: function (is_checked, label, count, is_deletable, parent_box) {
         let item = {};
 
         item.actor = new St.BoxLayout({ reactive: true, style_class: 'filter-window-item' });
@@ -2889,6 +2800,7 @@ const TaskFiltersWindow = new Lang.Class({
         item.actor.add_actor(item.checkbox.actor);
         item.checkbox.actor.checked = is_checked;
 
+
         let close_button;
 
         if (is_deletable) {
@@ -2899,10 +2811,7 @@ const TaskFiltersWindow = new Lang.Class({
             close_button.add_actor(close_icon);
 
             close_button.connect('clicked', () => {
-                if (item.checkbox.actor.has_key_focus || close_button.has_key_focus)
-                    this.entry.entry.grab_key_focus();
-                item.actor.destroy();
-                this._clean_filter_register();
+                this._delete_filter_item(item);
             });
         }
 
@@ -2911,21 +2820,28 @@ const TaskFiltersWindow = new Lang.Class({
         actor_to_connect.connect('key-focus-in', () => {
             SCROLL_TO_ITEM.scroll(this.filter_sectors_scroll,
                                   this.filter_sectors_scroll_box,
-                                  sector);
+                                  parent_box);
         });
 
         return item;
     },
 
-    // Remove objects from the filter_register whose actors have been destroyed.
-    // We can detect which one it is by checking whether the label.text is null.
-    _clean_filter_register: function () {
-        for (let k in this.filter_register) {
-            if (! this.filter_register.hasOwnProperty(k)) continue;
+    _delete_filter_item: function (item) {
+        if (item.checkbox.actor.has_key_focus || close_button.has_key_focus)
+            this.entry.entry.grab_key_focus();
 
-            for (let i=0, len = this.filter_register[k].length; i < len; i++) {
-                if (this.filter_register[k][i].label.text === null)
-                    this.filter_register[k].splice(i, 1);
+        item.actor.destroy();
+
+        for (let items in this.filter_register) {
+            if (! this.filter_register.hasOwnProperty(items)) continue;
+
+            items = this.filter_register[items];
+
+            for (let i = 0, len = items.length; i < len; i++) {
+                if (items[i] === item) {
+                    items.splice(i, 1);
+                    return;
+                }
             }
         }
     },
@@ -2938,29 +2854,31 @@ const TaskFiltersWindow = new Lang.Class({
 
     _on_ok_clicked: function () {
         let res = {
-            show_hidden:    this.show_hidden_tasks_toggle.state,
-            invert_filters: this.invert_toggle.state,
-            custom_filters: [],
-            active_filters: {
-                priorities : [],
-                contexts   : [],
-                projects   : [],
-                custom     : [],
+            show_hidden    : this.show_hidden_tasks_toggle.state,
+            invert_filters : this.invert_toggle.state,
+            custom_filters : [],
+            active_filters : {
+                priorities: [],
+                contexts  : [],
+                projects  : [],
+                custom    : [],
             },
         };
 
-        let i, k, len;
+        // find all active filters
+        for (let key in this.filter_register) {
+            if (! this.filter_register.hasOwnProperty(key)) continue;
 
-        for (k in this.filter_register) {
-            if (! this.filter_register.hasOwnProperty(k)) continue;
+            let items = this.filter_register[key];
 
-            for (i = 0, len = this.filter_register[k].length; i < len; i++) {
-                if (this.filter_register[k][i].checkbox.actor.checked)
-                    res.active_filters[k].push(this.filter_register[k][i].filter);
+            for (let i = 0, len = items.length; i < len; i++) {
+                if (items[i].checkbox.actor.checked)
+                    res.active_filters[key].push(items[i].filter);
             }
         }
 
-        for (i = 0, len = this.filter_register.custom.length; i < len; i++) {
+        // store the custom filters
+        for (let i = 0, len = this.filter_register.custom.length; i < len; i++) {
             res.custom_filters.push(this.filter_register.custom[i].filter);
         }
 
@@ -3500,12 +3418,11 @@ const TimeTracker = new Lang.Class({
         this.csv_dir = delegate.settings.get_value('todo-current')
                        .deep_unpack().csv_dir;
 
-        this.timer_seconds_proc_id   = null;
-        this.timer_minutes_proc_id   = null;
-        this.number_of_tracked_tasks = 0;
-
-        this.yearly_csv_file_monitor = null;
-        this.daily_csv_file_monitor  = null;
+        this.timer_seconds_mainloop_id            = null;
+        this.timer_minutes_mainloop_id            = null;
+        this.number_of_tracked_tasks              = 0;
+        this.yearly_csv_file_monitor              = null;
+        this.daily_csv_file_monitor               = null;
         this.daily_csv_file_monitor_handler_block = false;
 
 
@@ -3591,7 +3508,7 @@ const TimeTracker = new Lang.Class({
 
     _timer_seconds: function () {
         if (this.number_of_tracked_tasks === 0) {
-            this.timer_seconds_proc_id = null;
+            this.timer_seconds_mainloop_id = null;
             return;
         }
 
@@ -3599,37 +3516,37 @@ const TimeTracker = new Lang.Class({
             if (v.tracking) v.time++;
         }
 
-        this.timer_seconds_proc_id = Mainloop.timeout_add_seconds(1, () => {
+        this.timer_seconds_mainloop_id = Mainloop.timeout_add_seconds(1, () => {
             this._timer_seconds();
         });
     },
 
     _timer_minutes: function () {
         if (this.number_of_tracked_tasks === 0) {
-            this.timer_minutes_proc_id = null;
+            this.timer_minutes_mainloop_id = null;
             return;
         }
 
-        this.timer_minutes_proc_id = Mainloop.timeout_add_seconds(60, () => {
+        this.timer_minutes_mainloop_id = Mainloop.timeout_add_seconds(60, () => {
             this._write_daily_csv_file();
             this._timer_minutes();
         });
     },
 
     _start_timers: function () {
-        if (! this.timer_seconds_proc_id) this._timer_seconds();
-        if (! this.timer_minutes_proc_id) this._timer_minutes();
+        if (! this.timer_seconds_mainloop_id) this._timer_seconds();
+        if (! this.timer_minutes_mainloop_id) this._timer_minutes();
     },
 
     _stop_timers: function () {
-        if (this.timer_seconds_proc_id) {
-            Mainloop.source_remove(this.timer_seconds_proc_id);
-            this.timer_seconds_proc_id = null;
+        if (this.timer_seconds_mainloop_id) {
+            Mainloop.source_remove(this.timer_seconds_mainloop_id);
+            this.timer_seconds_mainloop_id = null;
         }
 
-        if (this.timer_minutes_proc_id) {
-            Mainloop.source_remove(this.timer_minutes_proc_id);
-            this.timer_minutes_proc_id = null;
+        if (this.timer_minutes_mainloop_id) {
+            Mainloop.source_remove(this.timer_minutes_mainloop_id);
+            this.timer_minutes_mainloop_id = null;
         }
     },
 
@@ -4083,19 +4000,19 @@ const TimeTracker = new Lang.Class({
             this.daily_csv_file_monitor = null;
         }
 
-        if (this.show_tasks_proc_id) {
-            Mainloop.source_remove(this.show_tasks_proc_id);
-            this.show_tasks_proc_id = null;
+        if (this.show_tasks_mainloop_id) {
+            Mainloop.source_remove(this.show_tasks_mainloop_id);
+            this.show_tasks_mainloop_id = null;
         }
 
-        if (this.timer_seconds_proc_id) {
-            Mainloop.source_remove(this.timer_seconds_proc_id);
-            this.timer_seconds_proc_id = null;
+        if (this.timer_seconds_mainloop_id) {
+            Mainloop.source_remove(this.timer_seconds_mainloop_id);
+            this.timer_seconds_mainloop_id = null;
         }
 
-        if (this.timer_minutes_proc_id) {
-            Mainloop.source_remove(this.timer_minutes_proc_id);
-            this.timer_minutes_proc_id = null;
+        if (this.timer_minutes_mainloop_id) {
+            Mainloop.source_remove(this.timer_minutes_mainloop_id);
+            this.timer_minutes_mainloop_id = null;
         }
     },
 });
@@ -4121,10 +4038,10 @@ const ViewManager = new Lang.Class({
         this.ext      = ext;
         this.delegate = delegate;
 
-        this.current_view       = View.DEFAULT;
-        this.actors             = [];
-        this.close_callback     = () => false;
-        this.show_tasks_proc_id = null;
+        this.current_view           = View.DEFAULT;
+        this.actors                 = [];
+        this.close_callback         = () => false;
+        this.show_tasks_mainloop_id = null;
 
         // @SPEED
         this.delegate.connect('section-open-state-changed', (_, state) => {
@@ -4213,7 +4130,7 @@ const ViewManager = new Lang.Class({
         for (let i = 0; i < n; i++)
             this.delegate.tasks_viewport[i].actor.visible = true;
 
-        this.show_tasks_proc_id = Mainloop.idle_add(() => {
+        this.show_tasks_mainloop_id = Mainloop.idle_add(() => {
            this._show_tasks__finish(n);
         });
     },
@@ -4226,23 +4143,23 @@ const ViewManager = new Lang.Class({
 
         if (! this.ext.menu.isOpen ||
             i === this.delegate.tasks_viewport.length ||
-            this.delegate.add_tasks_to_menu_proc_id) {
+            this.delegate.add_tasks_to_menu_mainloop_id) {
 
-            this.show_tasks_proc_id = null;
+            this.show_tasks_mainloop_id = null;
             return;
         }
 
         this.delegate.tasks_viewport[i].actor.visible = true;
 
-        this.show_tasks_proc_id = Mainloop.idle_add(() => {
+        this.show_tasks_mainloop_id = Mainloop.idle_add(() => {
             this._show_tasks__finish(++i, scroll_bar_shown);
         });
     },
 
     _hide_tasks: function () {
-        if (this.show_tasks_proc_id) {
-            Mainloop.source_remove(this.show_tasks_proc_id);
-            this.show_tasks_proc_id = null;
+        if (this.show_tasks_mainloop_id) {
+            Mainloop.source_remove(this.show_tasks_mainloop_id);
+            this.show_tasks_mainloop_id = null;
         }
 
         for (let i = 0, len = this.delegate.tasks_viewport.length; i < len; i++)
