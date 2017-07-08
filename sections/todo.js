@@ -1364,7 +1364,9 @@ const Todo = new Lang.Class({
         this.tasks.sort(compare_func);
         this.add_tasks_to_menu(true);
 
-        // update sort icon
+        // @BUG (or feature?)
+        // Although everything works anyway, clutter has failed assertions
+        // without later_add.
         Meta.later_add(Meta.LaterType.BEFORE_REDRAW, () => {
             if (this.cache.sort.sort_order === SortOrder.ASCENDING)
                 ICON_FROM_URI.icon_from_uri(this.sort_icon,
@@ -4040,7 +4042,7 @@ const ViewManager = new Lang.Class({
 
         this.current_view           = View.DEFAULT;
         this.actors                 = [];
-        this.close_callback         = () => false;
+        this.close_callback         = () => null;
         this.show_tasks_mainloop_id = null;
 
         // @SPEED
@@ -4087,6 +4089,7 @@ const ViewManager = new Lang.Class({
     show_view: function (view) {
         if (this.delegate.tasks_scroll_wrapper.visible) this._hide_tasks();
 
+        this.delegate.actor.remove_all_children();
         this.close_callback();
 
         this.current_view   = view.view_name;
@@ -4094,7 +4097,6 @@ const ViewManager = new Lang.Class({
         this.close_callback = view.close_callback;
 
         let show_tasks = false;
-        this.delegate.actor.remove_all_children();
 
         for (let i = 0; i < this.actors.length; i++) {
             this.delegate.actor.add_actor(this.actors[i]);
