@@ -427,7 +427,6 @@ const Todo = new Lang.Class({
         this.tasks_scroll_wrapper = new St.BoxLayout({ style_class: 'popup-menu-item' });
         this.actor.add(this.tasks_scroll_wrapper, {expand: true});
 
-
         // @HACK
         // Using the PopupMenuItem as a wrapper won't work here if there is
         // a large num of tasks. Various event listeners in PopupMenuItem
@@ -574,9 +573,9 @@ const Todo = new Lang.Class({
         this.view_manager = new ViewManager(this.ext, this);
         this.time_tracker = new TimeTracker(this.ext, this);
 
-        this._on_day_started_loop();
         this._init_todo_file();
         this._toggle_keybindings();
+        this._on_day_started_loop();
     },
 
     disable_section: function () {
@@ -660,7 +659,6 @@ const Todo = new Lang.Class({
             }
         }
         catch (e) {
-            this.show_view__no_todo_file();
             logError(e);
             return;
         }
@@ -685,6 +683,8 @@ const Todo = new Lang.Class({
     },
 
     _write_tasks_to_file: function () {
+        return;
+
         this.file_monitor_handler_block = true;
 
         let res = '';
@@ -800,13 +800,13 @@ const Todo = new Lang.Class({
 
             for (let i = 0, len = this.tasks.length; i < len; i++) {
                 if (this.tasks[i].priority !== '(x)')
-                    incompleted.push(this.tasks[i]);
+                    incompleted_tasks.push(this.tasks[i]);
                 else
-                    completed.push(this.tasks[i]);
+                    completed_tasks.push(this.tasks[i]);
             }
 
-            this.archive_tasks(completed);
-            this.tasks = incompleted;
+            this.archive_tasks(completed_tasks);
+            this.tasks = incompleted_tasks;
             this.on_tasks_changed();
             this.show_view__default();
         });
@@ -1005,8 +1005,8 @@ const Todo = new Lang.Class({
 
     _create_tasks__finish: function (i, todo_strings, callback) {
         if (i === todo_strings.length) {
-            this.create_tasks_mainloop_id = null;
             if (typeof(callback) === 'function') callback();
+            this.create_tasks_mainloop_id = null;
             return;
         }
 
@@ -1020,6 +1020,9 @@ const Todo = new Lang.Class({
 
     // This func must be called soon after 1 or more tasks have been added, or
     // removed from this.tasks array or when they have been edited.
+    //
+    // This func should not be called many times in a row. The idea is to add,
+    // delete, or edit all tasks first and then call this func once.
     //
     // It will handle various things like updating the todo.txt file, updating
     // the stats obj, showing or hiding various icons, etc...
@@ -1216,7 +1219,7 @@ const Todo = new Lang.Class({
                 }
             }
             else {
-                tasks_strings.push(task.task_str);
+                task_strings.push(task.task_str);
             }
         }
 
@@ -2067,6 +2070,7 @@ const TaskItem = new Lang.Class({
         });
         this.completion_checkbox.connect('clicked', () => {
             this.toggle_task();
+            this.delegate.on_tasks_changed();
         });
     },
 
@@ -2462,8 +2466,6 @@ const TaskItem = new Lang.Class({
 
             this.update_task(prio + words.join(' '));
         }
-
-        this.delegate.on_tasks_changed();
     },
 
     update_task: function (task_str) {
@@ -2494,7 +2496,6 @@ const TaskItem = new Lang.Class({
         }
 
         this._parse_task_str();
-        this.delegate.on_tasks_changed();
     },
 });
 Signals.addSignalMethods(TaskItem.prototype);
