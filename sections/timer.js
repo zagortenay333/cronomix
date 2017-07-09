@@ -206,7 +206,8 @@ const Timer = new Lang.Class({
 
     toggle_section: function () {
         if (this.section_enabled) {
-            this.panel_item.actor.show();
+            if (!this.ext.unicon_panel_item.actor.visible)
+                this.panel_item.actor.show();
             this.actor.show();
             this.sigm.connect_all();
             this.enable_section();
