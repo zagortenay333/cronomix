@@ -641,11 +641,8 @@ const Todo = new Lang.Class({
             return;
         }
 
-        let path = current.todo_file;
-
         try {
-            this.todo_txt_file = Gio.file_new_for_path(
-                path.replace(/^.+?\/\//, ''));
+            this.todo_txt_file = Gio.file_new_for_uri(current.todo_file);
 
             if (this.todo_file_monitor)
                 this.todo_file_monitor.cancel();
@@ -1233,8 +1230,7 @@ const Todo = new Lang.Class({
 
         try {
             let current   = this.settings.get_value('todo-current').deep_unpack();
-            let done_path = current.done_file.replace(/^.+?\/\//, '');
-            let done_file = Gio.file_new_for_path(done_path);
+            let done_file = Gio.file_new_for_uri(current.done_file);
 
             if (!done_txt_file || !done_txt_file.query_exists(null))
                 done_txt_file.create(Gio.FileCreateFlags.NONE, null);
