@@ -174,8 +174,8 @@ const Stopwatch = new Lang.Class({
         // listen
         //
         this.settings.connect('changed::stopwatch-enabled', () => {
-            this.section_enabled = this.settings.get_boolean('stopwatch-enabled');
             this.toggle_section();
+            this.section_enabled = this.settings.get_boolean('stopwatch-enabled');
         }); // don't put this signal into the signal manager
 
         this.sigm.connect(this.fullscreen, 'monitor-changed', () => {
@@ -237,22 +237,18 @@ const Stopwatch = new Lang.Class({
 
     toggle_section: function () {
         if (this.section_enabled) {
-            if (!this.ext.unicon_panel_item.actor.visible)
-                this.panel_item.actor.show();
-            this.actor.show();
-            this.sigm.connect_all();
-            this.enable_section();
+            this.panel_item.actor.hide();
+            this.disable_section();
         }
         else {
-            this.panel_item.actor.hide();
-            this.actor.hide();
-            this.disable_section();
+            if (!this.ext.unicon_panel_item.actor.visible)
+                this.panel_item.actor.show();
+            this.sigm.connect_all();
+            this.enable_section();
         }
     },
 
     disable_section: function () {
-        if (! this.section_enabled) return;
-
         if (this.time_backup_mainloop_id) {
             Mainloop.source_remove(this.time_backup_mainloop_id);
             this.time_backup_mainloop_id = null;

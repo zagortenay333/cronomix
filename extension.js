@@ -312,8 +312,12 @@ const Timepp = new Lang.Class({
         this.context_menu.actor.visible = true;
 
         for (let i = 0, len = this.section_register.length; i < len; i++) {
-            this.section_register[i].panel_item.actor.add_style_pseudo_class('checked');
-            this.section_register[i].panel_item.actor.can_focus = false;
+            let section = this.section_register[i];
+
+            if (section.panel_item.actor.visible) {
+                section.panel_item.actor.add_style_pseudo_class('checked');
+                section.panel_item.actor.can_focus = false;
+            }
         }
 
         if (section) this.menu.sourceActor = section.panel_item.actor;
@@ -472,9 +476,10 @@ const Timepp = new Lang.Class({
         return max_height >= 0 && min_height >= max_height;
     },
 
-    destroy: function() {
+    destroy: function () {
         for (let i = 0, len = this.section_register.length; i < len; i++) {
-            this.section_register[i].disable_section();
+            if (this.section_register[i].section_enabled)
+                this.section_register[i].disable_section();
         }
 
         if (this.theme_change_sig_id) {

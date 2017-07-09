@@ -147,8 +147,8 @@ const Timer = new Lang.Class({
         // listen
         //
         this.settings.connect('changed::timer-enabled', () => {
-            this.section_enabled = this.settings.get_boolean('timer-enabled');
             this.toggle_section();
+            this.section_enabled = this.settings.get_boolean('timer-enabled');
         }); // don't put this signal into the signal manager
 
         this.sigm.connect(this.fullscreen, 'monitor-changed', () => {
@@ -206,22 +206,18 @@ const Timer = new Lang.Class({
 
     toggle_section: function () {
         if (this.section_enabled) {
-            if (!this.ext.unicon_panel_item.actor.visible)
-                this.panel_item.actor.show();
-            this.actor.show();
-            this.sigm.connect_all();
-            this.enable_section();
+            this.panel_item.actor.hide();
+            this.disable_section();
         }
         else {
-            this.panel_item.actor.hide();
-            this.actor.hide();
-            this.disable_section();
+            if (!this.ext.unicon_panel_item.actor.visible)
+                this.panel_item.actor.show();
+            this.sigm.connect_all();
+            this.enable_section();
         }
     },
 
     disable_section: function () {
-        if (! this.section_enabled) return;
-
         this.stop_timer();
         this._store_cache();
         this.sigm.disconnect_all();
