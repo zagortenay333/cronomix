@@ -139,7 +139,7 @@ const Timepp = new Lang.Class({
             section.actor.hide();
             this.content_box.add_actor(section.actor);
 
-            if (i !== len) {
+            if (i !== len - 1) {
                 let sep = new PopupMenu.PopupSeparatorMenuItem();
                 sep.actor.add_style_class_name('timepp-separator');
                 this.separator_register.push(sep.actor);
