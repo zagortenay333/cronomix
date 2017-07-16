@@ -10,6 +10,11 @@ const ExtensionUtils = imports.misc.extensionUtils;
 const ME = ExtensionUtils.getCurrentExtension();
 
 
+const Gettext = imports.gettext.domain(ME.metadata['gettext-domain']);
+const _        = Gettext.gettext;
+const ngettext = Gettext.ngettext;
+
+
 const WEBSITE_LINK    = 'https://www.github.com/zagortenay333/timepp__gnome';
 const REPORT_BUG_LINK = 'https://www.github.com/zagortenay333/timepp__gnome/issues';
 
