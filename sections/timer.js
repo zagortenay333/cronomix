@@ -715,6 +715,11 @@ const TimerFullscreen = new Lang.Class({
 
         this.default_style_class = this.actor.style_class;
 
+
+        this.title = new St.Label({ x_expand: true, x_align: Clutter.ActorAlign.CENTER, style_class: 'pomo-phase-label' });
+        this.middle_box.insert_child_at_index(this.title, 0);
+
+
         this.slider = new Slider.Slider(0);
         this.bottom_box.add_child(this.slider.actor);
         this.slider.actor.can_focus = true;
@@ -723,7 +728,6 @@ const TimerFullscreen = new Lang.Class({
         this.toggle_bin = new St.Button({ can_focus: true, y_align: St.Align.MIDDLE });
         this.top_box.insert_child_at_index(this.toggle_bin, 0);
         this.toggle_bin.hide();
-
         this.toggle = new PopupMenu.Switch('');
         this.toggle_bin.add_actor(this.toggle.actor);
 
@@ -739,10 +743,12 @@ const TimerFullscreen = new Lang.Class({
         });
         this.slider.actor.connect('scroll-event', () => {
             this.delegate.slider_released();
+            this.title.text = '';
         });
         this.slider.connect('value-changed', (slider, val) => {
             this.delegate.slider_changed(slider, val);
             this.actor.remove_style_class_name('timer-expired');
+            this.title.text = '';
         });
         this.actor.connect('key-release-event', (_, event) => {
             switch (event.get_key_symbol()) {
@@ -793,6 +799,7 @@ const TimerFullscreen = new Lang.Class({
     close: function () {
         if (this.delegate.timer_state === TimerState.OFF) {
             this.actor.style_class = this.default_style_class;
+            this.title.text = '';
             this.set_banner_text(
                 this.delegate.settings.get_boolean('timer-show-seconds') ? '00:00:00' : '00:00');
         }
@@ -802,6 +809,7 @@ const TimerFullscreen = new Lang.Class({
 
     on_timer_started: function () {
         this.actor.style_class = this.default_style_class;
+        this.title.text = '';
         this.toggle.setToggleState('checked');
         this.toggle_bin.show();
     },
@@ -816,8 +824,13 @@ const TimerFullscreen = new Lang.Class({
     },
 
     on_timer_expired: function () {
-        let msg = this.delegate.cache.notif_msg ? '\n\n' + this.delegate.cache.notif_msg : '';
-        this.set_banner_text(TIMER_EXPIRED_MSG + msg);
+        if (this.delegate.cache.notif_msg) {
+            this.title.text = TIMER_EXPIRED_MSG;
+            this.set_banner_text(this.delegate.cache.notif_msg);
+        }
+        else {
+            this.set_banner_text(TIMER_EXPIRED_MSG);
+        }
         this.actor.style_class = this.default_style_class + ' timer-expired';
     },
 });
