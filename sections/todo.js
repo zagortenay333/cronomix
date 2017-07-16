@@ -371,7 +371,7 @@ const Todo = new Lang.Class({
 
 
         // icon bin
-        this.icon_box = new St.BoxLayout({ x_align: Clutter.ActorAlign.END, style_class: 'icon-bin' });
+        this.icon_box = new St.BoxLayout({ x_align: Clutter.ActorAlign.END, style_class: 'icon-box' });
         this.header.actor.add(this.icon_box);
 
 
