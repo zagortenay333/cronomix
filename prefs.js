@@ -1,16 +1,16 @@
-const Gio  = imports.gi.Gio;
-const Gtk  = imports.gi.Gtk;
-const GLib = imports.gi.GLib;
-const Lang = imports.lang;
-
-
+const Gio            = imports.gi.Gio;
+const Gtk            = imports.gi.Gtk;
+const GLib           = imports.gi.GLib;
+const Lang           = imports.lang;
 const ExtensionUtils = imports.misc.extensionUtils;
-const Me             = ExtensionUtils.getCurrentExtension();
+
+
+const ME = ExtensionUtils.getCurrentExtension();
 
 
 const Gettext = imports.gettext;
-Gettext.bindtextdomain(Me.metadata['gettext-domain'], Me.dir.get_path() + '/locale');
-const _ = Gettext.domain(Me.metadata['gettext-domain']).gettext;
+Gettext.bindtextdomain(ME.metadata['gettext-domain'], ME.dir.get_path() + '/locale');
+const _ = Gettext.domain(ME.metadata['gettext-domain']).gettext;
 
 
 const Settings = new Lang.Class({
@@ -19,15 +19,15 @@ const Settings = new Lang.Class({
     _init: function () {
         let GioSSS = Gio.SettingsSchemaSource;
         let schema = GioSSS.new_from_directory(
-            Me.dir.get_path() + '/schemas', GioSSS.get_default(), false);
+            ME.dir.get_path() + '/schemas', GioSSS.get_default(), false);
         schema = schema.lookup('org.gnome.shell.extensions.timepp', true);
 
         this.settings = new Gio.Settings({ settings_schema: schema });
 
         this.builder = new Gtk.Builder();
 
-        this.builder.set_translation_domain(Me.metadata['gettext-domain']);
-        this.builder.add_from_file(Me.path + '/Settings.ui');
+        this.builder.set_translation_domain(ME.metadata['gettext-domain']);
+        this.builder.add_from_file(ME.path + '/Settings.ui');
 
         this.selected_row = null;
 
@@ -342,9 +342,9 @@ const Settings = new Lang.Class({
             });
 
         this.settings.set_string('timer-sound-file-path',
-            GLib.filename_to_uri(Me.path + '/sounds/beeps.ogg', null));
+            GLib.filename_to_uri(ME.path + '/sounds/beeps.ogg', null));
         this.builder.get_object('timer-sound-chooser')
-            .set_uri(GLib.filename_to_uri(Me.path + '/sounds/beeps.ogg', null));
+            .set_uri(GLib.filename_to_uri(ME.path + '/sounds/beeps.ogg', null));
         this.builder.get_object('timer-sound-chooser')
             .connect('selection-changed', (widget) => {
                 this.settings.set_string('timer-sound-file-path', widget.get_uri());
@@ -497,9 +497,9 @@ const Settings = new Lang.Class({
             });
 
         this.settings.set_string('pomodoro-sound-file-path',
-            GLib.filename_to_uri(Me.path + '/sounds/beeps.ogg', null));
+            GLib.filename_to_uri(ME.path + '/sounds/beeps.ogg', null));
         this.builder.get_object('pomodoro-sound-chooser')
-            .set_uri(GLib.filename_to_uri(Me.path + '/sounds/beeps.ogg', null));
+            .set_uri(GLib.filename_to_uri(ME.path + '/sounds/beeps.ogg', null));
         this.builder.get_object('pomodoro-sound-chooser')
             .connect('selection-changed', (widget) => {
                 this.settings.set_string('pomodoro-sound-file-path', widget.get_uri());
@@ -588,9 +588,9 @@ const Settings = new Lang.Class({
             Gio.SettingsBindFlags.DEFAULT);
 
         this.settings.set_string('alarms-sound-file-path',
-            GLib.filename_to_uri(Me.path + '/sounds/beeps.ogg', null));
+            GLib.filename_to_uri(ME.path + '/sounds/beeps.ogg', null));
         this.builder.get_object('alarms-sound-chooser')
-            .set_uri(GLib.filename_to_uri(Me.path + '/sounds/beeps.ogg', null));
+            .set_uri(GLib.filename_to_uri(ME.path + '/sounds/beeps.ogg', null));
         this.builder.get_object('alarms-sound-chooser')
             .connect('selection-changed', (widget) => {
                 this.settings.set_string('alarms-sound-file-path', widget.get_uri());
