@@ -113,7 +113,7 @@
     background-image: url('img/radiobutton-checked.svg');
 }
 
-.timepp-menu .toggle-switch:focus,
+.timepp-menu StButton:focus .toggle-switch,
 .timepp-menu .radiobutton:focus StBin {
     outline: 2px #aaa;
 }
@@ -570,12 +570,17 @@
 .timepp-menu .todo-section .date-label {}
 
 .timepp-menu .todo-section .priority-label,
-.timepp-menu .todo-section .due-date-label {
+.timepp-menu .todo-section .due-date-label,
+.timepp-menu .todo-section .recurrence-date-label {
     font-weight: bold;
 }
 
 .timepp-menu .todo-section .due-date-label {
     color: #e22b2b;
+}
+
+.timepp-menu .todo-section .recurrence-date-label {
+    color: #f47e00;
 }
 
 .timepp-menu .todo-section .icon-bin {}

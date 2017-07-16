@@ -87,20 +87,22 @@ const View = {
 //
 
 
-const REG_CONTEXT  = /^@.+$/;
-const REG_PROJ     = /^\+.+$/;
-const REG_PRIO     = /^\([A-Z]\)$/;
-const REG_EXT      = /^[^:]+:[^:]+$/;
-const REG_DATE     = /^\d{4}-\d{2}-\d{2}$/;
-const REG_PRIO_EXT = /^(?:pri|PRI):[A-Z]$/;
-const REG_HIDE_EXT = /^h:1$/;
-const REG_DUE_EXT  = /^(?:due|DUE):\d{4}-\d{2}-\d{2}$/;
-const REG_URL      = /^(?:(?:https?|ftp):\/\/)?(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,}))\.?)(?::\d{2,5})?(?:[/?#]\S*)?$/;
+const REG_CONTEXT   = /^@.+$/;
+const REG_PROJ      = /^\+.+$/;
+const REG_PRIO      = /^\([A-Z]\)$/;
+const REG_EXT       = /^[^:]+:[^:]+$/;
+const REG_PRIO_EXT  = /^(?:pri|PRI):[A-Z]$/;
+const REG_HIDE_EXT  = /^h:1$/;
+const REG_REC_EXT_1 = /^rec:[1-9][0-9]*[dw]$/;
+const REG_REC_EXT_2 = /^rec:x-[1-9][0-9]*[dw]$/;
+const REG_REC_EXT_3 = /^rec:[1-9][0-9]*d-[1-9][0-9]*m$/;
+const REG_DUE_EXT   = /^(?:due|DUE):\d{4}-\d{2}-\d{2}$/;
+const REG_URL       = /^(?:(?:https?|ftp):\/\/)?(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,}))\.?)(?::\d{2,5})?(?:[/?#]\S*)?$/;
 
 
 // return date string in yyyy-mm-dd format adhering to locale
-function date_yyyymmdd () {
-    let now = new Date();
+function date_yyyymmdd (date_obj) {
+    let now = date_obj || new Date();
 
     let month = now.getMonth() + 1;
     let day   = now.getDate();
@@ -143,7 +145,8 @@ function resize_label (label) {
     // The vertical padding can only be calculated once the box is painted.
     // nat_height_adjusted is the minimum height needed to fit the multiline
     // text **including** vertical padding/borders.
-    let [min_height_adjusted, nat_height_adjusted] = theme_node.adjust_preferred_height(min_height, nat_height);
+    let [min_height_adjusted, nat_height_adjusted] =
+        theme_node.adjust_preferred_height(min_height, nat_height);
     let vert_padding = nat_height_adjusted - nat_height;
 
     label.set_height(nat_height + vert_padding);
@@ -181,13 +184,14 @@ const Todo = new Lang.Class({
 
         // Track how many tasks have a particular proj/context/prio, a
         // recurrence, etc...
+        // The maps have the structure:
+        // @key : string  (a context/project/priority)
+        // @val : natural (number of tasks that have that @key)
         this.stats = {
-            // the maps have the structure:
-            // @key : string  (a context/project/priority)
-            // @val : natural (number of tasks that have that @key)
-            priorities : new Map(),
-            contexts   : new Map(),
-            projects   : new Map(),
+            recurrences : 0,
+            priorities  : new Map(),
+            contexts    : new Map(),
+            projects    : new Map(),
         };
 
 
@@ -215,7 +219,7 @@ const Todo = new Lang.Class({
         //   on_tasks_changed() soon after that.
         //
         // - To EDIT a task, create a new task_str and call the task objects'
-        //   method update_task with the new string, and call on_tasks_changed()
+        //   reset method with the new string, and call on_tasks_changed()
         //   soon after that.
         //
         // Note that on_tasks_changed() does not update the todo.txt file. Use
@@ -555,14 +559,15 @@ const Todo = new Lang.Class({
                         sort_type  : SortType.PRIORITY,
                     },
                     filters: {
-                        show_hidden   : false,
-                        invert_filters: false,
-                        custom_filters: [],
-                        active_filters: {
-                            priorities : [],
-                            contexts   : [],
-                            projects   : [],
-                            custom     : [],
+                        show_recurring : false,
+                        show_hidden    : false,
+                        invert_filters : false,
+                        custom_filters : [],
+                        active_filters : {
+                            priorities: [],
+                            contexts  : [],
+                            projects  : [],
+                            custom    : [],
                         },
                     },
                 };
@@ -619,9 +624,9 @@ const Todo = new Lang.Class({
 
     _init_todo_file: function () {
         // reset
-        this.tasks_scroll_content.remove_all_children();
         this.tasks          = [];
         this.tasks_viewport = [];
+        this.tasks_scroll_content.remove_all_children();
         this.stats.priorities.clear();
         this.stats.contexts.clear();
         this.stats.projects.clear();
@@ -666,6 +671,7 @@ const Todo = new Lang.Class({
         lines = String(lines).trim().split(/\n|\r/);
 
         this.create_tasks(lines, () => {
+            this._check_recurrences();
             this.on_tasks_changed();
             this.show_view__default();
         });
@@ -722,6 +728,166 @@ const Todo = new Lang.Class({
         this._init_todo_file();
     },
 
+    _on_day_started_loop: function () {
+        if (this.on_day_started_loop_id) return;
+
+        let t = new Date();
+        t = 86400 - Math.round((t.getTime() - t.setHours(0,0,2,0)) / 1000);
+
+        this.on_day_started_loop_id = Mainloop.timeout_add_seconds(t, () => {
+            // We only emit here, or else we will emit every time the ext
+            // gets reloaded. In that case it couldn't be used by functions
+            // that deal with persistent data. On the other hand, this may never
+            // execute if the ext is removed before midnight and added back
+            // after.
+            this.emit('new-day');
+
+            // Update all due dates.
+            for (let i = 0, len = this.tasks.length; i < len; i++) {
+                this.tasks[i].update_due_date();
+            }
+
+            this._check_recurrences();
+
+            this.on_day_started_loop_id = null;
+            this._on_day_started_loop();
+        });
+    },
+
+    _check_recurrences: function () {
+        let needs_update = false;
+        let n            = 0;
+
+        for (let i = 0, len = this.tasks.length; i < len; i++) {
+            if (this.tasks[i].check_recurrence()) {
+                needs_update = true;
+                n++;
+            }
+        }
+
+        if (needs_update) {
+            Main.notify(ngettext('%d task has recurred',
+                                 '%d tasks have recurred',
+                                  n).format(n));
+            this.write_tasks_to_file();
+        }
+    },
+
+    _update_markup_colors: function () {
+        let update_needed = false;
+
+        ['context', 'project', 'link'].forEach((it) => {
+            let [success, col] = this.actor.get_theme_node()
+                                 .lookup_color(it + '-color', false);
+
+            if (! success) return;
+
+            col = col.to_string().substr(0, 7);
+
+            if (this.markup_colors[it] !== col) {
+                this.markup_colors[it] = col;
+                update_needed = true;
+            }
+        });
+
+        if (update_needed) {
+            for (let i = 0, len = this.tasks.length; i < len; i++) {
+                this.tasks[i].update_markup_colors();
+            }
+        }
+    },
+
+    _toggle_panel_item_mode: function () {
+        if (this.settings.get_enum('todo-panel-mode') === 0)
+            this.panel_item.set_mode('icon');
+        else if (this.settings.get_enum('todo-panel-mode') === 1)
+            this.panel_item.set_mode('text');
+        else
+            this.panel_item.set_mode('icon_text');
+    },
+
+    _toggle_keybindings: function (disable_all) {
+        if (!disable_all &&
+            this.settings.get_strv('todo-keybinding-open')[0] !== '') {
+
+            this.keybindings.push('todo-keybinding-open');
+
+            Main.wm.addKeybinding(
+                'todo-keybinding-open',
+                this.settings,
+                Meta.KeyBindingFlags.NONE,
+                Shell.ActionMode.NORMAL,
+                () => {
+                    this.ext.open_menu(this);
+                    if (this.view_manager.current_view !== View.LOADING &&
+                        this.view_manager.current_view !== View.NO_TODO_FILE) {
+
+                        this.show_view__default();
+                    }
+                });
+        }
+        else {
+            let i = this.keybindings.indexOf('todo-keybinding-open');
+            if (i !== -1) {
+                Main.wm.removeKeybinding('todo-keybinding-open');
+                this.keybindings.splice(i, 1);
+            }
+        }
+
+        if (!disable_all &&
+            this.settings.get_strv('todo-keybinding-open-to-add')[0] !== '') {
+
+            this.keybindings.push('todo-keybinding-open-to-add');
+
+            Main.wm.addKeybinding(
+                'todo-keybinding-open-to-add',
+                this.settings,
+                Meta.KeyBindingFlags.NONE,
+                Shell.ActionMode.NORMAL,
+                () => {
+                    this.ext.open_menu(this);
+                    if (this.view_manager.current_view !== View.LOADING &&
+                        this.view_manager.current_view !== View.NO_TODO_FILE) {
+
+                        this.show_view__task_editor();
+                    }
+                });
+        }
+        else {
+            let i = this.keybindings.indexOf('todo-keybinding-open-to-add');
+            if (i !== -1) {
+                Main.wm.removeKeybinding('todo-keybinding-open-to-add');
+                this.keybindings.splice(i, 1);
+            }
+        }
+
+        if (!disable_all &&
+            this.settings.get_strv('todo-keybinding-open-to-search')[0] !== '') {
+
+            this.keybindings.push('todo-keybinding-open-to-search');
+
+            Main.wm.addKeybinding(
+                'todo-keybinding-open-to-search',
+                this.settings,
+                Meta.KeyBindingFlags.NONE,
+                Shell.ActionMode.NORMAL,
+                () => {
+                    this.ext.open_menu(this);
+                    if (this.view_manager.current_view !== View.LOADING &&
+                        this.view_manager.current_view !== View.NO_TODO_FILE) {
+
+                        this.show_view__search();
+                    }
+                });
+        }
+        else {
+            let i = this.keybindings.indexOf('todo-keybinding-open-to-search');
+            if (i !== -1) {
+                Main.wm.removeKeybinding('todo-keybinding-open-to-search');
+                this.keybindings.splice(i, 1);
+            }
+        }
+    },
     show_view__no_todo_file: function () {
         this.panel_item.set_mode('icon');
         this.panel_item.actor.remove_style_class_name('done');
@@ -777,32 +943,32 @@ const Todo = new Lang.Class({
         });
 
         box.connect('delete-all', () => {
-            let incompleted_tasks = [];
+            let incomplete_tasks = [];
 
             for (let i = 0, len = this.tasks.length; i < len; i++) {
-                if (this.tasks[i].priority !== '(x)')
-                    incompleted_tasks.push(this.tasks[i]);
+                if (this.tasks[i].priority !== '(x)' || this.tasks[i].rec_str)
+                    incomplete_tasks.push(this.tasks[i]);
             }
 
-            this.tasks = incompleted_tasks;
+            this.tasks = incomplete_tasks;
             this.on_tasks_changed();
             this.write_tasks_to_file();
             this.show_view__default();
         });
 
         box.connect('archive-all', () => {
-            let completed_tasks   = [];
-            let incompleted_tasks = [];
+            let complete_tasks   = [];
+            let incomplete_tasks = [];
 
             for (let i = 0, len = this.tasks.length; i < len; i++) {
-                if (this.tasks[i].priority !== '(x)')
-                    incompleted_tasks.push(this.tasks[i]);
+                if (this.tasks[i].priority !== '(x)' || this.tasks[i].rec_str)
+                    incomplete_tasks.push(this.tasks[i]);
                 else
-                    completed_tasks.push(this.tasks[i]);
+                    complete_tasks.push(this.tasks[i]);
             }
 
-            this.archive_tasks(completed_tasks);
-            this.tasks = incompleted_tasks;
+            this.archive_tasks(complete_tasks);
+            this.tasks = incomplete_tasks;
             this.on_tasks_changed();
             this.write_tasks_to_file();
             this.show_view__default();
@@ -943,8 +1109,7 @@ const Todo = new Lang.Class({
         if (task) this.time_tracker.stop_tracking(task);
 
         editor.connect('add-task', (_, task_str) => {
-            this.tasks.push(new TaskItem(this.ext, this, task_str));
-            this.tasks.unshift(this.tasks.pop()); // insert at the beggining
+            this.tasks.unshift(new TaskItem(this.ext, this, task_str, true));
             this.on_tasks_changed();
             this.write_tasks_to_file();
             this.show_view__default();
@@ -966,7 +1131,7 @@ const Todo = new Lang.Class({
         });
 
         editor.connect('edit-task', (_, task_str) => {
-            task.update_task(task_str);
+            task.reset(true, task_str);
             this.on_tasks_changed();
             this.write_tasks_to_file();
             this.show_view__default();
@@ -995,7 +1160,7 @@ const Todo = new Lang.Class({
 
         for (; i < n; i++) {
             if (todo_strings[i].trim() === '') continue;
-            this.tasks.push(new TaskItem(this.ext, this, todo_strings[i]));
+            this.tasks.push(new TaskItem(this.ext, this, todo_strings[i], false));
         }
 
         this.create_tasks_mainloop_id = Mainloop.idle_add(() => {
@@ -1011,7 +1176,7 @@ const Todo = new Lang.Class({
         }
 
         if (todo_strings[i].trim() !== '')
-            this.tasks.push(new TaskItem(this.ext, this, todo_strings[i]));
+            this.tasks.push(new TaskItem(this.ext, this, todo_strings[i], false));
 
         this.create_tasks_mainloop_id = Mainloop.idle_add(() => {
             this._create_tasks__finish(++i, todo_strings, callback);
@@ -1034,11 +1199,12 @@ const Todo = new Lang.Class({
         // Update stats obj
         //
         {
-            let i, j, n, it, len;
-
+            this.stats.recurrences = 0;
             this.stats.priorities.clear();
             this.stats.projects.clear();
             this.stats.contexts.clear();
+
+            let i, j, n, it, len;
 
             for (i = 0, len = this.tasks.length; i < len; i++) {
                 it = this.tasks[i];
@@ -1051,6 +1217,12 @@ const Todo = new Lang.Class({
                 for (j = 0; j < it.contexts.length; j++) {
                     n = this.stats.contexts.get(it.contexts[j]);
                     this.stats.contexts.set(it.contexts[j], n ? ++n : 1);
+                }
+
+                if (it.rec_str) {
+                    this.stats.recurrences++;
+                    // Recurring tasks are not counted among complete tasks.
+                    if (it.priority === '(x)') continue;
                 }
 
                 n = this.stats.priorities.get(it.priority);
@@ -1249,12 +1421,11 @@ const Todo = new Lang.Class({
     // If invert_filters is false, return true if at least one filter is matched.
     // If invert_filters is true, return false if at least one filter is matched.
     _filter_test: function (task) {
-        if (! this.cache.filters.show_hidden) {
-            if (task.hidden) return false;
-        }
-        else return task.hidden;
-
-        if (! this.has_active_filters()) return true;
+        if (this.cache.filters.show_hidden)    return task.hidden;
+        if (task.hidden)                       return false;
+        if (this.cache.filters.show_recurring) return Boolean(task.rec_str);
+        if (task.rec_str && task.priority === '(x)') return false;
+        if (! this.has_active_filters())       return true;
 
         let i, arr, len;
 
@@ -1291,7 +1462,8 @@ const Todo = new Lang.Class({
             this.cache.filters.active_filters.contexts.length   ||
             this.cache.filters.active_filters.projects.length   ||
             this.cache.filters.active_filters.custom.length     ||
-            this.cache.filters.show_hidden) {
+            this.cache.filters.show_hidden                      ||
+            this.cache.filters.show_recurring) {
 
             return true;
         }
@@ -1451,158 +1623,6 @@ const Todo = new Lang.Class({
         if (pattern === res) return [false, this.search_dictionary.get(res)];
         else if (res)        return [true,  this.search_dictionary.get(res)];
         else                 return [true,  this.tasks];
-    },
-
-    _on_day_started_loop: function () {
-        if (this.on_day_started_loop_id) return;
-
-        //
-        // put stuff here to execute immediately on invocation (and each time
-        // the ext is reloaded.)
-        //
-        let d = new Date();
-        let t = 86400 - Math.round((d.getTime() - d.setHours(0,0,2,0)) / 1000);
-
-        this.on_day_started_loop_id = Mainloop.timeout_add_seconds(t, () => {
-            // We only emit here, or else we will emit every time the ext
-            // gets reloaded. In that case it couldn't be used by functions
-            // that deal with persistent data. On the other hand, this may never
-            // execute if the ext is removed before midnight and added back
-            // after.
-            this.emit('new-day');
-
-            // Update all due dates.
-            for (let i = 0, len = this.tasks.length; i < len; i++) {
-                this.tasks[i].update_due_date();
-            }
-
-            // reset
-            this.on_day_started_loop_id = null;
-            this._on_day_started_loop();
-        });
-    },
-
-    _update_markup_colors: function () {
-        let update_needed = false;
-
-        ['context', 'project', 'link'].forEach((it) => {
-            let [success, col] = this.actor.get_theme_node()
-                                 .lookup_color(it + '-color', false);
-
-            if (! success) return;
-
-            col = col.to_string().substr(0, 7);
-
-            if (this.markup_colors[it] !== col) {
-                this.markup_colors[it] = col;
-                update_needed = true;
-            }
-        });
-
-        if (update_needed) {
-            let i = 0;
-            let n = Math.min(this.tasks.length, 30);
-
-            for (; i < n; i++)
-                this.tasks[i].update_task();
-
-            Mainloop.idle_add(() => {
-                for (let len = this.tasks.length; i < len; i++)
-                    this.tasks[i].update_task();
-            });
-        }
-    },
-
-    _toggle_panel_item_mode: function () {
-        if (this.settings.get_enum('todo-panel-mode') === 0)
-            this.panel_item.set_mode('icon');
-        else if (this.settings.get_enum('todo-panel-mode') === 1)
-            this.panel_item.set_mode('text');
-        else
-            this.panel_item.set_mode('icon_text');
-    },
-
-    _toggle_keybindings: function (disable_all) {
-        if (!disable_all &&
-            this.settings.get_strv('todo-keybinding-open')[0] !== '') {
-
-            this.keybindings.push('todo-keybinding-open');
-
-            Main.wm.addKeybinding(
-                'todo-keybinding-open',
-                this.settings,
-                Meta.KeyBindingFlags.NONE,
-                Shell.ActionMode.NORMAL,
-                () => {
-                    this.ext.open_menu(this);
-                    if (this.view_manager.current_view !== View.LOADING &&
-                        this.view_manager.current_view !== View.NO_TODO_FILE) {
-
-                        this.show_view__default();
-                    }
-                });
-        }
-        else {
-            let i = this.keybindings.indexOf('todo-keybinding-open');
-            if (i !== -1) {
-                Main.wm.removeKeybinding('todo-keybinding-open');
-                this.keybindings.splice(i, 1);
-            }
-        }
-
-        if (!disable_all &&
-            this.settings.get_strv('todo-keybinding-open-to-add')[0] !== '') {
-
-            this.keybindings.push('todo-keybinding-open-to-add');
-
-            Main.wm.addKeybinding(
-                'todo-keybinding-open-to-add',
-                this.settings,
-                Meta.KeyBindingFlags.NONE,
-                Shell.ActionMode.NORMAL,
-                () => {
-                    this.ext.open_menu(this);
-                    if (this.view_manager.current_view !== View.LOADING &&
-                        this.view_manager.current_view !== View.NO_TODO_FILE) {
-
-                        this.show_view__task_editor();
-                    }
-                });
-        }
-        else {
-            let i = this.keybindings.indexOf('todo-keybinding-open-to-add');
-            if (i !== -1) {
-                Main.wm.removeKeybinding('todo-keybinding-open-to-add');
-                this.keybindings.splice(i, 1);
-            }
-        }
-
-        if (!disable_all &&
-            this.settings.get_strv('todo-keybinding-open-to-search')[0] !== '') {
-
-            this.keybindings.push('todo-keybinding-open-to-search');
-
-            Main.wm.addKeybinding(
-                'todo-keybinding-open-to-search',
-                this.settings,
-                Meta.KeyBindingFlags.NONE,
-                Shell.ActionMode.NORMAL,
-                () => {
-                    this.ext.open_menu(this);
-                    if (this.view_manager.current_view !== View.LOADING &&
-                        this.view_manager.current_view !== View.NO_TODO_FILE) {
-
-                        this.show_view__search();
-                    }
-                });
-        }
-        else {
-            let i = this.keybindings.indexOf('todo-keybinding-open-to-search');
-            if (i !== -1) {
-                Main.wm.removeKeybinding('todo-keybinding-open-to-search');
-                this.keybindings.splice(i, 1);
-            }
-        }
     },
 });
 Signals.addSignalMethods(Todo.prototype);
@@ -1919,16 +1939,16 @@ const TaskEditor = new Lang.Class({
         let words = this.entry.entry.get_text().split(/ +/);
 
         if (words[0] === 'x') {
-            if (! REG_DATE.test(words[1]))
+            if (! Date.parse(words[1]))
                 words.splice(1, 0, date_yyyymmdd(), date_yyyymmdd());
-            else if (! REG_DATE.test(words[2]))
+            else if (! Date.parse(words[2]))
                 words.splice(2, 0, date_yyyymmdd());
         }
         else if (REG_PRIO.test(words[0])) {
-            if (! REG_DATE.test(words[1]))
+            if (! Date.parse(words[1]))
                 words.splice(1, 0, date_yyyymmdd());
         }
-        else if (! REG_DATE.test(words[0])) {
+        else if (! Date.parse(words[0])) {
             words.splice(0, 0, date_yyyymmdd());
         }
 
@@ -1942,27 +1962,33 @@ Signals.addSignalMethods(TaskEditor.prototype);
 // =====================================================================
 // @@@ A task object including the actor to be drawn in the popup menu.
 //
-// @ext      : obj (main extension object)
-// @delegate : obj (main section object)
-// @task_str : string (a single line in todo.txt file)
+// @ext                 : obj (main extension object)
+// @delegate            : obj (main section object)
+// @task_str            : string (a single line in todo.txt file)
+// @do_check_recurrence : bool
+//
+// If @do_check_recurrence is true, then the task object will check to
+// to see if it needs to reopen in case it has a recurrence, and
+// as a result may end up updating it's task_str.
+// To know whether or not a task obj has recurred, one can set this param
+// to false and use the check_recurrence() method manually, which will
+// return a bool.
+// Setting this param to false is useful when we don't intend to update
+// the todo.txt file but must in case a task recurs. (E.g., when we load
+// tasks from the todo.txt file.)
 // =====================================================================
 const TaskItem = new Lang.Class({
     Name: 'Timepp.TaskItem',
 
-    _init: function (ext, delegate, task_str) {
+    _init: function (ext, delegate, task_str, do_check_recurrence = true) {
         this.ext      = ext;
         this.delegate = delegate;
         this.task_str = task_str;
 
+        // @NOTE
+        // If a var needs to be resettable, add it to the reset() method
+        // instead of the _init() method.
 
-        this.priority        = '(_)';
-        this.projects        = [];
-        this.contexts        = [];
-        // For sorting purposes, we set the dates to this when they don't exist.
-        this.creation_date   = '0000-00-00';
-        this.completion_date = '0000-00-00';
-        this.due_date        = '0000-00-00';
-        this.hidden          = false; // h:1 extension
         // Project/context/url below mouse pointer, null if none of those.
         this.current_keyword = null;
 
@@ -2008,6 +2034,13 @@ const TaskItem = new Lang.Class({
 
 
         //
+        // recurrence date label
+        //
+        this.rec_date_label = new St.Label({ visible: false, y_align: Clutter.ActorAlign.CENTER, style_class: 'recurrence-date-label' });
+        this.header.add_child(this.rec_date_label);
+
+
+        //
         // body
         //
         this.msg = new St.Label({ reactive: true, y_align: Clutter.ActorAlign.CENTER, x_align: St.Align.START, style_class: 'description-label'});
@@ -2032,9 +2065,9 @@ const TaskItem = new Lang.Class({
 
 
         //
-        // parse task string
+        // init the remaining vars and parse task string
         //
-        this._parse_task_str();
+        this.reset(do_check_recurrence);
 
 
         //
@@ -2074,6 +2107,457 @@ const TaskItem = new Lang.Class({
             this.delegate.on_tasks_changed();
             this.delegate.write_tasks_to_file();
         });
+    },
+
+    reset: function (do_check_recurrence = true, task_str) {
+        if (task_str) {
+            this.delegate.time_tracker.update_record_name(this.task_str, task_str);
+            this.task_str = task_str;
+        }
+
+        this.priority                    = '(_)';
+        this.projects                    = [];
+        this.contexts                    = [];
+        // For sorting purposes, we set the dates to this when they don't exist.
+        this.creation_date               = '0000-00-00';
+        this.completion_date             = '0000-00-00';
+        this.due_date                    = '0000-00-00';
+        this.prio_label.visible          = false;
+        this.prio_label.text             = '';
+        this.due_date_label.visible      = false;
+        this.due_date_label.text         = '';
+        this.rec_date_label.visible      = false;
+        this.rec_date_label.text         = '';
+        this.date_labels.visible         = false;
+        this.date_labels.text            = '';
+        this.actor.style_class           = 'task-item';
+        this.completion_checkbox.checked = false;
+        this.completion_checkbox.visible = true;
+        if (this.hidden) {
+            this.hidden = false;
+            this.header.remove_child(this.header.get_child_at_index(0));
+        }
+
+        // The recurrence type is one of: 1, 2, 3
+        // The numbers just match the global regex REG_REC_EXT_[123]
+        this.rec_type = 1;
+        this.rec_str  = '';
+
+        // These vars are used by the update_markup_colors() func to make it
+        // possible to update the context/project/url colors without having to
+        // re-parse the whole task_str.
+        // They are filled up by the _parse_task_str() func.
+        // this.description_markup is an array of marked up words that make up
+        // the 'description' part of the task_str sans any extensions.
+        this.description_markup = null;
+        this.context_indices    = [];
+        this.project_indices    = [];
+        this.link_indices       = [];
+
+
+        this._parse_task_str();
+        if (do_check_recurrence && this.rec_str) this.check_recurrence();
+    },
+
+    _parse_task_str: function () {
+        // The 'header' is part of the task_str at the start that includes
+        // the 'x' (checked) sign, the priority, and the completion/creation
+        // dates.
+        // The 'description' is everything else.
+
+        let words    = this.task_str.split(/ +/);
+        let len      = words.length;
+        let desc_pos = 0; // idx of first word of 'description' in words arr
+
+        //
+        // Parse 'header'
+        //
+        if (words[0] === 'x') {
+            this.completion_checkbox.checked = true;
+            this.actor.add_style_class_name('completed');
+            this.priority = '(x)';
+
+            if (Date.parse(words[1])) {
+                this.completion_date      = words[1];
+                // TRANSLATORS: 'completed:' is followed by a date
+                this.date_labels.text    += _('completed:') + words[1] + '   ';
+                this.date_labels.visible  = true;
+
+                if (Date.parse(words[2])) {
+                    this.creation_date        = words[2];
+                    // TRANSLATORS: 'created:' is followed by a date
+                    this.date_labels.text    += _('created:') + words[2] + '   ';
+                    this.date_labels.visible  = true;
+                    desc_pos                  = 3;
+                }
+                else desc_pos = 2;
+            }
+            else desc_pos = 1;
+        }
+        else if (REG_PRIO.test(words[0])) {
+            this.actor.add_style_class_name(words[0][1]);
+            this.prio_label.visible = true;
+            this.prio_label.text    = words[0];
+            this.priority           = words[0];
+
+            if (Date.parse(words[1])) {
+                this.creation_date        = words[1];
+                this.date_labels.text    += _('created:') + words[1] + '   ';
+                this.date_labels.visible  = true;
+                desc_pos                  = 2;
+            }
+            else desc_pos = 1;
+        }
+        else if (Date.parse(words[0])) {
+            this.creation_date       = words[0];
+            this.date_labels.text   += _('created:') + words[0] + '   ';
+            this.date_labels.visible = true;
+            desc_pos                 = 1;
+        }
+
+
+        //
+        // Parse 'description'
+        //
+        words = words.slice(desc_pos, len);
+        len = words.length;
+        let word;
+
+        for (let i = 0; i < len; i++) {
+            word = words[i];
+
+            if (REG_CONTEXT.test(word)) {
+                this.context_indices.push(i);
+                if (this.contexts.indexOf(word) === -1) {
+                    this.contexts.push(word);
+                }
+                words[i] = '<span foreground="' +
+                           this.delegate.markup_colors.context +
+                           '"><b>' + word + '</b></span>';
+            }
+            else if (REG_PROJ.test(word)) {
+                this.project_indices.push(i);
+                if (this.projects.indexOf(word) === -1) {
+                    this.projects.push(word);
+                }
+                words[i] = '<span foreground="' +
+                           this.delegate.markup_colors.project +
+                           '"><b>' + word + '</b></span>';
+            }
+            else if (REG_URL.test(word)) {
+                this.link_indices.push(i);
+                words[i] = '<span foreground="' +
+                           this.delegate.markup_colors.link +
+                           '"><u>' + word + '</u></span>';
+            }
+            else if (REG_EXT.test(word)) {
+                words.splice(i, 1);
+                i--; len--;
+
+                if (REG_DUE_EXT.test(word) && !this.rec_str && !this.hidden) {
+                    this.due_date = word.slice(4);
+                    this.due_date_label.text   += _('due:') + word.slice(4);
+                    this.due_date_label.visible = true;
+                    this.update_due_date();
+                }
+                else if (REG_REC_EXT_1.test(word) && !this.hidden &&
+                         this.creation_date !== '0000-00-00') {
+
+                    this.due_date_label.visible = false;
+                    this.due_date_label.text    = '';
+                    this.rec_str  = word;
+                    this.rec_type = 1;
+                }
+                else if (REG_REC_EXT_2.test(word) && !this.hidden &&
+                         (this.priority !== '(x)' ||
+                          this.completion_date !== '0000-00-00')) {
+
+                    this.due_date_label.visible = false;
+                    this.due_date_label.text    = '';
+                    this.rec_str  = word;
+                    this.rec_type = 2;
+                }
+                else if (REG_REC_EXT_3.test(word) && !this.hidden &&
+                         (/^[1-9]+n-1m$/.test(word) ||
+                          this.creation_date !== '0000-00-00')) {
+
+                    this.due_date_label.visible = false;
+                    this.due_date_label.text    = '';
+                    this.rec_str  = word;
+                    this.rec_type = 3;
+
+                }
+                else if (REG_HIDE_EXT.test(word)) {
+                    this.completion_checkbox.hide();
+                    this.prio_label.hide();
+                    this.due_date_label.hide();
+                    this.due_date_label.text = '';
+                    this.rec_date_label.hide();
+                    this.rec_date_label.text = '';
+                    this.date_labels.hide();
+                    if (this.edit_icon_bin) this.edit_icon_bin.hide();
+
+                    this.priority = '(~)';
+                    this.hidden = true;
+                    this.completion_checkbox.checked = false;
+                    this.actor.add_style_class_name('hidden-task');
+                    let icon_incognito_bin = new St.Button({ can_focus: true });
+                    this.header.insert_child_at_index(icon_incognito_bin, 0);
+                    let icon_incognito = new St.Icon();
+                    icon_incognito_bin.add_actor(icon_incognito);
+                    ICON_FROM_URI.icon_from_uri(icon_incognito,
+                                                CustomIcon.HIDDEN,
+                                                this.delegate.ext_dir);
+                }
+            }
+        }
+
+        this.description_markup = words;
+
+        // Escape '&' and '<', or else pango will throw an error.
+        // It could still throw an error if a tag is properly structured, but is
+        // not supported by pango.
+        let markup = this.description_markup.join(' ');
+        markup = markup.replace(/&(?!amp;|quot;|apos;|lt;|gt;)/g, '&amp;');
+        markup = markup.replace(/<(?!\/?.*>)/g, '&lt;');
+
+        this.msg.clutter_text.set_markup(markup);
+    },
+
+    check_recurrence: function () {
+        if (! this.rec_str) return false;
+
+        let [do_recur, next_rec, days] = this._get_recurrence_date();
+
+        if (do_recur) {
+            // update/insert creation date
+            let words = this.task_str.split(/ +/);
+            let idx;
+
+            if      (this.priority === '(x)') idx = 2;
+            else if (this.priority === '(_)') idx = 0;
+            else                              idx = 1;
+
+            if (Date.parse(words[idx])) words[idx] = date_yyyymmdd();
+            else                        words.splice(idx, 0, date_yyyymmdd());
+
+            this.task_str = words.join(' ');
+
+            if (this.priority === '(x)') this.toggle_task();
+            else                         this.reset(true);
+
+            return do_recur;
+        }
+
+        if (next_rec) {
+            this.rec_date_label.show();
+            // TRANSLATORS: %s is a date string in yyyy-mm-dd format
+            this.rec_date_label.text =
+                ngettext('recurs:%s (in %d day)', 'recurs:%s (in %d days)',
+                         days).format(next_rec, days);
+        }
+
+        return do_recur;
+    },
+
+    // This function assumes that the creation/completion dates are either valid
+    // or equal to '0000-00-00' and that if a particular type of recurrence
+    // needs a creation/completion date that it will be already there.  This is
+    // all done in the _parse_task_str func.
+    //
+    // returns array : [do_recur, next_recurrence, days_until]
+    //
+    // @do_recur        : bool    (whether or not the task should recur today)
+    // @next_recurrence : string  (date of next recurrence in yyyy-mm-dd format)
+    // @days_until      : natural (days until next recurrence)
+    //
+    // @next_recurrence can be an empty string, which indicates that the next
+    // recurrence couldn't be computed. E.g., the task recurs n days after
+    // completion but isn't completed.
+    _get_recurrence_date: function () {
+        let res   = [false, '', 0];
+        let today = date_yyyymmdd();
+
+        if (this.rec_type === 3) {
+            let increment =
+                +(this.rec_str.slice(this.rec_str.indexOf('-') + 1, -1));
+
+            if (this.creation_date === '0000-00-00' && increment > 1)
+                return res;
+
+            let day   = +(this.rec_str.slice(this.rec_str.indexOf(':') + 1,
+                                             this.rec_str.indexOf('d')));
+            let year  = +(this.creation_date.substr(0, 4));
+            let month = +(this.creation_date.substr(5, 2));
+            let iter  = "%d-%02d-%02d".format(year, month, day);
+
+            while (iter < today) {
+                month += increment;
+                year  += Math.floor(month / 12);
+                month %= 12;
+                iter   = "%d-%02d-%02d".format(year, month, day);
+            }
+
+            while (! Date.parse(iter)) {
+                iter = "%d-%02d-%02d".format(year, month, --day);
+            }
+
+            // We never recur a task on date that it was created on since
+            // it would be impossible to close it on that date.
+            res[0] = iter === today && this.creation_date !== today;
+
+            // If today is the date of recurrence or if the creation date was
+            // set into the future, we increment one last time.
+            if (res[0] || iter === this.creation_date) {
+                month += increment;
+                year  += Math.floor(month / 12);
+                month %= 12;
+                iter   = "%d-%02d-%02d".format(year, month, day);
+
+                while (! Date.parse(iter)) {
+                    iter = "%d-%02d-%02d".format(year, month, --day);
+                }
+            }
+
+            res[1] = iter;
+            res[2] = Math.round(
+                (Date.parse(iter+'T00:00:00') - Date.parse(today+'T00:00:00')) /
+                86400000
+            );
+        }
+        else {
+            let reference_date, rec_str_offset;
+
+            if (this.rec_type === 2) {
+                // When parsing the task_str, and incomplete task (so a task
+                // without a completion date) with this type of recurrence is
+                // valid. So we have to check this here.
+                if (this.completion_date === '0000-00-00') return res;
+
+                reference_date = this.completion_date;
+                rec_str_offset = 6;
+            }
+            else {
+                reference_date = this.creation_date;
+                rec_str_offset = 4;
+            }
+
+            let iter      = new Date(reference_date + 'T00:00:00');
+            let increment = +(this.rec_str.slice(rec_str_offset, -1)) *
+                (this.rec_str[this.rec_str.length - 1] === 'w' ? 7 : 1);
+
+            while (date_yyyymmdd(iter) < today) {
+                iter.setDate(iter.getDate() + increment);
+            }
+
+            res[0] = date_yyyymmdd(iter) === today && reference_date !== today;
+
+            if (res[0] || date_yyyymmdd(iter) === reference_date)
+                iter.setDate(iter.getDate() + increment);
+
+            res[1] = date_yyyymmdd(iter);
+            res[2] = Math.round(
+                (iter.getTime() - Date.parse(today + 'T00:00:00')) / 86400000);
+        }
+
+        return res;
+    },
+
+    update_markup_colors: function () {
+        let i, idx;
+
+        for (i = 0; i < this.context_indices.length; i++) {
+            idx = this.context_indices[i];
+
+            this.description_markup[idx] =
+                '<span foreground="' +
+                this.delegate.markup_colors.context + '"' +
+                this.description_markup[idx].slice(
+                    this.description_markup[idx].indexOf('>'));
+        }
+
+        for (i = 0; i < this.project_indices.length; i++) {
+            idx = this.project_indices[i];
+
+            this.description_markup[idx] =
+                '<span foreground="' +
+                this.delegate.markup_colors.project + '"' +
+                this.description_markup[idx].slice(
+                    this.description_markup[idx].indexOf('>'));
+        }
+
+        for (i = 0; i < this.link_indices.length; i++) {
+            idx = this.link_indices[i];
+
+            this.description_markup[idx] =
+                '<span foreground="' +
+                this.delegate.markup_colors.link + '"' +
+                this.description_markup[idx].slice(
+                    this.description_markup[idx].indexOf('>'));
+        }
+
+        this.msg.clutter_text.set_markup(this.description_markup.join(' '));
+    },
+
+    update_due_date: function () {
+        if (this.due_date === '0000-00-00') return;
+
+        let diff = Math.round(
+            (Date.parse(this.due_date + 'T00:00:00') -
+             Date.parse(date_yyyymmdd() + 'T00:00:00'))
+            / 86400000
+        );
+        let abs = Math.abs(diff);
+
+        if (diff === 0)
+            abs = _('today');
+        else if (diff < 0)
+            abs = ngettext('%d day ago', '%d days ago', abs).format(abs);
+        else
+            abs = ngettext('in %d day', 'in %d days', abs).format(abs);
+
+        this.due_date_label.text =
+            _('due-date:') + this.due_date + ' (' + abs + ')';
+    },
+
+    toggle_task: function () {
+        this._hide_header_icons();
+
+        if (this.priority === '(x)') {
+            let words = this.task_str.split(/ +/);
+
+            // See if there's an old priority stored in an ext (e.g., pri:A).
+            let prio  = '';
+            for (let i = 0, len = words.length; i < len; i++) {
+                if (REG_PRIO_EXT.test(words[i])) {
+                    prio = '(' + words[i][4] + ') ';
+                    words.splice(i, 1);
+                    break;
+                }
+            }
+
+            // remove the 'x' and completion date
+            if (Date.parse(words[1])) words.splice(0, 2);
+            else                      words.splice(0, 1);
+
+            this.reset(true, prio + words.join(' '));
+        }
+        else {
+            this.delegate.time_tracker.stop_tracking(this);
+
+            if (this.priority === '(_)') {
+                this.task_str = 'x ' + date_yyyymmdd() + ' ' + this.task_str;
+            }
+            else {
+                this.task_str = 'x ' +
+                                date_yyyymmdd() +
+                                this.task_str.slice(3) +
+                                ' pri:' + this.priority[1];
+            }
+
+            this.priority = '(x)';
+            this.reset(true);
+        }
     },
 
     _show_header_icons: function () {
@@ -2179,142 +2663,6 @@ const TaskItem = new Lang.Class({
         this.tracker_icon_bin.visible     = this.edit_icon_bin.visible;
     },
 
-    _parse_task_str: function () {
-        //
-        // The 'header' is part of the task_str at the start that includes
-        // the 'x' (checked) sign, the priority, and the completion/creation
-        // dates.
-        // The 'description' is everything else.
-        //
-
-        let words    = this.task_str.split(/ +/);
-        let len      = words.length;
-        let desc_pos = 0; // idx of first word of 'description' in words arr
-
-        //
-        // Parse 'header'
-        //
-        if (words[0] === 'x') {
-            this.completion_checkbox.checked = true;
-            this.actor.add_style_class_name('completed');
-            this.priority = '(x)';
-
-            if (REG_DATE.test(words[1])) {
-                this.completion_date      = words[1];
-                this.date_labels.text    += _('completed:') + words[1] + '   ';
-                this.date_labels.visible  = true;
-
-                if (REG_DATE.test(words[2])) {
-                    this.creation_date        = words[2];
-                    this.date_labels.text    += _('created:') + words[2] + '   ';
-                    this.date_labels.visible  = true;
-                    desc_pos                  = 3;
-                }
-                else desc_pos = 2;
-            }
-            else desc_pos = 1;
-        }
-        else if (REG_PRIO.test(words[0])) {
-            this.actor.add_style_class_name(words[0][1]);
-            this.prio_label.visible = true;
-            this.prio_label.text    = words[0];
-            this.priority           = words[0];
-
-            if (REG_DATE.test(words[1])) {
-                this.creation_date        = words[1];
-                this.date_labels.text    += _('created:') + words[1] + '   ';
-                this.date_labels.visible  = true;
-                desc_pos                  = 2;
-            }
-            else desc_pos = 1;
-        }
-        else if (REG_DATE.test(words[0])) {
-            this.creation_date       = words[0];
-            this.date_labels.text   += _('created:') + words[0] + '   ';
-            this.date_labels.visible = true;
-            desc_pos                 = 1;
-        }
-
-        //
-        // Parse 'description'
-        //
-        let word;
-        for (let i = desc_pos; i < len; i++) {
-            word = words[i];
-
-            if (REG_CONTEXT.test(word)) {
-                if (this.contexts.indexOf(word) === -1) {
-                    this.contexts.push(word);
-                }
-                words[i] = '<span foreground="' +
-                           this.delegate.markup_colors.context +
-                           '"><b>' + word + '</b></span>';
-            }
-            else if (REG_PROJ.test(word)) {
-                if (this.projects.indexOf(word) === -1) {
-                    this.projects.push(word);
-                }
-                words[i] = '<span foreground="' +
-                           this.delegate.markup_colors.project +
-                           '"><b>' + word + '</b></span>';
-            }
-            else if (REG_URL.test(word)) {
-                words[i] = '<span foreground="' +
-                           this.delegate.markup_colors.link +
-                           '"><u>' + word + '</u></span>';
-            }
-            else if (REG_EXT.test(word)) {
-                if (REG_DUE_EXT.test(word) && !this.hidden) {
-                    this.due_date = word.slice(4);
-                    this.due_date_label.text   += _('due:') + word.slice(4);
-                    this.due_date_label.visible = true;
-                    this.update_due_date();
-
-                    words.splice(i, 1);
-                    i--; len--;
-                }
-                else if (REG_HIDE_EXT.test(word)) {
-                    this.priority = '(~)';
-                    this.hidden = true;
-                    this.completion_checkbox.checked = false;
-                    this.actor.add_style_class_name('hidden-task');
-                    this.completion_checkbox.hide();
-                    this.prio_label.hide();
-                    this.due_date_label.hide();
-                    this.date_labels.hide();
-                    if (this.edit_icon_bin) this.edit_icon_bin.hide();
-
-                    let icon_incognito_bin = new St.Button({ can_focus: true });
-                    this.header.insert_child_at_index(icon_incognito_bin, 0);
-
-                    let icon_incognito = new St.Icon();
-                    icon_incognito_bin.add_actor(icon_incognito);
-
-                    ICON_FROM_URI.icon_from_uri(icon_incognito,
-                                                CustomIcon.HIDDEN,
-                                                this.delegate.ext_dir);
-
-                    words.splice(i, 1);
-                    i--; len--;
-                }
-                else if (REG_PRIO_EXT.test(word)) {
-                    words.splice(i, 1);
-                    i--; len--;
-                }
-            }
-        }
-
-        let markup = words.slice(desc_pos, len).join(' ');
-
-        // Escape '&' and '<', or else pango will throw an error.
-        // It could still throw an error if a tag is properly structured, but is
-        // not supported by pango.
-        markup = markup.replace(/&(?!amp;|quot;|apos;|lt;|gt;)/g, '&amp;');
-        markup = markup.replace(/<(?!\/?.*>)/g, '&lt;');
-
-        this.msg.clutter_text.set_markup(markup);
-    },
-
     // Return word under mouse cursor if it's a context or project, else null.
     _find_keyword: function (event) {
         let len = this.msg.clutter_text.text.length;
@@ -2413,92 +2761,6 @@ const TaskItem = new Lang.Class({
     on_tracker_stopped: function () {
         this._show_tracker_stopped_icon();
     },
-
-    update_due_date: function () {
-        if (this.due_date === '0000-00-00') return;
-
-        let due  = Date.parse(this.due_date + 'T00:00:00');
-        let diff = Math.ceil((due - Date.now()) / 86400000);
-        let abs  = Math.abs(diff);
-
-        if (diff === 0)
-            abs = _('today');
-        else if (diff < 0)
-            abs = ngettext('%d day ago', '%d days ago', abs).format(abs);
-        else
-            abs = ngettext('in %d day', 'in %d days', abs).format(abs);
-
-        this.due_date_label.text = _('due:') + this.due_date + ' (' + abs + ')';
-    },
-
-    toggle_task: function () {
-        this._hide_header_icons();
-
-        let old_prio = this.priority;
-
-        if (this.completion_checkbox.checked) {
-            this.delegate.time_tracker.stop_tracking(this);
-
-            if (this.priority !== '(_)') {
-                this.task_str = 'x ' +
-                                date_yyyymmdd() +
-                                this.task_str.slice(3) +
-                                ' pri:' + this.priority[1];
-            }
-            else
-                this.task_str = 'x ' + date_yyyymmdd() + ' ' + this.task_str;
-
-            this.priority = '(x)';
-            this.update_task();
-        }
-        else {
-            let prio  = '';
-            let words = this.task_str.split(/ +/);
-
-            for (let i = 0, len = words.length; i < len; i++) {
-                if (REG_PRIO_EXT.test(words[i])) {
-                    prio = '(' + words[i][4] + ') ';
-                    words.splice(i, 1);
-                    break;
-                }
-            }
-
-            if (REG_DATE.test(words[1])) words.splice(0, 2);
-            else                         words.splice(0, 1);
-
-            this.update_task(prio + words.join(' '));
-        }
-    },
-
-    update_task: function (task_str) {
-        if (task_str) {
-            this.delegate.time_tracker.update_record_name(this.task_str, task_str);
-            this.task_str = task_str;
-        }
-
-        // reset
-        this.priority               = '(_)';
-        this.projects               = [];
-        this.contexts               = [];
-        this.creation_date          = '0000-00-00';
-        this.completion_date        = '0000-00-00';
-        this.due_date               = '0000-00-00';
-        this.prio_label.visible     = false;
-        this.prio_label.text        = '';
-        this.due_date_label.visible = false;
-        this.due_date_label.text    = '';
-        this.date_labels.visible    = false;
-        this.date_labels.text       = '';
-        this.actor.style_class      = 'task-item';
-        this.completion_checkbox.checked = false;
-        this.completion_checkbox.visible = true;
-        if (this.hidden) {
-            this.hidden = false;
-            this.header.remove_child(this.header.get_child_at_index(0));
-        }
-
-        this._parse_task_str();
-    },
 });
 Signals.addSignalMethods(TaskItem.prototype);
 
@@ -2575,7 +2837,7 @@ const TaskFiltersWindow = new Lang.Class({
 
 
         //
-        // show hidden tasks switch
+        // show hidden only switch
         //
         this.show_hidden_tasks_item = new St.BoxLayout({ style_class: 'row' });
         this.content_box.add_child(this.show_hidden_tasks_item);
@@ -2590,26 +2852,48 @@ const TaskFiltersWindow = new Lang.Class({
         hidden_count_label.text =
             ngettext('%d hidden task', '%d hidden tasks', n).format(n);
 
+        this.show_hidden_tasks_toggle_btn = new St.Button({ can_focus: true });
+        this.show_hidden_tasks_item.add_actor(this.show_hidden_tasks_toggle_btn);
         this.show_hidden_tasks_toggle = new PopupMenu.Switch();
-        this.show_hidden_tasks_item.add_actor(this.show_hidden_tasks_toggle.actor);
-        this.show_hidden_tasks_toggle.actor.can_focus = true;
-        this.show_hidden_tasks_toggle.actor.reactive  = true;
+        this.show_hidden_tasks_toggle_btn.add_actor(this.show_hidden_tasks_toggle.actor);
+
+
+        //
+        // show recurring only switch
+        //
+        this.show_recurring_tasks_item = new St.BoxLayout({ style_class: 'row' });
+        this.content_box.add_child(this.show_recurring_tasks_item);
+
+        let show_recurring_tasks_label = new St.Label({ text: _('Show only recurring tasks'), y_align: Clutter.ActorAlign.CENTER });
+        this.show_recurring_tasks_item.add(show_recurring_tasks_label, {expand: true});
+
+        let recurring_count_label = new St.Label({ y_align: Clutter.ActorAlign.CENTER, style_class: 'popup-inactive-menu-item', pseudo_class: 'insensitive' });
+        this.show_recurring_tasks_item.add_child(recurring_count_label);
+
+        recurring_count_label.text =
+            ngettext('%d recurring task', '%d recurring tasks',
+                this.delegate.stats.recurrences)
+            .format(this.delegate.stats.recurrences);
+
+        this.show_recurring_tasks_toggle_btn = new St.Button({ can_focus: true });
+        this.show_recurring_tasks_item.add_actor(this.show_recurring_tasks_toggle_btn);
+        this.show_recurring_tasks_toggle = new PopupMenu.Switch();
+        this.show_recurring_tasks_toggle_btn.add_actor(this.show_recurring_tasks_toggle.actor);
 
 
         //
         // Invert switch (whitelist/blacklist)
         //
-        this.invert_switch_item = new St.BoxLayout({ style_class: 'row' });
-        this.content_box.add_child(this.invert_switch_item);
+        this.invert_item = new St.BoxLayout({ style_class: 'row' });
+        this.content_box.add_child(this.invert_item);
 
         let invert_label = new St.Label({ text: _('Invert filters'), y_align: St.Align.END });
-        this.invert_switch_item.add(invert_label, {expand: true});
+        this.invert_item.add(invert_label, {expand: true});
 
+        this.invert_toggle_btn = new St.Button({ can_focus: true });
+        this.invert_item.add_actor(this.invert_toggle_btn);
         this.invert_toggle = new PopupMenu.Switch();
-        this.invert_switch_item.add_actor(this.invert_toggle.actor);
-
-        this.invert_toggle.actor.can_focus = true;
-        this.invert_toggle.actor.reactive  = true;
+        this.invert_toggle_btn.add_actor(this.invert_toggle.actor);
 
 
         //
@@ -2654,19 +2938,18 @@ const TaskFiltersWindow = new Lang.Class({
             this.filter_register.custom.push(item);
             this.entry.entry.text = '';
         });
-        this.show_hidden_tasks_toggle.actor.connect('button-release-event', () => {
+        this.show_hidden_tasks_toggle_btn.connect('clicked', () => {
             this.show_hidden_tasks_toggle.toggle();
+            if (this.show_hidden_tasks_toggle.state)
+                this.show_recurring_tasks_toggle.setToggleState(false);
         });
-        this.invert_toggle.actor.connect('button-release-event', () => {
+        this.show_recurring_tasks_toggle_btn.connect('clicked', () => {
+            this.show_recurring_tasks_toggle.toggle();
+            if (this.show_recurring_tasks_toggle.state)
+                this.show_hidden_tasks_toggle.setToggleState(false);
+        });
+        this.invert_toggle_btn.connect('clicked', () => {
             this.invert_toggle.toggle();
-        });
-        this.show_hidden_tasks_toggle.actor.connect('key-press-event', (_, event) => {
-            if (event.get_key_symbol() === Clutter.Return)
-                this.show_hidden_tasks_toggle.toggle();
-        });
-        this.invert_toggle.actor.connect('key-press-event', (_, event) => {
-            if (event.get_key_symbol() === Clutter.Return)
-                this.invert_toggle.toggle();
         });
         this.button_reset.connect('clicked', () => {
             this._reset_all();
@@ -2688,6 +2971,9 @@ const TaskFiltersWindow = new Lang.Class({
 
         this.show_hidden_tasks_toggle.setToggleState(
             this.delegate.cache.filters.show_hidden);
+
+        this.show_recurring_tasks_toggle.setToggleState(
+            this.delegate.cache.filters.show_recurring);
 
 
         let i, len, key, value, item, check;
@@ -2859,6 +3145,7 @@ const TaskFiltersWindow = new Lang.Class({
 
     _on_ok_clicked: function () {
         let res = {
+            show_recurring : this.show_recurring_tasks_toggle.state,
             show_hidden    : this.show_hidden_tasks_toggle.state,
             invert_filters : this.invert_toggle.state,
             custom_filters : [],

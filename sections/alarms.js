@@ -726,8 +726,7 @@ const AlarmItem = new Lang.Class({
         this.option_box.add(this.edit_bin);
 
         this.toggle     = new PopupMenu.Switch(alarm.toggle);
-        this.toggle_bin = new St.Button({y_align: St.Align.START, x_align: St.Align.END });
-        this.toggle.actor.can_focus = true;
+        this.toggle_bin = new St.Button({can_focus: true, y_align: St.Align.START, x_align: St.Align.END });
         this.toggle_bin.add_actor(this.toggle.actor);
 
         this.option_box.add(this.toggle_bin);
