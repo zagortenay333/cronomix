@@ -18,6 +18,11 @@ const ExtensionUtils = imports.misc.extensionUtils;
 const ME = ExtensionUtils.getCurrentExtension();
 
 
+const Gettext = imports.gettext.domain(ME.metadata['gettext-domain']);
+const _        = Gettext.gettext;
+const ngettext = Gettext.ngettext;
+
+
 const FULLSCREEN     = ME.imports.lib.fullscreen;
 const SIG_MANAGER    = ME.imports.lib.signal_manager;
 const PANEL_ITEM     = ME.imports.lib.panel_item;

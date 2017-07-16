@@ -20,6 +20,11 @@ const ExtensionUtils = imports.misc.extensionUtils;
 const ME = ExtensionUtils.getCurrentExtension();
 
 
+const Gettext = imports.gettext.domain(ME.metadata['gettext-domain']);
+const _        = Gettext.gettext;
+const ngettext = Gettext.ngettext;
+
+
 const SIG_MANAGER    = ME.imports.lib.signal_manager;
 const FUZZ           = ME.imports.lib.fuzzy_search;
 const NUM_PICKER     = ME.imports.lib.num_picker;

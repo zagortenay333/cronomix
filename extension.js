@@ -14,7 +14,6 @@ const ExtensionUtils = imports.misc.extensionUtils;
 const ME = ExtensionUtils.getCurrentExtension();
 
 
-const CONVENIENCE   = ME.imports.lib.convenience;
 const PANEL_ITEM    = ME.imports.lib.panel_item;
 const ICON_FROM_URI = ME.imports.lib.icon_from_uri;
 
@@ -28,13 +27,11 @@ const Todo        = ME.imports.sections.todo;
 
 
 const Gettext = imports.gettext;
-Gettext.textdomain(ME.metadata['gettext-domain']);
 Gettext.bindtextdomain(ME.metadata['gettext-domain'], ME.dir.get_path() + '/locale');
-const _        = Gettext.gettext;
-const ngettext = Gettext.ngettext;
 
 
 const UNICON_ICON = '/img/unicon-symbolic.svg';
+
 const PanelPosition = {
     LEFT   : 0,
     CENTER : 1,
@@ -58,7 +55,14 @@ const Timepp = new Lang.Class({
         this.menu.actor.add_style_class_name('timepp-menu');
 
 
-        this.settings = new CONVENIENCE.getSettings('org.gnome.shell.extensions.timepp');
+        // settings
+        let GioSSS = Gio.SettingsSchemaSource;
+        let schema = GioSSS.new_from_directory(
+            ME.dir.get_path() + '/schemas', GioSSS.get_default(), false);
+        schema = schema.lookup('org.gnome.shell.extensions.timepp', true);
+        this.settings = new Gio.Settings({ settings_schema: schema });
+
+
         this.section_register    = [];
         this.separator_register  = [];
         this.panel_item_position = this.settings.get_enum('panel-item-position');

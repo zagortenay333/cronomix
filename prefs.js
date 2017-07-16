@@ -1,23 +1,28 @@
-const Gio      = imports.gi.Gio;
-const Gtk      = imports.gi.Gtk;
-const GLib     = imports.gi.GLib;
-const Lang     = imports.lang;
+const Gio  = imports.gi.Gio;
+const Gtk  = imports.gi.Gtk;
+const GLib = imports.gi.GLib;
+const Lang = imports.lang;
 
 
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me             = ExtensionUtils.getCurrentExtension();
-const Convenience    = Me.imports.lib.convenience;
 
 
-const Gettext = imports.gettext.domain(Me.metadata['gettext-domain']);
-const _       = Gettext.gettext;
+const Gettext = imports.gettext;
+Gettext.bindtextdomain(Me.metadata['gettext-domain'], Me.dir.get_path() + '/locale');
+const _ = Gettext.domain(Me.metadata['gettext-domain']).gettext;
 
 
 const Settings = new Lang.Class({
     Name: 'Timepp.Settings',
 
     _init: function () {
-        this.settings = Convenience.getSettings('org.gnome.shell.extensions.timepp');
+        let GioSSS = Gio.SettingsSchemaSource;
+        let schema = GioSSS.new_from_directory(
+            Me.dir.get_path() + '/schemas', GioSSS.get_default(), false);
+        schema = schema.lookup('org.gnome.shell.extensions.timepp', true);
+
+        this.settings = new Gio.Settings({ settings_schema: schema });
 
         this.builder = new Gtk.Builder();
 
@@ -726,11 +731,9 @@ const Settings = new Lang.Class({
     },
 });
 
-function init() {
-    Convenience.initTranslations();
-}
+function init () {}
 
-function buildPrefsWidget() {
+function buildPrefsWidget () {
     let settings = new Settings();
     let widget = settings.widget;
     widget.show_all();
