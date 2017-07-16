@@ -120,16 +120,16 @@ const Pomodoro = new Lang.Class({
 
 
         // icons
-        this.option_box = new St.BoxLayout({ y_align: Clutter.ActorAlign.CENTER, x_align: Clutter.ActorAlign.END, style_class: 'option-box' });
-        this.header.actor.add_actor(this.option_box);
+        this.icon_box = new St.BoxLayout({ y_align: Clutter.ActorAlign.CENTER, x_align: Clutter.ActorAlign.END, style_class: 'icon-box' });
+        this.header.actor.add_actor(this.icon_box);
 
         this.fullscreen_btn = new St.Button({ can_focus: true, y_align: St.Align.MIDDLE, x_align: St.Align.END, style_class: 'fullscreen-icon' });
-        this.option_box.add_actor(this.fullscreen_btn);
+        this.icon_box.add_actor(this.fullscreen_btn);
         this.fullscreen_icon = new St.Icon({ icon_name: 'view-fullscreen-symbolic' });
         this.fullscreen_btn.add_actor(this.fullscreen_icon);
 
         this.settings_btn = new St.Button({ can_focus: true, x_align: St.Align.END, y_align: St.Align.MIDDLE, style_class: 'settings-icon' });
-        this.option_box.add_actor(this.settings_btn);
+        this.icon_box.add_actor(this.settings_btn);
         this.settings_icon = new St.Icon({icon_name: 'open-menu-symbolic'});
         this.settings_btn.add_actor(this.settings_icon);
 

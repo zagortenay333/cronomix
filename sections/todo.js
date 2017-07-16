@@ -371,13 +371,13 @@ const Todo = new Lang.Class({
 
 
         // icon bin
-        this.icon_bin = new St.BoxLayout({ x_align: Clutter.ActorAlign.END, style_class: 'icon-bin' });
-        this.header.actor.add(this.icon_bin);
+        this.icon_box = new St.BoxLayout({ x_align: Clutter.ActorAlign.END, style_class: 'icon-bin' });
+        this.header.actor.add(this.icon_box);
 
 
         // filter icon
         this.filter_button = new St.Button({ can_focus: true, x_align: St.Align.END, style_class: 'filter-icon' });
-        this.icon_bin.add(this.filter_button);
+        this.icon_box.add(this.filter_button);
 
         this.filter_icon = new St.Icon({ y_align: Clutter.ActorAlign.CENTER });
         this.filter_button.add_actor(this.filter_icon);
@@ -387,7 +387,7 @@ const Todo = new Lang.Class({
 
         // sort icon
         this.sort_button = new St.Button({ can_focus: true, x_align: St.Align.END, style_class: 'sort-icon' });
-        this.icon_bin.add(this.sort_button);
+        this.icon_box.add(this.sort_button);
 
         this.sort_icon = new St.Icon({ y_align: Clutter.ActorAlign.CENTER });
         this.sort_button.add_actor(this.sort_icon);
@@ -395,7 +395,7 @@ const Todo = new Lang.Class({
 
         // todo file switcher icon
         this.file_switcher_button = new St.Button({ can_focus: true, x_align: St.Align.END, style_class: 'file-switcher-icon' });
-        this.icon_bin.add(this.file_switcher_button);
+        this.icon_box.add(this.file_switcher_button);
 
         this.file_switcher_icon = new St.Icon({ y_align: Clutter.ActorAlign.CENTER });
         this.file_switcher_button.add_actor(this.file_switcher_icon);
@@ -405,7 +405,7 @@ const Todo = new Lang.Class({
 
         // search icon
         this.search_button = new St.Button({ can_focus: true, x_align: St.Align.END, style_class: 'search-icon' });
-        this.icon_bin.add(this.search_button);
+        this.icon_box.add(this.search_button);
 
         this.search_icon = new St.Icon({ y_align: Clutter.ActorAlign.CENTER });
         this.search_button.add_actor(this.search_icon);
@@ -415,7 +415,7 @@ const Todo = new Lang.Class({
 
         // stats icon
         this.stats_button = new St.Button({ can_focus: true, x_align: St.Align.END, style_class: 'stats-icon' });
-        this.icon_bin.add(this.stats_button);
+        this.icon_box.add(this.stats_button);
 
         this.stats_icon = new St.Icon({ y_align: Clutter.ActorAlign.CENTER });
         this.stats_button.add_actor(this.stats_icon);
@@ -425,7 +425,7 @@ const Todo = new Lang.Class({
 
         // clear icon
         this.clear_button = new St.Button({ visible: false, can_focus: true, x_align: St.Align.END, style_class: 'clear-icon' });
-        this.icon_bin.add(this.clear_button);
+        this.icon_box.add(this.clear_button);
 
         this.clear_icon = new St.Icon({ y_align: Clutter.ActorAlign.CENTER });
         this.clear_button.add_actor(this.clear_icon);
@@ -2577,7 +2577,7 @@ const TaskItem = new Lang.Class({
         }
         else { // @SPEED Lazy load the icons.
             // icon box
-            this.header_icon_box = new St.BoxLayout({ x_align: Clutter.ActorAlign.END, style_class: 'option-box' });
+            this.header_icon_box = new St.BoxLayout({ x_align: Clutter.ActorAlign.END, style_class: 'icon-box' });
             this.header.add(this.header_icon_box, {expand: true});
 
             // statistic icon

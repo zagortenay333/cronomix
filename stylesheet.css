@@ -122,7 +122,7 @@
     min-height: 2em;
 }
 
-.timepp-menu .option-box,
+.timepp-menu .icon-box,
 .timepp-menu .btn-box {
     spacing: .5em;
 }
@@ -153,8 +153,8 @@
 
 .numpicker-arrow:focus StIcon,
 .numpicker-arrow:hover StIcon,
-.timepp-menu .settings-icon:focus,
-.timepp-menu .settings-icon:hover {
+.timepp-menu .icon-box StButton:focus StIcon,
+.timepp-menu .icon-box StButton:hover StIcon {
     color: #5a94dc;
 }
 

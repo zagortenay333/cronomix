@@ -111,23 +111,23 @@ const Timer = new Lang.Class({
         this.header.label.add_style_class_name('clock');
         this.actor.add_actor(this.header.actor);
 
-        this.option_box = new St.BoxLayout({ y_align: Clutter.ActorAlign.CENTER, x_align: Clutter.ActorAlign.END, style_class: 'option-box' });
-        this.header.actor.add(this.option_box, {expand: true});
+        this.icon_box = new St.BoxLayout({ y_align: Clutter.ActorAlign.CENTER, x_align: Clutter.ActorAlign.END, style_class: 'icon-box' });
+        this.header.actor.add(this.icon_box, {expand: true});
 
         this.toggle = new PopupMenu.Switch('');
         this.toggle_bin = new St.Button({ visible: false, can_focus: true, y_align: St.Align.MIDDLE });
         this.toggle_bin.add_actor(this.toggle.actor);
-        this.option_box.add(this.toggle_bin);
+        this.icon_box.add(this.toggle_bin);
 
         this.fullscreen_bin  = new St.Button({ can_focus: true, y_align: St.Align.MIDDLE, x_align: St.Align.END, style_class: 'fullscreen-icon' });
-        this.option_box.add(this.fullscreen_bin);
+        this.icon_box.add(this.fullscreen_bin);
         this.fullscreen_icon = new St.Icon({ icon_name: 'view-fullscreen-symbolic' });
         this.fullscreen_bin.add_actor(this.fullscreen_icon);
 
         this.settings_icon = new St.Icon({ icon_name: 'open-menu-symbolic' });
         this.settings_bin  = new St.Button({ can_focus: true, y_align: St.Align.MIDDLE, x_align: St.Align.END, style_class: 'settings-icon' });
         this.settings_bin.add_actor(this.settings_icon);
-        this.option_box.add(this.settings_bin);
+        this.icon_box.add(this.settings_bin);
 
 
 

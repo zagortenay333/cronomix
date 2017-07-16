@@ -720,21 +720,21 @@ const AlarmItem = new Lang.Class({
         this.time = new St.Label({ text: alarm.time_str, y_align: St.Align.END, x_align: St.Align.START, style_class: 'alarm-item-time' });
         this.header.add(this.time, {expand: true});
 
-        this.option_box = new St.BoxLayout({y_align: Clutter.ActorAlign.CENTER, x_align: Clutter.ActorAlign.CENTER, style_class: 'option-box'});
-        this.header.add_actor(this.option_box);
+        this.icon_box = new St.BoxLayout({y_align: Clutter.ActorAlign.CENTER, x_align: Clutter.ActorAlign.CENTER, style_class: 'icon-box'});
+        this.header.add_actor(this.icon_box);
 
         let edit_icon = new St.Icon();
         ICON_FROM_URI.icon_from_uri(edit_icon, EDIT_ICON, this.delegate.ext_dir);
         this.edit_bin = new St.Button({ visible: false, can_focus: true, y_align: St.Align.MIDDLE, x_align: St.Align.END, style_class: 'settings-icon'});
         this.edit_bin.add_actor(edit_icon);
 
-        this.option_box.add(this.edit_bin);
+        this.icon_box.add(this.edit_bin);
 
         this.toggle     = new PopupMenu.Switch(alarm.toggle);
         this.toggle_bin = new St.Button({can_focus: true, y_align: St.Align.START, x_align: St.Align.END });
         this.toggle_bin.add_actor(this.toggle.actor);
 
-        this.option_box.add(this.toggle_bin);
+        this.icon_box.add(this.toggle_bin);
 
 
         //
