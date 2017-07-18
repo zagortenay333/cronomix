@@ -461,16 +461,7 @@ const Todo = new Lang.Class({
         // listen
         //
         this.settings.connect('changed::todo-enabled', () => {
-            if (this.section_enabled) {
-                this.disable_section();
-            }
-            else {
-                this.sigm.connect_all();
-                this.enable_section();
-            }
-
-            this.section_enabled = this.settings.get_boolean('todo-enabled');
-            this.ext.update_panel_items();
+            this.toggle_section();
         }); // don't put this signal into the signal manager
 
         this.sigm.connect(this.settings, 'changed::todo-files', () => {
@@ -543,6 +534,19 @@ const Todo = new Lang.Class({
         }
 
         this.emit('section-open-state-changed', state);
+    },
+
+    toggle_section: function () {
+        if (this.section_enabled) {
+            this.disable_section();
+        }
+        else {
+            this.sigm.connect_all();
+            this.enable_section();
+        }
+
+        this.section_enabled = this.settings.get_boolean('todo-enabled');
+        this.ext.update_panel_items();
     },
 
     enable_section: function () {

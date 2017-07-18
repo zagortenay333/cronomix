@@ -179,16 +179,7 @@ const Stopwatch = new Lang.Class({
         // listen
         //
         this.settings.connect('changed::stopwatch-enabled', () => {
-            if (this.section_enabled) {
-                this.disable_section();
-            }
-            else {
-                this.sigm.connect_all();
-                this.enable_section();
-            }
-
-            this.section_enabled = this.settings.get_boolean('stopwatch-enabled');
-            this.ext.update_panel_items();
+            this.toggle_section();
         }); // don't put this signal into the signal manager
 
         this.sigm.connect(this.fullscreen, 'monitor-changed', () => {
@@ -247,6 +238,19 @@ const Stopwatch = new Lang.Class({
         }
 
         this.emit('section-open-state-changed', state);
+    },
+
+    toggle_section: function () {
+        if (this.section_enabled) {
+            this.disable_section();
+        }
+        else {
+            this.sigm.connect_all();
+            this.enable_section();
+        }
+
+        this.section_enabled = this.settings.get_boolean('stopwatch-enabled');
+        this.ext.update_panel_items();
     },
 
     disable_section: function () {
