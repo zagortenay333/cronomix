@@ -371,8 +371,7 @@ const Timepp = new Lang.Class({
 
             for (let i = 0, len = this.section_register.length; i < len; i++) {
                 let section = this.section_register[i];
-                if (section.section_enabled)
-                    this.section_register[i].panel_item.actor.show();
+                section.panel_item.actor.visible = section.section_enabled;
             }
         }
     },
