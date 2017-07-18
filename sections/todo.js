@@ -461,8 +461,16 @@ const Todo = new Lang.Class({
         // listen
         //
         this.settings.connect('changed::todo-enabled', () => {
-            this.toggle_section();
+            if (this.section_enabled) {
+                this.disable_section();
+            }
+            else {
+                this.sigm.connect_all();
+                this.enable_section();
+            }
+
             this.section_enabled = this.settings.get_boolean('todo-enabled');
+            this.ext.update_panel_items();
         }); // don't put this signal into the signal manager
 
         this.sigm.connect(this.settings, 'changed::todo-files', () => {
@@ -472,6 +480,7 @@ const Todo = new Lang.Class({
         });
         this.sigm.connect(this.settings, 'changed::todo-separate-menu', () => {
             this.separate_menu = this.settings.get_boolean('todo-separate-menu');
+            this.ext.update_panel_items();
         });
         this.sigm.connect(this.settings, 'changed::todo-show-seconds', () => {
             this._update_time_display();
@@ -534,19 +543,6 @@ const Todo = new Lang.Class({
         }
 
         this.emit('section-open-state-changed', state);
-    },
-
-    toggle_section: function () {
-        if (this.section_enabled) {
-            this.panel_item.actor.hide();
-            this.disable_section();
-        }
-        else {
-            if (!this.ext.unicon_panel_item.actor.visible)
-                this.panel_item.actor.show();
-            this.sigm.connect_all();
-            this.enable_section();
-        }
     },
 
     enable_section: function () {
@@ -893,6 +889,7 @@ const Todo = new Lang.Class({
             }
         }
     },
+
     show_view__no_todo_file: function () {
         this.panel_item.set_mode('icon');
         this.panel_item.actor.remove_style_class_name('done');

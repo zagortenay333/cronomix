@@ -167,8 +167,16 @@ const Pomodoro = new Lang.Class({
         // listen
         //
         this.settings.connect('changed::pomodoro-enabled', () => {
-            this.toggle_section();
+            if (this.section_enabled) {
+                this.disable_section();
+            }
+            else {
+                this.sigm.connect_all();
+                this.enable_section();
+            }
+
             this.section_enabled = this.settings.get_boolean('pomodoro-enabled');
+            this.ext.update_panel_items();
         }); // don't put this signal into the signal manager
 
         this.sigm.connect(this.fullscreen, 'monitor-changed', () => {
@@ -176,6 +184,7 @@ const Pomodoro = new Lang.Class({
         });
         this.sigm.connect(this.settings, 'changed::pomodoro-separate-menu', () => {
             this.separate_menu = this.settings.get_boolean('pomodoro-separate-menu');
+            this.ext.update_panel_items();
         });
         this.sigm.connect(this.settings, 'changed::pomodoro-show-seconds', () => {
             this._update_time_display();
@@ -219,19 +228,6 @@ const Pomodoro = new Lang.Class({
         }
 
         this.emit('section-open-state-changed', state);
-    },
-
-    toggle_section: function () {
-        if (this.section_enabled) {
-            this.panel_item.actor.hide();
-            this.disable_section();
-        }
-        else {
-            if (!this.ext.unicon_panel_item.actor.visible)
-                this.panel_item.actor.show();
-            this.sigm.connect_all();
-            this.enable_section();
-        }
     },
 
     disable_section: function () {

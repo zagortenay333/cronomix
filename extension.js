@@ -149,11 +149,9 @@ const Timepp = new Lang.Class({
                 this.separator_register.push(sep.actor);
                 this.content_box.add_actor(sep.actor);
             }
-
-            if (!section.section_enabled ||
-                this.settings.get_boolean('unicon-mode'))
-                section.panel_item.actor.hide();
         }
+
+        this.update_panel_items();
 
 
         //
@@ -172,7 +170,7 @@ const Timepp = new Lang.Class({
             this.panel_item_position = new_val;
         });
         this.settings.connect('changed::unicon-mode', () => {
-            this._toggle_unicon_mode();
+            this.update_panel_items();
         });
         this.unicon_panel_item.actor.connect('key-focus-in', () => {
             // user has right-clicked to show the context menu
@@ -195,11 +193,10 @@ const Timepp = new Lang.Class({
 
             this.context_menu.actor.hide();
             this.unicon_panel_item.actor.remove_style_pseudo_class('checked');
-
-            let section;
+            this.unicon_panel_item.actor.can_focus = true;
 
             for (let i = 0, len = this.section_register.length; i < len; i++) {
-                section = this.section_register[i];
+                let section = this.section_register[i];
 
                 if (! section.section_enabled) continue;
 
@@ -225,38 +222,52 @@ const Timepp = new Lang.Class({
 
     // @section: obj (a section's main object)
     //
-    // - If @section is omitted, then all enabled sections will be shown.
+    // - If @section is null, then that is assumed to mean that the unicon icon
+    //   has been clicked/activated (i.e., we show all joined menus.)
     //
     // - If @section is provided, then the menu will open to show that section.
     //     - If @section is a separate menu, we show it and hide all other menus.
     //
-    //     - If @section is not a sep menu, we show all non-separate menus that
+    //     - If @section is not a sep menu, we show all joined sections that
     //       are enabled.
     open_menu: function (section) {
+        this.unicon_panel_item.actor.remove_style_pseudo_class('checked');
+        this.unicon_panel_item.actor.can_focus = true;
+
         // Track sections whose state has changed and call their
         // on_section_open_state_changed method after the menu has been shown.
         let shown_sections  = [];
         let hidden_sections = [];
 
-        if (this.unicon_panel_item.actor.visible) { // show all enabled sections
-            this.menu.sourceActor = this.unicon_panel_item.actor;
-            this.unicon_panel_item.actor.add_style_pseudo_class('checked');
+        if (!section || !section.separate_menu) {
+            if (!section) {
+                this._update_menu_arrow(this.unicon_panel_item.actor);
+                this.unicon_panel_item.actor.add_style_pseudo_class('checked');
+                this.unicon_panel_item.actor.can_focus = false;
+            }
+            else {
+                this._update_menu_arrow(section.panel_item.actor);
+            }
 
             for (let i = 0, len = this.section_register.length; i < len; i++) {
                 section = this.section_register[i];
 
-                if (!section.section_enabled || section.actor.visible)
-                    continue;
+                if (! section.section_enabled) continue;
 
-                shown_sections.push(section);
-                section.actor.visible = true;
+                if (section.separate_menu) {
+                    if (section.actor.visible) {
+                        hidden_sections.push(section);
+                        section.actor.hide();
+                    }
+                }
+                else if (! section.actor.visible) {
+                    shown_sections.push(section);
+                    section.actor.visible = true;
+                }
             }
         }
-        else if (! section.section_enabled) {
-            return;
-        }
-        else if (section.separate_menu) { // show only separate section
-            this.menu.sourceActor = section.panel_item.actor;
+        else if (section.separate_menu) {
+            this._update_menu_arrow(section.panel_item.actor);
 
             let name = section.__name__;
 
@@ -276,26 +287,6 @@ const Timepp = new Lang.Class({
                 section.actor.visible = false;
             }
         }
-        else { // show only non-separate enabled sections
-            this.menu.sourceActor = section.panel_item.actor;
-
-            for (let i = 0, len = this.section_register.length; i < len; i++) {
-                section = this.section_register[i];
-
-                if (! section.section_enabled) continue;
-
-                if (section.separate_menu) {
-                    if (section.actor.visible) {
-                        hidden_sections.push(section);
-                        section.actor.hide();
-                    }
-                }
-                else if (! section.actor.visible) {
-                    shown_sections.push(section);
-                    section.actor.visible = true;
-                }
-            }
-        }
 
         this._update_separators();
         this.menu.open();
@@ -307,13 +298,25 @@ const Timepp = new Lang.Class({
             hidden_sections[i].on_section_open_state_changed(false);
     },
 
+    _update_menu_arrow: function (source_actor) {
+        if (this.menu.isOpen)
+            this.menu._boxPointer.setPosition(source_actor, this.menu._arrowAlignment);
+        else
+            this.menu.sourceActor = source_actor;
+    },
+
     toggle_context_menu: function (section) {
         if (this.menu.isOpen) {
             this.menu.close(false);
             return;
         }
 
+        if (section) this._update_menu_arrow(section.panel_item.actor);
+        else         this._update_menu_arrow(this.unicon_panel_item.actor);
+
         this.context_menu.actor.visible = true;
+        this.unicon_panel_item.actor.add_style_pseudo_class('checked');
+        this.unicon_panel_item.actor.can_focus = false;
 
         for (let i = 0, len = this.section_register.length; i < len; i++) {
             let section = this.section_register[i];
@@ -324,39 +327,44 @@ const Timepp = new Lang.Class({
             }
         }
 
-        if (section) this.menu.sourceActor = section.panel_item.actor;
-        else         this.menu.sourceActor = this.unicon_panel_item.actor;
-
         this._update_separators();
         this.menu.open(false);
     },
 
     _update_separators: function () {
-        let reg  = this.section_register;
-        let flag = reg[0].actor.visible;
-        let len  = this.section_register.length;
+        let any_prev_visible = this.section_register[0].actor.visible;
 
-        for (let i = 1; i < len; i++) {
-            if (reg[i].actor.visible) {
-                if (flag)
-                    this.separator_register[i - 1].show();
-                else
-                    this.separator_register[i - 1].hide();
-
-                flag = true;
+        for (let i = 0; i < this.separator_register.length; i++) {
+            if (this.section_register[i + 1].actor.visible) {
+                this.separator_register[i].visible = any_prev_visible;
+                any_prev_visible = true;
             }
-            else
-                this.separator_register[i - 1].hide();
+            else {
+                this.separator_register[i].visible = false;
+            }
         }
     },
 
-    _toggle_unicon_mode: function () {
+    update_panel_items: function () {
         if (this.settings.get_boolean('unicon-mode')) {
-            this.unicon_panel_item.actor.show();
+            let show_unicon = false;
 
-            for (let i = 0, len = this.section_register.length; i < len; i++)
-                this.section_register[i].panel_item.actor.hide();
+            for (let i = 0, len = this.section_register.length; i < len; i++) {
+                let section = this.section_register[i];
 
+                if (! section.section_enabled) {
+                    section.panel_item.actor.hide();
+                }
+                else if (section.separate_menu) {
+                    section.panel_item.actor.show();
+                }
+                else {
+                    section.panel_item.actor.hide();
+                    show_unicon = true;
+                }
+            }
+
+            this.unicon_panel_item.actor.visible = show_unicon;
         }
         else {
             this.unicon_panel_item.actor.hide();

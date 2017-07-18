@@ -346,7 +346,7 @@
                                           <object class="GtkLabel">
                                             <property name="visible">True</property>
                                             <property name="can_focus">False</property>
-                                            <property name="label" translatable="yes">Show single icon in panel</property>
+                                            <property name="label" translatable="yes">Show only 1 panel icon for joined menus</property>
                                           </object>
                                           <packing>
                                             <property name="expand">False</property>
