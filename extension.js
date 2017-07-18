@@ -240,7 +240,7 @@ const Timepp = new Lang.Class({
         let hidden_sections = [];
 
         if (!section || !section.separate_menu) {
-            if (!section) {
+            if (this.unicon_panel_item.actor.visible) {
                 this._update_menu_arrow(this.unicon_panel_item.actor);
                 this.unicon_panel_item.actor.add_style_pseudo_class('checked');
                 this.unicon_panel_item.actor.can_focus = false;
