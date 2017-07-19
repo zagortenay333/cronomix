@@ -27,7 +27,8 @@ const Todo        = ME.imports.sections.todo;
 
 
 const Gettext = imports.gettext;
-Gettext.bindtextdomain(ME.metadata['gettext-domain'], ME.dir.get_path() + '/locale');
+Gettext.bindtextdomain(ME.metadata['gettext-domain'],
+                       ME.dir.get_path() + '/locale');
 
 
 const UNICON_ICON = '/img/unicon-symbolic.svg';
@@ -492,6 +493,8 @@ const Timepp = new Lang.Class({
             if (this.section_register[i].section_enabled)
                 this.section_register[i].disable_section();
         }
+
+        this.section_register = null;
 
         if (this.theme_change_sig_id) {
             St.ThemeContext.get_for_stage(global.stage)

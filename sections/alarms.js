@@ -244,8 +244,11 @@ const Alarms = new Lang.Class({
         this._store_cache();
         this.sigm.disconnect_all();
         this._toggle_keybindings(true);
-        this.fullscreen.destroy();
-        this.fullscreen = null;
+
+        if (this.fullscreen) {
+            this.fullscreen.destroy();
+            this.fullscreen = null;
+        }
     },
 
     enable_section: function () {

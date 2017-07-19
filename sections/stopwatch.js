@@ -181,7 +181,6 @@ const Stopwatch = new Lang.Class({
         this.settings.connect('changed::stopwatch-enabled', () => {
             this.toggle_section();
         }); // don't put this signal into the signal manager
-
         this.sigm.connect(this.fullscreen, 'monitor-changed', () => {
             this.settings.set_int('stopwatch-fullscreen-monitor-pos', this.fullscreen.monitor);
         });
@@ -263,8 +262,11 @@ const Stopwatch = new Lang.Class({
         this._store_cache();
         this.sigm.disconnect_all();
         this._toggle_keybindings(true);
-        this.fullscreen.destroy();
-        this.fullscreen = null;
+
+        if (this.fullscreen) {
+            this.fullscreen.destroy();
+            this.fullscreen = null;
+        }
     },
 
     enable_section: function () {
