@@ -211,6 +211,7 @@ const Timer = new Lang.Class({
 
     toggle_section: function () {
         if (this.section_enabled) {
+            Main.notify("asdf");
             this.disable_section();
         }
         else {

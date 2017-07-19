@@ -494,8 +494,6 @@ const Timepp = new Lang.Class({
                 this.section_register[i].disable_section();
         }
 
-        this.section_register = null;
-
         if (this.theme_change_sig_id) {
             St.ThemeContext.get_for_stage(global.stage)
                            .disconnect(this.theme_change_sig_id);

@@ -1314,7 +1314,6 @@ const Todo = new Lang.Class({
         ignore_filters        = Boolean(ignore_filters);
 
         this.tasks_scroll.vscrollbar_policy = Gtk.PolicyType.NEVER;
-        this.tasks_scroll.get_vscroll_bar().get_adjustment().set_value(0);
 
         this.tasks_scroll_content.remove_all_children();
         if (update_tasks_viewport) this.tasks_viewport = [];
