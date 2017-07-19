@@ -151,10 +151,6 @@ const Timer = new Lang.Class({
         //
         // listen
         //
-        this.settings.connect('changed::timer-enabled', () => {
-            this.toggle_section();
-        }); // don't put this signal into the signal manager
-
         this.sigm.connect(this.fullscreen, 'monitor-changed', () => {
             this.settings.set_int('timer-fullscreen-monitor-pos', this.fullscreen.monitor);
         });
@@ -211,7 +207,6 @@ const Timer = new Lang.Class({
 
     toggle_section: function () {
         if (this.section_enabled) {
-            Main.notify("asdf");
             this.disable_section();
         }
         else {

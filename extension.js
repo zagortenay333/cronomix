@@ -14,6 +14,7 @@ const ExtensionUtils = imports.misc.extensionUtils;
 const ME = ExtensionUtils.getCurrentExtension();
 
 
+const SIG_MANAGER   = ME.imports.lib.signal_manager;
 const PANEL_ITEM    = ME.imports.lib.panel_item;
 const ICON_FROM_URI = ME.imports.lib.icon_from_uri;
 
@@ -55,6 +56,8 @@ const Timepp = new Lang.Class({
         this.actor.reactive    = false;
         this.menu.actor.add_style_class_name('timepp-menu');
 
+
+        this.sigm = new SIG_MANAGER.SignalManager();
 
         // settings
         let GioSSS = Gio.SettingsSchemaSource;
@@ -158,38 +161,52 @@ const Timepp = new Lang.Class({
         //
         // listen
         //
-        this.theme_change_sig_id =
-        St.ThemeContext.get_for_stage(global.stage).connect('changed', () => {
+        this.sigm.connect(this.settings, 'changed::timer-enabled', () => {
+            this.timer_section.toggle_section();
+        });
+        this.sigm.connect(this.settings, 'changed::stopwatch-enabled', () => {
+            this.stopwatch_section.toggle_section();
+        });
+        this.sigm.connect(this.settings, 'changed::pomodoro-enabled', () => {
+            this.pomodoro_section.toggle_section();
+        });
+        this.sigm.connect(this.settings, 'changed::alarms-enabled', () => {
+            this.alarms_section.toggle_section();
+        });
+        this.sigm.connect(this.settings, 'changed::todo-enabled', () => {
+            this.todo_section.toggle_section();
+        });
+        this.sigm.connect(St.ThemeContext.get_for_stage(global.stage), 'changed', () => {
             if (this.theme_change_signal_temp_block)
                 return;
 
             this._on_theme_changed();
         });
-        this.settings.connect('changed::panel-item-position', () => {
+        this.sigm.connect(this.settings, 'changed::panel-item-position', () => {
             let new_val = this.settings.get_enum('panel-item-position');
             this._on_panel_position_changed(this.panel_item_position, new_val);
             this.panel_item_position = new_val;
         });
-        this.settings.connect('changed::unicon-mode', () => {
+        this.sigm.connect(this.settings, 'changed::unicon-mode', () => {
             this.update_panel_items();
         });
-        this.unicon_panel_item.actor.connect('key-focus-in', () => {
+        this.sigm.connect(this.unicon_panel_item.actor, 'key-focus-in', () => {
             // user has right-clicked to show the context menu
             if (this.menu.isOpen && this.context_menu.actor.visible)
                 return;
 
             this.open_menu();
         });
-        this.unicon_panel_item.connect('left-click', () => {
+        this.sigm.connect(this.unicon_panel_item, 'left-click', () => {
             this.toggle_menu();
         });
-        this.unicon_panel_item.connect('right-click', () => {
+        this.sigm.connect(this.unicon_panel_item, 'right-click', () => {
             this.toggle_context_menu();
         });
-        this.pomodoro_section.connect('stop-time-tracking', () => {
+        this.sigm.connect(this.pomodoro_section, 'stop-time-tracking', () => {
             this.emit('stop-time-tracking');
         });
-        this.menu.connect('open-state-changed', (_, state) => {
+        this.sigm.connect(this.menu, 'open-state-changed', (_, state) => {
             if (state) return Clutter.EVENT_PROPAGATE;
 
             this.context_menu.actor.hide();
@@ -494,12 +511,8 @@ const Timepp = new Lang.Class({
                 this.section_register[i].disable_section();
         }
 
-        if (this.theme_change_sig_id) {
-            St.ThemeContext.get_for_stage(global.stage)
-                           .disconnect(this.theme_change_sig_id);
-        }
-
         this._unload_stylesheet();
+        this.sigm.disconnect_all();
         this.parent();
     },
 });

@@ -166,10 +166,6 @@ const Pomodoro = new Lang.Class({
         //
         // listen
         //
-        this.settings.connect('changed::pomodoro-enabled', () => {
-            this.toggle_section();
-        }); // don't put this signal into the signal manager
-
         this.sigm.connect(this.fullscreen, 'monitor-changed', () => {
             this.settings.set_int('pomodoro-fullscreen-monitor-pos', this.fullscreen.monitor);
         });

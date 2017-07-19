@@ -178,9 +178,6 @@ const Stopwatch = new Lang.Class({
         //
         // listen
         //
-        this.settings.connect('changed::stopwatch-enabled', () => {
-            this.toggle_section();
-        }); // don't put this signal into the signal manager
         this.sigm.connect(this.fullscreen, 'monitor-changed', () => {
             this.settings.set_int('stopwatch-fullscreen-monitor-pos', this.fullscreen.monitor);
         });

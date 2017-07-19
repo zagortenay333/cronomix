@@ -460,10 +460,6 @@ const Todo = new Lang.Class({
         //
         // listen
         //
-        this.settings.connect('changed::todo-enabled', () => {
-            this.toggle_section();
-        }); // don't put this signal into the signal manager
-
         this.sigm.connect(this.settings, 'changed::todo-files', () => {
             let todo_files = this.settings.get_value('todo-files').deep_unpack();
             if (todo_files.length > 1) this.file_switcher_button.show();

@@ -168,10 +168,6 @@ const Alarms = new Lang.Class({
         //
         // listen
         //
-        this.settings.connect('changed::alarms-enabled', () => {
-            this.toggle_section();
-        }); // don't put this signal into the signal manager
-
         this.sigm.connect(this.fullscreen, 'monitor-changed', () => {
             this.settings.set_int('alarms-fullscreen-monitor-pos', this.fullscreen.monitor);
         });
