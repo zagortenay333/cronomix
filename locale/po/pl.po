@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-07-20 06:48+0200\n"
-"PO-Revision-Date: 2017-07-20 06:52+0200\n"
+"PO-Revision-Date: 2017-07-20 07:02+0200\n"
 "Last-Translator: Piotr Komur <pkomur@gmail.com>\n"
 "Language-Team: \n"
 "Language: pl\n"
@@ -132,7 +132,7 @@ msgstr "Długa przerwa (min):"
 
 #: ../sections/pomodoro.js:765
 msgid "Num of pomos until long break:"
-msgstr "Num of pomos until long break:"
+msgstr "Liczba pomodoro do długiej przerwy:"
 
 #: ../sections/stopwatch.js:120 ../sections/stopwatch.js:375 ../settings.ui:526
 #: ../settings.ui:1511
