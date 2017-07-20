@@ -1,0 +1,528 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-07-20 06:48+0200\n"
+"PO-Revision-Date: 2017-07-20 07:02+0200\n"
+"Last-Translator: Piotr Komur <pkomur@gmail.com>\n"
+"Language-Team: \n"
+"Language: pl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
+"|| n%100>=20) ? 1 : 2);\n"
+"X-Generator: Poedit 2.0.2\n"
+
+#: ../lib/fullscreen.js:196
+msgid "Move to Primary Monitor"
+msgstr "Przenieś na podstawowy monitor"
+
+#: ../lib/fullscreen.js:202
+msgid "Move to Secondary Monitor"
+msgstr "Przenieś na dodatkowy monitor"
+
+#: ../sections/alarms.js:142
+msgid "Add New Alarm..."
+msgstr "Dodaj nowy alarm..."
+
+#. TRANSLATORS: %s is a time string in the format HH:MM (e.g., 13:44)
+#: ../sections/alarms.js:449 ../sections/alarms.js:893
+#, javascript-format
+msgid "Alarm at %s"
+msgstr "Alarm o %s"
+
+#: ../sections/alarms.js:463 ../sections/alarms.js:858
+msgid "Snooze"
+msgstr "Drzemka"
+
+#: ../sections/alarms.js:586
+msgid "Alarm Message..."
+msgstr "Komunikat alarmu..."
+
+#: ../sections/alarms.js:614 ../sections/todo.js:1721
+msgid "Delete"
+msgstr "Usuń"
+
+#: ../sections/alarms.js:622 ../sections/pomodoro.js:781
+#: ../sections/timer.js:658 ../sections/todo.js:1734 ../sections/todo.js:3557
+msgid "Cancel"
+msgstr "Anuluj"
+
+#: ../sections/alarms.js:623 ../sections/pomodoro.js:780
+#: ../sections/timer.js:659 ../sections/todo.js:1737 ../sections/todo.js:2908
+#: ../sections/todo.js:3242 ../sections/todo.js:3406 ../sections/todo.js:3560
+msgid "Ok"
+msgstr "OK"
+
+#: ../sections/alarms.js:916
+#, javascript-format
+msgid "%d alarm went off!"
+msgid_plural "%d alarms went off!"
+msgstr[0] "%d alarm minął!"
+msgstr[1] "%d alarmy minęły!"
+msgstr[2] "%d alarmów minęło!"
+
+#: ../sections/context_menu.js:32
+msgid "Open settings"
+msgstr "Ustawienia"
+
+#: ../sections/context_menu.js:35
+msgid "Go to extension website"
+msgstr "Otwórz stronę internetową"
+
+#: ../sections/context_menu.js:38
+msgid "Report bug"
+msgstr "Zgłoś błąd"
+
+#: ../sections/pomodoro.js:34
+msgid "Start working!"
+msgstr "Rozpocznij pracę!"
+
+#: ../sections/pomodoro.js:35
+msgid "Take long break!"
+msgstr "Weź długą przerwę!"
+
+#: ../sections/pomodoro.js:36
+msgid "Take short break!"
+msgstr "Weź krótką przerwę!"
+
+#: ../sections/pomodoro.js:105 ../sections/pomodoro.js:275
+#: ../sections/pomodoro.js:379 ../settings.ui:570 ../settings.ui:2068
+msgid "Pomodoro"
+msgstr ""
+
+#: ../sections/pomodoro.js:148 ../sections/pomodoro.js:843
+msgid "New Pomo"
+msgstr "Nowe Pomodoro"
+
+#: ../sections/pomodoro.js:149 ../sections/pomodoro.js:844
+msgid "Take Break"
+msgstr "Weź przerwę!"
+
+#: ../sections/pomodoro.js:150 ../sections/pomodoro.js:845
+#: ../sections/stopwatch.js:148 ../sections/stopwatch.js:634
+msgid "Start"
+msgstr ""
+
+#: ../sections/pomodoro.js:151 ../sections/pomodoro.js:846
+msgid "Stop"
+msgstr ""
+
+#: ../sections/pomodoro.js:704
+msgid "Clear all pomodoros?"
+msgstr "Usunąć wszystkie pomodoro?"
+
+#: ../sections/pomodoro.js:720
+msgid "Pomodoro (min):"
+msgstr "Pomodoro (min):"
+
+#: ../sections/pomodoro.js:735
+msgid "Short break (min):"
+msgstr "Krótka przerwa (min):"
+
+#: ../sections/pomodoro.js:750
+msgid "Long break (min):"
+msgstr "Długa przerwa (min):"
+
+#: ../sections/pomodoro.js:765
+msgid "Num of pomos until long break:"
+msgstr "Liczba pomodoro do długiej przerwy:"
+
+#: ../sections/stopwatch.js:120 ../sections/stopwatch.js:375 ../settings.ui:526
+#: ../settings.ui:1511
+msgid "Stopwatch"
+msgstr "Stoper"
+
+#: ../sections/stopwatch.js:146 ../sections/stopwatch.js:631
+#: ../sections/todo.js:2907
+msgid "Reset"
+msgstr "Zeruj"
+
+#: ../sections/stopwatch.js:147 ../sections/stopwatch.js:632
+msgid "Lap"
+msgstr "Okrążenie"
+
+#: ../sections/stopwatch.js:149 ../sections/stopwatch.js:633
+msgid "Pause"
+msgstr "Wstrzymaj"
+
+#: ../sections/timer.js:38
+msgid "Timer Expired!"
+msgstr "Czas minął!"
+
+#: ../sections/timer.js:109 ../sections/timer.js:310 ../settings.ui:482
+#: ../settings.ui:1162
+msgid "Timer"
+msgstr "Minutnik"
+
+#: ../sections/timer.js:636
+msgid "Timer message..."
+msgstr "Komunikat minutnika..."
+
+#: ../sections/todo.js:334
+msgid "Loading..."
+msgstr "Wczytuję..."
+
+#: ../sections/todo.js:344
+msgid "Select todo file in settings..."
+msgstr "Wskaż w ustawieniach plik 'todo'..."
+
+#: ../sections/todo.js:369
+msgid "Add New Task..."
+msgstr "Dodaj nowe zadanie..."
+
+#: ../sections/todo.js:770
+#, javascript-format
+msgid "%d task has recurred"
+msgid_plural "%d tasks have recurred"
+msgstr[0] "%d powtórzyło się"
+msgstr[1] "%d powtórzyły się"
+msgstr[2] "%d powtórzyło się"
+
+#: ../sections/todo.js:1683
+msgid "Task..."
+msgstr "Zadanie..."
+
+#: ../sections/todo.js:1729
+msgid "Archive"
+msgstr "Archiwum"
+
+#. TRANSLATORS: 'completed:' is followed by a date
+#: ../sections/todo.js:2185
+msgid "completed:"
+msgstr "ukończono:"
+
+#. TRANSLATORS: 'created:' is followed by a date
+#: ../sections/todo.js:2191 ../sections/todo.js:2207 ../sections/todo.js:2215
+msgid "created:"
+msgstr "utworzono:"
+
+#: ../sections/todo.js:2261
+msgid "due:"
+msgstr "termin:"
+
+#: ../sections/todo.js:2358
+#, javascript-format
+msgid "recurs:%s (in %d day)"
+msgid_plural "recurs:%s (in %d days)"
+msgstr[0] "powtórzenia: %s (jednego dnia)"
+msgstr[1] "powtórzenia: %s (przez %d dni)"
+msgstr[2] "powtórzenia: %s (przez %d dni)"
+
+#: ../sections/todo.js:2515 ../sections/todo.js:3666
+msgid "today"
+msgstr "dziś"
+
+#: ../sections/todo.js:2517
+#, javascript-format
+msgid "%d day ago"
+msgid_plural "%d days ago"
+msgstr[0] "%d dzień temu"
+msgstr[1] "%d dni temu"
+msgstr[2] "%d dni temu"
+
+#: ../sections/todo.js:2519
+#, javascript-format
+msgid "in %d day"
+msgid_plural "in %d days"
+msgstr[0] "w ciągu %d dnia"
+msgstr[1] "w ciagu %d dni"
+msgstr[2] "w ciagu %d dni"
+
+#: ../sections/todo.js:2522
+msgid "due-date:"
+msgstr "termin:"
+
+#: ../sections/todo.js:2825
+msgid "Add custom filter..."
+msgstr "Dodaj własny filtr..."
+
+#: ../sections/todo.js:2847
+msgid "Show only hidden tasks"
+msgstr "Pokaż tylko ukryte zadania"
+
+#: ../sections/todo.js:2855
+#, javascript-format
+msgid "%d hidden task"
+msgid_plural "%d hidden tasks"
+msgstr[0] "%d ukryte zadanie"
+msgstr[1] "%d ukryte zadania"
+msgstr[2] "%d ukrytych zadań"
+
+#: ../sections/todo.js:2869
+msgid "Show only recurring tasks"
+msgstr "Pokaż tylko powtarzające się zadania"
+
+#: ../sections/todo.js:2876
+#, javascript-format
+msgid "%d recurring task"
+msgid_plural "%d recurring tasks"
+msgstr[0] "%d powtarzające się zadanie"
+msgstr[1] "%d powtarzające się zadania"
+msgstr[2] "%d powtarzających się zadań"
+
+#: ../sections/todo.js:2892
+msgid "Invert filters"
+msgstr "Odwróć filtry"
+
+#: ../sections/todo.js:3076
+msgid "No Priority"
+msgstr "Bez priorytetu"
+
+#: ../sections/todo.js:3079
+msgid "Completed"
+msgstr "Ukończone"
+
+#: ../sections/todo.js:3089
+#, javascript-format
+msgid "%d task"
+msgid_plural "%d tasks"
+msgstr[0] "%d zadanie"
+msgstr[1] "%d zadania"
+msgstr[2] "%d zadań"
+
+#: ../sections/todo.js:3329
+msgid "Sort by Priority"
+msgstr "Sortuj wg priorytetu"
+
+#: ../sections/todo.js:3330
+msgid "Sort by Creation Date"
+msgstr "Sortuj wg daty utworzenia"
+
+#: ../sections/todo.js:3331
+msgid "Sort by Completion Date"
+msgstr "Sortuj wg daty zakończenia"
+
+#: ../sections/todo.js:3332
+msgid "Sort by Due Date"
+msgstr "Sortuj wg terminu"
+
+#: ../sections/todo.js:3359
+msgid "Ascending"
+msgstr "Rosnąco"
+
+#: ../sections/todo.js:3373
+msgid "Descending"
+msgstr "Malejąco"
+
+#: ../sections/todo.js:3517
+msgid "Delete all completed tasks"
+msgstr "Usuń wszystkie ukończone zadania"
+
+#: ../sections/todo.js:3530
+msgid "Archive all complete tasks to done.txt and delete them"
+msgstr "Zarchiwizuj ukończone zadania do pliku 'done.txt' przed ich usunięciem"
+
+#: ../sections/todo.js:3631
+msgid "Nothing found..."
+msgstr "Nic nie znaleziono..."
+
+#: ../sections/todo.js:3667
+msgid "last 3 days"
+msgstr "ostatnie 3 dni"
+
+#: ../sections/todo.js:3668
+msgid "this week"
+msgstr "ten tydzień"
+
+#: ../sections/todo.js:3669
+msgid "this month"
+msgstr "ten miesiąc"
+
+#: ../sections/todo.js:3670
+msgid "this year"
+msgstr "ten rok"
+
+#: ../sections/todo.js:4129
+msgid "To track time, select a dir for csv files in the settings."
+msgstr "Do śledzenia czasu wskaż w ustawieniach katalog dla plików csv."
+
+#: ../settings.ui:44
+msgid "Unique name"
+msgstr "Unikatowa nazwa"
+
+#: ../settings.ui:57 ../settings.ui:1073 ../settings.ui:1123
+#: ../settings.ui:1422 ../settings.ui:1472 ../settings.ui:1979
+#: ../settings.ui:2029 ../settings.ui:2389 ../settings.ui:2854
+#: ../settings.ui:2904 ../settings.ui:2942
+msgid "not set"
+msgstr "nie ustawiono"
+
+#: ../settings.ui:91
+msgid "Todo file"
+msgstr "Plik z zadaniami"
+
+#: ../settings.ui:137
+msgid "Done file (optional)"
+msgstr "Plik z ukończonymi zadaniami (opcjonalnie)"
+
+#: ../settings.ui:183
+msgid "Time-tracker csv directory (optional)"
+msgstr "Katalog z plikami śledzenia csv (opcjonalnie)"
+
+#: ../settings.ui:349
+msgid "Show only 1 panel icon for joined menus"
+msgstr "Pokaż tylko 1 ikonę na panelu, gdy menu są połączone"
+
+#: ../settings.ui:393
+msgid "Position in the panel"
+msgstr "Położenie na panelu"
+
+#: ../settings.ui:407
+msgid "Left"
+msgstr "Z lewej"
+
+#: ../settings.ui:408
+msgid "Center"
+msgstr "Na środku"
+
+#: ../settings.ui:409
+msgid "Right"
+msgstr "Z prawej"
+
+#: ../settings.ui:441
+msgid "Enabled Sections"
+msgstr "Dostępne sekcje"
+
+#: ../settings.ui:614 ../settings.ui:2428
+msgid "Alarms"
+msgstr "Alarmy"
+
+#: ../settings.ui:658
+msgid "Todo and Time Tracker"
+msgstr "Zadania i śledzenie"
+
+#: ../settings.ui:708
+msgid "General"
+msgstr "Ogólne"
+
+#: ../settings.ui:767 ../settings.ui:1222 ../settings.ui:1571
+#: ../settings.ui:2128 ../settings.ui:2488
+msgid "Show in separate menu"
+msgstr "Pokaż w oddzielnym menu"
+
+#: ../settings.ui:811 ../settings.ui:1615
+msgid "Show seconds"
+msgstr "Pokaż sekundy"
+
+#: ../settings.ui:855 ../settings.ui:1316 ../settings.ui:1659
+#: ../settings.ui:2532
+msgid "Panel Item Mode"
+msgstr "Prezentacja na panelu"
+
+#: ../settings.ui:869 ../settings.ui:1330 ../settings.ui:1673
+#: ../settings.ui:2546
+msgid "Icon only"
+msgstr "Tylko ikona"
+
+#: ../settings.ui:870 ../settings.ui:1331 ../settings.ui:1674
+#: ../settings.ui:2547
+msgid "Text only"
+msgstr "Tylko tekst"
+
+#: ../settings.ui:871 ../settings.ui:1332 ../settings.ui:1675
+#: ../settings.ui:2548
+msgid "Icon and Text"
+msgstr "Ikona i tekst"
+
+#: ../settings.ui:906 ../settings.ui:1710 ../settings.ui:2222
+msgid "Notification sound"
+msgstr "Dźwięk powiadomienia"
+
+#: ../settings.ui:968 ../settings.ui:1772 ../settings.ui:2284
+msgid "Notification style"
+msgstr "Styl powiadomienia"
+
+#: ../settings.ui:982 ../settings.ui:1786 ../settings.ui:2298
+msgid "Standard"
+msgstr "Standardowy"
+
+#: ../settings.ui:983 ../settings.ui:1787 ../settings.ui:2299
+msgid "Fullscreen"
+msgstr "Na pełnym ekranie"
+
+#: ../settings.ui:1015 ../settings.ui:1364 ../settings.ui:1921
+#: ../settings.ui:2331 ../settings.ui:2794
+msgid "Keyboard shortcuts"
+msgstr "Skróty klawiaturowe"
+
+#: ../settings.ui:1056 ../settings.ui:1405 ../settings.ui:1962
+#: ../settings.ui:2372 ../settings.ui:2837
+msgid "Open this section"
+msgstr "Otwórz sekcję"
+
+#: ../settings.ui:1068 ../settings.ui:1118 ../settings.ui:1417
+#: ../settings.ui:1467 ../settings.ui:1974 ../settings.ui:2024
+#: ../settings.ui:2384 ../settings.ui:2849 ../settings.ui:2899
+#: ../settings.ui:2937
+msgid ""
+"Examples:\n"
+"<super><ctrl><alt><shift>t\n"
+"<shift>super\n"
+"F3"
+msgstr ""
+"Przykłady:\n"
+"<super><ctrl><alt><shift>t\n"
+"<shift>super\n"
+"F3"
+
+#: ../settings.ui:1106 ../settings.ui:1455 ../settings.ui:2012
+msgid "Open in fullscreen"
+msgstr "Otwórz na pełnym ekranie"
+
+#: ../settings.ui:1266
+msgid "Format"
+msgstr ""
+
+#: ../settings.ui:1280
+msgid "hours:min"
+msgstr "godz.:min."
+
+#: ../settings.ui:1281
+msgid "hours:min:sec"
+msgstr "godz.:min.:sek."
+
+#: ../settings.ui:1282
+msgid "hours:min:sec:milisec"
+msgstr "godz.:min.:sek.:milisek."
+
+#: ../settings.ui:1821
+msgid "Stop time tracking when pomo is paused"
+msgstr "Zatrzymaj śledzenie, gdy pomodoro jest wstrzymane"
+
+#: ../settings.ui:1866
+msgid "Execute custom script when pomo pauses/starts"
+msgstr "Wykonaj własny skrypt, gdy pomodoro jest zatrzymywane/uruchamiane"
+
+#: ../settings.ui:2172
+msgid "Snooze duration (sec)"
+msgstr "Czas drzemki (sek.)"
+
+#: ../settings.ui:2600
+msgid "Task width (px)"
+msgstr "Szerokość zadania (px)"
+
+#: ../settings.ui:2630
+msgid "Todo files"
+msgstr "Pliki zadań"
+
+#: ../settings.ui:2887
+msgid "Open this section to add task"
+msgstr "Otwórz sekcję, aby dodać zadanie"
+
+#: ../settings.ui:2955
+msgid "Open this section to search tasks"
+msgstr "Otwórz sekcję, aby wyszukać zadanie"
+
+#: ../settings.ui:2993
+msgid "Todo / Time Tracker"
+msgstr "Zadania / Śledzenie"
+
+#~ msgid "Show single icon in panel"
+#~ msgstr "Pokaż pojedynczą ikonę na panelu"
