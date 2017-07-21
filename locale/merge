@@ -1,0 +1,6 @@
+#!/bin/sh
+
+find po -type f -name "*.po" | while read -r file; do
+    msgmerge -U "$file" --backup="none" po/template.pot
+    msgattrib --output-file="$file" --no-obsolete "$file"
+done
