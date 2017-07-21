@@ -4003,7 +4003,7 @@ const TimeTracker = new Lang.Class({
 
             if (it === '') continue;
 
-            key    = it.substring(24, it.length - 1);
+            key    = it.substring(24, it.length - 1).replace(/""/g, '"');
             val    = this.yearly_csv_map.get(key);
             record = {
                 date : it.substr(0, 10),
@@ -4060,6 +4060,7 @@ const TimeTracker = new Lang.Class({
         let [, contents] = this.daily_csv_file.load_contents(null);
         contents = String(contents).trim().split(/\n|\r/);
 
+        // Check if the todays csv file is out of date and archive it instead.
         for (let i = 0, len = contents.length; i < len; i++) {
             if (contents[i] === '') continue;
 
@@ -4076,7 +4077,7 @@ const TimeTracker = new Lang.Class({
 
             if (it === '') continue;
 
-            key  = it.substring(24, it.length - 1);
+            key  = it.substring(24, it.length - 1).replace(/""/g, '"');
             type = it.substr(19, 2);
 
             this.daily_csv_map.set(key, {
@@ -4128,7 +4129,7 @@ const TimeTracker = new Lang.Class({
             line = '' + date_yyyymmdd() + ', ' +
                        hh + ':' + mm    + ', ' +
                        v.type           + ', ' +
-                       '"' + k.replace("\"", "'") + '"' + '\n';
+                       '"' + k.replace(/"/g, '""') + '"' + '\n';
 
             if (v.type === '++') projects += line;
             else                 tasks    += line;
@@ -4140,7 +4141,8 @@ const TimeTracker = new Lang.Class({
 
             this.daily_csv_file.replace_contents(projects + tasks, null, false,
                 Gio.FileCreateFlags.REPLACE_DESTINATION, null);
-        } catch (e) { logError(e); }
+        }
+        catch (e) { logError(e); }
     },
 
     _archive_daily_csv_file: function () {
@@ -4193,8 +4195,7 @@ const TimeTracker = new Lang.Class({
 
     start_tracking: function (task) {
         if (!this.csv_dir) {
-            Main.notify(_('To track time, select a dir for csv files in the ' +
-                          'settings.'));
+            Main.notify(_('To track time, select a dir for csv files in the settings.'));
             return null;
         }
 
