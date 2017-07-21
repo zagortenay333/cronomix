@@ -54,7 +54,7 @@ const ContextMenu = new Lang.Class({
                     global.create_app_launch_context(0, -1)
                 );
             }
-            catch (e) { logError(e.message); }
+            catch (e) { logError(e); }
             ext.toggle_context_menu();
         });
         this.report_bug_link.connect('activate', () => {
@@ -64,7 +64,7 @@ const ContextMenu = new Lang.Class({
                     global.create_app_launch_context(0, -1)
                 );
             }
-            catch (e) { logError(e.message); }
+            catch (e) { logError(e); }
             ext.toggle_context_menu();
         });
     },

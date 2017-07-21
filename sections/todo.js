@@ -96,13 +96,14 @@ const REG_CONTEXT   = /^@.+$/;
 const REG_PROJ      = /^\+.+$/;
 const REG_PRIO      = /^\([A-Z]\)$/;
 const REG_EXT       = /^[^:]+:[^:]+$/;
+const REG_FILE_PATH = /^~?\//;
 const REG_PRIO_EXT  = /^(?:pri|PRI):[A-Z]$/;
 const REG_HIDE_EXT  = /^h:1$/;
 const REG_REC_EXT_1 = /^rec:[1-9][0-9]*[dw]$/;
 const REG_REC_EXT_2 = /^rec:x-[1-9][0-9]*[dw]$/;
 const REG_REC_EXT_3 = /^rec:[1-9][0-9]*d-[1-9][0-9]*m$/;
 const REG_DUE_EXT   = /^(?:due|DUE):\d{4}-\d{2}-\d{2}$/;
-const REG_URL       = /^(?:(?:https?|ftp):\/\/)?(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,}))\.?)(?::\d{2,5})?(?:[/?#]\S*)?$/;
+const REG_URL       = /^(?:https?:\/\/)?(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,}))\.?)(?::\d{2,5})?(?:[/?#]\S*)?$/;
 
 
 // return date string in yyyy-mm-dd format adhering to locale
@@ -116,6 +117,44 @@ function date_yyyymmdd (date_obj) {
     day   = (day   < 10) ? ('-' + 0 + day)   : ('-' + day);
 
     return now.getFullYear() + month + day;
+}
+
+
+// This function will splits the str into words at spaces and return array of
+// those words.
+// Escaped spaces are ignored ('\ ').
+function split_on_spaces (str) {
+    let words = [];
+    let i;
+    let word;
+
+    if (str.startsWith('\\ ')) {
+        word = ' ';
+        i    = 2;
+    }
+    else {
+        word = /\S/.test(str[0]) ? str[0] : '';
+        i    = 1;
+    }
+
+    for (let len = str.length; i < len; i++) {
+        if (str[i] === ' ') {
+            if (str[i - 1] === '\\') {
+                word += ' ';
+            }
+            else if (word) {
+                words.push(word);
+                word = '';
+            }
+        }
+        else {
+            word += str[i];
+        }
+    }
+
+    if (word) words.push(word);
+
+    return words;
 }
 
 
@@ -669,9 +708,11 @@ const Todo = new Lang.Class({
         this.show_view__loading();
 
         let [, lines] = this.todo_txt_file.load_contents(null);
-        lines = String(lines).trim().split(/\n|\r/);
+        lines = String(lines).split(/\n|\r/);
 
+        let start = Date.now();
         this.create_tasks(lines, () => {
+            Main.notify("" + (Date.now() - start));
             this._check_recurrences();
             this.on_tasks_changed();
             this.show_view__default();
@@ -1161,8 +1202,10 @@ const Todo = new Lang.Class({
         let i = 0;
 
         for (; i < n; i++) {
-            if (todo_strings[i].trim() === '') continue;
-            this.tasks.push(new TaskItem(this.ext, this, todo_strings[i], false));
+            if (/\S/.test(todo_strings[i])) {
+                this.tasks.push(new TaskItem(this.ext, this,
+                                             todo_strings[i], false));
+            }
         }
 
         this.create_tasks_mainloop_id = Mainloop.idle_add(() => {
@@ -1177,8 +1220,9 @@ const Todo = new Lang.Class({
             return;
         }
 
-        if (todo_strings[i].trim() !== '')
+        if (/\S/.test(todo_strings[i])) {
             this.tasks.push(new TaskItem(this.ext, this, todo_strings[i], false));
+        }
 
         this.create_tasks_mainloop_id = Mainloop.idle_add(() => {
             this._create_tasks__finish(++i, todo_strings, callback);
@@ -2166,9 +2210,10 @@ const TaskItem = new Lang.Class({
         // dates.
         // The 'description' is everything else.
 
-        let words    = this.task_str.split(/ +/);
+        let words    = split_on_spaces(this.task_str);
         let len      = words.length;
         let desc_pos = 0; // idx of first word of 'description' in words arr
+
 
         //
         // Parse 'header'
@@ -2245,7 +2290,7 @@ const TaskItem = new Lang.Class({
                            this.delegate.markup_colors.project +
                            '"><b>' + word + '</b></span>';
             }
-            else if (REG_URL.test(word)) {
+            else if (REG_URL.test(word) || REG_FILE_PATH.test(word)) {
                 this.link_indices.push(i);
                 words[i] = '<span foreground="' +
                            this.delegate.markup_colors.link +
@@ -2681,19 +2726,24 @@ const TaskItem = new Lang.Class({
         //
         // get word that contains the clicked char
         //
-        if (! this.msg.clutter_text.text[pos] ||
-            this.msg.clutter_text.text[pos] === ' ') return null;
+        let words   = split_on_spaces(this.msg.text);
+        let i       = 0;
+        let abs_idx = 0;
 
-        let begin = pos;
-        while (begin > 0 && this.msg.clutter_text.text[begin] !== ' ') begin--;
+        outer: for (; i < words.length; i++) {
+            for (let j = 0; j < words[i].length; j++) {
+                if (abs_idx === pos) break outer;
+                abs_idx++;
+            }
 
-        let end = pos;
-        while (end !== len && this.msg.clutter_text.text[end] !== ' ') end++;
+            abs_idx++;
+        }
 
-        let word = this.msg.clutter_text.text.substring(begin, end).trim();
+        if (i > words.length - 1) return null;
 
-        if (REG_CONTEXT.test(word) || REG_PROJ.test(word) || REG_URL.test(word))
-            return word;
+        if (REG_CONTEXT.test(words[i]) || REG_PROJ.test(words[i]) ||
+            REG_URL.test(words[i]) || REG_FILE_PATH.test(words[i]))
+            return words[i];
         else
             return null;
     },
@@ -2745,7 +2795,27 @@ const TaskItem = new Lang.Class({
                             Gio.app_info_launch_default_for_uri(this.current_keyword,
                                 global.create_app_launch_context(0, -1));
                         }
-                        catch (e) { logError(e.message); }
+                        catch (e) { logError(e); }
+                    }
+                    else if (REG_FILE_PATH.test(this.current_keyword)) {
+                        let path = this.current_keyword;
+                        path = path.replace('\\ ', ' ');
+
+                        if (this.current_keyword[0] === '~') {
+                            path = GLib.get_home_dir() + path.slice(1);
+                        }
+
+                        if (GLib.file_test(path, GLib.FileTest.EXISTS)) {
+                            try {
+                                Gio.app_info_launch_default_for_uri(
+                                    GLib.filename_to_uri(path, null),
+                                    global.create_app_launch_context(0, -1));
+                            }
+                            catch (e) { logError(e); }
+                        }
+                        else {
+                            Main.notify(_('File or dir not found.'));
+                        }
                     }
                     else this.delegate.activate_filter(this.current_keyword);
                 }
