@@ -10,3 +10,6 @@ I make changes to `po/template.pot`, but you should run it yourself just to make
 sure.  
 After that, you can go through your po file and add translations where they are
 missing.
+
+If you edited the extension yourself, then you can update the `po/template.pot`
+file by running the `extract` script.
