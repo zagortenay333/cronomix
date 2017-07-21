@@ -710,9 +710,7 @@ const Todo = new Lang.Class({
         let [, lines] = this.todo_txt_file.load_contents(null);
         lines = String(lines).split(/\n|\r/);
 
-        let start = Date.now();
         this.create_tasks(lines, () => {
-            Main.notify("" + (Date.now() - start));
             this._check_recurrences();
             this.on_tasks_changed();
             this.show_view__default();
