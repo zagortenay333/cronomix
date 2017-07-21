@@ -2294,7 +2294,7 @@ const TaskItem = new Lang.Class({
                 this.link_indices.push(i);
                 words[i] = '<span foreground="' +
                            this.delegate.markup_colors.link +
-                           '"><u>' + word + '</u></span>';
+                           '"><u><b>' + word + '</b></u></span>';
             }
             else if (REG_EXT.test(word)) {
                 words.splice(i, 1);
