@@ -451,8 +451,13 @@ const Timer = new Lang.Class({
     },
 
     _send_notif: function () {
-        let sound_file = this.settings.get_string('timer-sound-file-path')
-                                      .replace(/^.+?\/\//, '');
+        let sound_file = this.settings.get_string('timer-sound-file-path');
+
+        if (sound_file) {
+            try {
+                [sound_file, ] = GLib.filename_from_uri(sound_file, null);
+            } catch (e) { logError(e); }
+        }
 
         if (this.settings.get_boolean('timer-play-sound') && sound_file) {
             global.play_sound_file(0, sound_file, 'timer-notif', null);

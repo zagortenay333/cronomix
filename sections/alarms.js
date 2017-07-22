@@ -431,7 +431,12 @@ const Alarms = new Lang.Class({
 
     _send_notif: function (alarm) {
         let sound_file = this.settings.get_string('alarms-sound-file-path')
-                                      .replace(/^.+?\/\//, '');
+
+        if (sound_file) {
+            try {
+                [sound_file, ] = GLib.filename_from_uri(sound_file, null);
+            } catch (e) { logError(e); }
+        }
 
         if (this.settings.get_boolean('alarms-play-sound') && sound_file) {
             global.play_sound_file(0, sound_file, 'alarms-notif', null);

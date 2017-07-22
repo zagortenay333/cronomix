@@ -342,12 +342,15 @@ const Pomodoro = new Lang.Class({
         if (! this.settings.get_boolean('pomodoro-exec-script'))
             return;
 
-        let script_path = this.settings.get_string('pomodoro-script-path');
+        try {
+            let script_path = this.settings.get_string('pomodoro-script-path');
 
-        if (script_path) {
-            Util.spawnCommandLine(
-                script_path.replace(/^.+?\/\//, '') + " " + this.pomo_state);
+            if (script_path) {
+                [script_path, ] = GLib.filename_from_uri(script_path, null);
+                Util.spawnCommandLine(script_path + " " + this.pomo_state);
+            }
         }
+        catch (e) { logError(e); }
     },
 
     start: function () {
@@ -592,8 +595,13 @@ const Pomodoro = new Lang.Class({
             default: return;
         }
 
-        let sound_file = this.settings.get_string('pomodoro-sound-file-path')
-                                      .replace(/^.+?\/\//, '');
+        let sound_file = this.settings.get_string('pomodoro-sound-file-path');
+
+        if (sound_file) {
+            try {
+                [sound_file, ] = GLib.filename_from_uri(sound_file, null);
+            } catch (e) { logError(e); }
+        }
 
         if (this.settings.get_boolean('pomodoro-play-sound') && sound_file) {
             global.play_sound_file(0, sound_file, 'pomodoro-notif', null);

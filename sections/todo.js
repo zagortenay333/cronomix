@@ -3779,6 +3779,12 @@ const TimeTracker = new Lang.Class({
         this.csv_dir = delegate.settings.get_value('todo-current')
                        .deep_unpack().csv_dir;
 
+        if (this.csv_dir) {
+            try {
+                [this.csv_dir, ] = GLib.filename_from_uri(this.csv_dir, null);
+            } catch (e) { logError(e); }
+        }
+
         this.timer_seconds_mainloop_id            = null;
         this.timer_minutes_mainloop_id            = null;
         this.number_of_tracked_tasks              = 0;
@@ -3863,6 +3869,12 @@ const TimeTracker = new Lang.Class({
             this.csv_dir = delegate.settings.get_value('todo-current')
                            .deep_unpack().csv_dir;
 
+            if (this.csv_dir) {
+                try {
+                    [this.csv_dir, ] = GLib.filename_from_uri(this.csv_dir, null);
+                } catch (e) { logError(e); }
+            }
+
             this._init_tracker_dir();
         });
     },
@@ -3931,20 +3943,19 @@ const TimeTracker = new Lang.Class({
 
 
         // ensure tracker dir
-        Util.spawnCommandLine("mkdir -p  %s".format(
-            this.csv_dir.replace(/^.+?\/\//, '')));
+        Util.spawnCommandLine("mkdir -p  %s".format(this.csv_dir));
 
 
         // Archive the yearly csv file each year
         let today  = new Date();
-        let prev_f = this.csv_dir.replace(/^.+?\/\//, '') +
-                         '/' + (today.getFullYear() - 1) + '__time_tracker.csv';
+        let prev_f = this.csv_dir + '/' +
+                     (today.getFullYear() - 1) + '__time_tracker.csv';
 
         if (today.getMonth() === 0 &&
             today.getDate()  === 1 &&
             GLib.file_test(prev_f, GLib.FileTest.EXISTS)) {
 
-            let dir = this.csv_dir.replace(/^.+?\/\//, '') + "/YEARS__time_tracker";
+            let dir = this.csv_dir + "/YEARS__time_tracker";
             Util.spawnCommandLine("mkdir -p  %s".format(dir));
             Util.spawnCommandLine("mv %s %s".format(prev_f, dir));
         }
@@ -3968,15 +3979,13 @@ const TimeTracker = new Lang.Class({
 
 
         // ensure tracker dir
-        Util.spawnCommandLine("mkdir -p  %s".format(
-            this.csv_dir.replace(/^.+?\/\//, '')));
+        Util.spawnCommandLine("mkdir -p  %s".format(this.csv_dir));
 
         try {
-            Util.spawnCommandLine("mkdir -p  %s".format(
-                this.csv_dir.replace(/^.+?\/\//, '')));
+            Util.spawnCommandLine("mkdir -p  %s".format(this.csv_dir));
 
             this.yearly_csv_file = Gio.file_new_for_path(
-                this.csv_dir.replace(/^.+?\/\//, '') +
+                this.csv_dir +
                 '/' + (new Date().getFullYear()) + '__time_tracker.csv');
 
             if (!this.yearly_csv_file || !this.yearly_csv_file.query_exists(null))
@@ -4034,15 +4043,13 @@ const TimeTracker = new Lang.Class({
 
 
         // ensure tracker dir
-        Util.spawnCommandLine("mkdir -p  %s".format(
-            this.csv_dir.replace(/^.+?\/\//, '')));
+        Util.spawnCommandLine("mkdir -p  %s".format(this.csv_dir));
 
         try {
-            Util.spawnCommandLine("mkdir -p  %s".format(
-                this.csv_dir.replace(/^.+?\/\//, '')));
+            Util.spawnCommandLine("mkdir -p  %s".format(this.csv_dir));
 
             this.daily_csv_file = Gio.file_new_for_path(
-                this.csv_dir.replace(/^.+?\/\//, '') + '/TODAY__time_tracker.csv');
+                this.csv_dir + '/TODAY__time_tracker.csv');
 
             if (!this.daily_csv_file || !this.daily_csv_file.query_exists(null))
                 this.daily_csv_file.create(Gio.FileCreateFlags.NONE, null);
