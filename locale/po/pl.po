@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-07-21 20:06+0200\n"
+"POT-Creation-Date: 2017-07-22 16:28+0200\n"
 "PO-Revision-Date: 2017-07-20 07:02+0200\n"
 "Last-Translator: Piotr Komur <pkomur@gmail.com>\n"
 "Language-Team: \n"
@@ -32,35 +32,35 @@ msgid "Add New Alarm..."
 msgstr "Dodaj nowy alarm..."
 
 #. TRANSLATORS: %s is a time string in the format HH:MM (e.g., 13:44)
-#: ../sections/alarms.js:452 ../sections/alarms.js:896
+#: ../sections/alarms.js:457 ../sections/alarms.js:901
 #, javascript-format
 msgid "Alarm at %s"
 msgstr "Alarm o %s"
 
-#: ../sections/alarms.js:466 ../sections/alarms.js:861
+#: ../sections/alarms.js:471 ../sections/alarms.js:866
 msgid "Snooze"
 msgstr "Drzemka"
 
-#: ../sections/alarms.js:589
+#: ../sections/alarms.js:594
 msgid "Alarm Message..."
 msgstr "Komunikat alarmu..."
 
-#: ../sections/alarms.js:617 ../sections/todo.js:1762
+#: ../sections/alarms.js:622 ../sections/todo.js:1762
 msgid "Delete"
 msgstr "Usuń"
 
-#: ../sections/alarms.js:625 ../sections/pomodoro.js:784
-#: ../sections/timer.js:661 ../sections/todo.js:1775 ../sections/todo.js:3624
+#: ../sections/alarms.js:630 ../sections/pomodoro.js:792
+#: ../sections/timer.js:666 ../sections/todo.js:1775 ../sections/todo.js:3624
 msgid "Cancel"
 msgstr "Anuluj"
 
-#: ../sections/alarms.js:626 ../sections/pomodoro.js:783
-#: ../sections/timer.js:662 ../sections/todo.js:1778 ../sections/todo.js:2975
+#: ../sections/alarms.js:631 ../sections/pomodoro.js:791
+#: ../sections/timer.js:667 ../sections/todo.js:1778 ../sections/todo.js:2975
 #: ../sections/todo.js:3309 ../sections/todo.js:3473 ../sections/todo.js:3627
 msgid "Ok"
 msgstr "OK"
 
-#: ../sections/alarms.js:919
+#: ../sections/alarms.js:924
 #, javascript-format
 msgid "%d alarm went off!"
 msgid_plural "%d alarms went off!"
@@ -93,44 +93,44 @@ msgid "Take short break!"
 msgstr "Weź krótką przerwę!"
 
 #: ../sections/pomodoro.js:105 ../sections/pomodoro.js:278
-#: ../sections/pomodoro.js:382 ../settings.ui:570 ../settings.ui:2068
+#: ../sections/pomodoro.js:385 ../settings.ui:570 ../settings.ui:2068
 msgid "Pomodoro"
 msgstr ""
 
-#: ../sections/pomodoro.js:148 ../sections/pomodoro.js:846
+#: ../sections/pomodoro.js:148 ../sections/pomodoro.js:854
 msgid "New Pomo"
 msgstr "Nowe Pomodoro"
 
-#: ../sections/pomodoro.js:149 ../sections/pomodoro.js:847
+#: ../sections/pomodoro.js:149 ../sections/pomodoro.js:855
 msgid "Take Break"
 msgstr "Weź przerwę!"
 
-#: ../sections/pomodoro.js:150 ../sections/pomodoro.js:848
+#: ../sections/pomodoro.js:150 ../sections/pomodoro.js:856
 #: ../sections/stopwatch.js:148 ../sections/stopwatch.js:637
 msgid "Start"
 msgstr ""
 
-#: ../sections/pomodoro.js:151 ../sections/pomodoro.js:849
+#: ../sections/pomodoro.js:151 ../sections/pomodoro.js:857
 msgid "Stop"
 msgstr ""
 
-#: ../sections/pomodoro.js:707
+#: ../sections/pomodoro.js:715
 msgid "Clear all pomodoros?"
 msgstr "Usunąć wszystkie pomodoro?"
 
-#: ../sections/pomodoro.js:723
+#: ../sections/pomodoro.js:731
 msgid "Pomodoro (min):"
 msgstr "Pomodoro (min):"
 
-#: ../sections/pomodoro.js:738
+#: ../sections/pomodoro.js:746
 msgid "Short break (min):"
 msgstr "Krótka przerwa (min):"
 
-#: ../sections/pomodoro.js:753
+#: ../sections/pomodoro.js:761
 msgid "Long break (min):"
 msgstr "Długa przerwa (min):"
 
-#: ../sections/pomodoro.js:768
+#: ../sections/pomodoro.js:776
 msgid "Num of pomos until long break:"
 msgstr "Liczba pomodoro do długiej przerwy:"
 
@@ -161,7 +161,7 @@ msgstr "Czas minął!"
 msgid "Timer"
 msgstr "Minutnik"
 
-#: ../sections/timer.js:639
+#: ../sections/timer.js:644
 msgid "Timer message..."
 msgstr "Komunikat minutnika..."
 
@@ -343,7 +343,7 @@ msgstr "ten miesiąc"
 msgid "this year"
 msgstr "ten rok"
 
-#: ../sections/todo.js:4198
+#: ../sections/todo.js:4205
 msgid "To track time, select a dir for csv files in the settings."
 msgstr "Do śledzenia czasu wskaż w ustawieniach katalog dla plików csv."
 
