@@ -123,13 +123,13 @@ Some of the features of the todo.txt manager are:
 
 The todo.txt manager also has support for urls and file paths:
 ```
-    (A) @asdf https://www.google.com
-    (A) @asdf www.google.com
+(A) @asdf https://www.google.com
+(A) @asdf www.google.com
 
-    (A) @asdf /home/user/Documents
-    (A) @asdf ~/Documents
-    (A) @asdf ~/Documents/img.png
-    (A) @asdf ~/Documents/file\ with\ spaces.png
+(A) @asdf /home/user/Documents
+(A) @asdf ~/Documents
+(A) @asdf ~/Documents/img.png
+(A) @asdf ~/Documents/file\ with\ spaces.png
 ```
 
 Supported todo.txt extensions are:
