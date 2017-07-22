@@ -2797,7 +2797,7 @@ const TaskItem = new Lang.Class({
                     }
                     else if (REG_FILE_PATH.test(this.current_keyword)) {
                         let path = this.current_keyword;
-                        path = path.replace('\\ ', ' ');
+                        path = path.replace(/\\ /g, ' ');
 
                         if (this.current_keyword[0] === '~') {
                             path = GLib.get_home_dir() + path.slice(1);
