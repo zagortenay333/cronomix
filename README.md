@@ -4,7 +4,9 @@
 
 <img vspace="30" src="img/logo.png"></img>
 
-**A [todo.txt manager](https://github.com/ginatrapani/todo.txt-cli/wiki/The-Todo.txt-Format), time tracker, timer, stopwatch, pomodoro, and alarms gnome-shell extension.**
+**A [todo.txt
+manager](https://github.com/ginatrapani/todo.txt-cli/wiki/The-Todo.txt-Format),
+time tracker, timer, stopwatch, pomodoro, and alarms gnome-shell extension.**
 
 </div>
 
@@ -12,13 +14,15 @@
 
 ### Installation
 
-* You can install this extension from the [gnome-shell extensions site](https://extensions.gnome.org/extension/1238/time/).
+* You can install this extension from the [gnome-shell extensions
+site](https://extensions.gnome.org/extension/1238/time/).
   > **NOTE**:  
   > Since it takes some time for the extension to be reviewed, the version on
   > this site might be out of date and contain
   > bugs that have already been fixed. Consider using the github version.
 
-* You can install it manually by cloning/downloading this repo into your `~/.local/share/gnome-shell/extensions` dir
+* You can install it manually by cloning/downloading this repo into your
+`~/.local/share/gnome-shell/extensions` dir
 and renaming the downloaded dir to `timepp@zagortenay333`.
 
 ---
@@ -76,7 +80,7 @@ When in fullscreen, some keyboard shortcuts are available:
     </tr>
     <tr>
         <td><kbd>1</kbd> ... <kbd>9</kbd> and <kbd>0</kbd></td>
-        <td>start timer at the time specified by a num key.<br/><i>1=1min,
+        <td>start timer at the time specified by a num key.<br><i>1=1min,
 2=2min, ..., 0=10min</i></td>
     </tr>
 </table>
@@ -136,28 +140,38 @@ Supported todo.txt extensions are:
 
 <table>
     <tr>
+        <td valign="top"><code>tracker_id:string</code></td>
+        <td>
+            This extension is used to identify a task when starting/stopping
+            the time-tracker via the command-line.<br>
+            Multiple tasks can have the same tracker_id.
+        </td>
+    </tr>
+    <tr>
         <td valign="top"><code>pri:A-Z</code></td>
         <td>
-            This extension is used to restore the priority of a completed task when<br/>
+            This extension is used to restore the priority of a completed task
+when<br>
             it gets reopend.
         </td>
     </tr>
     <tr>
         <td valign="top"><code>h:1</code></td>
         <td>
-            Hides an extension by default<br/><br/>
-            <b>This extension disables all other extensions.</b></br></br>
-            <i>Among other things, can be used to populate the todo manager<br/>
-            with context/project keywords for autocompletion.</br>
+            Hides an extension by default<br><br>
+            <b>This extension disables all other extensions.</b><br><br>
+            <i>Among other things, can be used to populate the todo manager<br>
+            with context/project keywords for autocompletion.<br>
             </i>
         </td>
     </tr>
     <tr>
         <td valign="top"><code>due|DUE:yyyy-mm-dd</code></td>
         <td>
-            Sets a due date on a task.<br/>
+            Sets a due date on a task.<br>
             <i>
-            Timepp will also show how many days until/since the due date as well as</br>
+            Timepp will also show how many days until/since the due date as well
+as<br>
             provide the ability to sort tasks by due date.
             </i>
         </td>
@@ -165,57 +179,82 @@ Supported todo.txt extensions are:
     <tr>
         <td valign="top"><code>rec:recurrence_string</code></td>
         <td>
-            Used to automatically reopen a task after a given amount of time.<br/><br/>
-            <b>This extension disables the due date extension.</b><br/><br/>
-            <i>Each time a task recurs, it's creation date is updated.<br/>
-            If a task is already open on the date of the recursion, it's creation date will<br/>
-            be updated anyway.</i><br/><br/>
-            The <i>recurrence_string</i> can be in one of 3 diff forms:<br/>
-            <i>&nbsp;&nbsp&nbsp;&nbsp;(n=natural number, d=days, w=weeks, m=months)</i><br/><br/>
+            Used to automatically reopen a task after a given amount of
+time.<br><br>
+            <b>This extension disables the due date extension.</b><br><br>
+            <i>Each time a task recurs, it's creation date is updated.<br>
+            If a task is already open on the date of the recursion, it's
+creation date will<br>
+            be updated anyway.</i><br><br>
+            The <i>recurrence_string</i> can be in one of 3 diff forms:<br>
+            <i>&nbsp;&nbsp&nbsp;&nbsp;(n=natural number, d=days, w=weeks,
+m=months)</i><br><br>
             <ol>
             <li>
-            <code>rec:n(d|w)</code><br/>
-                This means that the task will recur n days/weeks after the creation date.<br/>
-                Examples:<br/>
+            <code>rec:n(d|w)</code><br>
+                This means that the task will recur n days/weeks after the
+creation date.<br>
+                Examples:<br>
                 <ul>
                 <li>
-                <code>x 2000-06-16 2000-06-09 rec:12d</code> means that the task will reopen<br/>
-                every 12 days starting from 2000-06-09. After 12 days it will look like<br/>
-                <code>2000-06-21 rec:12d</code>, and 12 days after that it will look like<br/>
+                <code>x 2000-06-16 2000-06-09 rec:12d</code> means that the task
+will reopen<br>
+                every 12 days starting from 2000-06-09. After 12 days it will
+look like<br>
+                <code>2000-06-21 rec:12d</code>, and 12 days after that it will
+look like<br>
                 <code>2000-7-03 rec:12d</code>, and so on...
                 </li>
                 </ul>
-            </li><br/>
+            </li><br>
             <li>
-                <code>rec:x-n(d|w)</code><br/>
-                This means that the task will recur n days/weeks after the completion date.<br/>
-                Examples:<br/>
+                <code>rec:x-n(d|w)</code><br>
+                This means that the task will recur n days/weeks after the
+completion date.<br>
+                Examples:<br>
                 <ul>
-                <li><code>rec:x-12d</code> recurs 12 days after date of completion.</li>
-                <li><code>rec:x-3w</code> recurs 3 weeks after date of completion.</li>
+                <li><code>rec:x-12d</code> recurs 12 days after date of
+completion.</li>
+                <li><code>rec:x-3w</code> recurs 3 weeks after date of
+completion.</li>
                 </ul>
-            </li><br/>
+            </li><br>
             <li>
-                <code>rec:nd-nm</code><br/>
-                This means that the task will recur on the n-th day of every n-th month starting<br/>
-                from the month of creation.<br/>
-                <i>Note that since when creating a task, one can set the creation date to any arbitrary<br/>
-                date, 'month of creation' here refers to the month written into the todo.txt file.<br/>
-                If a month doesn't have the particular n-th day, the last day of the month will be used instead.</i><br/>
-                Examples:<br/>
+                <code>rec:nd-nm</code><br>
+                This means that the task will recur on the n-th day of every
+n-th month starting<br>
+                from the month of creation.<br>
+                <i>Note that since when creating a task, one can set the
+creation date to any arbitrary<br>
+                date, 'month of creation' here refers to the month written into
+the todo.txt file.<br>
+                If a month doesn't have the particular n-th day, the last day of
+the month will be used instead.</i><br>
+                Examples:<br>
                 <ul>
-                <li><code>rec:12d-1m</code> recurs on the 12th day of each month.</li>
-                <li><code>rec:1d-1m</code> recurs on the first day of each month.</li>
-                <li><code>rec:31d-1m</code> recurs on the last day of each month.</li>
-                <li><code>rec:64d-1m</code> also recurs on the last day of each month.</li>
-                <li><code>rec:29d-1m</code> recurs on the 29th day of each month, and in<br/>
-                the case of February, on the 28th if it doesn't have 29 days.</li>
-                <li><code>(A) 2000-02-02 rec:12d-2m</code> recurs on the 12th day every<br/>
-                2 months starting from February.<br/>
-                If the actual current date is <code>2000-02-08</code>, the task recurs on <code>2000-02-12</code>.<br/>
-                If the actual current date is <code>2000-02-16</code>, the task recurs on <code>2000-04-12</code>.<br/>
-                <li><code>(A) 2000-01-01 rec:1d-12m</code> recurs on the first day of every year.</li>
-                <li><code>(A) 2000-02-01 rec:29d-24m</code> recurs on the last day of February every 2 years.</li>
+                <li><code>rec:12d-1m</code> recurs on the 12th day of each
+month.</li>
+                <li><code>rec:1d-1m</code> recurs on the first day of each
+month.</li>
+                <li><code>rec:31d-1m</code> recurs on the last day of each
+month.</li>
+                <li><code>rec:64d-1m</code> also recurs on the last day of each
+month.</li>
+                <li><code>rec:29d-1m</code> recurs on the 29th day of each
+month, and in<br>
+                the case of February, on the 28th if it doesn't have 29
+days.</li>
+                <li><code>(A) 2000-02-02 rec:12d-2m</code> recurs on the 12th
+day every<br>
+                2 months starting from February.<br>
+                If the actual current date is <code>2000-02-08</code>, the task
+recurs on <code>2000-02-12</code>.<br>
+                If the actual current date is <code>2000-02-16</code>, the task
+recurs on <code>2000-04-12</code>.<br>
+                <li><code>(A) 2000-01-01 rec:1d-12m</code> recurs on the first
+day of every year.</li>
+                <li><code>(A) 2000-02-01 rec:29d-24m</code> recurs on the last
+day of February every 2 years.</li>
                 </ul>
             </li>
             </ol>
@@ -229,7 +268,9 @@ Supported todo.txt extensions are:
 
 The time tracker is built into the todo.txt manager and allows you to track the
 time spent on a particular task as well as the time spent on a particular
-project.
+project.  
+You can also see how much time you spent working on a task today, this week, 
+this month, this year, etc, or do the same for all projects in the current year.
 
 When pressing the play button to track a task, all projects associated with that
 task will also be tracked.
@@ -243,12 +284,6 @@ start of each day.
 > **NOTE:**  
 > When editing a task that has been time-tracked, only the corresponding entry
 in the daily csv file will be updated. The yearly csv file will not be changed.
-
-> **HINT:**  
-> There is an option to pause the time tracker when the pomodoro stops!
-
-You can also see how much time you spent working on a task today, this week, 
-this month, this year, etc, or do the same for all projects in the current year.
 
 The csv file has the form:
 
@@ -267,6 +302,33 @@ date, time spent (hh:mm), type ('++' = project, '()' = task), task or project
 2017-02-05, 02:03, (), "(A) Watch the world burn."
 2017-02-05, 02:03, (), "x 2017-02-05 Catch Joker."
 2017-02-05, 02:03, (), "(Z) Take the trash out."
+```
+
+> **HINT:**  
+> There is an option to pause the time tracker when the pomodoro stops!
+
+The time tracker can also be controled via the command line using dbus:
+```sh
+# The id 'asdf' is created by using the 'tracker_id:string' todo.txt extension.
+# When using the stop/start by id funcs, all tasks with the given id will
+# stop/start tracking.
+#
+# There are 3 funcs:
+#   - stop_all_tracking
+#   - stop_tracking_by_id
+#   - start_tracking_by_id
+
+gdbus call --session --dest org.gnome.Shell \
+           --object-path /timepp/zagortenay333/TimeTracker \
+           --method timepp.zagortenay333.TimeTracker.stop_all_tracking
+
+gdbus call --session --dest org.gnome.Shell \
+           --object-path /timepp/zagortenay333/TimeTracker \
+           --method timepp.zagortenay333.TimeTracker.start_tracking_by_id 'asdf'
+
+gdbus call --session --dest org.gnome.Shell \
+           --object-path /timepp/zagortenay333/TimeTracker \
+           --method timepp.zagortenay333.TimeTracker.stop_tracking_by_id 'asdf'
 ```
 
 ---
@@ -306,4 +368,3 @@ Alarms, stopwatch and other timers won't work when the screen is locked.
 ![preview](https://i.imgur.com/m7I7NaO.png)
 <sup>**Preview info:** [Gnome-Shell
 theme](https://github.com/zagortenay333/ciliora-tertia-shell)</sup>
-

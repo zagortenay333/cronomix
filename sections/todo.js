@@ -37,6 +37,23 @@ const SCROLL_TO_ITEM = ME.imports.lib.scroll_to_item;
 const CACHE_FILE = GLib.get_home_dir() + '/.cache/timepp_gnome_shell_extension/timepp_todo.json';
 
 
+const TIME_TRACKER_DBUS_IFACE =
+    '<node>                                                 \
+        <interface name="timepp.zagortenay333.TimeTracker"> \
+            <method name="stop_all_tracking">               \
+            </method>                                       \
+                                                            \
+            <method name="stop_tracking_by_id">             \
+                <arg type="s" direction="in"/>              \
+            </method>                                       \
+                                                            \
+            <method name="start_tracking_by_id">            \
+                <arg type="s" direction="in"/>              \
+            </method>                                       \
+        </interface>                                        \
+    </node>';
+
+
 const CustomIcon = {
     TODO            : '/img/todo-symbolic.svg',
     EDIT            : '/img/edit-symbolic.svg',
@@ -92,18 +109,19 @@ const View = {
 //
 
 
-const REG_CONTEXT   = /^@.+$/;
-const REG_PROJ      = /^\+.+$/;
-const REG_PRIO      = /^\([A-Z]\)$/;
-const REG_EXT       = /^[^:]+:[^:]+$/;
-const REG_FILE_PATH = /^~?\//;
-const REG_PRIO_EXT  = /^(?:pri|PRI):[A-Z]$/;
-const REG_HIDE_EXT  = /^h:1$/;
-const REG_REC_EXT_1 = /^rec:[1-9][0-9]*[dw]$/;
-const REG_REC_EXT_2 = /^rec:x-[1-9][0-9]*[dw]$/;
-const REG_REC_EXT_3 = /^rec:[1-9][0-9]*d-[1-9][0-9]*m$/;
-const REG_DUE_EXT   = /^(?:due|DUE):\d{4}-\d{2}-\d{2}$/;
-const REG_URL       = /^(?:https?:\/\/)?(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,}))\.?)(?::\d{2,5})?(?:[/?#]\S*)?$/;
+const REG_CONTEXT     = /^@.+$/;
+const REG_PROJ        = /^\+.+$/;
+const REG_PRIO        = /^\([A-Z]\)$/;
+const REG_EXT         = /^[^:]+:[^:]+$/;
+const REG_FILE_PATH   = /^~?\//;
+const REG_PRIO_EXT    = /^(?:pri|PRI):[A-Z]$/;
+const REG_HIDE_EXT    = /^h:1$/;
+const REG_TASK_ID_EXT = /^id:[^:]+$/;
+const REG_REC_EXT_1   = /^rec:[1-9][0-9]*[dw]$/;
+const REG_REC_EXT_2   = /^rec:x-[1-9][0-9]*[dw]$/;
+const REG_REC_EXT_3   = /^rec:[1-9][0-9]*d-[1-9][0-9]*m$/;
+const REG_DUE_EXT     = /^(?:due|DUE):\d{4}-\d{2}-\d{2}$/;
+const REG_URL         = /^(?:https?:\/\/)?(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,}))\.?)(?::\d{2,5})?(?:[/?#]\S*)?$/;
 
 
 // return date string in yyyy-mm-dd format adhering to locale
@@ -2176,6 +2194,7 @@ const TaskItem = new Lang.Class({
         this.actor.style_class           = 'task-item';
         this.completion_checkbox.checked = false;
         this.completion_checkbox.visible = true;
+        this.id                          = '';
         if (this.hidden) {
             this.hidden = false;
             this.header.remove_child(this.header.get_child_at_index(0));
@@ -2330,6 +2349,9 @@ const TaskItem = new Lang.Class({
                     this.rec_str  = word;
                     this.rec_type = 3;
 
+                }
+                else if (REG_TASK_ID_EXT.test(word)) {
+                    this.id = word.slice(3);
                 }
                 else if (REG_HIDE_EXT.test(word)) {
                     this.completion_checkbox.hide();
@@ -2605,22 +2627,17 @@ const TaskItem = new Lang.Class({
     },
 
     _show_header_icons: function () {
-        if (this.header_icon_box) {
-            this.edit_icon_bin.show();
-
-            if (!this.hidden)
-                this.stat_icon_bin.show();
-
-            if (!this.hidden && !this.completion_checkbox.checked)
-                this.tracker_icon_bin.show();
-        }
-        else { // @SPEED Lazy load the icons.
+        //
+        // @SPEED
+        // Lazy load the icons.
+        //
+        if (!this.header_icon_box) {
             // icon box
             this.header_icon_box = new St.BoxLayout({ x_align: Clutter.ActorAlign.END, style_class: 'icon-box' });
             this.header.add(this.header_icon_box, {expand: true});
 
-            // statistic icon
-            this.stat_icon_bin = new St.Button({ visible: !this.hidden, can_focus: true, y_align: St.Align.MIDDLE });
+            // statistics icon
+            this.stat_icon_bin = new St.Button({ visible:false, can_focus: true, y_align: St.Align.MIDDLE });
             this.header_icon_box.add_actor(this.stat_icon_bin);
 
             this.stat_icon = new St.Icon();
@@ -2629,7 +2646,7 @@ const TaskItem = new Lang.Class({
 
 
             // settings icon
-            this.edit_icon_bin = new St.Button({ can_focus: true, y_align: St.Align.MIDDLE });
+            this.edit_icon_bin = new St.Button({ visible:false, can_focus: true, y_align: St.Align.MIDDLE });
             this.header_icon_box.add_actor(this.edit_icon_bin);
 
             this.edit_icon = new St.Icon();
@@ -2638,7 +2655,7 @@ const TaskItem = new Lang.Class({
 
 
             // time tracker start button
-            this.tracker_icon_bin = new St.Button({ visible: !this.hidden && !this.completion_checkbox.checked, can_focus: true, y_align: St.Align.MIDDLE, style_class: 'tracker-start-icon'});
+            this.tracker_icon_bin = new St.Button({ visible:false, can_focus: true, y_align: St.Align.MIDDLE, style_class: 'tracker-start-icon'});
             this.header_icon_box.add_actor(this.tracker_icon_bin);
 
             this.tracker_icon = new St.Icon({ icon_name: 'media-playback-start-symbolic' });
@@ -2676,6 +2693,17 @@ const TaskItem = new Lang.Class({
                 }
             });
         }
+
+        //
+        // show icons
+        //
+        if (!this.hidden && !this.completion_checkbox.checked)
+            this.tracker_icon_bin.show();
+
+        if (this.actor.visible) {
+            this.edit_icon_bin.show();
+            if (!this.hidden) this.stat_icon_bin.show();
+        }
     },
 
     _hide_header_icons: function () {
@@ -2705,6 +2733,14 @@ const TaskItem = new Lang.Class({
         this.tracker_icon.icon_name       = 'media-playback-start-symbolic';
         this.tracker_icon_bin.style_class = 'tracker-start-icon';
         this.tracker_icon_bin.visible     = this.edit_icon_bin.visible;
+    },
+
+    on_tracker_started: function () {
+        this._show_tracker_running_icon();
+    },
+
+    on_tracker_stopped: function () {
+        this._show_tracker_stopped_icon();
     },
 
     // Return word under mouse cursor if it's a context or project, else null.
@@ -2821,14 +2857,6 @@ const TaskItem = new Lang.Class({
                 break;
             }
         }
-    },
-
-    on_tracker_started: function () {
-        this._show_tracker_running_icon();
-    },
-
-    on_tracker_stopped: function () {
-        this._show_tracker_stopped_icon();
     },
 });
 Signals.addSignalMethods(TaskItem.prototype);
@@ -3775,6 +3803,8 @@ const TimeTracker = new Lang.Class({
         this.ext      = ext;
         this.delegate = delegate;
 
+        this.dbus_impl = Gio.DBusExportedObject.wrapJSObject(TIME_TRACKER_DBUS_IFACE, this);
+        this.dbus_impl.export(Gio.DBus.session, '/timepp/zagortenay333/TimeTracker');
 
         this.csv_dir = delegate.settings.get_value('todo-current')
                        .deep_unpack().csv_dir;
@@ -4200,6 +4230,22 @@ const TimeTracker = new Lang.Class({
         else                     this.start_tracking(task);
     },
 
+    start_tracking_by_id: function (id) {
+        for (let i = 0, len = this.delegate.tasks.length; i < len; i++) {
+            if (this.delegate.tasks[i].id === id) {
+                this.start_tracking(this.delegate.tasks[i]);
+            }
+        }
+    },
+
+    stop_tracking_by_id: function (id) {
+        for (let i = 0, len = this.delegate.tasks.length; i < len; i++) {
+            if (this.delegate.tasks[i].id === id) {
+                this.stop_tracking(this.delegate.tasks[i]);
+            }
+        }
+    },
+
     start_tracking: function (task) {
         if (!this.csv_dir) {
             Main.notify(_('To track time, select a dir for csv files in the settings.'));
@@ -4359,6 +4405,8 @@ const TimeTracker = new Lang.Class({
     },
 
     close: function () {
+        this.dbus_impl.unexport();
+
         if (this.yearly_csv_file_monitor) {
             this.yearly_csv_file_monitor.cancel();
             this.yearly_csv_file_monitor = null;
