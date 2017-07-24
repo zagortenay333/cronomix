@@ -2196,9 +2196,9 @@ const TaskItem = new Lang.Class({
         this.completion_checkbox.visible = true;
         this.id                          = '';
         if (this.hidden) {
-            this.hidden = false;
             this.header.remove_child(this.header.get_child_at_index(0));
         }
+        this.hidden = false;
 
         // The recurrence type is one of: 1, 2, 3
         // The numbers just match the global regex REG_REC_EXT_[123]
