@@ -116,7 +116,7 @@ const REG_EXT         = /^[^:]+:[^:]+$/;
 const REG_FILE_PATH   = /^~?\//;
 const REG_PRIO_EXT    = /^(?:pri|PRI):[A-Z]$/;
 const REG_HIDE_EXT    = /^h:1$/;
-const REG_TASK_ID_EXT = /^id:[^:]+$/;
+const REG_TASK_ID_EXT = /^tracker_id:[^:]+$/;
 const REG_REC_EXT_1   = /^rec:[1-9][0-9]*[dw]$/;
 const REG_REC_EXT_2   = /^rec:x-[1-9][0-9]*[dw]$/;
 const REG_REC_EXT_3   = /^rec:[1-9][0-9]*d-[1-9][0-9]*m$/;
@@ -2351,7 +2351,7 @@ const TaskItem = new Lang.Class({
 
                 }
                 else if (REG_TASK_ID_EXT.test(word)) {
-                    this.id = word.slice(3);
+                    this.tracker_id = word.slice(11);
                 }
                 else if (REG_HIDE_EXT.test(word)) {
                     this.completion_checkbox.hide();
@@ -4232,7 +4232,7 @@ const TimeTracker = new Lang.Class({
 
     start_tracking_by_id: function (id) {
         for (let i = 0, len = this.delegate.tasks.length; i < len; i++) {
-            if (this.delegate.tasks[i].id === id) {
+            if (this.delegate.tasks[i].tracker_id === id) {
                 this.start_tracking(this.delegate.tasks[i]);
             }
         }
@@ -4240,7 +4240,7 @@ const TimeTracker = new Lang.Class({
 
     stop_tracking_by_id: function (id) {
         for (let i = 0, len = this.delegate.tasks.length; i < len; i++) {
-            if (this.delegate.tasks[i].id === id) {
+            if (this.delegate.tasks[i].tracker_id === id) {
                 this.stop_tracking(this.delegate.tasks[i]);
             }
         }
