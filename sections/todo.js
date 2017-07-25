@@ -4138,7 +4138,7 @@ const TimeTracker = new Lang.Class({
         // monitor for some reason. This seems to work well enough.
         if (this.daily_csv_file_monitor_handler_block) {
             Mainloop.idle_add(() => {
-                this.file_monitor_handler_block = false;
+                this.daily_csv_file_monitor_handler_block = false;
             });
             return;
         }
