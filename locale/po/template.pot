@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-07-24 14:27+0200\n"
+"POT-Creation-Date: 2017-07-28 11:12+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -66,16 +66,20 @@ msgid_plural "%d alarms went off!"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../sections/context_menu.js:32
+#: ../sections/context_menu.js:33
 msgid "Open settings"
 msgstr ""
 
-#: ../sections/context_menu.js:35
+#: ../sections/context_menu.js:36
 msgid "Go to extension website"
 msgstr ""
 
-#: ../sections/context_menu.js:38
+#: ../sections/context_menu.js:39
 msgid "Report bug"
+msgstr ""
+
+#: ../sections/context_menu.js:42
+msgid "Help with translations"
 msgstr ""
 
 #: ../sections/pomodoro.js:34

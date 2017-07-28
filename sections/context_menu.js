@@ -15,8 +15,9 @@ const _        = Gettext.gettext;
 const ngettext = Gettext.ngettext;
 
 
-const WEBSITE_LINK    = 'https://www.github.com/zagortenay333/timepp__gnome';
-const REPORT_BUG_LINK = 'https://www.github.com/zagortenay333/timepp__gnome/issues';
+const WEBSITE_LINK      = 'https://www.github.com/zagortenay333/timepp__gnome';
+const REPORT_BUG_LINK   = 'https://www.github.com/zagortenay333/timepp__gnome/issues';
+const TRANSLATIONS_LINK = 'https://github.com/zagortenay333/timepp__gnome/tree/master/locale';
 
 
 const ContextMenu = new Lang.Class({
@@ -38,6 +39,8 @@ const ContextMenu = new Lang.Class({
         this.report_bug_link = new PopupMenu.PopupMenuItem(_('Report bug'));
         this.actor.add_actor(this.report_bug_link.actor);
 
+        this.translations_link = new PopupMenu.PopupMenuItem(_('Help with translations'));
+        this.actor.add_actor(this.translations_link.actor);
 
 
         //
@@ -61,6 +64,16 @@ const ContextMenu = new Lang.Class({
             try {
                 Gio.app_info_launch_default_for_uri(
                     REPORT_BUG_LINK,
+                    global.create_app_launch_context(0, -1)
+                );
+            }
+            catch (e) { logError(e); }
+            ext.toggle_context_menu();
+        });
+        this.translations_link.connect('activate', () => {
+            try {
+                Gio.app_info_launch_default_for_uri(
+                    TRANSLATIONS_LINK,
                     global.create_app_launch_context(0, -1)
                 );
             }
