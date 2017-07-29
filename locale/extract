@@ -1,2 +1,2 @@
 #!/bin/sh
-xgettext --add-comments="TRANSLATORS:" -o po/template.pot ../**/*.js ../settings.ui
+xgettext --add-comments="TRANSLATORS:" -o po/template.pot ../**/*.js ../prefs.ui

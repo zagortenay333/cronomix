@@ -27,7 +27,7 @@ const Settings = new Lang.Class({
         this.builder = new Gtk.Builder();
 
         this.builder.set_translation_domain(ME.metadata['gettext-domain']);
-        this.builder.add_from_file(ME.path + '/settings.ui');
+        this.builder.add_from_file(ME.path + '/prefs.ui');
 
         this.selected_row = null;
 

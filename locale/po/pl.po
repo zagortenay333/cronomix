@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-07-28 11:12+0200\n"
+"POT-Creation-Date: 2017-07-29 14:42+0200\n"
 "PO-Revision-Date: 2017-07-20 07:02+0200\n"
 "Last-Translator: Piotr Komur <pkomur@gmail.com>\n"
 "Language-Team: \n"
@@ -97,7 +97,7 @@ msgid "Take short break!"
 msgstr "Weź krótką przerwę!"
 
 #: ../sections/pomodoro.js:105 ../sections/pomodoro.js:278
-#: ../sections/pomodoro.js:385 ../settings.ui:570 ../settings.ui:2068
+#: ../sections/pomodoro.js:385 ../prefs.ui:570 ../prefs.ui:2068
 msgid "Pomodoro"
 msgstr ""
 
@@ -138,8 +138,8 @@ msgstr "Długa przerwa (min):"
 msgid "Num of pomos until long break:"
 msgstr "Liczba pomodoro do długiej przerwy:"
 
-#: ../sections/stopwatch.js:120 ../sections/stopwatch.js:378 ../settings.ui:526
-#: ../settings.ui:1511
+#: ../sections/stopwatch.js:120 ../sections/stopwatch.js:378 ../prefs.ui:526
+#: ../prefs.ui:1511
 msgid "Stopwatch"
 msgstr "Stoper"
 
@@ -160,8 +160,8 @@ msgstr "Wstrzymaj"
 msgid "Timer Expired!"
 msgstr "Czas minął!"
 
-#: ../sections/timer.js:109 ../sections/timer.js:313 ../settings.ui:482
-#: ../settings.ui:1162
+#: ../sections/timer.js:109 ../sections/timer.js:313 ../prefs.ui:482
+#: ../prefs.ui:1162
 msgid "Timer"
 msgstr "Minutnik"
 
@@ -351,124 +351,118 @@ msgstr "ten rok"
 msgid "To track time, select a dir for csv files in the settings."
 msgstr "Do śledzenia czasu wskaż w ustawieniach katalog dla plików csv."
 
-#: ../settings.ui:44
+#: ../prefs.ui:44
 msgid "Unique name"
 msgstr "Unikatowa nazwa"
 
-#: ../settings.ui:57 ../settings.ui:1073 ../settings.ui:1123
-#: ../settings.ui:1422 ../settings.ui:1472 ../settings.ui:1979
-#: ../settings.ui:2029 ../settings.ui:2389 ../settings.ui:2854
-#: ../settings.ui:2904 ../settings.ui:2942
+#: ../prefs.ui:57 ../prefs.ui:1073 ../prefs.ui:1123 ../prefs.ui:1422
+#: ../prefs.ui:1472 ../prefs.ui:1979 ../prefs.ui:2029 ../prefs.ui:2389
+#: ../prefs.ui:2854 ../prefs.ui:2904 ../prefs.ui:2942
 msgid "not set"
 msgstr "nie ustawiono"
 
-#: ../settings.ui:91
+#: ../prefs.ui:91
 msgid "Todo file"
 msgstr "Plik z zadaniami"
 
-#: ../settings.ui:137
+#: ../prefs.ui:137
 msgid "Done file (optional)"
 msgstr "Plik z ukończonymi zadaniami (opcjonalnie)"
 
-#: ../settings.ui:183
+#: ../prefs.ui:183
 msgid "Time-tracker csv directory (optional)"
 msgstr "Katalog z plikami śledzenia csv (opcjonalnie)"
 
-#: ../settings.ui:349
+#: ../prefs.ui:349
 msgid "Show only 1 panel icon for joined menus"
 msgstr "Pokaż tylko 1 ikonę na panelu, gdy menu są połączone"
 
-#: ../settings.ui:393
+#: ../prefs.ui:393
 msgid "Position in the panel"
 msgstr "Położenie na panelu"
 
-#: ../settings.ui:407
+#: ../prefs.ui:407
 msgid "Left"
 msgstr "Z lewej"
 
-#: ../settings.ui:408
+#: ../prefs.ui:408
 msgid "Center"
 msgstr "Na środku"
 
-#: ../settings.ui:409
+#: ../prefs.ui:409
 msgid "Right"
 msgstr "Z prawej"
 
-#: ../settings.ui:441
+#: ../prefs.ui:441
 msgid "Enabled Sections"
 msgstr "Dostępne sekcje"
 
-#: ../settings.ui:614 ../settings.ui:2428
+#: ../prefs.ui:614 ../prefs.ui:2428
 msgid "Alarms"
 msgstr "Alarmy"
 
-#: ../settings.ui:658
+#: ../prefs.ui:658
 msgid "Todo and Time Tracker"
 msgstr "Zadania i śledzenie"
 
-#: ../settings.ui:708
+#: ../prefs.ui:708
 msgid "General"
 msgstr "Ogólne"
 
-#: ../settings.ui:767 ../settings.ui:1222 ../settings.ui:1571
-#: ../settings.ui:2128 ../settings.ui:2488
+#: ../prefs.ui:767 ../prefs.ui:1222 ../prefs.ui:1571 ../prefs.ui:2128
+#: ../prefs.ui:2488
 msgid "Show in separate menu"
 msgstr "Pokaż w oddzielnym menu"
 
-#: ../settings.ui:811 ../settings.ui:1615
+#: ../prefs.ui:811 ../prefs.ui:1615
 msgid "Show seconds"
 msgstr "Pokaż sekundy"
 
-#: ../settings.ui:855 ../settings.ui:1316 ../settings.ui:1659
-#: ../settings.ui:2532
+#: ../prefs.ui:855 ../prefs.ui:1316 ../prefs.ui:1659 ../prefs.ui:2532
 msgid "Panel Item Mode"
 msgstr "Prezentacja na panelu"
 
-#: ../settings.ui:869 ../settings.ui:1330 ../settings.ui:1673
-#: ../settings.ui:2546
+#: ../prefs.ui:869 ../prefs.ui:1330 ../prefs.ui:1673 ../prefs.ui:2546
 msgid "Icon only"
 msgstr "Tylko ikona"
 
-#: ../settings.ui:870 ../settings.ui:1331 ../settings.ui:1674
-#: ../settings.ui:2547
+#: ../prefs.ui:870 ../prefs.ui:1331 ../prefs.ui:1674 ../prefs.ui:2547
 msgid "Text only"
 msgstr "Tylko tekst"
 
-#: ../settings.ui:871 ../settings.ui:1332 ../settings.ui:1675
-#: ../settings.ui:2548
+#: ../prefs.ui:871 ../prefs.ui:1332 ../prefs.ui:1675 ../prefs.ui:2548
 msgid "Icon and Text"
 msgstr "Ikona i tekst"
 
-#: ../settings.ui:906 ../settings.ui:1710 ../settings.ui:2222
+#: ../prefs.ui:906 ../prefs.ui:1710 ../prefs.ui:2222
 msgid "Notification sound"
 msgstr "Dźwięk powiadomienia"
 
-#: ../settings.ui:968 ../settings.ui:1772 ../settings.ui:2284
+#: ../prefs.ui:968 ../prefs.ui:1772 ../prefs.ui:2284
 msgid "Notification style"
 msgstr "Styl powiadomienia"
 
-#: ../settings.ui:982 ../settings.ui:1786 ../settings.ui:2298
+#: ../prefs.ui:982 ../prefs.ui:1786 ../prefs.ui:2298
 msgid "Standard"
 msgstr "Standardowy"
 
-#: ../settings.ui:983 ../settings.ui:1787 ../settings.ui:2299
+#: ../prefs.ui:983 ../prefs.ui:1787 ../prefs.ui:2299
 msgid "Fullscreen"
 msgstr "Na pełnym ekranie"
 
-#: ../settings.ui:1015 ../settings.ui:1364 ../settings.ui:1921
-#: ../settings.ui:2331 ../settings.ui:2794
+#: ../prefs.ui:1015 ../prefs.ui:1364 ../prefs.ui:1921 ../prefs.ui:2331
+#: ../prefs.ui:2794
 msgid "Keyboard shortcuts"
 msgstr "Skróty klawiaturowe"
 
-#: ../settings.ui:1056 ../settings.ui:1405 ../settings.ui:1962
-#: ../settings.ui:2372 ../settings.ui:2837
+#: ../prefs.ui:1056 ../prefs.ui:1405 ../prefs.ui:1962 ../prefs.ui:2372
+#: ../prefs.ui:2837
 msgid "Open this section"
 msgstr "Otwórz sekcję"
 
-#: ../settings.ui:1068 ../settings.ui:1118 ../settings.ui:1417
-#: ../settings.ui:1467 ../settings.ui:1974 ../settings.ui:2024
-#: ../settings.ui:2384 ../settings.ui:2849 ../settings.ui:2899
-#: ../settings.ui:2937
+#: ../prefs.ui:1068 ../prefs.ui:1118 ../prefs.ui:1417 ../prefs.ui:1467
+#: ../prefs.ui:1974 ../prefs.ui:2024 ../prefs.ui:2384 ../prefs.ui:2849
+#: ../prefs.ui:2899 ../prefs.ui:2937
 msgid ""
 "Examples:\n"
 "<super><ctrl><alt><shift>t\n"
@@ -480,54 +474,54 @@ msgstr ""
 "<shift>super\n"
 "F3"
 
-#: ../settings.ui:1106 ../settings.ui:1455 ../settings.ui:2012
+#: ../prefs.ui:1106 ../prefs.ui:1455 ../prefs.ui:2012
 msgid "Open in fullscreen"
 msgstr "Otwórz na pełnym ekranie"
 
-#: ../settings.ui:1266
+#: ../prefs.ui:1266
 msgid "Format"
 msgstr ""
 
-#: ../settings.ui:1280
+#: ../prefs.ui:1280
 msgid "hours:min"
 msgstr "godz.:min."
 
-#: ../settings.ui:1281
+#: ../prefs.ui:1281
 msgid "hours:min:sec"
 msgstr "godz.:min.:sek."
 
-#: ../settings.ui:1282
+#: ../prefs.ui:1282
 msgid "hours:min:sec:milisec"
 msgstr "godz.:min.:sek.:milisek."
 
-#: ../settings.ui:1821
+#: ../prefs.ui:1821
 msgid "Stop time tracking when pomo is paused"
 msgstr "Zatrzymaj śledzenie, gdy pomodoro jest wstrzymane"
 
-#: ../settings.ui:1866
+#: ../prefs.ui:1866
 msgid "Execute custom script when pomo pauses/starts"
 msgstr "Wykonaj własny skrypt, gdy pomodoro jest zatrzymywane/uruchamiane"
 
-#: ../settings.ui:2172
+#: ../prefs.ui:2172
 msgid "Snooze duration (sec)"
 msgstr "Czas drzemki (sek.)"
 
-#: ../settings.ui:2600
+#: ../prefs.ui:2600
 msgid "Task width (px)"
 msgstr "Szerokość zadania (px)"
 
-#: ../settings.ui:2630
+#: ../prefs.ui:2630
 msgid "Todo files"
 msgstr "Pliki zadań"
 
-#: ../settings.ui:2887
+#: ../prefs.ui:2887
 msgid "Open this section to add task"
 msgstr "Otwórz sekcję, aby dodać zadanie"
 
-#: ../settings.ui:2955
+#: ../prefs.ui:2955
 msgid "Open this section to search tasks"
 msgstr "Otwórz sekcję, aby wyszukać zadanie"
 
-#: ../settings.ui:2993
+#: ../prefs.ui:2993
 msgid "Todo / Time Tracker"
 msgstr "Zadania / Śledzenie"
