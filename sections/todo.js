@@ -109,19 +109,19 @@ const View = {
 //
 
 
-const REG_CONTEXT     = /^@.+$/;
-const REG_PROJ        = /^\+.+$/;
-const REG_PRIO        = /^\([A-Z]\)$/;
-const REG_EXT         = /^[^:]+:[^:]+$/;
-const REG_FILE_PATH   = /^~?\//;
-const REG_PRIO_EXT    = /^(?:pri|PRI):[A-Z]$/;
-const REG_HIDE_EXT    = /^h:1$/;
-const REG_TASK_ID_EXT = /^tracker_id:[^:]+$/;
-const REG_REC_EXT_1   = /^rec:[1-9][0-9]*[dw]$/;
-const REG_REC_EXT_2   = /^rec:x-[1-9][0-9]*[dw]$/;
-const REG_REC_EXT_3   = /^rec:[1-9][0-9]*d-[1-9][0-9]*m$/;
-const REG_DUE_EXT     = /^(?:due|DUE):\d{4}-\d{2}-\d{2}$/;
-const REG_URL         = /^(?:https?:\/\/)?(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,}))\.?)(?::\d{2,5})?(?:[/?#]\S*)?$/;
+const REG_CONTEXT        = /^@.+$/;
+const REG_PROJ           = /^\+.+$/;
+const REG_PRIO           = /^\([A-Z]\)$/;
+const REG_EXT            = /^[^:]+:[^:]+$/;
+const REG_FILE_PATH      = /^~?\//;
+const REG_PRIO_EXT       = /^(?:pri|PRI):[A-Z]$/;
+const REG_HIDE_EXT       = /^h:1$/;
+const REG_TRACKER_ID_EXT = /^tracker_id:[^:]+$/;
+const REG_REC_EXT_1      = /^rec:[1-9][0-9]*[dw]$/;
+const REG_REC_EXT_2      = /^rec:x-[1-9][0-9]*[dw]$/;
+const REG_REC_EXT_3      = /^rec:[1-9][0-9]*d-[1-9][0-9]*m$/;
+const REG_DUE_EXT        = /^(?:due|DUE):\d{4}-\d{2}-\d{2}$/;
+const REG_URL            = /^(?:https?:\/\/)?(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,}))\.?)(?::\d{2,5})?(?:[/?#]\S*)?$/;
 
 
 // return date string in yyyy-mm-dd format adhering to locale
@@ -2350,7 +2350,7 @@ const TaskItem = new Lang.Class({
                     this.rec_type = 3;
 
                 }
-                else if (REG_TASK_ID_EXT.test(word)) {
+                else if (REG_TRACKER_ID_EXT.test(word) && !this.hidden) {
                     this.tracker_id = word.slice(11);
                 }
                 else if (REG_HIDE_EXT.test(word)) {
@@ -2363,10 +2363,12 @@ const TaskItem = new Lang.Class({
                     this.date_labels.hide();
                     if (this.edit_icon_bin) this.edit_icon_bin.hide();
 
-                    this.priority = '(~)';
-                    this.hidden = true;
+                    this.tracker_id = '';
+                    this.priority   = '(~)';
+                    this.hidden     = true;
                     this.completion_checkbox.checked = false;
                     this.actor.add_style_class_name('hidden-task');
+
                     let icon_incognito_bin = new St.Button({ can_focus: true });
                     this.header.insert_child_at_index(icon_incognito_bin, 0);
                     let icon_incognito = new St.Icon();
