@@ -728,7 +728,9 @@ const Todo = new Lang.Class({
         let [, lines] = this.todo_txt_file.load_contents(null);
         lines = String(lines).split(/\n|\r/);
 
+        let start = Date.now();
         this.create_tasks(lines, () => {
+            Main.notify("" + (Date.now() - start));
             this._check_recurrences();
             this.on_tasks_changed();
             this.show_view__default();
@@ -2317,41 +2319,9 @@ const TaskItem = new Lang.Class({
                 words.splice(i, 1);
                 i--; len--;
 
-                if (REG_DUE_EXT.test(word) && !this.rec_str && !this.hidden) {
-                    this.due_date = word.slice(4);
-                    this.due_date_label.text   += _('due:') + word.slice(4);
-                    this.due_date_label.visible = true;
-                    this.update_due_date();
-                }
-                else if (REG_REC_EXT_1.test(word) && !this.hidden &&
-                         this.creation_date !== '0000-00-00') {
-
-                    this.due_date_label.visible = false;
-                    this.due_date_label.text    = '';
-                    this.rec_str  = word;
-                    this.rec_type = 1;
-                }
-                else if (REG_REC_EXT_2.test(word) && !this.hidden &&
-                         (this.priority !== '(x)' ||
-                          this.completion_date !== '0000-00-00')) {
-
-                    this.due_date_label.visible = false;
-                    this.due_date_label.text    = '';
-                    this.rec_str  = word;
-                    this.rec_type = 2;
-                }
-                else if (REG_REC_EXT_3.test(word) && !this.hidden &&
-                         (/^[1-9]+n-1m$/.test(word) ||
-                          this.creation_date !== '0000-00-00')) {
-
-                    this.due_date_label.visible = false;
-                    this.due_date_label.text    = '';
-                    this.rec_str  = word;
-                    this.rec_type = 3;
-
-                }
-                else if (REG_TRACKER_ID_EXT.test(word) && !this.hidden) {
-                    this.tracker_id = word.slice(11);
+                if (this.hidden) {
+                    // Ignore all other extensions if are already hidden.
+                    continue;
                 }
                 else if (REG_HIDE_EXT.test(word)) {
                     this.completion_checkbox.hide();
@@ -2376,6 +2346,42 @@ const TaskItem = new Lang.Class({
                     ICON_FROM_URI.icon_from_uri(icon_incognito,
                                                 CustomIcon.HIDDEN,
                                                 this.delegate.ext_dir);
+                }
+                else if (REG_DUE_EXT.test(word) && !this.rec_str) {
+                    this.due_date = word.slice(4);
+                    this.due_date_label.text   += _('due:') + word.slice(4);
+                    this.due_date_label.visible = true;
+                    this.update_due_date();
+                }
+                else if (REG_REC_EXT_1.test(word) &&
+                         this.creation_date !== '0000-00-00') {
+
+                    this.due_date_label.visible = false;
+                    this.due_date_label.text    = '';
+                    this.rec_str  = word;
+                    this.rec_type = 1;
+                }
+                else if (REG_REC_EXT_2.test(word) &&
+                         (this.priority !== '(x)' ||
+                          this.completion_date !== '0000-00-00')) {
+
+                    this.due_date_label.visible = false;
+                    this.due_date_label.text    = '';
+                    this.rec_str  = word;
+                    this.rec_type = 2;
+                }
+                else if (REG_REC_EXT_3.test(word) &&
+                         (/^[1-9]+n-1m$/.test(word) ||
+                          this.creation_date !== '0000-00-00')) {
+
+                    this.due_date_label.visible = false;
+                    this.due_date_label.text    = '';
+                    this.rec_str  = word;
+                    this.rec_type = 3;
+
+                }
+                else if (REG_TRACKER_ID_EXT.test(word)) {
+                    this.tracker_id = word.slice(11);
                 }
             }
         }
