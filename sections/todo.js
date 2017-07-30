@@ -34,7 +34,8 @@ const ICON_FROM_URI  = ME.imports.lib.icon_from_uri;
 const SCROLL_TO_ITEM = ME.imports.lib.scroll_to_item;
 
 
-const CACHE_FILE = GLib.get_home_dir() + '/.cache/timepp_gnome_shell_extension/timepp_todo.json';
+const CACHE_FILE = GLib.get_home_dir() +
+                   '/.cache/timepp_gnome_shell_extension/timepp_todo.json';
 
 
 const TIME_TRACKER_DBUS_IFACE =
@@ -1247,7 +1248,6 @@ const Todo = new Lang.Class({
 
     // This func must be called soon after 1 or more tasks have been added, or
     // removed from this.tasks array or when they have been edited.
-    // This func will not write update the todo.txt file
     //
     // This func should not be called many times in a row. The idea is to add,
     // delete, or edit all tasks first and then call this func once.
@@ -1255,7 +1255,7 @@ const Todo = new Lang.Class({
     // It will handle various things like updating the stats obj, showing or
     // hiding various icons, sorting tasks, etc...
     //
-    // This func will not write tasks to todo.txt file.
+    // This func will not write tasks to the todo.txt file.
     on_tasks_changed: function () {
         //
         // Update stats obj
@@ -1911,11 +1911,11 @@ const TaskEditor = new Lang.Class({
     _get_current_word: function () {
         let text = this.entry.entry.get_text();
 
-        if (! text) return;
+        if (! text) return null;
 
         let len  = text.length;
 
-        if (len === 0) return;
+        if (len === 0) return null;
 
         let pos = this.entry.entry.clutter_text.cursor_position;
 
@@ -2165,6 +2165,7 @@ const TaskItem = new Lang.Class({
         });
         this.completion_checkbox.connect('clicked', () => {
             this.toggle_task();
+            this.delegate.add_task_button.grab_key_focus();
             this.delegate.on_tasks_changed();
             this.delegate.write_tasks_to_file();
         });
