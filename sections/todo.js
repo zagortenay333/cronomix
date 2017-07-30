@@ -251,10 +251,11 @@ const Todo = new Lang.Class({
         // @key : string  (a context/project/priority)
         // @val : natural (number of tasks that have that @key)
         this.stats = {
-            recurrences : 0,
-            priorities  : new Map(),
-            contexts    : new Map(),
-            projects    : new Map(),
+            recurring_complete   : 0,
+            recurring_incomplete : 0,
+            priorities           : new Map(),
+            contexts             : new Map(),
+            projects             : new Map(),
         };
 
 
@@ -1261,7 +1262,8 @@ const Todo = new Lang.Class({
         // Update stats obj
         //
         {
-            this.stats.recurrences = 0;
+            this.stats.recurring_complete   = 0;
+            this.stats.recurring_incomplete = 0;
             this.stats.priorities.clear();
             this.stats.projects.clear();
             this.stats.contexts.clear();
@@ -1282,9 +1284,15 @@ const Todo = new Lang.Class({
                 }
 
                 if (it.rec_str) {
-                    this.stats.recurrences++;
-                    // Recurring tasks are not counted among complete tasks.
-                    if (it.priority === '(x)') continue;
+                    if (it.priority === '(x)') {
+                        this.stats.recurring_complete++;
+                        // We don't count completed recurring tasks among
+                        // complete tasks.
+                        continue;
+                    }
+                    else {
+                        this.stats.recurring_incomplete++;
+                    }
                 }
 
                 n = this.stats.priorities.get(it.priority);
@@ -1299,7 +1307,8 @@ const Todo = new Lang.Class({
         {
             let n_complete   = this.stats.priorities.get('(x)') || 0;
             let n_hidden     = this.stats.priorities.get('(~)') || 0;
-            let n_incomplete = this.tasks.length - n_complete - n_hidden;
+            let n_incomplete = this.tasks.length - n_complete - n_hidden -
+                               this.stats.recurring_complete;
 
             this.panel_item.set_label('' + n_incomplete);
 
@@ -2974,10 +2983,12 @@ const TaskFiltersWindow = new Lang.Class({
         let recurring_count_label = new St.Label({ y_align: Clutter.ActorAlign.CENTER, style_class: 'popup-inactive-menu-item', pseudo_class: 'insensitive' });
         this.show_recurring_tasks_item.add_child(recurring_count_label);
 
+        let n_recurring = this.delegate.stats.recurring_complete +
+                          this.delegate.stats.recurring_incomplete;
+
         recurring_count_label.text =
-            ngettext('%d recurring task', '%d recurring tasks',
-                this.delegate.stats.recurrences)
-            .format(this.delegate.stats.recurrences);
+            ngettext('%d recurring task', '%d recurring tasks', n_recurring)
+            .format(n_recurring);
 
         this.show_recurring_tasks_toggle_btn = new St.Button({ can_focus: true });
         this.show_recurring_tasks_item.add_actor(this.show_recurring_tasks_toggle_btn);
