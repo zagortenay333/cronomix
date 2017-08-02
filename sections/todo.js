@@ -829,7 +829,9 @@ const Todo = new Lang.Class({
             Main.notify(ngettext('%d task has recurred',
                                  '%d tasks have recurred',
                                   n).format(n));
+
             this.write_tasks_to_file();
+            this.on_tasks_changed();
         }
     },
 
@@ -1570,7 +1572,7 @@ const Todo = new Lang.Class({
             this.filter_button.remove_style_class_name('active');
     },
 
-    // This func will sort this.tasks array as well as call add_task_to_menu to
+    // This func will sort this.tasks array as well as call add_tasks_to_menu to
     // rebuild this.tasks_viewport.
     sort_tasks: function () {
         let key, compare_func;
