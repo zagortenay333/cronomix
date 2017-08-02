@@ -2194,7 +2194,7 @@ const TaskItem = new Lang.Class({
         // For sorting purposes, we set the dates to this when they don't exist.
         this.creation_date               = '0000-00-00';
         this.completion_date             = '0000-00-00';
-        this.due_date                    = '0000-00-00';
+        this.due_date                    = '9999-99-99';
         this.prio_label.visible          = false;
         this.prio_label.text             = '';
         this.due_date_label.visible      = false;
@@ -2584,7 +2584,7 @@ const TaskItem = new Lang.Class({
     },
 
     update_due_date: function () {
-        if (this.due_date === '0000-00-00') return;
+        if (this.due_date === '9999-99-99') return;
 
         let diff = Math.round(
             (Date.parse(this.due_date + 'T00:00:00') -
@@ -2600,8 +2600,7 @@ const TaskItem = new Lang.Class({
         else
             abs = ngettext('in %d day', 'in %d days', abs).format(abs);
 
-        this.due_date_label.text =
-            _('due-date:') + this.due_date + ' (' + abs + ')';
+        this.due_date_label.text = _('due:') + this.due_date + ' (' + abs + ')';
     },
 
     toggle_task: function () {
