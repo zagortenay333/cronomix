@@ -106,6 +106,7 @@ const View = {
 const REG_CONTEXT        = /^@.+$/;
 const REG_PROJ           = /^\+.+$/;
 const REG_PRIO           = /^\([A-Z]\)$/;
+const REG_DATE           = /^\d{4}-\d{2}-\d{2}$/;
 const REG_EXT            = /^[^:]+:[^:]+$/;
 const REG_FILE_PATH      = /^~?\//;
 const REG_PRIO_EXT       = /^(?:pri|PRI):[A-Z]$/;
@@ -2316,13 +2317,13 @@ const TaskItem = new Lang.Class({
             this.completion_checkbox.checked = true;
             this.actor.add_style_class_name('completed');
 
-            if (words[1] && Date.parse(words[1])) {
+            if (len >= 1 & REG_DATE.test(words[1]) && Date.parse(words[1])) {
                 this.completion_date      = words[1];
                 // TRANSLATORS: 'completed:' is followed by a date
                 this.date_labels.text    += _('completed:') + words[1] + '   ';
                 this.date_labels.visible  = true;
 
-                if (words[2] && Date.parse(words[2])) {
+                if (len >= 2 && REG_DATE.test(words[2]) && Date.parse(words[2])) {
                     this.creation_date        = words[2];
                     // TRANSLATORS: 'created:' is followed by a date
                     this.date_labels.text    += _('created:') + words[2] + '   ';
@@ -2339,7 +2340,7 @@ const TaskItem = new Lang.Class({
             this.prio_label.text    = words[0];
             this.priority           = words[0];
 
-            if (words[1] && Date.parse(words[1])) {
+            if (len >= 1 && REG_DATE.test(words[1]) && Date.parse(words[1])) {
                 this.creation_date        = words[1];
                 this.date_labels.text    += _('created:') + words[1] + '   ';
                 this.date_labels.visible  = true;
@@ -2347,7 +2348,7 @@ const TaskItem = new Lang.Class({
             }
             else desc_pos = 1;
         }
-        else if (Date.parse(words[0])) {
+        else if (REG_DATE.test(words[0]) && Date.parse(words[0])) {
             this.creation_date       = words[0];
             this.date_labels.text   += _('created:') + words[0] + '   ';
             this.date_labels.visible = true;
@@ -2489,8 +2490,8 @@ const TaskItem = new Lang.Class({
             else if (this.priority !== '(_)') idx = 1;
             else                              idx = 0;
 
-            if (Date.parse(words[idx])) words[idx] = date_yyyymmdd();
-            else                        words.splice(idx, 0, date_yyyymmdd());
+            if (REG_DATE.test(words[idx])) words[idx] = date_yyyymmdd();
+            else                           words.splice(idx, 0, date_yyyymmdd());
 
             this.task_str = words.join(' ');
 
