@@ -257,17 +257,13 @@ const Settings = new Lang.Class({
 
     _reset_add_dialog: function () {
         this.todo_name_entry.set_text('');
+        this.todo_file_chooser.unselect_all();
+        this.done_file_chooser.unselect_all();
 
-        let uri;
-
-        uri = this.todo_file_chooser.get_uri();
-        if (uri) this.todo_file_chooser.unselect_uri(uri);
-
-        uri = this.done_file_chooser.get_uri();
-        if (uri) this.done_file_chooser.unselect_uri(uri);
-
-        uri = this.csv_dir_chooser.get_uri();
-        if (uri) this.csv_dir_chooser.unselect_uri(uri);
+        // @HACK
+        // There appears to be no other way to reset a gtk_file_chooser that is
+        // used for folder selecting.
+        this.csv_dir_chooser.set_uri('');
     },
 
     // Bind the gtk window to the schema settings

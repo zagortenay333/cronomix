@@ -248,21 +248,31 @@ const Alarms = new Lang.Class({
     },
 
     enable_section: function () {
+        // init cache file
         try {
-            if (! this.cache_file) {
-                this.cache_file = Gio.file_new_for_path(CACHE_FILE);
+            this.cache_file = Gio.file_new_for_path(CACHE_FILE);
 
-                if ( this.cache_file.query_exists(null) ) {
-                    let [a, contents, b] = this.cache_file.load_contents(null);
-                    this.cache = JSON.parse(contents);
-                }
-                else {
-                    this.cache = {
-                        alarms: [],
-                    };
-                }
+            let cache_format_version =
+                ME.metadata['cache-file-format-version'].alarms;
+
+            if (this.cache_file.query_exists(null)) {
+                let [, contents] = this.cache_file.load_contents(null);
+                this.cache = JSON.parse(contents);
             }
-        } catch (e) { logError(e); }
+
+            if (!this.cache || !this.cache.format_version ||
+                this.cache.format_version !== cache_format_version) {
+
+                this.cache = {
+                    format_version : cache_format_version,
+                    alarms         : [],
+                };
+            }
+        }
+        catch (e) {
+            logError(e);
+            return;
+        }
 
         for (var i = 0, len = this.cache.alarms.length; i < len; i++)
             this._add_alarm(i);

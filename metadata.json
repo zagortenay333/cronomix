@@ -1,10 +1,17 @@
 {
-    "shell-version": ["3.24"],
-    "name": "Time ++",
-    "uuid": "timepp@zagortenay333",
-    "description": "A todo.txt manager, time tracker, timer, stopwatch, pomodoro, and alarm clock",
-    "original-author": "https://github.com/zagortenay333",
-    "url": "https://github.com/zagortenay333/timepp__gnome",
-    "version": -1,
-    "gettext-domain": "timepp"
+    "name"            : "Time ++",
+    "uuid"            : "timepp@zagortenay333",
+    "description"     : "A todo.txt manager, time tracker, timer, stopwatch, pomodoro, and alarm clock",
+    "original-author" : "https://github.com/zagortenay333",
+    "url"             : "https://github.com/zagortenay333/timepp__gnome",
+    "gettext-domain"  : "timepp",
+    "version"         : -1,
+    "shell-version"   : ["3.24"],
+    "cache-file-format-version" : {
+        "timer"     : 1,
+        "stopwatch" : 1,
+        "pomodoro"  : 1,
+        "alarms"    : 1,
+        "todo"      : 1
+    }
 }

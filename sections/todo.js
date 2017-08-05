@@ -6,6 +6,7 @@ const GLib           = imports.gi.GLib;
 const Shell          = imports.gi.Shell;
 const Pango          = imports.gi.Pango;
 const Clutter        = imports.gi.Clutter;
+const DND            = imports.ui.dnd;
 const Main           = imports.ui.main;
 const CheckBox       = imports.ui.checkBox;
 const PopupMenu      = imports.ui.popupMenu;
@@ -78,8 +79,11 @@ const SortOrder = {
 
 
 const SortType = {
+    CONTEXT         : 'CONTEXT',
+    PROJECT         : 'PROJECT',
     PRIORITY        : 'PRIORITY',
     DUE_DATE        : 'DUE_DATE',
+    COMPLETED       : 'COMPLETED',
     CREATION_DATE   : 'CREATION_DATE',
     COMPLETION_DATE : 'COMPLETION_DATE',
 };
@@ -97,17 +101,6 @@ const View = {
     NO_TODO_FILE  : 'NO_TODO_FILE',
     SELECT_FILTER : 'SELECT_FILTER',
 };
-
-
-//
-// Each task has a priority assigned to it at any time.
-// The values of a priority are (in order of precedence):
-//
-//   '(~)'   if the task is hidden
-//   '(x)'   if the task is completed
-//   '(A-Z)' if the task has an actual priority
-//   '(_)'   if the task has no priority
-//
 
 
 const REG_CONTEXT        = /^@.+$/;
@@ -240,23 +233,15 @@ const Todo = new Lang.Class({
         this.sigm            = new SIG_MANAGER.SignalManager();
 
 
-        // These are initiated with the enabled_section func.
+        // These are initiated with the enable_section func.
         this.time_tracker = null;
         this.view_manager = null;
 
 
         // Track how many tasks have a particular proj/context/prio, a
         // recurrence, etc...
-        // The maps have the structure:
-        // @key : string  (a context/project/priority)
-        // @val : natural (number of tasks that have that @key)
-        this.stats = {
-            recurring_complete   : 0,
-            recurring_incomplete : 0,
-            priorities           : new Map(),
-            contexts             : new Map(),
-            projects             : new Map(),
-        };
+        this.stats = null;
+        this._reset_stats_obj();
 
 
         // A GFile to the todo.txt file, GMonitor.
@@ -342,7 +327,7 @@ const Todo = new Lang.Class({
         // @SPEED
         // Tweak this function to completely disable animations when closing
         // the popup menu in order to avoid lag when there are lots of items.
-        this.ext.menu.close = function (_) {
+        this.ext.menu.close = function () {
             if (this._boxPointer.actor.visible) {
                 this._boxPointer.hide(false, Lang.bind(this, function() {
                     this.emit('menu-closed');
@@ -460,6 +445,11 @@ const Todo = new Lang.Class({
         this.file_switcher_button.add_actor(this.file_switcher_icon);
 
         ICON_FROM_URI.icon_from_uri(this.file_switcher_icon, CustomIcon.FILE_SWITCH, this.ext_dir);
+
+        if (this.settings.get_value('todo-files').deep_unpack().length > 1)
+            this.file_switcher_button.show();
+        else
+            this.file_switcher_button.hide();
 
 
         // search icon
@@ -605,32 +595,48 @@ const Todo = new Lang.Class({
     },
 
     enable_section: function () {
+        // init cache file
         try {
             this.cache_file = Gio.file_new_for_path(CACHE_FILE);
+
+            let cache_format_version =
+                ME.metadata['cache-file-format-version'].todo;
 
             if (this.cache_file.query_exists(null)) {
                 let [, contents] = this.cache_file.load_contents(null);
                 this.cache = JSON.parse(contents);
             }
-            else
+
+            if (!this.cache || !this.cache.format_version ||
+                this.cache.format_version !== cache_format_version) {
+
                 this.cache = {
-                    sort: {
-                        sort_order : SortOrder.DESCENDING,
-                        sort_type  : SortType.PRIORITY,
-                    },
+                    format_version: cache_format_version,
+
+                    sort: [
+                        [SortType.COMPLETED       , SortOrder.ASCENDING],
+                        [SortType.PRIORITY        , SortOrder.ASCENDING],
+                        [SortType.DUE_DATE        , SortOrder.ASCENDING],
+                        [SortType.CONTEXT         , SortOrder.ASCENDING],
+                        [SortType.PROJECT         , SortOrder.ASCENDING],
+                        [SortType.CREATION_DATE   , SortOrder.ASCENDING],
+                        [SortType.COMPLETION_DATE , SortOrder.ASCENDING],
+                    ],
+
                     filters: {
-                        show_recurring : false,
-                        show_hidden    : false,
                         invert_filters : false,
-                        custom_filters : [],
-                        active_filters : {
-                            priorities: [],
-                            contexts  : [],
-                            projects  : [],
-                            custom    : [],
-                        },
+                        recurring      : false,
+                        hidden         : false,
+                        completed      : false,
+                        no_priority    : false,
+                        priorities     : [],
+                        contexts       : [],
+                        projects       : [],
+                        custom         : [],
+                        custom_active  : [],
                     },
                 };
+            }
         }
         catch (e) {
             logError(e);
@@ -859,6 +865,24 @@ const Todo = new Lang.Class({
         }
     },
 
+    // The form of the stats object is only defined here.
+    //
+    // The maps have the structure:
+    // @key : string  (a context/project/priority)
+    // @val : natural (number of tasks that have that @key)
+    _reset_stats_obj: function () {
+        this.stats = {
+            recurring_completed   : 0,
+            recurring_incompleted : 0,
+            hidden                : 0,
+            completed             : 0,
+            no_priority           : 0,
+            priorities            : new Map(),
+            contexts              : new Map(),
+            projects              : new Map(),
+        };
+    },
+
     _toggle_panel_item_mode: function () {
         if (this.settings.get_enum('todo-panel-mode') === 0)
             this.panel_item.set_mode('icon');
@@ -1006,32 +1030,32 @@ const Todo = new Lang.Class({
         });
 
         box.connect('delete-all', () => {
-            let incomplete_tasks = [];
+            let incompleted_tasks = [];
 
             for (let i = 0, len = this.tasks.length; i < len; i++) {
-                if (this.tasks[i].priority !== '(x)' || this.tasks[i].rec_str)
-                    incomplete_tasks.push(this.tasks[i]);
+                if (!this.tasks[i].completed || this.tasks[i].rec_str)
+                    incompleted_tasks.push(this.tasks[i]);
             }
 
-            this.tasks = incomplete_tasks;
+            this.tasks = incompleted_tasks;
             this.on_tasks_changed();
             this.write_tasks_to_file();
             this.show_view__default();
         });
 
         box.connect('archive-all', () => {
-            let complete_tasks   = [];
-            let incomplete_tasks = [];
+            let completed_tasks   = [];
+            let incompleted_tasks = [];
 
             for (let i = 0, len = this.tasks.length; i < len; i++) {
-                if (this.tasks[i].priority !== '(x)' || this.tasks[i].rec_str)
-                    incomplete_tasks.push(this.tasks[i]);
+                if (!this.tasks[i].completed || this.tasks[i].rec_str)
+                    incompleted_tasks.push(this.tasks[i]);
                 else
-                    complete_tasks.push(this.tasks[i]);
+                    completed_tasks.push(this.tasks[i]);
             }
 
-            this.archive_tasks(complete_tasks);
-            this.tasks = incomplete_tasks;
+            this.archive_tasks(completed_tasks);
+            this.tasks = incompleted_tasks;
             this.on_tasks_changed();
             this.write_tasks_to_file();
             this.show_view__default();
@@ -1150,8 +1174,8 @@ const Todo = new Lang.Class({
             close_callback : () => { filters_window.actor.destroy(); },
         });
 
-        filters_window.connect('update-filters', (_, new_filters) => {
-            this.cache.filters = new_filters;
+        filters_window.connect('filters-updated', (_, filters) => {
+            this.cache.filters = filters;
             this.store_cache();
             this._update_filter_icon();
             this.add_tasks_to_menu(true);
@@ -1264,11 +1288,7 @@ const Todo = new Lang.Class({
         // Update stats obj
         //
         {
-            this.stats.recurring_complete   = 0;
-            this.stats.recurring_incomplete = 0;
-            this.stats.priorities.clear();
-            this.stats.projects.clear();
-            this.stats.contexts.clear();
+            this._reset_stats_obj();
 
             let i, j, n, it, len;
 
@@ -1285,20 +1305,29 @@ const Todo = new Lang.Class({
                     this.stats.contexts.set(it.contexts[j], n ? ++n : 1);
                 }
 
-                if (it.rec_str) {
-                    if (it.priority === '(x)') {
-                        this.stats.recurring_complete++;
-                        // We don't count completed recurring tasks among
-                        // complete tasks.
-                        continue;
-                    }
-                    else {
-                        this.stats.recurring_incomplete++;
-                    }
+                if (it.hidden) {
+                    this.stats.hidden++;
+                }
+                else if (it.completed) {
+                    this.stats.completed++;
+                }
+                else if (it.priority === '(_)') {
+                    this.stats.no_priority++;
+                }
+                else {
+                    n = this.stats.priorities.get(it.priority);
+                    this.stats.priorities.set(it.priority, n ? ++n : 1);
                 }
 
-                n = this.stats.priorities.get(it.priority);
-                this.stats.priorities.set(it.priority, n ? ++n : 1);
+                if (it.rec_str) {
+                    if (it.completed) {
+                        this.stats.recurring_completed++;
+                        this.stats.completed--;
+                    }
+                    else {
+                        this.stats.recurring_incompleted++;
+                    }
+                }
             }
         }
 
@@ -1307,14 +1336,14 @@ const Todo = new Lang.Class({
         // update panel label
         //
         {
-            let n_complete   = this.stats.priorities.get('(x)') || 0;
-            let n_hidden     = this.stats.priorities.get('(~)') || 0;
-            let n_incomplete = this.tasks.length - n_complete - n_hidden -
-                               this.stats.recurring_complete;
+            let n_incompleted = this.tasks.length -
+                               this.stats.completed -
+                               this.stats.hidden -
+                               this.stats.recurring_completed;
 
-            this.panel_item.set_label('' + n_incomplete);
+            this.panel_item.set_label('' + n_incompleted);
 
-            if (n_incomplete)
+            if (n_incompleted)
                 this.panel_item.actor.remove_style_class_name('done');
             else
                 this.panel_item.actor.add_style_class_name('done');
@@ -1322,12 +1351,13 @@ const Todo = new Lang.Class({
 
 
         //
-        // Check if there are any redundant active filters and remove them.
+        // Since contexts/projects/priorities are filters, it can happen that we
+        // have redundant filters in case tasks were deleted. Clean 'em up.
         //
         {
             let i, arr, len;
 
-            arr = this.cache.filters.active_filters.priorities;
+            arr = this.cache.filters.priorities;
             for (i = 0, len = arr.length; i < len; i++) {
                 if (! this.stats.priorities.has(arr[i])) {
                     arr.splice(i, 1);
@@ -1335,7 +1365,7 @@ const Todo = new Lang.Class({
                 }
             }
 
-            arr = this.cache.filters.active_filters.contexts;
+            arr = this.cache.filters.contexts;
             for (i = 0, len = arr.length; i < len; i++) {
                 if (! this.stats.contexts.has(arr[i])) {
                     arr.splice(i, 1);
@@ -1343,7 +1373,7 @@ const Todo = new Lang.Class({
                 }
             }
 
-            arr = this.cache.filters.active_filters.projects;
+            arr = this.cache.filters.projects;
             for (i = 0, len = arr.length; i < len; i++) {
                 if (! this.stats.projects.has(arr[i])) {
                     arr.splice(i, 1);
@@ -1358,7 +1388,7 @@ const Todo = new Lang.Class({
         //
         // rest
         //
-        this.clear_button.visible = this.stats.priorities.has('(x)');
+        this.clear_button.visible = this.stats.completed > 0;
         this.sort_tasks();
     },
 
@@ -1452,7 +1482,7 @@ const Todo = new Lang.Class({
         for (let i = 0, len = tasks.length; i < len; i++) {
             task = tasks[i];
 
-            if (! task.completion_checkbox.checked) {
+            if (!task.completed) {
                 if (task.priority !== '(_)') {
                     task_strings.push('x ' +
                                       date_yyyymmdd() +
@@ -1460,8 +1490,8 @@ const Todo = new Lang.Class({
                                       ' pri:' + task.priority[1]);
                 }
                 else {
-                    task_strings.push('x ' +
-                                      date_yyyymmdd() + ' ' + task.task_str);
+                    task_strings.push(
+                        'x ' + date_yyyymmdd() + ' ' + task.task_str);
                 }
             }
             else {
@@ -1493,33 +1523,42 @@ const Todo = new Lang.Class({
     // If invert_filters is false, return true if at least one filter is matched.
     // If invert_filters is true, return false if at least one filter is matched.
     _filter_test: function (task) {
-        if (this.cache.filters.show_hidden)    return task.hidden;
-        if (task.hidden)                       return false;
-        if (this.cache.filters.show_recurring) return Boolean(task.rec_str);
-        if (task.rec_str && task.priority === '(x)') return false;
-        if (! this.has_active_filters())       return true;
+        if (this.cache.filters.hidden)      return task.hidden;
+        if (task.hidden)                    return false;
+        if (this.cache.filters.recurring)   return Boolean(task.rec_str);
+        if (task.rec_str && task.completed) return false;
+        if (! this.has_active_filters())    return true;
+
+        if (task.completed) {
+            if (this.cache.filters.completed)
+                return !this.cache.filters.invert_filters;
+        }
+        else if (task.priority === '(_)') {
+            if (this.cache.filters.no_priority)
+                return !this.cache.filters.invert_filters;
+        }
 
         let i, arr, len;
 
-        arr = this.cache.filters.active_filters.priorities;
+        arr = this.cache.filters.priorities;
         for (i = 0, len = arr.length; i < len; i++) {
             if (arr[i] === task.priority)
                 return !this.cache.filters.invert_filters;
         }
 
-        arr = this.cache.filters.active_filters.contexts;
+        arr = this.cache.filters.contexts;
         for (i = 0, len = arr.length; i < len; i++) {
             if (task.contexts.indexOf(arr[i]) !== -1)
                 return !this.cache.filters.invert_filters;
         }
 
-        arr = this.cache.filters.active_filters.projects;
+        arr = this.cache.filters.projects;
         for (i = 0, len = arr.length; i < len; i++) {
             if (task.projects.indexOf(arr[i]) !== -1)
                 return !this.cache.filters.invert_filters;
         }
 
-        arr = this.cache.filters.active_filters.custom;
+        arr = this.cache.filters.custom_active;
         for (i = 0, len = arr.length; i < len; i++) {
             if (FUZZ.fuzzy_search_v1(arr[i], task.task_str) !== null)
                 return !this.cache.filters.invert_filters;
@@ -1530,12 +1569,14 @@ const Todo = new Lang.Class({
 
     // Returns true if there are any active filters, else false.
     has_active_filters: function () {
-        if (this.cache.filters.active_filters.priorities.length ||
-            this.cache.filters.active_filters.contexts.length   ||
-            this.cache.filters.active_filters.projects.length   ||
-            this.cache.filters.active_filters.custom.length     ||
-            this.cache.filters.show_hidden                      ||
-            this.cache.filters.show_recurring) {
+        if (this.cache.filters.recurring         ||
+            this.cache.filters.hidden            ||
+            this.cache.filters.completed         ||
+            this.cache.filters.no_priority       ||
+            this.cache.filters.priorities.length ||
+            this.cache.filters.contexts.length   ||
+            this.cache.filters.projects.length   ||
+            this.cache.filters.custom_active.length) {
 
             return true;
         }
@@ -1543,22 +1584,20 @@ const Todo = new Lang.Class({
         return false;
     },
 
-    // Add keyword as new active filter if it doesn't exist already.
+    // Add context/project/prio as new active filter.
     //
     // @keyword: string (priority, context, or project)
     activate_filter: function (keyword) {
-        if (REG_PRIO.test(keyword))
-            var arr = this.cache.filters.active_filters.priorities;
-        else if (REG_CONTEXT.test(keyword))
-            var arr = this.cache.filters.active_filters.contexts;
-        else if (REG_PROJ.test(keyword))
-            var arr = this.cache.filters.active_filters.projects;
+        let arr;
+
+        if      (REG_PRIO.test(keyword))    arr = this.cache.filters.priorities;
+        else if (REG_CONTEXT.test(keyword)) arr = this.cache.filters.contexts;
+        else if (REG_PROJ.test(keyword))    arr = this.cache.filters.projects;
 
         if (arr.indexOf(keyword) !== -1) return;
 
         arr.push(keyword);
         this.store_cache();
-
         this._update_filter_icon();
 
         if (this.view_manager.current_view === View.DEFAULT)
@@ -1575,53 +1614,68 @@ const Todo = new Lang.Class({
     // This func will sort this.tasks array as well as call add_tasks_to_menu to
     // rebuild this.tasks_viewport.
     sort_tasks: function () {
-        let key, compare_func;
+        let property_map = {
+            [SortType.COMPLETED]       : 'completed',
+            [SortType.PRIORITY]        : 'priority',
+            [SortType.DUE_DATE]        : 'due_date',
+            [SortType.CONTEXT]         : 'first_context',
+            [SortType.PROJECT]         : 'first_project',
+            [SortType.CREATION_DATE]   : 'creation_date',
+            [SortType.COMPLETION_DATE] : 'completion_date',
+        };
 
-        switch (this.cache.sort.sort_type) {
-            case SortType.PRIORITY: {
-                if (this.cache.sort.sort_order === SortOrder.DESCENDING)
-                    compare_func = (a, b) => +(a.priority   > b.priority) ||
-                                             +(a.priority === b.priority) - 1;
-                else
-                    compare_func = (a, b) => +(a.priority   < b.priority) ||
-                                             +(a.priority === b.priority) - 1;
-                break;
-            }
+        let i     = 0;
+        let len   = this.cache.sort.length;
+        let props = Array(len);
 
-            case SortType.CREATION_DATE:   if (!key) key = 'creation_date';
-            case SortType.COMPLETION_DATE: if (!key) key = 'completion_date';
-            case SortType.DUE_DATE:        if (!key) key = 'due_date';
-            case '': {
-                if (this.cache.sort.sort_order === SortOrder.DESCENDING) {
-                    compare_func = (a, b) => {
-                        return +(a[key] < b[key]) || +(a[key] === b[key]) - 1;
-                    };
-                }
-                else {
-                    compare_func = (a, b) => {
-                        return +(a[key] > b[key]) || +(a[key] === b[key]) - 1;
-                    };
-                }
-
-                break;
-            }
-
-            default: return;
+        for (; i < len; i++) {
+            props[i] = property_map[ this.cache.sort[i][0] ];
         }
 
-        this.tasks.sort(compare_func);
+        this.tasks.sort((a, b) => {
+            for (i = 0; (i < len) && (a[props[i]] === b[props[i]]); i++);
+
+            if (i === len) return 0;
+
+            switch (this.cache.sort[i][0]) {
+                case SortType.PRIORITY:
+                    if (this.cache.sort[i][1] === SortOrder.DESCENDING) {
+                        return +(a[props[i]] > b[props[i]]) ||
+                               +(a[props[i]] === b[props[i]]) - 1;
+                    }
+                    else {
+                        return +(a[props[i]] < b[props[i]]) ||
+                               +(a[props[i]] === b[props[i]]) - 1;
+                    }
+
+                default:
+                    if (this.cache.sort[i][1] === SortOrder.DESCENDING) {
+                        return +(a[props[i]] < b[props[i]]) ||
+                               +(a[props[i]] === b[props[i]]) - 1;
+                    }
+                    else {
+                        return +(a[props[i]] > b[props[i]]) ||
+                               +(a[props[i]] === b[props[i]]) - 1;
+                    }
+            }
+        });
+
         this.add_tasks_to_menu(true);
 
-        // @BUG (or feature?)
+        // Update sort icon.
+        //
+        // @BUG
         // Although everything works anyway, clutter has failed assertions
         // without later_add.
         Meta.later_add(Meta.LaterType.BEFORE_REDRAW, () => {
-            if (this.cache.sort.sort_order === SortOrder.ASCENDING)
+            if (this.cache.sort[0][1] === SortOrder.ASCENDING) {
                 ICON_FROM_URI.icon_from_uri(this.sort_icon,
                                     CustomIcon.SORT_ASCENDING, this.ext_dir);
-            else
+            }
+            else {
                 ICON_FROM_URI.icon_from_uri(this.sort_icon,
                                     CustomIcon.SORT_DESCENDING, this.ext_dir);
+            }
         });
     },
 
@@ -2011,16 +2065,16 @@ const TaskEditor = new Lang.Class({
         let words = this.entry.entry.get_text().split(/ +/);
 
         if (words[0] === 'x') {
-            if (! Date.parse(words[1]))
+            if (!Date.parse(words[1]))
                 words.splice(1, 0, date_yyyymmdd(), date_yyyymmdd());
-            else if (! Date.parse(words[2]))
+            else if (words[2] && !Date.parse(words[2]))
                 words.splice(2, 0, date_yyyymmdd());
         }
         else if (REG_PRIO.test(words[0])) {
-            if (! Date.parse(words[1]))
+            if (words[1] && !Date.parse(words[1]))
                 words.splice(1, 0, date_yyyymmdd());
         }
-        else if (! Date.parse(words[0])) {
+        else if (!Date.parse(words[0])) {
             words.splice(0, 0, date_yyyymmdd());
         }
 
@@ -2059,7 +2113,7 @@ const TaskItem = new Lang.Class({
 
         // @NOTE
         // If a var needs to be resettable, add it to the reset() method
-        // instead of the _init() method.
+        // instead of the _init() method.=
 
         // Project/context/url below mouse pointer, null if none of those.
         this.current_keyword = null;
@@ -2188,6 +2242,7 @@ const TaskItem = new Lang.Class({
             this.task_str = task_str;
         }
 
+        // For sorting purposes, we set the prio to '(_)' when there is no prio.
         this.priority                    = '(_)';
         this.projects                    = [];
         this.contexts                    = [];
@@ -2204,13 +2259,22 @@ const TaskItem = new Lang.Class({
         this.date_labels.visible         = false;
         this.date_labels.text            = '';
         this.actor.style_class           = 'task-item';
+        this.completed                   = false;
         this.completion_checkbox.checked = false;
         this.completion_checkbox.visible = true;
-        this.id                          = '';
+        this.tracker_id                  = '';
+
         if (this.hidden) {
             this.header.remove_child(this.header.get_child_at_index(0));
         }
         this.hidden = false;
+
+        // These vars are only used for sorting purposes. They hold the first
+        // context/project keyword as they appear in the task_str. If there are
+        // no contexts/projects, they are ''.
+        // They are set by the _parse_task_str() func.
+        this.first_context = '';
+        this.first_project = '';
 
         // The recurrence type is one of: 1, 2, 3
         // The numbers just match the global regex REG_REC_EXT_[123]
@@ -2220,14 +2284,14 @@ const TaskItem = new Lang.Class({
         // These vars are used by the update_markup_colors() func to make it
         // possible to update the context/project/url colors without having to
         // re-parse the whole task_str.
-        // They are filled up by the _parse_task_str() func.
+        // They are set by the _parse_task_str() func.
         // this.description_markup is an array of marked up words that make up
         // the 'description' part of the task_str sans any extensions.
+        // E.g., ['<span foreground="blue">@asdf</span>', ...].
         this.description_markup = null;
         this.context_indices    = [];
         this.project_indices    = [];
         this.link_indices       = [];
-
 
         this._parse_task_str();
         if (do_check_recurrence && this.rec_str) this.check_recurrence();
@@ -2248,17 +2312,17 @@ const TaskItem = new Lang.Class({
         // Parse 'header'
         //
         if (words[0] === 'x') {
+            this.completed                   = true;
             this.completion_checkbox.checked = true;
             this.actor.add_style_class_name('completed');
-            this.priority = '(x)';
 
-            if (Date.parse(words[1])) {
+            if (words[1] && Date.parse(words[1])) {
                 this.completion_date      = words[1];
                 // TRANSLATORS: 'completed:' is followed by a date
                 this.date_labels.text    += _('completed:') + words[1] + '   ';
                 this.date_labels.visible  = true;
 
-                if (Date.parse(words[2])) {
+                if (words[2] && Date.parse(words[2])) {
                     this.creation_date        = words[2];
                     // TRANSLATORS: 'created:' is followed by a date
                     this.date_labels.text    += _('created:') + words[2] + '   ';
@@ -2275,7 +2339,7 @@ const TaskItem = new Lang.Class({
             this.prio_label.text    = words[0];
             this.priority           = words[0];
 
-            if (Date.parse(words[1])) {
+            if (words[1] && Date.parse(words[1])) {
                 this.creation_date        = words[1];
                 this.date_labels.text    += _('created:') + words[1] + '   ';
                 this.date_labels.visible  = true;
@@ -2330,7 +2394,7 @@ const TaskItem = new Lang.Class({
                 i--; len--;
 
                 if (this.hidden) {
-                    // Ignore all other extensions if are already hidden.
+                    // Ignore all other extensions if task is hidden.
                     continue;
                 }
                 else if (REG_HIDE_EXT.test(word)) {
@@ -2344,8 +2408,9 @@ const TaskItem = new Lang.Class({
                     if (this.edit_icon_bin) this.edit_icon_bin.hide();
 
                     this.tracker_id = '';
-                    this.priority   = '(~)';
+                    this.priority   = '(_)';
                     this.hidden     = true;
+                    this.completed  = false;
                     this.completion_checkbox.checked = false;
                     this.actor.add_style_class_name('hidden-task');
 
@@ -2372,7 +2437,7 @@ const TaskItem = new Lang.Class({
                     this.rec_type = 1;
                 }
                 else if (REG_REC_EXT_2.test(word) &&
-                         (this.priority !== '(x)' ||
+                         (!this.completed ||
                           this.completion_date !== '0000-00-00')) {
 
                     this.due_date_label.visible = false;
@@ -2381,8 +2446,7 @@ const TaskItem = new Lang.Class({
                     this.rec_type = 2;
                 }
                 else if (REG_REC_EXT_3.test(word) &&
-                         (/^[1-9]+n-1m$/.test(word) ||
-                          this.creation_date !== '0000-00-00')) {
+                         this.creation_date !== '0000-00-00') {
 
                     this.due_date_label.visible = false;
                     this.due_date_label.text    = '';
@@ -2395,6 +2459,9 @@ const TaskItem = new Lang.Class({
                 }
             }
         }
+
+        if (this.contexts.length > 0) this.first_context = this.contexts[0];
+        if (this.projects.length > 0) this.first_project = this.projects[0];
 
         this.description_markup = words;
 
@@ -2418,17 +2485,17 @@ const TaskItem = new Lang.Class({
             let words = this.task_str.split(/ +/);
             let idx;
 
-            if      (this.priority === '(x)') idx = 2;
-            else if (this.priority === '(_)') idx = 0;
-            else                              idx = 1;
+            if      (this.completed)          idx = 2;
+            else if (this.priority !== '(_)') idx = 1;
+            else                              idx = 0;
 
             if (Date.parse(words[idx])) words[idx] = date_yyyymmdd();
             else                        words.splice(idx, 0, date_yyyymmdd());
 
             this.task_str = words.join(' ');
 
-            if (this.priority === '(x)') this.toggle_task();
-            else                         this.reset(true);
+            if (this.completed) this.toggle_task();
+            else                this.reset(true);
 
             return do_recur;
         }
@@ -2466,13 +2533,10 @@ const TaskItem = new Lang.Class({
             let increment =
                 +(this.rec_str.slice(this.rec_str.indexOf('-') + 1, -1));
 
-            if (this.creation_date === '0000-00-00' && increment > 1)
-                return res;
-
-            let day   = +(this.rec_str.slice(this.rec_str.indexOf(':') + 1,
-                                             this.rec_str.indexOf('d')));
             let year  = +(this.creation_date.substr(0, 4));
             let month = +(this.creation_date.substr(5, 2));
+            let day   = +(this.rec_str.slice(this.rec_str.indexOf(':') + 1,
+                                             this.rec_str.indexOf('d')));
             let iter  = "%d-%02d-%02d".format(year, month, day);
 
             while (iter < today) {
@@ -2488,10 +2552,13 @@ const TaskItem = new Lang.Class({
 
             // We never recur a task on date that it was created on since
             // it would be impossible to close it on that date.
-            res[0] = iter === today && this.creation_date !== today;
+            res[0] = (iter === today) && (this.creation_date !== today);
 
-            // If today is the date of recurrence or if the creation date was
-            // set into the future, we increment one last time.
+            // - If the recurrence is today, we increment one more time to have
+            //   the next recurrence.
+            // - If creation date is in the future(iter === this.creation_date),
+            //   we increment one more time since the recurrence can never
+            //   happen on the date of creation.
             if (res[0] || iter === this.creation_date) {
                 month += increment;
                 year  += Math.floor(month / 12);
@@ -2513,9 +2580,8 @@ const TaskItem = new Lang.Class({
             let reference_date, rec_str_offset;
 
             if (this.rec_type === 2) {
-                // When parsing the task_str, and incomplete task (so a task
-                // without a completion date) with this type of recurrence is
-                // valid. So we have to check this here.
+                // An incompleted task has no completion date; therefore, we
+                // cannot compute the next recurrence.
                 if (this.completion_date === '0000-00-00') return res;
 
                 reference_date = this.completion_date;
@@ -2606,7 +2672,7 @@ const TaskItem = new Lang.Class({
     toggle_task: function () {
         this._hide_header_icons();
 
-        if (this.priority === '(x)') {
+        if (this.completed) {
             let words = this.task_str.split(/ +/);
 
             // See if there's an old priority stored in an ext (e.g., pri:A).
@@ -2638,7 +2704,6 @@ const TaskItem = new Lang.Class({
                                 ' pri:' + this.priority[1];
             }
 
-            this.priority = '(x)';
             this.reset(true);
         }
     },
@@ -2881,32 +2946,31 @@ Signals.addSignalMethods(TaskItem.prototype);
 
 
 // =====================================================================
-// @@@ The window used for adding/editing filters.
+// @@@ Filter UI
 //
 // @ext      : obj (main extension object)
 // @delegate : obj (main section object)
 //
 // @signals:
-//  - 'update-filters', (returns obj) -> { invert_filters    : bool,
-//                                         custom_filters    : arr,
-//                                         active_filters    : obj, }
+//  - 'filters-updated' returns obj with which to replace the cache.filters obj
 // =====================================================================
 const TaskFiltersWindow = new Lang.Class({
     Name: 'Timepp.TaskFiltersWindow',
 
     _init: function (ext, delegate) {
-        this.ext            = ext;
-        this.delegate       = delegate;
-        this.active_filters = delegate.cache.filters.active_filters;
+        this.ext      = ext;
+        this.delegate = delegate;
 
 
         // We store all filter item objects here.
         // I.e., those objects created by the _new_filter_item() func.
         this.filter_register = {
-            priorities : [],
-            contexts   : [],
-            projects   : [],
-            custom     : [],
+            completed   : null,
+            no_priority : null,
+            priorities  : [],
+            contexts    : [],
+            projects    : [],
+            custom      : [],
         };
 
 
@@ -2962,9 +3026,10 @@ const TaskFiltersWindow = new Lang.Class({
         let hidden_count_label = new St.Label({ y_align: Clutter.ActorAlign.CENTER, style_class: 'popup-inactive-menu-item', pseudo_class: 'insensitive' });
         this.show_hidden_tasks_item.add_child(hidden_count_label);
 
-        let n = this.delegate.stats.priorities.get('(~)') || 0;
-        hidden_count_label.text =
-            ngettext('%d hidden task', '%d hidden tasks', n).format(n);
+        hidden_count_label.text = ngettext(
+                '%d hidden task',
+                '%d hidden tasks',
+                this.delegate.stats.hidden).format(this.delegate.stats.hidden);
 
         this.show_hidden_tasks_toggle_btn = new St.Button({ can_focus: true });
         this.show_hidden_tasks_item.add_actor(this.show_hidden_tasks_toggle_btn);
@@ -2984,8 +3049,8 @@ const TaskFiltersWindow = new Lang.Class({
         let recurring_count_label = new St.Label({ y_align: Clutter.ActorAlign.CENTER, style_class: 'popup-inactive-menu-item', pseudo_class: 'insensitive' });
         this.show_recurring_tasks_item.add_child(recurring_count_label);
 
-        let n_recurring = this.delegate.stats.recurring_complete +
-                          this.delegate.stats.recurring_incomplete;
+        let n_recurring = this.delegate.stats.recurring_completed +
+                          this.delegate.stats.recurring_incompleted;
 
         recurring_count_label.text =
             ngettext('%d recurring task', '%d recurring tasks', n_recurring)
@@ -3048,7 +3113,7 @@ const TaskFiltersWindow = new Lang.Class({
                     return;
             }
 
-            let item = this._new_filter_item(true, this.entry.entry.text, 0,
+            let item = this._new_filter_item(true, this.entry.entry.text, false,
                                              true, this.custom_filters_box);
             this.custom_filters_box.add_child(item.actor);
             this.filter_register.custom.push(item);
@@ -3082,14 +3147,11 @@ const TaskFiltersWindow = new Lang.Class({
     },
 
     _load_filters: function () {
-        this.invert_toggle.setToggleState(
-            this.delegate.cache.filters.invert_filters);
+        let filters = this.delegate.cache.filters;
 
-        this.show_hidden_tasks_toggle.setToggleState(
-            this.delegate.cache.filters.show_hidden);
-
-        this.show_recurring_tasks_toggle.setToggleState(
-            this.delegate.cache.filters.show_recurring);
+        this.invert_toggle.setToggleState(filters.invert_filters);
+        this.show_hidden_tasks_toggle.setToggleState(filters.hidden);
+        this.show_recurring_tasks_toggle.setToggleState(filters.recurring);
 
 
         let i, len, key, value, item, check;
@@ -3098,25 +3160,47 @@ const TaskFiltersWindow = new Lang.Class({
         //
         // custom filters
         //
-        len = this.delegate.cache.filters.custom_filters.length;
+        len = filters.custom.length;
         for (i = 0; i < len; i++) {
-            value = this.delegate.cache.filters.custom_filters[i];
-            check = this.active_filters.custom.indexOf(value) === -1 ? false : true;
+            value = filters.custom[i];
+            check = filters.custom_active.indexOf(value) === -1 ? false : true;
             item  = this._new_filter_item(check, value, 0, true, this.custom_filters_box);
             this.custom_filters_box.add_child(item.actor);
             this.filter_register.custom.push(item);
         }
 
 
+        this._add_separator(this.priority_filters_box);
+
+
+        //
+        // completed
+        //
+        if (this.delegate.stats.completed > 0) {
+            item = this._new_filter_item(filters.completed, _('Completed'),
+                this.delegate.stats.completed, 0, this.priority_filters_box);
+            this.filter_register.completed = item;
+            this.priority_filters_box.add_child(item.actor);
+        }
+
+
+        //
+        // no priority
+        //
+        if (this.delegate.stats.no_priority > 0) {
+            item = this._new_filter_item(filters.no_priority, _('No Priority'),
+                this.delegate.stats.no_priority, 0, this.priority_filters_box);
+            this.filter_register.no_priority = item;
+            this.priority_filters_box.add_child(item.actor);
+        }
+
+
         //
         // priorities
         //
-        this._add_separator(this.priority_filters_box);
-
         for ([key, value] of this.delegate.stats.priorities.entries()) {
-            if (key === '(~)') continue; // skip hidden tasks here
-            check = this.active_filters.priorities.indexOf(key) === -1 ? false : true;
-            item = this._new_filter_item(check, key, value, 0, this.priority_filters_box);
+            check = filters.priorities.indexOf(key) === -1 ? false : true;
+            item  = this._new_filter_item(check, key, value, false, this.priority_filters_box);
             this.filter_register.priorities.push(item);
         }
 
@@ -3124,31 +3208,34 @@ const TaskFiltersWindow = new Lang.Class({
             return +(a.filter > b.filter) || +(a.filter === b.filter) - 1;
         });
 
-        for (i = 0; i < this.filter_register.priorities.length; i++)
+        for (i = 0; i < this.filter_register.priorities.length; i++) {
             this.priority_filters_box.add_child(this.filter_register.priorities[i].actor);
+        }
+
+
+        this._add_separator(this.context_filters_box);
 
 
         //
         // contexts
         //
-        this._add_separator(this.context_filters_box);
-
         for ([key, value] of this.delegate.stats.contexts.entries()) {
-            check = this.active_filters.contexts.indexOf(key) === -1 ? false : true;
-            item  = this._new_filter_item(check, key, value, 0, this.context_filters_box);
+            check = filters.contexts.indexOf(key) === -1 ? false : true;
+            item  = this._new_filter_item(check, key, value, false, this.context_filters_box);
             this.context_filters_box.add_child(item.actor);
             this.filter_register.contexts.push(item);
         }
 
 
+        this._add_separator(this.project_filters_box);
+
+
         //
         // projects
         //
-        this._add_separator(this.project_filters_box);
-
         for ([key, value] of this.delegate.stats.projects.entries()) {
-            check = this.active_filters.projects.indexOf(key) === -1 ? false : true;
-            item  = this._new_filter_item(check, key, value, 0, this.project_filters_box);
+            check = filters.projects.indexOf(key) === -1 ? false : true;
+            item  = this._new_filter_item(check, key, value, false, this.project_filters_box);
             this.project_filters_box.add_child(item.actor);
             this.filter_register.projects.push(item);
         }
@@ -3182,19 +3269,8 @@ const TaskFiltersWindow = new Lang.Class({
 
         item.filter = label;
 
-        item.label = new St.Label({ y_align: Clutter.ActorAlign.CENTER });
+        item.label = new St.Label({ text: label, y_align: Clutter.ActorAlign.CENTER });
         item.actor.add(item.label, {expand: true});
-
-        switch (label) {
-            case '(_)':
-                item.label.text = _('No Priority');
-                break;
-            case '(x)':
-                item.label.text = _('Completed');
-                break;
-            default:
-                item.label.text = label;
-        }
 
         if (count) {
             item.count_label = new St.Label({ y_align: Clutter.ActorAlign.CENTER, style_class: 'popup-inactive-menu-item', pseudo_class: 'insensitive' });
@@ -3260,37 +3336,49 @@ const TaskFiltersWindow = new Lang.Class({
     },
 
     _on_ok_clicked: function () {
-        let res = {
-            show_recurring : this.show_recurring_tasks_toggle.state,
-            show_hidden    : this.show_hidden_tasks_toggle.state,
+        let filters = {
             invert_filters : this.invert_toggle.state,
-            custom_filters : [],
-            active_filters : {
-                priorities: [],
-                contexts  : [],
-                projects  : [],
-                custom    : [],
-            },
+            recurring      : this.show_recurring_tasks_toggle.state,
+            hidden         : this.show_hidden_tasks_toggle.state,
+
+            completed      : Boolean(this.filter_register.completed &&
+                         this.filter_register.completed.checkbox.actor.checked),
+
+            no_priority    : Boolean(this.filter_register.no_priority &&
+                       this.filter_register.no_priority.checkbox.actor.checked),
+
+            priorities     : [],
+            contexts       : [],
+            projects       : [],
+            custom         : [],
+            custom_active  : [],
         };
 
-        // find all active filters
-        for (let key in this.filter_register) {
-            if (! this.filter_register.hasOwnProperty(key)) continue;
-
-            let items = this.filter_register[key];
-
-            for (let i = 0, len = items.length; i < len; i++) {
-                if (items[i].checkbox.actor.checked)
-                    res.active_filters[key].push(items[i].filter);
-            }
+        for (let i = 0; i < this.filter_register.priorities.length; i++) {
+            let it = this.filter_register.priorities[i];
+            if (it.checkbox.actor.checked) filters.priorities.push(it.filter);
         }
 
-        // store the custom filters
+        for (let i = 0; i < this.filter_register.contexts.length; i++) {
+            let it = this.filter_register.contexts[i];
+            if (it.checkbox.actor.checked) filters.contexts.push(it.filter);
+        }
+
+        for (let i = 0; i < this.filter_register.projects.length; i++) {
+            let it = this.filter_register.projects[i];
+            if (it.checkbox.actor.checked) filters.projects.push(it.filter);
+        }
+
+        for (let i = 0; i < this.filter_register.custom.length; i++) {
+            let it = this.filter_register.custom[i];
+            if (it.checkbox.actor.checked) filters.custom_active.push(it.filter);
+        }
+
         for (let i = 0, len = this.filter_register.custom.length; i < len; i++) {
-            res.custom_filters.push(this.filter_register.custom[i].filter);
+            filters.custom.push(this.filter_register.custom[i].filter);
         }
 
-        this.emit('update-filters', res);
+        this.emit('filters-updated', filters);
     },
 });
 Signals.addSignalMethods(TaskFiltersWindow.prototype);
@@ -3425,7 +3513,7 @@ Signals.addSignalMethods(TodoFileSwitcher.prototype);
 
 
 // =====================================================================
-// @@@ The window used for editing the sort mode.
+// @@@ Sort UI
 //
 // @ext      : obj (main extension object)
 // @delegate : obj (main section object)
@@ -3439,17 +3527,19 @@ const TaskSortWindow = new Lang.Class({
         this.ext      = ext;
         this.delegate = delegate;
 
-        this.text_map = {};
-        this.text_map[SortType.PRIORITY]        = _('Sort by Priority');
-        this.text_map[SortType.CREATION_DATE]   = _('Sort by Creation Date');
-        this.text_map[SortType.COMPLETION_DATE] = _('Sort by Completion Date');
-        this.text_map[SortType.DUE_DATE]        = _('Sort by Due Date');
-
-        this.current_sort_order = '';
         this.checked_sort_item  = null;
+        this.dnd_pos            = null;
+        this.dnd_placeholder    = null
 
-        // Array of the all sort_type items.
-        this.sort_types = [];
+        this.sort_text_map = {
+            [SortType.CONTEXT]         : _('Sort by Context'),
+            [SortType.PROJECT]         : _('Sort by Projects'),
+            [SortType.PRIORITY]        : _('Sort by Priority'),
+            [SortType.DUE_DATE]        : _('Sort by Due Date'),
+            [SortType.COMPLETED]       : _('Sort by Completed'),
+            [SortType.CREATION_DATE]   : _('Sort by Creation Date'),
+            [SortType.COMPLETION_DATE] : _('Sort by Completion Date'),
+        }
 
 
         //
@@ -3460,56 +3550,20 @@ const TaskSortWindow = new Lang.Class({
         this.content_box = new St.BoxLayout({ x_expand: true, vertical: true, style_class: 'view-box-content' });
         this.actor.add_actor(this.content_box);
 
+        this.sort_items_box = new St.BoxLayout({ vertical: true, style_class: 'sort-items-box' });
+        this.content_box.add_child(this.sort_items_box);
+        this.sort_items_box._delegate = this;
 
         let radio_checkmark;
 
 
         //
-        // sort mode (ascending/descending)
+        // create sort items
         //
-        this.ascending_item = new St.BoxLayout({ reactive: true, style_class: 'row' });
-        this.content_box.add_child(this.ascending_item);
-
-        this.ascending_label = new St.Label ({ text: _('Ascending'), y_align: Clutter.ActorAlign.CENTER });
-        this.ascending_item.add(this.ascending_label, {expand: true});
-
-        this.ascending_radiobutton = new St.Button({ toggle_mode: true, can_focus: true, y_align: St.Align.MIDDLE });
-        this.ascending_item.add_child(this.ascending_radiobutton);
-        this.ascending_radiobutton.style_class = 'radiobutton';
-
-        radio_checkmark = new St.Bin();
-        this.ascending_radiobutton.add_actor(radio_checkmark);
-
-
-        this.descending_item = new St.BoxLayout({ reactive: true, style_class: 'row' });
-        this.content_box.add_child(this.descending_item);
-
-        this.descending_label = new St.Label ({ text: _('Descending'), y_align: Clutter.ActorAlign.CENTER });
-        this.descending_item.add(this.descending_label, {expand: true});
-
-        this.descending_radiobutton = new St.Button({ toggle_mode: true, can_focus: true, y_align: St.Align.MIDDLE });
-        this.descending_item.add_child(this.descending_radiobutton);
-        this.descending_radiobutton.style_class = 'radiobutton';
-
-        radio_checkmark = new St.Bin();
-        this.descending_radiobutton.add_actor(radio_checkmark);
-
-
-        //
-        // separator
-        //
-        let sep = new PopupMenu.PopupSeparatorMenuItem();
-        sep.actor.add_style_class_name('timepp-separator');
-        this.content_box.add_child(sep.actor);
-
-
-        //
-        // sort types
-        //
-        this._new_sort_type_item(SortType.PRIORITY);
-        this._new_sort_type_item(SortType.CREATION_DATE);
-        this._new_sort_type_item(SortType.COMPLETION_DATE);
-        this._new_sort_type_item(SortType.DUE_DATE);
+        for (let i = 0; i < this.delegate.cache.sort.length; i++) {
+            let it = this.delegate.cache.sort[i];
+            this._new_sort_type_item(it[0], it[1]);
+        }
 
 
         //
@@ -3522,72 +3576,163 @@ const TaskSortWindow = new Lang.Class({
 
 
         //
-        // check buttons
+        // listen
         //
-        if (this.delegate.cache.sort.sort_order === SortOrder.ASCENDING) {
-            this.current_sort_order = SortOrder.ASCENDING;
-            this.ascending_radiobutton.checked = true;
-        }
-        else {
-            this.current_sort_order = SortOrder.DESCENDING;
-            this.descending_radiobutton.checked = true;
+        this.button_ok.connect('clicked', () => {
+            this._on_ok_clicked();
+        });
+    },
+
+    _on_ok_clicked: function () {
+        let res      = [];
+        let children = this.sort_items_box.get_children();
+
+        for (let i = 0; i < children.length; i++) {
+            let it = children[i]._delegate;
+            res.push([it.sort_type, it.sort_order]);
         }
 
+        this.emit('update-sort', res);
+    },
 
-        let it;
-        for (let i = 0, len = this.sort_types.length; i < len; i++) {
-            it = this.sort_types[i];
+    _new_sort_type_item: function (sort_type, sort_order) {
+        let item = {};
 
-            if (it.sort_type === this.delegate.cache.sort.sort_type) {
-                it.radiobutton.checked = true;
-                this.checked_sort_item = it;
-            }
-        }
+        item.sort_type  = sort_type;
+        item.sort_order = sort_order;
+
+        item.actor = new St.BoxLayout({ reactive: true, style_class: 'row' });
+        item.actor._delegate = item;
+        item._delegate = this.sort_items_box;
+        this.sort_items_box.add_child(item.actor);
+
+        item.label = new St.Label ({ text: this.sort_text_map[sort_type], reactive: true, y_align: Clutter.ActorAlign.CENTER });
+        item.actor.add(item.label, {expand: true});
+
+        item.icn_box = new St.BoxLayout({ style_class: 'icon-box' });
+        item.actor.add_actor(item.icn_box);
+
+        item.sort_btn = new St.Button({ reactive: true, can_focus: true });
+        item.icn_box.add_actor(item.sort_btn);
+
+        item.sort_icon = new St.Icon();
+        item.sort_btn.add_actor(item.sort_icon);
+
+        if (sort_order === SortOrder.ASCENDING)
+            ICON_FROM_URI.icon_from_uri(item.sort_icon, CustomIcon.SORT_ASCENDING, this.delegate.ext_dir);
+        else
+            ICON_FROM_URI.icon_from_uri(item.sort_icon, CustomIcon.SORT_DESCENDING, this.delegate.ext_dir);
+
+
+        // DND
+        // Note that the various funcs that are being called from within
+        // item._draggable rely on the '_delegate' property, so make sure that
+        // the relevant actors have those, since we don't usually use the
+        // '_delegate' pattern heavily in this extension.
+        item._draggable = DND.makeDraggable(item.actor, { restoreOnSuccess: false, manualMode: false, dragActorOpacity: 0 });
 
 
         //
         // listen
         //
-        this.ascending_radiobutton.connect('clicked', () => {
-            this.current_sort_order = SortOrder.ASCENDING;
-            this.ascending_radiobutton.checked = true;
-            this.descending_radiobutton.checked = false;
+        item._draggable.connect('drag-begin', () => {
+            if (! this.dnd_placeholder) {
+                this.dnd_placeholder = new St.Bin();
+                this.dnd_placeholder._delegate = this.sort_items_box;
+                this.dnd_placeholder.set_width (item.actor.width);
+                this.dnd_placeholder.set_height (item.actor.height);
+
+                let i        = 0;
+                let children = this.sort_items_box.get_children();
+
+                for (; i < children.length; i++)
+                    if (children[i] === item.actor) break;
+
+                this.sort_items_box.insert_child_at_index(
+                    this.dnd_placeholder, i);
+            }
         });
-        this.descending_radiobutton.connect('clicked', () => {
-            this.current_sort_order = SortOrder.DESCENDING;
-            this.ascending_radiobutton.checked = false;
-            this.descending_radiobutton.checked = true;
+
+        item._draggable.connect('drag-end', () => {
+            item.actor.opacity = 255;
+
+            if (this.dnd_placeholder) {
+                this.dnd_placeholder.destroy();
+                this.dnd_placeholder = null;
+                this.dnd_pos         = null;
+            }
         });
-        this.button_ok.connect('clicked', () => {
-            this.emit('update-sort', { sort_order : this.current_sort_order,
-                                       sort_type  : this.checked_sort_item.sort_type });
+
+        item.sort_btn.connect('key-press-event', (_, event) => {
+            if (event.get_state() !== Clutter.ModifierType.CONTROL_MASK)
+                return Clutter.EVENT_PROPAGATE;
+
+            let i        = 0;
+            let children = this.sort_items_box.get_children();
+
+            for (; i < children.length; i++)
+                if (children[i] === item.actor) break;
+
+            if (event.get_key_symbol() === Clutter.KEY_Up && i > 0) {
+                this.sort_items_box.set_child_at_index(item.actor, --i);
+                return Clutter.EVENT_STOP;
+            }
+            else if (event.get_key_symbol() === Clutter.KEY_Down &&
+                     i < children.length - 1) {
+
+                this.sort_items_box.set_child_at_index(item.actor, ++i);
+                return Clutter.EVENT_STOP;
+            }
+
+            return Clutter.EVENT_PROPAGATE;
+        });
+
+        item.sort_btn.connect('clicked', () => {
+            if (item.sort_order === SortOrder.ASCENDING) {
+                ICON_FROM_URI.icon_from_uri(item.sort_icon, CustomIcon.SORT_DESCENDING, this.delegate.ext_dir);
+                item.sort_order = SortOrder.DESCENDING;
+            }
+            else {
+                ICON_FROM_URI.icon_from_uri(item.sort_icon, CustomIcon.SORT_ASCENDING, this.delegate.ext_dir);
+                item.sort_order = SortOrder.ASCENDING;
+            }
+        });
+
+        item.label.connect('enter-event', () => {
+            global.screen.set_cursor(Meta.Cursor.DND_UNSUPPORTED_TARGET);
+        });
+
+        item.label.connect('leave-event', () => {
+            global.screen.set_cursor(Meta.Cursor.DEFAULT);
         });
     },
 
-    _new_sort_type_item: function (sort_type) {
-        let item = {};
-        this.sort_types.push(item);
+    // Called from within item._draggable.
+    handleDragOver: function (source, actor, x, y, time) {
+        if (source._delegate !== this.sort_items_box)
+            return DND.DragMotionResult.NO_DROP;
 
-        item.sort_type = sort_type;
+        let children = this.sort_items_box.get_children();
+        let pos      = children.length;
 
-        item.actor = new St.BoxLayout({ reactive: true, style_class: 'row' });
-        this.content_box.add_child(item.actor);
+        while (--pos && y < children[pos].get_allocation_box().y1);
 
-        item.label = new St.Label ({ text: this.text_map[sort_type], y_align: Clutter.ActorAlign.CENTER });
-        item.actor.add(item.label, {expand: true});
+        this.dnd_pos = pos;
 
-        item.radiobutton = new St.Button({ toggle_mode: true, can_focus: true, y_align: St.Align.MIDDLE });
-        item.actor.add_child(item.radiobutton);
-        item.radiobutton.style_class = 'radiobutton';
+        this.sort_items_box.set_child_at_index(this.dnd_placeholder, this.dnd_pos);
 
-        let radio_checkmark = new St.Bin();
-        item.radiobutton.add_actor(radio_checkmark);
+        return DND.DragMotionResult.MOVE_DROP;
+    },
 
-        item.radiobutton.connect('clicked', () => {
-            this.checked_sort_item.radiobutton.checked = false;
-            item.radiobutton.checked = true;
-            this.checked_sort_item   = item;
-        });
+    // Called from within item._draggable.
+    acceptDrop: function (source, actor, x, y, time) {
+        if (source._delegate !== this.sort_items_box || this.dnd_pos === null)
+            return false;
+
+        Main.uiGroup.remove_child(source.actor);
+        this.sort_items_box.insert_child_at_index(source.actor, this.dnd_pos);
+
+        return true;
     },
 });
 Signals.addSignalMethods(TaskSortWindow.prototype);
@@ -3628,7 +3773,7 @@ const ClearCompletedTasks = new Lang.Class({
         this.delete_all_item = new St.BoxLayout({ reactive: true, style_class: 'row' });
         this.content_box.add_child(this.delete_all_item);
 
-        this.delete_all_label = new St.Label ({ text: _('Delete all completed tasks'), y_align: Clutter.ActorAlign.CENTER, style_class: 'delete-complete-tasks-label' });
+        this.delete_all_label = new St.Label ({ text: _('Delete all completed tasks'), y_align: Clutter.ActorAlign.CENTER, style_class: 'delete-completed-tasks-label' });
         this.delete_all_item.add(this.delete_all_label, {expand: true});
 
         this.delete_all_radiobutton = new St.Button({ style_class: 'radiobutton', toggle_mode: true, can_focus: true, y_align: St.Align.MIDDLE });
@@ -3641,7 +3786,7 @@ const ClearCompletedTasks = new Lang.Class({
         this.archive_all_item = new St.BoxLayout({ reactive: true, style_class: 'row' });
         this.content_box.add_child(this.archive_all_item);
 
-        this.archive_all_label = new St.Label ({ text: _('Archive all complete tasks to done.txt and delete them'), y_align: Clutter.ActorAlign.CENTER, style_class: 'archive-all-complete-tasks-label' });
+        this.archive_all_label = new St.Label ({ text: _('Archive all completed tasks to done.txt and delete them'), y_align: Clutter.ActorAlign.CENTER, style_class: 'archive-all-completed-tasks-label' });
         this.archive_all_item.add(this.archive_all_label, {expand: true});
 
         this.archive_all_radiobutton = new St.Button({ style_class: 'radiobutton', toggle_mode: true, can_focus: true, y_align: St.Align.MIDDLE });

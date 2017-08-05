@@ -248,22 +248,35 @@ const Pomodoro = new Lang.Class({
     },
 
     enable_section: function () {
+        // init cache file
         try {
             this.cache_file = Gio.file_new_for_path(CACHE_FILE);
+
+            let cache_format_version =
+                ME.metadata['cache-file-format-version'].pomodoro;
 
             if (this.cache_file.query_exists(null)) {
                 let [, contents] = this.cache_file.load_contents(null);
                 this.cache = JSON.parse(contents);
             }
-            else
+
+            if (!this.cache || !this.cache.format_version ||
+                this.cache.format_version !== cache_format_version) {
+
                 this.cache = {
+                    format_version  : cache_format_version,
                     pomo_counter    : 0,
                     pomo_duration   : 1500000000, // microseconds
                     short_break     : 300000000,
                     long_break      : 900000000,
                     long_break_rate : 4,
                 };
-        } catch (e) { logError(e); }
+            }
+        }
+        catch (e) {
+            logError(e);
+            return;
+        }
 
         let count_str = String(this.cache.pomo_counter);
         this.pomo_counter_display.text = this.cache.pomo_counter ? count_str : '';
@@ -311,8 +324,7 @@ const Pomodoro = new Lang.Class({
             settings.actor.destroy();
             this.header.actor.show();
 
-            if (this.pomo_state !== PomoState.STOPPED)
-                this._update_time_display();
+            this._update_time_display();
         });
 
         settings.connect('cancel', () => {
@@ -474,8 +486,11 @@ const Pomodoro = new Lang.Class({
             );
         }
         else {
-            if (time !== 0 && time !== this.cache.pomo_duration)
+            if (this.timer_duration > 0 &&
+                this.timer_duration !== this.cache.pomo_duration) {
+
                 time += 60;
+            }
 
             this.header.label.text = "%02d:%02d".format(
                 Math.floor(time / 3600),

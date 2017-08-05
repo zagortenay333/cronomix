@@ -231,20 +231,32 @@ const Timer = new Lang.Class({
     },
 
     enable_section: function () {
+        // init cache file
         try {
             this.cache_file = Gio.file_new_for_path(CACHE_FILE);
+
+            let cache_format_version =
+                ME.metadata['cache-file-format-version'].timer;
 
             if (this.cache_file.query_exists(null)) {
                 let [a, contents, b] = this.cache_file.load_contents(null);
                 this.cache = JSON.parse(contents);
             }
-            else {
+
+            if (!this.cache || !this.cache.format_version ||
+                this.cache.format_version !== cache_format_version) {
+
                 this.cache = {
-                    notif_msg: '',
-                    last_manually_set_time: 30000000,
+                    format_version         : cache_format_version,
+                    notif_msg              : '',
+                    last_manually_set_time : 30000000,
                 };
             }
-        } catch (e) { logError(e); }
+        }
+        catch (e) {
+            logError(e);
+            return;
+        }
 
         if (! this.fullscreen)
             this.fullscreen = new TimerFullscreen(

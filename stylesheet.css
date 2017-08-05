@@ -585,7 +585,7 @@
 
 .timepp-menu .todo-section .icon-bin {}
 
-.timepp-menu .todo-section .delete-complete-tasks-label {
+.timepp-menu .todo-section .delete-completed-tasks-label {
     font-weight: bold;
     color: #e22b2b;
 }
@@ -601,7 +601,7 @@
     spacing: .4em;
 }
 
-.timepp-menu .todo-section .archive-complete-tasks-label {}
+.timepp-menu .todo-section .archive-completed-tasks-label {}
 .timepp-menu .todo-section .stats-window {
     max-width: 600px;
 }
@@ -613,6 +613,11 @@
 
 .timepp-menu .todo-section .filter-window-item {
     max-width: 32em;
+}
+
+.timepp-menu .todo-section .sort-items-box {
+    padding: .5em 1em;
+    spacing: .7em;
 }
 
 .timepp-menu .todo-section .completion-box {

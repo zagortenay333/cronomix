@@ -184,8 +184,7 @@ time.<br><br>
             <b>This extension disables the due date extension.</b><br><br>
             <i>Each time a task recurs, it's creation date is updated.<br>
             If a task is already open on the date of the recursion, it's
-creation date will<br>
-            be updated anyway.</i><br><br>
+creation date will be updated anyway.</i><br><br>
             The <i>recurrence_string</i> can be in one of 3 diff forms:<br>
             <i>&nbsp;&nbsp&nbsp;&nbsp;(n=natural number, d=days, w=weeks,
 m=months)</i><br><br>
@@ -194,16 +193,17 @@ m=months)</i><br><br>
             <code>rec:n(d|w)</code><br>
                 This means that the task will recur n days/weeks after the
 creation date.<br>
+                <i>- This rec type requires a creation date.</i><br>
                 Examples:<br>
                 <ul>
                 <li>
-                <code>x 2000-06-16 2000-06-09 rec:12d</code> means that the task
+                <code>x 2000-01-01 2000-01-01 rec:12d</code> means that the task
 will reopen<br>
-                every 12 days starting from 2000-06-09. After 12 days it will
+every 12 days starting from <code>2000-01-01</code>. After 12 days it will
 look like<br>
-                <code>2000-06-21 rec:12d</code>, and 12 days after that it will
+                <code>2000-01-13 rec:12d</code>, and 12 days after that it will
 look like<br>
-                <code>2000-7-03 rec:12d</code>, and so on...
+                <code>2000-01-25 rec:12d</code>, and so on...
                 </li>
                 </ul>
             </li><br>
@@ -211,12 +211,14 @@ look like<br>
                 <code>rec:x-n(d|w)</code><br>
                 This means that the task will recur n days/weeks after the
 completion date.<br>
+                <i>- This rec type requires a completion date if the task is
+complete.</i><br>
                 Examples:<br>
                 <ul>
-                <li><code>rec:x-12d</code> recurs 12 days after date of
-completion.</li>
-                <li><code>rec:x-3w</code> recurs 3 weeks after date of
-completion.</li>
+                <li><code>x 2000-01-01 rec:x-12d</code> recurs 12 days after
+<code>2000-01-01</code>.</li>
+                <li><code>(A) rec:x-3w</code> recurs 3 weeks after completion
+date.</li>
                 </ul>
             </li><br>
             <li>
@@ -224,29 +226,35 @@ completion.</li>
                 This means that the task will recur on the n-th day of every
 n-th month starting<br>
                 from the month of creation.<br>
-                <i>Note that since when creating a task, one can set the
+                <i>- This rec type requires a creation date.</i><br>
+                <i>- Note that since when creating a task, one can set the
 creation date to any arbitrary<br>
                 date, 'month of creation' here refers to the month written into
 the todo.txt file.<br>
-                If a month doesn't have the particular n-th day, the last day of
-the month will be used instead.</i><br>
+                - If a month doesn't have the particular n-th day, the last day
+of
+that month will be used instead.</i><br>
                 Examples:<br>
                 <ul>
-                <li><code>rec:12d-1m</code> recurs on the 12th day of each
+                <li><code>(A) 2000-01-01 rec:12d-1m</code> recurs on the 12th
+day of each
 month.</li>
-                <li><code>rec:1d-1m</code> recurs on the first day of each
+                <li><code>(A) 2000-01-01 rec:1d-1m</code> recurs on the first
+day of each
 month.</li>
-                <li><code>rec:31d-1m</code> recurs on the last day of each
+                <li><code>(A) 2000-01-01 rec:31d-1m</code> recurs on the last
+day of each
 month.</li>
-                <li><code>rec:64d-1m</code> also recurs on the last day of each
+                <li><code>(A) 2000-01-01 rec:64d-1m</code> also recurs on the
+last day of each
 month.</li>
-                <li><code>rec:29d-1m</code> recurs on the 29th day of each
+                <li><code>(A) 2000-01-01 rec:29d-1m</code> recurs on the 29th
+day of each
 month, and in<br>
                 the case of February, on the 28th if it doesn't have 29
 days.</li>
                 <li><code>(A) 2000-02-02 rec:12d-2m</code> recurs on the 12th
-day every<br>
-                2 months starting from February.<br>
+day every 2 months starting from February.<br>
                 If the actual current date is <code>2000-02-08</code>, the task
 recurs on <code>2000-02-12</code>.<br>
                 If the actual current date is <code>2000-02-16</code>, the task
