@@ -292,12 +292,10 @@ msgstr[1] "%d zadania"
 msgstr[2] "%d zadań"
 
 #: ../sections/todo.js:3547
-#, fuzzy
 msgid "Sort by Context"
 msgstr "Sortuj wg daty utworzenia"
 
 #: ../sections/todo.js:3548
-#, fuzzy
 msgid "Sort by Projects"
 msgstr "Sortuj wg priorytetu"
 
@@ -310,7 +308,6 @@ msgid "Sort by Due Date"
 msgstr "Sortuj wg terminu"
 
 #: ../sections/todo.js:3551
-#, fuzzy
 msgid "Sort by Completed"
 msgstr "Sortuj wg daty zakończenia"
 
@@ -327,7 +324,6 @@ msgid "Delete all completed tasks"
 msgstr "Usuń wszystkie ukończone zadania"
 
 #: ../sections/todo.js:3801
-#, fuzzy
 msgid "Archive all completed tasks to done.txt and delete them"
 msgstr "Zarchiwizuj ukończone zadania do pliku 'done.txt' przed ich usunięciem"
 
