@@ -116,7 +116,7 @@ const REG_REC_EXT_1      = /^rec:[1-9][0-9]*[dw]$/;
 const REG_REC_EXT_2      = /^rec:x-[1-9][0-9]*[dw]$/;
 const REG_REC_EXT_3      = /^rec:[1-9][0-9]*d-[1-9][0-9]*m$/;
 const REG_DUE_EXT        = /^(?:due|DUE):\d{4}-\d{2}-\d{2}$/;
-const REG_URL            = /^\b((?:https?:\/\/|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’]))$/;
+const REG_URL            = /^\b((?:https?:\/\/|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?]))$/;
 
 
 // return date string in yyyy-mm-dd format adhering to locale
@@ -2391,9 +2391,6 @@ const TaskItem = new Lang.Class({
                            '"><u><b>' + word + '</b></u></span>';
             }
             else if (REG_EXT.test(word)) {
-                words.splice(i, 1);
-                i--; len--;
-
                 if (this.hidden) {
                     // Ignore all other extensions if task is hidden.
                     continue;
@@ -2422,12 +2419,16 @@ const TaskItem = new Lang.Class({
                     ICON_FROM_URI.icon_from_uri(icon_incognito,
                                                 CustomIcon.HIDDEN,
                                                 this.delegate.ext_dir);
+
+                    words.splice(i, 1); i--; len--;
                 }
                 else if (REG_DUE_EXT.test(word) && !this.rec_str) {
                     this.due_date = word.slice(4);
                     this.due_date_label.text   += _('due:') + word.slice(4);
                     this.due_date_label.visible = true;
                     this.update_due_date();
+
+                    words.splice(i, 1); i--; len--;
                 }
                 else if (REG_REC_EXT_1.test(word) &&
                          this.creation_date !== '0000-00-00') {
@@ -2436,6 +2437,8 @@ const TaskItem = new Lang.Class({
                     this.due_date_label.text    = '';
                     this.rec_str  = word;
                     this.rec_type = 1;
+
+                    words.splice(i, 1); i--; len--;
                 }
                 else if (REG_REC_EXT_2.test(word) &&
                          (!this.completed ||
@@ -2445,6 +2448,8 @@ const TaskItem = new Lang.Class({
                     this.due_date_label.text    = '';
                     this.rec_str  = word;
                     this.rec_type = 2;
+
+                    words.splice(i, 1); i--; len--;
                 }
                 else if (REG_REC_EXT_3.test(word) &&
                          this.creation_date !== '0000-00-00') {
@@ -2454,9 +2459,15 @@ const TaskItem = new Lang.Class({
                     this.rec_str  = word;
                     this.rec_type = 3;
 
+                    words.splice(i, 1); i--; len--;
                 }
                 else if (REG_TRACKER_ID_EXT.test(word)) {
                     this.tracker_id = word.slice(11);
+
+                    words.splice(i, 1); i--; len--;
+                }
+                else if (REG_PRIO_EXT.test(word)) {
+                    words.splice(i, 1); i--; len--;
                 }
             }
         }
