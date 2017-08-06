@@ -373,6 +373,6 @@ Alarms, stopwatch and other timers won't work when the screen is locked.
 
 ---
  
-![preview](https://i.imgur.com/m7I7NaO.png)
+![preview](https://i.imgur.com/kwMAHoM.png)
 <sup>**Preview info:** [Gnome-Shell
 theme](https://github.com/zagortenay333/ciliora-tertia-shell)</sup>
