@@ -119,7 +119,7 @@ Some of the features of the todo.txt manager are:
 * Filtering by context, project, priority, custom fuzzy filters...
 * Activating a filter by clicking on a priority, context, or proj in the task.
 * Support for multiple todo files and corresponding done files and csv dirs.
-* Sorting by priority, due date, completion date, creation date.
+* Compound sorting by priority, due date, completion date, creation date, etc...
 * Fuzzy autocompletion for contexts and projects when inline editing a task.
 * Autoupdating when the todo.txt file changes.
 * Deleting all completed tasks and optionally storing them into a done.txt file.
