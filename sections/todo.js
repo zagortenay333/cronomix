@@ -3306,7 +3306,7 @@ const TaskFiltersWindow = new Lang.Class({
             close_button.add_actor(close_icon);
 
             close_button.connect('clicked', () => {
-                this._delete_filter_item(item);
+                this._delete_custom_item(item);
             });
         }
 
@@ -3321,22 +3321,16 @@ const TaskFiltersWindow = new Lang.Class({
         return item;
     },
 
-    _delete_filter_item: function (item) {
+    _delete_custom_item: function (item) {
         if (item.checkbox.actor.has_key_focus || close_button.has_key_focus)
             this.entry.entry.grab_key_focus();
 
         item.actor.destroy();
 
-        for (let items in this.filter_register) {
-            if (! this.filter_register.hasOwnProperty(items)) continue;
-
-            items = this.filter_register[items];
-
-            for (let i = 0, len = items.length; i < len; i++) {
-                if (items[i] === item) {
-                    items.splice(i, 1);
-                    return;
-                }
+        for (let i = 0; i < this.filter_register.custom.length; i++) {
+            if (this.filter_register.custom[i] === item) {
+                this.filter_register.custom.splice(i, 1);
+                return;
             }
         }
     },
