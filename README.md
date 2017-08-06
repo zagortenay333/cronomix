@@ -262,7 +262,7 @@ recurs on <code>2000-04-12</code>.<br>
                 <li><code>(A) 2000-01-01 rec:1d-12m</code> recurs on the first
 day of every year.</li>
                 <li><code>(A) 2000-02-01 rec:29d-24m</code> recurs on the last
-day of February every 2 years.</li>
+day of February every 2 years starting from 2000.</li>
                 </ul>
             </li>
             </ol>
@@ -344,7 +344,7 @@ gdbus call --session --dest org.gnome.Shell \
 ### Custom Theme Support
 
 This extension supports custom themes. In order to style it, place a
-`timepp.css` file in your theme's root directory _(the dir where the
+`timepp.css` file into your theme's root directory _(the dir where the
 `gnome-shell.css` file is)_.
 
 You must use the `!important` directive in order to override a property from the
