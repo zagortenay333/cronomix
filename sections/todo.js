@@ -1757,7 +1757,7 @@ Signals.addSignalMethods(Todo.prototype);
 
 
 // =====================================================================
-// @@@ UI used for editing a task string.
+// @@@ Task Editor UI
 //
 // @ext      : obj (main extension object)
 // @delegate : obj (main section object)
@@ -2087,7 +2087,7 @@ Signals.addSignalMethods(TaskEditor.prototype);
 
 
 // =====================================================================
-// @@@ A task object including the actor to be drawn in the popup menu.
+// @@@ Task item/object including the actor to be drawn in the popup menu.
 //
 // @ext                 : obj (main extension object)
 // @delegate            : obj (main section object)
@@ -2477,14 +2477,11 @@ const TaskItem = new Lang.Class({
 
         this.description_markup = words;
 
-        // Escape '&' and '<', or else pango will throw an error.
-        // It could still throw an error if a tag is properly structured, but is
-        // not supported by pango.
-        let markup = this.description_markup.join(' ');
-        markup = markup.replace(/&(?!amp;|quot;|apos;|lt;|gt;)/g, '&amp;');
-        markup = markup.replace(/<(?!\/?.*>)/g, '&lt;');
-
-        this.msg.clutter_text.set_markup(markup);
+        // We escape '&' and '<'.
+        this.msg.clutter_text.set_markup(
+           words.join(' ').replace(/&(?!amp;|quot;|apos;|lt;|gt;)/g, '&amp;')
+                          .replace(/<(?!\/?.*>)/g, '&lt;')
+        );
     },
 
     check_recurrence: function () {

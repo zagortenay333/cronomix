@@ -494,10 +494,12 @@ const Timer = new Lang.Class({
             gicon        : icon.gicon,
         };
 
-        let notif = new MessageTray.Notification(source,
-                                                 TIMER_EXPIRED_MSG,
-                                                 this.cache.notif_msg,
-                                                 params);
+        let notif = new MessageTray.Notification(
+            source,
+            TIMER_EXPIRED_MSG,
+            this.cache.notif_msg,
+            params
+        );
 
         notif.setUrgency(MessageTray.Urgency.CRITICAL);
 
@@ -505,8 +507,11 @@ const Timer = new Lang.Class({
     },
 
     _show_settings: function () {
-        let settings = new TimerSettings(this.ext,
-            this.settings.get_boolean('timer-show-seconds'), this.cache.notif_msg);
+        let settings = new TimerSettings(
+            this.ext,
+            this.settings.get_boolean('timer-show-seconds'),
+            this.cache.notif_msg
+        );
 
         this.timepicker_container.add_actor(settings.actor);
         settings.button_cancel.grab_key_focus();
@@ -626,22 +631,22 @@ const TimerSettings = new Lang.Class({
         //
         // time pickers
         //
-        this.alarms_numpicker_box = new St.BoxLayout({ style_class: 'row numpicker-box' });
-        this.content_box.add_actor(this.alarms_numpicker_box);
+        this.numpicker_box = new St.BoxLayout({ style_class: 'row numpicker-box' });
+        this.content_box.add_actor(this.numpicker_box);
 
         this.hr_bin = new St.Bin({x_align: 1});
-        this.alarms_numpicker_box.add(this.hr_bin, {expand: true});
+        this.numpicker_box.add(this.hr_bin, {expand: true});
         this.hr  = new NUM_PICKER.NumPicker(0, 23);
         this.hr_bin.add_actor(this.hr.actor);
 
         this.min_bin = new St.Bin({x_align: 1});
-        this.alarms_numpicker_box.add(this.min_bin, {expand: true});
+        this.numpicker_box.add(this.min_bin, {expand: true});
         this.min = new NUM_PICKER.NumPicker(0, 59);
         this.min_bin.add_actor(this.min.actor);
 
         if (show_secs) {
             this.sec_bin = new St.Bin({x_align: 1});
-            this.alarms_numpicker_box.add(this.sec_bin, {expand: true});
+            this.numpicker_box.add(this.sec_bin, {expand: true});
             this.sec = new NUM_PICKER.NumPicker(0, 59);
             this.sec_bin.add_actor(this.sec.actor);
         }
@@ -672,13 +677,13 @@ const TimerSettings = new Lang.Class({
         //
         // buttons
         //
-        let alarms_settings_btn_box = new St.BoxLayout({ style_class: 'row btn-box' });
-        this.content_box.add(alarms_settings_btn_box, {expand: true});
+        let btn_box = new St.BoxLayout({ style_class: 'row btn-box' });
+        this.content_box.add(btn_box, {expand: true});
 
         this.button_cancel = new St.Button({ can_focus: true, label: _('Cancel'), style_class: 'button', x_expand: true });
         this.button_ok     = new St.Button({ can_focus: true, label: _('Ok'), style_class: 'button', x_expand: true });
-        alarms_settings_btn_box.add(this.button_cancel, {expand: true});
-        alarms_settings_btn_box.add(this.button_ok, {expand: true});
+        btn_box.add(this.button_cancel, {expand: true});
+        btn_box.add(this.button_ok, {expand: true});
 
 
         //
