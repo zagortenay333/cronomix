@@ -2555,6 +2555,12 @@ const TaskItem = new Lang.Class({
                 month += increment;
                 year  += Math.floor(month / 12);
                 month %= 12;
+
+                if (month === 0) {
+                    month = 12;
+                    year--;
+                }
+
                 iter   = "%d-%02d-%02d".format(year, month, day);
             }
 
@@ -2575,6 +2581,12 @@ const TaskItem = new Lang.Class({
                 month += increment;
                 year  += Math.floor(month / 12);
                 month %= 12;
+
+                if (month === 0) {
+                    month = 12;
+                    year--;
+                }
+
                 iter   = "%d-%02d-%02d".format(year, month, day);
 
                 while (! Date.parse(iter)) {
