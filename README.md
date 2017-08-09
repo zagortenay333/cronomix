@@ -34,6 +34,20 @@ gnome-shell version **`3.24`**.
 
 ---
 
+### Translations
+
+If you want to help out with translations, check out the instructions in the [locale](locale) dir.
+
+---
+
+### Lock Screen
+
+**Note that all gnome-shell extensions get disabled in the lock screen**.
+
+Alarms, stopwatch and other timers won't work when the screen is locked.
+
+---
+
 ### Sections
 
 Each section (timer, stopwatch, alarms..) can open as a separate menu when it's
@@ -362,20 +376,6 @@ The todo.txt manager, timer and alarm support
 > The pango markup will appear in the `todo.txt` file as well if used in the 
 todo.txt manager.  
 > Notifications will only show the `<b>`, `<i>`, `<u>` tags and links.
-
----
-
-### Translations
-
-If you want to help out with translations, check out the instructions in the [locale](locale) dir.
-
----
-
-### Lock Screen
-
-**Note that all gnome-shell extensions get disabled in the lock screen**.
-
-Alarms, stopwatch and other timers won't work when the screen is locked.
 
 ---
  
