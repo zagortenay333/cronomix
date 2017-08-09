@@ -2987,7 +2987,7 @@ F3</property>
                                             <property name="margin_top">10</property>
                                             <property name="margin_bottom">10</property>
                                             <child>
-                                              <object class="GtkEntry" id="todo-keybinding-open-to-switch-files">
+                                              <object class="GtkEntry" id="todo-keybinding-open-to-search1">
                                                 <property name="visible">True</property>
                                                 <property name="can_focus">True</property>
                                                 <property name="tooltip_text" translatable="yes">Examples:

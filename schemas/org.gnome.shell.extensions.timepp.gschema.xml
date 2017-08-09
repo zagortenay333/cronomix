@@ -292,5 +292,9 @@
             <default><![CDATA[[""]]]></default>
             <description>Open this section to search task</description>
         </key>
+        <key name="todo-keybinding-open-to-switch-files" type="as">
+            <default><![CDATA[[""]]]></default>
+            <description>Open this section to search task</description>
+        </key>
     </schema>
 </schemalist>

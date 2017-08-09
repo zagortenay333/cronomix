@@ -366,6 +366,15 @@ const Todo = new Lang.Class({
                 this.show_view__search();
             }
         });
+        this.keym.register('todo-keybinding-open-to-switch-files', () => {
+            this.ext.open_menu(this);
+            if (this.view_manager.current_view !== View.LOADING &&
+                this.view_manager.current_view !== View.NO_TODO_FILE &&
+                this.settings.get_value('todo-files').deep_unpack().length > 1) {
+
+                this.show_view__file_switcher();
+            }
+        });
 
 
         //
