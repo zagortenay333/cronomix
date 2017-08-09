@@ -1068,7 +1068,7 @@ const Todo = new Lang.Class({
         this.view_manager.show_view({
             view_name      : View.FILE_SWITCH,
             actors         : [filter_switcher.actor],
-            focused_actor  : filter_switcher.button_ok,
+            focused_actor  : filter_switcher.entry.entry,
             close_callback : () => { filter_switcher.actor.destroy(); },
         });
 
@@ -1641,7 +1641,7 @@ const Todo = new Lang.Class({
             this.add_tasks_to_menu_mainloop_id = null;
         }
 
-        let pattern = this.search_entry.text.trim().toLowerCase();
+        let pattern = this.search_entry.get_text().trim().toLowerCase();
 
         if (pattern === '') {
             this.last_search_pattern = '';
@@ -1903,15 +1903,15 @@ const TaskEditor = new Lang.Class({
         for (let [keyword,] of haystack.entries()) {
             score = FUZZ.fuzzy_search_v1(needle, keyword);
             if (!score) continue;
-            reduced_results.push({keyword: keyword, score: score });
+            reduced_results.push([score, keyword]);
         }
 
-        reduced_results.sort((a, b) => a.score < b.score);
+        reduced_results.sort((a, b) => a[0] < b[0]);
 
         let results = [];
 
         for (let i = 0, len = reduced_results.length; i < len; i++) {
-            results[i] = reduced_results[i].keyword;
+            results[i] = reduced_results[i][1];
         }
 
         return results;
@@ -1980,9 +1980,9 @@ const TaskEditor = new Lang.Class({
 
         let completion = this.curr_selected_completion.label;
 
-        let text = this.entry.entry.text.slice(0, this.current_word_start) +
+        let text = this.entry.entry.get_text().slice(0, this.current_word_start) +
                    completion +
-                   this.entry.entry.text.slice(this.current_word_end + 1);
+                   this.entry.entry.get_text().slice(this.current_word_end + 1);
 
 
         this.text_changed_handler_block = true;
@@ -3071,15 +3071,15 @@ const TaskFiltersWindow = new Lang.Class({
                                   this.custom_filters_box);
         });
         this.entry.entry.clutter_text.connect('activate', () => {
-            if (! this.entry.entry.text) return;
+            if (! this.entry.entry.get_text()) return;
 
             // check for duplicates
             for (let i = 0; i < this.filter_register.custom.length; i++) {
-                if (this.filter_register.custom[i].filter === this.entry.entry.text)
+                if (this.filter_register.custom[i].filter === this.entry.entry.get_text())
                     return;
             }
 
-            let item = this._new_filter_item(true, this.entry.entry.text, false,
+            let item = this._new_filter_item(true, this.entry.entry.get_text(), false,
                                              true, this.custom_filters_box);
             this.custom_filters_box.add_child(item.actor);
             this.filter_register.custom.push(item);
@@ -3346,7 +3346,7 @@ Signals.addSignalMethods(TaskFiltersWindow.prototype);
 
 
 // =====================================================================
-// @@@ The window used for switching between todo files
+// @@@ File Switcher
 //
 // @ext      : obj (main extension object)
 // @delegate : obj (main section object)
@@ -3362,13 +3362,13 @@ const TodoFileSwitcher = new Lang.Class({
         this.ext      = ext;
         this.delegate = delegate;
 
-
-        this.items        = [];
-        this.checked_item = null;
         this.todo_files   = delegate.settings.get_value('todo-files')
-                            .deep_unpack();
-        this.init_name    = delegate.settings.get_value('todo-current')
-                            .deep_unpack().name;
+                             .deep_unpack();
+        this.current_name = delegate.settings.get_value('todo-current')
+                             .deep_unpack().name;
+
+        this.file_items    = []; // the ones created with _load_items()
+        this.selected_item = null;
 
 
         //
@@ -3378,6 +3378,16 @@ const TodoFileSwitcher = new Lang.Class({
 
         this.content_box = new St.BoxLayout({ x_expand: true, vertical: true, style_class: 'view-box-content' });
         this.actor.add_actor(this.content_box);
+
+
+        //
+        // search entry
+        //
+        let entry_container = new St.BoxLayout({ vertical: true, x_expand: true, style_class: 'row' });
+        this.content_box.add_child(entry_container);
+
+        this.entry = new MULTIL_ENTRY.MultiLineEntry(_('Search files...'), false, true);
+        entry_container.add_child(this.entry.actor);
 
 
         //
@@ -3396,34 +3406,23 @@ const TodoFileSwitcher = new Lang.Class({
 
 
         //
-        // buttons
-        //
-        this.btn_box = new St.BoxLayout({ x_expand: true, style_class: 'row btn-box' });
-        this.content_box.add_child(this.btn_box);
-
-        this.button_ok = new St.Button({ can_focus: true, label: _('Ok'), style_class: 'btn-ok button' });
-        this.btn_box.add(this.button_ok, {expand: true});
-
-
-        //
         // listen
         //
-        this.button_ok.connect('clicked', () => {
-            if (this.checked_item.name !== this.init_name)
-                this.emit('switch', this.checked_item.name);
-            else
-                this.emit('close');
-        });
         this.delegate.settings.connect('changed::todo-files', () => {
-            this.items_scroll_content.remove_all_children();
-            this.checked_item = null;
-            this.todo_files = this.delegate.settings.get_value('todo-files')
-                              .deep_unpack();
-            this.init_name  = delegate.settings.get_value('todo-current')
-                              .deep_unpack().name;
+            this.emit('close');
+        });
+        this.entry.entry.clutter_text.connect('text-changed', () => {
+            this._search_files();
+        });
+        this.entry.entry.clutter_text.connect('activate', () => {
+            if (this.selected_item &&
+                this.selected_item.name !== this.current_name) {
 
-            if (this.todo_files.length < 2) this.emit('close');
-            else                            this._load_items();
+                this.emit('switch', this.selected_item.name);
+            }
+            else {
+                this.emit('close');
+            }
         });
         this.items_scroll_content.connect('queue-redraw', () => {
             this.items_scroll.vscrollbar_policy = Gtk.PolicyType.NEVER;
@@ -3433,39 +3432,106 @@ const TodoFileSwitcher = new Lang.Class({
     },
 
     _load_items: function () {
-        let it;
+        let it, item, is_current, current_item;
+
         for (let i = 0, len = this.todo_files.length; i < len; i++) {
             it = this.todo_files[i];
-            this._add_file_item(it.name, it.name === this.init_name);
+            is_current = (it.name === this.current_name);
+
+            item = {};
+
+            item.name = it.name;
+
+            item.actor = new St.Button({ can_focus: true, reactive: true, x_fill: true, x_align: St.Align.START, track_hover: true, style_class: 'row popup-menu-item' });
+            item.actor._delegate = item;
+
+            let content = new St.BoxLayout();
+            item.actor.add_actor(content);
+
+            item.label = new St.Label ({ text: it.name, x_expand: true });
+            content.add_child(item.label);
+
+            if (is_current) {
+                current_item = item;
+                content.add_child(new St.Label({ text: _('current file'), margin_left: 8, style_class: 'popup-inactive-menu-item', pseudo_class: 'insensitive' }));
+            }
+            else {
+                this.items_scroll_content.add_child(item.actor);
+                this.file_items.push(item);
+            }
+
+            item.actor.connect('notify::hover', (item) => {
+                item.grab_key_focus();
+            });
+            item.actor.connect('key-focus-in', (item) => {
+                if (this.selected_item)
+                    this.selected_item.actor.pseudo_class = '';
+
+                this.selected_item = item._delegate;
+                item.pseudo_class  = 'active';
+
+                SCROLL_TO_ITEM.scroll(this.items_scroll,
+                                      this.items_scroll_content,
+                                      item);
+            });
+            item.actor.connect('clicked', (item) => {
+                if (item._delegate.name !== this.current_name)
+                    this.emit('switch', item._delegate.name);
+                else
+                    this.emit('close');
+            });
         }
+
+        this.items_scroll_content.insert_child_at_index(current_item.actor, 0);
+        this.file_items.unshift(current_item);
+
+        this.selected_item              = current_item;
+        current_item.actor.pseudo_class = 'active';
     },
 
-    _add_file_item: function (name, checked) {
-        let item = {};
+    _search_files: function () {
+        let needle = this.entry.entry.get_text();
+        let len    = this.file_items.length;
 
-        item.name = name;
+        if (!needle) {
+            this.items_scroll_content.remove_all_children();
 
-        item.actor = new St.BoxLayout({ reactive: true, style_class: 'row' });
-        this.items_scroll_content.add_child(item.actor);
+            for (let i = 0; i < len; i++) {
+                this.items_scroll_content.add_child(this.file_items[i].actor);
+            }
+        }
+        else {
+            let reduced_results = [];
+            let i, item, score;
 
-        if (checked) this.checked_item = item;
+            for (i = 0; i < len; i++) {
+                item = this.file_items[i];
 
-        item.label = new St.Label ({ text: name, y_align: Clutter.ActorAlign.CENTER });
-        item.actor.add(item.label, {expand: true});
+                score = FUZZ.fuzzy_search_v1(needle, item.label.text);
+                if (!score) continue;
+                reduced_results.push([score, item]);
+            }
 
-        item.radiobutton = new St.Button({ toggle_mode: true, can_focus: true, y_align: St.Align.MIDDLE });
-        item.actor.add_child(item.radiobutton);
-        item.radiobutton.style_class = 'radiobutton';
-        item.radiobutton.checked     = checked;
+            reduced_results.sort((a, b) => a[0] < b[0]);
 
-        let radio_checkmark = new St.Bin();
-        item.radiobutton.add_actor(radio_checkmark);
+            this.items_scroll_content.remove_all_children();
 
-        item.radiobutton.connect('clicked', () => {
-            this.checked_item.radiobutton.checked = false;
-            item.radiobutton.checked              = true;
-            this.checked_item                     = item;
-        });
+            for (i = 0, len = reduced_results.length; i < len; i++) {
+                this.items_scroll_content.add_child(reduced_results[i][1].actor);
+            }
+        }
+
+        if (this.selected_item) this.selected_item.actor.pseudo_class = '';
+
+        let first_child = this.items_scroll_content.get_first_child();
+
+        if (first_child) {
+            this.selected_item       = first_child._delegate;
+            first_child.pseudo_class = 'active';
+        }
+        else {
+            this.selected_item = null;
+        }
     },
 });
 Signals.addSignalMethods(TodoFileSwitcher.prototype);
@@ -3513,8 +3579,6 @@ const TaskSortWindow = new Lang.Class({
         this.sort_items_box = new St.BoxLayout({ vertical: true, style_class: 'sort-items-box' });
         this.content_box.add_child(this.sort_items_box);
         this.sort_items_box._delegate = this;
-
-        let radio_checkmark;
 
 
         //
@@ -3811,7 +3875,7 @@ Signals.addSignalMethods(ClearCompletedTasks.prototype);
 
 
 // =====================================================================
-// @@@ UI for showing time tracker stats
+// @@@ Stats UI
 //
 // @ext      : obj (main extension object)
 // @delegate : obj (main section object)

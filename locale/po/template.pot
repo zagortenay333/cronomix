@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-09 10:41+0200\n"
+"POT-Creation-Date: 2017-08-09 14:36+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -49,13 +49,13 @@ msgid "Delete"
 msgstr ""
 
 #: ../sections/alarms.js:625 ../sections/pomodoro.js:777
-#: ../sections/timer.js:652 ../sections/todo.js:1804 ../sections/todo.js:3776
+#: ../sections/timer.js:652 ../sections/todo.js:1804 ../sections/todo.js:3840
 msgid "Cancel"
 msgstr ""
 
 #: ../sections/alarms.js:626 ../sections/pomodoro.js:776
 #: ../sections/timer.js:653 ../sections/todo.js:1807 ../sections/todo.js:3053
-#: ../sections/todo.js:3404 ../sections/todo.js:3534 ../sections/todo.js:3779
+#: ../sections/todo.js:3598 ../sections/todo.js:3843
 msgid "Ok"
 msgstr ""
 
@@ -215,7 +215,7 @@ msgid_plural "recurs:%s (in %d days)"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../sections/todo.js:2629 ../sections/todo.js:3885
+#: ../sections/todo.js:2629 ../sections/todo.js:3949
 msgid "today"
 msgstr ""
 
@@ -282,63 +282,71 @@ msgid_plural "%d tasks"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../sections/todo.js:3495
+#: ../sections/todo.js:3389
+msgid "Search files..."
+msgstr ""
+
+#: ../sections/todo.js:3456
+msgid "current file"
+msgstr ""
+
+#: ../sections/todo.js:3561
 msgid "Sort by Context"
 msgstr ""
 
-#: ../sections/todo.js:3496
+#: ../sections/todo.js:3562
 msgid "Sort by Projects"
 msgstr ""
 
-#: ../sections/todo.js:3497
+#: ../sections/todo.js:3563
 msgid "Sort by Priority"
 msgstr ""
 
-#: ../sections/todo.js:3498
+#: ../sections/todo.js:3564
 msgid "Sort by Due Date"
 msgstr ""
 
-#: ../sections/todo.js:3499
+#: ../sections/todo.js:3565
 msgid "Sort by Completed"
 msgstr ""
 
-#: ../sections/todo.js:3500
+#: ../sections/todo.js:3566
 msgid "Sort by Creation Date"
 msgstr ""
 
-#: ../sections/todo.js:3501
+#: ../sections/todo.js:3567
 msgid "Sort by Completion Date"
 msgstr ""
 
-#: ../sections/todo.js:3736
+#: ../sections/todo.js:3800
 msgid "Delete all completed tasks"
 msgstr ""
 
-#: ../sections/todo.js:3749
+#: ../sections/todo.js:3813
 msgid "Archive all completed tasks to done.txt and delete them"
 msgstr ""
 
-#: ../sections/todo.js:3850
+#: ../sections/todo.js:3914
 msgid "Nothing found..."
 msgstr ""
 
-#: ../sections/todo.js:3886
+#: ../sections/todo.js:3950
 msgid "last 3 days"
 msgstr ""
 
-#: ../sections/todo.js:3887
+#: ../sections/todo.js:3951
 msgid "this week"
 msgstr ""
 
-#: ../sections/todo.js:3888
+#: ../sections/todo.js:3952
 msgid "this month"
 msgstr ""
 
-#: ../sections/todo.js:3889
+#: ../sections/todo.js:3953
 msgid "this year"
 msgstr ""
 
-#: ../sections/todo.js:4375
+#: ../sections/todo.js:4439
 msgid "To track time, select a dir for csv files in the settings."
 msgstr ""
 
