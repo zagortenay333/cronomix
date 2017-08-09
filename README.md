@@ -365,6 +365,12 @@ todo.txt manager.
 
 ---
 
+### Translations
+
+If you want to help out with translations, check out the instructions in the [locale](locale) dir.
+
+---
+
 ### Lock Screen
 
 **Note that all gnome-shell extensions get disabled in the lock screen**.
