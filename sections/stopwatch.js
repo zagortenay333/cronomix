@@ -23,6 +23,7 @@ const ngettext = Gettext.ngettext;
 
 const FULLSCREEN    = ME.imports.lib.fullscreen;
 const SIG_MANAGER   = ME.imports.lib.signal_manager;
+const KEY_MANAGER   = ME.imports.lib.keybinding_manager;
 const PANEL_ITEM    = ME.imports.lib.panel_item;
 const ICON_FROM_URI = ME.imports.lib.icon_from_uri;
 
@@ -64,20 +65,32 @@ const Stopwatch = new Lang.Class({
         this.ext_dir  = ext_dir;
         this.settings = settings;
 
-        this.sigm       = new SIG_MANAGER.SignalManager();
-        this.fullscreen = new StopwatchFullscreen(
-            this.ext, this, this.settings.get_int('stopwatch-fullscreen-monitor-pos'));
-
         this.section_enabled = this.settings.get_boolean('stopwatch-enabled');
         this.separate_menu   = this.settings.get_boolean('stopwatch-separate-menu');
         this.clock_format    = this.settings.get_enum('stopwatch-clock-format');
         this.start_time      = 0; // used for computing elapsed time
         this.lap_count       = 0;
-        this.keybindings     = [];
         this.cache_file      = null;
         this.cache           = null;
         this.tic_mainloop_id = null;
         this.time_backup_mainloop_id = null;
+
+        this.fullscreen = new StopwatchFullscreen(
+            this.ext, this, this.settings.get_int('stopwatch-fullscreen-monitor-pos'));
+
+        this.sigm = new SIG_MANAGER.SignalManager();
+        this.keym = new KEY_MANAGER.KeybindingManager(this.settings);
+
+
+        //
+        // register shortcuts (need to be enabled later on)
+        //
+        this.keym.register('stopwatch-keybinding-open', () => {
+             this.ext.open_menu(this);
+        });
+        this.keym.register('stopwatch-keybinding-open-fullscreen', () => {
+            this._show_fullscreen();
+        });
 
 
         //
@@ -194,9 +207,6 @@ const Stopwatch = new Lang.Class({
         this.sigm.connect(this.settings, 'changed::stopwatch-panel-mode', () => {
             this._toggle_panel_mode();
         });
-        this.sigm.connect(this.settings, 'changed::stopwatch-keybinding-open', () => {
-            this._toggle_keybindings();
-        });
         this.sigm.connect(this.panel_item.actor, 'key-focus-in', () => {
             // user has right-clicked to show the context menu
             if (this.ext.menu.isOpen && this.ext.context_menu.actor.visible)
@@ -258,7 +268,7 @@ const Stopwatch = new Lang.Class({
         if (this.cache.state === StopwatchState.RUNNING) this.pause();
         this._store_cache();
         this.sigm.disconnect_all();
-        this._toggle_keybindings(true);
+        this.keym.disable_all();
 
         if (this.fullscreen) {
             this.fullscreen.destroy();
@@ -295,11 +305,12 @@ const Stopwatch = new Lang.Class({
             return;
         }
 
-        if (! this.fullscreen)
+        if (! this.fullscreen) {
             this.fullscreen = new StopwatchFullscreen(
                 this.ext, this, this.settings.get_int('stopwatch-fullscreen-monitor-pos'));
+        }
 
-        this._toggle_keybindings();
+        this.keym.enable_all();
 
 
         if (this.cache.state === StopwatchState.RESET) return;
@@ -551,46 +562,6 @@ const Stopwatch = new Lang.Class({
             this.panel_item.set_mode('text');
         else
             this.panel_item.set_mode('icon_text');
-    },
-
-    _toggle_keybindings: function (disable_all) {
-        if (!disable_all &&
-            this.settings.get_strv('stopwatch-keybinding-open')[0] !== '') {
-
-            this.keybindings.push('stopwatch-keybinding-open');
-
-            Main.wm.addKeybinding(
-                'stopwatch-keybinding-open',
-                this.settings,
-                Meta.KeyBindingFlags.NONE,
-                Shell.ActionMode.NORMAL,
-                () => { this.ext.open_menu(this); });
-        } else {
-            let i = this.keybindings.indexOf('stopwatch-keybinding-open');
-            if (i !== -1) {
-                Main.wm.removeKeybinding('stopwatch-keybinding-open');
-                this.keybindings.splice(i, 1);
-            }
-        }
-
-        if (!disable_all &&
-            this.settings.get_strv('stopwatch-keybinding-open-fullscreen')[0] !== '') {
-
-            this.keybindings.push('stopwatch-keybinding-open-fullscreen');
-
-            Main.wm.addKeybinding(
-                'stopwatch-keybinding-open-fullscreen',
-                this.settings,
-                Meta.KeyBindingFlags.NONE,
-                Shell.ActionMode.NORMAL,
-                () => { this._show_fullscreen(); });
-        } else {
-            let i = this.keybindings.indexOf('stopwatch-keybinding-open-fullscreen');
-            if (i !== -1) {
-                Main.wm.removeKeybinding('stopwatch-keybinding-open-fullscreen');
-                this.keybindings.splice(i, 1);
-            }
-        }
     },
 });
 Signals.addSignalMethods(Stopwatch.prototype);

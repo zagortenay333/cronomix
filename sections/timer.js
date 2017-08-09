@@ -26,6 +26,7 @@ const ngettext = Gettext.ngettext;
 
 const FULLSCREEN    = ME.imports.lib.fullscreen;
 const SIG_MANAGER   = ME.imports.lib.signal_manager;
+const KEY_MANAGER   = ME.imports.lib.keybinding_manager;
 const PANEL_ITEM    = ME.imports.lib.panel_item;
 const ICON_FROM_URI = ME.imports.lib.icon_from_uri;
 const NUM_PICKER    = ME.imports.lib.num_picker;
@@ -65,14 +66,11 @@ const Timer = new Lang.Class({
         this.ext_dir  = ext_dir;
         this.settings = settings;
 
-        this.sigm = new SIG_MANAGER.SignalManager();
-
         this.section_enabled = this.settings.get_boolean('timer-enabled');
         this.separate_menu   = this.settings.get_boolean('timer-separate-menu');
         this.timer_state     = TimerState.OFF;
         this.timer_duration  = 0; // in microseconds
         this.end_time        = 0; // used for computing elapsed time
-        this.keybindings     = [];
         this.tic_mainloop_id = null;
         this.cache_file      = null;
         this.cache           = null;
@@ -82,6 +80,20 @@ const Timer = new Lang.Class({
 
         this.fullscreen.set_banner_text(
             this.settings.get_boolean('timer-show-seconds') ? '00:00:00' : '00:00');
+
+        this.sigm = new SIG_MANAGER.SignalManager();
+        this.keym = new KEY_MANAGER.KeybindingManager(this.settings);
+
+
+        //
+        // register shortcuts (need to be enabled later on)
+        //
+        this.keym.register('timer-keybinding-open', () => {
+             this.ext.open_menu(this);
+        });
+        this.keym.register('timer-keybinding-open-fullscreen', () => {
+            this._show_fullscreen();
+        });
 
 
         //
@@ -164,9 +176,6 @@ const Timer = new Lang.Class({
         this.sigm.connect(this.settings, 'changed::timer-panel-mode', () => {
             this._toggle_panel_item_mode();
         });
-        this.sigm.connect(this.settings, 'changed::timer-keybinding-open', () => {
-            this._toggle_keybindings();
-        });
         this.sigm.connect(this.panel_item.actor, 'key-focus-in', () => {
             // user has right-clicked to show the context menu
             if (this.ext.menu.isOpen && this.ext.context_menu.actor.visible)
@@ -222,7 +231,7 @@ const Timer = new Lang.Class({
         this.stop_timer();
         this._store_cache();
         this.sigm.disconnect_all();
-        this._toggle_keybindings(true);
+        this.keym.disable_all();
 
         if (this.fullscreen) {
             this.fullscreen.destroy();
@@ -262,7 +271,7 @@ const Timer = new Lang.Class({
             this.fullscreen = new TimerFullscreen(
                 this.ext, this, this.settings.get_int('timer-fullscreen-monitor-pos'));
 
-        this._toggle_keybindings();
+        this.keym.enable_all();
     },
 
     _store_cache: function () {
@@ -563,46 +572,6 @@ const Timer = new Lang.Class({
             this.panel_item.set_mode('text');
         else
             this.panel_item.set_mode('icon_text');
-    },
-
-    _toggle_keybindings: function (disable_all) {
-        if (!disable_all &&
-            this.settings.get_strv('timer-keybinding-open')[0] !== '') {
-
-            this.keybindings.push('timer-keybinding-open');
-
-            Main.wm.addKeybinding(
-                'timer-keybinding-open',
-                this.settings,
-                Meta.KeyBindingFlags.NONE,
-                Shell.ActionMode.NORMAL,
-                () => { this.ext.open_menu(this); });
-        } else {
-            let i = this.keybindings.indexOf('timer-keybinding-open');
-            if (i !== -1) {
-                Main.wm.removeKeybinding('timer-keybinding-open');
-                this.keybindings.splice(i, 1);
-            }
-        }
-
-        if (!disable_all &&
-            this.settings.get_strv('timer-keybinding-open-fullscreen')[0] !== '') {
-
-            this.keybindings.push('timer-keybinding-open-fullscreen');
-
-            Main.wm.addKeybinding(
-                'timer-keybinding-open-fullscreen',
-                this.settings,
-                Meta.KeyBindingFlags.NONE,
-                Shell.ActionMode.NORMAL,
-                () => { this._show_fullscreen(); });
-        } else {
-            let i = this.keybindings.indexOf('timer-keybinding-open-fullscreen');
-            if (i !== -1) {
-                Main.wm.removeKeybinding('timer-keybinding-open-fullscreen');
-                this.keybindings.splice(i, 1);
-            }
-        }
     },
 });
 Signals.addSignalMethods(Timer.prototype);

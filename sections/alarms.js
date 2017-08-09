@@ -25,6 +25,7 @@ const ngettext = Gettext.ngettext;
 
 const FULLSCREEN     = ME.imports.lib.fullscreen;
 const SIG_MANAGER    = ME.imports.lib.signal_manager;
+const KEY_MANAGER    = ME.imports.lib.keybinding_manager;
 const PANEL_ITEM     = ME.imports.lib.panel_item;
 const ICON_FROM_URI  = ME.imports.lib.icon_from_uri;
 const MULTIL_ENTRY   = ME.imports.lib.multiline_entry;
@@ -107,15 +108,24 @@ const Alarms = new Lang.Class({
         this.ext_dir  = ext_dir;
         this.settings = settings;
 
-        this.sigm       = new SIG_MANAGER.SignalManager();
+        this.section_enabled = this.settings.get_boolean('alarms-enabled');
+        this.separate_menu   = this.settings.get_boolean('alarms-separate-menu');
+        this.cache_file      = null;
+        this.cache           = null;
+
         this.fullscreen = new AlarmFullscreen(
             this.ext, this, this.settings.get_int('alarms-fullscreen-monitor-pos'));
 
-        this.section_enabled = this.settings.get_boolean('alarms-enabled');
-        this.separate_menu   = this.settings.get_boolean('alarms-separate-menu');
-        this.keybindings     = [];
-        this.cache_file      = null;
-        this.cache           = null;
+        this.sigm = new SIG_MANAGER.SignalManager();
+        this.keym = new KEY_MANAGER.KeybindingManager(this.settings);
+
+
+        //
+        // register shortcuts (need to be enabled later on)
+        //
+        this.keym.register('alarms-keybinding-open', () => {
+             this.ext.open_menu(this);
+        });
 
 
         //
@@ -174,9 +184,6 @@ const Alarms = new Lang.Class({
         this.sigm.connect(this.settings, 'changed::alarms-separate-menu', () => {
             this.separate_menu = this.settings.get_boolean('alarms-separate-menu');
             this.ext.update_panel_items();
-        });
-        this.sigm.connect(this.settings, 'changed::alarms-keybinding-open', () => {
-            this._toggle_keybindings();
         });
         this.sigm.connect(this.panel_item.actor, 'key-focus-in', () => {
             // user has right-clicked to show the context menu
@@ -239,7 +246,7 @@ const Alarms = new Lang.Class({
         this.alarms_scroll_content.destroy_all_children();
         this._store_cache();
         this.sigm.disconnect_all();
-        this._toggle_keybindings(true);
+        this.keym.disable_all();
 
         if (this.fullscreen) {
             this.fullscreen.destroy();
@@ -281,7 +288,7 @@ const Alarms = new Lang.Class({
             this.fullscreen = new AlarmFullscreen(
                 this.ext, this, this.settings.get_int('alarms-fullscreen-monitor-pos'));
 
-        this._toggle_keybindings();
+        this.keym.enable_all();
         this._update_panel_item_UI();
     },
 
@@ -500,28 +507,6 @@ const Alarms = new Lang.Class({
 
     _update_panel_icon_name: function () {
         ICON_FROM_URI.icon_from_uri(this.panel_item.icon, ALARM_ICON, this.ext_dir);
-    },
-
-    _toggle_keybindings: function (disable_all) {
-        if (!disable_all &&
-            this.settings.get_strv('alarms-keybinding-open')[0] !== '') {
-
-            this.keybindings.push('alarms-keybinding-open');
-
-            Main.wm.addKeybinding(
-                'alarms-keybinding-open',
-                this.settings,
-                Meta.KeyBindingFlags.NONE,
-                Shell.ActionMode.NORMAL,
-                () => { this.ext.open_menu(this); });
-        }
-        else {
-            let i = this.keybindings.indexOf('alarms-keybinding-open');
-            if (i !== -1) {
-                Main.wm.removeKeybinding('alarms-keybinding-open');
-                this.keybindings.splice(i, 1);
-            }
-        }
     },
 });
 Signals.addSignalMethods(Alarms.prototype);

@@ -25,6 +25,7 @@ const ngettext = Gettext.ngettext;
 
 const FULLSCREEN    = ME.imports.lib.fullscreen;
 const SIG_MANAGER   = ME.imports.lib.signal_manager;
+const KEY_MANAGER   = ME.imports.lib.keybinding_manager;
 const PANEL_ITEM    = ME.imports.lib.panel_item;
 const ICON_FROM_URI = ME.imports.lib.icon_from_uri;
 const NUM_PICKER    = ME.imports.lib.num_picker;
@@ -65,19 +66,31 @@ const Pomodoro = new Lang.Class({
         this.ext_dir  = ext_dir;
         this.settings = settings;
 
-        this.sigm       = new SIG_MANAGER.SignalManager();
-        this.fullscreen = new PomodoroFullscreen(
-            this.ext, this, this.settings.get_int('pomodoro-fullscreen-monitor-pos'));
-
         this.section_enabled  = this.settings.get_boolean('pomodoro-enabled');
         this.separate_menu    = this.settings.get_boolean('pomodoro-separate-menu');
         this.pomo_state       = PomoState.STOPPED;
         this.timer_duration   = 0; // in microseconds
         this.end_time         = 0; // used for computing elapsed time
-        this.keybindings      = [];
         this.tic_mainloop_id  = null;
         this.cache_file       = null;
         this.cache            = null;
+
+        this.fullscreen = new PomodoroFullscreen(
+            this.ext, this, this.settings.get_int('pomodoro-fullscreen-monitor-pos'));
+
+        this.sigm = new SIG_MANAGER.SignalManager();
+        this.keym = new KEY_MANAGER.KeybindingManager(this.settings);
+
+
+        //
+        // register shortcuts (need to be enabled later on)
+        //
+        this.keym.register('pomodoro-keybinding-open', () => {
+             this.ext.open_menu(this);
+        });
+        this.keym.register('pomodoro-keybinding-open-fullscreen', () => {
+            this._show_fullscreen();
+        });
 
 
         //
@@ -179,9 +192,6 @@ const Pomodoro = new Lang.Class({
         this.sigm.connect(this.settings, 'changed::pomodoro-panel-mode', () => {
             this._toggle_panel_mode();
         });
-        this.sigm.connect(this.settings, 'changed::pomodoro-keybinding-open', () => {
-            this._toggle_keybindings();
-        });
         this.sigm.connect(this.panel_item.actor, 'key-focus-in', () => {
             // user has right-clicked to show the context menu
             if (this.ext.menu.isOpen && this.ext.context_menu.actor.visible)
@@ -239,7 +249,7 @@ const Pomodoro = new Lang.Class({
         this.stop();
         this._store_cache();
         this.sigm.disconnect_all();
-        this._toggle_keybindings(true);
+        this.keym.disable_all();
 
         if (this.fullscreen) {
             this.fullscreen.destroy();
@@ -286,7 +296,7 @@ const Pomodoro = new Lang.Class({
             this.fullscreen = new PomodoroFullscreen(
                 this.ext, this, this.settings.get_int('pomodoro-fullscreen-monitor-pos'));
 
-        this._toggle_keybindings();
+        this.keym.enable_all();
         this._update_time_display();
         this.header.label.text = _('Pomodoro');
     },
@@ -660,46 +670,6 @@ const Pomodoro = new Lang.Class({
             this.panel_item.set_mode('text');
         else
             this.panel_item.set_mode('icon_text');
-    },
-
-    _toggle_keybindings: function (disable_all) {
-        if (!disable_all &&
-            this.settings.get_strv('pomodoro-keybinding-open')[0] !== '') {
-
-            this.keybindings.push('pomodoro-keybinding-open');
-
-            Main.wm.addKeybinding(
-                'pomodoro-keybinding-open',
-                this.settings,
-                Meta.KeyBindingFlags.NONE,
-                Shell.ActionMode.NORMAL,
-                () => { this.ext.open_menu(this); });
-        } else {
-            let i = this.keybindings.indexOf('pomodoro-keybinding-open');
-            if (i !== -1) {
-                Main.wm.removeKeybinding('pomodoro-keybinding-open');
-                this.keybindings.splice(i, 1);
-            }
-        }
-
-        if (!disable_all &&
-            this.settings.get_strv('pomodoro-keybinding-open-fullscreen')[0] !== '') {
-
-            this.keybindings.push('pomodoro-keybinding-open-fullscreen');
-
-            Main.wm.addKeybinding(
-                'pomodoro-keybinding-open-fullscreen',
-                this.settings,
-                Meta.KeyBindingFlags.NONE,
-                Shell.ActionMode.NORMAL,
-                () => { this._show_fullscreen(); });
-        } else {
-            let i = this.keybindings.indexOf('pomodoro-keybinding-open-fullscreen');
-            if (i !== -1) {
-                Main.wm.removeKeybinding('pomodoro-keybinding-open-fullscreen');
-                this.keybindings.splice(i, 1);
-            }
-        }
     },
 });
 Signals.addSignalMethods(Pomodoro.prototype);

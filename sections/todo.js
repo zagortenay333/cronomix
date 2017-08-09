@@ -27,6 +27,7 @@ const ngettext = Gettext.ngettext;
 
 
 const SIG_MANAGER    = ME.imports.lib.signal_manager;
+const KEY_MANAGER    = ME.imports.lib.keybinding_manager;
 const FUZZ           = ME.imports.lib.fuzzy_search;
 const NUM_PICKER     = ME.imports.lib.num_picker;
 const PANEL_ITEM     = ME.imports.lib.panel_item;
@@ -226,17 +227,15 @@ const Todo = new Lang.Class({
         this.settings = settings;
 
 
-        this.keybindings     = [];
         this.section_enabled = this.settings.get_boolean('todo-enabled');
         this.separate_menu   = this.settings.get_boolean('todo-separate-menu');
         this.cache_file      = null;
         this.cache           = null;
-        this.sigm            = new SIG_MANAGER.SignalManager();
 
-
-        // These are initiated with the enable_section func.
-        this.time_tracker = null;
+        this.sigm         = new SIG_MANAGER.SignalManager();
+        this.keym         = new KEY_MANAGER.KeybindingManager(this.settings);
         this.view_manager = null;
+        this.time_tracker = null;
 
 
         // Track how many tasks have a particular proj/context/prio, a
@@ -338,6 +337,35 @@ const Todo = new Lang.Class({
             this.isOpen = false;
             this.emit('open-state-changed', false);
         };
+
+
+        //
+        // register shortcuts (need to be enabled later on)
+        //
+        this.keym.register('todo-keybinding-open', () => {
+            this.ext.open_menu(this);
+            if (this.view_manager.current_view !== View.LOADING &&
+                this.view_manager.current_view !== View.NO_TODO_FILE) {
+
+                this.show_view__default();
+            }
+        });
+        this.keym.register('todo-keybinding-open-to-add', () => {
+            this.ext.open_menu(this);
+            if (this.view_manager.current_view !== View.LOADING &&
+                this.view_manager.current_view !== View.NO_TODO_FILE) {
+
+                this.show_view__task_editor();
+            }
+        });
+        this.keym.register('todo-keybinding-open-to-search', () => {
+            this.ext.open_menu(this);
+            if (this.view_manager.current_view !== View.LOADING &&
+                this.view_manager.current_view !== View.NO_TODO_FILE) {
+
+                this.show_view__search();
+            }
+        });
 
 
         //
@@ -533,15 +561,6 @@ const Todo = new Lang.Class({
         this.sigm.connect(this.settings, 'changed::todo-current', () => {
             this._on_todo_file_changed();
         });
-        this.sigm.connect(this.settings, 'changed::todo-keybinding-open', () => {
-            this._toggle_keybindings();
-        });
-        this.sigm.connect(this.settings, 'changed::todo-keybinding-open-to-add', () => {
-            this._toggle_keybindings();
-        });
-        this.sigm.connect(this.settings, 'changed::todo-keybinding-open-to-search', () => {
-            this._toggle_keybindings();
-        });
         this.sigm.connect(this.panel_item.actor, 'key-focus-in', () => {
             // user has right-clicked to show the context menu
             if (this.ext.menu.isOpen && this.ext.context_menu.actor.visible)
@@ -648,13 +667,13 @@ const Todo = new Lang.Class({
         this.time_tracker = new TimeTracker(this.ext, this);
 
         this._init_todo_file();
-        this._toggle_keybindings();
+        this.keym.enable_all();
         this._on_day_started_loop();
     },
 
     disable_section: function () {
         this.sigm.disconnect_all();
-        this._toggle_keybindings(true);
+        this.keym.disable_all();
         this.tasks          = [];
         this.tasks_viewport = [];
         this.tasks_scroll_content.remove_all_children();
@@ -891,89 +910,6 @@ const Todo = new Lang.Class({
             this.panel_item.set_mode('text');
         else
             this.panel_item.set_mode('icon_text');
-    },
-
-    _toggle_keybindings: function (disable_all) {
-        if (!disable_all &&
-            this.settings.get_strv('todo-keybinding-open')[0] !== '') {
-
-            this.keybindings.push('todo-keybinding-open');
-
-            Main.wm.addKeybinding(
-                'todo-keybinding-open',
-                this.settings,
-                Meta.KeyBindingFlags.NONE,
-                Shell.ActionMode.NORMAL,
-                () => {
-                    this.ext.open_menu(this);
-                    if (this.view_manager.current_view !== View.LOADING &&
-                        this.view_manager.current_view !== View.NO_TODO_FILE) {
-
-                        this.show_view__default();
-                    }
-                });
-        }
-        else {
-            let i = this.keybindings.indexOf('todo-keybinding-open');
-            if (i !== -1) {
-                Main.wm.removeKeybinding('todo-keybinding-open');
-                this.keybindings.splice(i, 1);
-            }
-        }
-
-        if (!disable_all &&
-            this.settings.get_strv('todo-keybinding-open-to-add')[0] !== '') {
-
-            this.keybindings.push('todo-keybinding-open-to-add');
-
-            Main.wm.addKeybinding(
-                'todo-keybinding-open-to-add',
-                this.settings,
-                Meta.KeyBindingFlags.NONE,
-                Shell.ActionMode.NORMAL,
-                () => {
-                    this.ext.open_menu(this);
-                    if (this.view_manager.current_view !== View.LOADING &&
-                        this.view_manager.current_view !== View.NO_TODO_FILE) {
-
-                        this.show_view__task_editor();
-                    }
-                });
-        }
-        else {
-            let i = this.keybindings.indexOf('todo-keybinding-open-to-add');
-            if (i !== -1) {
-                Main.wm.removeKeybinding('todo-keybinding-open-to-add');
-                this.keybindings.splice(i, 1);
-            }
-        }
-
-        if (!disable_all &&
-            this.settings.get_strv('todo-keybinding-open-to-search')[0] !== '') {
-
-            this.keybindings.push('todo-keybinding-open-to-search');
-
-            Main.wm.addKeybinding(
-                'todo-keybinding-open-to-search',
-                this.settings,
-                Meta.KeyBindingFlags.NONE,
-                Shell.ActionMode.NORMAL,
-                () => {
-                    this.ext.open_menu(this);
-                    if (this.view_manager.current_view !== View.LOADING &&
-                        this.view_manager.current_view !== View.NO_TODO_FILE) {
-
-                        this.show_view__search();
-                    }
-                });
-        }
-        else {
-            let i = this.keybindings.indexOf('todo-keybinding-open-to-search');
-            if (i !== -1) {
-                Main.wm.removeKeybinding('todo-keybinding-open-to-search');
-                this.keybindings.splice(i, 1);
-            }
-        }
     },
 
     show_view__no_todo_file: function () {
