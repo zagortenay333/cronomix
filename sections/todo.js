@@ -117,9 +117,9 @@ function date_yyyymmdd (date_obj) {
 }
 
 
-// This function will splits the str into words at spaces and return array of
+// This function splits the @str into words at spaces and returns array of
 // those words.
-// Escaped spaces are ignored ('\ ').
+// Escaped spaces are included in their respective words ('\ ').
 function split_on_spaces (str) {
     let words = [];
     let i;
