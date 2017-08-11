@@ -379,6 +379,6 @@ todo.txt manager.
 
 ---
  
-![preview](https://i.imgur.com/kwMAHoM.png)
+![preview](https://i.imgur.com/8Mi1OlY.png)
 <sup>**Preview info:** [Gnome-Shell
 theme](https://github.com/zagortenay333/ciliora-tertia-shell)</sup>
