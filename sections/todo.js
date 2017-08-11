@@ -119,19 +119,19 @@ function date_yyyymmdd (date_obj) {
 
 // This function splits the @str into words at spaces and returns array of
 // those words.
-// Escaped spaces are included in their respective words ('\ ').
+// Escaped spaces ('\ ') are included in their respective words as well as the
+// backslash. E.g., ['as\ df', 'qwert\ y', ...].
 function split_on_spaces (str) {
     let words = [];
-    let i;
-    let word;
+    let i, word;
 
     if (str.startsWith('\\ ')) {
-        word = ' ';
         i    = 2;
+        word = ' ';
     }
     else {
-        word = /\S/.test(str[0]) ? str[0] : '';
         i    = 1;
+        word = (str[0] === ' ') ? '' : str[0];
     }
 
     for (let len = str.length; i < len; i++) {
@@ -160,15 +160,15 @@ function split_on_spaces (str) {
 // scrollview. The label does not seem to get resized properly and as a result
 // to container doesn't either, which leads various issues.
 //
-// The issue does not appear if the scrollbar is visible, so it doesn't need to
-// be used all the time and is not a performance issue.
-//
 // The needs_scrollbar func will not return a correct value because of this.
 // Also, sometimes the bottom actor might be cut off, or extra padding might be
 // added...
 //
-// This func needs to be used at a time when the actor is already drawn, or else
-// it will not work.
+// The issue does not appear if the scrollbar is visible, so it doesn't need to
+// be used all the time and is not a performance issue.
+//
+// This func needs to be used at a time when the actor is already drawn, or it
+// will not work.
 function resize_label (label) {
     let theme_node = label.get_theme_node();
     let alloc_box  = label.get_allocation_box();
