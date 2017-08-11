@@ -27,15 +27,15 @@ const FULLSCREEN    = ME.imports.lib.fullscreen;
 const SIG_MANAGER   = ME.imports.lib.signal_manager;
 const KEY_MANAGER   = ME.imports.lib.keybinding_manager;
 const PANEL_ITEM    = ME.imports.lib.panel_item;
-const ICON_FROM_URI = ME.imports.lib.icon_from_uri;
 const NUM_PICKER    = ME.imports.lib.num_picker;
 
 
-const CACHE_FILE      = GLib.get_home_dir() + '/.cache/timepp_gnome_shell_extension/timepp_pomodoro.json';
+const CACHE_FILE = GLib.get_home_dir() +
+                   '/.cache/timepp_gnome_shell_extension/timepp_pomodoro.json';
+
 const START_MSG       = _('Start working!');
 const LONG_BREAK_MSG  = _('Take long break!')
 const SHORT_BREAK_MSG = _('Take short break!')
-const POMODORO_ICON   = '/img/pomodoro-symbolic.svg';
 
 
 const PomoState = {
@@ -97,10 +97,11 @@ const Pomodoro = new Lang.Class({
         // panel item
         //
         this.panel_item = new PANEL_ITEM.PanelItem(ext.menu);
+        this.panel_item.icon.icon_name = 'timepp-pomodoro-symbolic';
 
         this.panel_item.set_label(this.settings.get_boolean('pomodoro-show-seconds') ? '00:00:00' : '00:00');
         this.panel_item.actor.add_style_class_name('pomodoro-panel-item');
-        this._update_panel_icon_name();
+
         this._toggle_panel_mode();
 
         ext.panel_item_box.add_actor(this.panel_item.actor);
@@ -138,12 +139,12 @@ const Pomodoro = new Lang.Class({
 
         this.fullscreen_btn = new St.Button({ can_focus: true, y_align: St.Align.MIDDLE, x_align: St.Align.END, style_class: 'fullscreen-icon' });
         this.icon_box.add_actor(this.fullscreen_btn);
-        this.fullscreen_icon = new St.Icon({ icon_name: 'view-fullscreen-symbolic' });
+        this.fullscreen_icon = new St.Icon({ icon_name: 'timepp-fullscreen-symbolic' });
         this.fullscreen_btn.add_actor(this.fullscreen_icon);
 
         this.settings_btn = new St.Button({ can_focus: true, x_align: St.Align.END, y_align: St.Align.MIDDLE, style_class: 'settings-icon' });
         this.icon_box.add_actor(this.settings_btn);
-        this.settings_icon = new St.Icon({icon_name: 'open-menu-symbolic'});
+        this.settings_icon = new St.Icon({ icon_name: 'timepp-settings-symbolic' });
         this.settings_btn.add_actor(this.settings_icon);
 
 
@@ -643,8 +644,7 @@ const Pomodoro = new Lang.Class({
         let source = new MessageTray.Source();
         Main.messageTray.add(source);
 
-        let icon = new St.Icon();
-        ICON_FROM_URI.icon_from_uri(icon, POMODORO_ICON, this.ext_dir);
+        let icon = new St.Icon({ icon_name: 'timepp-pomodoro-symbolic' });
 
         let params = {
             bannerMarkup : true,
@@ -657,10 +657,6 @@ const Pomodoro = new Lang.Class({
         notif.setTransient(true);
 
         source.notify(notif);
-    },
-
-    _update_panel_icon_name: function() {
-        ICON_FROM_URI.icon_from_uri(this.panel_item.icon, POMODORO_ICON, this.ext_dir);
     },
 
     _toggle_panel_mode: function () {

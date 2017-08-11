@@ -32,7 +32,6 @@ const FUZZ           = ME.imports.lib.fuzzy_search;
 const NUM_PICKER     = ME.imports.lib.num_picker;
 const PANEL_ITEM     = ME.imports.lib.panel_item;
 const MULTIL_ENTRY   = ME.imports.lib.multiline_entry;
-const ICON_FROM_URI  = ME.imports.lib.icon_from_uri;
 const SCROLL_TO_ITEM = ME.imports.lib.scroll_to_item;
 
 
@@ -55,22 +54,6 @@ const TIME_TRACKER_DBUS_IFACE =
             </method>                                       \
         </interface>                                        \
     </node>';
-
-
-const CustomIcon = {
-    TODO            : '/img/todo-symbolic.svg',
-    EDIT            : '/img/edit-symbolic.svg',
-    CLEAR           : '/img/clear-symbolic.svg',
-    GRAPH           : '/img/graph-symbolic.svg',
-    HIDDEN          : '/img/hidden-symbolic.svg',
-    SEARCH          : '/img/search-symbolic.svg',
-    FILTER          : '/img/filter-symbolic.svg',
-    CONTEXT         : '/img/context-symbolic.svg',
-    FILE_SWITCH     : '/img/file-switch-symbolic.svg',
-    TODO_LOADING    : '/img/todo-loading-symbolic.svg',
-    SORT_ASCENDING  : '/img/sort-ascending-symbolic.svg',
-    SORT_DESCENDING : '/img/sort-descending-symbolic.svg',
-};
 
 
 const SortOrder = {
@@ -383,7 +366,7 @@ const Todo = new Lang.Class({
         this.panel_item = new PANEL_ITEM.PanelItem(ext.menu);
 
         this.panel_item.actor.add_style_class_name('todo-panel-item');
-        ICON_FROM_URI.icon_from_uri(this.panel_item.icon, CustomIcon.TODO, this.ext_dir);
+        this.panel_item.icon.icon_name = 'timepp-todo-symbolic';
         this._toggle_panel_item_mode();
 
         ext.panel_item_box.add_actor(this.panel_item.actor);
@@ -445,7 +428,7 @@ const Todo = new Lang.Class({
         this.add_task_bin = new St.BoxLayout();
         this.add_task_button.add_actor(this.add_task_bin);
 
-        this.add_task_icon = new St.Icon({ icon_name: 'list-add-symbolic', y_align: Clutter.ActorAlign.CENTER });
+        this.add_task_icon = new St.Icon({ icon_name: 'timepp-plus-symbolic', y_align: Clutter.ActorAlign.CENTER });
         this.add_task_bin.add_actor(this.add_task_icon);
 
         this.add_task_label = new St.Label({ text: _('Add New Task...'), y_align: Clutter.ActorAlign.CENTER });
@@ -461,10 +444,8 @@ const Todo = new Lang.Class({
         this.filter_button = new St.Button({ can_focus: true, x_align: St.Align.END, style_class: 'filter-icon' });
         this.icon_box.add(this.filter_button);
 
-        this.filter_icon = new St.Icon({ y_align: Clutter.ActorAlign.CENTER });
+        this.filter_icon = new St.Icon({ icon_name: 'timepp-filter-symbolic', y_align: Clutter.ActorAlign.CENTER });
         this.filter_button.add_actor(this.filter_icon);
-
-        ICON_FROM_URI.icon_from_uri(this.filter_icon, CustomIcon.FILTER, this.ext_dir);
 
 
         // sort icon
@@ -479,10 +460,8 @@ const Todo = new Lang.Class({
         this.file_switcher_button = new St.Button({ can_focus: true, x_align: St.Align.END, style_class: 'file-switcher-icon' });
         this.icon_box.add(this.file_switcher_button);
 
-        this.file_switcher_icon = new St.Icon({ y_align: Clutter.ActorAlign.CENTER });
+        this.file_switcher_icon = new St.Icon({ icon_name: 'timepp-file-switch-symbolic', y_align: Clutter.ActorAlign.CENTER });
         this.file_switcher_button.add_actor(this.file_switcher_icon);
-
-        ICON_FROM_URI.icon_from_uri(this.file_switcher_icon, CustomIcon.FILE_SWITCH, this.ext_dir);
 
         if (this.settings.get_value('todo-files').deep_unpack().length > 1)
             this.file_switcher_button.show();
@@ -494,30 +473,24 @@ const Todo = new Lang.Class({
         this.search_button = new St.Button({ can_focus: true, x_align: St.Align.END, style_class: 'search-icon' });
         this.icon_box.add(this.search_button);
 
-        this.search_icon = new St.Icon({ y_align: Clutter.ActorAlign.CENTER });
+        this.search_icon = new St.Icon({ icon_name: 'timepp-search-symbolic', y_align: Clutter.ActorAlign.CENTER });
         this.search_button.add_actor(this.search_icon);
-
-        ICON_FROM_URI.icon_from_uri(this.search_icon, CustomIcon.SEARCH, this.ext_dir);
 
 
         // stats icon
         this.stats_button = new St.Button({ can_focus: true, x_align: St.Align.END, style_class: 'stats-icon' });
         this.icon_box.add(this.stats_button);
 
-        this.stats_icon = new St.Icon({ y_align: Clutter.ActorAlign.CENTER });
+        this.stats_icon = new St.Icon({ icon_name: 'timepp-graph-symbolic', y_align: Clutter.ActorAlign.CENTER });
         this.stats_button.add_actor(this.stats_icon);
-
-        ICON_FROM_URI.icon_from_uri(this.stats_icon, CustomIcon.GRAPH, this.ext_dir);
 
 
         // clear icon
         this.clear_button = new St.Button({ visible: false, can_focus: true, x_align: St.Align.END, style_class: 'clear-icon' });
         this.icon_box.add(this.clear_button);
 
-        this.clear_icon = new St.Icon({ y_align: Clutter.ActorAlign.CENTER });
+        this.clear_icon = new St.Icon({ icon_name: 'timepp-clear-symbolic', y_align: Clutter.ActorAlign.CENTER });
         this.clear_button.add_actor(this.clear_icon);
-
-        ICON_FROM_URI.icon_from_uri(this.clear_icon, CustomIcon.CLEAR, this.ext_dir);
 
 
         //
@@ -936,9 +909,7 @@ const Todo = new Lang.Class({
     show_view__loading: function () {
         this.panel_item.set_mode('icon');
         this.panel_item.actor.remove_style_class_name('done');
-
-        ICON_FROM_URI.icon_from_uri(
-            this.panel_item.icon, CustomIcon.TODO_LOADING, this.ext_dir);
+        this.panel_item.icon.icon_name = 'timepp-todo-loading-symbolic';
 
         this.view_manager.show_view({
             view_name      : View.LOADING,
@@ -946,8 +917,7 @@ const Todo = new Lang.Class({
             focused_actor  : this.loading_msg.label,
             close_callback : () => {
                 this.loading_msg.actor.hide();
-                ICON_FROM_URI.icon_from_uri(
-                    this.panel_item.icon, CustomIcon.TODO, this.ext_dir);
+                this.panel_item.icon.icon_name = 'timepp-todo-symbolic';
                 this._toggle_panel_item_mode();
             },
         });
@@ -1614,14 +1584,10 @@ const Todo = new Lang.Class({
         // Although everything works anyway, clutter has failed assertions
         // without later_add.
         Meta.later_add(Meta.LaterType.BEFORE_REDRAW, () => {
-            if (this.cache.sort[0][1] === SortOrder.ASCENDING) {
-                ICON_FROM_URI.icon_from_uri(this.sort_icon,
-                                    CustomIcon.SORT_ASCENDING, this.ext_dir);
-            }
-            else {
-                ICON_FROM_URI.icon_from_uri(this.sort_icon,
-                                    CustomIcon.SORT_DESCENDING, this.ext_dir);
-            }
+            this.sort_icon.icon_name =
+                this.cache.sort[0][1] === SortOrder.ASCENDING ?
+                'timepp-sort-ascending-symbolic' :
+                'timepp-sort-descending-symbolic';
         });
     },
 
@@ -2361,9 +2327,7 @@ const TaskItem = new Lang.Class({
                     this.header.insert_child_at_index(icon_incognito_bin, 0);
                     let icon_incognito = new St.Icon();
                     icon_incognito_bin.add_actor(icon_incognito);
-                    ICON_FROM_URI.icon_from_uri(icon_incognito,
-                                                CustomIcon.HIDDEN,
-                                                this.delegate.ext_dir);
+                    icon_incognito.icon_name = 'timepp-hidden-symbolic';
 
                     words.splice(i, 1); i--; len--;
                 }
@@ -2688,25 +2652,23 @@ const TaskItem = new Lang.Class({
             this.stat_icon_bin = new St.Button({ visible:false, can_focus: true, y_align: St.Align.MIDDLE });
             this.header_icon_box.add_actor(this.stat_icon_bin);
 
-            this.stat_icon = new St.Icon();
+            this.stat_icon = new St.Icon({ icon_name: 'timepp-graph-symbolic' });
             this.stat_icon_bin.add_actor(this.stat_icon);
-            ICON_FROM_URI.icon_from_uri(this.stat_icon, CustomIcon.GRAPH, this.delegate.ext_dir);
 
 
             // settings icon
             this.edit_icon_bin = new St.Button({ visible:false, can_focus: true, y_align: St.Align.MIDDLE });
             this.header_icon_box.add_actor(this.edit_icon_bin);
 
-            this.edit_icon = new St.Icon();
+            this.edit_icon = new St.Icon({ icon_name: 'timepp-edit-symbolic' });
             this.edit_icon_bin.add_actor(this.edit_icon);
-            ICON_FROM_URI.icon_from_uri(this.edit_icon, CustomIcon.EDIT, this.delegate.ext_dir);
 
 
             // time tracker start button
             this.tracker_icon_bin = new St.Button({ visible:false, can_focus: true, y_align: St.Align.MIDDLE, style_class: 'tracker-start-icon'});
             this.header_icon_box.add_actor(this.tracker_icon_bin);
 
-            this.tracker_icon = new St.Icon({ icon_name: 'media-playback-start-symbolic' });
+            this.tracker_icon = new St.Icon({ icon_name: 'timepp-start-symbolic' });
             this.tracker_icon_bin.add_actor(this.tracker_icon);
 
 
@@ -2772,13 +2734,13 @@ const TaskItem = new Lang.Class({
 
     _show_tracker_running_icon: function () {
         this._show_header_icons();
-        this.tracker_icon.icon_name       = 'media-playback-pause-symbolic';
+        this.tracker_icon.icon_name       = 'timepp-stop-symbolic';
         this.tracker_icon_bin.style_class = 'tracker-pause-icon';
         this.tracker_icon_bin.visible     = true;
     },
 
     _show_tracker_stopped_icon: function () {
-        this.tracker_icon.icon_name       = 'media-playback-start-symbolic';
+        this.tracker_icon.icon_name       = 'timepp-start-symbolic';
         this.tracker_icon_bin.style_class = 'tracker-start-icon';
         this.tracker_icon_bin.visible     = this.edit_icon_bin.visible;
     },
@@ -3642,10 +3604,11 @@ const TaskSortWindow = new Lang.Class({
         item.sort_icon = new St.Icon();
         item.sort_btn.add_actor(item.sort_icon);
 
-        if (sort_order === SortOrder.ASCENDING)
-            ICON_FROM_URI.icon_from_uri(item.sort_icon, CustomIcon.SORT_ASCENDING, this.delegate.ext_dir);
-        else
-            ICON_FROM_URI.icon_from_uri(item.sort_icon, CustomIcon.SORT_DESCENDING, this.delegate.ext_dir);
+        item.sort_icon.set_icon_name(
+            sort_order === SortOrder.ASCENDING ?
+            'timepp-sort-ascending-symbolic'   :
+            'timepp-sort-descending-symbolic'
+        );
 
 
         // DND
@@ -3713,12 +3676,12 @@ const TaskSortWindow = new Lang.Class({
 
         item.sort_btn.connect('clicked', () => {
             if (item.sort_order === SortOrder.ASCENDING) {
-                ICON_FROM_URI.icon_from_uri(item.sort_icon, CustomIcon.SORT_DESCENDING, this.delegate.ext_dir);
                 item.sort_order = SortOrder.DESCENDING;
+                item.sort_icon.icon_name = 'timepp-sort-descending-symbolic';
             }
             else {
-                ICON_FROM_URI.icon_from_uri(item.sort_icon, CustomIcon.SORT_ASCENDING, this.delegate.ext_dir);
                 item.sort_order = SortOrder.ASCENDING;
+                item.sort_icon.icon_name = 'timepp-sort-ascending-symbolic';
             }
         });
 

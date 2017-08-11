@@ -16,7 +16,6 @@ const ME = ExtensionUtils.getCurrentExtension();
 
 const SIG_MANAGER   = ME.imports.lib.signal_manager;
 const PANEL_ITEM    = ME.imports.lib.panel_item;
-const ICON_FROM_URI = ME.imports.lib.icon_from_uri;
 
 
 const ContextMenu = ME.imports.sections.context_menu;
@@ -98,10 +97,10 @@ const Timepp = new Lang.Class({
         // unicon panel item (shown when single panel item mode is selected)
         //
         this.unicon_panel_item = new PANEL_ITEM.PanelItem(this.menu);
+        this.unicon_panel_item.icon.icon_name = 'timepp-unicon-symbolic';
 
         this.unicon_panel_item.set_mode('icon');
         this.unicon_panel_item.actor.add_style_class_name('unicon-panel-item');
-        this._update_unicon_name();
 
         if (! this.settings.get_boolean('unicon-mode')) this.unicon_panel_item.actor.hide();
 
@@ -394,10 +393,6 @@ const Timepp = new Lang.Class({
         }
     },
 
-    _update_unicon_name: function() {
-        ICON_FROM_URI.icon_from_uri(this.unicon_panel_item.icon, UNICON_ICON, ME.path);
-    },
-
     _on_panel_position_changed: function (old_pos, new_pos) {
         let ref = this.container;
 
@@ -529,23 +524,43 @@ let timepp;
 function enable () {
     timepp = new Timepp();
 
-    let pos;
+    {
+        let pos;
 
-    switch (timepp.settings.get_enum('panel-item-position')) {
-        case PanelPosition.LEFT:
-            pos = Main.panel._leftBox.get_n_children();
-            Main.panel.addToStatusArea('timepp', timepp, pos, 'left');
-            break;
-        case PanelPosition.CENTER:
-            pos = Main.panel._centerBox.get_n_children();
-            Main.panel.addToStatusArea('timepp', timepp, pos, 'center');
-            break;
-        case PanelPosition.RIGHT:
-            Main.panel.addToStatusArea('timepp', timepp, 0, 'right');
+        switch (timepp.settings.get_enum('panel-item-position')) {
+            case PanelPosition.LEFT:
+                pos = Main.panel._leftBox.get_n_children();
+                Main.panel.addToStatusArea('timepp', timepp, pos, 'left');
+                break;
+            case PanelPosition.CENTER:
+                pos = Main.panel._centerBox.get_n_children();
+                Main.panel.addToStatusArea('timepp', timepp, pos, 'center');
+                break;
+            case PanelPosition.RIGHT:
+                Main.panel.addToStatusArea('timepp', timepp, 0, 'right');
+        }
+    }
+
+    // To make it easier to use custom icons, we just append the img dir to the
+    // search paths of the default icon theme.
+    // To avoid issues, we prefix the file names of our custom symbolic icons
+    // with 'timepp-'.
+    {
+        let icon_theme = imports.gi.Gtk.IconTheme.get_default();
+        icon_theme.prepend_search_path(ME.dir.get_path() + '/img/icons');
     }
 }
 
 function disable () {
+    // remove the custom search path
+    {
+        let icon_theme  = imports.gi.Gtk.IconTheme.get_default();
+        let custom_path = ME.dir.get_path() + '/img/icons';
+        let paths       = icon_theme.get_search_path();
+        paths.splice(paths.indexOf(custom_path), 1);
+        icon_theme.set_search_path(paths);
+    }
+
     timepp.destroy();
     timepp = null;
 }

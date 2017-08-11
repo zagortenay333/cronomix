@@ -25,11 +25,10 @@ const FULLSCREEN    = ME.imports.lib.fullscreen;
 const SIG_MANAGER   = ME.imports.lib.signal_manager;
 const KEY_MANAGER   = ME.imports.lib.keybinding_manager;
 const PANEL_ITEM    = ME.imports.lib.panel_item;
-const ICON_FROM_URI = ME.imports.lib.icon_from_uri;
 
 
-const CACHE_FILE     = GLib.get_home_dir() + '/.cache/timepp_gnome_shell_extension/timepp_stopwatch.json';
-const STOPWATCH_ICON = '/img/stopwatch-symbolic.svg';
+const CACHE_FILE = GLib.get_home_dir() +
+                   '/.cache/timepp_gnome_shell_extension/timepp_stopwatch.json';
 
 
 const StopwatchState = {
@@ -97,9 +96,9 @@ const Stopwatch = new Lang.Class({
         // panel item
         //
         this.panel_item = new PANEL_ITEM.PanelItem(ext.menu);
+        this.panel_item.icon.icon_name = 'timepp-stopwatch-symbolic';
 
         this.panel_item.actor.add_style_class_name('stopwatch-panel-item');
-        this._update_panel_icon_name();
         this._toggle_panel_mode();
 
         ext.panel_item_box.add_actor(this.panel_item.actor);
@@ -140,7 +139,7 @@ const Stopwatch = new Lang.Class({
 
         this.fullscreen_bin  = new St.Button({ can_focus: true, y_align: St.Align.MIDDLE, x_align: St.Align.END, style_class: 'fullscreen-icon' });
         this.icon_box.add(this.fullscreen_bin);
-        this.fullscreen_icon = new St.Icon({ icon_name: 'view-fullscreen-symbolic' });
+        this.fullscreen_icon = new St.Icon({ icon_name: 'timepp-fullscreen-symbolic' });
         this.fullscreen_bin.add_actor(this.fullscreen_icon);
 
 
@@ -549,10 +548,6 @@ const Stopwatch = new Lang.Class({
             Mainloop.timeout_add_seconds(60, () => {
                 this._periodic_time_backup();
             });
-    },
-
-    _update_panel_icon_name: function() {
-        ICON_FROM_URI.icon_from_uri(this.panel_item.icon, STOPWATCH_ICON, this.ext_dir);
     },
 
     _toggle_panel_mode: function () {

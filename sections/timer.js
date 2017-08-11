@@ -28,13 +28,13 @@ const FULLSCREEN    = ME.imports.lib.fullscreen;
 const SIG_MANAGER   = ME.imports.lib.signal_manager;
 const KEY_MANAGER   = ME.imports.lib.keybinding_manager;
 const PANEL_ITEM    = ME.imports.lib.panel_item;
-const ICON_FROM_URI = ME.imports.lib.icon_from_uri;
 const NUM_PICKER    = ME.imports.lib.num_picker;
 const MULTIL_ENTRY  = ME.imports.lib.multiline_entry;
 
 
-const CACHE_FILE = GLib.get_home_dir() + '/.cache/timepp_gnome_shell_extension/timepp_timer.json';
-const TIMER_ICON         = '/img/timer-symbolic.svg';
+const CACHE_FILE = GLib.get_home_dir() +
+                   '/.cache/timepp_gnome_shell_extension/timepp_timer.json';
+
 const TIMER_MAX_DURATION = 86400000000; // 24 hours in microseconds
 const TIMER_EXPIRED_MSG  = _('Timer Expired!');
 
@@ -100,10 +100,11 @@ const Timer = new Lang.Class({
         // add panel item
         //
         this.panel_item = new PANEL_ITEM.PanelItem(ext.menu);
+        this.panel_item.icon.icon_name = 'timepp-timer-symbolic';
 
         this.panel_item.set_label(this.settings.get_boolean('timer-show-seconds') ? '00:00:00' : '00:00');
         this.panel_item.actor.add_style_class_name('timer-panel-item');
-        this._update_panel_icon_name();
+
         this._toggle_panel_item_mode();
 
         ext.panel_item_box.add_actor(this.panel_item.actor);
@@ -133,10 +134,10 @@ const Timer = new Lang.Class({
 
         this.fullscreen_bin  = new St.Button({ can_focus: true, y_align: St.Align.MIDDLE, x_align: St.Align.END, style_class: 'fullscreen-icon' });
         this.icon_box.add(this.fullscreen_bin);
-        this.fullscreen_icon = new St.Icon({ icon_name: 'view-fullscreen-symbolic' });
+        this.fullscreen_icon = new St.Icon({ icon_name: 'timepp-fullscreen-symbolic' });
         this.fullscreen_bin.add_actor(this.fullscreen_icon);
 
-        this.settings_icon = new St.Icon({ icon_name: 'open-menu-symbolic' });
+        this.settings_icon = new St.Icon({ icon_name: 'timepp-settings-symbolic' });
         this.settings_bin  = new St.Button({ can_focus: true, y_align: St.Align.MIDDLE, x_align: St.Align.END, style_class: 'settings-icon' });
         this.settings_bin.add_actor(this.settings_icon);
         this.icon_box.add(this.settings_bin);
@@ -359,10 +360,6 @@ const Timer = new Lang.Class({
         });
     },
 
-    _update_panel_icon_name: function() {
-        ICON_FROM_URI.icon_from_uri(this.panel_item.icon, TIMER_ICON, this.ext_dir);
-    },
-
     _update_time_display: function () {
         let time = Math.floor(this.timer_duration / 1000000);
 
@@ -495,8 +492,7 @@ const Timer = new Lang.Class({
         let source = new MessageTray.Source();
         Main.messageTray.add(source);
 
-        let icon = new St.Icon();
-        ICON_FROM_URI.icon_from_uri(icon, TIMER_ICON, this.ext_dir);
+        let icon = new St.Icon({ icon_name: 'timepp-timer-symbolic' });
 
         let params = {
             bannerMarkup : true,

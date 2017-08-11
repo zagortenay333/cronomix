@@ -27,16 +27,14 @@ const FULLSCREEN     = ME.imports.lib.fullscreen;
 const SIG_MANAGER    = ME.imports.lib.signal_manager;
 const KEY_MANAGER    = ME.imports.lib.keybinding_manager;
 const PANEL_ITEM     = ME.imports.lib.panel_item;
-const ICON_FROM_URI  = ME.imports.lib.icon_from_uri;
 const MULTIL_ENTRY   = ME.imports.lib.multiline_entry;
 const NUM_PICKER     = ME.imports.lib.num_picker;
 const DAY_CHOOSER    = ME.imports.lib.day_chooser;
 const SCROLL_TO_ITEM = ME.imports.lib.scroll_to_item;
 
 
-const CACHE_FILE = GLib.get_home_dir() + '/.cache/timepp_gnome_shell_extension/timepp_alarms.json';
-const ALARM_ICON = '/img/alarms-symbolic.svg';
-const EDIT_ICON  = '/img/edit-symbolic.svg';
+const CACHE_FILE = GLib.get_home_dir() +
+                   '/.cache/timepp_gnome_shell_extension/timepp_alarms.json';
 
 
 const NotifStyle = {
@@ -132,10 +130,10 @@ const Alarms = new Lang.Class({
         // add panel item
         //
         this.panel_item = new PANEL_ITEM.PanelItem(ext.menu);
+        this.panel_item.icon.icon_name = 'timepp-alarms-symbolic';
 
         this.panel_item.actor.add_style_class_name('alarm-panel-item');
         this.panel_item.set_mode('icon');
-        this._update_panel_icon_name();
 
         ext.panel_item_box.add_actor(this.panel_item.actor);
 
@@ -152,7 +150,7 @@ const Alarms = new Lang.Class({
         this.add_alarm_item = new PopupMenu.PopupMenuItem(_('Add New Alarm...'), {style_class: 'header'});
         this.actor.add(this.add_alarm_item.actor, {expand: true});
 
-        let header_icon = new St.Icon({ icon_name: 'list-add-symbolic' });
+        let header_icon = new St.Icon({ icon_name: 'timepp-plus-symbolic' });
         this.add_alarm_item.actor.insert_child_below(header_icon, this.add_alarm_item.label);
 
 
@@ -467,8 +465,7 @@ const Alarms = new Lang.Class({
         let source = new MessageTray.Source();
         Main.messageTray.add(source);
 
-        let icon = new St.Icon();
-        ICON_FROM_URI.icon_from_uri(icon, ALARM_ICON, this.ext_dir);
+        let icon = new St.Icon({ icon_name: 'timepp-alarms-symbolic' });
 
         // TRANSLATORS: %s is a time string in the format HH:MM (e.g., 13:44)
         let title = _('Alarm at %s').format(alarm.time_str);
@@ -503,10 +500,6 @@ const Alarms = new Lang.Class({
                 break;
             }
         }
-    },
-
-    _update_panel_icon_name: function () {
-        ICON_FROM_URI.icon_from_uri(this.panel_item.icon, ALARM_ICON, this.ext_dir);
     },
 });
 Signals.addSignalMethods(Alarms.prototype);
@@ -722,8 +715,7 @@ const AlarmItem = new Lang.Class({
         this.icon_box = new St.BoxLayout({y_align: Clutter.ActorAlign.CENTER, x_align: Clutter.ActorAlign.CENTER, style_class: 'icon-box'});
         this.header.add_actor(this.icon_box);
 
-        let edit_icon = new St.Icon();
-        ICON_FROM_URI.icon_from_uri(edit_icon, EDIT_ICON, this.delegate.ext_dir);
+        let edit_icon = new St.Icon({ icon_name: 'timepp-edit-symbolic' });
         this.edit_bin = new St.Button({ visible: false, can_focus: true, y_align: St.Align.MIDDLE, x_align: St.Align.END, style_class: 'settings-icon'});
         this.edit_bin.add_actor(edit_icon);
 
