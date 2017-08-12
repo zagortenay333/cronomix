@@ -141,12 +141,9 @@
     text-shadow: 0 0 transparent;
 }
 
-.numpicker-counter {
-    padding-left: 4px 2px 4px 8px;
-}
-
+.numpicker-counter,
 .numpicker-arrow-box {
-    padding-left: 4px 8px 4px 2px;
+    padding: 4px;
 }
 
 .numpicker-arrow {}

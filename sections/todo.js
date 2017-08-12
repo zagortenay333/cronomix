@@ -387,7 +387,7 @@ const Todo = new Lang.Class({
         this.search_entry = new St.Entry({ can_focus: true });
         this.search_entry_bin.actor.add(this.search_entry, {expand: true});
 
-        this.close_icon = new St.Icon({ icon_name: 'window-close-symbolic' });
+        this.close_icon = new St.Icon({ icon_name: 'timepp-close-symbolic' });
         this.search_entry.set_secondary_icon(this.close_icon);
 
 
@@ -3216,7 +3216,7 @@ const TaskFiltersWindow = new Lang.Class({
             close_button = new St.Button({ can_focus: true, style_class: 'close-icon' });
             item.actor.add_actor(close_button);
 
-            let close_icon = new St.Icon({ icon_name: 'window-close-symbolic' });
+            let close_icon = new St.Icon({ icon_name: 'timepp-close-symbolic' });
             close_button.add_actor(close_icon);
 
             close_button.connect('clicked', () => {
@@ -3856,7 +3856,7 @@ const TimeTrackerStatView = new Lang.Class({
         this.close_button = new St.Button({ can_focus: true, style_class: 'close-icon', x_expand: true, x_align: St.Align.END });
         this.content_box.add_actor(this.close_button);
 
-        let close_icon = new St.Icon({ icon_name: 'window-close-symbolic' });
+        let close_icon = new St.Icon({ icon_name: 'timepp-close-symbolic' });
         this.close_button.add_actor(close_icon);
 
         this.close_button.connect('clicked', () => { this.emit('close'); });

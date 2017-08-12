@@ -2,6 +2,7 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
+   xmlns:osb="http://www.openswatchbook.org/uri/2009/osb"
    xmlns:dc="http://purl.org/dc/elements/1.1/"
    xmlns:cc="http://creativecommons.org/ns#"
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
@@ -15,8 +16,8 @@
    height="16"
    id="svg11300"
    sodipodi:version="0.32"
-   inkscape:version="0.91 r13725"
-   sodipodi:docname="edit-symbolic.svg"
+   inkscape:version="0.92.1 r15371"
+   sodipodi:docname="timepp-edit-symbolic.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
    version="1.0"
    style="display:inline;enable-background:new">
@@ -29,26 +30,26 @@
      borderopacity="1"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:zoom="22.627417"
-     inkscape:cx="7.906765"
-     inkscape:cy="4.2414758"
+     inkscape:zoom="90.509668"
+     inkscape:cx="10.232621"
+     inkscape:cy="7.8666732"
      inkscape:current-layer="layer1"
      showgrid="true"
      inkscape:grid-bbox="true"
      inkscape:document-units="px"
      inkscape:showpageshadow="false"
      inkscape:window-width="1600"
-     inkscape:window-height="852"
+     inkscape:window-height="846"
      inkscape:window-x="0"
      inkscape:window-y="26"
      width="400px"
      height="300px"
-     inkscape:snap-nodes="false"
+     inkscape:snap-nodes="true"
      inkscape:snap-bbox="true"
      gridtolerance="10000"
      inkscape:object-nodes="true"
      inkscape:snap-grids="true"
-     showguides="false"
+     showguides="true"
      inkscape:guide-bbox="true"
      inkscape:window-maximized="1"
      inkscape:bbox-nodes="true"
@@ -65,7 +66,8 @@
      guidehiopacity="0.49803922"
      inkscape:snap-smooth-nodes="false"
      inkscape:object-paths="true"
-     inkscape:snap-global="true">
+     inkscape:snap-global="true"
+     inkscape:snap-midpoints="false">
     <inkscape:grid
        type="xygrid"
        id="grid3123"
@@ -75,7 +77,16 @@
        snapvisiblegridlinesonly="true" />
   </sodipodi:namedview>
   <defs
-     id="defs3" />
+     id="defs3">
+    <linearGradient
+       osb:paint="solid"
+       id="linearGradient5606">
+      <stop
+         style="stop-color:#000000;stop-opacity:1;"
+         offset="0"
+         id="stop5608" />
+    </linearGradient>
+  </defs>
   <metadata
      id="metadata4">
     <rdf:RDF>
@@ -134,8 +145,9 @@
      transform="translate(0,-284)">
     <path
        style="opacity:1;fill:#bebebe;fill-opacity:1;stroke:none;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="M 11.583984 2 C 11.328365 2 11.072822 2.0971038 10.876953 2.2929688 L 9.2929688 3.8769531 L 12.123047 6.7070312 L 13.707031 5.1230469 C 14.09877 4.7313069 14.098768 4.1007144 13.707031 3.7089844 L 12.291016 2.2929688 C 12.095147 2.0971038 11.839603 2 11.583984 2 z M 7.8789062 5.2929688 L 2 11.171875 L 2 14 L 4.828125 14 L 10.707031 8.1230469 L 7.8789062 5.2929688 z "
-       transform="translate(0,284)"
-       id="rect4135" />
+       d="m 12.526944,286.0015 c -0.255247,-0.0139 -0.51573,0.0689 -0.722072,0.2536 l -1.9545621,1.764 2.6701681,2.9809 1.954562,-1.764 c 0.41269,-0.36955 0.447364,-0.99907 0.0778,-1.41167 l -1.336009,-1.49148 c -0.184802,-0.20631 -0.434619,-0.31731 -0.68985,-0.33136 z M 8.6052168,289.13587 2,295.05244 V 298 h 2.703688 l 6.569715,-5.88286 z"
+       id="rect4135"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccccccccccccccc" />
   </g>
 </svg>
