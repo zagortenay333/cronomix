@@ -197,16 +197,14 @@ function resize_label (label) {
 // =====================================================================
 // @@@ Main
 //
-// @ext      : obj    (main extension object)
-// @ext_dir  : string (extension dir path)
-// @settings : obj    (extension settings)
+// @ext      : obj (main extension object)
+// @settings : obj (extension settings)
 // =====================================================================
 const Todo = new Lang.Class({
     Name: 'Timepp.Todo',
 
-    _init: function (ext, ext_dir, settings) {
+    _init: function (ext, settings) {
         this.ext      = ext;
-        this.ext_dir  = ext_dir;
         this.settings = settings;
 
 

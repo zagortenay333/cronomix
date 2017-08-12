@@ -94,16 +94,14 @@ function resize_label (label) {
 // =====================================================================
 // @@@ Main
 //
-// @ext      : obj    (main extension object)
-// @ext_dir  : string (extension dir path)
-// @settings : obj    (extension settings)
+// @ext      : obj (main extension object)
+// @settings : obj (extension settings)
 // =====================================================================
 const Alarms = new Lang.Class({
     Name: 'Timepp.Alarms',
 
-    _init: function (ext, ext_dir, settings) {
+    _init: function (ext, settings) {
         this.ext      = ext;
-        this.ext_dir  = ext_dir;
         this.settings = settings;
 
         this.section_enabled = this.settings.get_boolean('alarms-enabled');

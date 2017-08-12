@@ -125,19 +125,19 @@ const Timepp = new Lang.Class({
         //
         // init sections
         //
-        this.timer_section = new Timer.Timer(this, ME.path, this.settings);
+        this.timer_section = new Timer.Timer(this, this.settings);
         this.section_register.push(this.timer_section);
 
-        this.stopwatch_section = new Stopwatch.Stopwatch(this, ME.path, this.settings);
+        this.stopwatch_section = new Stopwatch.Stopwatch(this, this.settings);
         this.section_register.push(this.stopwatch_section);
 
-        this.pomodoro_section = new Pomodoro.Pomodoro(this, ME.path, this.settings);
+        this.pomodoro_section = new Pomodoro.Pomodoro(this, this.settings);
         this.section_register.push(this.pomodoro_section);
 
-        this.alarms_section = new Alarms.Alarms(this, ME.path, this.settings);
+        this.alarms_section = new Alarms.Alarms(this, this.settings);
         this.section_register.push(this.alarms_section);
 
-        this.todo_section = new Todo.Todo(this, ME.path, this.settings);
+        this.todo_section = new Todo.Todo(this, this.settings);
         this.section_register.push(this.todo_section);
 
         for (let i = 0, len = this.section_register.length; i < len; i++) {
