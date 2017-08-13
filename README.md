@@ -55,7 +55,7 @@ icon is clicked, or it can appear together with other sections in one menu.
 
 Individual sections can be disabled.
 
-Right-clicking on the extension panel item will open a context section with
+Right-clicking on the panel icons will open a context section with
 some useful links.
 
 ---
