@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-13 18:40+0200\n"
+"POT-Creation-Date: 2017-08-13 21:21+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,11 +18,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: ../lib/fullscreen.js:196
+#: ../lib/fullscreen.js:202
 msgid "Move to Primary Monitor"
 msgstr ""
 
-#: ../lib/fullscreen.js:202
+#: ../lib/fullscreen.js:208
 msgid "Move to Secondary Monitor"
 msgstr ""
 
