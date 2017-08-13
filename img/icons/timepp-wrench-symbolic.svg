@@ -17,7 +17,7 @@
    id="svg11300"
    sodipodi:version="0.32"
    inkscape:version="0.92.1 r15371"
-   sodipodi:docname="timepp-start-symbolic.svg"
+   sodipodi:docname="timepp-wrench-symbolic.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
    version="1.0"
    style="display:inline;enable-background:new">
@@ -30,9 +30,9 @@
      borderopacity="1"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:zoom="64"
-     inkscape:cx="12.196124"
-     inkscape:cy="6.0870555"
+     inkscape:zoom="32"
+     inkscape:cx="5.9163172"
+     inkscape:cy="8.623143"
      inkscape:current-layer="layer1"
      showgrid="true"
      inkscape:grid-bbox="true"
@@ -49,7 +49,7 @@
      gridtolerance="10000"
      inkscape:object-nodes="true"
      inkscape:snap-grids="true"
-     showguides="false"
+     showguides="true"
      inkscape:guide-bbox="true"
      inkscape:window-maximized="1"
      inkscape:bbox-nodes="true"
@@ -67,7 +67,10 @@
      inkscape:snap-smooth-nodes="true"
      inkscape:object-paths="false"
      inkscape:snap-global="true"
-     inkscape:snap-center="true">
+     inkscape:snap-center="true"
+     inkscape:snap-others="false"
+     inkscape:measure-start="0,0"
+     inkscape:measure-end="0,0">
     <inkscape:grid
        type="xygrid"
        id="grid3123"
@@ -103,7 +106,7 @@
         <dc:source />
         <cc:license
            rdf:resource="" />
-        <dc:title />
+        <dc:title></dc:title>
         <dc:subject>
           <rdf:Bag />
         </dc:subject>
@@ -143,11 +146,34 @@
      inkscape:label="Base"
      id="layer1"
      transform="translate(0,-284)">
+    <g
+       style="display:inline;enable-background:new"
+       id="g4589"
+       transform="translate(12.505859,277.23632)">
+      <g
+         transform="translate(0,-284)"
+         id="layer1-3"
+         inkscape:label="Base"
+         style="display:inline" />
+    </g>
+    <rect
+       style="opacity:1;fill:#bebebe;fill-opacity:1;stroke:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect4624"
+       width="10"
+       height="10"
+       x="-24"
+       y="279" />
     <path
        style="fill:#bebebe;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="m 3,286 v 12 l 11,-6 z"
-       id="path828"
+       d="m 15,299 v -2 l -5,-5 -2,2 5,5 z"
+       id="path4728"
+       inkscape:connector-curvature="0" />
+    <path
+       style="opacity:1;fill:#bebebe;fill-opacity:1;stroke:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 6,1 C 5.4204423,1.001023 4.8454748,1.1027988 4.3007812,1.3007812 L 8,5 8,6 6,8 5.03125,8.03125 1.3027344,4.3027344 C 1.1043092,4.846693 1.0018753,5.4209836 1,6 1,8.7614237 3.2385763,11 6,11 8.7614237,11 11,8.7614237 11,6 11,3.2385763 8.7614237,1 6,1 Z"
+       id="path4776"
+       transform="translate(0,284)"
        inkscape:connector-curvature="0"
-       sodipodi:nodetypes="cccc" />
+       sodipodi:nodetypes="ccccccccssc" />
   </g>
 </svg>

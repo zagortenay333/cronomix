@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-12 11:58+0200\n"
+"POT-Creation-Date: 2017-08-13 18:40+0200\n"
 "PO-Revision-Date: 2017-07-20 07:02+0200\n"
 "Last-Translator: Piotr Komur <pkomur@gmail.com>\n"
 "Language-Team: \n"
@@ -68,19 +68,19 @@ msgstr[0] "%d alarm minął!"
 msgstr[1] "%d alarmy minęły!"
 msgstr[2] "%d alarmów minęło!"
 
-#: ../sections/context_menu.js:33
+#: ../sections/context_menu.js:38
 msgid "Open settings"
 msgstr "Ustawienia"
 
-#: ../sections/context_menu.js:36
+#: ../sections/context_menu.js:41
 msgid "Go to extension website"
 msgstr "Otwórz stronę internetową"
 
-#: ../sections/context_menu.js:39
+#: ../sections/context_menu.js:44
 msgid "Report bug"
 msgstr "Zgłoś błąd"
 
-#: ../sections/context_menu.js:42
+#: ../sections/context_menu.js:47
 msgid "Help with translations"
 msgstr ""
 

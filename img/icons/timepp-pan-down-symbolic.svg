@@ -17,7 +17,7 @@
    id="svg11300"
    sodipodi:version="0.32"
    inkscape:version="0.92.1 r15371"
-   sodipodi:docname="timepp-down-symbolic.svg"
+   sodipodi:docname="timepp-pan-down-symbolic.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
    version="1.0"
    style="display:inline;enable-background:new">
@@ -30,9 +30,9 @@
      borderopacity="1"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:zoom="22.627417"
-     inkscape:cx="5.6368062"
-     inkscape:cy="8.7579754"
+     inkscape:zoom="128"
+     inkscape:cx="7.5488888"
+     inkscape:cy="4.125588"
      inkscape:current-layer="layer1"
      showgrid="true"
      inkscape:grid-bbox="true"
@@ -44,7 +44,7 @@
      inkscape:window-y="26"
      width="400px"
      height="300px"
-     inkscape:snap-nodes="false"
+     inkscape:snap-nodes="true"
      inkscape:snap-bbox="true"
      gridtolerance="10000"
      inkscape:object-nodes="true"
@@ -66,7 +66,7 @@
      guidehiopacity="0.49803922"
      inkscape:snap-smooth-nodes="true"
      inkscape:object-paths="false"
-     inkscape:snap-global="true"
+     inkscape:snap-global="false"
      inkscape:snap-center="true">
     <inkscape:grid
        type="xygrid"
@@ -103,7 +103,7 @@
         <dc:source />
         <cc:license
            rdf:resource="" />
-        <dc:title></dc:title>
+        <dc:title />
         <dc:subject>
           <rdf:Bag />
         </dc:subject>
@@ -145,8 +145,9 @@
      transform="translate(0,-284)">
     <path
        style="display:inline;fill:#bebebe;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;enable-background:new"
-       d="m 13,290 -5,5 -5,-5 z"
+       d="M 13,290 8,295.5 3,290 Z"
        id="path837"
-       inkscape:connector-curvature="0" />
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cccc" />
   </g>
 </svg>

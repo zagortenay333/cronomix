@@ -20,6 +20,11 @@ const REPORT_BUG_LINK   = 'https://www.github.com/zagortenay333/timepp__gnome/is
 const TRANSLATIONS_LINK = 'https://github.com/zagortenay333/timepp__gnome/tree/master/locale';
 
 
+// =====================================================================
+// @@@ Context Menu
+//
+// @ext: obj (main extension object)
+// =====================================================================
 const ContextMenu = new Lang.Class({
     Name: 'Timepp.ContextMenu',
 
@@ -30,16 +35,16 @@ const ContextMenu = new Lang.Class({
         //
         // items
         //
-        this.settings_link = new PopupMenu.PopupMenuItem(_('Open settings'));
+        this.settings_link = new MenuItem('timepp-wrench-symbolic', _('Open settings'));
         this.actor.add_actor(this.settings_link.actor);
 
-        this.website_link = new PopupMenu.PopupMenuItem(_('Go to extension website'));
+        this.website_link = new MenuItem('timepp-link-symbolic', _('Go to extension website'));
         this.actor.add_actor(this.website_link.actor);
 
-        this.report_bug_link = new PopupMenu.PopupMenuItem(_('Report bug'));
+        this.report_bug_link = new MenuItem('timepp-issue-symbolic', _('Report bug'));
         this.actor.add_actor(this.report_bug_link.actor);
 
-        this.translations_link = new PopupMenu.PopupMenuItem(_('Help with translations'));
+        this.translations_link = new MenuItem('timepp-translate-symbolic', _('Help with translations'));
         this.actor.add_actor(this.translations_link.actor);
 
 
@@ -80,5 +85,27 @@ const ContextMenu = new Lang.Class({
             catch (e) { logError(e); }
             ext.toggle_context_menu();
         });
+    },
+});
+
+
+// =====================================================================
+// @@@ The popupmenuitem with icons on the left side
+//
+// @icon_name : string
+// @label     : string
+// =====================================================================
+const MenuItem = new Lang.Class({
+    Name    : 'Timepp.PopupMenuIconItem',
+    Extends : PopupMenu.PopupBaseMenuItem,
+
+    _init: function (icon_name, label, params) {
+        this.parent(params);
+
+        this.icon = new St.Icon({ icon_name: icon_name });
+        this.actor.add_child(this.icon);
+
+        this.label = new St.Label({ text: label });
+        this.actor.add_child(this.label);
     },
 });
