@@ -3178,14 +3178,19 @@ const TaskFiltersWindow = new Lang.Class({
     },
 
     _reset_all: function () {
-        for (let items in this.filter_register) {
-            if (! this.filter_register.hasOwnProperty(items)) continue;
+        this.filter_register.completed.checkbox.actor.checked   = false;
+        this.filter_register.no_priority.checkbox.actor.checked = false;
 
-            items = this.filter_register[items];
-
-            for (let i = 0, len = items.length; i < len; i++)
-                items[i].checkbox.actor.checked = false;
-        }
+        [
+            this.filter_register.priorities,
+            this.filter_register.contexts,
+            this.filter_register.projects,
+            this.filter_register.custom,
+        ].forEach((arr) => {
+            for (let i = 0; i < arr.length; i++) {
+                arr[i].checkbox.actor.checked = false;
+            }
+        });
     },
 
     _new_filter_item: function (is_checked, label, count, is_deletable, parent_box) {
@@ -3292,9 +3297,6 @@ const TaskFiltersWindow = new Lang.Class({
         for (let i = 0; i < this.filter_register.custom.length; i++) {
             let it = this.filter_register.custom[i];
             if (it.checkbox.actor.checked) filters.custom_active.push(it.filter);
-        }
-
-        for (let i = 0, len = this.filter_register.custom.length; i < len; i++) {
             filters.custom.push(this.filter_register.custom[i].filter);
         }
 
