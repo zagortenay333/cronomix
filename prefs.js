@@ -720,6 +720,26 @@ const Settings = new Lang.Class({
                 }
             });
 
+        this.builder.get_object('todo-keybinding-open-to-stats')
+            .set_text(this.settings.get_strv('todo-keybinding-open-to-stats')[0]);
+        this.builder.get_object('todo-keybinding-open-to-stats').connect('changed',
+            (entry) => {
+                let [key, mods] = Gtk.accelerator_parse(entry.get_text());
+
+                if (Gtk.accelerator_valid(key, mods)) {
+                    entry["secondary-icon-name"] = null;
+                    let shortcut = Gtk.accelerator_name(key, mods);
+                    this.settings.set_strv('todo-keybinding-open-to-stats', [shortcut]);
+                }
+                else {
+                    if (entry.get_text() !== '')
+                        entry["secondary-icon-name"] = "dialog-warning-symbolic";
+                    else
+                        entry["secondary-icon-name"] = "";
+                    this.settings.set_strv('todo-keybinding-open-to-stats', ['']);
+                }
+            });
+
         this.builder.get_object('todo-keybinding-open-to-switch-files')
             .set_text(this.settings.get_strv('todo-keybinding-open-to-switch-files')[0]);
         this.builder.get_object('todo-keybinding-open-to-switch-files').connect('changed',

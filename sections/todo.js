@@ -1,3 +1,8 @@
+/*
+let s = Date.now();
+log(`>>>>>>>>>>>>>>>>>>>>> PERF: ${Date.now() - s}`);
+*/
+
 const St             = imports.gi.St;
 const Gio            = imports.gi.Gio
 const Gtk            = imports.gi.Gtk;
@@ -5,6 +10,7 @@ const Meta           = imports.gi.Meta;
 const GLib           = imports.gi.GLib;
 const Shell          = imports.gi.Shell;
 const Pango          = imports.gi.Pango;
+const PangoCairo     = imports.gi.PangoCairo;
 const Clutter        = imports.gi.Clutter;
 const DND            = imports.ui.dnd;
 const Main           = imports.ui.main;
@@ -26,9 +32,12 @@ const _        = Gettext.gettext;
 const ngettext = Gettext.ngettext;
 
 
+const FULLSCREEN     = ME.imports.lib.fullscreen;
 const SIG_MANAGER    = ME.imports.lib.signal_manager;
 const KEY_MANAGER    = ME.imports.lib.keybinding_manager;
 const FUZZ           = ME.imports.lib.fuzzy_search;
+const GRAPHS         = ME.imports.lib.graphs;
+const DATE_PICKER    = ME.imports.lib.date_picker;
 const NUM_PICKER     = ME.imports.lib.num_picker;
 const PANEL_ITEM     = ME.imports.lib.panel_item;
 const MULTIL_ENTRY   = ME.imports.lib.multiline_entry;
@@ -169,6 +178,8 @@ function split_on_spaces (str) {
 //
 // This func needs to be used at a time when the actor is already drawn, or it
 // will not work.
+//
+// @label: St.Label
 function resize_label (label) {
     let theme_node = label.get_theme_node();
     let alloc_box  = label.get_allocation_box();
@@ -210,13 +221,19 @@ const Todo = new Lang.Class({
 
         this.section_enabled = this.settings.get_boolean('todo-enabled');
         this.separate_menu   = this.settings.get_boolean('todo-separate-menu');
-        this.cache_file      = null;
-        this.cache           = null;
 
+        this.cache_file   = null;
+        this.cache        = null;
         this.sigm         = new SIG_MANAGER.SignalManager();
         this.keym         = new KEY_MANAGER.KeybindingManager(this.settings);
         this.view_manager = null;
         this.time_tracker = null;
+
+
+        // The view manager only allows one view to be visible at time; however,
+        // since the stats view uses the fullscreen iface, it is orthogonal to
+        // the other views, so we don't use the view manager for it.
+        this.stats_view = null;
 
 
         // Track how many tasks have a particular proj/context/prio, a
@@ -231,14 +248,12 @@ const Todo = new Lang.Class({
 
 
         // @NOTE
-        //
         // this.tasks, this.tasks_viewport and the popup menu are the
         // only places where refs to task objects can be held for longer periods
         // of time.
-        // If a task has been permanently removed from this.tasks, then it has
-        // to be also removed from this.tasks_viewport and the popup_menu.
-        // Removing a task object from all 3 of those is expected to delete that
-        // object.
+        // If a task has been removed from this.tasks, then it has to also be
+        // removed from this.tasks_viewport and it's actor has to be removed
+        // from the popup menu.
         //
         // - To ADD a task, create the object and add it to this.tasks and call
         //   this.on_tasks_changed() soon after that.
@@ -290,19 +305,15 @@ const Todo = new Lang.Class({
         this.on_day_started_loop_id = null;
 
 
-        // The custom css properties 'context-color', 'project-color', and
-        // 'link-color' can be used in the themes css file to style the task
-        // markup.
-        //
         // These css properties need to be added to the
         // 'timepp-menu todo-section' selector.
         //
-        // The colors are parsed and stored in this object.
-        this.markup_colors = {
-            project : 'magenta',
-            context : 'green',
-            link    : 'blue',
-        };
+        // The keys are equal to the names of the css properties.
+        this.markup_colors = new Map([
+            ['-timepp-context-color' , 'magenta'],
+            ['-timepp-project-color' , 'green'],
+            ['-timepp-link-color'    , 'blue'],
+        ]);
 
 
         // @SPEED
@@ -345,6 +356,14 @@ const Todo = new Lang.Class({
                 this.view_manager.current_view !== View.NO_TODO_FILE) {
 
                 this.show_view__search();
+            }
+        });
+        this.keym.register('todo-keybinding-open-to-stats', () => {
+            this.ext.open_menu(this);
+            if (this.view_manager.current_view !== View.LOADING &&
+                this.view_manager.current_view !== View.NO_TODO_FILE) {
+
+                this.show_view__time_tracker_stats();
             }
         });
         this.keym.register('todo-keybinding-open-to-switch-files', () => {
@@ -645,6 +664,7 @@ const Todo = new Lang.Class({
 
         this.view_manager = new ViewManager(this.ext, this);
         this.time_tracker = new TimeTracker(this.ext, this);
+        this.stats_view   = new StatsView(this.ext, this, 0);
 
         this._init_todo_file();
         this.keym.enable_all();
@@ -656,7 +676,7 @@ const Todo = new Lang.Class({
         this.keym.disable_all();
         this.tasks          = [];
         this.tasks_viewport = [];
-        this.tasks_scroll_content.remove_all_children();
+        this.tasks_scroll_content.destroy_all_children();
 
         if (this.todo_file_monitor) {
             this.todo_file_monitor.cancel();
@@ -686,13 +706,18 @@ const Todo = new Lang.Class({
         if (this.view_manager) {
             this.view_manager = null;
         }
+
+        if (this.stats_view) {
+            this.stats_view.destroy();
+            this.stats_view = null;
+        }
     },
 
     _init_todo_file: function () {
         // reset
         this.tasks          = [];
         this.tasks_viewport = [];
-        this.tasks_scroll_content.remove_all_children();
+        this.tasks_scroll_content.destroy_all_children();
         this.stats.priorities.clear();
         this.stats.contexts.clear();
         this.stats.projects.clear();
@@ -843,17 +868,17 @@ const Todo = new Lang.Class({
 
     _update_markup_colors: function () {
         let update_needed = false;
+        let theme_node    = this.actor.get_theme_node();
 
-        ['context', 'project', 'link'].forEach((it) => {
-            let [success, col] = this.actor.get_theme_node()
-                                 .lookup_color(it + '-color', false);
+        this.markup_colors.forEach((old_col, prop) => {
+            let [success, new_col] = theme_node.lookup_color(prop, false);
 
-            if (! success) return;
+            if (!success) return;
 
-            col = col.to_string().substr(0, 7);
+            new_col = new_col.to_string().substr(0, 7);
 
-            if (this.markup_colors[it] !== col) {
-                this.markup_colors[it] = col;
+            if (old_col !== new_col) {
+                this.markup_colors.set(prop, new_col);
                 update_needed = true;
             }
         });
@@ -981,25 +1006,31 @@ const Todo = new Lang.Class({
     },
 
     show_view__time_tracker_stats: function (task) {
-        let stats;
+        this.ext.menu.close();
+        this.stats_view.open();
 
-        if (task) {
-            stats = this.time_tracker.get_stats(task.task_str);
-            if (stats) stats = [stats];
-        }
-        else stats = this.time_tracker.get_all_project_stats();
+        if (this.time_tracker.stats_data.size === 0)
+            this.stats_view.show_mode__banner(_('Loading...'));
 
-        let stat_view = new TimeTrackerStatView(this.ext, this, stats);
+        Mainloop.idle_add(() => {
+            let stats = this.time_tracker.get_stats();
 
-        this.view_manager.show_view({
-            view_name      : View.STATS,
-            actors         : [stat_view.actor],
-            focused_actor  : stat_view.close_button,
-            close_callback : () => { stat_view.actor.destroy(); },
-        });
+            if (! stats) {
+                this.stats_view.show_mode__banner(_('Nothing found.'));
+            }
+            else {
+                this.stats_view.set_stats(...stats);
 
-        stat_view.connect('close', () => {
-            this.show_view__default();
+                let d = new Date();
+
+                if (task) {
+                    this.stats_view.show_mode__single(
+                        d.getFullYear(), d.getMonth(), task.task_str);
+                }
+                else {
+                    this.stats_view.show_mode__global(date_yyyymmdd(d));
+                }
+            }
         });
     },
 
@@ -1498,22 +1529,21 @@ const Todo = new Lang.Class({
         return false;
     },
 
-    // Add context/project/prio as new active filter.
-    //
     // @keyword: string (priority, context, or project)
-    activate_filter: function (keyword) {
+    toggle_filter: function (keyword) {
         let arr;
 
         if      (REG_PRIO.test(keyword))    arr = this.cache.filters.priorities;
         else if (REG_CONTEXT.test(keyword)) arr = this.cache.filters.contexts;
         else if (REG_PROJ.test(keyword))    arr = this.cache.filters.projects;
 
-        if (arr.indexOf(keyword) !== -1) return;
+        let idx = arr.indexOf(keyword);
 
-        arr.push(keyword);
+        if (idx === -1) arr.push(keyword);
+        else            arr.splice(idx, 1);
+
         this.store_cache();
         this._update_filter_icon();
-
         if (this.view_manager.current_view === View.DEFAULT)
             this.add_tasks_to_menu(true);
     },
@@ -1652,9 +1682,10 @@ const Todo = new Lang.Class({
     _find_prev_search_results: function (pattern) {
         let res = '';
 
-        for (let [old_patt,] of this.search_dictionary.entries())
+        for (let old_patt of this.search_dictionary.keys()) {
             if (pattern.startsWith(old_patt) && old_patt.length > res.length)
                 res = old_patt;
+        }
 
         if (pattern === res) return [false, this.search_dictionary.get(res)];
         else if (res)        return [true,  this.search_dictionary.get(res)];
@@ -1830,7 +1861,7 @@ const TaskEditor = new Lang.Class({
             return;
         }
 
-        this.completion_menu_content.remove_all_children();
+        this.completion_menu_content.destroy_all_children();
         this.completion_menu.show();
 
         for (let i = 0; i < completions.length; i++)  {
@@ -1857,14 +1888,14 @@ const TaskEditor = new Lang.Class({
     _find_completions: function (needle, haystack) {
         if (needle === '@' || needle === '+') {
             let res = [];
-            for (let [key,] of haystack.entries()) res.push(key);
+            for (let key of haystack.keys()) res.push(key);
             return res;
         }
 
         let reduced_results = [];
 
         let score;
-        for (let [keyword,] of haystack.entries()) {
+        for (let keyword of haystack.keys()) {
             score = FUZZ.fuzzy_search_v1(needle, keyword);
             if (!score) continue;
             reduced_results.push([score, keyword]);
@@ -2023,7 +2054,7 @@ const TaskItem = new Lang.Class({
 
         // @NOTE
         // If a var needs to be resettable, add it to the reset() method
-        // instead of the _init() method.=
+        // instead of the _init() method.
 
         // Project/context/url below mouse pointer, null if none of those.
         this.current_keyword = null;
@@ -2280,24 +2311,27 @@ const TaskItem = new Lang.Class({
                 if (this.contexts.indexOf(word) === -1) {
                     this.contexts.push(word);
                 }
-                words[i] = '<span foreground="' +
-                           this.delegate.markup_colors.context +
-                           '"><b>' + word + '</b></span>';
+                words[i] =
+                    '<span foreground="' +
+                    this.delegate.markup_colors.get('-timepp-context-color') +
+                    '"><b>' + word + '</b></span>';
             }
             else if (REG_PROJ.test(word)) {
                 this.project_indices.push(i);
                 if (this.projects.indexOf(word) === -1) {
                     this.projects.push(word);
                 }
-                words[i] = '<span foreground="' +
-                           this.delegate.markup_colors.project +
-                           '"><b>' + word + '</b></span>';
+                words[i] =
+                    '<span foreground="' +
+                    this.delegate.markup_colors.get('-timepp-project-color') +
+                    '"><b>' + word + '</b></span>';
             }
             else if (REG_URL.test(word) || REG_FILE_PATH.test(word)) {
                 this.link_indices.push(i);
-                words[i] = '<span foreground="' +
-                           this.delegate.markup_colors.link +
-                           '"><u><b>' + word + '</b></u></span>';
+                words[i] =
+                    '<span foreground="' +
+                    this.delegate.markup_colors.get('-timepp-link-color') +
+                    '"><u><b>' + word + '</b></u></span>';
             }
             else if (REG_EXT.test(word)) {
                 if (this.hidden) {
@@ -2384,10 +2418,9 @@ const TaskItem = new Lang.Class({
 
         this.description_markup = words;
 
-        // We escape '&' and '<'.
         this.msg.clutter_text.set_markup(
-           words.join(' ').replace(/&(?!amp;|quot;|apos;|lt;|gt;)/g, '&amp;')
-                          .replace(/<(?!\/?.*>)/g, '&lt;')
+            words.join(' ').replace(/&(?!amp;|quot;|apos;|lt;|gt;)/g, '&amp;')
+                           .replace(/<(?!\/?[^<]*>)/g, '&lt;')
         );
     },
 
@@ -2549,7 +2582,7 @@ const TaskItem = new Lang.Class({
 
             this.description_markup[idx] =
                 '<span foreground="' +
-                this.delegate.markup_colors.context + '"' +
+                this.delegate.markup_colors.get('-timepp-context-color') + '"' +
                 this.description_markup[idx].slice(
                     this.description_markup[idx].indexOf('>'));
         }
@@ -2559,7 +2592,7 @@ const TaskItem = new Lang.Class({
 
             this.description_markup[idx] =
                 '<span foreground="' +
-                this.delegate.markup_colors.project + '"' +
+                this.delegate.markup_colors.get('-timepp-project-color') + '"' +
                 this.description_markup[idx].slice(
                     this.description_markup[idx].indexOf('>'));
         }
@@ -2569,7 +2602,7 @@ const TaskItem = new Lang.Class({
 
             this.description_markup[idx] =
                 '<span foreground="' +
-                this.delegate.markup_colors.link + '"' +
+                this.delegate.markup_colors.get('-timepp-link-color') + '"' +
                 this.description_markup[idx].slice(
                     this.description_markup[idx].indexOf('>'));
         }
@@ -2674,21 +2707,25 @@ const TaskItem = new Lang.Class({
             this.stat_icon_bin.connect('button-press-event', () => {
                 this.delegate.show_view__time_tracker_stats(this);
                 Mainloop.idle_add(() => { this._hide_header_icons(); });
+                return Clutter.EVENT_STOP;
             });
             this.stat_icon_bin.connect('key-press-event', (_, event) => {
                 if (event.get_key_symbol() === Clutter.Return) {
                     this.delegate.show_view__time_tracker_stats(this);
                     Mainloop.idle_add(() => { this._hide_header_icons(); });
+                    return Clutter.EVENT_STOP;
                 }
             });
             this.edit_icon_bin.connect('button-press-event', () => {
                 this.delegate.show_view__task_editor(this);
                 Mainloop.idle_add(() => { this._hide_header_icons(); });
+                return Clutter.EVENT_STOP;
             });
             this.edit_icon_bin.connect('key-press-event', (_, event) => {
                 if (event.get_key_symbol() === Clutter.Return) {
                     this.delegate.show_view__task_editor(this);
                     Mainloop.idle_add(() => { this._hide_header_icons(); });
+                    return Clutter.EVENT_STOP;
                 }
             });
             this.tracker_icon_bin.connect('button-press-event', () => {
@@ -2698,6 +2735,7 @@ const TaskItem = new Lang.Class({
             this.tracker_icon_bin.connect('key-press-event', (_, event) => {
                 if (event.get_key_symbol() === Clutter.Return) {
                     this.delegate.time_tracker.toggle_tracking(this);
+                    return Clutter.EVENT_STOP;
                 }
             });
         }
@@ -2822,7 +2860,7 @@ const TaskItem = new Lang.Class({
             case Clutter.EventType.BUTTON_RELEASE: {
                 if (this.prio_label.has_pointer) {
                     this.delegate.add_task_button.grab_key_focus();
-                    this.delegate.activate_filter(this.priority);
+                    this.delegate.toggle_filter(this.priority);
                 }
                 else if (this.msg.has_pointer) {
                     if (! this.current_keyword) break;
@@ -2859,7 +2897,7 @@ const TaskItem = new Lang.Class({
                             Main.notify(_('File or dir not found.'));
                         }
                     }
-                    else this.delegate.activate_filter(this.current_keyword);
+                    else this.delegate.toggle_filter(this.current_keyword);
                 }
 
                 break;
@@ -3178,8 +3216,11 @@ const TaskFiltersWindow = new Lang.Class({
     },
 
     _reset_all: function () {
-        this.filter_register.completed.checkbox.actor.checked   = false;
-        this.filter_register.no_priority.checkbox.actor.checked = false;
+        if (this.filter_register.completed)
+            this.filter_register.completed.checkbox.actor.checked = false;
+
+        if (this.filter_register.no_priority)
+            this.filter_register.no_priority.checkbox.actor.checked = false;
 
         [
             this.filter_register.priorities,
@@ -3297,7 +3338,7 @@ const TaskFiltersWindow = new Lang.Class({
         for (let i = 0; i < this.filter_register.custom.length; i++) {
             let it = this.filter_register.custom[i];
             if (it.checkbox.actor.checked) filters.custom_active.push(it.filter);
-            filters.custom.push(this.filter_register.custom[i].filter);
+            filters.custom.push(it.filter);
         }
 
         this.emit('filters-updated', filters);
@@ -3686,7 +3727,7 @@ const TaskSortWindow = new Lang.Class({
         });
 
         item.label.connect('enter-event', () => {
-            global.screen.set_cursor(Meta.Cursor.DND_UNSUPPORTED_TARGET);
+            global.screen.set_cursor(Meta.Cursor.MOVE_OR_RESIZE_WINDOW);
         });
 
         item.label.connect('leave-event', () => {
@@ -3838,110 +3879,6 @@ Signals.addSignalMethods(ClearCompletedTasks.prototype);
 
 
 // =====================================================================
-// @@@ Stats UI
-//
-// @ext      : obj (main extension object)
-// @delegate : obj (main section object)
-// @stats    : null or array (of stats object produced by TimeTracker.get_stats)
-//
-// @stats === null means that the records for a task/project weren't found.
-// =====================================================================
-const TimeTrackerStatView = new Lang.Class({
-    Name: 'Timepp.TimeTrackerStatView',
-
-    _init: function (ext, delegate, stats) {
-        this.actor = new St.Bin({ x_fill: true, style_class: 'view-box stats-window' });
-
-        this.content_box = new St.BoxLayout({ x_expand: true, vertical: true, style_class: 'view-box-content' });
-        this.actor.add_actor(this.content_box);
-
-        this.close_button = new St.Button({ can_focus: true, style_class: 'close-icon', x_expand: true, x_align: St.Align.END });
-        this.content_box.add_actor(this.close_button);
-
-        let close_icon = new St.Icon({ icon_name: 'timepp-close-symbolic' });
-        this.close_button.add_actor(close_icon);
-
-        this.close_button.connect('clicked', () => { this.emit('close'); });
-
-        let scroll_view = new St.ScrollView({ style_class: 'vfade' });
-        this.content_box.add_actor(scroll_view);
-
-        // enable scrolling by grabbing with the mouse
-        scroll_view.vscroll.connect('scroll-start', () => { ext.menu.passEvents = true; });
-        scroll_view.vscroll.connect('scroll-stop', () => { ext.menu.passEvents = false; });
-
-        let scroll_content = new St.BoxLayout({ vertical: true });
-        scroll_view.add_actor(scroll_content);
-
-        if (! stats) {
-            let label = new St.Label({ text : _('Nothing found...'), style: 'font-weight: bold;', style_class: 'row' });
-            scroll_content.add_child(label);
-
-            return;
-        }
-
-        let it, markup = '';
-        let titles = this._gen_titles();
-
-        for (let i = 0, len = stats.length; i < len; i++) {
-            it = stats[i];
-
-            markup +=
-                '<b>' + it.name + '</b>:'                             + '\n\n' +
-                '    ' + titles[0] + this._format(it.today)           + '\n' +
-                '    ' + titles[1] + this._format(it.last_three_days) + '\n' +
-                '    ' + titles[2] + this._format(it.this_week)       + '\n' +
-                '    ' + titles[3] + this._format(it.this_month)      + '\n' +
-                '    ' + titles[4] + this._format(it.this_year);
-
-            if (i !== len - 1 && len > 1) markup += '\n\n\n\n';
-        }
-
-        let text = new St.Label({ text: it.name, style_class: 'stats-item-title popup-menu-item' });
-        scroll_content.add_actor(text);
-
-        text.clutter_text.line_wrap      = true;
-        text.clutter_text.ellipsize      = Pango.EllipsizeMode.NONE;
-        text.clutter_text.line_wrap_mode = Pango.WrapMode.WORD_CHAR;
-
-        text.clutter_text.set_markup('<tt>' + markup + '</tt>');
-    },
-
-    _gen_titles: function () {
-        let titles = [
-            '<b>'+_('today')+'</b>',
-            '<b>'+_('last 3 days')+'</b>',
-            '<b>'+_('this week')+'</b>',
-            '<b>'+_('this month')+'</b>',
-            '<b>'+_('this year')+'</b>',
-        ];
-
-        let longest = titles[0].length;
-
-        for (let i = 1; i < titles.length; i++) {
-            longest = (titles[i].length > longest) ? titles[i].length : longest;
-        }
-
-        longest += 2;
-
-        for (let i = 0; i < titles.length; i++) {
-            let diff  = longest - titles[i].length;
-            titles[i] = titles[i] + Array(diff).join(' ') + ':  ';
-        }
-
-        return titles;
-    },
-
-    _format: function (seconds) {
-        return '' + Math.floor(seconds / 3600)      + 'h ' +
-                    Math.round(seconds % 3600 / 60) + 'm';
-    },
-});
-Signals.addSignalMethods(TimeTrackerStatView.prototype);
-
-
-
-// =====================================================================
 // @@@ Time tracker
 //
 // @ext      : obj (main extension object)
@@ -3961,45 +3898,28 @@ const TimeTracker = new Lang.Class({
                        .deep_unpack().csv_dir;
 
         if (this.csv_dir) {
-            try {
-                [this.csv_dir, ] = GLib.filename_from_uri(this.csv_dir, null);
-            } catch (e) { logError(e); }
+            [this.csv_dir, ] = GLib.filename_from_uri(this.csv_dir, null);
         }
 
-        this.timer_seconds_mainloop_id            = null;
-        this.timer_minutes_mainloop_id            = null;
-        this.number_of_tracked_tasks              = 0;
-        this.yearly_csv_file_monitor              = null;
-        this.daily_csv_file_monitor               = null;
+        this.number_of_tracked_tasks = 0;
+        this.tracker_tic_id          = null;
+
+        // GFiles
+        this.yearly_csv_dir  = null;
+        this.yearly_csv_file = null;
+        this.daily_csv_file  = null;
+
+        // GFileMonitors
+        this.yearly_csv_dir_monitor  = null;
+        this.yearly_csv_file_monitor = null;
+        this.daily_csv_file_monitor  = null;
+
         this.daily_csv_file_monitor_handler_block = false;
 
-
-        // We only read the yearly csv file for statistics lookup.
-        // The daily csv file is appended to it each day.
-        //
-        // The structure of the yearly map is:
-        //
-        // @key : string
-        // @val : array
-        //
-        // @key:
-        //   is a string which is either a task string (a single line in the
-        //   todo.txt file) or a project keyword (e.g., '+my_project', '+stuff',
-        //   etc...)
-        //
-        // @val:
-        //   is an object of the form: { type    : string,
-        //                               records : array, }
-        //
-        //   @type
-        //     is either the string '++' or the string '()'.
-        //     '++' means it's a project, '()' means it's a task.
-        //
-        //   @records
-        //     is an array of objects where each object is of the form:
-        //     {date: string (in yyyy-mm-dd format), time: int (seconds)}
-        //     E.g., {date: '3434-34-34', time: 324}
-        this.yearly_csv_map = new Map();
+        // The stats data is cached with the exception of today's stats which
+        // get appended.
+        this.stats_data           = new Map();
+        this.stats_unique_entries = new Set();
 
 
         // The structure of the daily map is:
@@ -4030,10 +3950,6 @@ const TimeTracker = new Lang.Class({
         this.daily_csv_map = new Map();
 
 
-        //
-        // init csv dir
-        // We init the daily/yearly csv maps with the this func as well.
-        //
         this._init_tracker_dir();
 
 
@@ -4051,125 +3967,103 @@ const TimeTracker = new Lang.Class({
                            .deep_unpack().csv_dir;
 
             if (this.csv_dir) {
-                try {
-                    [this.csv_dir, ] = GLib.filename_from_uri(this.csv_dir, null);
-                } catch (e) { logError(e); }
+                [this.csv_dir, ] = GLib.filename_from_uri(this.csv_dir, null);
             }
 
             this._init_tracker_dir();
         });
     },
 
-    _timer_seconds: function () {
+    _tracker_tic: function () {
         if (this.number_of_tracked_tasks === 0) {
-            this.timer_seconds_mainloop_id = null;
+            this.tracker_tic_id = null;
             return;
         }
 
-        for (let [, v] of this.daily_csv_map.entries()) {
-            if (v.tracking) v.time++;
-        }
+        let min = arguments[0] || 1;
 
-        this.timer_seconds_mainloop_id = Mainloop.timeout_add_seconds(1, () => {
-            this._timer_seconds();
+        this.tracker_tic_id = Mainloop.timeout_add_seconds(1, () => {
+            for (let v of this.daily_csv_map.values()) {
+                if (v.tracking) {
+                    v.time++;
+                    log(v.time);
+                }
+            }
+
+            if (min === 60) {
+                min = 0;
+                Mainloop.idle_add(() => this._write_daily_csv_file());
+            }
+
+            this._tracker_tic(++min);
         });
     },
 
-    _timer_minutes: function () {
-        if (this.number_of_tracked_tasks === 0) {
-            this.timer_minutes_mainloop_id = null;
-            return;
-        }
-
-        this.timer_minutes_mainloop_id = Mainloop.timeout_add_seconds(60, () => {
-            this._write_daily_csv_file();
-            this._timer_minutes();
-        });
-    },
-
-    _start_timers: function () {
-        if (! this.timer_seconds_mainloop_id) this._timer_seconds();
-        if (! this.timer_minutes_mainloop_id) this._timer_minutes();
-    },
-
-    _stop_timers: function () {
-        if (this.timer_seconds_mainloop_id) {
-            Mainloop.source_remove(this.timer_seconds_mainloop_id);
-            this.timer_seconds_mainloop_id = null;
-        }
-
-        if (this.timer_minutes_mainloop_id) {
-            Mainloop.source_remove(this.timer_minutes_mainloop_id);
-            this.timer_minutes_mainloop_id = null;
-        }
-    },
-
+    // This func will:
+    //  - Reset the time tracker.
+    //  - If the user has specified a time tracker dir:
+    //      - Ensure that the tracker dir has the daily csv file, yearly csv
+    //        file, and yearly csv dir in it.
+    //      - Ensure that all GFileMonitors are active.
+    //      - Ensure that the daily_csv_map is initialized.
     _init_tracker_dir: function () {
         // reset
-        this.stop_all_tracking();
-        this._stop_timers();
+        {
+            this.stop_all_tracking();
+            this.daily_csv_map.clear();
+            this.stats_data.clear();
+            this.stats_unique_entries.clear();
 
-        if (this.daily_csv_file_monitor) {
-            this.daily_csv_file_monitor.cancel();
-            this.daily_csv_file_monitor = null;
-        }
+            if (this.tracker_tic_id) {
+                Mainloop.source_remove(this.tracker_tic_id);
+                this.tracker_tic_id = null;
+            }
 
-        if (this.yearly_csv_file_monitor) {
-            this.yearly_csv_file_monitor.cancel();
-            this.yearly_csv_file_monitor = null;
-        }
+            if (this.daily_csv_file_monitor) {
+                this.daily_csv_file_monitor.cancel();
+                this.daily_csv_file_monitor = null;
+            }
 
+            if (this.yearly_csv_file_monitor) {
+                this.yearly_csv_file_monitor.cancel();
+                this.yearly_csv_file_monitor = null;
+            }
 
-        if (! this.csv_dir) return;
-
-
-        // ensure tracker dir
-        Util.spawnCommandLine("mkdir -p  %s".format(this.csv_dir));
-
-
-        // Archive the yearly csv file each year
-        let today  = new Date();
-        let prev_f = this.csv_dir + '/' +
-                     (today.getFullYear() - 1) + '__time_tracker.csv';
-
-        if (today.getMonth() === 0 &&
-            today.getDate()  === 1 &&
-            GLib.file_test(prev_f, GLib.FileTest.EXISTS)) {
-
-            let dir = this.csv_dir + "/YEARS__time_tracker";
-            Util.spawnCommandLine("mkdir -p  %s".format(dir));
-            Util.spawnCommandLine("mv %s %s".format(prev_f, dir));
-        }
-
-        // init daily and yearly csv map
-        this._init_yearly_csv_map();
-        this._init_daily_csv_map();
-    },
-
-    _init_yearly_csv_map: function () {
-        this.yearly_csv_file = null;
-        this.yearly_csv_map.clear();
-
-        if (this.yearly_csv_file_monitor) {
-            this.yearly_csv_file_monitor.cancel();
-            this.yearly_csv_file_monitor = null;
+            if (this.yearly_csv_dir_monitor) {
+                this.yearly_csv_dir_monitor.cancel();
+                this.yearly_csv_dir_monitor = null;
+            }
         }
 
 
         if (! this.csv_dir) return;
 
 
-        // ensure tracker dir
-        Util.spawnCommandLine("mkdir -p  %s".format(this.csv_dir));
+        let d = new Date();
 
+
+        // ensure the yearly dir, yearly file, daily file, and their monitors
         try {
-            Util.spawnCommandLine("mkdir -p  %s".format(this.csv_dir));
+            // yearly dir
+            this.yearly_csv_dir = Gio.file_new_for_path(
+                `${this.csv_dir}/YEARS__time_tracker`);
 
+            if (! this.yearly_csv_dir.query_exists(null))
+                this.yearly_csv_dir.make_directory_with_parents(null);
+
+            this.yearly_csv_dir_monitor = this.yearly_csv_dir.monitor_directory(
+                Gio.FileMonitorFlags.NONE, null);
+
+            this.yearly_csv_dir_monitor.connect('changed', () => {
+                this._on_yearly_csv_dir_changed();
+            });
+
+
+            // yearly file
             this.yearly_csv_file = Gio.file_new_for_path(
-                this.csv_dir +
-                '/' + (new Date().getFullYear()) + '__time_tracker.csv');
+                `${this.csv_dir}/${d.getFullYear()}__time_tracker.csv`);
 
-            if (!this.yearly_csv_file || !this.yearly_csv_file.query_exists(null))
+            if (! this.yearly_csv_file.query_exists(null))
                 this.yearly_csv_file.create(Gio.FileCreateFlags.NONE, null);
 
             this.yearly_csv_file_monitor = this.yearly_csv_file.monitor_file(
@@ -4178,61 +4072,13 @@ const TimeTracker = new Lang.Class({
             this.yearly_csv_file_monitor.connect('changed', () => {
                 this._on_yearly_csv_file_changed();
             });
-        }
-        catch (e) { logError(e); }
 
 
-        let [, contents] = this.yearly_csv_file.load_contents(null);
-        contents = String(contents).trim().split(/\n|\r/);
-
-
-        let it, val, record, key;
-
-        for (let i = 0, len = contents.length; i < len; i++) {
-            it = contents[i].trim();
-
-            if (it === '') continue;
-
-            key    = it.substring(24, it.length - 1).replace(/""/g, '"');
-            val    = this.yearly_csv_map.get(key);
-            record = {
-                date : it.substr(0, 10),
-                time : +(it.substr(12, 2)) * 3600 + (+(it.substr(15, 2)) * 60),
-            };
-
-            if (val)
-                val.records.push(record);
-            else
-                this.yearly_csv_map.set(key, {
-                    type    : it.substr(19, 2),
-                    records : [record],
-                });
-        }
-    },
-
-    _init_daily_csv_map: function () {
-        this.daily_csv_file = null;
-        this.daily_csv_map.clear();
-
-        if (this.daily_csv_file_monitor) {
-            this.daily_csv_file_monitor.cancel();
-            this.daily_csv_file_monitor = null;
-        }
-
-
-        if (! this.csv_dir) return;
-
-
-        // ensure tracker dir
-        Util.spawnCommandLine("mkdir -p  %s".format(this.csv_dir));
-
-        try {
-            Util.spawnCommandLine("mkdir -p  %s".format(this.csv_dir));
-
+            // daily file
             this.daily_csv_file = Gio.file_new_for_path(
-                this.csv_dir + '/TODAY__time_tracker.csv');
+                `${this.csv_dir}/TODAY__time_tracker.csv`);
 
-            if (!this.daily_csv_file || !this.daily_csv_file.query_exists(null))
+            if (! this.daily_csv_file.query_exists(null))
                 this.daily_csv_file.create(Gio.FileCreateFlags.NONE, null);
 
             this.daily_csv_file_monitor = this.daily_csv_file.monitor_file(
@@ -4242,51 +4088,71 @@ const TimeTracker = new Lang.Class({
                 this._on_daily_csv_file_changed();
             });
         }
-        catch (e) { logError(e); }
+        catch (e) {
+            logError(e);
+            return;
+        }
 
+        // check to see if the yearly csv file needs to be archived
+        {
+            let prev_f =
+                `${this.csv_dir}/${d.getFullYear() - 1}__time_tracker.csv`;
 
-        let [, contents] = this.daily_csv_file.load_contents(null);
-        contents = String(contents).trim().split(/\n|\r/);
-
-        // Check if the todays csv file is out of date and archive it instead.
-        for (let i = 0, len = contents.length; i < len; i++) {
-            if (contents[i] === '') continue;
-
-            if (contents[i].substr(0, 10) !== date_yyyymmdd()) {
-                this._archive_daily_csv_file();
-                return;
+            if (GLib.file_test(prev_f, GLib.FileTest.EXISTS)) {
+                let dir = `${this.csv_dir}/YEARS__time_tracker`;
+                Util.spawnCommandLine(`mv ${prev_f} ${dir}`);
             }
         }
 
-        let it, key, type;
+        // init daily csv map
+        {
+            let [, contents] = this.daily_csv_file.load_contents(null);
+            contents = String(contents).trim().split(/\n|\r/);
 
-        for (let i = 0, len = contents.length; i < len; i++) {
-            it = contents[i].trim();
+            // Check whether we need to archive the daily file.
+            for (let i = 0, len = contents.length; i < len; i++) {
+                if (contents[i] === '') continue;
 
-            if (it === '') continue;
+                if (contents[i].substr(0, 10) !== date_yyyymmdd(d)) {
+                    this._archive_daily_csv_file();
+                    return;
+                }
+            }
 
-            key  = it.substring(24, it.length - 1).replace(/""/g, '"');
-            type = it.substr(19, 2);
+            for (let i = 0, len = contents.length; i < len; i++) {
+                let it = contents[i].trim();
 
-            this.daily_csv_map.set(key, {
-                time : +(it.substr(12, 2)) * 3600 + (+(it.substr(15, 2)) * 60),
-                tracking : false,
-                type     : type,
-            });
+                if (it === '') continue;
 
-            if (type === '++') this.daily_csv_map.get(key).tracked_children = 0;
-            else               this.daily_csv_map.get(key).task_ref = null;
+                let key  = it.substring(24, it.length - 1).replace(/""/g, '"');
+                let type = it.substr(19, 2);
+
+                this.daily_csv_map.set(key, {
+                    time : +(it.substr(12, 2)) * 3600 + (+(it.substr(15, 2)) * 60),
+                    tracking : false,
+                    type     : type,
+                });
+
+                if (type === '++')
+                    this.daily_csv_map.get(key).tracked_children = 0;
+                else
+                    this.daily_csv_map.get(key).task_ref = null;
+            }
         }
     },
 
+    _on_yearly_csv_dir_changed: function () {
+        this._init_tracker_dir();
+    },
+
     _on_yearly_csv_file_changed: function () {
-        this._init_yearly_csv_map();
+        this._init_tracker_dir();
     },
 
     _on_daily_csv_file_changed: function () {
         // @HACK
         // The normal handler_block/unblock methods don't work with a file
-        // monitor for some reason. This seems to work well enough.
+        // monitor for some reason.
         if (this.daily_csv_file_monitor_handler_block) {
             Mainloop.idle_add(() => {
                 this.daily_csv_file_monitor_handler_block = false;
@@ -4294,58 +4160,61 @@ const TimeTracker = new Lang.Class({
             return;
         }
 
-        this.stop_all_tracking();
-        this._init_daily_csv_map();
+        this._init_tracker_dir();
     },
 
     _write_daily_csv_file: function () {
+        // We don't need to reinitialize the tracker dir here.
         this.daily_csv_file_monitor_handler_block = true;
 
+        let d        = date_yyyymmdd();
         let projects = '';
         let tasks    = '';
-        let line, hh, mm;
 
         for (let [k, v] of this.daily_csv_map.entries()) {
             if (v.time < 60) continue;
 
-            hh = '' + Math.floor(v.time / 3600);
-            hh = (hh.length === 1) ? ('0' + hh) : hh;
+            let hh = Math.floor(v.time / 3600);
+            hh     = (hh < 10) ? ('0' + hh) : ('' + hh);
 
-            mm = '' + Math.round(v.time % 3600 / 60);
-            mm = (mm.length === 1) ? ('0' + mm) : mm;
+            let mm = Math.round(v.time % 3600 / 60);
+            mm     = (mm < 10) ? ('0' + mm) : ('' +  mm);
 
-            line = '' + date_yyyymmdd() + ', ' +
-                       hh + ':' + mm    + ', ' +
-                       v.type           + ', ' +
-                       '"' + k.replace(/"/g, '""') + '"' + '\n';
+            let line =
+                `${d}, ${hh}:${mm}, ${v.type}, \"${k.replace(/"/g, '""')}\"\n`;
 
             if (v.type === '++') projects += line;
             else                 tasks    += line;
         }
 
         try {
-            if (!this.daily_csv_file || !this.daily_csv_file.query_exists(null))
+            if (! this.daily_csv_file.query_exists(null))
                 this.daily_csv_file.create(Gio.FileCreateFlags.NONE, null);
 
             this.daily_csv_file.replace_contents(projects + tasks, null, false,
                 Gio.FileCreateFlags.REPLACE_DESTINATION, null);
         }
-        catch (e) { logError(e); }
+        catch (e) { this._init_tracker_dir(); }
     },
 
     _archive_daily_csv_file: function () {
-        let [, contents]  = this.daily_csv_file.load_contents(null);
+        try {
+            let [, contents]  = this.daily_csv_file.load_contents(null);
 
-        let append_stream = this.yearly_csv_file.append_to(
-            Gio.FileCreateFlags.NONE, null);
+            let append_stream = this.yearly_csv_file.append_to(
+                Gio.FileCreateFlags.NONE, null);
 
-        append_stream.write_all(contents, null);
+            append_stream.write_all(contents, null);
 
-        this.daily_csv_file.replace_contents('', null, false,
-            Gio.FileCreateFlags.REPLACE_DESTINATION, null);
+            this.daily_csv_file.replace_contents('', null, false,
+                Gio.FileCreateFlags.REPLACE_DESTINATION, null);
+        }
+        catch (e) { this._init_tracker_dir(); }
 
-        for (let [, v] of this.daily_csv_map.entries()) {
-            v.date = date_yyyymmdd();
+        let d = date_yyyymmdd();
+
+        for (let v of this.daily_csv_map.values()) {
+            v.date = d;
             v.time = 0;
         }
     },
@@ -4399,7 +4268,9 @@ const TimeTracker = new Lang.Class({
 
     start_tracking: function (task) {
         if (!this.csv_dir) {
-            Main.notify(_('To track time, select a dir for csv files in the settings.'));
+            Main.notify(
+                _('To track time, select a dir for csv files in the settings.'));
+
             return null;
         }
 
@@ -4420,27 +4291,25 @@ const TimeTracker = new Lang.Class({
             });
         }
 
-        if (task.projects) {
-            for (let i = 0, len = task.projects.length; i < len; i++) {
-                val = this.daily_csv_map.get(task.projects[i]);
+        for (let i = 0, len = task.projects.length; i < len; i++) {
+            val = this.daily_csv_map.get(task.projects[i]);
 
-                if (val) {
-                    val.tracking = true;
-                    val.tracked_children++;
-                }
-                else {
-                    this.daily_csv_map.set(task.projects[i], {
-                        time             : 0,
-                        tracking         : true,
-                        type             : '++',
-                        tracked_children : 1,
-                    });
-                }
+            if (val) {
+                val.tracking = true;
+                val.tracked_children++;
+            }
+            else {
+                this.daily_csv_map.set(task.projects[i], {
+                    time             : 0,
+                    tracking         : true,
+                    type             : '++',
+                    tracked_children : 1,
+                });
             }
         }
 
         this.number_of_tracked_tasks++;
-        this._start_timers();
+        if (! this.tracker_tic_id) this._tracker_tic();
 
         for (let i = 0, len = this.delegate.tasks.length; i < len; i++) {
             if (this.delegate.tasks[i].task_str === task.task_str)
@@ -4460,13 +4329,11 @@ const TimeTracker = new Lang.Class({
         val.tracking = false;
         this.number_of_tracked_tasks--;
 
-        if (task.projects) {
-            let proj;
+        let proj;
 
-            for (let i = 0, len = task.projects.length; i < len; i++) {
-                proj = this.daily_csv_map.get(task.projects[i]);
-                if (--proj.tracked_children === 0) proj.tracking = false;
-            }
+        for (let i = 0, len = task.projects.length; i < len; i++) {
+            proj = this.daily_csv_map.get(task.projects[i]);
+            if (--proj.tracked_children === 0) proj.tracking = false;
         }
 
         for (let i = 0, len = this.delegate.tasks.length; i < len; i++) {
@@ -4479,8 +4346,11 @@ const TimeTracker = new Lang.Class({
     },
 
     // Swap the old_task_str with the new_task_str in the daily_csv_map only.
+    // The time tracked on the old_task_str is copied over to the new_task_str.
     update_record_name: function (old_task_str, new_task_str) {
         if (!this.csv_dir) return null;
+
+        this.stats_unique_entries.delete(old_task_str);
 
         let val = this.daily_csv_map.get(old_task_str);
 
@@ -4492,95 +4362,121 @@ const TimeTracker = new Lang.Class({
         this._write_daily_csv_file();
     },
 
-    get_all_project_stats: function () {
+    // NOTE: The returned values are cached, use for READ-ONLY!
+    //
+    // returns: [@stats_data, @stats_unique_entries]
+    //
+    // @stats_data: Map
+    //   - @key: string (date in 'yyyy-mm-dd' iso format)
+    //   - @val: Map
+    //       - @key: string (a project or task)
+    //       - @val: int    (minutes spent working on task/project that date)
+    //
+    // @stats_unique_entries: Set (of all unique tasks/projects)
+    //
+    // The keys in @stats_data are sorted from newest to oldest.
+    // In each @val inside @stats_data, the projects are sorted after tasks.
+    get_stats: function () {
         if (!this.csv_dir) return null;
 
-        let stats = [];
+        // update todays data
+        {
+            let today       = date_yyyymmdd();
+            let stats_today = [];
 
-        for (let [k, v] of this.yearly_csv_map.entries())
-            if (v.type === '++')
-                stats.push(this.get_stats(k));
+            for (let [k, v] of this.daily_csv_map.entries()) {
+                this.stats_unique_entries.add(k);
 
-        if (stats.length === 0) stats = null;
+                let time = Math.floor(v.time / 60);
 
-        return stats;
-    },
-
-    // @needle: string (a task_str or a project keyword)
-    get_stats: function (needle) {
-        if (!this.csv_dir) return null;
-
-        let yearly_records = this.yearly_csv_map.get(needle);
-        yearly_records     = yearly_records ? yearly_records.records : null;
-
-        let todays_record  = this.daily_csv_map.get(needle);
-        todays_record      = todays_record ? todays_record.time : 0;
-
-        if (! yearly_records && ! todays_record) return null;
-
-        let stats = {
-            name            : needle,
-            today           : todays_record,
-            last_three_days : todays_record,
-            this_week       : todays_record,
-            this_month      : todays_record,
-            this_year       : todays_record,
-        };
-
-        if (! yearly_records) return stats;
-
-        let dates = [
-            ['last_three_days', new Date(Date.now() - 172800000).toISOString().substr(0, 10)],
-            ['this_week',       this._get_week_start_date()],
-            ['this_month',      new Date().toISOString().substr(0, 8) + '01'],
-            ['this_year',       new Date().getFullYear() + '-01-01'],
-        ];
-
-        let acc = todays_record;
-        let i   = yearly_records.length;
-        let j, it;
-
-        while (i--) {
-            it   = yearly_records[i];
-            acc += it.time;
-
-            j = dates.length;
-
-            while (j--) {
-                if (dates[j][1] <= it.date) stats[ dates[j][0] ] = acc;
-                else dates.splice(j, 1);
+                if (v.type === '++') stats_today.push([k, time]);
+                else                 stats_today.unshift([k, time]);
             }
+
+            this.stats_data.set(today, new Map(stats_today));
         }
 
-        return stats;
+        // add the rest if we don't have it cached
+        if (this.stats_data.size < 2) {
+            let reg       = /^\d{4}__time_tracker.csv$/;
+            let csv_files = [];
+            let file_enum;
+
+            try {
+                file_enum = this.yearly_csv_dir.enumerate_children(
+                    'standard::name,standard::type',
+                    Gio.FileQueryInfoFlags.NONE,
+                    null
+                );
+            }
+            catch (e) { file_enum = null; }
+
+            if (file_enum !== null) {
+                let info;
+
+                while ((info = file_enum.next_file(null))) {
+                    if (! reg.test(info.get_name())) continue;
+                    csv_files.push([file_enum.get_child(info), info.get_name()]);
+                }
+            }
+
+            csv_files.push(
+                [this.yearly_csv_file, this.yearly_csv_file.get_basename()]);
+
+            csv_files.sort((a, b) => a[1] < b[1]);
+
+            csv_files.forEach((it) => {
+                let [, content] = it[0].load_contents(null);
+                content         = String(content).split(/\n|\r/);
+
+                let string, date, entry, time;
+
+                let i = content.length;
+                while (i--) {
+                    it = content[i];
+
+                    if (!it) continue;
+
+                    date   = it.substr(0, 10);
+                    time   = +(it.substr(12, 2)) * 60 + +(it.substr(15, 2));
+                    string = it.slice(24, -1).replace(/""/g, '"');
+
+                    entry  = this.stats_data.get(date);
+
+                    this.stats_unique_entries.add(string);
+
+                    if (entry)
+                        entry.set(string, time);
+                    else
+                        this.stats_data.set(date, new Map([ [string, time] ]));
+                }
+            });
+        }
+
+        return [this.stats_data, this.stats_unique_entries];
     },
 
     close: function () {
         this.dbus_impl.unexport();
-
-        if (this.yearly_csv_file_monitor) {
-            this.yearly_csv_file_monitor.cancel();
-            this.yearly_csv_file_monitor = null;
-        }
 
         if (this.daily_csv_file_monitor) {
             this.daily_csv_file_monitor.cancel();
             this.daily_csv_file_monitor = null;
         }
 
-        if (this.show_tasks_mainloop_id) {
-            Mainloop.source_remove(this.show_tasks_mainloop_id);
-            this.show_tasks_mainloop_id = null;
+        if (this.yearly_csv_file_monitor) {
+            this.yearly_csv_file_monitor.cancel();
+            this.yearly_csv_file_monitor = null;
         }
 
-        if (this.timer_seconds_mainloop_id) {
-            Mainloop.source_remove(this.timer_seconds_mainloop_id);
-            this.timer_seconds_mainloop_id = null;
+        if (this.yearly_csv_dir_monitor) {
+            this.yearly_csv_dir_monitor.cancel();
+            this.yearly_csv_dir_monitor = null;
         }
 
-        if (this.timer_minutes_mainloop_id) {
-            Mainloop.source_remove(this.timer_minutes_mainloop_id);
-            this.timer_minutes_mainloop_id = null;
+        if (this.tracker_tic_id) {
+            Mainloop.source_remove(this.tracker_tic_id);
+            this.tracker_tic_id = null;
         }
     },
 });
@@ -4608,7 +4504,8 @@ const ViewManager = new Lang.Class({
 
         this.current_view           = View.DEFAULT;
         this.actors                 = [];
-        this.close_callback         = () => null;
+        this.open_callback          = null;
+        this.close_callback         = null;
         this.show_tasks_mainloop_id = null;
 
         // @SPEED
@@ -4640,35 +4537,49 @@ const ViewManager = new Lang.Class({
     // When calling this function all properties must be provided.
     //
     // @view_name:
-    //   is the name of the new view. Only use the View enum here.
+    //   Name of the new view. Only use the View enum here.
     //
-    // @actors:
-    //   is an array of all the top-level actors that need to be in the popup
+    // @actors (can be omitted if @open_callback is given):
+    //   Array of all the top-level actors that need to be in the popup
     //   menu. These are the actors that make up the particular view.
     //
     // @focused_actor:
-    //   is the actor that will be put into focus when the view is shown.
+    //   Actor that will be put into focus when the view is shown.
     //
     // @close_callback:
-    //   is a function that is used to close this view when another view needs
+    //   Function that is used to close this view when another view needs
     //   to be shown.
+    //
+    // @open_callback (optional):
+    //   Function that is used to open the view. If it is not given, then
+    //   opening the view means that the actors will be added to the popup menu.
     show_view: function (view) {
-        if (this.delegate.tasks_scroll_wrapper.visible) this._hide_tasks();
+        if (this.delegate.tasks_scroll_wrapper.visible)
+            this._hide_tasks();
 
-        this.delegate.actor.remove_all_children();
-        this.close_callback();
+        if (typeof this.close_callback === 'function')
+            this.close_callback();
 
         this.current_view   = view.view_name;
         this.actors         = view.actors;
         this.close_callback = view.close_callback;
+        this.open_callback  = view.open_callback || null;
 
         let show_tasks = false;
 
-        for (let i = 0; i < this.actors.length; i++) {
-            this.delegate.actor.add_actor(this.actors[i]);
-            this.actors[i].show();
-            if (this.actors[i] === this.delegate.tasks_scroll_wrapper)
-                show_tasks = true;
+        if (typeof this.open_callback === 'function') {
+            this.open_callback();
+        }
+        else {
+            this.delegate.actor.remove_all_children();
+
+            for (let i = 0; i < this.actors.length; i++) {
+                this.delegate.actor.add_actor(this.actors[i]);
+                this.actors[i].show();
+
+                if (this.actors[i] === this.delegate.tasks_scroll_wrapper)
+                    show_tasks = true;
+            }
         }
 
         if (show_tasks) {
@@ -4735,3 +4646,1017 @@ const ViewManager = new Lang.Class({
     },
 });
 Signals.addSignalMethods(ViewManager.prototype);
+
+
+
+// =====================================================================
+// @@@ Stats View
+//
+// @ext      : obj (main extension object)
+// @delegate : obj (main section object)
+// @monitor  : int (monitor position)
+// =====================================================================
+const StatsView = new Lang.Class({
+    Name    : 'Timepp.StatsView',
+    Extends : FULLSCREEN.Fullscreen,
+
+    _init: function (ext, delegate, monitor) {
+        this.parent(monitor);
+
+        this.ext      = ext;
+        this.delegate = delegate;
+
+        this.default_style_class = this.actor.style_class;
+        this.actor.add_style_class_name('stats');
+        this.set_banner_size(0);
+        this.middle_box.vertical = false;
+        this.bottom_box.hide();
+        {
+            let visible = this.monitor_button.visible;
+            this.top_box_left.remove_child(this.monitor_button);
+            this.top_box_right.insert_child_at_index(this.monitor_button, 0);
+            this.monitor_button.visible = visible;
+        }
+
+
+        // Values as returned by the time tracker's get_stats. The unique
+        // entries Set is converted to an array.
+        this.stats_data           = null;
+        this.stats_unique_entries = null;
+
+
+        // A map between 'human-readable' properties and translated strings as
+        // well as date intervals consisting of two date strings in 'yyyy-mm-dd'
+        // format.
+        // date_str === '' represents an open/half-open interval.
+        //
+        // The dates intervals are updated by _update_string_date_map() func.
+        //
+        // @key: string
+        // @val: array (of the form [translated_str, range])
+        //   - @range: array (of the form [date_str, date_str])
+        this.string_date_map = new Map([
+            ['today'        , [_('Today')         , ['', '']] ],
+            ['week'         , [_('This Week')     , ['', '']] ],
+            ['month'        , [_('This Month')    , ['', '']] ],
+            ['three_months' , [_('Last 3 Months') , ['', '']] ],
+            ['six_months'   , [_('Last 6 Months') , ['', '']] ],
+            ['all'          , [_('All Time')      , ['', '']] ],
+        ]);
+
+        this._update_string_date_map();
+
+
+        // See the comment on the _set_mode() func for an explanation on how the
+        // stat modes are handled.
+        this.mode = {
+            BANNER : 'BANNER',
+            GLOBAL : 'GLOBAL',
+            SINGLE : 'SINGLE',
+            SEARCH : 'SEARCH',
+            HOT    : 'HOT',
+        };
+
+        this.current_mode = this.prev_mode = {
+            name   : '',
+            args   : null,
+            actors : null,
+        }
+
+
+        // Used by the _search() func.
+        this.selected_search_result = null;
+
+        this.hot_mode_show_tasks = false; // true = task, false = projects
+
+
+        // A map from mode names to functions that invoke it.
+        this.mode_func_map = {
+            [this.mode.BANNER] : this.show_mode__banner,
+            [this.mode.GLOBAL] : this.show_mode__global,
+            [this.mode.SINGLE] : this.show_mode__single,
+            [this.mode.HOT]    : this.show_mode__hot,
+        };
+
+
+        // We want to be able to style certain parts of the graph using css.
+        // The _update_graph_css_info() func will get that info by looking for
+        // custom css properties and store it in this obj.
+        //
+        // @key: Is equal to the css property.
+        // @val: Array into which we store a color in both hex and rgba format.
+        //       The hex string is used for color comparison.
+        this.graph_css = {
+            ['-timepp-axes-color']      : ['#ffffffff', [1, 1, 1, 1]],
+            ['-timepp-y-label-color']   : ['#ffffffff', [1, 1, 1, 1]],
+            ['-timepp-x-label-color']   : ['#ffffffff', [1, 1, 1, 1]],
+            ['-timepp-rulers-color']    : ['#ffffffff', [1, 1, 1, 1]],
+            ['-timepp-proj-vbar-color'] : ['#ffffffff', [1, 1, 1, 1]],
+            ['-timepp-task-vbar-color'] : ['#ffffffff', [1, 1, 1, 1]],
+        };
+
+
+        //
+        // nav bar
+        //
+        this.nav_bar = new St.BoxLayout({ style_class: 'navbar' });
+        this.top_box_right.insert_child_at_index(this.nav_bar, 0);
+
+        this.single_mode_icon = new St.Button({ y_align: St.Align.MIDDLE, can_focus: true });
+        this.nav_bar.add_actor(this.single_mode_icon);
+        this.single_mode_icon.add_actor(new St.Icon({ icon_name: 'timepp-search-symbolic' }));
+
+        this.global_mode_icon = new St.Button({ y_align: St.Align.MIDDLE, can_focus: true });
+        this.nav_bar.add_actor(this.global_mode_icon);
+        this.global_mode_icon.add_actor(new St.Icon({ icon_name: 'timepp-eye-symbolic' }));
+
+        this.hot_mode_icon = new St.Button({ y_align: St.Align.MIDDLE, can_focus: true });
+        this.nav_bar.add_actor(this.hot_mode_icon);
+        this.hot_mode_icon.add_actor(new St.Icon({ icon_name: 'timepp-fire-symbolic' }));
+
+
+        //
+        // search entry and results container
+        //
+        this.entry = new St.Entry({ y_align: Clutter.ActorAlign.CENTER, visible: false, hint_text: _('Search...') });
+        this.top_box_center.add_actor(this.entry);
+        this.entry.set_primary_icon(new St.Icon({ icon_name: 'timepp-search-symbolic' }));
+
+        this.search_results_container = new St.BoxLayout({ visible: false, x_align: Clutter.ActorAlign.CENTER, x_expand: true, y_expand: true, vertical: true, style_class: 'search-results-box' });
+        this.middle_box.add_actor(this.search_results_container);
+
+        this.search_scrollview = new St.ScrollView({ hscrollbar_policy: Gtk.PolicyType.NEVER, style_class: 'vfade' });
+        this.search_results_container.add_actor(this.search_scrollview);
+
+        this.search_results_content = new St.BoxLayout({ y_expand: true, vertical: true });
+        this.search_scrollview.add_actor(this.search_results_content);
+
+
+        //
+        // date picker
+        //
+        {
+            let today      = date_yyyymmdd();
+            let year_start = today.substr(0, 4) + '-01-01';
+
+            this.date_picker = new DATE_PICKER.DatePicker(
+                '',
+                today,
+                [_('Year:'), _('Month:'), _('Day:')]
+            );
+
+            this.date_picker.actor.hide();
+            this.top_box_left.insert_child_at_index(this.date_picker.actor, 0);
+        }
+
+
+        //
+        // hot mode controls
+        //
+        {
+            let today = date_yyyymmdd();
+
+            this.hot_mode_control_box = new St.BoxLayout({ y_align: Clutter.ActorAlign.CENTER, visible: false, style_class: 'hot-mode-control-box' });
+            this.top_box_left.insert_child_at_index(this.hot_mode_control_box, 0);
+
+
+            // custom range view
+            this.date_range_custom_view = new St.BoxLayout({ visible: false, style_class: 'custom-date-range-box' });
+            this.hot_mode_control_box.add_actor(this.date_range_custom_view);
+
+            this.date_range_custom_view.add_actor(new St.Label({ text: _('From: '), y_align: Clutter.ActorAlign.CENTER }));
+
+            this.bound_date_1 = new DATE_PICKER.DatePicker('', today, ['', '', '']);
+            this.date_range_custom_view.add_actor(this.bound_date_1.actor);
+
+            this.date_range_custom_view.add_actor(new St.Label({ text: _('To: '), y_align: Clutter.ActorAlign.CENTER }));
+
+            this.bound_date_2 = new DATE_PICKER.DatePicker('', today, ['', '', '']);
+            this.date_range_custom_view.add_actor(this.bound_date_2.actor);
+
+            this.custom_range_ok_btn = new St.Button({ can_focus: true, label: _('Ok'), style_class: 'button' });
+            this.date_range_custom_view.add_actor(this.custom_range_ok_btn);
+
+            this.custom_range_cancel_btn = new St.Button({ can_focus: true, label: _('Cancel'), style_class: 'button' });
+            this.date_range_custom_view.add_actor(this.custom_range_cancel_btn);
+
+
+            // the main view
+            this.date_range_main_view = new St.BoxLayout();
+            this.hot_mode_control_box.add_actor(this.date_range_main_view);
+
+            this.date_range_main_view.add_actor(new St.Label({ text: _('Type: '), y_align: Clutter.ActorAlign.CENTER }));
+
+            this.type_btn = new St.Button({ can_focus: true, label: '', style_class: 'button' });
+            this.date_range_main_view.add_actor(this.type_btn);
+
+            this.type_menu = new PopupMenu.PopupMenu(this.type_btn, 0.5, St.Side.TOP);
+            this.menu_manager.addMenu(this.type_menu);
+            Main.uiGroup.add_actor(this.type_menu.actor);
+            this.type_menu.actor.hide();
+
+            this.date_range_main_view.add_actor(new St.Label({ text: _('Range: '), y_align: Clutter.ActorAlign.CENTER }));
+
+            this.range_btn = new St.Button({ can_focus: true, label: '', style_class: 'button' });
+            this.date_range_main_view.add_actor(this.range_btn);
+
+            this.range_menu = new PopupMenu.PopupMenu(this.range_btn, 0.5, St.Side.TOP);
+            this.menu_manager.addMenu(this.range_menu);
+            Main.uiGroup.add_actor(this.range_menu.actor);
+            this.range_menu.actor.hide();
+
+
+            // fill up
+            for (let val of this.string_date_map.values()) {
+                let label = val[0];
+                let range = val[1];
+
+                this.range_menu.addAction(label, () => {
+                    this.show_mode__hot(label, range);
+                });
+            }
+
+            this.range_menu.addAction(_('Custom Range...'), () => {
+                this.date_range_main_view.hide();
+                this.date_range_custom_view.show();
+                Mainloop.idle_add(() => { this.actor.grab_key_focus(); });
+            });
+
+            this.type_menu.addAction(_('Projects'), () => {
+                this.hot_mode_show_tasks = false;
+                this.show_mode__hot(this.current_mode.args[0],
+                                    this.current_mode.args[1]);
+            });
+
+            this.type_menu.addAction(_('Tasks'), () => {
+                this.hot_mode_show_tasks = true;
+                this.show_mode__hot(this.current_mode.args[0],
+                                    this.current_mode.args[1]);
+            });
+        }
+
+
+        //
+        // vbars graph
+        //
+        this.vbars_graph = new GRAPHS.VBars();
+        this.middle_box.add_child(this.vbars_graph.actor);
+        this.vbars_graph.actor.hide();
+
+
+        //
+        // sum stats card
+        //
+        {
+            this.stats_card = new St.BoxLayout({ vertical: true, visible: false, x_expand: true, y_expand: true, style_class: 'sum-stats-card' });
+            this.middle_box.add_child(this.stats_card);
+
+            ['stats_card_title', 'stats_card_stats'].forEach((it) => {
+                let scroll = new St.ScrollView({ hscrollbar_policy: Gtk.PolicyType.NEVER });
+                this.stats_card.add_child(scroll);
+
+                let content = new St.BoxLayout({ vertical: true });
+                scroll.add_actor(content);
+
+                this[it] = new St.Label();
+                content.add_child(this[it]);
+
+                this[it].clutter_text.line_wrap      = true;
+                this[it].clutter_text.ellipsize      = Pango.EllipsizeMode.NONE;
+                this[it].clutter_text.line_wrap_mode = Pango.WrapMode.WORD_CHAR;
+            });
+        }
+
+
+        //
+        // listen
+        //
+        this.vbars_graph.connect('vbar-clicked', (_, vbar_label) => {
+            let today = new Date();
+
+            this.show_mode__single(today.getFullYear(),
+                                   today.getMonth(),
+                                   vbar_label);
+        });
+        this.entry.clutter_text.connect('text-changed', () => {
+            this._search();
+        });
+        this.entry.clutter_text.connect('activate', () => {
+            if (this.selected_search_result) {
+                let d = new Date();
+                this.show_mode__single(d.getFullYear(),
+                                       d.getMonth(),
+                                       this.selected_search_result.get_text());
+            }
+        });
+        this.actor.connect('key-press-event', (_, event) => {
+            switch (event.get_key_symbol()) {
+                case Clutter.KEY_f:
+                case Clutter.KEY_slash:
+                    this.show_mode__search();
+                    return Clutter.EVENT_STOP;
+                default:
+                    return Clutter.EVENT_PROPAGATE;
+            }
+        });
+        this.entry.clutter_text.connect('key-press-event', (_, event) => {
+            let direction;
+
+            switch (event.get_key_symbol()) {
+                case Clutter.KEY_Up:
+                    direction = 1;
+                    break;
+                case Clutter.KEY_Down:
+                    direction = -1;
+                    break;
+            }
+
+            if (direction) this._navigate_search_results(direction);
+        });
+        this.single_mode_icon.connect('clicked', (icon) => {
+            this.show_mode__search();
+            return Clutter.EVENT_STOP;
+        });
+        this.global_mode_icon.connect('clicked', (icon) => {
+            if (this.current_mode.name === this.mode.GLOBAL) {
+                return Clutter.EVENT_PROPAGATE;
+            }
+            else if (this.prev_mode.name === this.mode.GLOBAL) {
+                this.show_mode__global(...this.prev_mode.args);
+            }
+            else {
+                this.show_mode__global(date_yyyymmdd());
+            }
+
+            return Clutter.EVENT_STOP;
+        });
+        this.hot_mode_icon.connect('clicked', (icon) => {
+            if (this.current_mode.name === this.mode.HOT) {
+                return Clutter.EVENT_PROPAGATE;
+            }
+            else if (this.prev_mode.name === this.mode.HOT) {
+                this.show_mode__hot(...this.prev_mode.args);
+            }
+            else {
+                this.show_mode__hot(this.string_date_map.get('week')[0],
+                                    this.string_date_map.get('week')[1]);
+            }
+
+            return Clutter.EVENT_STOP;
+        });
+        this.range_btn.connect('clicked', () => {
+            this.range_menu.toggle();
+            return Clutter.EVENT_STOP;
+        });
+        this.type_btn.connect('clicked', () => {
+            this.type_menu.toggle();
+            return Clutter.EVENT_STOP;
+        });
+        this.actor.connect('style-changed', () => {
+            this._update_graph_css_info();
+        });
+        this.date_picker.connect('date-changed', (_, date_arr, date_str) => {
+            this._on_month_picker_changed(date_arr, date_str);
+        });
+        this.custom_range_ok_btn.connect('clicked', () => {
+            let [, date_str_1] = this.bound_date_1.get_date();
+            let [, date_str_2] = this.bound_date_2.get_date();
+            let label          = date_str_1 + '   ...   ' + date_str_2;
+
+            this.show_mode__hot(label, [date_str_1, date_str_2]);
+
+            this.date_range_main_view.show();
+            this.date_range_custom_view.hide();
+            Mainloop.idle_add(() => { this.actor.grab_key_focus(); });
+        });
+        this.custom_range_cancel_btn.connect('clicked', () => {
+            this.date_range_main_view.show();
+            this.date_range_custom_view.hide();
+            Mainloop.idle_add(() => { this.actor.grab_key_focus(); });
+        });
+    },
+
+    close: function () {
+        this.stats_data           = null;
+        this.stats_unique_entries = null;
+        this._set_mode('', null, null);
+
+        this.parent();
+    },
+
+    // @params as returned by the time tracker's get_stats func()
+    set_stats: function (stats_data, stats_unique_entries) {
+        this.stats_data           = stats_data;
+        this.stats_unique_entries = Array.from(stats_unique_entries);
+
+        this._update_string_date_map();
+    },
+
+    show_mode__global: function (date) {
+        let actors = [this.vbars_graph.actor, this.date_picker.actor];
+
+        this._set_mode(
+            this.mode.GLOBAL,
+            [date],
+            () => {
+                actors.forEach((it) => it.hide());
+                this.vbars_graph.draw_vbars([], 8, 64);
+            }
+        );
+
+        actors.forEach((it) => it.show());
+        this.nav_bar.get_children().forEach((it) => it.checked = false);
+        this.global_mode_icon.checked = true;
+
+        this.date_picker.set_date_from_string(date);
+
+        this.vbars_graph.draw_coord_system({
+            y_max               : 1440,
+            y_conversion_factor : 60,
+            n_rulers            : 12,
+            x_offset            : 30,
+            y_offset            : 12,
+            y_label_suffix      : 'h',
+        });
+
+        this.vbars_graph.draw_vbars(
+            this._get_stats__vbars_global(date),
+            8,
+            64,
+            (label, y_val) => {
+                let h = Math.floor(y_val / 60);
+                h = h ? '' + h + 'h ' : '';
+
+                let m = y_val % 60;
+                m = m ? '' + m + 'min' : '';
+
+                return h + m + '\n\n' + label;
+            }
+        );
+    },
+
+    // @year    : int
+    // @month   : int    (0-indexed)
+    // @keyword : string (projects/task)
+    show_mode__single: function (year, month, keyword) {
+        let actors = [
+            this.stats_card,
+            this.date_picker.actor,
+            this.vbars_graph.actor,
+        ];
+
+        this._set_mode(
+            this.mode.SINGLE,
+            [year, month, keyword],
+            () => {
+                actors.forEach((it) => it.hide());
+                this.date_picker.day_picker.actor.show();
+                this.vbars_graph.draw_vbars([], 8, 64);
+            }
+        );
+
+        this.date_picker.day_picker.actor.visible = false;
+        actors.forEach((it) => it.show());
+        this.nav_bar.get_children().forEach((it) => it.checked = false);
+        this.single_mode_icon.checked = true;
+
+        this.date_picker.set_date(year, month, 1);
+
+        this.vbars_graph.draw_coord_system({
+            y_max               : 1440,
+            y_conversion_factor : 60,
+            n_rulers            : 12,
+            x_offset            : 30,
+            y_offset            : 30,
+            y_label_suffix      : 'h',
+        });
+
+        this.vbars_graph.draw_vbars(
+            this._get_stats__vbars_single(year, month, keyword),
+            8,
+            64,
+            (label, y_val) => {
+                let h = Math.floor(y_val / 60);
+                h = h ? '' + h + 'h ' : '';
+
+                let m = y_val % 60;
+                m = m ? '' + m + 'min' : '';
+
+                return h + m;
+            }
+        );
+
+        // update stats card
+        if (this.prev_mode.name !== this.mode.SINGLE ||
+            this.prev_mode.args[2] !== keyword) {
+
+            //
+            // title
+            //
+            let markup = REG_PROJ.test(keyword) ?
+                         _('<b>Stats for <i>project</i>: </b>') :
+                         _('<b>Stats for <i>task</i>: </b>');
+
+            markup += '\n\n' + keyword;
+
+            this.stats_card_title.clutter_text.set_markup(
+                '<tt>' + markup + '</tt>');
+
+            //
+            // stats
+            //
+            let longest = 0;
+
+            for (let v of this.string_date_map.values())
+                if (v[0].length > longest) longest = v[0].length;
+
+            longest++;
+
+            let stats = this._get_stats__sum(keyword);
+            markup    = '';
+
+            for (let [k, v] of this.string_date_map.entries()) {
+                let h = Math.floor(stats[k] / 60);
+                h = h ? '' + h + 'h ' : '';
+
+                let m = stats[k] % 60;
+                m = m ? '' + m + 'min' : '0';
+
+                markup +=
+                    '<b>' + v[0] + ': </b>' +
+                    Array(longest - v[0].length).join(' ') +
+                    h + m + '\n\n';
+            };
+
+            markup += `\n\n<b>${_('Total time per yearly quarter: ')}</b>`;
+
+            for (let [year, quarters] of stats.quarters.entries()) {
+                markup += '\n';
+
+                quarters.forEach((it, i) => {
+                    let h = Math.floor(it / 60);
+                    h = h ? '' + h + 'h ' : '';
+
+                    let m = it % 60;
+                    m = m ? '' + m + 'min' : '0';
+
+                    markup += `\n<b>Q${i + 1} ${year}:</b> ${h + m}`;
+                });
+            }
+
+            this.stats_card_stats.clutter_text.set_markup(`<tt>${markup}</tt>`);
+        }
+    },
+
+    // @label      : string
+    // @range      : array  (of the form [date_str_1, date_str_2])
+    show_mode__hot: function (label, range) {
+        let actors = [this.vbars_graph.actor, this.hot_mode_control_box]
+
+        this._set_mode(
+            this.mode.HOT,
+            [label, range],
+            () => actors.forEach((it) => {
+                it.hide()
+                this.vbars_graph.draw_vbars([], 8, 64);
+            })
+        );
+
+        let lower_bound, upper_bound;
+
+        if (range[0] <= range[1]) {
+            lower_bound = range[0];
+            upper_bound = range[1];
+        }
+        else {
+            lower_bound = range[1];
+            upper_bound = range[0];
+        }
+
+        if (!lower_bound) lower_bound = '0000-00-00';
+        if (!upper_bound) upper_bound = '9999-99-99';
+
+        actors.forEach((it) => it.show());
+        this.nav_bar.get_children().forEach((it) => { it.checked = false; });
+        this.hot_mode_icon.checked = true;
+
+        this.range_btn.label = label;
+        this.type_btn.label  =
+            this.hot_mode_show_tasks ? _('Tasks') : _('Projects');
+
+        let stats            = new Map();
+        let rgba             = this.hot_mode_show_tasks ?
+                               this.graph_css['-timepp-task-vbar-color'][1] :
+                               this.graph_css['-timepp-proj-vbar-color'][1];
+
+        for (let [date, records] of this.stats_data.entries()) {
+            if (date < lower_bound) break;
+            if (date > upper_bound) continue;
+
+            records.forEach((val, key) => {
+                if (REG_PROJ.test(key) === this.hot_mode_show_tasks) return;
+                stats.set(key, (stats.get(key) || 0) + val);
+            });
+        }
+
+        stats = Array.from(stats);
+
+        stats.sort((a, b) => +(a[1] < b[1]) || +(a[1] === b[1]) - 1);
+
+        let max_vbars = Math.min(stats.length, 100);
+        let vbars     = new Array(max_vbars);
+
+        for (let i = 0; i < max_vbars; i++) {
+            vbars[i] = {
+                label   : stats[i][0],
+                y_val   : stats[i][1],
+                rgba    : rgba,
+                x_label : '',
+            };
+        }
+
+        let max_hours = (stats.length > 0) ? Math.floor(stats[0][1] / 60) : 24;
+
+        if (max_hours <= 24) {
+            this.vbars_graph.draw_coord_system({
+                y_max               : 1440,
+                y_conversion_factor : 60,
+                n_rulers            : 12,
+                x_offset            : 30,
+                y_offset            : 12,
+                y_label_suffix      : 'h',
+            });
+        }
+        else if (max_hours < 1000) {
+            this.vbars_graph.draw_coord_system({
+                y_max               : 60 * (max_hours + 10 - max_hours % 10),
+                y_conversion_factor : 60,
+                n_rulers            : 10,
+                x_offset            : (max_hours < 100) ? 30 : 40,
+                y_offset            : 12,
+                y_label_suffix      : 'h',
+            });
+        }
+        else {
+            this.vbars_graph.draw_coord_system({
+                y_max               : stats[0][1],
+                y_conversion_factor : 60000,
+                n_rulers            : 10,
+                x_offset            : 60,
+                y_offset            : 12,
+                y_label_suffix      : 'Kh',
+            });
+        }
+
+        this.vbars_graph.draw_vbars(
+            vbars,
+            8,
+            64,
+            (label, y_val) => {
+                let h = Math.floor(y_val / 60);
+                h = h ? '' + h + 'h ' : '';
+
+                let m = y_val % 60;
+                m = m ? '' + m + 'min' : '';
+
+                return h + m + '\n\n' + label;
+            }
+        );
+    },
+
+    show_mode__search: function () {
+        let actors = [this.entry, this.search_results_container];
+
+        this._set_mode(
+            this.mode.SEARCH,
+            null,
+            () => {
+                this.search_results_content.destroy_all_children();
+                actors.forEach((it) => it.hide());
+                this.single_mode_icon.show();
+                this.top_box.layout_manager.homogeneous = false;
+                this.entry.set_text('');
+                this.selected_search_result = null;
+            }
+        );
+
+        actors.forEach((it) => it.show());
+        this.single_mode_icon.hide();
+        this.top_box.layout_manager.homogeneous = true; // center entry
+        this.nav_bar.get_children().forEach((it) => it.checked = false);
+        Mainloop.idle_add(() => this.entry.grab_key_focus());
+    },
+
+    show_mode__banner: function (text) {
+        this._set_mode(
+            this.mode.BANNER,
+            null,
+            () => {
+                this.set_banner_size(0);
+                this.nav_bar.show();
+            }
+        );
+
+        this.nav_bar.hide();
+        this.set_banner_size(.2);
+        this.set_banner_text(text);
+    },
+
+    // A very simple way of handling different 'modes' (views) of the stats
+    // interface.
+    //
+    // There is one 'show_mode__' func for each mode, which needs to call this
+    // func.
+    //
+    // We maintain the args passed to a particular 'show_mode__' func so that
+    // it's possible to refresh the mode by calling it with the same args
+    // (e.g., when the css custom props have been updated.) Or we could slightly
+    // tweak the args and refresh (e.g., change the keyword, but keep month
+    // the same for the SINGLE mode.)
+    //
+    // @mode_name     : string (use this.mode enum only)
+    // @args          : array  (of the args passed to a 'show_mode__' func)
+    // @hide_callback : func   (used to close the prev mode)
+    _set_mode: function (name, args, hide_callback) {
+        this.prev_mode = this.current_mode;
+
+        this.current_mode = {
+            name          : name,
+            args          : args,
+            hide_callback : hide_callback,
+        };
+
+        if (typeof this.prev_mode.hide_callback === 'function') {
+            let focused_actor = this.prev_mode.name === this.current_mode.name ?
+                                global.stage.get_key_focus() :
+                                this.actor;
+
+            this.prev_mode.hide_callback();
+            Mainloop.idle_add(() => focused_actor.grab_key_focus());
+        }
+    },
+
+    _get_stats__sum: function (keyword) {
+        let sum = {
+            today        : 0,
+            week         : 0,
+            month        : 0,
+            three_months : 0,
+            six_months   : 0,
+            quarters     : new Map(),
+            all          : 0,
+        };
+
+        let month_quarter_map = [0, 0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3];
+
+        let bound_dates = new Map([
+            ['today'        , this.string_date_map.get('today')[1][0]],
+            ['week'         , this.string_date_map.get('week')[1][0]],
+            ['month'        , this.string_date_map.get('month')[1][0]],
+            ['three_months' , this.string_date_map.get('three_months')[1][0]],
+            ['six_months'   , this.string_date_map.get('six_months')[1][0]],
+        ]);
+
+        this.stats_data.forEach((records, date) => {
+            let val = records.get(keyword) || 0;
+
+            bound_dates.forEach((target_date, k) => {
+                if (date >= target_date) sum[k] += val;
+                else                     bound_dates.delete(k);
+            });
+
+            let year  = date.substr(0, 4);
+            sum.all  += val;
+
+            if (val > 0) {
+                let quarter       = month_quarter_map[+(date.substr(5, 2))];
+                let year_quarters = sum.quarters.get(year) || [0, 0, 0, 0];
+
+                year_quarters[quarter] += val;
+                sum.quarters.set(year, year_quarters);
+            }
+        });
+
+        return sum;
+    },
+
+    _get_stats__vbars_single: function (year, month, keyword) {
+        month++;
+
+        let days_in_month = (new Date(year, month, 0)).getDate();
+
+        let rgba = REG_PROJ.test(keyword) ?
+                   this.graph_css['-timepp-proj-vbar-color'][1] :
+                   this.graph_css['-timepp-task-vbar-color'][1];
+
+        let vbars = new Array(days_in_month);
+
+        for (let i = 0; i < days_in_month; i++) {
+            let records =
+                this.stats_data.get('%d-%02d-%02d'.format(year, month, i + 1));
+
+            let found = records ? (records.get(keyword) || null) : null;
+
+            vbars[i] = {
+                label   : keyword,
+                y_val   : found || 0,
+                rgba    : rgba,
+                x_label : '%02d'.format(i + 1),
+            };
+        }
+
+        return vbars;
+    },
+
+    _get_stats__vbars_global: function (date) {
+        let vbars   = [];
+        let records = this.stats_data.get(date);
+
+        if (records) {
+            for (let [key, val] of records.entries()) {
+                let rgba = REG_PROJ.test(key) ?
+                           this.graph_css['-timepp-proj-vbar-color'][1] :
+                           this.graph_css['-timepp-task-vbar-color'][1];
+
+                vbars.push({
+                    label   : key,
+                    y_val   : val,
+                    rgba    : rgba,
+                    x_label : '',
+                });
+            }
+
+            vbars.reverse(); // we want the projects to be at the start
+        }
+
+        return vbars;
+    },
+
+    // @direction: 1 or -1
+    _navigate_search_results: function (direction) {
+        if (this.search_results_content.get_n_children() < 2 ||
+            !this.selected_search_result) {
+
+            return;
+        }
+
+        let new_selected;
+
+        if (direction === -1)
+            new_selected = this.selected_search_result.get_next_sibling();
+        else
+            new_selected = this.selected_search_result.get_previous_sibling();
+
+        if (! new_selected)
+            return;
+
+        this.selected_search_result.pseudo_class = '';
+        new_selected.pseudo_class                = 'selected';
+        this.selected_search_result              = new_selected;
+
+        SCROLL_TO_ITEM.scroll(this.search_scrollview,
+                              this.search_results_content,
+                              new_selected);
+    },
+
+    _search: function () {
+        this.search_results_content.destroy_all_children();
+        this.search_scrollview.get_vscroll_bar().get_adjustment().set_value(0);
+        if (this.selected_search_result)
+            this.selected_search_result.pseudo_class = '';
+        this.selected_search_result = null;
+
+        let needle = this.entry.get_text().toLowerCase();
+
+
+        if (! needle) return;
+
+
+        let reduced_results = [];
+        let score;
+
+        for (let i = 0, len = this.stats_unique_entries.length; i < len; i++) {
+            score = FUZZ.fuzzy_search_v1(
+                needle, this.stats_unique_entries[i].toLowerCase());
+
+            if (score !== null) reduced_results.push([i, score]);
+        }
+
+
+        if (reduced_results.length === 0)
+            return;
+
+
+        reduced_results.sort((a, b) => b[1] - a[1]);
+
+        let len = Math.min(50, reduced_results.length);
+
+        for (let i = 0; i < len; i++) {
+            let label = new St.Label({ text: this.stats_unique_entries[reduced_results[i][0]], reactive: true, track_hover: true, style_class: 'search-result-item' });
+            label.clutter_text.line_wrap      = true;
+            label.clutter_text.line_wrap_mode = Pango.WrapMode.WORD_CHAR;
+            label.clutter_text.ellipsize      = Pango.EllipsizeMode.NONE;
+
+            label.connect('queue-redraw', () => {
+                if (! this.search_scrollview.vscrollbar_visible)
+                    resize_label(label);
+            });
+
+            label.connect('notify::hover', (label) => {
+                this.selected_search_result.pseudo_class = '';
+                this.selected_search_result = label;
+                label.pseudo_class = 'selected';
+            });
+
+            label.connect('button-press-event', (label) => {
+                let d = new Date();
+                this.show_mode__single(
+                    d.getFullYear(), d.getMonth(), label.get_text());
+            });
+
+            this.search_results_content.add_child(label);
+        }
+
+        this.selected_search_result =
+            this.search_results_content.get_first_child();
+
+        this.selected_search_result.pseudo_class = 'selected';
+    },
+
+    _on_month_picker_changed: function (date_arr, date_str) {
+        switch (this.current_mode.name) {
+            case this.mode.GLOBAL:
+                this.show_mode__global(date_str);
+                break;
+            case this.mode.SINGLE:
+                this.show_mode__single(
+                    date_arr[0], date_arr[1], this.current_mode.args[2]);
+                break;
+        }
+    },
+
+    _update_string_date_map: function () {
+        let today  = date_yyyymmdd();
+        let date_o = new Date(today + 'T00:00:00');
+
+        this.string_date_map.get('today')[1] = [today, today];
+
+        let day_pos = (7 - Shell.util_get_week_start() + date_o.getDay()) % 7;
+        date_o.setDate(date_o.getDate() - day_pos);
+        this.string_date_map.get('week')[1] = [date_yyyymmdd(date_o), today];
+
+        date_o.setDate(1);
+        this.string_date_map.get('month')[1] =
+            [today.substr(0, 7) + '-01', today];
+
+        date_o.setMonth(date_o.getMonth() - 2);
+        this.string_date_map.get('three_months')[1] =
+            [date_yyyymmdd(date_o), today];
+
+        date_o.setMonth(date_o.getMonth() - 3);
+        this.string_date_map.get('six_months')[1] =
+            [date_yyyymmdd(date_o), today];
+    },
+
+    _update_graph_css_info: function () {
+        let update_needed = false;
+
+        for (let prop in this.graph_css) {
+            if (! this.graph_css.hasOwnProperty(prop)) continue;
+
+            let [success, col] = this.vbars_graph.actor.get_theme_node()
+                                 .lookup_color(prop, false);
+
+            let hex = col.to_string();
+
+            if (success) {
+                let rgba = [
+                    col.red   / 255,
+                    col.green / 255,
+                    col.blue  / 255,
+                    col.alpha / 255,
+                ];
+
+                if (this.graph_css[prop][0] !== hex) {
+                    update_needed = true;
+                    this.graph_css[prop] = [hex, rgba];
+                }
+            }
+        }
+
+        if (update_needed) {
+            this.vbars_graph.draw_coord_system({
+                axes_rgba    : this.graph_css['-timepp-axes-color'][1],
+                y_label_rgba : this.graph_css['-timepp-y-label-color'][1],
+                x_label_rgba : this.graph_css['-timepp-x-label-color'][1],
+                rulers_rgba  : this.graph_css['-timepp-rulers-color'][1],
+            });
+
+            if (this.current_mode.name) {
+                this.mode_func_map[this.current_mode.name](
+                    ...this.current_mode.args);
+            }
+        }
+    },
+});
+Signals.addSignalMethods(StatsView.prototype);

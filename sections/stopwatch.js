@@ -307,6 +307,7 @@ const Stopwatch = new Lang.Class({
                 this.ext, this, this.settings.get_int('stopwatch-fullscreen-monitor-pos'));
         }
 
+        this.sigm.connect_all();
         this.keym.enable_all();
 
 

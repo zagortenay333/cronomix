@@ -292,6 +292,12 @@
             <default><![CDATA[[""]]]></default>
             <description>Open this section to search task</description>
         </key>
+
+        <key name="todo-keybinding-open-to-stats" type="as">
+            <default><![CDATA[[""]]]></default>
+            <description>Open the stats view</description>
+        </key>
+
         <key name="todo-keybinding-open-to-switch-files" type="as">
             <default><![CDATA[[""]]]></default>
             <description>Open this section to search task</description>

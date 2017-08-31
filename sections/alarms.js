@@ -321,7 +321,10 @@ const Alarms = new Lang.Class({
             editor.connect('edited-alarm', (_, alarm) => {
                 alarm_item.toggle.setToggleState(alarm.toggle);
                 alarm_item.time.set_text(alarm.time_str);
-                alarm_item.msg.clutter_text.set_markup(alarm.msg);
+                alarm_item.msg.clutter_text.set_markup(
+                    alarm.msg.replace(/&(?!amp;|quot;|apos;|lt;|gt;)/g, '&amp;')
+                             .replace(/<(?!\/?[^<]*>)/g, '&lt;')
+                );
 
                 if (alarm.msg) alarm_item.msg.show();
                 else alarm_item.msg.hide();
