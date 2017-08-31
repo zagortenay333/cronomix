@@ -40,7 +40,7 @@ const StopwatchState = {
 const ClockFormat = {
     H_M      : 0,
     H_M_S    : 1,
-    H_M_S_MS : 2,
+    H_M_S_CS : 2,
 };
 
 const NotifStyle = {
@@ -111,9 +111,9 @@ const Stopwatch = new Lang.Class({
                 this.panel_item.set_label('00:00:00');
                 this.fullscreen.set_banner_text('00:00:00')
                 break;
-            case ClockFormat.H_M_S_MS:
-                this.panel_item.set_label('00:00:00:0000');
-                this.fullscreen.set_banner_text('00:00:00:0000')
+            case ClockFormat.H_M_S_CS:
+                this.panel_item.set_label('00:00:00:00');
+                this.fullscreen.set_banner_text('00:00:00:00')
                 break;
         }
 
@@ -409,8 +409,8 @@ const Stopwatch = new Lang.Class({
         this.cache.time = GLib.get_monotonic_time() - this.start_time;
         this._update_time_display();
 
-        if (this.clock_format === ClockFormat.H_M_S_MS) {
-            this.tic_mainloop_id = Mainloop.timeout_add(1, () => {
+        if (this.clock_format === ClockFormat.H_M_S_CS) {
+            this.tic_mainloop_id = Mainloop.timeout_add(10, () => {
                 this._tic();
             });
         }
@@ -428,9 +428,9 @@ const Stopwatch = new Lang.Class({
     },
 
     _time_format_str: function () {
-        let t  = Math.floor(this.cache.time / 1000);
-        let ms = t % 1000;
-        t      = Math.floor(t / 1000);
+        let t  = Math.floor(this.cache.time / 10000);
+        let cs = t % 100;
+        t      = Math.floor(t / 100);
         let h  = Math.floor(t / 3600);
         t      = t % 3600;
         let m  = Math.floor(t / 60);
@@ -441,8 +441,8 @@ const Stopwatch = new Lang.Class({
                 return "%02d:%02d".format(h, m);
             case ClockFormat.H_M_S:
                 return "%02d:%02d:%02d".format(h, m, s);
-            case ClockFormat.H_M_S_MS:
-                return "%02d:%02d:%02d:%04d".format(h, m, s, ms);
+            case ClockFormat.H_M_S_CS:
+                return "%02d:%02d:%02d:%02d".format(h, m, s, cs);
         }
     },
 
@@ -668,8 +668,8 @@ const StopwatchFullscreen = new Lang.Class({
                 case ClockFormat.H_M_S:
                     this.set_banner_text('00:00:00')
                     break;
-                case ClockFormat.H_M_S_MS:
-                    this.set_banner_text('00:00:00:0000')
+                case ClockFormat.H_M_S_CS:
+                    this.set_banner_text('00:00:00:00')
                     break;
             }
         }

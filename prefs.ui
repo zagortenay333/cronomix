@@ -1279,7 +1279,7 @@ F3</property>
                                             <items>
                                               <item translatable="yes">hours:min</item>
                                               <item translatable="yes">hours:min:sec</item>
-                                              <item translatable="yes">hours:min:sec:milisec</item>
+                                              <item translatable="yes">hours:min:sec:centisec</item>
                                             </items>
                                           </object>
                                           <packing>

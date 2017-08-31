@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-31 20:06+0200\n"
+"POT-Creation-Date: 2017-08-31 20:11+0200\n"
 "PO-Revision-Date: 2017-07-20 07:02+0200\n"
 "Last-Translator: Piotr Komur <pkomur@gmail.com>\n"
 "Language-Team: \n"
@@ -568,7 +568,8 @@ msgid "hours:min:sec"
 msgstr "godz.:min.:sek."
 
 #: ../prefs.ui:1282
-msgid "hours:min:sec:milisec"
+#, fuzzy
+msgid "hours:min:sec:centisec"
 msgstr "godz.:min.:sek.:milisek."
 
 #: ../prefs.ui:1821
