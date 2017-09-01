@@ -74,7 +74,11 @@ When in fullscreen, some keyboard shortcuts are available:
     <th align="left" colspan="2">All</th>
     <tr>
         <td><kbd>Tab</kbd></td>
-        <td>navigate</td>
+        <td>navigate forward</td>
+    </tr>
+    <tr>
+        <td><kbd>Ctrl</kbd> + <kbd>Tab</kbd></td>
+        <td>navigate backward</td>
     </tr>
     <tr>
         <td><kbd>Esc</kbd></td>
@@ -120,6 +124,14 @@ When in fullscreen, some keyboard shortcuts are available:
     <tr>
         <td><kbd>space</kbd></td>
         <td>stop/start timer</td>
+    </tr>
+</table>
+
+<table>
+    <th align="left" colspan="2">Stats View</th>
+    <tr>
+        <td><kbd>f</kbd> or <kbd>/</kbd></td>
+        <td>start searching history</td>
     </tr>
 </table>
 
@@ -291,8 +303,13 @@ day of February every 2 years starting from 2000.</li>
 The time tracker is built into the todo.txt manager and allows you to track the
 time spent on a particular task as well as the time spent on a particular
 project.  
-You can also see how much time you spent working on a task today, this week, 
-this month, this year, etc, or do the same for all projects in the current year.
+
+> This extension features a fullscreen stats view for browsing your time-tracker data
+> * The stats view has a cool looking vbars graph for displaying data
+> * It supports viewing time spent on tasks/projects on any recorded day
+> * You can see a detailed view for a particular task/project
+> * You can fuzzy search your history
+> * You can view the most worked on tasks/projects in a particular time interval
 
 When pressing the play button to track a task, all projects associated with that
 task will also be tracked.
@@ -353,8 +370,6 @@ gdbus call --session --dest org.gnome.Shell \
            --method timepp.zagortenay333.TimeTracker.stop_tracking_by_id 'asdf'
 ```
 
----
-
 ### Custom Theme Support
 
 This extension supports custom themes. In order to style it, place a
@@ -379,6 +394,6 @@ todo.txt manager.
 
 ---
  
-![preview](https://i.imgur.com/8Mi1OlY.png)
+![preview](https://i.imgur.com/mLk5mK1.png)
 <sup>**Preview info:** [Gnome-Shell
 theme](https://github.com/zagortenay333/ciliora-tertia-shell)</sup>
