@@ -23,7 +23,7 @@ const Timer       = ME.imports.sections.timer;
 const Stopwatch   = ME.imports.sections.stopwatch;
 const Pomodoro    = ME.imports.sections.pomodoro;
 const Alarms      = ME.imports.sections.alarms;
-const Todo        = ME.imports.sections.todo;
+const Todo        = ME.imports.sections.todo.MAIN;
 
 
 const Gettext = imports.gettext;
@@ -48,7 +48,7 @@ const Timepp = new Lang.Class({
     Extends : PanelMenu.Button,
 
     _init: function () {
-        this.parent(0.5, _('Timepp'));
+        this.parent(0.5, 'Timepp');
 
         this.actor.style_class = '';
         this.actor.can_focus   = false;
