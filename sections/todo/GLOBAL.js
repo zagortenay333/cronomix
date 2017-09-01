@@ -1,10 +1,10 @@
-const SortOrder = {
+var SortOrder = {
     ASCENDING  : 'ASCENDING',
     DESCENDING : 'DESCENDING',
 };
 
 
-const SortType = {
+var SortType = {
     CONTEXT         : 'CONTEXT',
     PROJECT         : 'PROJECT',
     PRIORITY        : 'PRIORITY',
@@ -15,7 +15,7 @@ const SortType = {
 };
 
 
-const View = {
+var View = {
     CLEAR         : 'CLEAR',
     STATS         : 'STATS',
     SEARCH        : 'SEARCH',
@@ -29,20 +29,20 @@ const View = {
 };
 
 
-const REG_CONTEXT        = /^@.+$/;
-const REG_PROJ           = /^\+.+$/;
-const REG_PRIO           = /^\([A-Z]\)$/;
-const REG_DATE           = /^\d{4}-\d{2}-\d{2}$/;
-const REG_EXT            = /^[^:]+:[^:]+$/;
-const REG_FILE_PATH      = /^~?\//;
-const REG_PRIO_EXT       = /^(?:pri|PRI):[A-Z]$/;
-const REG_HIDE_EXT       = /^h:1$/;
-const REG_TRACKER_ID_EXT = /^tracker_id:[^:]+$/;
-const REG_REC_EXT_1      = /^rec:[1-9][0-9]*[dw]$/;
-const REG_REC_EXT_2      = /^rec:x-[1-9][0-9]*[dw]$/;
-const REG_REC_EXT_3      = /^rec:[1-9][0-9]*d-[1-9][0-9]*m$/;
-const REG_DUE_EXT        = /^(?:due|DUE):\d{4}-\d{2}-\d{2}$/;
-const REG_URL            = /^\b((?:https?:\/\/|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?]))$/;
+var REG_CONTEXT        = /^@.+$/;
+var REG_PROJ           = /^\+.+$/;
+var REG_PRIO           = /^\([A-Z]\)$/;
+var REG_DATE           = /^\d{4}-\d{2}-\d{2}$/;
+var REG_EXT            = /^[^:]+:[^:]+$/;
+var REG_FILE_PATH      = /^~?\//;
+var REG_PRIO_EXT       = /^(?:pri|PRI):[A-Z]$/;
+var REG_HIDE_EXT       = /^h:1$/;
+var REG_TRACKER_ID_EXT = /^tracker_id:[^:]+$/;
+var REG_REC_EXT_1      = /^rec:[1-9][0-9]*[dw]$/;
+var REG_REC_EXT_2      = /^rec:x-[1-9][0-9]*[dw]$/;
+var REG_REC_EXT_3      = /^rec:[1-9][0-9]*d-[1-9][0-9]*m$/;
+var REG_DUE_EXT        = /^(?:due|DUE):\d{4}-\d{2}-\d{2}$/;
+var REG_URL            = /^\b((?:https?:\/\/|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?]))$/;
 
 
 // return date string in yyyy-mm-dd format adhering to locale

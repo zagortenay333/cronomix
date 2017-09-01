@@ -23,7 +23,7 @@ const G = ME.imports.sections.todo.GLOBAL;
 // - To switch to a new view, use the show_view function of this object.
 // - The current_view is always stored in the current_view var of this obj.
 // =====================================================================
-const ViewManager = new Lang.Class({
+var ViewManager = new Lang.Class({
     Name: 'Timepp.ViewManager',
 
     _init: function (ext, delegate) {

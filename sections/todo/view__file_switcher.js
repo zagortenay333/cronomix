@@ -31,7 +31,7 @@ const G = ME.imports.sections.todo.GLOBAL;
 //   - 'switch' (returns the unique name of the new todo file)
 //   - 'close'
 // =====================================================================
-const TodoFileSwitcher = new Lang.Class({
+var TodoFileSwitcher = new Lang.Class({
     Name: 'Timepp.TodoFileSwitcher',
 
     _init: function (ext, delegate) {

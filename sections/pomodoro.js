@@ -57,7 +57,7 @@ const NotifStyle = {
 // @ext      : obj (main extension object)
 // @settings : obj (extension settings)
 // =====================================================================
-const Pomodoro = new Lang.Class({
+var Pomodoro = new Lang.Class({
     Name: 'Timepp.Pomodoro',
 
     _init: function (ext, settings) {

@@ -97,7 +97,7 @@ function resize_label (label) {
 // @ext      : obj (main extension object)
 // @settings : obj (extension settings)
 // =====================================================================
-const Alarms = new Lang.Class({
+var Alarms = new Lang.Class({
     Name: 'Timepp.Alarms',
 
     _init: function (ext, settings) {

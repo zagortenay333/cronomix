@@ -26,7 +26,7 @@ const G = ME.imports.sections.todo.GLOBAL;
 //
 // @signals: 'update-sort'
 // =====================================================================
-const TaskSortWindow = new Lang.Class({
+var TaskSortWindow = new Lang.Class({
     Name: 'Timepp.TaskSortWindow',
 
     _init: function (ext, delegate) {

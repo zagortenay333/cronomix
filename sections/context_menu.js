@@ -25,7 +25,7 @@ const TRANSLATIONS_LINK = 'https://github.com/zagortenay333/timepp__gnome/tree/m
 //
 // @ext: obj (main extension object)
 // =====================================================================
-const ContextMenu = new Lang.Class({
+var ContextMenu = new Lang.Class({
     Name: 'Timepp.ContextMenu',
 
     _init: function (ext) {

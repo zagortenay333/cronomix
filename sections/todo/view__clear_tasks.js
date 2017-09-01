@@ -27,7 +27,7 @@ const G = ME.imports.sections.todo.GLOBAL;
 //   - 'archive-all' (delete and write to done.txt all completed tasks)
 //   - 'cancel'
 // =====================================================================
-const ClearCompletedTasks = new Lang.Class({
+var ClearCompletedTasks = new Lang.Class({
     Name: 'Timepp.ClearCompletedTasks',
 
     _init: function (ext, delegate) {

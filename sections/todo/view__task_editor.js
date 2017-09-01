@@ -41,7 +41,7 @@ const G = ME.imports.sections.todo.GLOBAL;
 // of that task object and the signals 'delete-task' and 'edit-task' will be
 // used instead of 'add-task'.
 // =====================================================================
-const TaskEditor = new Lang.Class({
+var TaskEditor = new Lang.Class({
     Name: 'Timepp.TaskEditor',
 
     _init: function (ext, delegate, task) {

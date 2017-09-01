@@ -32,7 +32,7 @@ const G = ME.imports.sections.todo.GLOBAL;
 // @signals:
 //  - 'filters-updated' returns obj with which to replace the cache.filters obj
 // =====================================================================
-const TaskFiltersWindow = new Lang.Class({
+var TaskFiltersWindow = new Lang.Class({
     Name: 'Timepp.TaskFiltersWindow',
 
     _init: function (ext, delegate) {

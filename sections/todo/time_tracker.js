@@ -42,7 +42,7 @@ const TIME_TRACKER_DBUS_IFACE =
 // @ext      : obj (main extension object)
 // @delegate : obj (main section object)
 // =====================================================================
-const TimeTracker = new Lang.Class({
+var TimeTracker = new Lang.Class({
     Name: 'Timepp.TimeTracker',
 
     _init: function (ext, delegate) {

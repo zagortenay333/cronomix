@@ -50,7 +50,7 @@ const CACHE_FILE = GLib.get_home_dir() +
 // @ext      : obj (main extension object)
 // @settings : obj (extension settings)
 // =====================================================================
-const Todo = new Lang.Class({
+var Todo = new Lang.Class({
     Name: 'Timepp.Todo',
 
     _init: function (ext, settings) {

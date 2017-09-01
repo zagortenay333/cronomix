@@ -43,7 +43,7 @@ const G = ME.imports.sections.todo.GLOBAL;
 // the todo.txt file but must in case a task recurs. (E.g., when we load
 // tasks from the todo.txt file.)
 // =====================================================================
-const TaskItem = new Lang.Class({
+var TaskItem = new Lang.Class({
     Name: 'Timepp.TaskItem',
 
     _init: function (ext, delegate, task_str, do_check_recurrence = true) {

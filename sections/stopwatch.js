@@ -55,7 +55,7 @@ const NotifStyle = {
 // @ext      : obj (main extension object)
 // @settings : obj (extension settings)
 // =====================================================================
-const Stopwatch = new Lang.Class({
+var Stopwatch = new Lang.Class({
     Name: 'Timepp.Stopwatch',
 
     _init: function (ext, settings) {

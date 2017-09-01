@@ -57,7 +57,7 @@ const NotifStyle = {
 // @ext      : obj (main extension object)
 // @settings : obj (extension settings)
 // =====================================================================
-const Timer = new Lang.Class({
+var Timer = new Lang.Class({
     Name: 'Timepp.Timer',
 
     _init: function (ext, settings) {

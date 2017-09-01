@@ -35,7 +35,7 @@ const G = ME.imports.sections.todo.GLOBAL;
 // @delegate : obj (main section object)
 // @monitor  : int (monitor position)
 // =====================================================================
-const StatsView = new Lang.Class({
+var StatsView = new Lang.Class({
     Name    : 'Timepp.StatsView',
     Extends : FULLSCREEN.Fullscreen,
 
