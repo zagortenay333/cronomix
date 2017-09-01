@@ -907,4 +907,3 @@ var TaskItem = new Lang.Class({
     },
 });
 Signals.addSignalMethods(TaskItem.prototype);
-

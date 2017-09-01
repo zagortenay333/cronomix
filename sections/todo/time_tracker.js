@@ -142,10 +142,7 @@ var TimeTracker = new Lang.Class({
 
         this.tracker_tic_id = Mainloop.timeout_add_seconds(1, () => {
             for (let v of this.daily_csv_map.values()) {
-                if (v.tracking) {
-                    v.time++;
-                    log(v.time);
-                }
+                if (v.tracking) v.time++;
             }
 
             if (min === 60) {
