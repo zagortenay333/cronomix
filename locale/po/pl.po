@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-02 20:44+0200\n"
+"POT-Creation-Date: 2017-09-03 14:34+0200\n"
 "PO-Revision-Date: 2017-07-20 07:02+0200\n"
 "Last-Translator: Piotr Komur <pkomur@gmail.com>\n"
 "Language-Team: \n"
@@ -27,145 +27,20 @@ msgstr "Przenieś na podstawowy monitor"
 msgid "Move to Secondary Monitor"
 msgstr "Przenieś na dodatkowy monitor"
 
-#: ../sections/alarms.js:148
-msgid "Add New Alarm..."
-msgstr "Dodaj nowy alarm..."
-
-#. TRANSLATORS: %s is a time string in the format HH:MM (e.g., 13:44)
-#: ../sections/alarms.js:472 ../sections/alarms.js:889
-#, javascript-format
-msgid "Alarm at %s"
-msgstr "Alarm o %s"
-
-#: ../sections/alarms.js:486 ../sections/alarms.js:854
-msgid "Snooze"
-msgstr "Drzemka"
-
-#: ../sections/alarms.js:583
-msgid "Alarm Message..."
-msgstr "Komunikat alarmu..."
-
-#: ../sections/alarms.js:611
-msgid "Delete"
-msgstr "Usuń"
-
-#: ../sections/alarms.js:619 ../sections/pomodoro.js:771
-#: ../sections/timer.js:646
+#: ../prefs.js:133 ../sections/todo/view__clear_tasks.js:93
+#: ../sections/todo/view__stats.js:219
+#: ../sections/todo/view__task_editor.js:127 ../sections/timer.js:646
+#: ../sections/pomodoro.js:771 ../sections/alarms.js:619
 msgid "Cancel"
 msgstr "Anuluj"
 
-#: ../sections/alarms.js:620 ../sections/pomodoro.js:770
-#: ../sections/timer.js:647
+#: ../prefs.js:134 ../sections/todo/view__clear_tasks.js:96
+#: ../sections/todo/view__sort.js:78 ../sections/todo/view__filters.js:165
+#: ../sections/todo/view__stats.js:216
+#: ../sections/todo/view__task_editor.js:130 ../sections/timer.js:647
+#: ../sections/pomodoro.js:770 ../sections/alarms.js:620
 msgid "Ok"
 msgstr "OK"
-
-#: ../sections/alarms.js:912
-#, javascript-format
-msgid "%d alarm went off!"
-msgid_plural "%d alarms went off!"
-msgstr[0] "%d alarm minął!"
-msgstr[1] "%d alarmy minęły!"
-msgstr[2] "%d alarmów minęło!"
-
-#: ../sections/context_menu.js:38
-msgid "Open settings"
-msgstr "Ustawienia"
-
-#: ../sections/context_menu.js:41
-msgid "Go to extension website"
-msgstr "Otwórz stronę internetową"
-
-#: ../sections/context_menu.js:44
-msgid "Report bug"
-msgstr "Zgłoś błąd"
-
-#: ../sections/context_menu.js:47
-msgid "Help with translations"
-msgstr ""
-
-#: ../sections/pomodoro.js:36
-msgid "Start working!"
-msgstr "Rozpocznij pracę!"
-
-#: ../sections/pomodoro.js:37
-msgid "Take long break!"
-msgstr "Weź długą przerwę!"
-
-#: ../sections/pomodoro.js:38
-msgid "Take short break!"
-msgstr "Weź krótką przerwę!"
-
-#: ../sections/pomodoro.js:117 ../sections/pomodoro.js:300
-#: ../sections/pomodoro.js:406 ../prefs.ui:570 ../prefs.ui:2068
-msgid "Pomodoro"
-msgstr ""
-
-#: ../sections/pomodoro.js:160 ../sections/pomodoro.js:833
-msgid "New Pomo"
-msgstr "Nowe Pomodoro"
-
-#: ../sections/pomodoro.js:161 ../sections/pomodoro.js:834
-msgid "Take Break"
-msgstr "Weź przerwę!"
-
-#: ../sections/pomodoro.js:162 ../sections/pomodoro.js:835
-#: ../sections/stopwatch.js:158 ../sections/stopwatch.js:613
-msgid "Start"
-msgstr ""
-
-#: ../sections/pomodoro.js:163 ../sections/pomodoro.js:836
-msgid "Stop"
-msgstr ""
-
-#: ../sections/pomodoro.js:694
-msgid "Clear all pomodoros?"
-msgstr "Usunąć wszystkie pomodoro?"
-
-#: ../sections/pomodoro.js:710
-msgid "Pomodoro (min):"
-msgstr "Pomodoro (min):"
-
-#: ../sections/pomodoro.js:725
-msgid "Short break (min):"
-msgstr "Krótka przerwa (min):"
-
-#: ../sections/pomodoro.js:740
-msgid "Long break (min):"
-msgstr "Długa przerwa (min):"
-
-#: ../sections/pomodoro.js:755
-msgid "Num of pomos until long break:"
-msgstr "Liczba pomodoro do długiej przerwy:"
-
-#: ../sections/stopwatch.js:130 ../sections/stopwatch.js:398 ../prefs.ui:526
-#: ../prefs.ui:1511
-msgid "Stopwatch"
-msgstr "Stoper"
-
-#: ../sections/stopwatch.js:156 ../sections/stopwatch.js:610
-msgid "Reset"
-msgstr "Zeruj"
-
-#: ../sections/stopwatch.js:157 ../sections/stopwatch.js:611
-msgid "Lap"
-msgstr "Okrążenie"
-
-#: ../sections/stopwatch.js:159 ../sections/stopwatch.js:612
-msgid "Pause"
-msgstr "Wstrzymaj"
-
-#: ../sections/timer.js:39
-msgid "Timer Expired!"
-msgstr "Czas minął!"
-
-#: ../sections/timer.js:120 ../sections/timer.js:333 ../prefs.ui:482
-#: ../prefs.ui:1162
-msgid "Timer"
-msgstr "Minutnik"
-
-#: ../sections/timer.js:624
-msgid "Timer message..."
-msgstr "Komunikat minutnika..."
 
 #: ../prefs.ui:44
 msgid "Unique name"
@@ -213,6 +88,21 @@ msgstr "Z prawej"
 #: ../prefs.ui:441
 msgid "Enabled Sections"
 msgstr "Dostępne sekcje"
+
+#: ../prefs.ui:482 ../prefs.ui:1162 ../sections/timer.js:120
+#: ../sections/timer.js:333
+msgid "Timer"
+msgstr "Minutnik"
+
+#: ../prefs.ui:526 ../prefs.ui:1511 ../sections/stopwatch.js:130
+#: ../sections/stopwatch.js:398
+msgid "Stopwatch"
+msgstr "Stoper"
+
+#: ../prefs.ui:570 ../prefs.ui:2068 ../sections/pomodoro.js:117
+#: ../sections/pomodoro.js:300 ../sections/pomodoro.js:406
+msgid "Pomodoro"
+msgstr ""
 
 #: ../prefs.ui:614 ../prefs.ui:2428
 msgid "Alarms"
@@ -308,9 +198,8 @@ msgid "hours:min:sec"
 msgstr "godz.:min.:sek."
 
 #: ../prefs.ui:1282
-#, fuzzy
 msgid "hours:min:sec:centisec"
-msgstr "godz.:min.:sek.:milisek."
+msgstr ""
 
 #: ../prefs.ui:1821
 msgid "Stop time tracking when pomo is paused"
@@ -341,15 +230,380 @@ msgid "Open this section to search tasks"
 msgstr "Otwórz sekcję, aby wyszukać zadanie"
 
 #: ../prefs.ui:3005
-#, fuzzy
 msgid "Open the stats view"
-msgstr "Otwórz sekcję"
+msgstr ""
 
 #: ../prefs.ui:3061
-#, fuzzy
 msgid "Open this section to switch todo files"
 msgstr "Otwórz sekcję, aby wyszukać zadanie"
 
 #: ../prefs.ui:3101
 msgid "Todo / Time Tracker"
 msgstr "Zadania / Śledzenie"
+
+#: ../sections/todo/MAIN.js:255 ../sections/todo/MAIN.js:852
+msgid "Loading..."
+msgstr "Wczytuję..."
+
+#: ../sections/todo/MAIN.js:265
+msgid "Select todo file in settings..."
+msgstr "Wskaż w ustawieniach plik 'todo'..."
+
+#: ../sections/todo/MAIN.js:290
+msgid "Add New Task..."
+msgstr "Dodaj nowe zadanie..."
+
+#: ../sections/todo/MAIN.js:699
+#, javascript-format
+msgid "%d task has recurred"
+msgid_plural "%d tasks have recurred"
+msgstr[0] "%d powtórzyło się"
+msgstr[1] "%d powtórzyły się"
+msgstr[2] "%d powtórzyło się"
+
+#: ../sections/todo/MAIN.js:858
+msgid "Nothing found."
+msgstr "Nic nie znaleziono..."
+
+#. TRANSLATORS: 'completed:' is followed by a date
+#: ../sections/todo/task_item.js:262
+msgid "completed:"
+msgstr "ukończono:"
+
+#. TRANSLATORS: 'created:' is followed by a date
+#: ../sections/todo/task_item.js:268 ../sections/todo/task_item.js:284
+#: ../sections/todo/task_item.js:292
+msgid "created:"
+msgstr "utworzono:"
+
+#: ../sections/todo/task_item.js:367 ../sections/todo/task_item.js:631
+msgid "due:"
+msgstr "termin:"
+
+#: ../sections/todo/task_item.js:457
+#, javascript-format
+msgid "recurs:%s (in %d day)"
+msgid_plural "recurs:%s (in %d days)"
+msgstr[0] "powtórzenia: %s (jednego dnia)"
+msgstr[1] "powtórzenia: %s (przez %d dni)"
+msgstr[2] "powtórzenia: %s (przez %d dni)"
+
+#: ../sections/todo/task_item.js:625
+msgid "today"
+msgstr "dziś"
+
+#: ../sections/todo/task_item.js:627
+#, javascript-format
+msgid "%d day ago"
+msgid_plural "%d days ago"
+msgstr[0] "%d dzień temu"
+msgstr[1] "%d dni temu"
+msgstr[2] "%d dni temu"
+
+#: ../sections/todo/task_item.js:629
+#, javascript-format
+msgid "in %d day"
+msgid_plural "in %d days"
+msgstr[0] "w ciągu %d dnia"
+msgstr[1] "w ciagu %d dni"
+msgstr[2] "w ciagu %d dni"
+
+#: ../sections/todo/task_item.js:898
+msgid "File or dir not found."
+msgstr ""
+
+#: ../sections/todo/view__clear_tasks.js:53
+msgid "Delete all completed tasks"
+msgstr "Usuń wszystkie ukończone zadania"
+
+#: ../sections/todo/view__clear_tasks.js:66
+msgid "Archive all completed tasks to done.txt and delete them"
+msgstr "Zarchiwizuj ukończone zadania do pliku 'done.txt' przed ich usunięciem"
+
+#: ../sections/todo/view__sort.js:41
+msgid "Sort by Context"
+msgstr "Sortuj wg daty utworzenia"
+
+#: ../sections/todo/view__sort.js:42
+msgid "Sort by Projects"
+msgstr "Sortuj wg priorytetu"
+
+#: ../sections/todo/view__sort.js:43
+msgid "Sort by Priority"
+msgstr "Sortuj wg priorytetu"
+
+#: ../sections/todo/view__sort.js:44
+msgid "Sort by Due Date"
+msgstr "Sortuj wg terminu"
+
+#: ../sections/todo/view__sort.js:45
+msgid "Sort by Completed"
+msgstr "Sortuj wg daty zakończenia"
+
+#: ../sections/todo/view__sort.js:46
+msgid "Sort by Creation Date"
+msgstr "Sortuj wg daty utworzenia"
+
+#: ../sections/todo/view__sort.js:47
+msgid "Sort by Completion Date"
+msgstr "Sortuj wg daty zakończenia"
+
+#: ../sections/todo/view__file_switcher.js:65
+msgid "Search files..."
+msgstr ""
+
+#: ../sections/todo/view__file_switcher.js:132
+msgid "current file"
+msgstr ""
+
+#: ../sections/todo/view__filters.js:79
+msgid "Add custom filter..."
+msgstr "Dodaj własny filtr..."
+
+#: ../sections/todo/view__filters.js:101
+msgid "Show only hidden tasks"
+msgstr "Pokaż tylko ukryte zadania"
+
+#: ../sections/todo/view__filters.js:108
+#, javascript-format
+msgid "%d hidden task"
+msgid_plural "%d hidden tasks"
+msgstr[0] "%d ukryte zadanie"
+msgstr[1] "%d ukryte zadania"
+msgstr[2] "%d ukrytych zadań"
+
+#: ../sections/todo/view__filters.js:124
+msgid "Show only recurring tasks"
+msgstr "Pokaż tylko powtarzające się zadania"
+
+#: ../sections/todo/view__filters.js:134
+#, javascript-format
+msgid "%d recurring task"
+msgid_plural "%d recurring tasks"
+msgstr[0] "%d powtarzające się zadanie"
+msgstr[1] "%d powtarzające się zadania"
+msgstr[2] "%d powtarzających się zadań"
+
+#: ../sections/todo/view__filters.js:149
+msgid "Invert filters"
+msgstr "Odwróć filtry"
+
+#: ../sections/todo/view__filters.js:164 ../sections/stopwatch.js:156
+#: ../sections/stopwatch.js:610
+msgid "Reset"
+msgstr "Zeruj"
+
+#: ../sections/todo/view__filters.js:258
+msgid "Completed"
+msgstr "Ukończone"
+
+#: ../sections/todo/view__filters.js:269
+msgid "No Priority"
+msgstr "Bez priorytetu"
+
+#: ../sections/todo/view__filters.js:365
+#, javascript-format
+msgid "%d task"
+msgid_plural "%d tasks"
+msgstr[0] "%d zadanie"
+msgstr[1] "%d zadania"
+msgstr[2] "%d zadań"
+
+#: ../sections/todo/view__stats.js:78
+msgid "Today"
+msgstr "dziś"
+
+#: ../sections/todo/view__stats.js:79
+msgid "This Week"
+msgstr "ten tydzień"
+
+#: ../sections/todo/view__stats.js:80
+msgid "This Month"
+msgstr "ten miesiąc"
+
+#: ../sections/todo/view__stats.js:81
+msgid "Last 3 Months"
+msgstr ""
+
+#: ../sections/todo/view__stats.js:82
+msgid "Last 6 Months"
+msgstr ""
+
+#: ../sections/todo/view__stats.js:83
+msgid "All Time"
+msgstr ""
+
+#: ../sections/todo/view__stats.js:160
+msgid "Search..."
+msgstr ""
+
+#: ../sections/todo/view__stats.js:184
+msgid "Year:"
+msgstr ""
+
+#: ../sections/todo/view__stats.js:184
+msgid "Month:"
+msgstr ""
+
+#: ../sections/todo/view__stats.js:184
+msgid "Day:"
+msgstr ""
+
+#: ../sections/todo/view__stats.js:206
+msgid "From: "
+msgstr ""
+
+#: ../sections/todo/view__stats.js:211
+msgid "To: "
+msgstr ""
+
+#: ../sections/todo/view__stats.js:227
+msgid "Type: "
+msgstr ""
+
+#: ../sections/todo/view__stats.js:237
+msgid "Range: "
+msgstr ""
+
+#: ../sections/todo/view__stats.js:258
+msgid "Custom Range..."
+msgstr ""
+
+#: ../sections/todo/view__stats.js:264 ../sections/todo/view__stats.js:624
+msgid "Projects"
+msgstr "Sortuj wg priorytetu"
+
+#: ../sections/todo/view__stats.js:270 ../sections/todo/view__stats.js:624
+msgid "Tasks"
+msgstr "Zadanie..."
+
+#: ../sections/todo/view__stats.js:536
+msgid "<b>Stats for <i>project</i>: </b>"
+msgstr ""
+
+#: ../sections/todo/view__stats.js:537
+msgid "<b>Stats for <i>task</i>: </b>"
+msgstr ""
+
+#: ../sections/todo/view__stats.js:570
+msgid "Total time per yearly quarter: "
+msgstr ""
+
+#: ../sections/todo/view__task_editor.js:76
+msgid "Task..."
+msgstr "Zadanie..."
+
+#: ../sections/todo/view__task_editor.js:114 ../sections/alarms.js:611
+msgid "Delete"
+msgstr "Usuń"
+
+#: ../sections/todo/view__task_editor.js:122
+msgid "Archive"
+msgstr "Archiwum"
+
+#: ../sections/stopwatch.js:157 ../sections/stopwatch.js:611
+msgid "Lap"
+msgstr "Okrążenie"
+
+#: ../sections/stopwatch.js:158 ../sections/stopwatch.js:613
+#: ../sections/pomodoro.js:162 ../sections/pomodoro.js:835
+msgid "Start"
+msgstr ""
+
+#: ../sections/stopwatch.js:159 ../sections/stopwatch.js:612
+msgid "Pause"
+msgstr "Wstrzymaj"
+
+#: ../sections/context_menu.js:38
+msgid "Open settings"
+msgstr "Ustawienia"
+
+#: ../sections/context_menu.js:41
+msgid "Go to extension website"
+msgstr "Otwórz stronę internetową"
+
+#: ../sections/context_menu.js:44
+msgid "Report bug"
+msgstr "Zgłoś błąd"
+
+#: ../sections/context_menu.js:47
+msgid "Help with translations"
+msgstr ""
+
+#: ../sections/timer.js:39
+msgid "Timer Expired!"
+msgstr "Czas minął!"
+
+#: ../sections/timer.js:624
+msgid "Timer message..."
+msgstr "Komunikat minutnika..."
+
+#: ../sections/pomodoro.js:36
+msgid "Start working!"
+msgstr "Rozpocznij pracę!"
+
+#: ../sections/pomodoro.js:37
+msgid "Take long break!"
+msgstr "Weź długą przerwę!"
+
+#: ../sections/pomodoro.js:38
+msgid "Take short break!"
+msgstr "Weź krótką przerwę!"
+
+#: ../sections/pomodoro.js:160 ../sections/pomodoro.js:833
+msgid "New Pomo"
+msgstr "Nowe Pomodoro"
+
+#: ../sections/pomodoro.js:161 ../sections/pomodoro.js:834
+msgid "Take Break"
+msgstr "Weź przerwę!"
+
+#: ../sections/pomodoro.js:163 ../sections/pomodoro.js:836
+msgid "Stop"
+msgstr ""
+
+#: ../sections/pomodoro.js:694
+msgid "Clear all pomodoros?"
+msgstr "Usunąć wszystkie pomodoro?"
+
+#: ../sections/pomodoro.js:710
+msgid "Pomodoro (min):"
+msgstr "Pomodoro (min):"
+
+#: ../sections/pomodoro.js:725
+msgid "Short break (min):"
+msgstr "Krótka przerwa (min):"
+
+#: ../sections/pomodoro.js:740
+msgid "Long break (min):"
+msgstr "Długa przerwa (min):"
+
+#: ../sections/pomodoro.js:755
+msgid "Num of pomos until long break:"
+msgstr "Liczba pomodoro do długiej przerwy:"
+
+#: ../sections/alarms.js:148
+msgid "Add New Alarm..."
+msgstr "Dodaj nowy alarm..."
+
+#. TRANSLATORS: %s is a time string in the format HH:MM (e.g., 13:44)
+#: ../sections/alarms.js:472 ../sections/alarms.js:889
+#, javascript-format
+msgid "Alarm at %s"
+msgstr "Alarm o %s"
+
+#: ../sections/alarms.js:486 ../sections/alarms.js:854
+msgid "Snooze"
+msgstr "Drzemka"
+
+#: ../sections/alarms.js:583
+msgid "Alarm Message..."
+msgstr "Komunikat alarmu..."
+
+#: ../sections/alarms.js:912
+#, javascript-format
+msgid "%d alarm went off!"
+msgid_plural "%d alarms went off!"
+msgstr[0] "%d alarm minął!"
+msgstr[1] "%d alarmy minęły!"
+msgstr[2] "%d alarmów minęło!"
