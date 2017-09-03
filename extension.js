@@ -70,7 +70,7 @@ const Timepp = new Lang.Class({
         this.separator_register  = [];
         this.panel_item_position = this.settings.get_enum('panel-item-position');
         this.custom_stylesheet   = null;
-        this.theme_change_signal_temp_block = false;
+        this.theme_change_signal_block = false;
 
 
         //
@@ -176,9 +176,7 @@ const Timepp = new Lang.Class({
             this.todo_section.toggle_section();
         });
         this.sigm.connect(St.ThemeContext.get_for_stage(global.stage), 'changed', () => {
-            if (this.theme_change_signal_temp_block)
-                return;
-
+            if (this.theme_change_signal_block) return;
             this._on_theme_changed();
         });
         this.sigm.connect(this.settings, 'changed::panel-item-position', () => {
@@ -426,61 +424,43 @@ const Timepp = new Lang.Class({
     },
 
     _load_stylesheet: function () {
-        this.theme_change_signal_temp_block = true;
+        this.theme_change_signal_block = true;
 
-        let stylesheet = Main._defaultCssStylesheet;
+        // set custom stylesheet
+        {
+            let stylesheet = Main._cssStylesheet || Main._defaultCssStylesheet;
+            let path       = stylesheet.get_path();
+            let theme_dir  = path ? GLib.path_get_dirname(path) : '';
 
-        if (Main._cssStylesheet)
-            stylesheet = Main._cssStylesheet;
+            if (theme_dir) {
+                this.custom_stylesheet =
+                    Gio.file_new_for_path(theme_dir + '/timepp.css');
+            }
 
-        let theme_dir = stylesheet.get_path();
-        theme_dir = theme_dir ? GLib.path_get_dirname(theme_dir) : '';
+            if (!this.custom_stylesheet ||
+                !this.custom_stylesheet.query_exists(null)) {
 
-        if (theme_dir !== '')
-            this.custom_stylesheet = Gio.file_new_for_path(theme_dir + '/timepp.css');
-
-        if (!this.custom_stylesheet || !this.custom_stylesheet.query_exists(null)) {
-            let default_stylesheet = Gio.File.new_for_path(ME.path + '/stylesheet.css');
-
-            if (default_stylesheet.query_exists(null))
-                this.custom_stylesheet = default_stylesheet;
-            else
-                return;
+                this.custom_stylesheet =
+                    Gio.File.new_for_path(ME.path + '/stylesheet.css');
+            }
         }
 
-        let theme_context = St.ThemeContext.get_for_stage(global.stage);
-        if (! theme_context)
-            return;
-
-        let theme = theme_context.get_theme();
-        if (! theme)
-            return;
-
-        theme.load_stylesheet(this.custom_stylesheet);
-
+        // load custom stylesheet
+        St.ThemeContext.get_for_stage(global.stage).get_theme()
+            .load_stylesheet(this.custom_stylesheet);
 
         // reload theme
         Main.reloadThemeResource();
         Main.loadTheme();
 
-        Mainloop.idle_add(() => {
-            this.theme_change_signal_temp_block = false;
-        });
+        Mainloop.idle_add(() => this.theme_change_signal_block = false);
     },
 
     _unload_stylesheet: function () {
-        if (! this.custom_stylesheet)
-            return;
+        if (! this.custom_stylesheet) return;
 
-        let theme_context = St.ThemeContext.get_for_stage(global.stage);
-        if (! theme_context)
-            return;
-
-        let theme = theme_context.get_theme();
-        if (! theme)
-            return;
-
-        theme.unload_stylesheet(this.custom_stylesheet);
+        St.ThemeContext.get_for_stage(global.stage).get_theme()
+            .unload_stylesheet(this.custom_stylesheet);
 
         this.custom_stylesheet = null;
     },
