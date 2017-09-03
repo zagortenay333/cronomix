@@ -428,8 +428,8 @@ const Timepp = new Lang.Class({
 
         // set custom stylesheet
         {
-            let stylesheet = Main._cssStylesheet || Main._defaultCssStylesheet;
-            let path       = stylesheet.get_path();
+            let stylesheet = Main.getThemeStylesheet();
+            let path       = stylesheet ? stylesheet.get_path() : '';
             let theme_dir  = path ? GLib.path_get_dirname(path) : '';
 
             if (theme_dir) {
