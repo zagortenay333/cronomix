@@ -1,15 +1,14 @@
-const Gio            = imports.gi.Gio;
-const Gtk            = imports.gi.Gtk;
-const GLib           = imports.gi.GLib;
-const Lang           = imports.lang;
-const ExtensionUtils = imports.misc.extensionUtils;
+const Gio  = imports.gi.Gio;
+const Gtk  = imports.gi.Gtk;
+const GLib = imports.gi.GLib;
+const Lang = imports.lang;
 
 
-const ME = ExtensionUtils.getCurrentExtension();
+const ME = imports.misc.extensionUtils.getCurrentExtension();
 
 
 const Gettext = imports.gettext;
-Gettext.bindtextdomain(ME.metadata['gettext-domain'], ME.dir.get_path() + '/locale');
+Gettext.bindtextdomain(ME.metadata['gettext-domain'], ME.path + '/locale');
 const _ = Gettext.domain(ME.metadata['gettext-domain']).gettext;
 
 
@@ -17,12 +16,14 @@ const Settings = new Lang.Class({
     Name: 'Timepp.Settings',
 
     _init: function () {
-        let GioSSS = Gio.SettingsSchemaSource;
-        let schema = GioSSS.new_from_directory(
-            ME.dir.get_path() + '/schemas', GioSSS.get_default(), false);
-        schema = schema.lookup('org.gnome.shell.extensions.timepp', true);
+        {
+            let GioSSS = Gio.SettingsSchemaSource;
+            let schema = GioSSS.new_from_directory(
+                ME.path + '/schemas', GioSSS.get_default(), false);
+            schema = schema.lookup('org.gnome.shell.extensions.timepp', true);
 
-        this.settings = new Gio.Settings({ settings_schema: schema });
+            this.settings = new Gio.Settings({ settings_schema: schema });
+        }
 
         this.builder = new Gtk.Builder();
 

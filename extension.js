@@ -1,21 +1,20 @@
-const St             = imports.gi.St;
-const Gio            = imports.gi.Gio;
-const GLib           = imports.gi.GLib;
-const Clutter        = imports.gi.Clutter;
-const Main           = imports.ui.main;
-const PopupMenu      = imports.ui.popupMenu;
-const PanelMenu      = imports.ui.panelMenu;
-const Lang           = imports.lang;
-const Util           = imports.misc.util;
-const Mainloop       = imports.mainloop;
-const ExtensionUtils = imports.misc.extensionUtils;
+const St        = imports.gi.St;
+const Gio       = imports.gi.Gio;
+const GLib      = imports.gi.GLib;
+const Clutter   = imports.gi.Clutter;
+const Main      = imports.ui.main;
+const PopupMenu = imports.ui.popupMenu;
+const PanelMenu = imports.ui.panelMenu;
+const Lang      = imports.lang;
+const Util      = imports.misc.util;
+const Mainloop  = imports.mainloop;
 
 
-const ME = ExtensionUtils.getCurrentExtension();
+const ME = imports.misc.extensionUtils.getCurrentExtension();
 
 
-const SIG_MANAGER   = ME.imports.lib.signal_manager;
-const PANEL_ITEM    = ME.imports.lib.panel_item;
+const SIG_MANAGER = ME.imports.lib.signal_manager;
+const PANEL_ITEM  = ME.imports.lib.panel_item;
 
 
 const ContextMenu = ME.imports.sections.context_menu;
@@ -27,11 +26,8 @@ const Todo        = ME.imports.sections.todo.MAIN;
 
 
 const Gettext = imports.gettext;
-Gettext.bindtextdomain(ME.metadata['gettext-domain'],
-                       ME.dir.get_path() + '/locale');
+Gettext.bindtextdomain(ME.metadata['gettext-domain'], ME.path + '/locale');
 
-
-const UNICON_ICON = '/img/unicon-symbolic.svg';
 
 const PanelPosition = {
     LEFT   : 0,
@@ -61,7 +57,7 @@ const Timepp = new Lang.Class({
         // settings
         let GioSSS = Gio.SettingsSchemaSource;
         let schema = GioSSS.new_from_directory(
-            ME.dir.get_path() + '/schemas', GioSSS.get_default(), false);
+            ME.path + '/schemas', GioSSS.get_default(), false);
         schema = schema.lookup('org.gnome.shell.extensions.timepp', true);
         this.settings = new Gio.Settings({ settings_schema: schema });
 
@@ -527,7 +523,7 @@ function enable () {
     // with 'timepp-'.
     {
         let icon_theme = imports.gi.Gtk.IconTheme.get_default();
-        icon_theme.prepend_search_path(ME.dir.get_path() + '/img/icons');
+        icon_theme.prepend_search_path(ME.path + '/img/icons');
     }
 }
 
@@ -535,7 +531,7 @@ function disable () {
     // remove the custom search path
     {
         let icon_theme  = imports.gi.Gtk.IconTheme.get_default();
-        let custom_path = ME.dir.get_path() + '/img/icons';
+        let custom_path = ME.path + '/img/icons';
         let paths       = icon_theme.get_search_path();
         paths.splice(paths.indexOf(custom_path), 1);
         icon_theme.set_search_path(paths);
