@@ -143,7 +143,7 @@ Some of the features of the todo.txt manager are:
 
 * Fuzzy task searching.
 * Filtering by context, project, priority, custom fuzzy filters...
-* Activating a filter by clicking on a priority, context, or proj in the task.
+* Toggling a filter on/off by clicking on a priority, context, or proj in a task.
 * Support for multiple todo files and corresponding done files and csv dirs.
 * Compound sorting by priority, due date, completion date, creation date, etc...
 * Fuzzy autocompletion for contexts and projects when inline editing a task.
@@ -369,6 +369,8 @@ gdbus call --session --dest org.gnome.Shell \
            --object-path /timepp/zagortenay333/TimeTracker \
            --method timepp.zagortenay333.TimeTracker.stop_tracking_by_id 'asdf'
 ```
+
+---
 
 ### Custom Theme Support
 
