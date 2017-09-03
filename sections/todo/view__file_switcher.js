@@ -151,10 +151,16 @@ var TodoFileSwitcher = new Lang.Class({
                                       item);
             });
             item.actor.connect('clicked', (item) => {
-                if (item._delegate.name !== this.current_name)
-                    this.emit('switch', item._delegate.name);
-                else
-                    this.emit('close');
+                // Destroy the actor before emiting to get rid of any signals
+                // that are set on the actor.
+                // In particular, the 'key-focus-in' signal calls SCROLL_TO_ITEM
+                // which will call get_allocation_box() at a bad time and will
+                // cause clutter to spit assertion errors.
+                let name = item._delegate.name;
+                item.destroy();
+
+                if (name !== this.current_name) this.emit('switch', name)
+                else                            this.emit('close');
             });
         }
 
@@ -166,7 +172,7 @@ var TodoFileSwitcher = new Lang.Class({
     },
 
     _search_files: function () {
-        let needle = this.entry.entry.get_text();
+        let needle = this.entry.entry.get_text().toLowerCase();
         let len    = this.file_items.length;
 
         if (!needle) {
@@ -183,9 +189,10 @@ var TodoFileSwitcher = new Lang.Class({
             for (i = 0; i < len; i++) {
                 item = this.file_items[i];
 
-                score = FUZZ.fuzzy_search_v1(needle, item.label.text);
-                if (!score) continue;
-                reduced_results.push([score, item]);
+                score = FUZZ.fuzzy_search_v1(
+                    needle, item.label.text.toLowerCase());
+
+                if (score) reduced_results.push([score, item]);
             }
 
             reduced_results.sort((a, b) => a[0] < b[0]);
