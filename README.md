@@ -42,7 +42,7 @@ If you want to help out with translations, check out the instructions in the [lo
 
 ### Lock Screen
 
-**Note that all gnome-shell extensions get disabled in the lock screen**.
+:bangbang: **Note that all gnome-shell extensions get disabled in the lock screen**.
 
 Alarms, stopwatch and other timers won't work when the screen is locked.
 
