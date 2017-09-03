@@ -395,7 +395,9 @@ todo.txt manager.
 > Notifications will only show the `<b>`, `<i>`, `<u>` tags and links.
 
 ---
- 
+
+### Preview
+
+> [Gnome-Shell theme](https://github.com/zagortenay333/ciliora-tertia-shell)
+
 ![preview](https://i.imgur.com/mLk5mK1.png)
-<sup>**Preview info:** [Gnome-Shell
-theme](https://github.com/zagortenay333/ciliora-tertia-shell)</sup>
