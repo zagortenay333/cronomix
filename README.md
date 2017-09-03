@@ -400,4 +400,4 @@ todo.txt manager.
 
 > [Gnome-Shell theme](https://github.com/zagortenay333/ciliora-tertia-shell)
 
-![preview](https://i.imgur.com/mLk5mK1.png)
+![preview](https://i.imgur.com/zCxnIWz.png)
