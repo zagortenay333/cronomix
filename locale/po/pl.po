@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-03 17:54+0200\n"
+"POT-Creation-Date: 2017-09-04 13:55+0200\n"
 "PO-Revision-Date: 2017-07-20 07:02+0200\n"
 "Last-Translator: Piotr Komur <pkomur@gmail.com>\n"
 "Language-Team: \n"
@@ -308,7 +308,7 @@ msgstr[0] "w ciągu %d dnia"
 msgstr[1] "w ciagu %d dni"
 msgstr[2] "w ciagu %d dni"
 
-#: ../sections/todo/task_item.js:898
+#: ../sections/todo/task_item.js:896
 msgid "File or dir not found."
 msgstr ""
 

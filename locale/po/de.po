@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: timepp@zagortenay 333\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-03 17:54+0200\n"
+"POT-Creation-Date: 2017-09-04 13:55+0200\n"
 "PO-Revision-Date: 2017-08-29 10:51+0200\n"
 "Last-Translator: Christian Mattes <mac@tasarion.de>\n"
 "Language-Team: German\n"
@@ -305,7 +305,7 @@ msgid_plural "in %d days"
 msgstr[0] "in %d Tag"
 msgstr[1] "in %d Tagen"
 
-#: ../sections/todo/task_item.js:898
+#: ../sections/todo/task_item.js:896
 msgid "File or dir not found."
 msgstr "Datei oder Verzeichnis nicht gefunden."
 
