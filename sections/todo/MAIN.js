@@ -1276,7 +1276,7 @@ var Todo = new Lang.Class({
                     content += `x ${today} ${task.task_str}\n`;
                 else
                     content += `x ${today} ${task.task_str.slice(3)} \
-                                pri: ${task.priority[1]}\n`;
+                                pri:${task.priority[1]}\n`;
             }
         }
 
