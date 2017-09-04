@@ -147,7 +147,7 @@ var TaskEditor = new Lang.Class({
             Mainloop.idle_add(() => {
                 let word = this._get_current_word();
                 if (word) this._show_completions(word);
-                else this.completion_menu.hide();
+                else      this.completion_menu.hide();
             });
         });
         this.entry.entry.connect('key-press-event', (_, event) => {
@@ -179,7 +179,9 @@ var TaskEditor = new Lang.Class({
     _show_completions: function (word) {
         let completions = null;
 
-        if (word[0] === '@')
+        if (word === '(')
+            completions = this._find_completions(word, this.delegate.stats.priorities);
+        else if (word[0] === '@')
             completions = this._find_completions(word, this.delegate.stats.contexts);
         else if (word[0] === '+')
             completions = this._find_completions(word, this.delegate.stats.projects);
@@ -270,13 +272,19 @@ var TaskEditor = new Lang.Class({
 
         let word = text.substring(start, end + 1);
 
-        this.current_word_start = start;
-        this.current_word_end   = end;
+        if ((pos === 0 && word === '(') ||
+            /[@+]/.test(word) ||
+            G.REG_CONTEXT.test(word) ||
+            G.REG_PROJ.test(word)) {
 
-        if (/[@+]/.test(word) || G.REG_CONTEXT.test(word) || G.REG_PROJ.test(word))
+            this.current_word_start = start;
+            this.current_word_end   = end;
+
             return word;
-        else
+        }
+        else {
             return null;
+        }
     },
 
     _on_tab: function () {
@@ -300,15 +308,14 @@ var TaskEditor = new Lang.Class({
 
     _on_completion_selected: function () {
         this.completion_menu.hide();
+        this.text_changed_handler_block = true;
 
         let completion = this.curr_selected_completion.label;
 
-        let text = this.entry.entry.get_text().slice(0, this.current_word_start) +
-                   completion +
-                   this.entry.entry.get_text().slice(this.current_word_end + 1);
-
-
-        this.text_changed_handler_block = true;
+        let text =
+            this.entry.entry.get_text().slice(0, this.current_word_start) +
+            completion +
+            this.entry.entry.get_text().slice(this.current_word_end + 1);
 
         this.entry.entry.text = text;
 
