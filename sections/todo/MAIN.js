@@ -1261,40 +1261,31 @@ var Todo = new Lang.Class({
     //
     // @tasks: array (of task objects)
     archive_tasks: function (tasks) {
-        let task_strings = [];
-
+        let content = '';
+        let today   = G.date_yyyymmdd();
         let task;
+
         for (let i = 0, len = tasks.length; i < len; i++) {
             task = tasks[i];
 
-            if (!task.completed) {
-                if (task.priority !== '(_)') {
-                    task_strings.push('x ' +
-                                      G.date_yyyymmdd() +
-                                      task.task_str.slice(3) +
-                                      ' pri:' + task.priority[1]);
-                }
-                else {
-                    task_strings.push(
-                        'x ' + G.date_yyyymmdd() + ' ' + task.task_str);
-                }
+            if (task.completed) {
+                content += task.task_str + '\n';
             }
             else {
-                task_strings.push(task.task_str);
+                if (task.priority === '(_)')
+                    content += `x ${today} ${task.task_str}\n`;
+                else
+                    content += `x ${today} ${task.task_str.slice(3)} \
+                                pri: ${task.priority[1]}\n`;
             }
         }
 
         try {
-            let current   = this.settings.get_value('todo-current').deep_unpack();
+            let current = this.settings.get_value('todo-current').deep_unpack();
             let done_file = Gio.file_new_for_uri(current.done_file);
+            let append_stream = done_file.append_to(Gio.FileCreateFlags.NONE, null);
 
-            if (!done_txt_file || !done_txt_file.query_exists(null))
-                done_txt_file.create(Gio.FileCreateFlags.NONE, null);
-
-            let append_stream = done_txt_file.append_to(
-                Gio.FileCreateFlags.NONE, null);
-
-            append_stream.write_all(task_strings.join('\n'), null);
+            append_stream.write_all(content, null);
         }
         catch (e) { logError(e); }
     },
