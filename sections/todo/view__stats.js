@@ -157,7 +157,7 @@ var StatsView = new Lang.Class({
         //
         // search entry and results container
         //
-        this.entry = new St.Entry({ y_align: Clutter.ActorAlign.CENTER, visible: false, hint_text: _('Search...') });
+        this.entry = new St.Entry({ can_focus: true, y_align: Clutter.ActorAlign.CENTER, visible: false, hint_text: _('Search...') });
         this.top_box_center.add_actor(this.entry);
         this.entry.set_primary_icon(new St.Icon({ icon_name: 'timepp-search-symbolic' }));
 
