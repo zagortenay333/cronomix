@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-09 13:13+0200\n"
+"POT-Creation-Date: 2017-09-09 13:34+0200\n"
 "PO-Revision-Date: 2017-07-20 07:02+0200\n"
 "Last-Translator: Piotr Komur <pkomur@gmail.com>\n"
 "Language-Team: \n"
@@ -29,16 +29,16 @@ msgstr "Przenieś na dodatkowy monitor"
 
 #: ../prefs.js:133 ../sections/todo/view__clear_tasks.js:93
 #: ../sections/todo/view__stats.js:219
-#: ../sections/todo/view__task_editor.js:127 ../sections/timer.js:661
-#: ../sections/pomodoro.js:805 ../sections/alarms.js:622
+#: ../sections/todo/view__task_editor.js:127 ../sections/timer.js:660
+#: ../sections/pomodoro.js:805 ../sections/alarms.js:621
 msgid "Cancel"
 msgstr "Anuluj"
 
 #: ../prefs.js:134 ../sections/todo/view__clear_tasks.js:96
 #: ../sections/todo/view__sort.js:78 ../sections/todo/view__filters.js:165
 #: ../sections/todo/view__stats.js:216
-#: ../sections/todo/view__task_editor.js:130 ../sections/timer.js:662
-#: ../sections/pomodoro.js:804 ../sections/alarms.js:623
+#: ../sections/todo/view__task_editor.js:130 ../sections/timer.js:661
+#: ../sections/pomodoro.js:804 ../sections/alarms.js:622
 msgid "Ok"
 msgstr "OK"
 
@@ -89,13 +89,13 @@ msgstr "Z prawej"
 msgid "Enabled Sections"
 msgstr "Dostępne sekcje"
 
-#: ../prefs.ui:482 ../prefs.ui:1162 ../sections/timer.js:132
-#: ../sections/timer.js:341
+#: ../prefs.ui:482 ../prefs.ui:1162 ../sections/timer.js:131
+#: ../sections/timer.js:340
 msgid "Timer"
 msgstr "Minutnik"
 
-#: ../prefs.ui:526 ../prefs.ui:1511 ../sections/stopwatch.js:142
-#: ../sections/stopwatch.js:411
+#: ../prefs.ui:526 ../prefs.ui:1511 ../sections/stopwatch.js:141
+#: ../sections/stopwatch.js:410
 msgid "Stopwatch"
 msgstr "Stoper"
 
@@ -384,8 +384,8 @@ msgstr[2] "%d powtarzających się zadań"
 msgid "Invert filters"
 msgstr "Odwróć filtry"
 
-#: ../sections/todo/view__filters.js:164 ../sections/stopwatch.js:168
-#: ../sections/stopwatch.js:633
+#: ../sections/todo/view__filters.js:164 ../sections/stopwatch.js:167
+#: ../sections/stopwatch.js:632
 msgid "Reset"
 msgstr "Zeruj"
 
@@ -489,7 +489,7 @@ msgstr ""
 msgid "Task..."
 msgstr "Zadanie..."
 
-#: ../sections/todo/view__task_editor.js:114 ../sections/alarms.js:614
+#: ../sections/todo/view__task_editor.js:114 ../sections/alarms.js:613
 msgid "Delete"
 msgstr "Usuń"
 
@@ -497,41 +497,41 @@ msgstr "Usuń"
 msgid "Archive"
 msgstr "Archiwum"
 
-#: ../sections/stopwatch.js:169 ../sections/stopwatch.js:634
+#: ../sections/stopwatch.js:168 ../sections/stopwatch.js:633
 msgid "Lap"
 msgstr "Okrążenie"
 
-#: ../sections/stopwatch.js:170 ../sections/stopwatch.js:636
+#: ../sections/stopwatch.js:169 ../sections/stopwatch.js:635
 #: ../sections/pomodoro.js:176 ../sections/pomodoro.js:872
 msgid "Start"
 msgstr ""
 
-#: ../sections/stopwatch.js:171 ../sections/stopwatch.js:635
+#: ../sections/stopwatch.js:170 ../sections/stopwatch.js:634
 #: ../sections/pomodoro.js:177 ../sections/pomodoro.js:873
 msgid "Stop"
 msgstr ""
 
-#: ../sections/context_menu.js:38
+#: ../sections/context_menu.js:37
 msgid "Open settings"
 msgstr "Ustawienia"
 
-#: ../sections/context_menu.js:41
+#: ../sections/context_menu.js:40
 msgid "Go to extension website"
 msgstr "Otwórz stronę internetową"
 
-#: ../sections/context_menu.js:44
+#: ../sections/context_menu.js:43
 msgid "Report bug"
 msgstr "Zgłoś błąd"
 
-#: ../sections/context_menu.js:47
+#: ../sections/context_menu.js:46
 msgid "Help with translations"
 msgstr ""
 
-#: ../sections/timer.js:41
+#: ../sections/timer.js:40
 msgid "Timer Expired!"
 msgstr "Czas minął!"
 
-#: ../sections/timer.js:639
+#: ../sections/timer.js:638
 msgid "Timer message..."
 msgstr "Komunikat minutnika..."
 
@@ -580,25 +580,25 @@ msgstr "Długa przerwa (min):"
 msgid "Num of pomos until long break:"
 msgstr "Liczba pomodoro do długiej przerwy:"
 
-#: ../sections/alarms.js:151
+#: ../sections/alarms.js:150
 msgid "Add New Alarm..."
 msgstr "Dodaj nowy alarm..."
 
 #. TRANSLATORS: %s is a time string in the format HH:MM (e.g., 13:44)
-#: ../sections/alarms.js:472 ../sections/alarms.js:892
+#: ../sections/alarms.js:471 ../sections/alarms.js:891
 #, javascript-format
 msgid "Alarm at %s"
 msgstr "Alarm o %s"
 
-#: ../sections/alarms.js:486 ../sections/alarms.js:857
+#: ../sections/alarms.js:485 ../sections/alarms.js:856
 msgid "Snooze"
 msgstr "Drzemka"
 
-#: ../sections/alarms.js:586
+#: ../sections/alarms.js:585
 msgid "Alarm Message..."
 msgstr "Komunikat alarmu..."
 
-#: ../sections/alarms.js:915
+#: ../sections/alarms.js:914
 #, javascript-format
 msgid "%d alarm went off!"
 msgid_plural "%d alarms went off!"

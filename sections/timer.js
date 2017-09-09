@@ -1,22 +1,21 @@
-const St             = imports.gi.St;
-const Gio            = imports.gi.Gio
-const Gtk            = imports.gi.Gtk;
-const GLib           = imports.gi.GLib;
-const Meta           = imports.gi.Meta;
-const Shell          = imports.gi.Shell;
-const Pango          = imports.gi.Pango;
-const Clutter        = imports.gi.Clutter;
-const Main           = imports.ui.main;
-const PopupMenu      = imports.ui.popupMenu;
-const MessageTray    = imports.ui.messageTray;
-const Slider         = imports.ui.slider;
-const Lang           = imports.lang;
-const Signals        = imports.signals;
-const Mainloop       = imports.mainloop;
-const ExtensionUtils = imports.misc.extensionUtils;
+const St          = imports.gi.St;
+const Gio         = imports.gi.Gio
+const Gtk         = imports.gi.Gtk;
+const GLib        = imports.gi.GLib;
+const Meta        = imports.gi.Meta;
+const Shell       = imports.gi.Shell;
+const Pango       = imports.gi.Pango;
+const Clutter     = imports.gi.Clutter;
+const Main        = imports.ui.main;
+const PopupMenu   = imports.ui.popupMenu;
+const MessageTray = imports.ui.messageTray;
+const Slider      = imports.ui.slider;
+const Lang        = imports.lang;
+const Signals     = imports.signals;
+const Mainloop    = imports.mainloop;
 
 
-const ME = ExtensionUtils.getCurrentExtension();
+const ME = imports.misc.extensionUtils.getCurrentExtension();
 
 
 const Gettext  = imports.gettext.domain(ME.metadata['gettext-domain']);

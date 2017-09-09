@@ -1,13 +1,12 @@
-const St             = imports.gi.St;
-const Gio            = imports.gi.Gio
-const Shell          = imports.gi.Shell;
-const PopupMenu      = imports.ui.popupMenu;
-const Util           = imports.misc.util;
-const Lang           = imports.lang;
-const ExtensionUtils = imports.misc.extensionUtils;
+const St        = imports.gi.St;
+const Gio       = imports.gi.Gio
+const Shell     = imports.gi.Shell;
+const PopupMenu = imports.ui.popupMenu;
+const Util      = imports.misc.util;
+const Lang      = imports.lang;
 
 
-const ME = ExtensionUtils.getCurrentExtension();
+const ME = imports.misc.extensionUtils.getCurrentExtension();
 
 
 const Gettext  = imports.gettext.domain(ME.metadata['gettext-domain']);
