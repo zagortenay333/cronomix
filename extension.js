@@ -483,7 +483,7 @@ const Timepp = new Lang.Class({
         }
 
         this._unload_stylesheet();
-        this.sigm.disconnect_all();
+        this.sigm.clear();
         this.parent();
     },
 });
