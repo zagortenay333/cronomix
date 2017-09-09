@@ -29,7 +29,7 @@ const G = ME.imports.sections.todo.GLOBAL;
 
 
 const TIME_TRACKER       = ME.imports.sections.todo.time_tracker;
-const TASK_ITEM          = ME.imports.sections.todo.task_item;
+const TASK               = ME.imports.sections.todo.task_item;
 const VIEW_MANAGER       = ME.imports.sections.todo.view_manager;
 const VIEW_STATS         = ME.imports.sections.todo.view__stats;
 const VIEW_CLEAR         = ME.imports.sections.todo.view__clear_tasks;
@@ -555,9 +555,8 @@ var Todo = new Lang.Class({
 
     _init_todo_file: function () {
         // reset
-        this.tasks          = [];
         this.tasks_viewport = [];
-        this.tasks_scroll_content.destroy_all_children();
+        this.tasks_scroll_content.remove_all_children();
         this.stats.priorities.clear();
         this.stats.contexts.clear();
         this.stats.projects.clear();
@@ -601,7 +600,9 @@ var Todo = new Lang.Class({
         let [, lines] = this.todo_txt_file.load_contents(null);
         lines = String(lines).split(/\n|\r/);
 
+        let s = Date.now();
         this.create_tasks(lines, () => {
+            log(`>>>>>>>>>>>>>>>>> PERF: ${Date.now() - s}`);
             this._check_recurrences();
             this.on_tasks_changed();
             this.show_view__default();
@@ -757,264 +758,6 @@ var Todo = new Lang.Class({
             this.panel_item.set_mode('icon_text');
     },
 
-    show_view__no_todo_file: function () {
-        this.panel_item.set_mode('icon');
-        this.panel_item.actor.remove_style_class_name('done');
-
-        this.view_manager.show_view({
-            view_name      : G.View.NO_TODO_FILE,
-            actors         : [this.no_todo_file_msg.actor],
-            focused_actor  : this.no_todo_file_msg.label,
-            close_callback : () => { this.no_todo_file_msg.actor.hide(); },
-        });
-    },
-
-    show_view__loading: function () {
-        this.panel_item.set_mode('icon');
-        this.panel_item.actor.remove_style_class_name('done');
-        this.panel_item.icon.icon_name = 'timepp-todo-loading-symbolic';
-
-        this.view_manager.show_view({
-            view_name      : G.View.LOADING,
-            actors         : [this.loading_msg.actor],
-            focused_actor  : this.loading_msg.label,
-            close_callback : () => {
-                this.loading_msg.actor.hide();
-                this.panel_item.icon.icon_name = 'timepp-todo-symbolic';
-                this._toggle_panel_item_mode();
-            },
-        });
-    },
-
-    show_view__default: function () {
-        this.view_manager.show_view({
-            view_name      : G.View.DEFAULT,
-            actors         : [this.header.actor, this.tasks_scroll_wrapper],
-            focused_actor  : this.add_task_button,
-            close_callback : () => {
-                this.header.actor.hide();
-                this.tasks_scroll_wrapper.hide();
-            },
-        });
-    },
-
-    show_view__clear_completed: function () {
-        let box = new VIEW_CLEAR.ClearCompletedTasks(this.ext, this);
-
-        this.view_manager.show_view({
-            view_name      : G.View.CLEAR,
-            actors         : [box.actor],
-            focused_actor  : box.button_cancel,
-            close_callback : () => { box.actor.destroy(); },
-        });
-
-        box.connect('delete-all', () => {
-            let incompleted_tasks = [];
-
-            for (let i = 0, len = this.tasks.length; i < len; i++) {
-                if (!this.tasks[i].completed || this.tasks[i].rec_str)
-                    incompleted_tasks.push(this.tasks[i]);
-            }
-
-            this.tasks = incompleted_tasks;
-            this.on_tasks_changed();
-            this.write_tasks_to_file();
-            this.show_view__default();
-        });
-
-        box.connect('archive-all', () => {
-            let completed_tasks   = [];
-            let incompleted_tasks = [];
-
-            for (let i = 0, len = this.tasks.length; i < len; i++) {
-                if (!this.tasks[i].completed || this.tasks[i].rec_str)
-                    incompleted_tasks.push(this.tasks[i]);
-                else
-                    completed_tasks.push(this.tasks[i]);
-            }
-
-            this.archive_tasks(completed_tasks);
-            this.tasks = incompleted_tasks;
-            this.on_tasks_changed();
-            this.write_tasks_to_file();
-            this.show_view__default();
-        });
-
-        box.connect('cancel', () => {
-            this.show_view__default();
-        });
-    },
-
-    show_view__time_tracker_stats: function (task) {
-        this.ext.menu.close();
-        this.stats_view.open();
-
-        if (this.time_tracker.stats_data.size === 0)
-            this.stats_view.show_mode__banner(_('Loading...'));
-
-        Mainloop.idle_add(() => {
-            let stats = this.time_tracker.get_stats();
-
-            if (! stats) {
-                this.stats_view.show_mode__banner(_('Nothing found.'));
-            }
-            else {
-                this.stats_view.set_stats(...stats);
-
-                let d = new Date();
-
-                if (task) {
-                    this.stats_view.show_mode__single(
-                        d.getFullYear(), d.getMonth(), task.task_str);
-                }
-                else {
-                    this.stats_view.show_mode__global(G.date_yyyymmdd(d));
-                }
-            }
-        });
-    },
-
-    show_view__search: function () {
-        if (this.add_tasks_to_menu_mainloop_id) {
-            Mainloop.source_remove(this.add_tasks_to_menu_mainloop_id);
-            this.add_tasks_to_menu_mainloop_id = null;
-        }
-
-        this.view_manager.show_view({
-            view_name      : G.View.SEARCH,
-            focused_actor  : this.search_entry,
-            actors         : [
-                this.search_entry_bin.actor,
-                this.tasks_scroll_wrapper
-            ],
-            close_callback : () => {
-                this.search_entry.set_text('');
-                this.search_dictionary.clear();
-                this.search_entry_bin.actor.hide();
-                this.tasks_scroll_wrapper.hide();
-                this.add_tasks_to_menu(true);
-            },
-        });
-
-        // We always search all tasks no matter what filters are active, so
-        // add all tasks to the popup menu.
-        this.add_tasks_to_menu(true, true);
-    },
-
-    show_view__file_switcher: function () {
-        let filter_switcher =
-            new VIEW_FILE_SWITCHER.TodoFileSwitcher(this.ext, this);
-
-        this.view_manager.show_view({
-            view_name      : G.View.FILE_SWITCH,
-            actors         : [filter_switcher.actor],
-            focused_actor  : filter_switcher.entry.entry,
-            close_callback : () => { filter_switcher.actor.destroy(); },
-        });
-
-        filter_switcher.connect('switch', (_, name) => {
-            let todo_files = this.settings.get_value('todo-files').deep_unpack();
-            let current;
-
-            for (let i = 0, len = todo_files.length; i < len; i++) {
-                if (todo_files[i].name === name) {
-                    current = todo_files[i];
-                    break;
-                }
-            }
-
-            this.settings.set_value('todo-current',
-                                    GLib.Variant.new('a{ss}', current));
-        });
-
-        filter_switcher.connect('close', () => {
-            this.show_view__default();
-        });
-    },
-
-    show_view__sort: function () {
-        let sort_window = new VIEW_SORT.TaskSortWindow(this.ext, this);
-
-        this.view_manager.show_view({
-            view_name      : G.View.SELECT_SORT,
-            actors         : [sort_window.actor],
-            focused_actor  : sort_window.button_ok,
-            close_callback : () => { sort_window.actor.destroy(); },
-        });
-
-        sort_window.connect('update-sort', (_, new_sort_obj) => {
-            this.cache.sort = new_sort_obj;
-            this.store_cache();
-            this.sort_tasks();
-            this.show_view__default();
-        });
-    },
-
-    show_view__filters: function () {
-        let filters_window = new VIEW_FILTERS.TaskFiltersWindow(this.ext, this);
-
-        this.view_manager.show_view({
-            view_name      : G.View.SELECT_FILTER,
-            actors         : [filters_window.actor],
-            focused_actor  : filters_window.button_ok,
-            close_callback : () => { filters_window.actor.destroy(); },
-        });
-
-        filters_window.connect('filters-updated', (_, filters) => {
-            this.cache.filters = filters;
-            this.store_cache();
-            this._update_filter_icon();
-            this.add_tasks_to_menu(true);
-            this.show_view__default();
-        });
-    },
-
-    show_view__task_editor: function (task) {
-        let editor = new VIEW_TASK_EDITOR.TaskEditor(this.ext, this, task);
-
-        this.view_manager.show_view({
-            view_name      : G.View.EDITOR,
-            actors         : [editor.actor],
-            focused_actor  : editor.entry.entry,
-            close_callback : () => { editor.actor.destroy(); },
-        });
-
-        if (task) this.time_tracker.stop_tracking(task);
-
-        editor.connect('add-task', (_, task_str) => {
-            this.tasks.unshift(new TASK_ITEM.TaskItem(this.ext, this, task_str, true));
-            this.on_tasks_changed();
-            this.write_tasks_to_file();
-            this.show_view__default();
-        });
-
-        editor.connect('delete-task', (_, do_archive) => {
-            if (do_archive) this.archive_tasks([task]);
-
-            for (let i = 0, len = this.tasks.length; i < len; i++) {
-                if (this.tasks[i] === task) {
-                    this.tasks.splice(i, 1);
-                    break;
-                }
-            }
-
-            this.on_tasks_changed();
-            this.write_tasks_to_file();
-            this.show_view__default();
-        });
-
-        editor.connect('edit-task', (_, task_str) => {
-            task.reset(true, task_str);
-            this.on_tasks_changed();
-            this.write_tasks_to_file();
-            this.show_view__default();
-        });
-
-        editor.connect('cancel', () => {
-            this.show_view__default();
-        });
-    },
-
     // Create task objects from the given task strings and add them to the
     // this.tasks array.
     //
@@ -1028,13 +771,24 @@ var Todo = new Lang.Class({
             this.add_tasks_to_menu_mainloop_id = null;
         }
 
-        let n = Math.min(todo_strings.length, 21);
+        let len = todo_strings.length;
+
+        // Since we are reusing already instantiated objects, get rid of any
+        // excess task object.
+        while (this.tasks.length > len) this.tasks.pop().actor.destroy();
+
+
+        let n = Math.min(len, 21);
         let i = 0;
 
         for (; i < n; i++) {
-            if (/\S/.test(todo_strings[i])) {
-                this.tasks.push(new TASK_ITEM.TaskItem(this.ext, this,
-                                             todo_strings[i], false));
+            let str = todo_strings[i];
+
+            if (/\S/.test(str)) {
+                if (this.tasks[i])
+                    this.tasks[i].reset(false, todo_strings[i]);
+                else
+                    this.tasks.push(new TASK.TaskItem(this.ext, this, str, false));
             }
         }
 
@@ -1050,8 +804,13 @@ var Todo = new Lang.Class({
             return;
         }
 
-        if (/\S/.test(todo_strings[i])) {
-            this.tasks.push(new TASK_ITEM.TaskItem(this.ext, this, todo_strings[i], false));
+        let str = todo_strings[i];
+
+        if (/\S/.test(str)) {
+            if (this.tasks[i])
+                this.tasks[i].reset(false, str);
+            else
+                this.tasks.push(new TASK.TaskItem(this.ext, this, str, false));
         }
 
         this.create_tasks_mainloop_id = Mainloop.idle_add(() => {
@@ -1289,6 +1048,264 @@ var Todo = new Lang.Class({
             append_stream.write_all(content, null);
         }
         catch (e) { logError(e); }
+    },
+
+    show_view__no_todo_file: function () {
+        this.panel_item.set_mode('icon');
+        this.panel_item.actor.remove_style_class_name('done');
+
+        this.view_manager.show_view({
+            view_name      : G.View.NO_TODO_FILE,
+            actors         : [this.no_todo_file_msg.actor],
+            focused_actor  : this.no_todo_file_msg.label,
+            close_callback : () => { this.no_todo_file_msg.actor.hide(); },
+        });
+    },
+
+    show_view__loading: function () {
+        this.panel_item.set_mode('icon');
+        this.panel_item.actor.remove_style_class_name('done');
+        this.panel_item.icon.icon_name = 'timepp-todo-loading-symbolic';
+
+        this.view_manager.show_view({
+            view_name      : G.View.LOADING,
+            actors         : [this.loading_msg.actor],
+            focused_actor  : this.loading_msg.label,
+            close_callback : () => {
+                this.loading_msg.actor.hide();
+                this.panel_item.icon.icon_name = 'timepp-todo-symbolic';
+                this._toggle_panel_item_mode();
+            },
+        });
+    },
+
+    show_view__default: function () {
+        this.view_manager.show_view({
+            view_name      : G.View.DEFAULT,
+            actors         : [this.header.actor, this.tasks_scroll_wrapper],
+            focused_actor  : this.add_task_button,
+            close_callback : () => {
+                this.header.actor.hide();
+                this.tasks_scroll_wrapper.hide();
+            },
+        });
+    },
+
+    show_view__clear_completed: function () {
+        let box = new VIEW_CLEAR.ClearCompletedTasks(this.ext, this);
+
+        this.view_manager.show_view({
+            view_name      : G.View.CLEAR,
+            actors         : [box.actor],
+            focused_actor  : box.button_cancel,
+            close_callback : () => { box.actor.destroy(); },
+        });
+
+        box.connect('delete-all', () => {
+            let incompleted_tasks = [];
+
+            for (let i = 0, len = this.tasks.length; i < len; i++) {
+                if (!this.tasks[i].completed || this.tasks[i].rec_str)
+                    incompleted_tasks.push(this.tasks[i]);
+            }
+
+            this.tasks = incompleted_tasks;
+            this.on_tasks_changed();
+            this.write_tasks_to_file();
+            this.show_view__default();
+        });
+
+        box.connect('archive-all', () => {
+            let completed_tasks   = [];
+            let incompleted_tasks = [];
+
+            for (let i = 0, len = this.tasks.length; i < len; i++) {
+                if (!this.tasks[i].completed || this.tasks[i].rec_str)
+                    incompleted_tasks.push(this.tasks[i]);
+                else
+                    completed_tasks.push(this.tasks[i]);
+            }
+
+            this.archive_tasks(completed_tasks);
+            this.tasks = incompleted_tasks;
+            this.on_tasks_changed();
+            this.write_tasks_to_file();
+            this.show_view__default();
+        });
+
+        box.connect('cancel', () => {
+            this.show_view__default();
+        });
+    },
+
+    show_view__time_tracker_stats: function (task) {
+        this.ext.menu.close();
+        this.stats_view.open();
+
+        if (this.time_tracker.stats_data.size === 0)
+            this.stats_view.show_mode__banner(_('Loading...'));
+
+        Mainloop.idle_add(() => {
+            let stats = this.time_tracker.get_stats();
+
+            if (! stats) {
+                this.stats_view.show_mode__banner(_('Nothing found.'));
+            }
+            else {
+                this.stats_view.set_stats(...stats);
+
+                let d = new Date();
+
+                if (task) {
+                    this.stats_view.show_mode__single(
+                        d.getFullYear(), d.getMonth(), task.task_str);
+                }
+                else {
+                    this.stats_view.show_mode__global(G.date_yyyymmdd(d));
+                }
+            }
+        });
+    },
+
+    show_view__search: function () {
+        if (this.add_tasks_to_menu_mainloop_id) {
+            Mainloop.source_remove(this.add_tasks_to_menu_mainloop_id);
+            this.add_tasks_to_menu_mainloop_id = null;
+        }
+
+        this.view_manager.show_view({
+            view_name      : G.View.SEARCH,
+            focused_actor  : this.search_entry,
+            actors         : [
+                this.search_entry_bin.actor,
+                this.tasks_scroll_wrapper
+            ],
+            close_callback : () => {
+                this.search_entry.set_text('');
+                this.search_dictionary.clear();
+                this.search_entry_bin.actor.hide();
+                this.tasks_scroll_wrapper.hide();
+                this.add_tasks_to_menu(true);
+            },
+        });
+
+        // We always search all tasks no matter what filters are active, so
+        // add all tasks to the popup menu.
+        this.add_tasks_to_menu(true, true);
+    },
+
+    show_view__file_switcher: function () {
+        let filter_switcher =
+            new VIEW_FILE_SWITCHER.TodoFileSwitcher(this.ext, this);
+
+        this.view_manager.show_view({
+            view_name      : G.View.FILE_SWITCH,
+            actors         : [filter_switcher.actor],
+            focused_actor  : filter_switcher.entry.entry,
+            close_callback : () => { filter_switcher.actor.destroy(); },
+        });
+
+        filter_switcher.connect('switch', (_, name) => {
+            let todo_files = this.settings.get_value('todo-files').deep_unpack();
+            let current;
+
+            for (let i = 0, len = todo_files.length; i < len; i++) {
+                if (todo_files[i].name === name) {
+                    current = todo_files[i];
+                    break;
+                }
+            }
+
+            this.settings.set_value('todo-current',
+                                    GLib.Variant.new('a{ss}', current));
+        });
+
+        filter_switcher.connect('close', () => {
+            this.show_view__default();
+        });
+    },
+
+    show_view__sort: function () {
+        let sort_window = new VIEW_SORT.TaskSortWindow(this.ext, this);
+
+        this.view_manager.show_view({
+            view_name      : G.View.SELECT_SORT,
+            actors         : [sort_window.actor],
+            focused_actor  : sort_window.button_ok,
+            close_callback : () => { sort_window.actor.destroy(); },
+        });
+
+        sort_window.connect('update-sort', (_, new_sort_obj) => {
+            this.cache.sort = new_sort_obj;
+            this.store_cache();
+            this.sort_tasks();
+            this.show_view__default();
+        });
+    },
+
+    show_view__filters: function () {
+        let filters_window = new VIEW_FILTERS.TaskFiltersWindow(this.ext, this);
+
+        this.view_manager.show_view({
+            view_name      : G.View.SELECT_FILTER,
+            actors         : [filters_window.actor],
+            focused_actor  : filters_window.button_ok,
+            close_callback : () => { filters_window.actor.destroy(); },
+        });
+
+        filters_window.connect('filters-updated', (_, filters) => {
+            this.cache.filters = filters;
+            this.store_cache();
+            this._update_filter_icon();
+            this.add_tasks_to_menu(true);
+            this.show_view__default();
+        });
+    },
+
+    show_view__task_editor: function (task) {
+        let editor = new VIEW_TASK_EDITOR.TaskEditor(this.ext, this, task);
+
+        this.view_manager.show_view({
+            view_name      : G.View.EDITOR,
+            actors         : [editor.actor],
+            focused_actor  : editor.entry.entry,
+            close_callback : () => { editor.actor.destroy(); },
+        });
+
+        if (task) this.time_tracker.stop_tracking(task);
+
+        editor.connect('add-task', (_, task_str) => {
+            this.tasks.unshift(new TASK.TaskItem(this.ext, this, task_str, true));
+            this.on_tasks_changed();
+            this.write_tasks_to_file();
+            this.show_view__default();
+        });
+
+        editor.connect('delete-task', (_, do_archive) => {
+            if (do_archive) this.archive_tasks([task]);
+
+            for (let i = 0, len = this.tasks.length; i < len; i++) {
+                if (this.tasks[i] === task) {
+                    this.tasks.splice(i, 1);
+                    break;
+                }
+            }
+
+            this.on_tasks_changed();
+            this.write_tasks_to_file();
+            this.show_view__default();
+        });
+
+        editor.connect('edit-task', (_, task_str) => {
+            task.reset(true, task_str);
+            this.on_tasks_changed();
+            this.write_tasks_to_file();
+            this.show_view__default();
+        });
+
+        editor.connect('cancel', () => {
+            this.show_view__default();
+        });
     },
 
     // A predicate used to determine whether a task inside the this.tasks array

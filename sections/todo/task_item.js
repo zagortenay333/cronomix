@@ -176,7 +176,7 @@ var TaskItem = new Lang.Class({
         });
     },
 
-    reset: function (do_check_recurrence = true, task_str) {
+    reset: function (do_check_recurrence, task_str) {
         if (task_str) {
             this.delegate.time_tracker.update_record_name(this.task_str, task_str);
             this.task_str = task_str;
