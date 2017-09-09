@@ -350,7 +350,7 @@ date, time spent (hh:mm), type ('++' = project, '()' = task), task or project
 
 ### DBus API
 
-This extension comes with a dbus api. Check out the [dbus](dbus) for info on
+This extension comes with a dbus api. Check out the [dbus dir](dbus) for info on
 what you can do.
 
 There are also some example scripts that might come in handy. :smile:
