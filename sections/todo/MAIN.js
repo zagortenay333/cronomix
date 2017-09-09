@@ -512,7 +512,7 @@ var Todo = new Lang.Class({
     },
 
     disable_section: function () {
-        this.sigm.clear();
+        this.sigm.disconnect_all();
         this.keym.disable_all();
         this.tasks          = [];
         this.tasks_viewport = [];

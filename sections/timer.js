@@ -238,7 +238,7 @@ var Timer = new Lang.Class({
         this.dbus_impl.unexport();
         this.stop();
         this._store_cache();
-        this.sigm.clear();
+        this.sigm.disconnect_all();
         this.keym.disable_all();
 
         if (this.fullscreen) {

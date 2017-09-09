@@ -243,7 +243,7 @@ var Alarms = new Lang.Class({
 
         this.alarms_scroll_content.destroy_all_children();
         this._store_cache();
-        this.sigm.clear();
+        this.sigm.disconnect_all();
         this.keym.disable_all();
 
         if (this.fullscreen) {

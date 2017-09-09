@@ -276,7 +276,7 @@ var Stopwatch = new Lang.Class({
         if (this.cache.state === StopwatchState.RUNNING) this.stop();
         this.dbus_impl.unexport();
         this._store_cache();
-        this.sigm.clear();
+        this.sigm.disconnect_all();
         this.keym.disable_all();
 
         if (this.fullscreen) {
