@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-04 20:21+0200\n"
+"POT-Creation-Date: 2017-09-09 13:13+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -28,16 +28,16 @@ msgstr ""
 
 #: ../prefs.js:133 ../sections/todo/view__clear_tasks.js:93
 #: ../sections/todo/view__stats.js:219
-#: ../sections/todo/view__task_editor.js:127 ../sections/timer.js:646
-#: ../sections/pomodoro.js:771 ../sections/alarms.js:619
+#: ../sections/todo/view__task_editor.js:127 ../sections/timer.js:661
+#: ../sections/pomodoro.js:805 ../sections/alarms.js:622
 msgid "Cancel"
 msgstr ""
 
 #: ../prefs.js:134 ../sections/todo/view__clear_tasks.js:96
 #: ../sections/todo/view__sort.js:78 ../sections/todo/view__filters.js:165
 #: ../sections/todo/view__stats.js:216
-#: ../sections/todo/view__task_editor.js:130 ../sections/timer.js:647
-#: ../sections/pomodoro.js:770 ../sections/alarms.js:620
+#: ../sections/todo/view__task_editor.js:130 ../sections/timer.js:662
+#: ../sections/pomodoro.js:804 ../sections/alarms.js:623
 msgid "Ok"
 msgstr ""
 
@@ -46,9 +46,9 @@ msgid "Unique name"
 msgstr ""
 
 #: ../prefs.ui:57 ../prefs.ui:1073 ../prefs.ui:1123 ../prefs.ui:1422
-#: ../prefs.ui:1472 ../prefs.ui:1979 ../prefs.ui:2029 ../prefs.ui:2389
-#: ../prefs.ui:2854 ../prefs.ui:2904 ../prefs.ui:2942 ../prefs.ui:2992
-#: ../prefs.ui:3048
+#: ../prefs.ui:1472 ../prefs.ui:1921 ../prefs.ui:1971 ../prefs.ui:2331
+#: ../prefs.ui:2796 ../prefs.ui:2846 ../prefs.ui:2884 ../prefs.ui:2934
+#: ../prefs.ui:2990
 msgid "not set"
 msgstr ""
 
@@ -88,22 +88,22 @@ msgstr ""
 msgid "Enabled Sections"
 msgstr ""
 
-#: ../prefs.ui:482 ../prefs.ui:1162 ../sections/timer.js:120
-#: ../sections/timer.js:333
+#: ../prefs.ui:482 ../prefs.ui:1162 ../sections/timer.js:132
+#: ../sections/timer.js:341
 msgid "Timer"
 msgstr ""
 
-#: ../prefs.ui:526 ../prefs.ui:1511 ../sections/stopwatch.js:130
-#: ../sections/stopwatch.js:398
+#: ../prefs.ui:526 ../prefs.ui:1511 ../sections/stopwatch.js:142
+#: ../sections/stopwatch.js:411
 msgid "Stopwatch"
 msgstr ""
 
-#: ../prefs.ui:570 ../prefs.ui:2068 ../sections/pomodoro.js:117
-#: ../sections/pomodoro.js:300 ../sections/pomodoro.js:406
+#: ../prefs.ui:570 ../prefs.ui:2010 ../sections/pomodoro.js:131
+#: ../sections/pomodoro.js:312 ../sections/pomodoro.js:406
 msgid "Pomodoro"
 msgstr ""
 
-#: ../prefs.ui:614 ../prefs.ui:2428
+#: ../prefs.ui:614 ../prefs.ui:2370
 msgid "Alarms"
 msgstr ""
 
@@ -115,8 +115,8 @@ msgstr ""
 msgid "General"
 msgstr ""
 
-#: ../prefs.ui:767 ../prefs.ui:1222 ../prefs.ui:1571 ../prefs.ui:2128
-#: ../prefs.ui:2488
+#: ../prefs.ui:767 ../prefs.ui:1222 ../prefs.ui:1571 ../prefs.ui:2070
+#: ../prefs.ui:2430
 msgid "Show in separate menu"
 msgstr ""
 
@@ -124,51 +124,51 @@ msgstr ""
 msgid "Show seconds"
 msgstr ""
 
-#: ../prefs.ui:855 ../prefs.ui:1316 ../prefs.ui:1659 ../prefs.ui:2532
+#: ../prefs.ui:855 ../prefs.ui:1316 ../prefs.ui:1659 ../prefs.ui:2474
 msgid "Panel Item Mode"
 msgstr ""
 
-#: ../prefs.ui:869 ../prefs.ui:1330 ../prefs.ui:1673 ../prefs.ui:2546
+#: ../prefs.ui:869 ../prefs.ui:1330 ../prefs.ui:1673 ../prefs.ui:2488
 msgid "Icon only"
 msgstr ""
 
-#: ../prefs.ui:870 ../prefs.ui:1331 ../prefs.ui:1674 ../prefs.ui:2547
+#: ../prefs.ui:870 ../prefs.ui:1331 ../prefs.ui:1674 ../prefs.ui:2489
 msgid "Text only"
 msgstr ""
 
-#: ../prefs.ui:871 ../prefs.ui:1332 ../prefs.ui:1675 ../prefs.ui:2548
+#: ../prefs.ui:871 ../prefs.ui:1332 ../prefs.ui:1675 ../prefs.ui:2490
 msgid "Icon and Text"
 msgstr ""
 
-#: ../prefs.ui:906 ../prefs.ui:1710 ../prefs.ui:2222
+#: ../prefs.ui:906 ../prefs.ui:1710 ../prefs.ui:2164
 msgid "Notification sound"
 msgstr ""
 
-#: ../prefs.ui:968 ../prefs.ui:1772 ../prefs.ui:2284
+#: ../prefs.ui:968 ../prefs.ui:1772 ../prefs.ui:2226
 msgid "Notification style"
 msgstr ""
 
-#: ../prefs.ui:982 ../prefs.ui:1786 ../prefs.ui:2298
+#: ../prefs.ui:982 ../prefs.ui:1786 ../prefs.ui:2240
 msgid "Standard"
 msgstr ""
 
-#: ../prefs.ui:983 ../prefs.ui:1787 ../prefs.ui:2299
+#: ../prefs.ui:983 ../prefs.ui:1787 ../prefs.ui:2241
 msgid "Fullscreen"
 msgstr ""
 
-#: ../prefs.ui:1015 ../prefs.ui:1364 ../prefs.ui:1921 ../prefs.ui:2331
-#: ../prefs.ui:2794
+#: ../prefs.ui:1015 ../prefs.ui:1364 ../prefs.ui:1863 ../prefs.ui:2273
+#: ../prefs.ui:2736
 msgid "Keyboard shortcuts"
 msgstr ""
 
-#: ../prefs.ui:1056 ../prefs.ui:1405 ../prefs.ui:1962 ../prefs.ui:2372
-#: ../prefs.ui:2837
+#: ../prefs.ui:1056 ../prefs.ui:1405 ../prefs.ui:1904 ../prefs.ui:2314
+#: ../prefs.ui:2779
 msgid "Open this section"
 msgstr ""
 
 #: ../prefs.ui:1068 ../prefs.ui:1118 ../prefs.ui:1417 ../prefs.ui:1467
-#: ../prefs.ui:1974 ../prefs.ui:2024 ../prefs.ui:2384 ../prefs.ui:2849
-#: ../prefs.ui:2899 ../prefs.ui:2937 ../prefs.ui:2987 ../prefs.ui:3043
+#: ../prefs.ui:1916 ../prefs.ui:1966 ../prefs.ui:2326 ../prefs.ui:2791
+#: ../prefs.ui:2841 ../prefs.ui:2879 ../prefs.ui:2929 ../prefs.ui:2985
 msgid ""
 "Examples:\n"
 "<super><ctrl><alt><shift>t\n"
@@ -176,7 +176,7 @@ msgid ""
 "F3"
 msgstr ""
 
-#: ../prefs.ui:1106 ../prefs.ui:1455 ../prefs.ui:2012
+#: ../prefs.ui:1106 ../prefs.ui:1455 ../prefs.ui:1954
 msgid "Open in fullscreen"
 msgstr ""
 
@@ -200,62 +200,58 @@ msgstr ""
 msgid "Stop time tracking when pomo is paused"
 msgstr ""
 
-#: ../prefs.ui:1866
-msgid "Execute custom script when pomo pauses/starts"
-msgstr ""
-
-#: ../prefs.ui:2172
+#: ../prefs.ui:2114
 msgid "Snooze duration (sec)"
 msgstr ""
 
-#: ../prefs.ui:2600
+#: ../prefs.ui:2542
 msgid "Task width (px)"
 msgstr ""
 
-#: ../prefs.ui:2630
+#: ../prefs.ui:2572
 msgid "Todo files"
 msgstr ""
 
-#: ../prefs.ui:2887
+#: ../prefs.ui:2829
 msgid "Open this section to add task"
 msgstr ""
 
-#: ../prefs.ui:2955
+#: ../prefs.ui:2897
 msgid "Open this section to search tasks"
 msgstr ""
 
-#: ../prefs.ui:3005
+#: ../prefs.ui:2947
 msgid "Open the stats view"
 msgstr ""
 
-#: ../prefs.ui:3061
+#: ../prefs.ui:3003
 msgid "Open this section to switch todo files"
 msgstr ""
 
-#: ../prefs.ui:3101
+#: ../prefs.ui:3043
 msgid "Todo / Time Tracker"
 msgstr ""
 
-#: ../sections/todo/MAIN.js:255 ../sections/todo/MAIN.js:852
+#: ../sections/todo/MAIN.js:256 ../sections/todo/MAIN.js:853
 msgid "Loading..."
 msgstr ""
 
-#: ../sections/todo/MAIN.js:265
+#: ../sections/todo/MAIN.js:266
 msgid "Select todo file in settings..."
 msgstr ""
 
-#: ../sections/todo/MAIN.js:290
+#: ../sections/todo/MAIN.js:291
 msgid "Add New Task..."
 msgstr ""
 
-#: ../sections/todo/MAIN.js:699
+#: ../sections/todo/MAIN.js:700
 #, javascript-format
 msgid "%d task has recurred"
 msgid_plural "%d tasks have recurred"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../sections/todo/MAIN.js:858
+#: ../sections/todo/MAIN.js:859
 msgid "Nothing found."
 msgstr ""
 
@@ -299,7 +295,7 @@ msgid_plural "in %d days"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../sections/todo/task_item.js:896
+#: ../sections/todo/task_item.js:877
 msgid "File or dir not found."
 msgstr ""
 
@@ -377,8 +373,8 @@ msgstr[1] ""
 msgid "Invert filters"
 msgstr ""
 
-#: ../sections/todo/view__filters.js:164 ../sections/stopwatch.js:156
-#: ../sections/stopwatch.js:610
+#: ../sections/todo/view__filters.js:164 ../sections/stopwatch.js:168
+#: ../sections/stopwatch.js:633
 msgid "Reset"
 msgstr ""
 
@@ -481,7 +477,7 @@ msgstr ""
 msgid "Task..."
 msgstr ""
 
-#: ../sections/todo/view__task_editor.js:114 ../sections/alarms.js:611
+#: ../sections/todo/view__task_editor.js:114 ../sections/alarms.js:614
 msgid "Delete"
 msgstr ""
 
@@ -489,17 +485,18 @@ msgstr ""
 msgid "Archive"
 msgstr ""
 
-#: ../sections/stopwatch.js:157 ../sections/stopwatch.js:611
+#: ../sections/stopwatch.js:169 ../sections/stopwatch.js:634
 msgid "Lap"
 msgstr ""
 
-#: ../sections/stopwatch.js:158 ../sections/stopwatch.js:613
-#: ../sections/pomodoro.js:162 ../sections/pomodoro.js:835
+#: ../sections/stopwatch.js:170 ../sections/stopwatch.js:636
+#: ../sections/pomodoro.js:176 ../sections/pomodoro.js:872
 msgid "Start"
 msgstr ""
 
-#: ../sections/stopwatch.js:159 ../sections/stopwatch.js:612
-msgid "Pause"
+#: ../sections/stopwatch.js:171 ../sections/stopwatch.js:635
+#: ../sections/pomodoro.js:177 ../sections/pomodoro.js:873
+msgid "Stop"
 msgstr ""
 
 #: ../sections/context_menu.js:38
@@ -518,77 +515,73 @@ msgstr ""
 msgid "Help with translations"
 msgstr ""
 
-#: ../sections/timer.js:39
+#: ../sections/timer.js:41
 msgid "Timer Expired!"
 msgstr ""
 
-#: ../sections/timer.js:624
+#: ../sections/timer.js:639
 msgid "Timer message..."
 msgstr ""
 
-#: ../sections/pomodoro.js:36
-msgid "Start working!"
+#: ../sections/pomodoro.js:39
+msgid "Work!"
 msgstr ""
 
-#: ../sections/pomodoro.js:37
-msgid "Take long break!"
+#: ../sections/pomodoro.js:40
+msgid "Long Break!"
 msgstr ""
 
-#: ../sections/pomodoro.js:38
-msgid "Take short break!"
+#: ../sections/pomodoro.js:41
+msgid "Short break!"
 msgstr ""
 
-#: ../sections/pomodoro.js:160 ../sections/pomodoro.js:833
+#: ../sections/pomodoro.js:174 ../sections/pomodoro.js:870
 msgid "New Pomo"
 msgstr ""
 
-#: ../sections/pomodoro.js:161 ../sections/pomodoro.js:834
+#: ../sections/pomodoro.js:175 ../sections/pomodoro.js:871
 msgid "Take Break"
 msgstr ""
 
-#: ../sections/pomodoro.js:163 ../sections/pomodoro.js:836
-msgid "Stop"
-msgstr ""
-
-#: ../sections/pomodoro.js:694
+#: ../sections/pomodoro.js:715
 msgid "Clear all pomodoros?"
 msgstr ""
 
-#: ../sections/pomodoro.js:710
-msgid "Pomodoro (min):"
+#: ../sections/pomodoro.js:731
+msgid "Pomodoro (min:sec):"
 msgstr ""
 
-#: ../sections/pomodoro.js:725
-msgid "Short break (min):"
+#: ../sections/pomodoro.js:750
+msgid "Short break (min:sec):"
 msgstr ""
 
-#: ../sections/pomodoro.js:740
-msgid "Long break (min):"
+#: ../sections/pomodoro.js:770
+msgid "Long break (min:sec):"
 msgstr ""
 
-#: ../sections/pomodoro.js:755
+#: ../sections/pomodoro.js:789
 msgid "Num of pomos until long break:"
 msgstr ""
 
-#: ../sections/alarms.js:148
+#: ../sections/alarms.js:151
 msgid "Add New Alarm..."
 msgstr ""
 
 #. TRANSLATORS: %s is a time string in the format HH:MM (e.g., 13:44)
-#: ../sections/alarms.js:472 ../sections/alarms.js:889
+#: ../sections/alarms.js:472 ../sections/alarms.js:892
 #, javascript-format
 msgid "Alarm at %s"
 msgstr ""
 
-#: ../sections/alarms.js:486 ../sections/alarms.js:854
+#: ../sections/alarms.js:486 ../sections/alarms.js:857
 msgid "Snooze"
 msgstr ""
 
-#: ../sections/alarms.js:583
+#: ../sections/alarms.js:586
 msgid "Alarm Message..."
 msgstr ""
 
-#: ../sections/alarms.js:912
+#: ../sections/alarms.js:915
 #, javascript-format
 msgid "%d alarm went off!"
 msgid_plural "%d alarms went off!"

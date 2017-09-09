@@ -705,37 +705,18 @@ var TaskItem = new Lang.Class({
 
 
             // listen
-            this.stat_icon_bin.connect('button-press-event', () => {
+            this.delegate.sigm.connect_press(this.stat_icon_bin, () => {
                 this.delegate.show_view__time_tracker_stats(this);
                 Mainloop.idle_add(() => { this._hide_header_icons(); });
                 return Clutter.EVENT_STOP;
             });
-            this.stat_icon_bin.connect('key-press-event', (_, event) => {
-                if (event.get_key_symbol() === Clutter.Return) {
-                    this.delegate.show_view__time_tracker_stats(this);
-                    Mainloop.idle_add(() => { this._hide_header_icons(); });
-                    return Clutter.EVENT_STOP;
-                }
-            });
-            this.edit_icon_bin.connect('button-press-event', () => {
+            this.delegate.sigm.connect_press(this.edit_icon_bin, () => {
                 this.delegate.show_view__task_editor(this);
                 Mainloop.idle_add(() => { this._hide_header_icons(); });
             });
-            this.edit_icon_bin.connect('key-press-event', (_, event) => {
-                if (event.get_key_symbol() === Clutter.Return) {
-                    this.delegate.show_view__task_editor(this);
-                    Mainloop.idle_add(() => { this._hide_header_icons(); });
-                }
-            });
-            this.tracker_icon_bin.connect('button-press-event', () => {
+            this.delegate.sigm.connect_press(this.tracker_icon_bin, () => {
                 this.delegate.time_tracker.toggle_tracking(this);
                 return Clutter.EVENT_STOP;
-            });
-            this.tracker_icon_bin.connect('key-press-event', (_, event) => {
-                if (event.get_key_symbol() === Clutter.Return) {
-                    this.delegate.time_tracker.toggle_tracking(this);
-                    return Clutter.EVENT_STOP;
-                }
             });
         }
 

@@ -190,16 +190,6 @@
             <description>Stop time tracking when pomo is paused</description>
         </key>
 
-        <key name="pomodoro-exec-script" type="b">
-            <default>false</default>
-            <description>Execute custom script when pomo pauses/starts</description>
-        </key>
-
-        <key name="pomodoro-script-path" type="s">
-            <default>""</default>
-            <description>Path to custom script</description>
-        </key>
-
         <key name="pomodoro-keybinding-open" type="as">
             <default><![CDATA[[""]]]></default>
             <description>Open this section</description>

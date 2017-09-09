@@ -61,6 +61,7 @@ var Todo = new Lang.Class({
         this.section_enabled = this.settings.get_boolean('todo-enabled');
         this.separate_menu   = this.settings.get_boolean('todo-separate-menu');
 
+
         this.cache_file   = null;
         this.cache        = null;
         this.sigm         = new SIG_MANAGER.SignalManager();
@@ -406,17 +407,17 @@ var Todo = new Lang.Class({
 
             this.ext.open_menu(this);
         });
-        this.sigm.connect(this.panel_item, 'left-click', () => { this.ext.toggle_menu(this); });
-        this.sigm.connect(this.panel_item, 'right-click', () => { this.ext.toggle_context_menu(this); });
-        this.sigm.connect(this.add_task_button, 'clicked', () => { this.show_view__task_editor(); });
-        this.sigm.connect(this.filter_button, 'clicked', () => { this.show_view__filters(); });
-        this.sigm.connect(this.sort_button, 'clicked', () => { this.show_view__sort(); });
-        this.sigm.connect(this.file_switcher_button, 'clicked', () => { this.show_view__file_switcher(); });
-        this.sigm.connect(this.search_button, 'clicked', () => { this.show_view__search(); });
-        this.sigm.connect(this.stats_button, 'clicked', () => { this.show_view__time_tracker_stats(); });
-        this.sigm.connect(this.clear_button, 'clicked', () => { this.show_view__clear_completed(); });
-        this.sigm.connect(this.search_entry, 'secondary-icon-clicked', () => { this.show_view__default(); });
-        this.sigm.connect(this.actor, 'style-changed', () => { this._update_markup_colors(); });
+        this.sigm.connect(this.panel_item, 'left-click', () => this.ext.toggle_menu(this));
+        this.sigm.connect(this.panel_item, 'right-click', () => this.ext.toggle_context_menu(this));
+        this.sigm.connect_press(this.add_task_button, () => this.show_view__task_editor());
+        this.sigm.connect_press(this.filter_button, () => this.show_view__filters());
+        this.sigm.connect_press(this.sort_button, () => this.show_view__sort());
+        this.sigm.connect_press(this.file_switcher_button, () => this.show_view__file_switcher());
+        this.sigm.connect_press(this.search_button, () => this.show_view__search());
+        this.sigm.connect_press(this.stats_button, () => this.show_view__time_tracker_stats());
+        this.sigm.connect_press(this.clear_button, () => this.show_view__clear_completed());
+        this.sigm.connect(this.search_entry, 'secondary-icon-clicked', () => this.show_view__default());
+        this.sigm.connect(this.actor, 'style-changed', () => this._update_markup_colors());
         this.sigm.connect(this.search_entry.clutter_text, 'text-changed', () => {
             Mainloop.idle_add(() => this._search());
         });
@@ -511,7 +512,7 @@ var Todo = new Lang.Class({
     },
 
     disable_section: function () {
-        this.sigm.disconnect_all();
+        this.sigm.clear();
         this.keym.disable_all();
         this.tasks          = [];
         this.tasks_viewport = [];

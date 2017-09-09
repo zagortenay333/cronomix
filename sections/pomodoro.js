@@ -1,21 +1,20 @@
-const St             = imports.gi.St;
-const Gio            = imports.gi.Gio
-const GLib           = imports.gi.GLib;
-const Meta           = imports.gi.Meta;
-const Shell          = imports.gi.Shell;
-const Clutter        = imports.gi.Clutter;
-const MessageTray    = imports.ui.messageTray;
-const Main           = imports.ui.main;
-const CheckBox       = imports.ui.checkBox;
-const PopupMenu      = imports.ui.popupMenu;
-const Util           = imports.misc.util;
-const Lang           = imports.lang;
-const Signals        = imports.signals;
-const Mainloop       = imports.mainloop;
-const ExtensionUtils = imports.misc.extensionUtils;
+const St          = imports.gi.St;
+const Gio         = imports.gi.Gio
+const GLib        = imports.gi.GLib;
+const Meta        = imports.gi.Meta;
+const Shell       = imports.gi.Shell;
+const Clutter     = imports.gi.Clutter;
+const MessageTray = imports.ui.messageTray;
+const Main        = imports.ui.main;
+const CheckBox    = imports.ui.checkBox;
+const PopupMenu   = imports.ui.popupMenu;
+const Util        = imports.misc.util;
+const Lang        = imports.lang;
+const Signals     = imports.signals;
+const Mainloop    = imports.mainloop;
 
 
-const ME = ExtensionUtils.getCurrentExtension();
+const ME = imports.misc.extensionUtils.getCurrentExtension();
 
 
 const Gettext  = imports.gettext.domain(ME.metadata['gettext-domain']);
@@ -30,20 +29,25 @@ const PANEL_ITEM    = ME.imports.lib.panel_item;
 const NUM_PICKER    = ME.imports.lib.num_picker;
 
 
+const IFACE = `${ME.path}/dbus/pomodoro_iface.xml`;
+
+
 const CACHE_FILE = GLib.get_home_dir() +
                    '/.cache/timepp_gnome_shell_extension/timepp_pomodoro.json';
 
-const START_MSG       = _('Start working!');
-const LONG_BREAK_MSG  = _('Take long break!')
-const SHORT_BREAK_MSG = _('Take short break!')
+
+const START_MSG       = _('Work!');
+const LONG_BREAK_MSG  = _('Long Break!')
+const SHORT_BREAK_MSG = _('Short break!')
 
 
 const PomoState = {
-    POMO        : 'POMO',
-    SHORT_BREAK : 'SHORT_BREAK',
-    LONG_BREAK  : 'LONG_BREAK',
     STOPPED     : 'STOPPED',
+    POMO        : 'POMO',
+    LONG_BREAK  : 'LONG_BREAK',
+    SHORT_BREAK : 'SHORT_BREAK',
 };
+
 
 const NotifStyle = {
     STANDARD   : 0,
@@ -64,17 +68,27 @@ var Pomodoro = new Lang.Class({
         this.ext      = ext;
         this.settings = settings;
 
+
+        {
+            let [,xml,] = Gio.file_new_for_path(IFACE).load_contents(null);
+            xml = '' + xml;
+            this.dbus_impl = Gio.DBusExportedObject.wrapJSObject(xml, this);
+        }
+
+
         this.section_enabled  = this.settings.get_boolean('pomodoro-enabled');
         this.separate_menu    = this.settings.get_boolean('pomodoro-separate-menu');
         this.pomo_state       = PomoState.STOPPED;
-        this.timer_duration   = 0; // in microseconds
-        this.end_time         = 0; // used for computing elapsed time
+        this.clock            = 0; // seconds
+        this.end_time         = 0; // for computing elapsed time (microseconds)
         this.tic_mainloop_id  = null;
         this.cache_file       = null;
         this.cache            = null;
 
-        this.fullscreen = new PomodoroFullscreen(
-            this.ext, this, this.settings.get_int('pomodoro-fullscreen-monitor-pos'));
+
+        this.fullscreen = new PomodoroFullscreen(this.ext, this,
+            this.settings.get_int('pomodoro-fullscreen-monitor-pos'));
+
 
         this.sigm = new SIG_MANAGER.SignalManager();
         this.keym = new KEY_MANAGER.KeybindingManager(this.settings);
@@ -87,7 +101,7 @@ var Pomodoro = new Lang.Class({
              this.ext.open_menu(this);
         });
         this.keym.register('pomodoro-keybinding-open-fullscreen', () => {
-            this._show_fullscreen();
+            this.show_fullscreen();
         });
 
 
@@ -126,9 +140,9 @@ var Pomodoro = new Lang.Class({
         this.header.actor.add_child(this.phase_label);
 
 
-        // counter
-        this.pomo_counter_display = new St.Label({ y_align: Clutter.ActorAlign.CENTER, style_class: 'pomo-counter' });
-        this.header.actor.add_child(this.pomo_counter_display);
+        // clock
+        this.clock_label = new St.Label({ y_align: Clutter.ActorAlign.CENTER, style_class: 'pomo-counter' });
+        this.header.actor.add_child(this.clock_label);
 
 
         // icons
@@ -198,15 +212,15 @@ var Pomodoro = new Lang.Class({
 
             this.ext.open_menu(this);
         });
-        this.sigm.connect(this.panel_item, 'left-click', () => { this.ext.toggle_menu(this); });
-        this.sigm.connect(this.panel_item, 'right-click', () => { this.ext.toggle_context_menu(this); });
-        this.sigm.connect(this.panel_item, 'middle-click', Lang.bind(this, this.timer_toggle));
-        this.sigm.connect(this.settings_btn, 'clicked', Lang.bind(this, this._show_settings));
-        this.sigm.connect(this.fullscreen_btn, 'clicked', Lang.bind(this, this._show_fullscreen));
-        this.sigm.connect(this.button_start, 'clicked', Lang.bind(this, this.start));
-        this.sigm.connect(this.button_stop, 'clicked', Lang.bind(this, this.stop));
-        this.sigm.connect(this.button_new_pomo, 'clicked', Lang.bind(this, this.start_new_pomo));
-        this.sigm.connect(this.button_take_break, 'clicked', Lang.bind(this, this.take_break));
+        this.sigm.connect(this.panel_item, 'left-click', () => this.ext.toggle_menu(this));
+        this.sigm.connect(this.panel_item, 'right-click', () => this.ext.toggle_context_menu(this));
+        this.sigm.connect(this.panel_item, 'middle-click', () => this.timer_toggle());
+        this.sigm.connect_press(this.settings_btn, () => this._show_settings());
+        this.sigm.connect_press(this.fullscreen_btn, () => this.show_fullscreen());
+        this.sigm.connect_press(this.button_start, () => this.start_pomo());
+        this.sigm.connect_press(this.button_stop, () => this.stop());
+        this.sigm.connect_press(this.button_new_pomo, () => this.start_new_pomo());
+        this.sigm.connect_press(this.button_take_break, () => this.take_break());
 
 
         if (this.section_enabled) this.enable_section();
@@ -240,14 +254,10 @@ var Pomodoro = new Lang.Class({
     },
 
     disable_section: function () {
-        if (this.tic_mainloop_id) {
-            Mainloop.source_remove(this.tic_mainloop_id);
-            this.tic_mainloop_id = null;
-        }
-
+        this.dbus_impl.unexport();
         this.stop();
         this._store_cache();
-        this.sigm.disconnect_all();
+        this.sigm.clear();
         this.keym.disable_all();
 
         if (this.fullscreen) {
@@ -275,9 +285,9 @@ var Pomodoro = new Lang.Class({
                 this.cache = {
                     format_version  : cache_format_version,
                     pomo_counter    : 0,
-                    pomo_duration   : 1500000000, // microseconds
-                    short_break     : 300000000,
-                    long_break      : 900000000,
+                    pomo_duration   : 150, // seconds
+                    short_break     : 300, // seconds
+                    long_break      : 900, // seconds
                     long_break_rate : 4,
                 };
             }
@@ -287,14 +297,16 @@ var Pomodoro = new Lang.Class({
             return;
         }
 
-        let count_str = String(this.cache.pomo_counter);
-        this.pomo_counter_display.text = this.cache.pomo_counter ? count_str : '';
-        this.timer_duration = this.cache.pomo_duration;
+        let count_str         = String(this.cache.pomo_counter);
+        this.clock_label.text = this.cache.pomo_counter ? count_str : '';
+        this.clock            = this.cache.pomo_duration;
 
-        if (! this.fullscreen)
-            this.fullscreen = new PomodoroFullscreen(
-                this.ext, this, this.settings.get_int('pomodoro-fullscreen-monitor-pos'));
+        if (! this.fullscreen) {
+            this.fullscreen = new PomodoroFullscreen(this.ext, this,
+                this.settings.get_int('pomodoro-fullscreen-monitor-pos'));
+        }
 
+        this.dbus_impl.export(Gio.DBus.session, '/timepp/zagortenay333/Pomodoro');
         this.keym.enable_all();
         this._update_time_display();
         this.header.label.text = _('Pomodoro');
@@ -309,24 +321,22 @@ var Pomodoro = new Lang.Class({
     },
 
     _show_settings: function () {
-        let settings = new PomodoroSettings(this.cache);
+        let settings = new PomodoroSettings(this, this.cache);
         this.settings_container.add_actor(settings.actor);
         settings.button_cancel.grab_key_focus();
 
         this.header.actor.hide();
         this.btn_box_wrapper.actor.hide();
 
-        settings.connect('ok', (_, clear_pomo_counter) => {
-            this._store_cache();
+        settings.connect('ok', (_, res) => {
+            this.set_phase_durations(
+                res.pomo, res.short_break, res.long_break, res.break_rate);
 
             if (this.pomo_state === PomoState.STOPPED)
-                this.timer_duration = this.cache.pomo_duration;
+                this.clock = this.cache.pomo_duration;
 
-            if (clear_pomo_counter) {
-                this.cache.pomo_counter = 0;
-                this._store_cache();
-                this.pomo_counter_display.text = '';
-            }
+            if (res.clear_counter)
+                this.clear_pomo_counter();
 
             this.btn_box_wrapper.actor.show();
             this.button_box.grab_key_focus();
@@ -344,12 +354,35 @@ var Pomodoro = new Lang.Class({
         });
     },
 
-    _show_fullscreen: function () {
+    show_fullscreen: function () {
         this.ext.menu.close();
-        if (! this.fullscreen)
-            this.fullscreen = new PomodoroFullscreen(
-                this.ext, this, this.settings.get_int('pomodoro-fullscreen-monitor-pos'));
+
+        if (! this.fullscreen) {
+            this.fullscreen = new PomodoroFullscreen(this.ext, this,
+                this.settings.get_int('pomodoro-fullscreen-monitor-pos'));
+        }
+
         this.fullscreen.open();
+    },
+
+    clear_pomo_counter: function () {
+        this.cache.pomo_counter = 0;
+        this.clock_label.text = '';
+
+        this._store_cache();
+    },
+
+    // @pomo        : int (seconds)
+    // @short_break : int (seconds)
+    // @long_break  : int (seconds)
+    // @break_rate  : int (num of pomos until long break)
+    set_phase_durations: function (pomo, short_break, long_break, break_rate) {
+        this.cache.pomo_duration   = Math.max(1, pomo);
+        this.cache.short_break     = Math.max(1, short_break);
+        this.cache.long_break      = Math.max(1, long_break);
+        this.cache.long_break_rate = Math.max(1, break_rate);
+
+        this._store_cache();
     },
 
     _maybe_stop_tracking: function () {
@@ -359,61 +392,23 @@ var Pomodoro = new Lang.Class({
         this.emit('stop-time-tracking');
     },
 
-    _maybe_exec_custom_script: function () {
-        if (! this.settings.get_boolean('pomodoro-exec-script'))
-            return;
-
-        try {
-            let script_path = this.settings.get_string('pomodoro-script-path');
-
-            if (script_path) {
-                [script_path, ] = GLib.filename_from_uri(script_path, null);
-                Util.spawnCommandLine(script_path + " " + this.pomo_state);
-            }
-        }
-        catch (e) { logError(e); }
-    },
-
-    start: function () {
-        if (this.pomo_state !== PomoState.STOPPED) return;
-
+    stop: function () {
         if (this.tic_mainloop_id) {
             Mainloop.source_remove(this.tic_mainloop_id);
             this.tic_mainloop_id = null;
         }
 
-        this.pomo_state = PomoState.POMO;
-
-        this.end_time = GLib.get_monotonic_time() + this.timer_duration;
-
-        if (! this.fullscreen.is_open)
-            this.button_stop.grab_key_focus();
-
-        this._update_phase_label();
-        this._update_buttons();
-        this._update_panel_item();
-        this.fullscreen.on_start();
-        this._tic();
-        this._maybe_exec_custom_script();
-    },
-
-    stop: function () {
         if (this.pomo_state === PomoState.STOPPED)
             return;
 
         if (this.pomo_state !== PomoState.POMO) {
-            this.timer_duration    = this.cache.pomo_duration;
+            this.clock             = this.cache.pomo_duration;
             this.header.label.text = _('Pomodoro');
-        }
-
-        if (this.tic_mainloop_id) {
-            Mainloop.source_remove(this.tic_mainloop_id);
-            this.tic_mainloop_id = null;
         }
 
         this.pomo_state = PomoState.STOPPED;
 
-        if (! this.fullscreen.is_open)
+        if (!this.fullscreen.is_open && this.actor.visible)
             this.button_stop.grab_key_focus();
 
         this.fullscreen.on_stop();
@@ -424,26 +419,40 @@ var Pomodoro = new Lang.Class({
         if (this.settings.get_boolean('pomodoro-stop-tracking'))
             this.emit('stop-time-tracking');
 
-        this._maybe_exec_custom_script();
+        this.dbus_impl.emit_signal(
+            'pomo_state_changed', GLib.Variant.new('(s)', [this.pomo_state]));
+
         this._maybe_stop_tracking();
     },
 
     start_new_pomo: function () {
-        this.pomo_state = PomoState.POMO;
+        this.start_pomo(this.cache.pomo_duration);
+    },
 
+    // @time: int (seconds)
+    start_pomo: function (time = this.clock) {
         if (this.tic_mainloop_id) {
             Mainloop.source_remove(this.tic_mainloop_id);
             this.tic_mainloop_id = null;
         }
 
-        this.timer_duration = this.cache.pomo_duration;
-        this.end_time       = GLib.get_monotonic_time() + this.timer_duration;
-        this.fullscreen.on_new_pomo();
-        this._update_phase_label();
-        this._update_buttons();
+        this.pomo_state = PomoState.POMO;
+        this.end_time   = GLib.get_monotonic_time() + (time * 1000000);
+        this.clock      = time;
+
+        this.dbus_impl.emit_signal(
+            'pomo_state_changed', GLib.Variant.new('(s)', [this.pomo_state]));
+
+        this.fullscreen.on_start();
+        this._update_time_display();
         this._update_panel_item();
+        this._update_buttons();
+        this._update_phase_label();
+
+        if (!this.fullscreen.is_open && this.actor.visible)
+            this.button_stop.grab_key_focus();
+
         this._tic();
-        this._maybe_exec_custom_script();
     },
 
     take_break: function () {
@@ -455,35 +464,41 @@ var Pomodoro = new Lang.Class({
         if (this.cache.pomo_counter &&
             ((this.cache.pomo_counter % this.cache.long_break_rate) === 0)) {
 
-            this.pomo_state     = PomoState.LONG_BREAK;
-            this.timer_duration = this.cache.long_break;
+            this.pomo_state = PomoState.LONG_BREAK;
+            this.clock      = this.cache.long_break;
         }
         else {
-            this.pomo_state     = PomoState.SHORT_BREAK;
-            this.timer_duration = this.cache.short_break;
+            this.pomo_state = PomoState.SHORT_BREAK;
+            this.clock      = this.cache.short_break;
         }
 
+        this.end_time = GLib.get_monotonic_time() + (this.clock * 1000000);
+
         this.fullscreen.on_break();
-        this.end_time = GLib.get_monotonic_time() + this.timer_duration;
-        this._maybe_exec_custom_script();
-        this._maybe_stop_tracking();
+        this._update_time_display();
         this._update_phase_label();
         this._update_buttons();
         this._update_panel_item();
-        this._tic();
+        this._maybe_stop_tracking();
+
         if (this.settings.get_boolean('pomodoro-stop-tracking'))
             this.emit('stop-time-tracking');
+
+        this.dbus_impl.emit_signal(
+            'pomo_state_changed', GLib.Variant.new('(s)', [this.pomo_state]));
+
+        this._tic();
     },
 
     timer_toggle: function () {
         if (this.pomo_state === PomoState.STOPPED)
-            this.start();
+            this.start_pomo();
         else
             this.stop();
     },
 
     _update_time_display: function () {
-        let time = Math.floor(this.timer_duration / 1000000);
+        let time = this.clock;
 
         // If the seconds are not shown, we need to make the timer '1-indexed'
         // with respect to minutes. I.e., 00:00:34 becomes 00:01.
@@ -495,9 +510,7 @@ var Pomodoro = new Lang.Class({
             );
         }
         else {
-            if (this.timer_duration > 0 &&
-                this.timer_duration !== this.cache.pomo_duration) {
-
+            if (this.clock > 0 && this.clock !== this.cache.pomo_duration) {
                 time += 60;
             }
 
@@ -544,31 +557,36 @@ var Pomodoro = new Lang.Class({
     _update_buttons: function () {
         switch (this.pomo_state) {
             case PomoState.POMO:
-                this.button_start.visible      = false;
-                this.button_stop.visible       = true;
-                this.button_take_break.visible = true;
-                this.button_new_pomo.visible   = true;
+                this.button_start.visible                 = false;
+                this.button_stop.visible                  = true;
+                this.button_take_break.visible            = true;
+                this.button_new_pomo.visible              = true;
+
                 this.fullscreen.button_start.visible      = false;
                 this.fullscreen.button_stop.visible       = true;
                 this.fullscreen.button_take_break.visible = true;
                 this.fullscreen.button_new_pomo.visible   = true;
                 break;
+
             case PomoState.SHORT_BREAK:
             case PomoState.LONG_BREAK:
-                this.button_start.visible      = false;
-                this.button_stop.visible       = true;
-                this.button_take_break.visible = false;
-                this.button_new_pomo.visible   = true;
+                this.button_start.visible                 = false;
+                this.button_stop.visible                  = true;
+                this.button_take_break.visible            = false;
+                this.button_new_pomo.visible              = true;
+
                 this.fullscreen.button_start.visible      = false;
                 this.fullscreen.button_stop.visible       = true;
                 this.fullscreen.button_take_break.visible = false;
                 this.fullscreen.button_new_pomo.visible   = true;
                 break;
+
             case PomoState.STOPPED:
-                this.button_start.visible      = true;
-                this.button_stop.visible       = false;
-                this.button_take_break.visible = false;
-                this.button_new_pomo.visible   = false;
+                this.button_start.visible                 = true;
+                this.button_stop.visible                  = false;
+                this.button_take_break.visible            = false;
+                this.button_new_pomo.visible              = false;
+
                 this.fullscreen.button_start.visible      = true;
                 this.fullscreen.button_stop.visible       = false;
                 this.fullscreen.button_take_break.visible = false;
@@ -587,14 +605,14 @@ var Pomodoro = new Lang.Class({
             this.cache.pomo_counter += 1;
             this._store_cache();
             this.take_break();
-            this.pomo_counter_display.text = '' + this.cache.pomo_counter;
+            this.clock_label.text = '' + this.cache.pomo_counter;
         }
 
         this._send_notif();
     },
 
     _tic: function () {
-        if (this.timer_duration < 1000000) {
+        if (this.clock < 1) {
             this.tic_mainloop_id = null;
             this._timer_expired();
             return;
@@ -602,7 +620,8 @@ var Pomodoro = new Lang.Class({
 
         this._update_time_display();
 
-        this.timer_duration = this.end_time - GLib.get_monotonic_time();
+        this.clock =
+            Math.floor((this.end_time - GLib.get_monotonic_time()) / 1000000);
 
         this.tic_mainloop_id = Mainloop.timeout_add_seconds(1, () => {
             this._tic();
@@ -619,16 +638,13 @@ var Pomodoro = new Lang.Class({
             default: return;
         }
 
-        let sound_file = this.settings.get_string('pomodoro-sound-file-path');
+        if (this.settings.get_boolean('pomodoro-play-sound')) {
+            let sound_file = this.settings.get_string('pomodoro-sound-file-path');
 
-        if (sound_file) {
-            try {
-                [sound_file, ] = GLib.filename_from_uri(sound_file, null);
-            } catch (e) { logError(e); }
-        }
-
-        if (this.settings.get_boolean('pomodoro-play-sound') && sound_file) {
-            global.play_sound_file(0, sound_file, 'pomodoro-notif', null);
+            if (sound_file) {
+                [sound_file,] = GLib.filename_from_uri(sound_file, null);
+                global.play_sound_file(0, sound_file, '', null);
+            }
         }
 
         if (this.settings.get_enum('pomodoro-notif-style') === NotifStyle.FULLSCREEN) {
@@ -673,12 +689,17 @@ Signals.addSignalMethods(Pomodoro.prototype);
 // =====================================================================
 // @@@ Pomodoro settings
 //
+// @delegate   : obj (main section object)
+// @pomo_cache : obj (section cache object)
+//
 // @signals: 'ok', 'cancel'
 // =====================================================================
 const PomodoroSettings = new Lang.Class({
     Name: 'Timepp.PomodoroSettings',
 
-    _init: function(pomo_cache) {
+    _init: function(delegate, pomo_cache) {
+        this.delegate = delegate;
+
         this.actor = new St.BoxLayout({style_class: 'view-box'});
 
         this.content_box = new St.BoxLayout({vertical: true, style_class: 'view-box-content'});
@@ -707,13 +728,17 @@ const PomodoroSettings = new Lang.Class({
         this.pomo_duration = new St.BoxLayout({style_class: 'row'});
         this.content_box.add_actor(this.pomo_duration);
 
-        this.pomo_label = new St.Label({text: _('Pomodoro (min):'), y_align: Clutter.ActorAlign.CENTER});
+        this.pomo_label = new St.Label({text: _('Pomodoro (min:sec):'), y_align: Clutter.ActorAlign.CENTER});
         this.pomo_duration.add(this.pomo_label, {expand: true});
 
-        this.pomo_dur_mm_picker = new NUM_PICKER.NumPicker(1, null);
-        this.pomo_duration.add_actor(this.pomo_dur_mm_picker.actor);
+        this.pomo_dur_min_picker = new NUM_PICKER.NumPicker(0, null);
+        this.pomo_duration.add_actor(this.pomo_dur_min_picker.actor);
+        this.pomo_dur_min_picker.set_counter(
+            Math.floor(pomo_cache.pomo_duration / 60));
 
-        this.pomo_dur_mm_picker._set_counter(Math.floor(pomo_cache.pomo_duration / 60000000));
+        this.pomo_dur_sec_picker = new NUM_PICKER.NumPicker(1, null);
+        this.pomo_duration.add_actor(this.pomo_dur_sec_picker.actor);
+        this.pomo_dur_sec_picker.set_counter(pomo_cache.pomo_duration % 60);
 
 
         //
@@ -722,13 +747,18 @@ const PomodoroSettings = new Lang.Class({
         this.short_break = new St.BoxLayout({style_class: 'row'});
         this.content_box.add_actor(this.short_break);
 
-        this.short_break_label = new St.Label({text: _('Short break (min):'), y_align: Clutter.ActorAlign.CENTER});
+        this.short_break_label = new St.Label({text: _('Short break (min:sec):'), y_align: Clutter.ActorAlign.CENTER});
         this.short_break.add(this.short_break_label, {expand: true});
 
-        this.short_break_mm_picker = new NUM_PICKER.NumPicker(1, null);
-        this.short_break.add_actor(this.short_break_mm_picker.actor);
+        this.short_break_min_picker = new NUM_PICKER.NumPicker(0, null);
+        this.short_break.add_actor(this.short_break_min_picker.actor);
+        this.short_break_min_picker.set_counter(
+            Math.floor(pomo_cache.short_break / 60));
 
-        this.short_break_mm_picker._set_counter(Math.floor(pomo_cache.short_break / 60000000));
+        this.short_break_sec_picker = new NUM_PICKER.NumPicker(1, null);
+        this.short_break.add_actor(this.short_break_sec_picker.actor);
+        this.short_break_sec_picker.set_counter(pomo_cache.short_break % 60);
+
 
 
         //
@@ -737,13 +767,17 @@ const PomodoroSettings = new Lang.Class({
         this.long_break = new St.BoxLayout({style_class: 'row'});
         this.content_box.add_actor(this.long_break);
 
-        this.long_break_label = new St.Label({text: _('Long break (min):'), y_align: Clutter.ActorAlign.CENTER});
+        this.long_break_label = new St.Label({text: _('Long break (min:sec):'), y_align: Clutter.ActorAlign.CENTER});
         this.long_break.add(this.long_break_label, {expand: true});
 
-        this.long_break_mm_picker = new NUM_PICKER.NumPicker(1, null);
-        this.long_break.add_actor(this.long_break_mm_picker.actor);
+        this.long_break_min_picker = new NUM_PICKER.NumPicker(0, null);
+        this.long_break.add_actor(this.long_break_min_picker.actor);
+        this.long_break_min_picker.set_counter(
+            Math.floor(pomo_cache.long_break / 60));
 
-        this.long_break_mm_picker._set_counter(Math.floor(pomo_cache.long_break / 60000000));
+        this.long_break_sec_picker = new NUM_PICKER.NumPicker(1, null);
+        this.long_break.add_actor(this.long_break_sec_picker.actor);
+        this.long_break_sec_picker.set_counter(pomo_cache.long_break % 60);
 
 
         //
@@ -758,7 +792,7 @@ const PomodoroSettings = new Lang.Class({
         this.long_break_rate_picker = new NUM_PICKER.NumPicker(1, null);
         this.long_break_rate.add_actor(this.long_break_rate_picker.actor);
 
-        this.long_break_rate_picker._set_counter(pomo_cache.long_break_rate);
+        this.long_break_rate_picker.set_counter(pomo_cache.long_break_rate);
 
 
         //
@@ -778,14 +812,17 @@ const PomodoroSettings = new Lang.Class({
         // listen
         //
         this.button_ok.connect('clicked', () => {
-            pomo_cache.pomo_duration   = this.pomo_dur_mm_picker.counter * 60000000;
-            pomo_cache.short_break     = this.short_break_mm_picker.counter * 60000000;
-            pomo_cache.long_break      = this.long_break_mm_picker.counter * 60000000;
-            pomo_cache.long_break_rate = this.long_break_rate_picker.counter;
-
-            this.emit('ok', this.clear_item_checkbox.actor.checked);
+            this.emit('ok', {
+                clear_counter : this.clear_item_checkbox.actor.checked,
+                break_rate    : this.long_break_rate_picker.counter,
+                pomo          : this.pomo_dur_min_picker.counter * 60 +
+                                this.pomo_dur_sec_picker.counter,
+                short_break   : this.short_break_min_picker.counter * 60 +
+                                this.short_break_sec_picker.counter,
+                long_break    : this.long_break_min_picker.counter * 60 +
+                                this.long_break_sec_picker.counter,
+            });
         });
-
         this.button_cancel.connect('clicked', () => {
             this.emit('cancel');
         });
@@ -798,9 +835,9 @@ Signals.addSignalMethods(PomodoroSettings.prototype);
 // =====================================================================
 // @@@ Pomodoro fullscreen
 //
-// @ext       : ext class
-// @show_secs : bool
-// @monitor   : int
+// @ext      : obj (main extension object)
+// @delegate : obj (main section object)
+// @monitor  : int
 //
 // signals: 'monitor-changed'
 // =====================================================================

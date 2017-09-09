@@ -1,0 +1,23 @@
+<!DOCTYPE node PUBLIC
+'-//freedesktop//DTD D-BUS Object Introspection 1.0//EN'
+'http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd'>
+
+<node>
+    <interface name="timepp.zagortenay333.TimeTracker">
+
+        <method name="stop_all_tracking"/>
+
+        <!--
+           - The argument is the tracker id specified using the
+           - 'tracker_id:string' todo.txt extension.
+           -->
+        <method name="stop_tracking_by_id">
+            <arg name="tracker_id" type="s" direction="in"/>
+        </method>
+
+        <method name="start_tracking_by_id">
+            <arg name="tracker_id" type="s" direction="in"/>
+        </method>
+
+    </interface>
+</node>

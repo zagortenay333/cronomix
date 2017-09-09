@@ -27,13 +27,16 @@ const KEY_MANAGER   = ME.imports.lib.keybinding_manager;
 const PANEL_ITEM    = ME.imports.lib.panel_item;
 
 
+const IFACE = `${ME.path}/dbus/stopwatch_iface.xml`;
+
+
 const CACHE_FILE = GLib.get_home_dir() +
                    '/.cache/timepp_gnome_shell_extension/timepp_stopwatch.json';
 
 
 const StopwatchState = {
     RUNNING : 'RUNNING',
-    PAUSED  : 'PAUSED',
+    STOPPED  : 'STOPPED',
     RESET   : 'RESET',
 };
 
@@ -62,18 +65,27 @@ var Stopwatch = new Lang.Class({
         this.ext      = ext;
         this.settings = settings;
 
+
+        {
+            let [,xml,] = Gio.file_new_for_path(IFACE).load_contents(null);
+            xml = '' + xml;
+            this.dbus_impl = Gio.DBusExportedObject.wrapJSObject(xml, this);
+        }
+
+
         this.section_enabled = this.settings.get_boolean('stopwatch-enabled');
         this.separate_menu   = this.settings.get_boolean('stopwatch-separate-menu');
         this.clock_format    = this.settings.get_enum('stopwatch-clock-format');
-        this.start_time      = 0; // used for computing elapsed time
-        this.lap_count       = 0;
+        this.start_time      = 0; // for computing elapsed time (microseconds)
         this.cache_file      = null;
         this.cache           = null;
         this.tic_mainloop_id = null;
         this.time_backup_mainloop_id = null;
 
-        this.fullscreen = new StopwatchFullscreen(
-            this.ext, this, this.settings.get_int('stopwatch-fullscreen-monitor-pos'));
+
+        this.fullscreen = new StopwatchFullscreen(this.ext, this,
+            this.settings.get_int('stopwatch-fullscreen-monitor-pos'));
+
 
         this.sigm = new SIG_MANAGER.SignalManager();
         this.keym = new KEY_MANAGER.KeybindingManager(this.settings);
@@ -86,7 +98,7 @@ var Stopwatch = new Lang.Class({
              this.ext.open_menu(this);
         });
         this.keym.register('stopwatch-keybinding-open-fullscreen', () => {
-            this._show_fullscreen();
+            this.show_fullscreen();
         });
 
 
@@ -112,8 +124,8 @@ var Stopwatch = new Lang.Class({
                 this.fullscreen.set_banner_text('00:00:00')
                 break;
             case ClockFormat.H_M_S_CS:
-                this.panel_item.set_label('00:00:00:00');
-                this.fullscreen.set_banner_text('00:00:00:00')
+                this.panel_item.set_label('00:00:00.00');
+                this.fullscreen.set_banner_text('00:00:00.00')
                 break;
         }
 
@@ -156,11 +168,11 @@ var Stopwatch = new Lang.Class({
         this.button_reset = new St.Button({ can_focus: true, label: _('Reset'), style_class: 'btn-reset button', x_expand: true, visible: false });
         this.button_lap   = new St.Button({ can_focus: true, label: _('Lap'),   style_class: 'btn-lap button',   x_expand: true, visible: false });
         this.button_start = new St.Button({ can_focus: true, label: _('Start'), style_class: 'btn-start button', x_expand: true });
-        this.button_pause = new St.Button({ can_focus: true, label: _('Pause'), style_class: 'btn-stop button',  x_expand: true, visible: false });
+        this.button_stop  = new St.Button({ can_focus: true, label: _('Stop'), style_class: 'btn-stop button',  x_expand: true, visible: false });
         this.stopwatch_button_box.add(this.button_reset, {expand: true});
         this.stopwatch_button_box.add(this.button_lap, {expand: true});
         this.stopwatch_button_box.add(this.button_start, {expand: true});
-        this.stopwatch_button_box.add(this.button_pause, {expand: true});
+        this.stopwatch_button_box.add(this.button_stop, {expand: true});
 
 
         //
@@ -211,14 +223,14 @@ var Stopwatch = new Lang.Class({
 
             this.ext.open_menu(this);
         });
-        this.sigm.connect(this.panel_item, 'left-click', () => { this.ext.toggle_menu(this); });
-        this.sigm.connect(this.panel_item, 'right-click', () => { this.ext.toggle_context_menu(this); });
-        this.sigm.connect(this.panel_item, 'middle-click', Lang.bind(this, this.stopwatch_toggle));
-        this.sigm.connect(this.fullscreen_bin, 'clicked', Lang.bind(this, this._show_fullscreen));
-        this.sigm.connect(this.button_start, 'clicked', () => { this.start(); });
-        this.sigm.connect(this.button_reset, 'clicked', () => { this.reset(); });
-        this.sigm.connect(this.button_pause, 'clicked', () => { this.pause(); });
-        this.sigm.connect(this.button_lap, 'clicked',   () => { this.add_lap(); });
+        this.sigm.connect(this.panel_item, 'left-click', () => this.ext.toggle_menu(this));
+        this.sigm.connect(this.panel_item, 'right-click', () => this.ext.toggle_context_menu(this));
+        this.sigm.connect(this.panel_item, 'middle-click', () => this.stopwatch_toggle());
+        this.sigm.connect_press(this.fullscreen_bin, () => this.show_fullscreen());
+        this.sigm.connect_press(this.button_start, () => this.start());
+        this.sigm.connect_press(this.button_reset, () => this.reset());
+        this.sigm.connect_press(this.button_stop, () => this.stop());
+        this.sigm.connect_press(this.button_lap, () => this.lap());
         this.sigm.connect(this.laps_string, 'queue-redraw', () => {
             this.laps_scroll.vscrollbar_policy = Gtk.PolicyType.NEVER;
             if (ext.needs_scrollbar())
@@ -262,9 +274,10 @@ var Stopwatch = new Lang.Class({
             this.time_backup_mainloop_id = null;
         }
 
-        if (this.cache.state === StopwatchState.RUNNING) this.pause();
+        if (this.cache.state === StopwatchState.RUNNING) this.stop();
+        this.dbus_impl.unexport();
         this._store_cache();
-        this.sigm.disconnect_all();
+        this.sigm.clear();
         this.keym.disable_all();
 
         if (this.fullscreen) {
@@ -292,7 +305,7 @@ var Stopwatch = new Lang.Class({
                 this.cache = {
                     format_version : cache_format_version,
                     state          : StopwatchState.RESET,
-                    time           : 0, // in microseconds
+                    time           : 0, // miliseconds
                     laps           : [],
                 };
             }
@@ -307,6 +320,7 @@ var Stopwatch = new Lang.Class({
                 this.ext, this, this.settings.get_int('stopwatch-fullscreen-monitor-pos'));
         }
 
+        this.dbus_impl.export(Gio.DBus.session, '/timepp/zagortenay333/Stopwatch');
         this.sigm.connect_all();
         this.keym.enable_all();
 
@@ -314,7 +328,6 @@ var Stopwatch = new Lang.Class({
         if (this.cache.state === StopwatchState.RESET) return;
 
 
-        this.lap_count = this.cache.laps.length;
         this._update_laps();
 
         this._update_time_display();
@@ -322,7 +335,7 @@ var Stopwatch = new Lang.Class({
         if (this.cache.state === StopwatchState.RUNNING)
             this.start();
         else
-            this.pause();
+            this.stop();
     },
 
     _store_cache: function () {
@@ -333,22 +346,23 @@ var Stopwatch = new Lang.Class({
             null, false, Gio.FileCreateFlags.REPLACE_DESTINATION, null);
     },
 
-    start: function (actor, event) {
+    start: function () {
         this.start_time = GLib.get_monotonic_time() - this.cache.time;
 
-        if (!this.fullscreen.is_open)
-            this.button_pause.grab_key_focus();
+        if (!this.fullscreen.is_open && this.actor.visible)
+            this.button_stop.grab_key_focus();
 
         this.cache.state = StopwatchState.RUNNING;
         this._store_cache();
         this._toggle_buttons();
         this._panel_item_UI_update();
         this.fullscreen.on_timer_started();
-        if (! this.tic_mainloop_id) this._tic();
         if (! this.time_backup_mainloop_id) this._periodic_time_backup();
+
+        if (! this.tic_mainloop_id) this._tic();
     },
 
-    pause: function (actor, event) {
+    stop: function () {
         if (this.tic_mainloop_id) {
             Mainloop.source_remove(this.tic_mainloop_id);
             this.tic_mainloop_id = null;
@@ -361,16 +375,16 @@ var Stopwatch = new Lang.Class({
 
         this.fullscreen.on_timer_stopped();
 
-        if (!this.fullscreen.is_open)
+        if (!this.fullscreen.is_open && this.actor.visible)
             this.button_start.grab_key_focus();
 
-        this.cache.state = StopwatchState.PAUSED;
+        this.cache.state = StopwatchState.STOPPED;
         this._store_cache();
         this._panel_item_UI_update();
         this._toggle_buttons();
     },
 
-    reset: function (actor, event) {
+    reset: function () {
         if (this.tic_mainloop_id) {
             Mainloop.source_remove(this.tic_mainloop_id);
             this.tic_mainloop_id = null;
@@ -383,14 +397,13 @@ var Stopwatch = new Lang.Class({
 
         this.fullscreen.on_timer_reset();
 
-        if (!this.fullscreen.is_open)
+        if (!this.fullscreen.is_open && this.actor.visible)
             this.button_start.grab_key_focus();
 
         this.cache.state = StopwatchState.RESET;
         this.cache.laps = [];
         this.cache.time = 0;
         this._store_cache();
-        this.lap_count = 0;
         this._update_time_display();
         this._toggle_buttons();
         this._panel_item_UI_update();
@@ -400,13 +413,15 @@ var Stopwatch = new Lang.Class({
 
     stopwatch_toggle: function () {
         if (this.cache.state === StopwatchState.RUNNING)
-            this.pause();
+            this.stop();
         else
             this.start();
     },
 
     _tic: function () {
-        this.cache.time = GLib.get_monotonic_time() - this.start_time;
+        this.cache.time =
+            Math.floor((GLib.get_monotonic_time() - this.start_time) / 1000);
+
         this._update_time_display();
 
         if (this.clock_format === ClockFormat.H_M_S_CS) {
@@ -428,13 +443,14 @@ var Stopwatch = new Lang.Class({
     },
 
     _time_format_str: function () {
-        let t  = Math.floor(this.cache.time / 10000);
-        let cs = t % 100;
-        t      = Math.floor(t / 100);
-        let h  = Math.floor(t / 3600);
-        t      = t % 3600;
-        let m  = Math.floor(t / 60);
-        let s  = t % 60;
+        let t   = Math.floor(this.cache.time / 10); // centiseconds
+
+        let cs  = t % 100;
+        t       = Math.floor(t / 100);
+        let h   = Math.floor(t / 3600);
+        t       = t % 3600;
+        let m   = Math.floor(t / 60);
+        let s   = t % 60;
 
         switch (this.clock_format) {
             case ClockFormat.H_M:
@@ -442,7 +458,7 @@ var Stopwatch = new Lang.Class({
             case ClockFormat.H_M_S:
                 return "%02d:%02d:%02d".format(h, m, s);
             case ClockFormat.H_M_S_CS:
-                return "%02d:%02d:%02d:%02d".format(h, m, s, cs);
+                return "%02d:%02d:%02d.%02d".format(h, m, s, cs);
         }
     },
 
@@ -453,33 +469,32 @@ var Stopwatch = new Lang.Class({
             this.panel_item.actor.remove_style_class_name('on');
     },
 
-    add_lap: function () {
+    lap: function () {
         if (this.cache.state !== StopwatchState.RUNNING) return;
 
-        this.lap_count++;
         this.cache.laps.push(this._time_format_str());
         this._store_cache();
         this._update_laps();
     },
 
     _update_laps: function () {
-        if (this.cache.laps.length === 0) return;
+        let n = this.cache.laps.length;
 
-        let pad = String(this.lap_count).length + 1;
+        if (n === 0) return;
 
-        let markup = '<b>'+ 1 +'</b> ' +
-                      Array(pad - 1).join(' ') +
-                     '- '+ this.cache.laps[0];
+        let pad    = String(n).length + 1;
+        let markup = '';
 
-        for (let i = 1, len = this.cache.laps.length; i < len; i++) {
-            markup += '\n<b>' + (i + 1) + '</b> ' +
-                       Array(pad - String(i + 1).length).join(' ') +
-                      '- ' + this.cache.laps[i];
+        while (n--) {
+            markup += `<b>${n + 1}</b> ` +
+                      Array(pad - String(n + 1).length).join(' ') +
+                      `- ${this.cache.laps[n]}\n`;
         }
 
-        this.laps_string.clutter_text.set_markup('<tt>' + markup + '</tt>');
-        this.fullscreen.laps_string.clutter_text.set_markup('<tt>' + markup + '</tt>');
+        markup = `<tt>${markup.slice(0, -1)}</tt>`;
 
+        this.laps_string.clutter_text.set_markup(markup);
+        this.fullscreen.laps_string.clutter_text.set_markup(markup);
         this.laps_wrapper.actor.show();
         this.fullscreen.laps_scroll.show();
     },
@@ -495,13 +510,13 @@ var Stopwatch = new Lang.Class({
                 this.button_reset.hide();
                 this.button_lap.hide();
                 this.button_start.show();
-                this.button_pause.hide();
+                this.button_stop.hide();
                 this.button_start.add_style_pseudo_class('first-child');
                 this.button_start.add_style_pseudo_class('last-child');
                 this.fullscreen.button_reset.hide();
                 this.fullscreen.button_lap.hide();
                 this.fullscreen.button_start.show();
-                this.fullscreen.button_pause.hide();
+                this.fullscreen.button_stop.hide();
                 this.fullscreen.button_start.add_style_pseudo_class('first-child');
                 this.fullscreen.button_start.add_style_pseudo_class('last-child');
                 break;
@@ -509,34 +524,37 @@ var Stopwatch = new Lang.Class({
                 this.button_reset.show();
                 this.button_lap.show();
                 this.button_start.hide();
-                this.button_pause.show();
+                this.button_stop.show();
                 this.fullscreen.button_reset.show();
                 this.fullscreen.button_lap.show();
                 this.fullscreen.button_start.hide();
-                this.fullscreen.button_pause.show();
+                this.fullscreen.button_stop.show();
                 break;
-            case StopwatchState.PAUSED:
+            case StopwatchState.STOPPED:
                 this.button_reset.show();
                 this.button_lap.hide();
                 this.button_start.show();
-                this.button_pause.hide();
+                this.button_stop.hide();
                 this.button_start.remove_style_pseudo_class('first-child');
                 this.button_start.add_style_pseudo_class('last-child');
                 this.fullscreen.button_reset.show();
                 this.fullscreen.button_lap.hide();
                 this.fullscreen.button_start.show();
-                this.fullscreen.button_pause.hide();
+                this.fullscreen.button_stop.hide();
                 this.fullscreen.button_start.remove_style_pseudo_class('first-child');
                 this.fullscreen.button_start.add_style_pseudo_class('last-child');
                 break;
         }
     },
 
-    _show_fullscreen: function () {
+    show_fullscreen: function () {
         this.ext.menu.close();
-        if (! this.fullscreen)
-            this.fullscreen = new StopwatchFullscreen(
-                this.ext, this, this.settings.get_int('stopwatch-fullscreen-monitor-pos'));
+
+        if (! this.fullscreen) {
+            this.fullscreen = new StopwatchFullscreen(this.ext, this,
+                this.settings.get_int('stopwatch-fullscreen-monitor-pos'));
+        }
+
         this.fullscreen.open();
     },
 
@@ -557,6 +575,11 @@ var Stopwatch = new Lang.Class({
         else
             this.panel_item.set_mode('icon_text');
     },
+
+    // returns int (miliseconds)
+    get_time: function () {
+        return this.cache.time;
+    },
 });
 Signals.addSignalMethods(Stopwatch.prototype);
 
@@ -565,9 +588,9 @@ Signals.addSignalMethods(Stopwatch.prototype);
 // =====================================================================
 // @@@ Stopwatch fullscreen interface
 //
-// @ext       : ext class
-// @show_secs : bool
-// @monitor   : int
+// @ext      : obj (main extension object)
+// @delegate : obj (main section object)
+// @monitor  : int
 //
 // signals: 'monitor-changed'
 // =====================================================================
@@ -609,12 +632,12 @@ const StopwatchFullscreen = new Lang.Class({
 
         this.button_reset = new St.Button({ can_focus: true, label: _('Reset'), style_class: 'btn-reset button', visible: false });
         this.button_lap   = new St.Button({ can_focus: true, label: _('Lap'),   style_class: 'btn-lap button',   visible: false });
-        this.button_pause = new St.Button({ can_focus: true, label: _('Pause'), style_class: 'btn-stop button',  visible: false });
+        this.button_stop  = new St.Button({ can_focus: true, label: _('Stop'), style_class: 'btn-stop button',  visible: false });
         this.button_start = new St.Button({ can_focus: true, label: _('Start'), style_class: 'btn-start button' });
         this.stopwatch_button_box.add_child(this.button_reset);
         this.stopwatch_button_box.add_child(this.button_lap);
         this.stopwatch_button_box.add_child(this.button_start);
-        this.stopwatch_button_box.add_child(this.button_pause);
+        this.stopwatch_button_box.add_child(this.button_stop);
 
 
         //
@@ -628,12 +651,12 @@ const StopwatchFullscreen = new Lang.Class({
             this.delegate.reset();
             return Clutter.EVENT_STOP;
         });
-        this.button_pause.connect('clicked', () => {
-            this.delegate.pause();
+        this.button_stop.connect('clicked', () => {
+            this.delegate.stop();
             return Clutter.EVENT_STOP;
         });
         this.button_lap.connect('clicked', () => {
-            this.delegate.add_lap();
+            this.delegate.lap();
             return Clutter.EVENT_STOP;
         });
         this.actor.connect('key-release-event', (_, event) => {
@@ -645,7 +668,7 @@ const StopwatchFullscreen = new Lang.Class({
                 case Clutter.KEY_KP_Enter:
                 case Clutter.KEY_ISO_Enter:
                 case Clutter.Return:
-                    this.delegate.add_lap();
+                    this.delegate.lap();
                     return Clutter.EVENT_STOP;
                 case Clutter.KEY_r:
                 case Clutter.KEY_BackSpace:
@@ -669,7 +692,7 @@ const StopwatchFullscreen = new Lang.Class({
                     this.set_banner_text('00:00:00')
                     break;
                 case ClockFormat.H_M_S_CS:
-                    this.set_banner_text('00:00:00:00')
+                    this.set_banner_text('00:00:00.00')
                     break;
             }
         }

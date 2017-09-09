@@ -8,9 +8,9 @@
     "version"         : -1,
     "shell-version"   : ["3.24"],
     "cache-file-format-version" : {
-        "timer"     : 1,
-        "stopwatch" : 1,
-        "pomodoro"  : 1,
+        "timer"     : 2,
+        "stopwatch" : 2,
+        "pomodoro"  : 2,
         "alarms"    : 1,
         "todo"      : 1
     }

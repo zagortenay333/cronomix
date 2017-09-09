@@ -1,0 +1,32 @@
+<!DOCTYPE node PUBLIC
+'-//freedesktop//DTD D-BUS Object Introspection 1.0//EN'
+'http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd'>
+
+<node>
+    <interface name="timepp.zagortenay333.Pomodoro">
+
+        <method name="start_pomo">
+            <arg name="pomo" type="d"/> <!-- seconds -->
+        </method>
+
+        <method name="start_new_pomo"/>
+        <method name="stop"/>
+        <method name="take_break"/>
+        <method name="timer_toggle"/>
+        <method name="show_fullscreen"/>
+        <method name="clear_pomo_counter"/>
+
+        <method name="set_phase_durations">
+            <arg name="pomo"        type="s"/> <!-- seconds -->
+            <arg name="short_break" type="s"/> <!-- seconds -->
+            <arg name="long_break"  type="s"/> <!-- seconds -->
+            <arg name="break_rate"  type="s"/> <!-- long break every n pomos -->
+        </method>
+
+        <!-- state is one of: 'POMO', 'STOPPED', 'LONG_BREAK', 'SHORT_BREAK' -->
+        <signal name="pomo_state_changed">
+            <arg name="state" type="s"/>
+        </signal>
+
+    </interface>
+</node>

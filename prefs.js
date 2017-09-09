@@ -525,19 +525,6 @@ const Settings = new Lang.Class({
             'active',
             Gio.SettingsBindFlags.DEFAULT);
 
-        this.settings.bind(
-            'pomodoro-exec-script',
-            this.builder.get_object('pomodoro-exec-script-switch'),
-            'active',
-            Gio.SettingsBindFlags.DEFAULT);
-
-        this.builder.get_object('pomodoro-script-path-chooser')
-            .set_uri(this.settings.get_string('pomodoro-script-path'));
-        this.builder.get_object('pomodoro-script-path-chooser').connect('selection-changed',
-            (widget) => {
-                this.settings.set_string('pomodoro-script-path', widget.get_uri());
-            });
-
         this.builder.get_object('pomodoro-keybinding-open')
             .set_text(this.settings.get_strv('pomodoro-keybinding-open')[0]);
         this.builder.get_object('pomodoro-keybinding-open').connect('changed',

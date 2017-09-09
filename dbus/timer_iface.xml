@@ -1,0 +1,24 @@
+<!DOCTYPE node PUBLIC
+'-//freedesktop//DTD D-BUS Object Introspection 1.0//EN'
+'http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd'>
+
+<node>
+    <interface name="timepp.zagortenay333.Timer">
+
+        <method name="start">
+            <arg name="time" type="u" direction="in"/> <!-- in seconds -->
+        </method>
+
+        <method name="stop"/>
+        <method name="toggle_timer"/>
+        <method name="reset"/>
+        <method name="show_fullscreen"/>
+
+        <method name="set_notif_msg">
+            <arg name="msg" type="s" direction="in"/>
+        </method>
+
+        <signal name="timer_expired"/>
+
+    </interface>
+</node>

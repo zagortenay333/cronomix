@@ -32,10 +32,12 @@ const NUM_PICKER    = ME.imports.lib.num_picker;
 const MULTIL_ENTRY  = ME.imports.lib.multiline_entry;
 
 
+const IFACE = `${ME.path}/dbus/timer_iface.xml`;
+
 const CACHE_FILE = GLib.get_home_dir() +
                    '/.cache/timepp_gnome_shell_extension/timepp_timer.json';
 
-const TIMER_MAX_DURATION = 86400000000; // 24 hours in microseconds
+const TIMER_MAX_DURATION = 86400; // 24 hours in seconds
 const TIMER_EXPIRED_MSG  = _('Timer Expired!');
 
 
@@ -64,20 +66,30 @@ var Timer = new Lang.Class({
         this.ext      = ext;
         this.settings = settings;
 
+
+        {
+            let [,xml,] = Gio.file_new_for_path(IFACE).load_contents(null);
+            xml = '' + xml;
+            this.dbus_impl = Gio.DBusExportedObject.wrapJSObject(xml, this);
+        }
+
+
         this.section_enabled = this.settings.get_boolean('timer-enabled');
         this.separate_menu   = this.settings.get_boolean('timer-separate-menu');
         this.timer_state     = TimerState.OFF;
-        this.timer_duration  = 0; // in microseconds
-        this.end_time        = 0; // used for computing elapsed time
+        this.clock           = 0; // in seconds
+        this.end_time        = 0; // for computing elapsed time (microseconds)
         this.tic_mainloop_id = null;
         this.cache_file      = null;
         this.cache           = null;
 
-        this.fullscreen = new TimerFullscreen(
-            this.ext, this, this.settings.get_int('timer-fullscreen-monitor-pos'));
+
+        this.fullscreen = new TimerFullscreen(this.ext, this,
+            this.settings.get_int('timer-fullscreen-monitor-pos'));
 
         this.fullscreen.set_banner_text(
             this.settings.get_boolean('timer-show-seconds') ? '00:00:00' : '00:00');
+
 
         this.sigm = new SIG_MANAGER.SignalManager();
         this.keym = new KEY_MANAGER.KeybindingManager(this.settings);
@@ -90,7 +102,7 @@ var Timer = new Lang.Class({
              this.ext.open_menu(this);
         });
         this.keym.register('timer-keybinding-open-fullscreen', () => {
-            this._show_fullscreen();
+            this.show_fullscreen();
         });
 
 
@@ -184,17 +196,14 @@ var Timer = new Lang.Class({
         });
         this.sigm.connect(this.panel_item, 'left-click', () => { this.ext.toggle_menu(this); });
         this.sigm.connect(this.panel_item, 'right-click', () => { this.ext.toggle_context_menu(this); });
-        this.sigm.connect(this.panel_item, 'middle-click', Lang.bind(this, this.toggle_timer));
-        this.sigm.connect(this.toggle_bin, 'clicked', Lang.bind(this, this.toggle_timer));
-        this.sigm.connect(this.fullscreen_bin, 'clicked', Lang.bind(this, this._show_fullscreen));
-        this.sigm.connect(this.settings_bin, 'clicked', Lang.bind(this, this._show_settings));
-        this.sigm.connect(this.slider, 'value-changed', Lang.bind(this, this.slider_changed));
-        this.sigm.connect(this.slider, 'drag-end', Lang.bind(this, this.slider_released));
-        this.sigm.connect(this.slider.actor, 'scroll-event', Lang.bind(this, this.slider_released));
-        this.sigm.connect(this.slider_item.actor, 'button-press-event', Lang.bind(this, function(actor, event) {
-            this.slider.startDragging(event);
-        }));
-
+        this.sigm.connect(this.panel_item, 'middle-click', () => this.toggle_timer());
+        this.sigm.connect_press(this.toggle_bin, () => this.toggle_timer());
+        this.sigm.connect_press(this.fullscreen_bin, () => this.show_fullscreen());
+        this.sigm.connect_press(this.settings_bin, () => this._show_settings());
+        this.sigm.connect(this.slider, 'value-changed', (slider, value) => this.slider_changed(slider, value));
+        this.sigm.connect(this.slider, 'drag-end', () => this.slider_released());
+        this.sigm.connect(this.slider.actor, 'scroll-event', () => this.slider_released());
+        this.sigm.connect(this.slider_item.actor, 'button-press-event', (_, event) => this.slider.startDragging(event));
 
         if (this.section_enabled) this.enable_section();
         else                      this.sigm.disconnect_all();
@@ -227,9 +236,10 @@ var Timer = new Lang.Class({
     },
 
     disable_section: function () {
-        this.stop_timer();
+        this.dbus_impl.unexport();
+        this.stop();
         this._store_cache();
-        this.sigm.disconnect_all();
+        this.sigm.clear();
         this.keym.disable_all();
 
         if (this.fullscreen) {
@@ -257,7 +267,7 @@ var Timer = new Lang.Class({
                 this.cache = {
                     format_version         : cache_format_version,
                     notif_msg              : '',
-                    last_manually_set_time : 30000000,
+                    last_manually_set_time : 30, // in seconds
                 };
             }
         }
@@ -270,6 +280,7 @@ var Timer = new Lang.Class({
             this.fullscreen = new TimerFullscreen(
                 this.ext, this, this.settings.get_int('timer-fullscreen-monitor-pos'));
 
+        this.dbus_impl.export(Gio.DBus.session, '/timepp/zagortenay333/Timer');
         this.keym.enable_all();
     },
 
@@ -282,35 +293,31 @@ var Timer = new Lang.Class({
     },
 
     toggle_timer: function () {
-        if (this.timer_state === TimerState.STOPPED)
-            this.start_timer();
-        else if (this.timer_state === TimerState.RUNNING)
-            this.stop_timer();
-        else
-            return;
+        if      (this.timer_state === TimerState.STOPPED) this.start();
+        else if (this.timer_state === TimerState.RUNNING) this.stop();
     },
 
-    start_timer: function (time) {
+    // @time: int (seconds)
+    start: function (time = 0) {
         if (this.tic_mainloop_id) {
             Mainloop.source_remove(this.tic_mainloop_id);
             this.tic_mainloop_id = null;
         }
 
-        this.timer_duration = time || this.timer_duration;
-        this.end_time       = GLib.get_monotonic_time() + this.timer_duration;
-
         this.timer_state = TimerState.RUNNING;
+        this.clock       = Math.min(time, TIMER_MAX_DURATION) || this.clock;
+        this.end_time    = GLib.get_monotonic_time() + (this.clock * 1000000);
 
         this._update_time_display();
-        this._tic();
-
         this.fullscreen.on_timer_started();
         this.toggle.setToggleState('checked');
         this.toggle_bin.show();
         this.panel_item.actor.add_style_class_name('on');
+
+        this._tic();
     },
 
-    stop_timer: function () {
+    stop: function () {
         if (this.tic_mainloop_id) {
             Mainloop.source_remove(this.tic_mainloop_id);
             this.tic_mainloop_id = null;
@@ -322,12 +329,13 @@ var Timer = new Lang.Class({
         this.panel_item.actor.remove_style_class_name('on');
     },
 
-    off_timer: function () {
+    reset: function () {
         if (this.tic_mainloop_id) {
             Mainloop.source_remove(this.tic_mainloop_id);
             this.tic_mainloop_id = null;
         }
 
+        this.slider.setValue(0);
         this.fullscreen.on_timer_off();
         this.timer_state = TimerState.OFF;
         this.header.label.text = _('Timer');
@@ -336,22 +344,24 @@ var Timer = new Lang.Class({
     },
 
     _on_timer_expired: function () {
-        this.off_timer();
+        this.reset();
         this.fullscreen.on_timer_expired();
         this._send_notif();
+        this.dbus_impl.emit_signal('timer_expired', null);
     },
 
     _tic: function () {
         this._update_slider();
         this._update_time_display();
 
-        if (this.timer_duration < 1000000) {
-            this.timer_duration = 0;
+        if (this.clock < 1) {
+            this.clock = 0;
             this._on_timer_expired();
             return;
         }
 
-        this.timer_duration = this.end_time - GLib.get_monotonic_time();
+        this.clock =
+            Math.floor((this.end_time - GLib.get_monotonic_time()) / 1000000)
 
         this.tic_mainloop_id = Mainloop.timeout_add_seconds(1, () => {
             this._tic();
@@ -359,7 +369,7 @@ var Timer = new Lang.Class({
     },
 
     _update_time_display: function () {
-        let time = Math.floor(this.timer_duration / 1000000);
+        let time = this.clock;
 
         // If the seconds are not shown, we need to make the timer '1-indexed'
         // in respect to minutes. I.e., 00:00:34 becomes 00:01.
@@ -384,18 +394,18 @@ var Timer = new Lang.Class({
     },
 
     _update_slider: function () {
-        // Update slider based on the timer_duration.
-        // Use this when the timer_duration changes without using the slider.
+        // Update slider based on the clock.
+        // Use this when the clock changes without using the slider.
         // This function is the inverse of the function that is used to calc the
-        // timer_duration based on the slider.
-        let x = this.timer_duration / TIMER_MAX_DURATION;
+        // clock based on the slider.
+        let x = this.clock / TIMER_MAX_DURATION;
         let y = (Math.log(x * (Math.pow(2, 10) - 1) +1)) / Math.log(2) / 10;
         this.slider.setValue(y);
         this.fullscreen.slider.setValue(y);
     },
 
     _update_time_display: function () {
-        let time = Math.floor(this.timer_duration / 1000000);
+        let time = this.clock;
 
         // If the seconds are not shown, we need to make the timer '1-indexed'
         // in respect to minutes. I.e., 00:00:34 becomes 00:01.
@@ -420,18 +430,18 @@ var Timer = new Lang.Class({
     },
 
     slider_released: function () {
-        if (this.timer_duration < 1000000) {
-            this.off_timer();
+        if (this.clock < 1) {
+            this.reset();
         }
         else {
-            this.start_timer();
-            this.cache.last_manually_set_time = this.timer_duration;
+            this.start();
+            this.cache.last_manually_set_time = this.clock;
             this._store_cache();
         }
     },
 
     slider_changed: function (slider, value) {
-        this.stop_timer();
+        this.stop();
 
         if (value < 1) {
             // Make rate of change of the timer duration an exponential curve.
@@ -455,28 +465,24 @@ var Timer = new Lang.Class({
                 else                  step = 3600;
             }
 
-            this.timer_duration =
-                Math.floor(y * TIMER_MAX_DURATION / step) * step;
+            this.clock = Math.floor(y * TIMER_MAX_DURATION / step) * step;
 
             this._update_time_display();
         }
         else { // slider has been dragged past the limit
-            this.timer_duration = TIMER_MAX_DURATION;
+            this.clock = TIMER_MAX_DURATION;
             this._update_time_display();
         }
     },
 
     _send_notif: function () {
-        let sound_file = this.settings.get_string('timer-sound-file-path');
+        if (this.settings.get_boolean('timer-play-sound')) {
+            let sound_file = this.settings.get_string('timer-sound-file-path');
 
-        if (sound_file) {
-            try {
-                [sound_file, ] = GLib.filename_from_uri(sound_file, null);
-            } catch (e) { logError(e); }
-        }
-
-        if (this.settings.get_boolean('timer-play-sound') && sound_file) {
-            global.play_sound_file(0, sound_file, 'timer-notif', null);
+            if (sound_file) {
+                [sound_file,] = GLib.filename_from_uri(sound_file, null);
+                global.play_sound_file(0, sound_file, '', null);
+            }
         }
 
         if (this.settings.get_enum('timer-notif-style') === NotifStyle.FULLSCREEN) {
@@ -512,6 +518,7 @@ var Timer = new Lang.Class({
     _show_settings: function () {
         let settings = new TimerSettings(
             this.ext,
+            this,
             this.settings.get_boolean('timer-show-seconds'),
             this.cache.notif_msg
         );
@@ -528,12 +535,11 @@ var Timer = new Lang.Class({
             this.header.actor.show();
             this.slider_item.actor.show();
 
-            this.cache.notif_msg = notif_msg;
-            this._store_cache();
+            this.set_notif_msg(notif_msg);
 
             if (time) {
-                this.timer_duration = time;
-                this.start_timer();
+                this.clock = time;
+                this.start();
                 this._update_slider();
                 this.cache.last_manually_set_time = time;
                 this._store_cache();
@@ -548,7 +554,12 @@ var Timer = new Lang.Class({
         });
     },
 
-    _show_fullscreen: function () {
+    set_notif_msg: function (msg) {
+        this.cache.notif_msg = msg;
+        this._store_cache();
+    },
+
+    show_fullscreen: function () {
         this.ext.menu.close();
 
         if (! this.fullscreen) {
@@ -575,7 +586,8 @@ Signals.addSignalMethods(Timer.prototype);
 // =====================================================================
 // @@@ Settings window
 //
-// @ext       : ext class
+// @ext       : obj (main extension object)
+// @delegate  : obj (main section object)
 // @show_secs : bool
 // @notif_msg : string
 //
@@ -584,7 +596,10 @@ Signals.addSignalMethods(Timer.prototype);
 const TimerSettings = new Lang.Class({
     Name: 'Timepp.TimerSettings',
 
-    _init: function(ext, show_secs, notif_msg) {
+    _init: function(ext, delegate, show_secs, notif_msg) {
+        this.ext      = ext;
+        this.delegate = delegate;
+
         this.actor = new St.Bin({ x_fill: true, style_class: 'view-box' });
 
         this.content_box = new St.BoxLayout({ x_expand: true, vertical: true, style_class: 'view-box-content' });
@@ -667,11 +682,11 @@ const TimerSettings = new Lang.Class({
     },
 
     _get_time: function () {
-        let hr  = this.hr.counter * 3600;
+        let h   = this.hr.counter * 3600;
         let min = this.min.counter * 60;
         let sec = this.sec ? this.sec.counter : 0;
 
-        return (hr + min + sec) * 1000000;
+        return h + min + sec;
     },
 });
 Signals.addSignalMethods(TimerSettings.prototype);
@@ -681,9 +696,9 @@ Signals.addSignalMethods(TimerSettings.prototype);
 // =====================================================================
 // @@@ Timer fullscreen interface
 //
-// @ext       : ext class
-// @show_secs : bool
-// @monitor   : int
+// @ext      : obj (main extension object)
+// @delegate : obj (main section object)
+// @monitor  : int
 //
 // signals: 'monitor-changed'
 // =====================================================================
@@ -742,37 +757,37 @@ const TimerFullscreen = new Lang.Class({
                     return Clutter.EVENT_STOP;
                 case Clutter.KEY_r:
                 case Clutter.KEY_BackSpace:
-                    this.delegate.start_timer(this.delegate.cache.last_manually_set_time);
+                    this.delegate.start(this.delegate.cache.last_manually_set_time);
                     return Clutter.EVENT_STOP;
                 case Clutter.KEY_1:
-                    this.delegate.start_timer(60000000);
+                    this.delegate.start(60);
                     return Clutter.EVENT_STOP;
                 case Clutter.KEY_2:
-                    this.delegate.start_timer(2 * 60000000);
+                    this.delegate.start(2 * 60);
                     return Clutter.EVENT_STOP;
                 case Clutter.KEY_3:
-                    this.delegate.start_timer(3 * 60000000);
+                    this.delegate.start(3 * 60);
                     return Clutter.EVENT_STOP;
                 case Clutter.KEY_4:
-                    this.delegate.start_timer(4 * 60000000);
+                    this.delegate.start(4 * 60);
                     return Clutter.EVENT_STOP;
                 case Clutter.KEY_5:
-                    this.delegate.start_timer(5 * 60000000);
+                    this.delegate.start(5 * 60);
                     return Clutter.EVENT_STOP;
                 case Clutter.KEY_6:
-                    this.delegate.start_timer(6 * 60000000);
+                    this.delegate.start(6 * 60);
                     return Clutter.EVENT_STOP;
                 case Clutter.KEY_7:
-                    this.delegate.start_timer(7 * 60000000);
+                    this.delegate.start(7 * 60);
                     return Clutter.EVENT_STOP;
                 case Clutter.KEY_8:
-                    this.delegate.start_timer(8 * 60000000);
+                    this.delegate.start(8 * 60);
                     return Clutter.EVENT_STOP;
                 case Clutter.KEY_9:
-                    this.delegate.start_timer(9 * 60000000);
+                    this.delegate.start(9 * 60);
                     return Clutter.EVENT_STOP;
                 case Clutter.KEY_0:
-                    this.delegate.start_timer(10 * 60000000);
+                    this.delegate.start(10 * 60);
                     return Clutter.EVENT_STOP;
                 default:
                     return Clutter.EVENT_PROPAGATE;

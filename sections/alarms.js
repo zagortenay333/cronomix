@@ -104,13 +104,16 @@ var Alarms = new Lang.Class({
         this.ext      = ext;
         this.settings = settings;
 
+
         this.section_enabled = this.settings.get_boolean('alarms-enabled');
         this.separate_menu   = this.settings.get_boolean('alarms-separate-menu');
         this.cache_file      = null;
         this.cache           = null;
 
-        this.fullscreen = new AlarmFullscreen(
-            this.ext, this, this.settings.get_int('alarms-fullscreen-monitor-pos'));
+
+        this.fullscreen = new AlarmFullscreen(this.ext, this,
+            this.settings.get_int('alarms-fullscreen-monitor-pos'));
+
 
         this.sigm = new SIG_MANAGER.SignalManager();
         this.keym = new KEY_MANAGER.KeybindingManager(this.settings);
@@ -241,7 +244,7 @@ var Alarms = new Lang.Class({
 
         this.alarms_scroll_content.destroy_all_children();
         this._store_cache();
-        this.sigm.disconnect_all();
+        this.sigm.clear();
         this.keym.disable_all();
 
         if (this.fullscreen) {
@@ -301,7 +304,7 @@ var Alarms = new Lang.Class({
     alarm_editor: function (alarm_item) {
         let alarm_obj = alarm_item ? alarm_item.alarm : null;
 
-        let editor = new AlarmEditor(this.ext, alarm_obj);
+        let editor = new AlarmEditor(this.ext, this, alarm_obj);
 
         this.actor.insert_child_at_index(editor.actor, 0);
         editor.button_cancel.grab_key_focus();
@@ -446,16 +449,13 @@ var Alarms = new Lang.Class({
     },
 
     _send_notif: function (alarm) {
-        let sound_file = this.settings.get_string('alarms-sound-file-path')
+        if (this.settings.get_boolean('alarms-play-sound')) {
+            let sound_file = this.settings.get_string('alarms-sound-file-path');
 
-        if (sound_file) {
-            try {
-                [sound_file, ] = GLib.filename_from_uri(sound_file, null);
-            } catch (e) { logError(e); }
-        }
-
-        if (this.settings.get_boolean('alarms-play-sound') && sound_file) {
-            global.play_sound_file(0, sound_file, 'alarms-notif', null);
+            if (sound_file) {
+                [sound_file,] = GLib.filename_from_uri(sound_file, null);
+                global.play_sound_file(0, sound_file, '', null);
+            }
         }
 
         if (this.settings.get_enum('alarms-notif-style') === NotifStyle.FULLSCREEN) {
@@ -510,8 +510,9 @@ Signals.addSignalMethods(Alarms.prototype);
 // =====================================================================
 // @@@ Alarm Editor
 //
-// @ext   : obj  (main ext object)
-// @alarm : obj  (alarm object)
+// @ext      : obj  (main ext object)
+// @delegate : obj  (main section object)
+// @alarm    : obj  (alarm object)
 //
 // @signals: 'add-alarm', 'edited-alarm', 'delete-alarm', 'cancel'
 //
@@ -522,13 +523,15 @@ Signals.addSignalMethods(Alarms.prototype);
 const AlarmEditor = new Lang.Class({
     Name: 'Timepp.AlarmEditor',
 
-    _init: function(ext, alarm) {
+    _init: function(ext, delegate, alarm) {
+        this.ext      = ext;
+        this.delegate = delegate;
+        this.alarm    = alarm;
+
+
         //
         // container
         //
-        this.ext = ext;
-        this.alarm = alarm;
-
         this.actor = new St.Bin({ x_fill: true, style_class: 'view-box' });
 
         this.content_box = new St.BoxLayout({ x_expand: true, vertical: true, style_class: 'view-box-content'});
@@ -555,8 +558,8 @@ const AlarmEditor = new Lang.Class({
 
         if (alarm) {
             let [hr_str, min_str] = alarm.time_str.split(':');
-            this.hh._set_counter(parseInt(hr_str));
-            this.mm._set_counter(parseInt(min_str));
+            this.hh.set_counter(parseInt(hr_str));
+            this.mm.set_counter(parseInt(min_str));
         }
 
 
@@ -611,9 +614,9 @@ const AlarmEditor = new Lang.Class({
             this.button_delete = new St.Button({ can_focus: true, label: _('Delete'), style_class: 'btn-delete button', x_expand: true });
             btn_box.add(this.button_delete, {expand: true});
 
-            this.button_delete.connect('clicked', Lang.bind(this, function () {
+            this.button_delete.connect('clicked', () => {
                 this.emit('delete-alarm');
-            }));
+            });
         };
 
         this.button_cancel = new St.Button({ can_focus: true, label: _('Cancel'), style_class: 'btn-cancel button', x_expand: true });
@@ -747,8 +750,8 @@ const AlarmItem = new Lang.Class({
         //
         // listen
         //
-        this.toggle_bin.connect('clicked', () => { this._on_toggle(); });
-        this.edit_bin.connect('clicked',   () => { this._on_edit(); });
+        this.toggle_bin.connect('clicked', () => this._on_toggle());
+        this.delegate.sigm.connect_press(this.edit_bin, () => this._on_edit());
         this.actor.connect('queue-redraw', () => { resize_label(this.msg); });
         this.actor.connect('enter-event',  () => { this.edit_bin.show(); });
         this.actor.connect('event', (actor, event) => {
@@ -804,9 +807,9 @@ Signals.addSignalMethods(AlarmItem.prototype);
 // =====================================================================
 // @@@ Alarm fullscreen interface
 //
-// @ext       : ext class
-// @show_secs : bool
-// @monitor   : int
+// @ext      : obj (main extension object)
+// @delegate : obj (main section object)
+// @monitor  : int
 //
 // signals: 'monitor-changed'
 // =====================================================================

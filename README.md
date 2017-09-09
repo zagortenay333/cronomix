@@ -346,29 +346,14 @@ date, time spent (hh:mm), type ('++' = project, '()' = task), task or project
 > **HINT:**  
 > There is an option to pause the time tracker when the pomodoro stops!
 
-The time tracker can also be controled via the command line using dbus:
-```sh
-# The id 'asdf' is created by using the 'tracker_id:string' todo.txt extension.
-# When using the stop/start by id funcs, all tasks with the given id will
-# stop/start tracking.
-#
-# There are 3 funcs:
-#   - stop_all_tracking
-#   - stop_tracking_by_id
-#   - start_tracking_by_id
+---
 
-gdbus call --session --dest org.gnome.Shell \
-           --object-path /timepp/zagortenay333/TimeTracker \
-           --method timepp.zagortenay333.TimeTracker.stop_all_tracking
+### DBus API
 
-gdbus call --session --dest org.gnome.Shell \
-           --object-path /timepp/zagortenay333/TimeTracker \
-           --method timepp.zagortenay333.TimeTracker.start_tracking_by_id 'asdf'
+This extension comes with a dbus api. Check out the [dbus](dbus) for info on
+what you can do.
 
-gdbus call --session --dest org.gnome.Shell \
-           --object-path /timepp/zagortenay333/TimeTracker \
-           --method timepp.zagortenay333.TimeTracker.stop_tracking_by_id 'asdf'
-```
+There are also some example scripts that might come in handy. :smile:
 
 ---
 

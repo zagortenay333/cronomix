@@ -16,24 +16,11 @@ const _        = Gettext.gettext;
 const ngettext = Gettext.ngettext;
 
 
+const IFACE = `${ME.path}/dbus/time_tracker_iface.xml`;
+
+
 const G = ME.imports.sections.todo.GLOBAL;
 
-
-const TIME_TRACKER_DBUS_IFACE =
-    '<node>                                                 \
-        <interface name="timepp.zagortenay333.TimeTracker"> \
-            <method name="stop_all_tracking">               \
-            </method>                                       \
-                                                            \
-            <method name="stop_tracking_by_id">             \
-                <arg type="s" direction="in"/>              \
-            </method>                                       \
-                                                            \
-            <method name="start_tracking_by_id">            \
-                <arg type="s" direction="in"/>              \
-            </method>                                       \
-        </interface>                                        \
-    </node>';
 
 
 // =====================================================================
@@ -49,23 +36,33 @@ var TimeTracker = new Lang.Class({
         this.ext      = ext;
         this.delegate = delegate;
 
-        this.dbus_impl = Gio.DBusExportedObject.wrapJSObject(TIME_TRACKER_DBUS_IFACE, this);
-        this.dbus_impl.export(Gio.DBus.session, '/timepp/zagortenay333/TimeTracker');
 
-        this.csv_dir = delegate.settings.get_value('todo-current')
-                       .deep_unpack().csv_dir;
+        {
+            let [,xml,] = Gio.file_new_for_path(IFACE).load_contents(null);
+            xml = '' + xml;
+            this.dbus_impl = Gio.DBusExportedObject.wrapJSObject(xml, this);
+            this.dbus_impl.export(Gio.DBus.session, '/timepp/zagortenay333/TimeTracker');
+        }
+
+
+
+        this.csv_dir =
+            delegate.settings.get_value('todo-current').deep_unpack().csv_dir;
 
         if (this.csv_dir) {
             [this.csv_dir, ] = GLib.filename_from_uri(this.csv_dir, null);
         }
 
+
         this.number_of_tracked_tasks = 0;
         this.tracker_tic_id          = null;
+
 
         // GFiles
         this.yearly_csv_dir  = null;
         this.yearly_csv_file = null;
         this.daily_csv_file  = null;
+
 
         // GFileMonitors
         this.yearly_csv_dir_monitor  = null;
@@ -73,6 +70,7 @@ var TimeTracker = new Lang.Class({
         this.daily_csv_file_monitor  = null;
 
         this.daily_csv_file_monitor_handler_block = false;
+
 
         // The stats data is cached with the exception of today's stats which
         // get appended.

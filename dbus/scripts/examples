@@ -1,0 +1,37 @@
+#!/bin/bash
+set -eu
+
+
+# =====================================================================
+# Templates for monitoring a signal and calling a method
+# =====================================================================
+
+
+pomodoro_monitor () {
+    local signal
+    local -a msg
+
+    gdbus monitor --session    \
+        --dest org.gnome.Shell \
+        --object-path /timepp/zagortenay333/Pomodoro |
+    while read -r -a msg; do
+        signal=${msg[1]} signal=${signal##*.}
+
+        case "$signal" in
+            "POMO")        echo "$signal";;
+            "STOPPED")     echo "$signal";;
+            "LONG_BREAK")  echo "$signal";;
+            "SHORT_BREAK") echo "$signal";;
+        esac
+    done
+}
+
+timer_start () {
+    local time="$1"
+
+    >/dev/null gdbus call                         \
+        --session                                 \
+        --dest org.gnome.Shell                    \
+        --object-path /timepp/zagortenay333/Timer \
+        --method timepp.zagortenay333.Timer.start "$time"
+}
