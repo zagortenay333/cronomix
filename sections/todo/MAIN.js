@@ -600,9 +600,7 @@ var Todo = new Lang.Class({
         let [, lines] = this.todo_txt_file.load_contents(null);
         lines = String(lines).split(/\n|\r/);
 
-        let s = Date.now();
         this.create_tasks(lines, () => {
-            log(`>>>>>>>>>>>>>>>>> PERF: ${Date.now() - s}`);
             this._check_recurrences();
             this.on_tasks_changed();
             this.show_view__default();
