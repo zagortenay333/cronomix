@@ -598,7 +598,7 @@ var Todo = new Lang.Class({
         this.show_view__loading();
 
         let [, lines] = this.todo_txt_file.load_contents(null);
-        lines = String(lines).split(/\n|\r/);
+        lines = String(lines).split(/\n|\r/).filter((l) => /\S/.test(l));
 
         this.create_tasks(lines, () => {
             this._check_recurrences();
@@ -775,6 +775,8 @@ var Todo = new Lang.Class({
         // excess task object.
         while (this.tasks.length > len) this.tasks.pop().actor.destroy();
 
+        log(this.tasks.length)
+        log(len)
 
         let n = Math.min(len, 21);
         let i = 0;
@@ -782,12 +784,10 @@ var Todo = new Lang.Class({
         for (; i < n; i++) {
             let str = todo_strings[i];
 
-            if (/\S/.test(str)) {
-                if (this.tasks[i])
-                    this.tasks[i].reset(false, todo_strings[i]);
-                else
-                    this.tasks.push(new TASK.TaskItem(this.ext, this, str, false));
-            }
+            if (this.tasks[i])
+                this.tasks[i].reset(false, todo_strings[i]);
+            else
+                this.tasks.push(new TASK.TaskItem(this.ext, this, str, false));
         }
 
         this.create_tasks_mainloop_id = Mainloop.idle_add(() => {
@@ -804,12 +804,10 @@ var Todo = new Lang.Class({
 
         let str = todo_strings[i];
 
-        if (/\S/.test(str)) {
-            if (this.tasks[i])
-                this.tasks[i].reset(false, str);
-            else
-                this.tasks.push(new TASK.TaskItem(this.ext, this, str, false));
-        }
+        if (this.tasks[i])
+            this.tasks[i].reset(false, str);
+        else
+            this.tasks.push(new TASK.TaskItem(this.ext, this, str, false));
 
         this.create_tasks_mainloop_id = Mainloop.idle_add(() => {
             this._create_tasks__finish(++i, todo_strings, callback);

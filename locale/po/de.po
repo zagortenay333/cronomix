@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: timepp@zagortenay 333\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-10 17:38+0200\n"
+"POT-Creation-Date: 2017-09-10 18:35+0200\n"
 "PO-Revision-Date: 2017-08-29 10:51+0200\n"
 "Last-Translator: Christian Mattes <mac@tasarion.de>\n"
 "Language-Team: German\n"
@@ -237,7 +237,7 @@ msgstr "Bereich zum Wechseln der Aufgaben-Datei öffnen"
 msgid "Todo / Time Tracker"
 msgstr "Aufgaben / Zeiterfassung"
 
-#: ../sections/todo/MAIN.js:256 ../sections/todo/MAIN.js:1144
+#: ../sections/todo/MAIN.js:256 ../sections/todo/MAIN.js:1142
 msgid "Loading..."
 msgstr "Lade..."
 
@@ -256,7 +256,7 @@ msgid_plural "%d tasks have recurred"
 msgstr[0] "%d Aufgabe wurde wiederholt"
 msgstr[1] "%d Aufgaben wurden wiederholt"
 
-#: ../sections/todo/MAIN.js:1150
+#: ../sections/todo/MAIN.js:1148
 #, fuzzy
 msgid "Nothing found."
 msgstr "Nichts gefunden..."
