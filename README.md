@@ -23,7 +23,10 @@ site](https://extensions.gnome.org/extension/1238/time/).
 
 * You can install it manually by cloning/downloading this repo into your
 `~/.local/share/gnome-shell/extensions` dir
-and renaming the downloaded dir to `timepp@zagortenay333`.
+and renaming the downloaded dir to `timepp@zagortenay333`.  
+After that, restart
+gnome-shell (_<kbd>Alt</kbd>+<kbd>F2</kbd> then type `r`_) and enable the
+extension via gnome-tweaks tool.
 
 ---
 
