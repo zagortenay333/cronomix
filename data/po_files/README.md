@@ -6,7 +6,7 @@
     
 ---
     
-**In order to update an existing `.po` file:**
+**To update an existing `.po` file:**
 1. Run the `merge` script.
 1. Go through the `.po` file and check whether there are any missing/fuzzy translations.
 
