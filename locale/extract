@@ -1,3 +1,0 @@
-#!/bin/bash
-find .. -type f -name "*.ui" -o -name "*.js" |
-    xgettext --add-comments="TRANSLATORS:" -o ./po/template.pot -f -

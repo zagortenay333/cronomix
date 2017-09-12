@@ -1,0 +1,11 @@
+#!/bin/bash
+set -eu
+
+
+script_dir=${BASH_SOURCE%/*}
+
+root_dir="$script_dir/../../"
+
+
+find "$root_dir" -type f -name "*.ui" -o -name "*.js" |
+xgettext --add-comments="TRANSLATORS:" -o "$script_dir/template.pot" -f -

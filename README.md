@@ -2,7 +2,7 @@
 
 ### Time ++
 
-<img vspace="30" src="img/logo.png"></img>
+<img vspace="30" src="data/img/logo.png"></img>
 
 **A [todo.txt
 manager](https://github.com/ginatrapani/todo.txt-cli/wiki/The-Todo.txt-Format),
@@ -39,7 +39,8 @@ gnome-shell version **`3.24`**.
 
 ### Translations
 
-If you want to help out with translations, check out the instructions in the [locale](locale) dir.
+If you want to help out with translations, check out the instructions in the
+[po_files](data/po_files) dir.
 
 ---
 

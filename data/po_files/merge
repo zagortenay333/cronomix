@@ -1,0 +1,15 @@
+#!/bin/bash
+set -eu
+
+
+script_dir=${BASH_SOURCE%/*}
+
+template_file="$script_dir/template.pot"
+
+pofiles=$(find "$script_dir/po" -name "*.po")
+
+
+for po_file in $pofiles; do
+    msgmerge -U "$po_file" --backup="none" "$template_file"
+    msgattrib --output-file="$po_file" --no-obsolete "$po_file"
+done

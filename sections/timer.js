@@ -642,13 +642,13 @@ const TimerSettings = new Lang.Class({
         this.entry.scroll_box.hscrollbar_policy = Gtk.PolicyType.NEVER;
 
         // fill entry with notif_msg
-        Meta.later_add(Meta.LaterType.BEFORE_REDRAW, Lang.bind(this, function() {
+        Meta.later_add(Meta.LaterType.BEFORE_REDRAW, () => {
             this.entry.entry.set_text(notif_msg);
-        }));
+        });
 
-        Meta.later_add(Meta.LaterType.BEFORE_REDRAW, Lang.bind(this, function() {
+        Meta.later_add(Meta.LaterType.BEFORE_REDRAW, () => {
             this.entry._resize_entry();
-        }));
+        });
 
 
         //

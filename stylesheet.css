@@ -104,13 +104,13 @@
 }
 
 .timepp-menu .radiobutton StBin {
-    background-image: url('img/radiobutton.svg');
+    background-image: url('data/img/radiobutton.svg');
     height: 16px;
     width: 16px;
 }
 
 .timepp-menu .radiobutton:checked StBin {
-    background-image: url('img/radiobutton-checked.svg');
+    background-image: url('data/img/radiobutton-checked.svg');
 }
 
 .timepp-menu StButton:focus .toggle-switch,
@@ -275,11 +275,11 @@
 }
 
 .timepp-fullscreen .toggle-switch-us, .toggle-switch-intl {
-    background-image: url("img/switch-off.svg");
+    background-image: url("data/img/switch-off.svg");
 }
 
 .timepp-fullscreen .toggle-switch-us:checked, .toggle-switch-intl:checked {
-    background-image: url("img/switch-on.svg");
+    background-image: url("data/img/switch-on.svg");
 }
 
 .timepp-fullscreen .btn-box {

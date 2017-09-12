@@ -6,7 +6,6 @@ const Main      = imports.ui.main;
 const PopupMenu = imports.ui.popupMenu;
 const PanelMenu = imports.ui.panelMenu;
 const Lang      = imports.lang;
-const Util      = imports.misc.util;
 const Mainloop  = imports.mainloop;
 
 
@@ -46,22 +45,24 @@ const Timepp = new Lang.Class({
     _init: function () {
         this.parent(0.5, 'Timepp');
 
+
         this.actor.style_class = '';
         this.actor.can_focus   = false;
         this.actor.reactive    = false;
         this.menu.actor.add_style_class_name('timepp-menu');
 
 
-        this.sigm = new SIG_MANAGER.SignalManager();
+        {
+            let GioSSS = Gio.SettingsSchemaSource;
+            let schema = GioSSS.new_from_directory(
+                ME.path + '/data/schemas', GioSSS.get_default(), false);
+            schema = schema.lookup('org.gnome.shell.extensions.timepp', true);
 
-        // settings
-        let GioSSS = Gio.SettingsSchemaSource;
-        let schema = GioSSS.new_from_directory(
-            ME.path + '/schemas', GioSSS.get_default(), false);
-        schema = schema.lookup('org.gnome.shell.extensions.timepp', true);
-        this.settings = new Gio.Settings({ settings_schema: schema });
+            this.settings = new Gio.Settings({ settings_schema: schema });
+        }
 
 
+        this.sigm                = new SIG_MANAGER.SignalManager();
         this.section_register    = [];
         this.separator_register  = [];
         this.panel_item_position = this.settings.get_enum('panel-item-position');
@@ -69,16 +70,16 @@ const Timepp = new Lang.Class({
         this.theme_change_signal_block = false;
 
 
-        //
         // ensure cache dir
-        //
-        Util.spawnCommandLine("mkdir -p %s".format(
-            GLib.get_home_dir() + '/.cache/timepp_gnome_shell_extension'));
+        {
+            let dir = Gio.file_new_for_path(
+                `${GLib.get_home_dir()}/.cache/timepp_gnome_shell_extension`);
+
+            if (!dir.query_exists(null))
+                dir.make_directory_with_parents(null);
+        }
 
 
-        //
-        // allow custom theme support
-        //
         this._load_stylesheet();
 
 
@@ -422,7 +423,7 @@ const Timepp = new Lang.Class({
     _load_stylesheet: function () {
         this.theme_change_signal_block = true;
 
-        // set custom stylesheet
+        // determine custom stylesheet
         {
             let stylesheet = Main.getThemeStylesheet();
             let path       = stylesheet ? stylesheet.get_path() : '';
@@ -523,7 +524,7 @@ function enable () {
     // with 'timepp-'.
     {
         let icon_theme = imports.gi.Gtk.IconTheme.get_default();
-        icon_theme.prepend_search_path(ME.path + '/img/icons');
+        icon_theme.prepend_search_path(ME.path + '/data/img/icons');
     }
 }
 
@@ -531,7 +532,7 @@ function disable () {
     // remove the custom search path
     {
         let icon_theme  = imports.gi.Gtk.IconTheme.get_default();
-        let custom_path = ME.path + '/img/icons';
+        let custom_path = ME.path + '/data/img/icons';
         let paths       = icon_theme.get_search_path();
         paths.splice(paths.indexOf(custom_path), 1);
         icon_theme.set_search_path(paths);

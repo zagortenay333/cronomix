@@ -389,12 +389,12 @@ var Alarms = new Lang.Class({
         this.alarms_scroll_content.add_actor(alarm_item.actor);
         this.alarms_scroll_wrapper.actor.show();
 
-        alarm_item.connect('alarm-toggled', Lang.bind(this, function () {
+        alarm_item.connect('alarm-toggled', () => {
             if (alarm.ID) Mainloop.source_remove(alarm.ID);
             if (alarm.toggle) this.schedule_alarm(alarm);
             this._update_panel_item_UI();
             this._store_cache();
-        }));
+        });
     },
 
     _delete_alarm: function (alarm) {

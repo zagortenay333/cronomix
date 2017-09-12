@@ -19,7 +19,7 @@ const Settings = new Lang.Class({
         {
             let GioSSS = Gio.SettingsSchemaSource;
             let schema = GioSSS.new_from_directory(
-                ME.path + '/schemas', GioSSS.get_default(), false);
+                ME.path + '/data/schemas', GioSSS.get_default(), false);
             schema = schema.lookup('org.gnome.shell.extensions.timepp', true);
 
             this.settings = new Gio.Settings({ settings_schema: schema });
@@ -28,7 +28,7 @@ const Settings = new Lang.Class({
         this.builder = new Gtk.Builder();
 
         this.builder.set_translation_domain(ME.metadata['gettext-domain']);
-        this.builder.add_from_file(ME.path + '/prefs.ui');
+        this.builder.add_from_file(ME.path + '/data/prefs.ui');
 
         this.selected_row = null;
 
@@ -333,14 +333,18 @@ const Settings = new Lang.Class({
 
         this.builder.get_object('timer-panel-mode-combo')
             .set_active(this.settings.get_enum('timer-panel-mode'));
-        this.builder.get_object('timer-panel-mode-combo').connect('changed',
-            (widget) => {
+        this.builder.get_object('timer-panel-mode-combo')
+            .connect('changed', (widget) => {
                 this.settings.set_enum('timer-panel-mode', widget.get_active());
             });
 
-        if (! this.settings.get_string('timer-sound-file-path')) {
-            this.settings.set_string('timer-sound-file-path',
-                GLib.filename_to_uri(ME.path + '/sounds/beeps.ogg', null));
+        {
+            let sound_f = this.settings.get_string('timer-sound-file-path');
+
+            if (! GLib.file_test(sound_f, GLib.FileTest.EXISTS)) {
+                this.settings.set_string('timer-sound-file-path',
+                    GLib.filename_to_uri(ME.path + '/data/sounds/beeps.ogg', null));
+            }
         }
         this.builder.get_object('timer-sound-chooser')
             .set_uri(this.settings.get_string('timer-sound-file-path'), null);
@@ -351,8 +355,8 @@ const Settings = new Lang.Class({
 
         this.builder.get_object('timer-notif-style-combo')
             .set_active(this.settings.get_enum('timer-notif-style'));
-        this.builder.get_object('timer-notif-style-combo').connect('changed',
-            (widget) => {
+        this.builder.get_object('timer-notif-style-combo')
+            .connect('changed', (widget) => {
                 this.settings.set_enum('timer-notif-style', widget.get_active());
             });
 
@@ -370,8 +374,8 @@ const Settings = new Lang.Class({
 
         this.builder.get_object('timer-keybinding-open')
             .set_text(this.settings.get_strv('timer-keybinding-open')[0]);
-        this.builder.get_object('timer-keybinding-open').connect('changed',
-            (entry) => {
+        this.builder.get_object('timer-keybinding-open')
+            .connect('changed', (entry) => {
                 let [key, mods] = Gtk.accelerator_parse(entry.get_text());
 
                 if (Gtk.accelerator_valid(key, mods)) {
@@ -390,8 +394,8 @@ const Settings = new Lang.Class({
 
         this.builder.get_object('timer-keybinding-open-fullscreen')
             .set_text(this.settings.get_strv('timer-keybinding-open-fullscreen')[0]);
-        this.builder.get_object('timer-keybinding-open-fullscreen').connect('changed',
-            (entry) => {
+        this.builder.get_object('timer-keybinding-open-fullscreen')
+            .connect('changed', (entry) => {
                 let [key, mods] = Gtk.accelerator_parse(entry.get_text());
 
                 if (Gtk.accelerator_valid(key, mods)) {
@@ -420,22 +424,22 @@ const Settings = new Lang.Class({
 
         this.builder.get_object('stopwatch-clock-format-combo')
             .set_active(this.settings.get_enum('stopwatch-clock-format'));
-        this.builder.get_object('stopwatch-clock-format-combo').connect('changed',
-            (widget) => {
+        this.builder.get_object('stopwatch-clock-format-combo')
+            .connect('changed', (widget) => {
                 this.settings.set_enum('stopwatch-clock-format', widget.get_active());
             });
 
         this.builder.get_object('stopwatch-panel-mode-combo')
             .set_active(this.settings.get_enum('stopwatch-panel-mode'));
-        this.builder.get_object('stopwatch-panel-mode-combo').connect('changed',
-            (widget) => {
+        this.builder.get_object('stopwatch-panel-mode-combo')
+            .connect('changed', (widget) => {
                 this.settings.set_enum('stopwatch-panel-mode', widget.get_active());
             });
 
         this.builder.get_object('stopwatch-keybinding-open')
             .set_text(this.settings.get_strv('stopwatch-keybinding-open')[0]);
-        this.builder.get_object('stopwatch-keybinding-open').connect('changed',
-            (entry) => {
+        this.builder.get_object('stopwatch-keybinding-open')
+            .connect('changed', (entry) => {
                 let [key, mods] = Gtk.accelerator_parse(entry.get_text());
 
                 if (Gtk.accelerator_valid(key, mods)) {
@@ -454,8 +458,8 @@ const Settings = new Lang.Class({
 
         this.builder.get_object('stopwatch-keybinding-open-fullscreen')
             .set_text(this.settings.get_strv('stopwatch-keybinding-open-fullscreen')[0]);
-        this.builder.get_object('stopwatch-keybinding-open-fullscreen').connect('changed',
-            (entry) => {
+        this.builder.get_object('stopwatch-keybinding-open-fullscreen')
+            .connect('changed', (entry) => {
                 let [key, mods] = Gtk.accelerator_parse(entry.get_text());
 
                 if (Gtk.accelerator_valid(key, mods)) {
@@ -490,14 +494,18 @@ const Settings = new Lang.Class({
 
         this.builder.get_object('pomodoro-panel-mode-combo')
             .set_active(this.settings.get_enum('pomodoro-panel-mode'));
-        this.builder.get_object('pomodoro-panel-mode-combo').connect('changed',
-            (widget) => {
+        this.builder.get_object('pomodoro-panel-mode-combo')
+            .connect('changed', (widget) => {
                 this.settings.set_enum('pomodoro-panel-mode', widget.get_active());
             });
 
-        if (! this.settings.get_string('pomodoro-sound-file-path')) {
-            this.settings.set_string('pomodoro-sound-file-path',
-                GLib.filename_to_uri(ME.path + '/sounds/beeps.ogg', null));
+        {
+            let sound_f = this.settings.get_string('pomodoro-sound-file-path');
+
+            if (! GLib.file_test(sound_f, GLib.FileTest.EXISTS)) {
+                this.settings.set_string('pomodoro-sound-file-path',
+                    GLib.filename_to_uri(ME.path + '/data/sounds/beeps.ogg', null));
+            }
         }
         this.builder.get_object('pomodoro-sound-chooser')
             .set_uri(this.settings.get_string('pomodoro-sound-file-path'), null);
@@ -508,8 +516,8 @@ const Settings = new Lang.Class({
 
         this.builder.get_object('pomodoro-notif-style-combo')
             .set_active(this.settings.get_enum('pomodoro-notif-style'));
-        this.builder.get_object('pomodoro-notif-style-combo').connect('changed',
-            (widget) => {
+        this.builder.get_object('pomodoro-notif-style-combo')
+            .connect('changed', (widget) => {
                 this.settings.set_enum('pomodoro-notif-style', widget.get_active());
             });
 
@@ -527,8 +535,8 @@ const Settings = new Lang.Class({
 
         this.builder.get_object('pomodoro-keybinding-open')
             .set_text(this.settings.get_strv('pomodoro-keybinding-open')[0]);
-        this.builder.get_object('pomodoro-keybinding-open').connect('changed',
-            (entry) => {
+        this.builder.get_object('pomodoro-keybinding-open')
+            .connect('changed', (entry) => {
                 let [key, mods] = Gtk.accelerator_parse(entry.get_text());
 
                 if (Gtk.accelerator_valid(key, mods)) {
@@ -547,8 +555,8 @@ const Settings = new Lang.Class({
 
         this.builder.get_object('pomodoro-keybinding-open-fullscreen')
             .set_text(this.settings.get_strv('pomodoro-keybinding-open-fullscreen')[0]);
-        this.builder.get_object('pomodoro-keybinding-open-fullscreen').connect('changed',
-            (entry) => {
+        this.builder.get_object('pomodoro-keybinding-open-fullscreen')
+            .connect('changed', (entry) => {
                 let [key, mods] = Gtk.accelerator_parse(entry.get_text());
 
                 if (Gtk.accelerator_valid(key, mods)) {
@@ -575,9 +583,13 @@ const Settings = new Lang.Class({
             'active',
             Gio.SettingsBindFlags.DEFAULT);
 
-        if (! this.settings.get_string('alarms-sound-file-path')) {
-            this.settings.set_string('alarms-sound-file-path',
-                GLib.filename_to_uri(ME.path + '/sounds/beeps.ogg', null));
+        {
+            let sound_f = this.settings.get_string('alarms-sound-file-path');
+
+            if (! GLib.file_test(sound_f, GLib.FileTest.EXISTS)) {
+                this.settings.set_string('alarms-sound-file-path',
+                    GLib.filename_to_uri(ME.path + '/data/sounds/beeps.ogg', null));
+            }
         }
         this.builder.get_object('alarms-sound-chooser')
             .set_uri(this.settings.get_string('alarms-sound-file-path'), null);
@@ -588,8 +600,8 @@ const Settings = new Lang.Class({
 
         this.builder.get_object('alarms-notif-style-combo')
             .set_active(this.settings.get_enum('alarms-notif-style'));
-        this.builder.get_object('alarms-notif-style-combo').connect('changed',
-            (widget) => {
+        this.builder.get_object('alarms-notif-style-combo')
+            .connect('changed', (widget) => {
                 this.settings.set_enum('alarms-notif-style', widget.get_active());
             });
 
@@ -607,8 +619,8 @@ const Settings = new Lang.Class({
 
         this.builder.get_object('alarms-keybinding-open')
             .set_text(this.settings.get_strv('alarms-keybinding-open')[0]);
-        this.builder.get_object('alarms-keybinding-open').connect('changed',
-            (entry) => {
+        this.builder.get_object('alarms-keybinding-open')
+            .connect('changed', (entry) => {
                 let [key, mods] = Gtk.accelerator_parse(entry.get_text());
 
                 if (Gtk.accelerator_valid(key, mods)) {
@@ -637,8 +649,8 @@ const Settings = new Lang.Class({
 
         this.builder.get_object('todo-panel-mode-combo')
             .set_active(this.settings.get_enum('todo-panel-mode'));
-        this.builder.get_object('todo-panel-mode-combo').connect('changed',
-            (widget) => {
+        this.builder.get_object('todo-panel-mode-combo')
+            .connect('changed', (widget) => {
                 this.settings.set_enum('todo-panel-mode', widget.get_active());
             });
 
@@ -650,8 +662,8 @@ const Settings = new Lang.Class({
 
         this.builder.get_object('todo-keybinding-open')
             .set_text(this.settings.get_strv('todo-keybinding-open')[0]);
-        this.builder.get_object('todo-keybinding-open').connect('changed',
-            (entry) => {
+        this.builder.get_object('todo-keybinding-open')
+            .connect('changed', (entry) => {
                 let [key, mods] = Gtk.accelerator_parse(entry.get_text());
 
                 if (Gtk.accelerator_valid(key, mods)) {
@@ -670,8 +682,8 @@ const Settings = new Lang.Class({
 
         this.builder.get_object('todo-keybinding-open-to-add')
             .set_text(this.settings.get_strv('todo-keybinding-open-to-add')[0]);
-        this.builder.get_object('todo-keybinding-open-to-add').connect('changed',
-            (entry) => {
+        this.builder.get_object('todo-keybinding-open-to-add')
+            .connect('changed', (entry) => {
                 let [key, mods] = Gtk.accelerator_parse(entry.get_text());
 
                 if (Gtk.accelerator_valid(key, mods)) {
@@ -690,8 +702,8 @@ const Settings = new Lang.Class({
 
         this.builder.get_object('todo-keybinding-open-to-search')
             .set_text(this.settings.get_strv('todo-keybinding-open-to-search')[0]);
-        this.builder.get_object('todo-keybinding-open-to-search').connect('changed',
-            (entry) => {
+        this.builder.get_object('todo-keybinding-open-to-search')
+            .connect('changed', (entry) => {
                 let [key, mods] = Gtk.accelerator_parse(entry.get_text());
 
                 if (Gtk.accelerator_valid(key, mods)) {
@@ -710,8 +722,8 @@ const Settings = new Lang.Class({
 
         this.builder.get_object('todo-keybinding-open-to-stats')
             .set_text(this.settings.get_strv('todo-keybinding-open-to-stats')[0]);
-        this.builder.get_object('todo-keybinding-open-to-stats').connect('changed',
-            (entry) => {
+        this.builder.get_object('todo-keybinding-open-to-stats')
+            .connect('changed', (entry) => {
                 let [key, mods] = Gtk.accelerator_parse(entry.get_text());
 
                 if (Gtk.accelerator_valid(key, mods)) {
@@ -730,8 +742,8 @@ const Settings = new Lang.Class({
 
         this.builder.get_object('todo-keybinding-open-to-switch-files')
             .set_text(this.settings.get_strv('todo-keybinding-open-to-switch-files')[0]);
-        this.builder.get_object('todo-keybinding-open-to-switch-files').connect('changed',
-            (entry) => {
+        this.builder.get_object('todo-keybinding-open-to-switch-files')
+            .connect('changed', (entry) => {
                 let [key, mods] = Gtk.accelerator_parse(entry.get_text());
 
                 if (Gtk.accelerator_valid(key, mods)) {

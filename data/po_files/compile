@@ -1,0 +1,17 @@
+#!/bin/bash
+set -eu
+
+
+script_dir=${BASH_SOURCE%/*}
+
+locale_dir="$script_dir/../../locale"
+
+pofiles=$(find "$script_dir/po" -name "*.po")
+
+
+for po_file in $pofiles; do
+    lang=${po_file##*/} lang=${lang%.*}
+
+    mkdir -p "$locale_dir/$lang/LC_MESSAGES/"
+	msgfmt "$script_dir/po/${lang}.po" -o "$locale_dir/$lang/LC_MESSAGES/timepp.mo"
+done

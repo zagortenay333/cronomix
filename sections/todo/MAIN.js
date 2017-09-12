@@ -161,9 +161,7 @@ var Todo = new Lang.Class({
         // the popup menu in order to avoid lag when there are lots of items.
         this.ext.menu.close = function () {
             if (this._boxPointer.actor.visible) {
-                this._boxPointer.hide(false, Lang.bind(this, function() {
-                    this.emit('menu-closed');
-                }));
+                this._boxPointer.hide(false, () => this.emit('menu-closed'));
             }
             if (!this.isOpen) return;
             this.isOpen = false;
@@ -583,7 +581,7 @@ var Todo = new Lang.Class({
                 this.todo_txt_file.monitor_file(Gio.FileMonitorFlags.NONE, null);
 
             this.todo_file_monitor.connect(
-                'changed', Lang.bind(this, this._on_todo_file_changed));
+                'changed', () => this._on_todo_file_changed(arguments[3]));
 
             if (!this.todo_txt_file || !this.todo_txt_file.query_exists(null)) {
                 this.show_view__no_todo_file();
@@ -630,7 +628,7 @@ var Todo = new Lang.Class({
             Gio.FileCreateFlags.REPLACE_DESTINATION, null);
     },
 
-    _on_todo_file_changed: function (a, b, c, event_type) {
+    _on_todo_file_changed: function (event_type) {
         // @HACK
         // The normal handler_block/unblock methods don't work with a file
         // monitor for some reason. This seems to work well enough.
@@ -774,9 +772,6 @@ var Todo = new Lang.Class({
         // Since we are reusing already instantiated objects, get rid of any
         // excess task object.
         while (this.tasks.length > len) this.tasks.pop().actor.destroy();
-
-        log(this.tasks.length)
-        log(len)
 
         let n = Math.min(len, 21);
         let i = 0;
