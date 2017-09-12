@@ -4,8 +4,7 @@
 
 <img vspace="30" src="data/img/logo.png"></img>
 
-**A [todo.txt
-manager](https://github.com/ginatrapani/todo.txt-cli/wiki/The-Todo.txt-Format),
+**A [todo.txt manager](https://github.com/todotxt/todotxt/),
 time tracker, timer, stopwatch, pomodoro, and alarms gnome-shell extension.**
 
 </div>
