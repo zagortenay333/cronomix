@@ -32,7 +32,7 @@ extension via gnome-tweaks tool.
 ### Compatibility
 
 The latest version of this extension is on the master branch, and it supports
-gnome-shell version **`3.24`**.
+gnome-shell version **`3.24`** and **`3.26`**.
 
 ---
 
