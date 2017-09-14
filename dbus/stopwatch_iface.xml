@@ -11,7 +11,7 @@
         <method name="lap"/>
         <method name="show_fullscreen"/>
 
-        <!-- time is returned in miliseconds -->
+        <!-- time is returned in microseconds -->
         <method name="get_time">
             <arg name="time" type="u" direction="out"/>
         </method>

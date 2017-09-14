@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-12 14:49+0200\n"
+"POT-Creation-Date: 2017-09-14 19:31+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -30,8 +30,8 @@ msgstr ""
 #: data/po_files/../../sections/todo/view__clear_tasks.js:93
 #: data/po_files/../../sections/todo/view__stats.js:219
 #: data/po_files/../../sections/todo/view__task_editor.js:127
-#: data/po_files/../../sections/timer.js:660
-#: data/po_files/../../sections/pomodoro.js:805
+#: data/po_files/../../sections/timer.js:643
+#: data/po_files/../../sections/pomodoro.js:788
 #: data/po_files/../../sections/alarms.js:621
 msgid "Cancel"
 msgstr ""
@@ -42,8 +42,8 @@ msgstr ""
 #: data/po_files/../../sections/todo/view__filters.js:165
 #: data/po_files/../../sections/todo/view__stats.js:216
 #: data/po_files/../../sections/todo/view__task_editor.js:130
-#: data/po_files/../../sections/timer.js:661
-#: data/po_files/../../sections/pomodoro.js:804
+#: data/po_files/../../sections/timer.js:644
+#: data/po_files/../../sections/pomodoro.js:787
 #: data/po_files/../../sections/alarms.js:622
 msgid "Ok"
 msgstr ""
@@ -194,7 +194,7 @@ msgstr ""
 
 #: data/po_files/../../sections/todo/view__filters.js:164
 #: data/po_files/../../sections/stopwatch.js:167
-#: data/po_files/../../sections/stopwatch.js:632
+#: data/po_files/../../sections/stopwatch.js:638
 msgid "Reset"
 msgstr ""
 
@@ -309,27 +309,25 @@ msgid "Archive"
 msgstr ""
 
 #: data/po_files/../../sections/stopwatch.js:141
-#: data/po_files/../../sections/stopwatch.js:410
+#: data/po_files/../../sections/stopwatch.js:414
 #: data/po_files/../../data/prefs.ui:526 data/po_files/../../data/prefs.ui:1511
 msgid "Stopwatch"
 msgstr ""
 
 #: data/po_files/../../sections/stopwatch.js:168
-#: data/po_files/../../sections/stopwatch.js:633
+#: data/po_files/../../sections/stopwatch.js:639
 msgid "Lap"
 msgstr ""
 
 #: data/po_files/../../sections/stopwatch.js:169
-#: data/po_files/../../sections/stopwatch.js:635
-#: data/po_files/../../sections/pomodoro.js:176
-#: data/po_files/../../sections/pomodoro.js:872
+#: data/po_files/../../sections/stopwatch.js:641
 msgid "Start"
 msgstr ""
 
 #: data/po_files/../../sections/stopwatch.js:170
-#: data/po_files/../../sections/stopwatch.js:634
+#: data/po_files/../../sections/stopwatch.js:640
 #: data/po_files/../../sections/pomodoro.js:177
-#: data/po_files/../../sections/pomodoro.js:873
+#: data/po_files/../../sections/pomodoro.js:880
 msgid "Stop"
 msgstr ""
 
@@ -349,17 +347,17 @@ msgstr ""
 msgid "Help with translations"
 msgstr ""
 
-#: data/po_files/../../sections/timer.js:40
+#: data/po_files/../../sections/timer.js:42
 msgid "Timer Expired!"
 msgstr ""
 
-#: data/po_files/../../sections/timer.js:131
-#: data/po_files/../../sections/timer.js:340
+#: data/po_files/../../sections/timer.js:134
+#: data/po_files/../../sections/timer.js:347
 #: data/po_files/../../data/prefs.ui:482 data/po_files/../../data/prefs.ui:1162
 msgid "Timer"
 msgstr ""
 
-#: data/po_files/../../sections/timer.js:638
+#: data/po_files/../../sections/timer.js:621
 msgid "Timer message..."
 msgstr ""
 
@@ -377,38 +375,43 @@ msgstr ""
 
 #: data/po_files/../../sections/pomodoro.js:131
 #: data/po_files/../../sections/pomodoro.js:312
-#: data/po_files/../../sections/pomodoro.js:406
+#: data/po_files/../../sections/pomodoro.js:408
 #: data/po_files/../../data/prefs.ui:570 data/po_files/../../data/prefs.ui:2010
 msgid "Pomodoro"
 msgstr ""
 
 #: data/po_files/../../sections/pomodoro.js:174
-#: data/po_files/../../sections/pomodoro.js:870
+#: data/po_files/../../sections/pomodoro.js:877
 msgid "New Pomo"
 msgstr ""
 
 #: data/po_files/../../sections/pomodoro.js:175
-#: data/po_files/../../sections/pomodoro.js:871
+#: data/po_files/../../sections/pomodoro.js:878
 msgid "Take Break"
 msgstr ""
 
-#: data/po_files/../../sections/pomodoro.js:715
+#: data/po_files/../../sections/pomodoro.js:176
+#: data/po_files/../../sections/pomodoro.js:879
+msgid "Continue"
+msgstr ""
+
+#: data/po_files/../../sections/pomodoro.js:699
 msgid "Clear all pomodoros?"
 msgstr ""
 
-#: data/po_files/../../sections/pomodoro.js:731
+#: data/po_files/../../sections/pomodoro.js:715
 msgid "Pomodoro (min:sec):"
 msgstr ""
 
-#: data/po_files/../../sections/pomodoro.js:750
+#: data/po_files/../../sections/pomodoro.js:734
 msgid "Short break (min:sec):"
 msgstr ""
 
-#: data/po_files/../../sections/pomodoro.js:770
+#: data/po_files/../../sections/pomodoro.js:753
 msgid "Long break (min:sec):"
 msgstr ""
 
-#: data/po_files/../../sections/pomodoro.js:789
+#: data/po_files/../../sections/pomodoro.js:772
 msgid "Num of pomos until long break:"
 msgstr ""
 

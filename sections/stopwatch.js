@@ -304,7 +304,7 @@ var Stopwatch = new Lang.Class({
                 this.cache = {
                     format_version : cache_format_version,
                     state          : StopwatchState.RESET,
-                    time           : 0, // miliseconds
+                    time           : 0, // microseconds
                     laps           : [],
                 };
             }
@@ -352,16 +352,19 @@ var Stopwatch = new Lang.Class({
             this.button_stop.grab_key_focus();
 
         this.cache.state = StopwatchState.RUNNING;
-        this._store_cache();
         this._toggle_buttons();
         this._panel_item_UI_update();
         this.fullscreen.on_timer_started();
+
         if (! this.time_backup_mainloop_id) this._periodic_time_backup();
 
-        if (! this.tic_mainloop_id) this._tic();
+        this._store_cache();
+        this._tic();
     },
 
     stop: function () {
+        this.cache.time = GLib.get_monotonic_time() - this.start_time;
+
         if (this.tic_mainloop_id) {
             Mainloop.source_remove(this.tic_mainloop_id);
             this.tic_mainloop_id = null;
@@ -378,9 +381,10 @@ var Stopwatch = new Lang.Class({
             this.button_start.grab_key_focus();
 
         this.cache.state = StopwatchState.STOPPED;
-        this._store_cache();
         this._panel_item_UI_update();
         this._toggle_buttons();
+
+        this._store_cache();
     },
 
     reset: function () {
@@ -418,8 +422,7 @@ var Stopwatch = new Lang.Class({
     },
 
     _tic: function () {
-        this.cache.time =
-            Math.floor((GLib.get_monotonic_time() - this.start_time) / 1000);
+        this.cache.time = GLib.get_monotonic_time() - this.start_time;
 
         this._update_time_display();
 
@@ -436,13 +439,15 @@ var Stopwatch = new Lang.Class({
     },
 
     _update_time_display: function () {
-        this.header.label.text = this._time_format_str();
-        this.panel_item.set_label(this.header.label.text);
-        this.fullscreen.set_banner_text(this.header.label.text);
+        let txt = this._time_format_str();
+
+        this.header.label.text = txt;
+        this.panel_item.set_label(txt);
+        this.fullscreen.set_banner_text(txt);
     },
 
     _time_format_str: function () {
-        let t   = Math.floor(this.cache.time / 10); // centiseconds
+        let t   = Math.floor(this.cache.time / 10000); // centiseconds
 
         let cs  = t % 100;
         t       = Math.floor(t / 100);
@@ -558,6 +563,7 @@ var Stopwatch = new Lang.Class({
     },
 
     _periodic_time_backup: function () {
+        this.cache.time = GLib.get_monotonic_time() - this.start_time;
         this._store_cache();
 
         this.time_backup_mainloop_id =
@@ -575,7 +581,7 @@ var Stopwatch = new Lang.Class({
             this.panel_item.set_mode('icon_text');
     },
 
-    // returns int (miliseconds)
+    // returns int (microseconds)
     get_time: function () {
         return this.cache.time;
     },

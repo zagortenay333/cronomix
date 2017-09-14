@@ -33,10 +33,12 @@ const MULTIL_ENTRY  = ME.imports.lib.multiline_entry;
 
 const IFACE = `${ME.path}/dbus/timer_iface.xml`;
 
+
 const CACHE_FILE = GLib.get_home_dir() +
                    '/.cache/timepp_gnome_shell_extension/timepp_timer.json';
 
-const TIMER_MAX_DURATION = 86400; // 24 hours in seconds
+
+const TIMER_MAX_DURATION = 86400000000; // 24 hours in microseconds
 const TIMER_EXPIRED_MSG  = _('Timer Expired!');
 
 
@@ -45,6 +47,7 @@ const TimerState = {
     STOPPED : 'STOPPED',
     OFF     : 'OFF',
 };
+
 
 const NotifStyle = {
     STANDARD   : 0,
@@ -76,11 +79,11 @@ var Timer = new Lang.Class({
         this.section_enabled = this.settings.get_boolean('timer-enabled');
         this.separate_menu   = this.settings.get_boolean('timer-separate-menu');
         this.timer_state     = TimerState.OFF;
-        this.clock           = 0; // in seconds
-        this.end_time        = 0; // for computing elapsed time (microseconds)
         this.tic_mainloop_id = null;
         this.cache_file      = null;
         this.cache           = null;
+        this.clock           = 0; // microseconds
+        this.end_time        = 0; // For computing elapsed time (microseconds)
 
 
         this.fullscreen = new TimerFullscreen(this.ext, this,
@@ -266,7 +269,7 @@ var Timer = new Lang.Class({
                 this.cache = {
                     format_version         : cache_format_version,
                     notif_msg              : '',
-                    last_manually_set_time : 30, // in seconds
+                    last_manually_set_time : 30, // seconds
                 };
             }
         }
@@ -297,17 +300,19 @@ var Timer = new Lang.Class({
     },
 
     // @time: int (seconds)
-    start: function (time = 0) {
+    start: function (time) {
+        if (time) time *= 1000000;
+        else      time  = this.clock;
+
         if (this.tic_mainloop_id) {
             Mainloop.source_remove(this.tic_mainloop_id);
             this.tic_mainloop_id = null;
         }
 
         this.timer_state = TimerState.RUNNING;
-        this.clock       = Math.min(time, TIMER_MAX_DURATION) || this.clock;
-        this.end_time    = GLib.get_monotonic_time() + (this.clock * 1000000);
 
-        this._update_time_display();
+        this.end_time = GLib.get_monotonic_time() + time;
+
         this.fullscreen.on_timer_started();
         this.toggle.setToggleState('checked');
         this.toggle_bin.show();
@@ -317,6 +322,8 @@ var Timer = new Lang.Class({
     },
 
     stop: function () {
+        this.clock = this.end_time - GLib.get_monotonic_time();
+
         if (this.tic_mainloop_id) {
             Mainloop.source_remove(this.tic_mainloop_id);
             this.tic_mainloop_id = null;
@@ -350,17 +357,16 @@ var Timer = new Lang.Class({
     },
 
     _tic: function () {
-        this._update_slider();
-        this._update_time_display();
+        this.clock = this.end_time - GLib.get_monotonic_time();
 
-        if (this.clock < 1) {
+        if (this.clock <= 0) {
             this.clock = 0;
             this._on_timer_expired();
             return;
         }
 
-        this.clock =
-            Math.floor((this.end_time - GLib.get_monotonic_time()) / 1000000)
+        this._update_slider();
+        this._update_time_display();
 
         this.tic_mainloop_id = Mainloop.timeout_add_seconds(1, () => {
             this._tic();
@@ -368,12 +374,13 @@ var Timer = new Lang.Class({
     },
 
     _update_time_display: function () {
-        let time = this.clock;
+        let time = Math.ceil(this.clock / 1000000);
+        let txt;
 
         // If the seconds are not shown, we need to make the timer '1-indexed'
         // in respect to minutes. I.e., 00:00:34 becomes 00:01.
         if (this.settings.get_boolean('timer-show-seconds')) {
-            this.header.label.text = "%02d:%02d:%02d".format(
+            txt = "%02d:%02d:%02d".format(
                 Math.floor(time / 3600),
                 Math.floor(time % 3600 / 60),
                 time % 60
@@ -382,14 +389,15 @@ var Timer = new Lang.Class({
         else {
             if (time % 3600 !== 0) time += 60;
 
-            this.header.label.text = "%02d:%02d".format(
+            txt = "%02d:%02d".format(
                 Math.floor(time / 3600),
                 Math.floor(time % 3600 / 60)
             );
         }
 
-        this.panel_item.set_label(this.header.label.text);
-        this.fullscreen.set_banner_text(this.header.label.text);
+        this.header.label.text = txt;
+        this.panel_item.set_label(txt);
+        this.fullscreen.set_banner_text(txt);
     },
 
     _update_slider: function () {
@@ -403,33 +411,8 @@ var Timer = new Lang.Class({
         this.fullscreen.slider.setValue(y);
     },
 
-    _update_time_display: function () {
-        let time = this.clock;
-
-        // If the seconds are not shown, we need to make the timer '1-indexed'
-        // in respect to minutes. I.e., 00:00:34 becomes 00:01.
-        if (this.settings.get_boolean('timer-show-seconds')) {
-            this.header.label.text = "%02d:%02d:%02d".format(
-                Math.floor(time / 3600),
-                Math.floor(time % 3600 / 60),
-                time % 60
-            );
-        }
-        else {
-            if (time % 3600 !== 0) time += 60;
-
-            this.header.label.text = "%02d:%02d".format(
-                Math.floor(time / 3600),
-                Math.floor(time % 3600 / 60)
-            );
-        }
-
-        this.panel_item.set_label(this.header.label.text);
-        this.fullscreen.set_banner_text(this.header.label.text);
-    },
-
     slider_released: function () {
-        if (this.clock < 1) {
+        if (this.clock < 1000000) {
             this.reset();
         }
         else {
@@ -685,7 +668,7 @@ const TimerSettings = new Lang.Class({
         let min = this.min.counter * 60;
         let sec = this.sec ? this.sec.counter : 0;
 
-        return h + min + sec;
+        return (h + min + sec) * 1000000;
     },
 });
 Signals.addSignalMethods(TimerSettings.prototype);
