@@ -370,17 +370,17 @@ msgstr "Timernachricht..."
 
 #: data/po_files/../../sections/pomodoro.js:39
 msgid "Work!"
-msgstr ""
+msgstr "Arbeite!"
 
 #: data/po_files/../../sections/pomodoro.js:40
 #, fuzzy
 msgid "Long Break!"
-msgstr "Mache eine lange Pause!"
+msgstr "Mach eine lange Pause!"
 
 #: data/po_files/../../sections/pomodoro.js:41
 #, fuzzy
 msgid "Short break!"
-msgstr "Mache eine kurze Pause!"
+msgstr "Mach eine kurze Pause!"
 
 #: data/po_files/../../sections/pomodoro.js:131
 #: data/po_files/../../sections/pomodoro.js:312
@@ -402,7 +402,7 @@ msgstr "Pause machen"
 #: data/po_files/../../sections/pomodoro.js:176
 #: data/po_files/../../sections/pomodoro.js:879
 msgid "Continue"
-msgstr ""
+msgstr "Weiter"
 
 #: data/po_files/../../sections/pomodoro.js:699
 msgid "Clear all pomodoros?"
