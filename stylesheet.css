@@ -459,6 +459,11 @@
 
 .timepp-menu .alarm-section .entry-container {}
 
+.timepp-menu .alarm-section .add-alarm:hover,
+.timepp-menu .alarm-section .add-alarm:focus {
+    color: #5a94dc;
+}
+
 .timepp-menu .alarm-section .alarm-item {
     background: rgba(125, 125, 125, .15);
     border-radius: 2px;
@@ -651,8 +656,8 @@
 
 .timepp-menu .todo-section .task-item StButton:hover,
 .timepp-menu .todo-section .task-item StButton:focus,
-.timepp-menu .todo-section .header StButton:hover,
-.timepp-menu .todo-section .header StButton:focus {
+.timepp-menu .todo-section .add-task:hover,
+.timepp-menu .todo-section .add-task:focus {
     color: #5a94dc;
 }
 

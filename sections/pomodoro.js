@@ -82,6 +82,7 @@ var Pomodoro = new Lang.Class({
         this.tic_mainloop_id  = null;
         this.cache_file       = null;
         this.cache            = null;
+        this.notif_source     = null;
         this.clock            = 0; // microseconds
         this.end_time         = 0; // For computing elapsed time (microseconds)
 
@@ -223,6 +224,9 @@ var Pomodoro = new Lang.Class({
         this.sigm.connect_press(this.button_take_break, () => this.take_break());
 
 
+        //
+        // Init the rest of the section or disconnect signals for now.
+        //
         if (this.section_enabled) this.enable_section();
         else                      this.sigm.disconnect_all();
     },
@@ -241,13 +245,8 @@ var Pomodoro = new Lang.Class({
     },
 
     toggle_section: function () {
-        if (this.section_enabled) {
-            this.disable_section();
-        }
-        else {
-            this.sigm.connect_all();
-            this.enable_section();
-        }
+        if (this.section_enabled) this.disable_section();
+        else                      this.enable_section();
 
         this.section_enabled = this.settings.get_boolean('pomodoro-enabled');
         this.ext.update_panel_items();
@@ -308,6 +307,7 @@ var Pomodoro = new Lang.Class({
 
         this.dbus_impl.export(Gio.DBus.session, '/timepp/zagortenay333/Pomodoro');
         this.keym.enable_all();
+        this.sigm.connect_all();
         this._update_time_display();
         this.header.label.text = _('Pomodoro');
     },
@@ -639,8 +639,11 @@ var Pomodoro = new Lang.Class({
         if (this.fullscreen.is_open)
             return;
 
-        let source = new MessageTray.Source();
-        Main.messageTray.add(source);
+        if (this.notif_source)
+            this.notif_source.destroyNonResidentNotifications();
+
+        this.notif_source = new MessageTray.Source();
+        Main.messageTray.add(this.notif_source);
 
         let icon = new St.Icon({ icon_name: 'timepp-pomodoro-symbolic' });
 
@@ -649,12 +652,12 @@ var Pomodoro = new Lang.Class({
             gicon        : icon.gicon,
         };
 
-        let notif = new MessageTray.Notification(source, msg, '', params);
+        let notif =
+            new MessageTray.Notification(this.notif_source, msg, '', params);
 
-        notif.setUrgency(MessageTray.Urgency.HIGH);
-        notif.setTransient(true);
+        notif.setUrgency(MessageTray.Urgency.CRITICAL);
 
-        source.notify(notif);
+        this.notif_source.notify(notif);
     },
 
     _toggle_panel_mode: function () {

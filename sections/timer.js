@@ -82,6 +82,7 @@ var Timer = new Lang.Class({
         this.tic_mainloop_id = null;
         this.cache_file      = null;
         this.cache           = null;
+        this.notif_source    = null;
         this.clock           = 0; // microseconds
         this.end_time        = 0; // For computing elapsed time (microseconds)
 
@@ -207,6 +208,10 @@ var Timer = new Lang.Class({
         this.sigm.connect(this.slider.actor, 'scroll-event', () => this.slider_released());
         this.sigm.connect(this.slider_item.actor, 'button-press-event', (_, event) => this.slider.startDragging(event));
 
+
+        //
+        // Init the rest of the section or disconnect signals for now.
+        //
         if (this.section_enabled) this.enable_section();
         else                      this.sigm.disconnect_all();
     },
@@ -225,13 +230,8 @@ var Timer = new Lang.Class({
     },
 
     toggle_section: function () {
-        if (this.section_enabled) {
-            this.disable_section();
-        }
-        else {
-            this.sigm.connect_all();
-            this.enable_section();
-        }
+        if (this.section_enabled) this.disable_section();
+        else                      this.enable_section();
 
         this.section_enabled = this.settings.get_boolean('timer-enabled');
         this.ext.update_panel_items();
@@ -284,6 +284,7 @@ var Timer = new Lang.Class({
 
         this.dbus_impl.export(Gio.DBus.session, '/timepp/zagortenay333/Timer');
         this.keym.enable_all();
+        this.sigm.connect_all();
     },
 
     _store_cache: function () {
@@ -475,8 +476,11 @@ var Timer = new Lang.Class({
         if (this.fullscreen.is_open)
             return;
 
-        let source = new MessageTray.Source();
-        Main.messageTray.add(source);
+        if (this.notif_source)
+            this.notif_source.destroyNonResidentNotifications();
+
+        this.notif_source = new MessageTray.Source();
+        Main.messageTray.add(this.notif_source);
 
         let icon = new St.Icon({ icon_name: 'timepp-timer-symbolic' });
 
@@ -486,7 +490,7 @@ var Timer = new Lang.Class({
         };
 
         let notif = new MessageTray.Notification(
-            source,
+            this.notif_source,
             TIMER_EXPIRED_MSG,
             this.cache.notif_msg,
             params
@@ -494,7 +498,7 @@ var Timer = new Lang.Class({
 
         notif.setUrgency(MessageTray.Urgency.CRITICAL);
 
-        source.notify(notif);
+        this.notif_source.notify(notif);
     },
 
     _show_settings: function () {

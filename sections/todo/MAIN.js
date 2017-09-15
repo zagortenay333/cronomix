@@ -421,6 +421,9 @@ var Todo = new Lang.Class({
         });
 
 
+        //
+        // Init the rest of the section or disconnect signals for now.
+        //
         if (this.section_enabled) this.enable_section();
         else                      this.sigm.disconnect_all();
     },
@@ -439,13 +442,8 @@ var Todo = new Lang.Class({
     },
 
     toggle_section: function () {
-        if (this.section_enabled) {
-            this.disable_section();
-        }
-        else {
-            this.sigm.connect_all();
-            this.enable_section();
-        }
+        if (this.section_enabled) this.disable_section();
+        else                      this.enable_section();
 
         this.section_enabled = this.settings.get_boolean('todo-enabled');
         this.ext.update_panel_items();
@@ -506,6 +504,7 @@ var Todo = new Lang.Class({
 
         this._init_todo_file();
         this.keym.enable_all();
+        this.sigm.connect_all();
         this._on_day_started_loop();
     },
 
