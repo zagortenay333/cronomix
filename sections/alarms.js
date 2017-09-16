@@ -505,7 +505,7 @@ const AlarmEditor = new Lang.Class({
             let box = new St.BoxLayout({style_class: 'row numpicker-box'});
             this.content_box.add_actor(box);
 
-            let label = new St.Label({ text: _('Alarm time (h:min): '), x_expand: true, y_align: Clutter.ActorAlign.CENTER });
+            let label = new St.Label({ text: `${_('Alarm time')} ${_('(h:min)')} `, x_expand: true, y_align: Clutter.ActorAlign.CENTER });
             box.add_child(label);
 
             this.hh = new NUM_PICKER.NumPicker(0, 23);
@@ -544,7 +544,7 @@ const AlarmEditor = new Lang.Class({
             let box = new St.BoxLayout({style_class: 'row'});
             this.content_box.add_actor(box);
 
-            let label = new St.Label({ text: _('Snooze duration (min): '), x_expand: true, y_align: Clutter.ActorAlign.CENTER });
+            let label = new St.Label({ text: `${_('Snooze duration')} ${_('(min)')} `, x_expand: true, y_align: Clutter.ActorAlign.CENTER });
             box.add_child(label);
 
             this.snooze_duration_picker = new NUM_PICKER.NumPicker(1, null);

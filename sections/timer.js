@@ -595,24 +595,28 @@ const TimerSettings = new Lang.Class({
         //
         // time pickers
         //
-        this.numpicker_box = new St.BoxLayout({ style_class: 'row numpicker-box' });
-        this.content_box.add_actor(this.numpicker_box);
+        {
+            let box = new St.BoxLayout({ style_class: 'row numpicker-box' });
+            this.content_box.add_actor(box);
 
-        this.hr_bin = new St.Bin({x_align: 1});
-        this.numpicker_box.add(this.hr_bin, {expand: true});
-        this.hr  = new NUM_PICKER.NumPicker(0, 23);
-        this.hr_bin.add_actor(this.hr.actor);
+            let label = new St.Label({ x_expand: true, y_align: Clutter.ActorAlign.CENTER });
+            box.add_child(label);
 
-        this.min_bin = new St.Bin({x_align: 1});
-        this.numpicker_box.add(this.min_bin, {expand: true});
-        this.min = new NUM_PICKER.NumPicker(0, 59);
-        this.min_bin.add_actor(this.min.actor);
+            this.hr = new NUM_PICKER.NumPicker(0, 23);
+            box.add_child(this.hr.actor);
 
-        if (show_secs) {
-            this.sec_bin = new St.Bin({x_align: 1});
-            this.numpicker_box.add(this.sec_bin, {expand: true});
-            this.sec = new NUM_PICKER.NumPicker(0, 59);
-            this.sec_bin.add_actor(this.sec.actor);
+            this.min = new NUM_PICKER.NumPicker(0, 59);
+            box.add_child(this.min.actor);
+
+            if (show_secs) {
+                label.text = `${_('(h:min:sec)')} `;
+
+                this.sec = new NUM_PICKER.NumPicker(0, 59);
+                box.add_child(this.sec.actor);
+            }
+            else {
+                label.text = `${_('(h:min)')} `;
+            }
         }
 
 

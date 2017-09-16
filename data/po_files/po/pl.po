@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-15 20:08+0200\n"
+"POT-Creation-Date: 2017-09-16 12:03+0200\n"
 "PO-Revision-Date: 2017-07-20 07:02+0200\n"
 "Last-Translator: Piotr Komur <pkomur@gmail.com>\n"
 "Language-Team: \n"
@@ -31,7 +31,7 @@ msgstr "Przenieś na dodatkowy monitor"
 #: data/po_files/../../sections/todo/view__clear_tasks.js:93
 #: data/po_files/../../sections/todo/view__stats.js:220
 #: data/po_files/../../sections/todo/view__task_editor.js:127
-#: data/po_files/../../sections/timer.js:647
+#: data/po_files/../../sections/timer.js:651
 #: data/po_files/../../sections/pomodoro.js:791
 #: data/po_files/../../sections/alarms.js:599
 msgid "Cancel"
@@ -43,7 +43,7 @@ msgstr "Anuluj"
 #: data/po_files/../../sections/todo/view__filters.js:165
 #: data/po_files/../../sections/todo/view__stats.js:217
 #: data/po_files/../../sections/todo/view__task_editor.js:130
-#: data/po_files/../../sections/timer.js:648
+#: data/po_files/../../sections/timer.js:652
 #: data/po_files/../../sections/pomodoro.js:790
 #: data/po_files/../../sections/alarms.js:600
 msgid "Ok"
@@ -365,7 +365,18 @@ msgstr "Czas minął!"
 msgid "Timer"
 msgstr "Minutnik"
 
-#: data/po_files/../../sections/timer.js:625
+#: data/po_files/../../sections/timer.js:612
+#, fuzzy
+msgid "(h:min:sec)"
+msgstr "godz.:min.:sek."
+
+#: data/po_files/../../sections/timer.js:618
+#: data/po_files/../../sections/alarms.js:508
+#, fuzzy
+msgid "(h:min)"
+msgstr "godz.:min."
+
+#: data/po_files/../../sections/timer.js:629
 msgid "Timer message..."
 msgstr "Komunikat minutnika..."
 
@@ -386,6 +397,7 @@ msgstr "Weź krótką przerwę!"
 #: data/po_files/../../sections/pomodoro.js:132
 #: data/po_files/../../sections/pomodoro.js:312
 #: data/po_files/../../sections/pomodoro.js:408
+#: data/po_files/../../sections/pomodoro.js:718
 #: data/po_files/../../data/prefs.ui:570 data/po_files/../../data/prefs.ui:2010
 msgid "Pomodoro"
 msgstr ""
@@ -406,26 +418,29 @@ msgid "Continue"
 msgstr ""
 
 #: data/po_files/../../sections/pomodoro.js:702
-msgid "Clear all pomodoros?"
-msgstr "Usunąć wszystkie pomodoro?"
+msgid "Reset pomodoro counter?"
+msgstr ""
 
 #: data/po_files/../../sections/pomodoro.js:718
+#: data/po_files/../../sections/pomodoro.js:737
+#: data/po_files/../../sections/pomodoro.js:756
 #, fuzzy
-msgid "Pomodoro (min:sec):"
+msgid "(min:sec)"
 msgstr "Pomodoro (min):"
 
 #: data/po_files/../../sections/pomodoro.js:737
 #, fuzzy
-msgid "Short break (min:sec):"
-msgstr "Krótka przerwa (min):"
+msgid "Short break"
+msgstr "Weź krótką przerwę!"
 
 #: data/po_files/../../sections/pomodoro.js:756
 #, fuzzy
-msgid "Long break (min:sec):"
-msgstr "Długa przerwa (min):"
+msgid "Long break"
+msgstr "Weź długą przerwę!"
 
 #: data/po_files/../../sections/pomodoro.js:775
-msgid "Num of pomos until long break:"
+#, fuzzy
+msgid "Num of pomos until long break"
 msgstr "Liczba pomodoro do długiej przerwy:"
 
 #: data/po_files/../../sections/alarms.js:129
@@ -445,13 +460,18 @@ msgid "Snooze"
 msgstr "Drzemka"
 
 #: data/po_files/../../sections/alarms.js:508
-msgid "Alarm time (h:min): "
-msgstr ""
+#, fuzzy
+msgid "Alarm time"
+msgstr "Alarm o %s"
 
 #: data/po_files/../../sections/alarms.js:547
 #, fuzzy
-msgid "Snooze duration (min): "
+msgid "Snooze duration"
 msgstr "Czas drzemki (sek.)"
+
+#: data/po_files/../../sections/alarms.js:547
+msgid "(min)"
+msgstr ""
 
 #: data/po_files/../../sections/alarms.js:563
 msgid "Alarm Message..."
