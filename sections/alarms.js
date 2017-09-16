@@ -49,6 +49,8 @@ const NotifStyle = {
 //
 // @ext      : obj (main extension object)
 // @settings : obj (extension settings)
+//
+// @signals: 'section-open-state-changed'
 // =====================================================================
 var Alarms = new Lang.Class({
     Name: 'Timepp.Alarms',
@@ -72,9 +74,8 @@ var Alarms = new Lang.Class({
         this.keym = new KEY_MANAGER.KeybindingManager(this.settings);
 
 
-        this.wallclock           = new GnomeDesktop.WallClock();
-        this.wallclock.time_only = true;
-        this.wallclock_str       = ''; // time_str
+        this.wallclock     = new GnomeDesktop.WallClock();
+        this.wallclock_str = ''; // time_str
 
 
         // @key: alarm obj

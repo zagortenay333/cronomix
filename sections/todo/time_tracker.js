@@ -78,31 +78,24 @@ var TimeTracker = new Lang.Class({
         this.stats_unique_entries = new Set();
 
 
-        // The structure of the daily map is:
-        //
-        // @key:
-        //   is a string which is either a task string (a single line in the
+        // @key: string
+        //   which is either a task string (a single line in the
         //   todo.txt file) or a project keyword (e.g., '+my_project', '+stuff',
         //   etc...)
         //
-        // @val:
-        //   is an object of the form: { time     : int,
-        //                               tracking : bool,
-        //                               type     : string, }
+        // @val: obj
+        //   of the form: {
+        //       time     : int    (in seconds)
+        //       tracking : bool
+        //       type     : string ('++' = project, '()' = task)
+        //   }
         //
-        //   If the type is '++' (a project), then the @val obj will have the
-        //   additional property: tracked_children (int).
+        //   If @type is '()', then @val also has the prop:
+        //       task_ref: obj (the ref of the corresponding task object)
         //
-        //   If the type is '()' (a task), then the @val object will have the
-        //   additional property: task_ref (obj).
-        //
-        //   @time     : time tracked in seconds.
-        //   @tracking : indicates whether the entry is being tracked.
-        //   @type     : indicates whether the entry is a project or task.
-        //
-        //   @task_ref         : the ref of the corresponding task object.
-        //   @tracked_children : number of tasks that are part of this project
-        //                       and that are being tracked.
+        //   If @type is '++', then @val also has the prop:
+        //       @tracked_children: int (number of tasks that are part of this
+        //                               project and that are being tracked)
         this.daily_csv_map = new Map();
 
 
@@ -139,7 +132,7 @@ var TimeTracker = new Lang.Class({
         let min = arguments[0] || 1;
 
         this.tracker_tic_id = Mainloop.timeout_add_seconds(1, () => {
-            for (let v of this.daily_csv_map.values()) {
+            for (let [,v] of this.daily_csv_map) {
                 if (v.tracking) v.time++;
             }
 
@@ -259,37 +252,34 @@ var TimeTracker = new Lang.Class({
 
         // init daily csv map
         {
-            let [, contents] = this.daily_csv_file.load_contents(null);
-            contents = String(contents).trim().split(/\n|\r/);
+            let date_str = G.date_yyyymmdd(d);
 
-            // Check whether we need to archive the daily file.
-            for (let i = 0, len = contents.length; i < len; i++) {
-                if (contents[i] === '') continue;
+            let [, lines] = this.daily_csv_file.load_contents(null);
+            lines = String(lines).split(/\n|\r/).filter((l) => /\S/.test(l));
 
-                if (contents[i].substr(0, 10) !== G.date_yyyymmdd(d)) {
+            for (let it of lines) {
+                if (it.substr(0, 10) !== date_str) {
                     this._archive_daily_csv_file();
-                    return;
+                    this.daily_csv_map.clear();
+                    break;
                 }
-            }
-
-            for (let i = 0, len = contents.length; i < len; i++) {
-                let it = contents[i].trim();
 
                 if (it === '') continue;
 
                 let key  = it.substring(24, it.length - 1).replace(/""/g, '"');
                 let type = it.substr(19, 2);
 
-                this.daily_csv_map.set(key, {
-                    time : +(it.substr(12, 2)) * 3600 + (+(it.substr(15, 2)) * 60),
+                let entry = {
                     tracking : false,
                     type     : type,
-                });
+                    time     : +(it.substr(12, 2)) * 3600 +
+                               +(it.substr(15, 2)) * 60,
+                };
 
-                if (type === '++')
-                    this.daily_csv_map.get(key).tracked_children = 0;
-                else
-                    this.daily_csv_map.get(key).task_ref = null;
+                if (type === '++') entry.tracked_children = 0;
+                else               entry.task_ref = null;
+
+                this.daily_csv_map.set(key, entry);
             }
         }
     },
@@ -366,7 +356,7 @@ var TimeTracker = new Lang.Class({
 
         let d = G.date_yyyymmdd();
 
-        for (let v of this.daily_csv_map.values()) {
+        for (let [,v] of this.daily_csv_map) {
             v.date = d;
             v.time = 0;
         }
@@ -404,18 +394,14 @@ var TimeTracker = new Lang.Class({
     },
 
     start_tracking_by_id: function (id) {
-        for (let i = 0, len = this.delegate.tasks.length; i < len; i++) {
-            if (this.delegate.tasks[i].tracker_id === id) {
-                this.start_tracking(this.delegate.tasks[i]);
-            }
+        for (let it of this.delegate.tasks) {
+            if (it.tracker_id === id) this.start_tracking(it);
         }
     },
 
     stop_tracking_by_id: function (id) {
-        for (let i = 0, len = this.delegate.tasks.length; i < len; i++) {
-            if (this.delegate.tasks[i].tracker_id === id) {
-                this.stop_tracking(this.delegate.tasks[i]);
-            }
+        for (let it of this.delegate.tasks) {
+            if (it.tracker_id === id) this.stop_tracking(it);
         }
     },
 
@@ -444,15 +430,15 @@ var TimeTracker = new Lang.Class({
             });
         }
 
-        for (let i = 0, len = task.projects.length; i < len; i++) {
-            val = this.daily_csv_map.get(task.projects[i]);
+        for (let project of task.projects) {
+            val = this.daily_csv_map.get(project);
 
             if (val) {
                 val.tracking = true;
                 val.tracked_children++;
             }
             else {
-                this.daily_csv_map.set(task.projects[i], {
+                this.daily_csv_map.set(project, {
                     time             : 0,
                     tracking         : true,
                     type             : '++',
@@ -464,9 +450,8 @@ var TimeTracker = new Lang.Class({
         this.number_of_tracked_tasks++;
         if (! this.tracker_tic_id) this._tracker_tic();
 
-        for (let i = 0, len = this.delegate.tasks.length; i < len; i++) {
-            if (this.delegate.tasks[i].task_str === task.task_str)
-                this.delegate.tasks[i].on_tracker_started();
+        for (let it of this.delegate.tasks) {
+            if (it.task_str === task.task_str) it.on_tracker_started();
         }
 
         this.delegate.panel_item.actor.add_style_class_name('on');
@@ -482,16 +467,13 @@ var TimeTracker = new Lang.Class({
         val.tracking = false;
         this.number_of_tracked_tasks--;
 
-        let proj;
-
-        for (let i = 0, len = task.projects.length; i < len; i++) {
-            proj = this.daily_csv_map.get(task.projects[i]);
-            if (--proj.tracked_children === 0) proj.tracking = false;
+        for (let project of task.projects) {
+            let val = this.daily_csv_map.get(project);
+            if (--val.tracked_children === 0) val.tracking = false;
         }
 
-        for (let i = 0, len = this.delegate.tasks.length; i < len; i++) {
-            if (this.delegate.tasks[i].task_str === task.task_str)
-                this.delegate.tasks[i].on_tracker_stopped();
+        for (let it of this.delegate.tasks) {
+            if (it.task_str === task.task_str) it.on_tracker_stopped();
         }
 
         if (this.number_of_tracked_tasks === 0)
@@ -503,6 +485,8 @@ var TimeTracker = new Lang.Class({
     update_record_name: function (old_task_str, new_task_str) {
         if (!this.csv_dir) return null;
 
+        // We can safely delete this since the get_stats func will add the entry
+        // back if we tracked it before yesterday.
         this.stats_unique_entries.delete(old_task_str);
 
         let val = this.daily_csv_map.get(old_task_str);

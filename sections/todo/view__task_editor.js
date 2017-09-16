@@ -218,14 +218,15 @@ var TaskEditor = new Lang.Class({
     _find_completions: function (needle, haystack) {
         if (needle === '@' || needle === '+') {
             let res = [];
-            for (let key of haystack.keys()) res.push(key);
+            for (let [key,] of haystack) res.push(key);
             return res;
         }
 
         let reduced_results = [];
 
         let score;
-        for (let keyword of haystack.keys()) {
+
+        for (let [keyword,] of haystack) {
             score = FUZZ.fuzzy_search_v1(needle, keyword);
             if (!score) continue;
             reduced_results.push([score, keyword]);

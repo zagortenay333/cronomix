@@ -35,7 +35,7 @@ const CACHE_FILE = GLib.get_home_dir() +
 
 const StopwatchState = {
     RUNNING : 'RUNNING',
-    STOPPED  : 'STOPPED',
+    STOPPED : 'STOPPED',
     RESET   : 'RESET',
 };
 
@@ -56,6 +56,8 @@ const NotifStyle = {
 //
 // @ext      : obj (main extension object)
 // @settings : obj (extension settings)
+//
+// @signals: 'section-open-state-changed'
 // =====================================================================
 var Stopwatch = new Lang.Class({
     Name: 'Timepp.Stopwatch',
@@ -578,7 +580,10 @@ var Stopwatch = new Lang.Class({
 
     // returns int (microseconds)
     get_time: function () {
-        return this.cache.time;
+        if (this.cache.state === StopwatchState.RUNNING)
+            return GLib.get_monotonic_time() - this.start_time;
+        else
+            return this.cache.time;
     },
 });
 Signals.addSignalMethods(Stopwatch.prototype);

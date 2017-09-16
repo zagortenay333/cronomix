@@ -60,6 +60,10 @@ const NotifStyle = {
 //
 // @ext      : obj (main extension object)
 // @settings : obj (extension settings)
+//
+// @signals:
+//   - 'section-open-state-changed'
+//   - 'stop-time-tracking'
 // =====================================================================
 var Pomodoro = new Lang.Class({
     Name: 'Timepp.Pomodoro',
