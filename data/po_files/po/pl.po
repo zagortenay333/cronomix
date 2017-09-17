@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-16 19:48+0200\n"
+"POT-Creation-Date: 2017-09-17 12:07+0200\n"
 "PO-Revision-Date: 2017-07-20 07:02+0200\n"
 "Last-Translator: Piotr Komur <pkomur@gmail.com>\n"
 "Language-Team: \n"
@@ -50,7 +50,7 @@ msgid "Ok"
 msgstr "OK"
 
 #: data/po_files/../../sections/todo/MAIN.js:259
-#: data/po_files/../../sections/todo/MAIN.js:1121
+#: data/po_files/../../sections/todo/MAIN.js:1130
 msgid "Loading..."
 msgstr "Wczytuję..."
 
@@ -62,7 +62,7 @@ msgstr "Wskaż w ustawieniach plik 'todo'..."
 msgid "Add New Task..."
 msgstr "Dodaj nowe zadanie..."
 
-#: data/po_files/../../sections/todo/MAIN.js:684
+#: data/po_files/../../sections/todo/MAIN.js:693
 #, javascript-format
 msgid "%d task has recurred"
 msgid_plural "%d tasks have recurred"
@@ -70,7 +70,7 @@ msgstr[0] "%d powtórzyło się"
 msgstr[1] "%d powtórzyły się"
 msgstr[2] "%d powtórzyło się"
 
-#: data/po_files/../../sections/todo/MAIN.js:1127
+#: data/po_files/../../sections/todo/MAIN.js:1136
 msgid "Nothing found."
 msgstr "Nic nie znaleziono..."
 

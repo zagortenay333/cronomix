@@ -510,7 +510,6 @@ var Todo = new Lang.Class({
         }
 
         this.view_manager = new VIEW_MANAGER.ViewManager(this.ext, this);
-        this.time_tracker = new TIME_TRACKER.TimeTracker(this.ext, this);
         this.stats_view   = new VIEW_STATS.StatsView(this.ext, this, 0);
 
         this._init_todo_file();
@@ -557,16 +556,26 @@ var Todo = new Lang.Class({
 
     _init_todo_file: function () {
         // reset
-        this.tasks_viewport = [];
-        this.tasks_scroll_content.remove_all_children();
-        this.stats.priorities.clear();
-        this.stats.contexts.clear();
-        this.stats.projects.clear();
-        if (this.todo_file_monitor) {
-            this.todo_file_monitor.cancel();
-            this.todo_file_monitor = null;
+        {
+            this.tasks_viewport = [];
+            this.tasks_scroll_content.remove_all_children();
+
+            this.stats.priorities.clear();
+            this.stats.contexts.clear();
+            this.stats.projects.clear();
+
+            if (this.todo_file_monitor) {
+                this.todo_file_monitor.cancel();
+                this.todo_file_monitor = null;
+            }
+
+            if (this.time_tracker) {
+                this.time_tracker.close();
+                this.time_tracker = null;
+            }
         }
 
+        this.time_tracker = new TIME_TRACKER.TimeTracker(this.ext, this);
 
         let current = this.settings.get_value('todo-current').deep_unpack();
 
