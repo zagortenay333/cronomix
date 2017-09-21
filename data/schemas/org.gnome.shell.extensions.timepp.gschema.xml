@@ -229,11 +229,6 @@
             <description>Notification style</description>
         </key>
 
-        <key name="alarms-snooze-duration" type="i">
-            <default>300</default>
-            <description>Snooze duration</description>
-        </key>
-
         <key name="alarms-keybinding-open" type="as">
             <default><![CDATA[[""]]]></default>
             <description>Open this section</description>

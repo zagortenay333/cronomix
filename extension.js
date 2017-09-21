@@ -56,7 +56,7 @@ const Timepp = new Lang.Class({
             let GioSSS = Gio.SettingsSchemaSource;
             let schema = GioSSS.new_from_directory(
                 ME.path + '/data/schemas', GioSSS.get_default(), false);
-            schema = schema.lookup('org.gnome.shell.extensions.timepp', true);
+            schema = schema.lookup('org.gnome.shell.extensions.timepp', false);
 
             this.settings = new Gio.Settings({ settings_schema: schema });
         }

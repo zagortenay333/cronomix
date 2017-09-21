@@ -35,7 +35,7 @@ const CACHE_FILE = GLib.get_home_dir() +
 
 const StopwatchState = {
     RUNNING : 'RUNNING',
-    STOPPED  : 'STOPPED',
+    STOPPED : 'STOPPED',
     RESET   : 'RESET',
 };
 
@@ -56,6 +56,8 @@ const NotifStyle = {
 //
 // @ext      : obj (main extension object)
 // @settings : obj (extension settings)
+//
+// @signals: 'section-open-state-changed'
 // =====================================================================
 var Stopwatch = new Lang.Class({
     Name: 'Timepp.Stopwatch',
@@ -237,6 +239,9 @@ var Stopwatch = new Lang.Class({
         });
 
 
+        //
+        // Init the rest of the section or disconnect signals for now.
+        //
         if (this.section_enabled) this.enable_section();
         else                      this.sigm.disconnect_all();
     },
@@ -255,13 +260,8 @@ var Stopwatch = new Lang.Class({
     },
 
     toggle_section: function () {
-        if (this.section_enabled) {
-            this.disable_section();
-        }
-        else {
-            this.sigm.connect_all();
-            this.enable_section();
-        }
+        if (this.section_enabled) this.disable_section();
+        else                      this.enable_section();
 
         this.section_enabled = this.settings.get_boolean('stopwatch-enabled');
         this.ext.update_panel_items();
@@ -328,13 +328,10 @@ var Stopwatch = new Lang.Class({
 
 
         this._update_laps();
-
         this._update_time_display();
 
-        if (this.cache.state === StopwatchState.RUNNING)
-            this.start();
-        else
-            this.stop();
+        if (this.cache.state === StopwatchState.RUNNING) this.start();
+        else                                             this.stop();
     },
 
     _store_cache: function () {
@@ -583,7 +580,10 @@ var Stopwatch = new Lang.Class({
 
     // returns int (microseconds)
     get_time: function () {
-        return this.cache.time;
+        if (this.cache.state === StopwatchState.RUNNING)
+            return GLib.get_monotonic_time() - this.start_time;
+        else
+            return this.cache.time;
     },
 });
 Signals.addSignalMethods(Stopwatch.prototype);

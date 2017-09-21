@@ -60,6 +60,10 @@ const NotifStyle = {
 //
 // @ext      : obj (main extension object)
 // @settings : obj (extension settings)
+//
+// @signals:
+//   - 'section-open-state-changed'
+//   - 'stop-time-tracking'
 // =====================================================================
 var Pomodoro = new Lang.Class({
     Name: 'Timepp.Pomodoro',
@@ -82,6 +86,7 @@ var Pomodoro = new Lang.Class({
         this.tic_mainloop_id  = null;
         this.cache_file       = null;
         this.cache            = null;
+        this.notif_source     = null;
         this.clock            = 0; // microseconds
         this.end_time         = 0; // For computing elapsed time (microseconds)
 
@@ -223,6 +228,9 @@ var Pomodoro = new Lang.Class({
         this.sigm.connect_press(this.button_take_break, () => this.take_break());
 
 
+        //
+        // Init the rest of the section or disconnect signals for now.
+        //
         if (this.section_enabled) this.enable_section();
         else                      this.sigm.disconnect_all();
     },
@@ -241,13 +249,8 @@ var Pomodoro = new Lang.Class({
     },
 
     toggle_section: function () {
-        if (this.section_enabled) {
-            this.disable_section();
-        }
-        else {
-            this.sigm.connect_all();
-            this.enable_section();
-        }
+        if (this.section_enabled) this.disable_section();
+        else                      this.enable_section();
 
         this.section_enabled = this.settings.get_boolean('pomodoro-enabled');
         this.ext.update_panel_items();
@@ -308,6 +311,7 @@ var Pomodoro = new Lang.Class({
 
         this.dbus_impl.export(Gio.DBus.session, '/timepp/zagortenay333/Pomodoro');
         this.keym.enable_all();
+        this.sigm.connect_all();
         this._update_time_display();
         this.header.label.text = _('Pomodoro');
     },
@@ -639,8 +643,11 @@ var Pomodoro = new Lang.Class({
         if (this.fullscreen.is_open)
             return;
 
-        let source = new MessageTray.Source();
-        Main.messageTray.add(source);
+        if (this.notif_source)
+            this.notif_source.destroyNonResidentNotifications();
+
+        this.notif_source = new MessageTray.Source();
+        Main.messageTray.add(this.notif_source);
 
         let icon = new St.Icon({ icon_name: 'timepp-pomodoro-symbolic' });
 
@@ -649,12 +656,12 @@ var Pomodoro = new Lang.Class({
             gicon        : icon.gicon,
         };
 
-        let notif = new MessageTray.Notification(source, msg, '', params);
+        let notif =
+            new MessageTray.Notification(this.notif_source, msg, '', params);
 
-        notif.setUrgency(MessageTray.Urgency.HIGH);
-        notif.setTransient(true);
+        notif.setUrgency(MessageTray.Urgency.CRITICAL);
 
-        source.notify(notif);
+        this.notif_source.notify(notif);
     },
 
     _toggle_panel_mode: function () {
@@ -696,7 +703,7 @@ const PomodoroSettings = new Lang.Class({
         this.clear_all_item = new St.BoxLayout({style_class: 'row'});
         this.content_box.add_actor(this.clear_all_item);
 
-        this.clear_item_label = new St.Label({text: _('Clear all pomodoros?'), y_align: Clutter.ActorAlign.CENTER});
+        this.clear_item_label = new St.Label({text: `${_('Reset pomodoro counter?')} `, y_align: Clutter.ActorAlign.CENTER});
         this.clear_all_item.add(this.clear_item_label, {expand: true});
 
         this.clear_checkbox_bin = new St.Bin();
@@ -712,7 +719,7 @@ const PomodoroSettings = new Lang.Class({
         this.pomo_duration = new St.BoxLayout({style_class: 'row'});
         this.content_box.add_actor(this.pomo_duration);
 
-        this.pomo_label = new St.Label({text: _('Pomodoro (min:sec):'), y_align: Clutter.ActorAlign.CENTER});
+        this.pomo_label = new St.Label({text: `${_('Pomodoro')} ${_('(min:sec)')} `, y_align: Clutter.ActorAlign.CENTER});
         this.pomo_duration.add(this.pomo_label, {expand: true});
 
         this.pomo_dur_min_picker = new NUM_PICKER.NumPicker(0, null);
@@ -731,7 +738,7 @@ const PomodoroSettings = new Lang.Class({
         this.short_break = new St.BoxLayout({style_class: 'row'});
         this.content_box.add_actor(this.short_break);
 
-        this.short_break_label = new St.Label({text: _('Short break (min:sec):'), y_align: Clutter.ActorAlign.CENTER});
+        this.short_break_label = new St.Label({text: `${_('Short break')} ${_('(min:sec)')} `, y_align: Clutter.ActorAlign.CENTER});
         this.short_break.add(this.short_break_label, {expand: true});
 
         this.short_break_min_picker = new NUM_PICKER.NumPicker(0, null);
@@ -750,7 +757,7 @@ const PomodoroSettings = new Lang.Class({
         this.long_break = new St.BoxLayout({style_class: 'row'});
         this.content_box.add_actor(this.long_break);
 
-        this.long_break_label = new St.Label({text: _('Long break (min:sec):'), y_align: Clutter.ActorAlign.CENTER});
+        this.long_break_label = new St.Label({text: `${_('Long break')} ${_('(min:sec)')} `, y_align: Clutter.ActorAlign.CENTER});
         this.long_break.add(this.long_break_label, {expand: true});
 
         this.long_break_min_picker = new NUM_PICKER.NumPicker(0, null);
@@ -769,7 +776,7 @@ const PomodoroSettings = new Lang.Class({
         this.long_break_rate = new St.BoxLayout({style_class: 'row'});
         this.content_box.add_actor(this.long_break_rate);
 
-        this.long_break_rate_label = new St.Label({text: _('Num of pomos until long break:'), y_align: Clutter.ActorAlign.CENTER});
+        this.long_break_rate_label = new St.Label({text: `${_('Num of pomos until long break')} `, y_align: Clutter.ActorAlign.CENTER});
         this.long_break_rate.add(this.long_break_rate_label, {expand: true});
 
         this.long_break_rate_picker = new NUM_PICKER.NumPicker(1, null);

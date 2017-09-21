@@ -1,14 +1,15 @@
-const St        = imports.gi.St;
-const Gio       = imports.gi.Gio
-const Gtk       = imports.gi.Gtk;
-const Meta      = imports.gi.Meta;
-const GLib      = imports.gi.GLib;
-const Clutter   = imports.gi.Clutter;
-const Main      = imports.ui.main;
-const PopupMenu = imports.ui.popupMenu;
-const Lang      = imports.lang;
-const Signals   = imports.signals;
-const Mainloop  = imports.mainloop;
+const St           = imports.gi.St;
+const Gio          = imports.gi.Gio
+const Gtk          = imports.gi.Gtk;
+const Meta         = imports.gi.Meta;
+const GLib         = imports.gi.GLib;
+const Clutter      = imports.gi.Clutter;
+const GnomeDesktop = imports.gi.GnomeDesktop;
+const Main         = imports.ui.main;
+const PopupMenu    = imports.ui.popupMenu;
+const Lang         = imports.lang;
+const Signals      = imports.signals;
+const Mainloop     = imports.mainloop;
 
 
 const ME = imports.misc.extensionUtils.getCurrentExtension();
@@ -49,6 +50,10 @@ const CACHE_FILE = GLib.get_home_dir() +
 //
 // @ext      : obj (main extension object)
 // @settings : obj (extension settings)
+//
+// @signals:
+//   - 'new-day' (new day started)
+//   - 'section-open-state-changed'
 // =====================================================================
 var Todo = new Lang.Class({
     Name: 'Timepp.Todo',
@@ -70,6 +75,10 @@ var Todo = new Lang.Class({
         this.time_tracker = null;
 
 
+        // We use this for tracking when a new day begins.
+        this.wallclock = new GnomeDesktop.WallClock();
+
+
         // The view manager only allows one view to be visible at time; however,
         // since the stats view uses the fullscreen iface, it is orthogonal to
         // the other views, so we don't use the view manager for it.
@@ -78,6 +87,7 @@ var Todo = new Lang.Class({
 
         // Track how many tasks have a particular proj/context/prio, a
         // recurrence, etc...
+        // The func _reset_stats_obj defines the form of this object.
         this.stats = null;
         this._reset_stats_obj();
 
@@ -138,11 +148,6 @@ var Todo = new Lang.Class({
         // If null, the corresponding func is not running.
         this.create_tasks_mainloop_id      = null;
         this.add_tasks_to_menu_mainloop_id = null;
-
-
-        // The mainloop id of the _on_day_started_loop.
-        // If null, the loop is not running.
-        this.on_day_started_loop_id = null;
 
 
         // These css properties need to be added to the
@@ -392,8 +397,8 @@ var Todo = new Lang.Class({
         });
         this.sigm.connect(this.settings, 'changed::todo-task-width', () => {
             let width = this.settings.get_int('todo-task-width');
-            for (let i = 0, len = this.tasks.length; i < len; i++)
-                this.tasks[i].actor.width = width;
+            for (let task of this.tasks)
+                task.actor.width = width;
         });
         this.sigm.connect(this.settings, 'changed::todo-current', () => {
             this._on_todo_file_changed();
@@ -404,6 +409,12 @@ var Todo = new Lang.Class({
                 return;
 
             this.ext.open_menu(this);
+        });
+        this.sigm.connect(this.wallclock, 'notify::clock', () => {
+            let t = GLib.DateTime.new_now(this.wallclock.timezone);
+            t     = t.format('%H:%M');
+
+            if (t === '00:00') this._on_new_day_started();
         });
         this.sigm.connect(this.panel_item, 'left-click', () => this.ext.toggle_menu(this));
         this.sigm.connect(this.panel_item, 'right-click', () => this.ext.toggle_context_menu(this));
@@ -421,6 +432,9 @@ var Todo = new Lang.Class({
         });
 
 
+        //
+        // Init the rest of the section or disconnect signals for now.
+        //
         if (this.section_enabled) this.enable_section();
         else                      this.sigm.disconnect_all();
     },
@@ -439,13 +453,8 @@ var Todo = new Lang.Class({
     },
 
     toggle_section: function () {
-        if (this.section_enabled) {
-            this.disable_section();
-        }
-        else {
-            this.sigm.connect_all();
-            this.enable_section();
-        }
+        if (this.section_enabled) this.disable_section();
+        else                      this.enable_section();
 
         this.section_enabled = this.settings.get_boolean('todo-enabled');
         this.ext.update_panel_items();
@@ -501,12 +510,11 @@ var Todo = new Lang.Class({
         }
 
         this.view_manager = new VIEW_MANAGER.ViewManager(this.ext, this);
-        this.time_tracker = new TIME_TRACKER.TimeTracker(this.ext, this);
         this.stats_view   = new VIEW_STATS.StatsView(this.ext, this, 0);
 
         this._init_todo_file();
         this.keym.enable_all();
-        this._on_day_started_loop();
+        this.sigm.connect_all();
     },
 
     disable_section: function () {
@@ -531,11 +539,6 @@ var Todo = new Lang.Class({
             this.add_tasks_to_menu_mainloop_id = null;
         }
 
-        if (this.on_day_started_loop_id) {
-            Mainloop.source_remove(this.on_day_started_loop_id);
-            this.on_day_started_loop_id = null;
-        }
-
         if (this.time_tracker) {
             this.time_tracker.close();
             this.time_tracker = null;
@@ -553,16 +556,26 @@ var Todo = new Lang.Class({
 
     _init_todo_file: function () {
         // reset
-        this.tasks_viewport = [];
-        this.tasks_scroll_content.remove_all_children();
-        this.stats.priorities.clear();
-        this.stats.contexts.clear();
-        this.stats.projects.clear();
-        if (this.todo_file_monitor) {
-            this.todo_file_monitor.cancel();
-            this.todo_file_monitor = null;
+        {
+            this.tasks_viewport = [];
+            this.tasks_scroll_content.remove_all_children();
+
+            this.stats.priorities.clear();
+            this.stats.contexts.clear();
+            this.stats.projects.clear();
+
+            if (this.todo_file_monitor) {
+                this.todo_file_monitor.cancel();
+                this.todo_file_monitor = null;
+            }
+
+            if (this.time_tracker) {
+                this.time_tracker.close();
+                this.time_tracker = null;
+            }
         }
 
+        this.time_tracker = new TIME_TRACKER.TimeTracker(this.ext, this);
 
         let current = this.settings.get_value('todo-current').deep_unpack();
 
@@ -656,38 +669,21 @@ var Todo = new Lang.Class({
         this._init_todo_file();
     },
 
-    _on_day_started_loop: function () {
-        if (this.on_day_started_loop_id) return;
+    _on_new_day_started: function () {
+        this.emit('new-day');
 
-        let t = new Date();
-        t = 86400 - Math.round((t.getTime() - t.setHours(0,0,2,0)) / 1000);
+        for (let task of this.tasks)
+            task.update_due_date();
 
-        this.on_day_started_loop_id = Mainloop.timeout_add_seconds(t, () => {
-            // We only emit here, or else we will emit every time the ext
-            // gets reloaded. In that case it couldn't be used by functions
-            // that deal with persistent data. On the other hand, this may never
-            // execute if the ext is removed before midnight and added back
-            // after.
-            this.emit('new-day');
-
-            // Update all due dates.
-            for (let i = 0, len = this.tasks.length; i < len; i++) {
-                this.tasks[i].update_due_date();
-            }
-
-            this._check_recurrences();
-
-            this.on_day_started_loop_id = null;
-            this._on_day_started_loop();
-        });
+        this._check_recurrences();
     },
 
     _check_recurrences: function () {
         let needs_update = false;
         let n            = 0;
 
-        for (let i = 0, len = this.tasks.length; i < len; i++) {
-            if (this.tasks[i].check_recurrence()) {
+        for (let task of this.tasks) {
+            if (task.check_recurrence()) {
                 needs_update = true;
                 n++;
             }
@@ -721,14 +717,11 @@ var Todo = new Lang.Class({
         });
 
         if (update_needed) {
-            for (let i = 0, len = this.tasks.length; i < len; i++) {
-                this.tasks[i].update_markup_colors();
-            }
+            for (let task of this.tasks)
+                task.update_markup_colors();
         }
     },
 
-    // The form of the stats object is only defined here.
-    //
     // The maps have the structure:
     // @key : string  (a context/project/priority)
     // @val : natural (number of tasks that have that @key)
@@ -1522,7 +1515,7 @@ var Todo = new Lang.Class({
     _find_prev_search_results: function (pattern) {
         let res = '';
 
-        for (let old_patt of this.search_dictionary.keys()) {
+        for (let [old_patt,] of this.search_dictionary) {
             if (pattern.startsWith(old_patt) && old_patt.length > res.length)
                 res = old_patt;
         }

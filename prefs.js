@@ -611,12 +611,6 @@ const Settings = new Lang.Class({
             'active',
             Gio.SettingsBindFlags.DEFAULT);
 
-        this.settings.bind(
-            'alarms-snooze-duration',
-            this.builder.get_object('alarms-snooze-duration-spin'),
-            'value',
-            Gio.SettingsBindFlags.DEFAULT);
-
         this.builder.get_object('alarms-keybinding-open')
             .set_text(this.settings.get_strv('alarms-keybinding-open')[0]);
         this.builder.get_object('alarms-keybinding-open')

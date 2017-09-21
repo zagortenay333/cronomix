@@ -2107,55 +2107,6 @@ F3</property>
                                         <property name="margin_right">10</property>
                                         <property name="margin_top">10</property>
                                         <property name="margin_bottom">10</property>
-                                        <child>
-                                          <object class="GtkLabel">
-                                            <property name="visible">True</property>
-                                            <property name="can_focus">False</property>
-                                            <property name="label" translatable="yes">Snooze duration (sec)</property>
-                                          </object>
-                                          <packing>
-                                            <property name="expand">False</property>
-                                            <property name="fill">True</property>
-                                            <property name="position">0</property>
-                                          </packing>
-                                        </child>
-                                        <child>
-                                          <object class="GtkSpinButton" id="alarms-snooze-duration-spin">
-                                            <property name="visible">True</property>
-                                            <property name="can_focus">True</property>
-                                            <property name="input_purpose">number</property>
-                                            <property name="adjustment">adjustment2</property>
-                                            <property name="climb_rate">1</property>
-                                            <property name="numeric">True</property>
-                                            <property name="value">300</property>
-                                          </object>
-                                          <packing>
-                                            <property name="expand">False</property>
-                                            <property name="fill">True</property>
-                                            <property name="pack_type">end</property>
-                                            <property name="position">1</property>
-                                          </packing>
-                                        </child>
-                                      </object>
-                                    </child>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkListBoxRow">
-                                    <property name="width_request">100</property>
-                                    <property name="height_request">40</property>
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">True</property>
-                                    <property name="activatable">False</property>
-                                    <property name="selectable">False</property>
-                                    <child>
-                                      <object class="GtkBox">
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">False</property>
-                                        <property name="margin_left">10</property>
-                                        <property name="margin_right">10</property>
-                                        <property name="margin_top">10</property>
-                                        <property name="margin_bottom">10</property>
                                         <property name="spacing">16</property>
                                         <child>
                                           <object class="GtkLabel">

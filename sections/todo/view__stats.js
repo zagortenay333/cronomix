@@ -19,6 +19,7 @@ const ngettext = Gettext.ngettext;
 
 
 const FUZZ           = ME.imports.lib.fuzzy_search;
+const RESIZE         = ME.imports.lib.resize_label;
 const GRAPHS         = ME.imports.lib.graphs;
 const FULLSCREEN     = ME.imports.lib.fullscreen;
 const DATE_PICKER    = ME.imports.lib.date_picker;
@@ -246,7 +247,7 @@ var StatsView = new Lang.Class({
 
 
             // fill up
-            for (let val of this.string_date_map.values()) {
+            for (let [,val] of this.string_date_map) {
                 let label = val[0];
                 let range = val[1];
 
@@ -546,7 +547,7 @@ var StatsView = new Lang.Class({
             //
             let longest = 0;
 
-            for (let v of this.string_date_map.values())
+            for (let [,v] of this.string_date_map)
                 if (v[0].length > longest) longest = v[0].length;
 
             longest++;
@@ -554,7 +555,7 @@ var StatsView = new Lang.Class({
             let stats = this._get_stats__sum(keyword);
             markup    = '';
 
-            for (let [k, v] of this.string_date_map.entries()) {
+            for (let [k, v] of this.string_date_map) {
                 let h = Math.floor(stats[k] / 60);
                 h = h ? '' + h + 'h ' : '';
 
@@ -569,7 +570,7 @@ var StatsView = new Lang.Class({
 
             markup += `\n\n<b>${_('Total time per yearly quarter: ')}</b>`;
 
-            for (let [year, quarters] of stats.quarters.entries()) {
+            for (let [year, quarters] of stats.quarters) {
                 markup += '\n';
 
                 quarters.forEach((it, i) => {
@@ -628,7 +629,7 @@ var StatsView = new Lang.Class({
                                this.graph_css['-timepp-task-vbar-color'][1] :
                                this.graph_css['-timepp-proj-vbar-color'][1];
 
-        for (let [date, records] of this.stats_data.entries()) {
+        for (let [date, records] of this.stats_data) {
             if (date < lower_bound) break;
             if (date > upper_bound) continue;
 
@@ -852,7 +853,7 @@ var StatsView = new Lang.Class({
         let records = this.stats_data.get(date);
 
         if (records) {
-            for (let [key, val] of records.entries()) {
+            for (let [key, val] of records) {
                 let rgba = G.REG_PROJ.test(key) ?
                            this.graph_css['-timepp-proj-vbar-color'][1] :
                            this.graph_css['-timepp-task-vbar-color'][1];
@@ -938,7 +939,7 @@ var StatsView = new Lang.Class({
 
             label.connect('queue-redraw', () => {
                 if (! this.search_scrollview.vscrollbar_visible)
-                    G.resize_label(label);
+                    RESIZE.resize_label(label);
             });
 
             label.connect('notify::hover', (label) => {

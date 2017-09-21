@@ -276,7 +276,7 @@ var TaskFiltersWindow = new Lang.Class({
         //
         // priorities
         //
-        for ([key, value] of this.delegate.stats.priorities.entries()) {
+        for ([key, value] of this.delegate.stats.priorities) {
             check = filters.priorities.indexOf(key) === -1 ? false : true;
             item  = this._new_filter_item(check, key, value, false, this.priority_filters_box);
             this.filter_register.priorities.push(item);
@@ -297,7 +297,7 @@ var TaskFiltersWindow = new Lang.Class({
         //
         // contexts
         //
-        for ([key, value] of this.delegate.stats.contexts.entries()) {
+        for ([key, value] of this.delegate.stats.contexts) {
             check = filters.contexts.indexOf(key) === -1 ? false : true;
             item  = this._new_filter_item(check, key, value, false, this.context_filters_box);
             this.context_filters_box.add_child(item.actor);
@@ -311,7 +311,7 @@ var TaskFiltersWindow = new Lang.Class({
         //
         // projects
         //
-        for ([key, value] of this.delegate.stats.projects.entries()) {
+        for ([key, value] of this.delegate.stats.projects) {
             check = filters.projects.indexOf(key) === -1 ? false : true;
             item  = this._new_filter_item(check, key, value, false, this.project_filters_box);
             this.project_filters_box.add_child(item.actor);

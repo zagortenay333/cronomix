@@ -60,6 +60,8 @@ const NotifStyle = {
 //
 // @ext      : obj (main extension object)
 // @settings : obj (extension settings)
+//
+// @signals: 'section-open-state-changed'
 // =====================================================================
 var Timer = new Lang.Class({
     Name: 'Timepp.Timer',
@@ -82,6 +84,7 @@ var Timer = new Lang.Class({
         this.tic_mainloop_id = null;
         this.cache_file      = null;
         this.cache           = null;
+        this.notif_source    = null;
         this.clock           = 0; // microseconds
         this.end_time        = 0; // For computing elapsed time (microseconds)
 
@@ -207,6 +210,10 @@ var Timer = new Lang.Class({
         this.sigm.connect(this.slider.actor, 'scroll-event', () => this.slider_released());
         this.sigm.connect(this.slider_item.actor, 'button-press-event', (_, event) => this.slider.startDragging(event));
 
+
+        //
+        // Init the rest of the section or disconnect signals for now.
+        //
         if (this.section_enabled) this.enable_section();
         else                      this.sigm.disconnect_all();
     },
@@ -225,13 +232,8 @@ var Timer = new Lang.Class({
     },
 
     toggle_section: function () {
-        if (this.section_enabled) {
-            this.disable_section();
-        }
-        else {
-            this.sigm.connect_all();
-            this.enable_section();
-        }
+        if (this.section_enabled) this.disable_section();
+        else                      this.enable_section();
 
         this.section_enabled = this.settings.get_boolean('timer-enabled');
         this.ext.update_panel_items();
@@ -284,6 +286,7 @@ var Timer = new Lang.Class({
 
         this.dbus_impl.export(Gio.DBus.session, '/timepp/zagortenay333/Timer');
         this.keym.enable_all();
+        this.sigm.connect_all();
     },
 
     _store_cache: function () {
@@ -475,8 +478,11 @@ var Timer = new Lang.Class({
         if (this.fullscreen.is_open)
             return;
 
-        let source = new MessageTray.Source();
-        Main.messageTray.add(source);
+        if (this.notif_source)
+            this.notif_source.destroyNonResidentNotifications();
+
+        this.notif_source = new MessageTray.Source();
+        Main.messageTray.add(this.notif_source);
 
         let icon = new St.Icon({ icon_name: 'timepp-timer-symbolic' });
 
@@ -486,7 +492,7 @@ var Timer = new Lang.Class({
         };
 
         let notif = new MessageTray.Notification(
-            source,
+            this.notif_source,
             TIMER_EXPIRED_MSG,
             this.cache.notif_msg,
             params
@@ -494,7 +500,7 @@ var Timer = new Lang.Class({
 
         notif.setUrgency(MessageTray.Urgency.CRITICAL);
 
-        source.notify(notif);
+        this.notif_source.notify(notif);
     },
 
     _show_settings: function () {
@@ -591,24 +597,28 @@ const TimerSettings = new Lang.Class({
         //
         // time pickers
         //
-        this.numpicker_box = new St.BoxLayout({ style_class: 'row numpicker-box' });
-        this.content_box.add_actor(this.numpicker_box);
+        {
+            let box = new St.BoxLayout({ style_class: 'row numpicker-box' });
+            this.content_box.add_actor(box);
 
-        this.hr_bin = new St.Bin({x_align: 1});
-        this.numpicker_box.add(this.hr_bin, {expand: true});
-        this.hr  = new NUM_PICKER.NumPicker(0, 23);
-        this.hr_bin.add_actor(this.hr.actor);
+            let label = new St.Label({ x_expand: true, y_align: Clutter.ActorAlign.CENTER });
+            box.add_child(label);
 
-        this.min_bin = new St.Bin({x_align: 1});
-        this.numpicker_box.add(this.min_bin, {expand: true});
-        this.min = new NUM_PICKER.NumPicker(0, 59);
-        this.min_bin.add_actor(this.min.actor);
+            this.hr = new NUM_PICKER.NumPicker(0, 23);
+            box.add_child(this.hr.actor);
 
-        if (show_secs) {
-            this.sec_bin = new St.Bin({x_align: 1});
-            this.numpicker_box.add(this.sec_bin, {expand: true});
-            this.sec = new NUM_PICKER.NumPicker(0, 59);
-            this.sec_bin.add_actor(this.sec.actor);
+            this.min = new NUM_PICKER.NumPicker(0, 59);
+            box.add_child(this.min.actor);
+
+            if (show_secs) {
+                label.text = `${_('(h:min:sec)')} `;
+
+                this.sec = new NUM_PICKER.NumPicker(0, 59);
+                box.add_child(this.sec.actor);
+            }
+            else {
+                label.text = `${_('(h:min)')} `;
+            }
         }
 
 
