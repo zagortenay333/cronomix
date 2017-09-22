@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-17 12:31+0200\n"
+"POT-Creation-Date: 2017-09-22 11:03+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -274,24 +274,24 @@ msgid "Custom Range..."
 msgstr ""
 
 #: data/po_files/../../sections/todo/view__stats.js:265
-#: data/po_files/../../sections/todo/view__stats.js:625
+#: data/po_files/../../sections/todo/view__stats.js:628
 msgid "Projects"
 msgstr ""
 
 #: data/po_files/../../sections/todo/view__stats.js:271
-#: data/po_files/../../sections/todo/view__stats.js:625
+#: data/po_files/../../sections/todo/view__stats.js:628
 msgid "Tasks"
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__stats.js:537
+#: data/po_files/../../sections/todo/view__stats.js:540
 msgid "<b>Stats for <i>project</i>: </b>"
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__stats.js:538
+#: data/po_files/../../sections/todo/view__stats.js:541
 msgid "<b>Stats for <i>task</i>: </b>"
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__stats.js:571
+#: data/po_files/../../sections/todo/view__stats.js:574
 msgid "Total time per yearly quarter: "
 msgstr ""
 

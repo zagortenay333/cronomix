@@ -52,7 +52,7 @@ const CACHE_FILE = GLib.get_home_dir() +
 // @settings : obj (extension settings)
 //
 // @signals:
-//   - 'new-day' (new day started)
+//   - 'new-day' (new day started) (returns string in yyyy-mm-dd iso format)
 //   - 'section-open-state-changed'
 // =====================================================================
 var Todo = new Lang.Class({
@@ -670,7 +670,7 @@ var Todo = new Lang.Class({
     },
 
     _on_new_day_started: function () {
-        this.emit('new-day');
+        this.emit('new-day', G.date_yyyymmdd());
 
         for (let task of this.tasks)
             task.update_due_date();
