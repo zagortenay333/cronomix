@@ -70,7 +70,7 @@ msgstr[1] "%d Aufgaben wurden wiederholt"
 #: data/po_files/../../sections/todo/MAIN.js:1136
 #, fuzzy
 msgid "Nothing found."
-msgstr "Nichts gefunden..."
+msgstr "Nichts gefunden."
 
 #. TRANSLATORS: 'completed:' is followed by a date
 #: data/po_files/../../sections/todo/task_item.js:263
@@ -216,17 +216,17 @@ msgstr[1] "%d Aufgaben"
 #: data/po_files/../../sections/todo/view__stats.js:79
 #, fuzzy
 msgid "Today"
-msgstr "heute"
+msgstr "Heute"
 
 #: data/po_files/../../sections/todo/view__stats.js:80
 #, fuzzy
 msgid "This Week"
-msgstr "diese Woche"
+msgstr "Diese Woche"
 
 #: data/po_files/../../sections/todo/view__stats.js:81
 #, fuzzy
 msgid "This Month"
-msgstr "dieser Monat"
+msgstr "Dieser Monat"
 
 #: data/po_files/../../sections/todo/view__stats.js:82
 msgid "Last 3 Months"
@@ -239,7 +239,7 @@ msgstr "Letze 6 Monate"
 #: data/po_files/../../sections/todo/view__stats.js:84
 #, fuzzy
 msgid "All Time"
-msgstr "Timer"
+msgstr "Alles"
 
 #: data/po_files/../../sections/todo/view__stats.js:161
 #, fuzzy
@@ -282,13 +282,13 @@ msgstr "Eigene Spanne: "
 #: data/po_files/../../sections/todo/view__stats.js:625
 #, fuzzy
 msgid "Projects"
-msgstr "Nach Projekt sortieren"
+msgstr "Projekte"
 
 #: data/po_files/../../sections/todo/view__stats.js:271
 #: data/po_files/../../sections/todo/view__stats.js:625
 #, fuzzy
 msgid "Tasks"
-msgstr "Aufgabe..."
+msgstr "Aufgaben"
 
 #: data/po_files/../../sections/todo/view__stats.js:537
 msgid "<b>Stats for <i>project</i>: </b>"
@@ -367,13 +367,13 @@ msgstr "Timer"
 #: data/po_files/../../sections/timer.js:614
 #, fuzzy
 msgid "(h:min:sec)"
-msgstr "stunden:min:sek"
+msgstr "(h:min:sek)"
 
 #: data/po_files/../../sections/timer.js:620
 #: data/po_files/../../sections/alarms.js:509
 #, fuzzy
 msgid "(h:min)"
-msgstr "stunden:min"
+msgstr "(h:min)"
 
 #: data/po_files/../../sections/timer.js:631
 msgid "Timer message..."
@@ -418,29 +418,29 @@ msgstr "Weiter"
 
 #: data/po_files/../../sections/pomodoro.js:706
 msgid "Reset pomodoro counter?"
-msgstr ""
+msgstr "Pomodoro-Zähler zurücksetzen?"
 
 #: data/po_files/../../sections/pomodoro.js:722
 #: data/po_files/../../sections/pomodoro.js:741
 #: data/po_files/../../sections/pomodoro.js:760
 #, fuzzy
 msgid "(min:sec)"
-msgstr "Pomodoro (min):"
+msgstr "(min:sek):"
 
 #: data/po_files/../../sections/pomodoro.js:741
 #, fuzzy
 msgid "Short break"
-msgstr "Mach eine kurze Pause!"
+msgstr "Kurze Pause"
 
 #: data/po_files/../../sections/pomodoro.js:760
 #, fuzzy
 msgid "Long break"
-msgstr "Mach eine lange Pause!"
+msgstr "Lange Pause"
 
 #: data/po_files/../../sections/pomodoro.js:779
 #, fuzzy
 msgid "Num of pomos until long break"
-msgstr "Anzahl Pomos bis zur langen Pause:"
+msgstr "Anzahl Pomos bis zur langen Pause"
 
 #: data/po_files/../../sections/alarms.js:130
 msgid "Add New Alarm..."
@@ -461,16 +461,16 @@ msgstr "Schlummern"
 #: data/po_files/../../sections/alarms.js:509
 #, fuzzy
 msgid "Alarm time"
-msgstr "Wecker für %s"
+msgstr "Weckzeit"
 
 #: data/po_files/../../sections/alarms.js:548
 #, fuzzy
 msgid "Snooze duration"
-msgstr "Schlummerdauer (sek)"
+msgstr "Schlummerdauer"
 
 #: data/po_files/../../sections/alarms.js:548
 msgid "(min)"
-msgstr ""
+msgstr "(min)"
 
 #: data/po_files/../../sections/alarms.js:564
 msgid "Alarm Message..."
@@ -508,7 +508,7 @@ msgstr "Aufgaben-Datei"
 
 #: data/po_files/../../data/prefs.ui:137
 msgid "Done file (optional)"
-msgstr "Erledigt-Datei"
+msgstr "Erledigt-Datei (optional)"
 
 #: data/po_files/../../data/prefs.ui:183
 msgid "Time-tracker csv directory (optional)"
@@ -665,7 +665,7 @@ msgstr "stunden:min:sek"
 #: data/po_files/../../data/prefs.ui:1282
 #, fuzzy
 msgid "hours:min:sec:centisec"
-msgstr "stunden:min:sek:millisek"
+msgstr "stunden:min:sek:centisek"
 
 #: data/po_files/../../data/prefs.ui:1821
 msgid "Stop time tracking when pomo is paused"
@@ -690,7 +690,7 @@ msgstr "Bereich zum Durchsuchen der Aufgaben öffnen"
 #: data/po_files/../../data/prefs.ui:2898
 #, fuzzy
 msgid "Open the stats view"
-msgstr "Diesen Bereich öffnen"
+msgstr "Statistik öffnen"
 
 #: data/po_files/../../data/prefs.ui:2954
 msgid "Open this section to switch todo files"
