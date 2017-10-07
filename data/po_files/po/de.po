@@ -68,7 +68,6 @@ msgstr[0] "%d Aufgabe wurde wiederholt"
 msgstr[1] "%d Aufgaben wurden wiederholt"
 
 #: data/po_files/../../sections/todo/MAIN.js:1136
-#, fuzzy
 msgid "Nothing found."
 msgstr "Nichts gefunden."
 
@@ -160,7 +159,7 @@ msgstr "Dateien suchen..."
 
 #: data/po_files/../../sections/todo/view__file_switcher.js:132
 msgid "current file"
-msgstr "Aktuelle Datei"
+msgstr "aktuelle Datei"
 
 #: data/po_files/../../sections/todo/view__filters.js:79
 msgid "Add custom filter..."
@@ -214,17 +213,14 @@ msgstr[0] "%d Aufgabe"
 msgstr[1] "%d Aufgaben"
 
 #: data/po_files/../../sections/todo/view__stats.js:79
-#, fuzzy
 msgid "Today"
 msgstr "Heute"
 
 #: data/po_files/../../sections/todo/view__stats.js:80
-#, fuzzy
 msgid "This Week"
 msgstr "Diese Woche"
 
 #: data/po_files/../../sections/todo/view__stats.js:81
-#, fuzzy
 msgid "This Month"
 msgstr "Dieser Monat"
 
@@ -237,14 +233,12 @@ msgid "Last 6 Months"
 msgstr "Letze 6 Monate"
 
 #: data/po_files/../../sections/todo/view__stats.js:84
-#, fuzzy
 msgid "All Time"
 msgstr "Alles"
 
 #: data/po_files/../../sections/todo/view__stats.js:161
-#, fuzzy
 msgid "Search..."
-msgstr "Dateien suchen..."
+msgstr "Suchen..."
 
 #: data/po_files/../../sections/todo/view__stats.js:185
 msgid "Year:"
@@ -280,13 +274,11 @@ msgstr "Eigene Spanne: "
 
 #: data/po_files/../../sections/todo/view__stats.js:265
 #: data/po_files/../../sections/todo/view__stats.js:628
-#, fuzzy
 msgid "Projects"
 msgstr "Projekte"
 
 #: data/po_files/../../sections/todo/view__stats.js:271
 #: data/po_files/../../sections/todo/view__stats.js:628
-#, fuzzy
 msgid "Tasks"
 msgstr "Aufgaben"
 
@@ -365,13 +357,11 @@ msgid "Timer"
 msgstr "Timer"
 
 #: data/po_files/../../sections/timer.js:614
-#, fuzzy
 msgid "(h:min:sec)"
 msgstr "(h:min:sek)"
 
 #: data/po_files/../../sections/timer.js:620
 #: data/po_files/../../sections/alarms.js:509
-#, fuzzy
 msgid "(h:min)"
 msgstr "(h:min)"
 
@@ -384,14 +374,12 @@ msgid "Work!"
 msgstr "Arbeite!"
 
 #: data/po_files/../../sections/pomodoro.js:40
-#, fuzzy
 msgid "Long Break!"
-msgstr "Mach eine lange Pause!"
+msgstr "Lange Pause!"
 
 #: data/po_files/../../sections/pomodoro.js:41
-#, fuzzy
 msgid "Short break!"
-msgstr "Mach eine kurze Pause!"
+msgstr "Kurze Pause!"
 
 #: data/po_files/../../sections/pomodoro.js:136
 #: data/po_files/../../sections/pomodoro.js:316
@@ -423,22 +411,18 @@ msgstr "Pomodoro-Zähler zurücksetzen?"
 #: data/po_files/../../sections/pomodoro.js:722
 #: data/po_files/../../sections/pomodoro.js:741
 #: data/po_files/../../sections/pomodoro.js:760
-#, fuzzy
 msgid "(min:sec)"
 msgstr "(min:sek):"
 
 #: data/po_files/../../sections/pomodoro.js:741
-#, fuzzy
 msgid "Short break"
 msgstr "Kurze Pause"
 
 #: data/po_files/../../sections/pomodoro.js:760
-#, fuzzy
 msgid "Long break"
 msgstr "Lange Pause"
 
 #: data/po_files/../../sections/pomodoro.js:779
-#, fuzzy
 msgid "Num of pomos until long break"
 msgstr "Anzahl Pomos bis zur langen Pause"
 
@@ -459,12 +443,10 @@ msgid "Snooze"
 msgstr "Schlummern"
 
 #: data/po_files/../../sections/alarms.js:509
-#, fuzzy
 msgid "Alarm time"
 msgstr "Weckzeit"
 
 #: data/po_files/../../sections/alarms.js:548
-#, fuzzy
 msgid "Snooze duration"
 msgstr "Schlummerdauer"
 
@@ -663,9 +645,8 @@ msgid "hours:min:sec"
 msgstr "stunden:min:sek"
 
 #: data/po_files/../../data/prefs.ui:1282
-#, fuzzy
 msgid "hours:min:sec:centisec"
-msgstr "stunden:min:sek:centisek"
+msgstr "stunden:min:sek:hundertstel"
 
 #: data/po_files/../../data/prefs.ui:1821
 msgid "Stop time tracking when pomo is paused"
@@ -688,7 +669,6 @@ msgid "Open this section to search tasks"
 msgstr "Bereich zum Durchsuchen der Aufgaben öffnen"
 
 #: data/po_files/../../data/prefs.ui:2898
-#, fuzzy
 msgid "Open the stats view"
 msgstr "Statistik öffnen"
 
