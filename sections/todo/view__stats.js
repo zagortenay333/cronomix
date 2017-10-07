@@ -311,6 +311,9 @@ var StatsView = new Lang.Class({
         //
         // listen
         //
+        this.delegate.connect('new-day', (_, today) => {
+            this._on_new_day_started(today);
+        });
         this.vbars_graph.connect('vbar-clicked', (_, vbar_label) => {
             let today = new Date();
 
@@ -1038,5 +1041,10 @@ var StatsView = new Lang.Class({
             }
         }
     },
+
+    _on_new_day_started: function (today) {
+        this.date_picker.set_range('',  today);
+        this.bound_date_1.set_range('', today);
+        this.bound_date_2.set_range('', today);
+    },
 });
-Signals.addSignalMethods(StatsView.prototype);
