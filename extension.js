@@ -80,9 +80,6 @@ const Timepp = new Lang.Class({
         }
 
 
-        this._load_stylesheet();
-
-
         //
         // panel actor
         //
@@ -151,7 +148,12 @@ const Timepp = new Lang.Class({
             }
         }
 
+
+        //
+        // more init
+        //
         this.update_panel_items();
+        Mainloop.idle_add(() => this._load_stylesheet());
 
 
         //
