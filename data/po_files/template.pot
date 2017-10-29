@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-29 18:10+0100\n"
+"POT-Creation-Date: 2017-10-29 18:30+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -274,7 +274,7 @@ msgid "due"
 msgstr ""
 
 #: data/po_files/../../sections/todo/task_item.js:629
-msgid "threshold"
+msgid "defered"
 msgstr ""
 
 #: data/po_files/../../sections/todo/task_item.js:669
@@ -459,7 +459,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: data/po_files/../../sections/todo/MAIN.js:262
-#: data/po_files/../../sections/todo/MAIN.js:1154
+#: data/po_files/../../sections/todo/MAIN.js:1152
 msgid "Loading..."
 msgstr ""
 
@@ -478,16 +478,14 @@ msgid_plural "%d tasks have recurred"
 msgstr[0] ""
 msgstr[1] ""
 
-#. TRANSLATORS: Here the word 'threshold' refers to an extension
-#. which makes a task invisible until the threshold date is reached.
-#: data/po_files/../../sections/todo/MAIN.js:712
+#: data/po_files/../../sections/todo/MAIN.js:710
 #, javascript-format
-msgid "%d task has crossed threshold"
-msgid_plural "%d tasks have crossed threshold"
+msgid "%d defered task has been opened"
+msgid_plural "%d defered tasks have been opened"
 msgstr[0] ""
 msgstr[1] ""
 
-#: data/po_files/../../sections/todo/MAIN.js:1160
+#: data/po_files/../../sections/todo/MAIN.js:1158
 msgid "Nothing found."
 msgstr ""
 
@@ -496,7 +494,7 @@ msgid "Add custom filter..."
 msgstr ""
 
 #: data/po_files/../../sections/todo/view__filters.js:105
-msgid "Show only hidden tasks"
+msgid "Show hidden tasks only"
 msgstr ""
 
 #: data/po_files/../../sections/todo/view__filters.js:112
@@ -507,7 +505,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: data/po_files/../../sections/todo/view__filters.js:129
-msgid "Show only recurring tasks"
+msgid "Show recurring tasks only"
 msgstr ""
 
 #: data/po_files/../../sections/todo/view__filters.js:139
@@ -518,13 +516,13 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: data/po_files/../../sections/todo/view__filters.js:155
-msgid "Show only threshold tasks"
+msgid "Show defered tasks only"
 msgstr ""
 
 #: data/po_files/../../sections/todo/view__filters.js:164
 #, javascript-format
-msgid "%d threshold task"
-msgid_plural "%d threshold tasks"
+msgid "%d defered task"
+msgid_plural "%d defered tasks"
 msgstr[0] ""
 msgstr[1] ""
 

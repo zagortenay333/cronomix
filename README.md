@@ -193,12 +193,9 @@ Supported todo.txt extensions are:
         </td>
     </tr>
     <tr>
-        <td valign="top"><code>t:yyyy-mm-dd</code></td>
+        <td valign="top"><code>(t|defer):yyyy-mm-dd</code></td>
         <td>
-            Sets a threshold date on a task.<br>
-            <i>
-            The task will remain hidden until the threshold date has arrived.<br>
-            </i>
+            Defers opening a task until specified date.<br>
         </td>
     </tr>
     <tr>
@@ -217,7 +214,7 @@ as<br>
         <td>
             Used to automatically reopen a task after a given amount of
 time.<br><br>
-            <b>This extension is incompatible with the due and threshold extensions.</b><br><br>
+            <b>This extension is incompatible with the due and defer extensions.</b><br><br>
             <i>Each time a task recurs, it's creation date is updated.<br>
             If a task is already open on the date of the recursion, it's
 creation date will be updated anyway.</i><br><br>

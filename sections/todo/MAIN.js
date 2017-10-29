@@ -155,12 +155,12 @@ var Todo = new Lang.Class({
         //
         // The keys are equal to the names of the css properties.
         this.markup_colors = new Map([
-            ['-timepp-context-color'        , 'magenta'],
-            ['-timepp-project-color'        , 'green'],
-            ['-timepp-link-color'           , 'blue'],
-            ['-timepp-due-date-color'       , 'red'],
-            ['-timepp-rec-date-color'       , 'tomato'],
-            ['-timepp-threshold-date-color' , 'violet'],
+            ['-timepp-context-color'    , 'magenta'],
+            ['-timepp-project-color'    , 'green'],
+            ['-timepp-link-color'       , 'blue'],
+            ['-timepp-due-date-color'   , 'red'],
+            ['-timepp-rec-date-color'   , 'tomato'],
+            ['-timepp-defer-date-color' , 'violet'],
         ]);
 
 
@@ -494,7 +494,7 @@ var Todo = new Lang.Class({
 
                     filters: {
                         invert_filters : false,
-                        threshold      : false,
+                        defer          : false,
                         recurring      : false,
                         hidden         : false,
                         completed      : false,
@@ -680,10 +680,10 @@ var Todo = new Lang.Class({
     },
 
     _check_dates: function () {
-        let today           = G.date_yyyymmdd();
-        let tasks_updated   = false;
-        let recurred_tasks  = 0;
-        let threshold_tasks = 0;
+        let today          = G.date_yyyymmdd();
+        let tasks_updated  = false;
+        let recurred_tasks = 0;
+        let defered_tasks  = 0;
 
         for (let task of this.tasks) {
             if (task.check_recurrence()) {
@@ -691,9 +691,9 @@ var Todo = new Lang.Class({
                 recurred_tasks++;
             }
 
-            if (task.check_threshold_date(today)) {
+            if (task.check_defered_tasks(today)) {
                 tasks_updated = true;
-                threshold_tasks++;
+                defered_tasks++;
             }
 
             task.update_dates_markup();
@@ -706,12 +706,10 @@ var Todo = new Lang.Class({
                                       recurred_tasks).format(recurred_tasks));
             }
 
-            if (threshold_tasks > 0) {
-                // TRANSLATORS: Here the word 'threshold' refers to an extension
-                // which makes a task invisible until the threshold date is reached.
-                Main.notify(ngettext('%d task has crossed threshold',
-                                     '%d tasks have crossed threshold',
-                                      threshold_tasks).format(threshold_tasks));
+            if (defered_tasks > 0) {
+                Main.notify(ngettext('%d defered task has been opened',
+                                     '%d defered tasks have been opened',
+                                      defered_tasks).format(defered_tasks));
             }
 
             this.write_tasks_to_file();
@@ -749,7 +747,7 @@ var Todo = new Lang.Class({
     // @val : natural (number of tasks that have that @key)
     _reset_stats_obj: function () {
         this.stats = {
-            threshold_tasks       : 0,
+            defered_tasks         : 0,
             recurring_completed   : 0,
             recurring_incompleted : 0,
             hidden                : 0,
@@ -850,8 +848,8 @@ var Todo = new Lang.Class({
                     continue;
                 }
 
-                if (task.is_under_threshold) {
-                    this.stats.threshold_tasks++;
+                if (task.is_defered) {
+                    this.stats.defered_tasks++;
                     continue;
                 }
 
@@ -892,7 +890,7 @@ var Todo = new Lang.Class({
                                 this.stats.completed -
                                 this.stats.hidden -
                                 this.stats.recurring_completed -
-                                this.stats.threshold_tasks;
+                                this.stats.defered_tasks;
 
             this.panel_item.set_label('' + n_incompleted);
 
@@ -1327,10 +1325,10 @@ var Todo = new Lang.Class({
     _filter_test: function (task) {
         if (this.cache.filters.hidden)      return task.hidden;
         if (task.hidden)                    return false;
-        if (this.cache.filters.threshold)   return task.is_under_threshold;
+        if (this.cache.filters.defered)     return task.is_defered;
         if (this.cache.filters.recurring)   return Boolean(task.rec_str);
         if (task.rec_str && task.completed) return false;
-        if (task.is_under_threshold)        return false;
+        if (task.is_defered)                return false;
         if (! this.has_active_filters())    return true;
 
         if (task.completed) {
@@ -1373,7 +1371,7 @@ var Todo = new Lang.Class({
 
     // Returns true if there are any active filters, else false.
     has_active_filters: function () {
-        if (this.cache.filters.threshold         ||
+        if (this.cache.filters.defered         ||
             this.cache.filters.recurring         ||
             this.cache.filters.hidden            ||
             this.cache.filters.completed         ||

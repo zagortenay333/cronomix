@@ -556,12 +556,12 @@
      * These custom properties only work if they are specified on this
      * selector.
      */
-    -timepp-context-color:        #f47e00;
-    -timepp-project-color:        #009a4b;
-    -timepp-link-color:           #5a94dc;
-    -timepp-due-date-color:       #e22b2b;
-    -timepp-rec-date-color:       #f47e00;
-    -timepp-threshold-date-color: #5a94dc;
+    -timepp-context-color:    #f47e00;
+    -timepp-project-color:    #009a4b;
+    -timepp-link-color:       #5a94dc;
+    -timepp-due-date-color:   #e22b2b;
+    -timepp-rec-date-color:   #f47e00;
+    -timepp-defer-date-color: #5a94dc;
 }
 
 .timepp-menu .todo-section .loading-msg,

@@ -102,7 +102,7 @@ var TaskFiltersWindow = new Lang.Class({
         this.show_hidden_tasks_item = new St.BoxLayout({ style_class: 'row' });
         this.content_box.add_child(this.show_hidden_tasks_item);
 
-        let show_hidden_tasks_label = new St.Label({ text: _('Show only hidden tasks'), y_align: Clutter.ActorAlign.CENTER });
+        let show_hidden_tasks_label = new St.Label({ text: _('Show hidden tasks only'), y_align: Clutter.ActorAlign.CENTER });
         this.show_hidden_tasks_item.add(show_hidden_tasks_label, {expand: true});
 
         let hidden_count_label = new St.Label({ y_align: Clutter.ActorAlign.CENTER, style_class: 'popup-inactive-menu-item', pseudo_class: 'insensitive' });
@@ -126,7 +126,7 @@ var TaskFiltersWindow = new Lang.Class({
         this.show_recurring_tasks_item = new St.BoxLayout({ style_class: 'row' });
         this.content_box.add_child(this.show_recurring_tasks_item);
 
-        let show_recurring_tasks_label = new St.Label({ text: _('Show only recurring tasks'), y_align: Clutter.ActorAlign.CENTER });
+        let show_recurring_tasks_label = new St.Label({ text: _('Show recurring tasks only'), y_align: Clutter.ActorAlign.CENTER });
         this.show_recurring_tasks_item.add(show_recurring_tasks_label, {expand: true});
 
         let recurring_count_label = new St.Label({ y_align: Clutter.ActorAlign.CENTER, style_class: 'popup-inactive-menu-item', pseudo_class: 'insensitive' });
@@ -147,28 +147,28 @@ var TaskFiltersWindow = new Lang.Class({
 
 
         //
-        // show threshold tasks only switch
+        // show defered tasks only switch
         //
-        this.show_threshold_tasks_item = new St.BoxLayout({ style_class: 'row' });
-        this.content_box.add_child(this.show_threshold_tasks_item);
+        this.show_defered_tasks_item = new St.BoxLayout({ style_class: 'row' });
+        this.content_box.add_child(this.show_defered_tasks_item);
 
-        let show_threshold_tasks_label = new St.Label({ text: _('Show only threshold tasks'), y_align: Clutter.ActorAlign.CENTER });
-        this.show_threshold_tasks_item.add(show_threshold_tasks_label, {expand: true});
+        let show_defered_tasks_label = new St.Label({ text: _('Show defered tasks only'), y_align: Clutter.ActorAlign.CENTER });
+        this.show_defered_tasks_item.add(show_defered_tasks_label, {expand: true});
 
-        let threshold_count_label = new St.Label({ y_align: Clutter.ActorAlign.CENTER, style_class: 'popup-inactive-menu-item', pseudo_class: 'insensitive' });
-        this.show_threshold_tasks_item.add_child(threshold_count_label);
+        let defered_count_label = new St.Label({ y_align: Clutter.ActorAlign.CENTER, style_class: 'popup-inactive-menu-item', pseudo_class: 'insensitive' });
+        this.show_defered_tasks_item.add_child(defered_count_label);
 
-        let n_threshold = this.delegate.stats.threshold_tasks;
+        let n_defered = this.delegate.stats.defered_tasks;
 
-        threshold_count_label.text =
-            ngettext('%d threshold task', '%d threshold tasks', n_threshold)
-            .format(n_threshold);
+        defered_count_label.text =
+            ngettext('%d defered task', '%d defered tasks', n_defered)
+            .format(n_defered);
 
-        this.show_threshold_tasks_toggle_btn = new St.Button({ can_focus: true });
-        this.show_threshold_tasks_item.add_actor(this.show_threshold_tasks_toggle_btn);
-        this.show_threshold_tasks_toggle = new PopupMenu.Switch();
-        this.nand_toggles.push(this.show_threshold_tasks_toggle);
-        this.show_threshold_tasks_toggle_btn.add_actor(this.show_threshold_tasks_toggle.actor);
+        this.show_defered_tasks_toggle_btn = new St.Button({ can_focus: true });
+        this.show_defered_tasks_item.add_actor(this.show_defered_tasks_toggle_btn);
+        this.show_defered_tasks_toggle = new PopupMenu.Switch();
+        this.nand_toggles.push(this.show_defered_tasks_toggle);
+        this.show_defered_tasks_toggle_btn.add_actor(this.show_defered_tasks_toggle.actor);
 
 
         //
@@ -246,13 +246,13 @@ var TaskFiltersWindow = new Lang.Class({
                 this.show_recurring_tasks_toggle.setToggleState(true);
             }
         });
-        this.show_threshold_tasks_toggle_btn.connect('clicked', () => {
-            if (this.show_threshold_tasks_toggle.state) {
-                this.show_threshold_tasks_toggle.setToggleState(false);
+        this.show_defered_tasks_toggle_btn.connect('clicked', () => {
+            if (this.show_defered_tasks_toggle.state) {
+                this.show_defered_tasks_toggle.setToggleState(false);
             }
             else {
                 for (toggle of this.nand_toggles) toggle.setToggleState(false);
-                this.show_threshold_tasks_toggle.setToggleState(true);
+                this.show_defered_tasks_toggle.setToggleState(true);
             }
         });
         this.invert_toggle_btn.connect('clicked', () => {
@@ -277,7 +277,7 @@ var TaskFiltersWindow = new Lang.Class({
 
         this.invert_toggle.setToggleState(filters.invert_filters);
         this.show_hidden_tasks_toggle.setToggleState(filters.hidden);
-        this.show_threshold_tasks_toggle.setToggleState(filters.threshold);
+        this.show_defered_tasks_toggle.setToggleState(filters.defered);
         this.show_recurring_tasks_toggle.setToggleState(filters.recurring);
 
 
@@ -467,16 +467,13 @@ var TaskFiltersWindow = new Lang.Class({
     _on_ok_clicked: function () {
         let filters = {
             invert_filters : this.invert_toggle.state,
-            threshold      : this.show_threshold_tasks_toggle.state,
+            defered        : this.show_defered_tasks_toggle.state,
             recurring      : this.show_recurring_tasks_toggle.state,
             hidden         : this.show_hidden_tasks_toggle.state,
-
             completed      : Boolean(this.filter_register.completed &&
-                         this.filter_register.completed.checkbox.actor.checked),
-
+                             this.filter_register.completed.checkbox.actor.checked),
             no_priority    : Boolean(this.filter_register.no_priority &&
-                       this.filter_register.no_priority.checkbox.actor.checked),
-
+                             this.filter_register.no_priority.checkbox.actor.checked),
             priorities     : [],
             contexts       : [],
             projects       : [],

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-29 17:55+0100\n"
+"POT-Creation-Date: 2017-10-29 18:30+0100\n"
 "PO-Revision-Date: 2017-07-20 07:02+0200\n"
 "Last-Translator: Piotr Komur <pkomur@gmail.com>\n"
 "Language-Team: \n"
@@ -281,7 +281,7 @@ msgid "due"
 msgstr "termin:"
 
 #: data/po_files/../../sections/todo/task_item.js:629
-msgid "threshold"
+msgid "defered"
 msgstr ""
 
 #: data/po_files/../../sections/todo/task_item.js:669
@@ -470,7 +470,7 @@ msgstr[1] "w ciagu %d dni"
 msgstr[2] "w ciagu %d dni"
 
 #: data/po_files/../../sections/todo/MAIN.js:262
-#: data/po_files/../../sections/todo/MAIN.js:1154
+#: data/po_files/../../sections/todo/MAIN.js:1152
 msgid "Loading..."
 msgstr "Wczytuję..."
 
@@ -490,17 +490,15 @@ msgstr[0] "%d powtórzyło się"
 msgstr[1] "%d powtórzyły się"
 msgstr[2] "%d powtórzyło się"
 
-#. TRANSLATORS: Here the word 'threshold' refers to an extension
-#. which makes a task invisible until the threshold date is reached.
-#: data/po_files/../../sections/todo/MAIN.js:712
-#, fuzzy, javascript-format
-msgid "%d task has crossed threshold"
-msgid_plural "%d tasks have crossed threshold"
-msgstr[0] "%d powtórzyło się"
-msgstr[1] "%d powtórzyły się"
-msgstr[2] "%d powtórzyło się"
+#: data/po_files/../../sections/todo/MAIN.js:710
+#, javascript-format
+msgid "%d defered task has been opened"
+msgid_plural "%d defered tasks have been opened"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
 
-#: data/po_files/../../sections/todo/MAIN.js:1160
+#: data/po_files/../../sections/todo/MAIN.js:1158
 msgid "Nothing found."
 msgstr "Nic nie znaleziono..."
 
@@ -509,7 +507,8 @@ msgid "Add custom filter..."
 msgstr "Dodaj własny filtr..."
 
 #: data/po_files/../../sections/todo/view__filters.js:105
-msgid "Show only hidden tasks"
+#, fuzzy
+msgid "Show hidden tasks only"
 msgstr "Pokaż tylko ukryte zadania"
 
 #: data/po_files/../../sections/todo/view__filters.js:112
@@ -521,7 +520,8 @@ msgstr[1] "%d ukryte zadania"
 msgstr[2] "%d ukrytych zadań"
 
 #: data/po_files/../../sections/todo/view__filters.js:129
-msgid "Show only recurring tasks"
+#, fuzzy
+msgid "Show recurring tasks only"
 msgstr "Pokaż tylko powtarzające się zadania"
 
 #: data/po_files/../../sections/todo/view__filters.js:139
@@ -534,13 +534,13 @@ msgstr[2] "%d powtarzających się zadań"
 
 #: data/po_files/../../sections/todo/view__filters.js:155
 #, fuzzy
-msgid "Show only threshold tasks"
+msgid "Show defered tasks only"
 msgstr "Pokaż tylko ukryte zadania"
 
 #: data/po_files/../../sections/todo/view__filters.js:164
 #, fuzzy, javascript-format
-msgid "%d threshold task"
-msgid_plural "%d threshold tasks"
+msgid "%d defered task"
+msgid_plural "%d defered tasks"
 msgstr[0] "%d ukryte zadanie"
 msgstr[1] "%d ukryte zadania"
 msgstr[2] "%d ukrytych zadań"

@@ -38,7 +38,7 @@ const G = ME.imports.sections.todo.GLOBAL;
 // which might cause it to update it's task_str which will require
 // that the task is written to the todo.txt file.
 // E.g., the recurrence extension might cause the task_str to change,
-// or the threshold extension.
+// or the defer extension.
 // Setting this param to false is useful when we don't intend to update
 // the todo.txt file but must in case a task recurs. (E.g., when we load
 // tasks from the todo.txt file.)
@@ -184,8 +184,8 @@ var TaskItem = new Lang.Class({
         }
         this.hidden = false;
 
-        this.threshold_date        = '';
-        this.is_under_threshold = false;
+        this.defer_date = '';
+        this.is_defered = false;
 
         // The recurrence type is one of: 1, 2, 3
         // The numbers just match the global regex G.REG_REC_EXT_[123]
@@ -216,7 +216,7 @@ var TaskItem = new Lang.Class({
 
         if (self_update) {
             this.check_recurrence();
-            this.check_threshold_date();
+            this.check_defered_tasks();
             this.update_dates_markup();
         }
     },
@@ -318,8 +318,8 @@ var TaskItem = new Lang.Class({
                     this.creation_date   = '0000-00-00';
                     this.completion_date = '0000-00-00';
                     this.due_date        = '9999-99-99';
-                    this.threshold_date  = '';
-                    this.is_under_threshold = false;
+                    this.defer_date      = '';
+                    this.is_defered      = false;
                     this.rec_str         = '';
                     this.tracker_id      = '';
                     this.priority        = '(_)';
@@ -333,10 +333,10 @@ var TaskItem = new Lang.Class({
 
                     words.splice(i, 1); i--; len--;
                 }
-                else if (G.REG_THRESHOLD_EXT.test(word)) {
+                else if (G.REG_DEFER_EXT.test(word)) {
                     if (this.rec_str) continue;
 
-                    this.threshold_date = word.slice(2);
+                    this.defer_date = word.slice(2);
                     words.splice(i, 1); i--; len--;
                 }
                 else if (G.REG_DUE_EXT.test(word)) {
@@ -393,18 +393,18 @@ var TaskItem = new Lang.Class({
         );
     },
 
-    check_threshold_date: function (today = G.date_yyyymmdd()) {
-        if (! this.threshold_date) return false;
+    check_defered_tasks: function (today = G.date_yyyymmdd()) {
+        if (! this.defer_date) return false;
 
-        this.creation_date = this.threshold_date;
+        this.creation_date = this.defer_date;
 
-        if (this.threshold_date > today) {
-            this.is_under_threshold = true;
+        if (this.defer_date > today) {
+            this.is_defered = true;
             return false;
         }
 
-        let prev = this.is_under_threshold;
-        this.is_under_threshold = false;
+        let prev = this.is_under_defer;
+        this.is_under_defer = false;
         return prev;
     },
 
@@ -622,11 +622,11 @@ var TaskItem = new Lang.Class({
                 '</span>';
         }
 
-        if (this.is_under_threshold) {
+        if (this.is_defered) {
             markup +=
                 '<span font-weight="bold" foreground="' +
-                this.delegate.markup_colors.get('-timepp-threshold-date-color') + '">' +
-                `${_('threshold')}:&#160;${this.threshold_date}&#160;(${G.date_delta_str(this.threshold_date)})   ` +
+                this.delegate.markup_colors.get('-timepp-defer-date-color') + '">' +
+                `${_('defered')}:&#160;${this.defer_date}&#160;(${G.date_delta_str(this.defer_date)})   ` +
                 '</span>';
         }
 
