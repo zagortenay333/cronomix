@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-29 10:44+0100\n"
+"POT-Creation-Date: 2017-10-29 11:49+0100\n"
 "PO-Revision-Date: 2017-07-20 07:02+0200\n"
 "Last-Translator: Piotr Komur <pkomur@gmail.com>\n"
 "Language-Team: \n"
@@ -470,7 +470,7 @@ msgstr[1] "w ciagu %d dni"
 msgstr[2] "w ciagu %d dni"
 
 #: data/po_files/../../sections/todo/MAIN.js:262
-#: data/po_files/../../sections/todo/MAIN.js:1155
+#: data/po_files/../../sections/todo/MAIN.js:1154
 msgid "Loading..."
 msgstr "Wczytuję..."
 
@@ -500,7 +500,7 @@ msgstr[0] "%d powtórzyło się"
 msgstr[1] "%d powtórzyły się"
 msgstr[2] "%d powtórzyło się"
 
-#: data/po_files/../../sections/todo/MAIN.js:1161
+#: data/po_files/../../sections/todo/MAIN.js:1160
 msgid "Nothing found."
 msgstr "Nic nie znaleziono..."
 

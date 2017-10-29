@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: timepp@zagortenay 333\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-29 10:44+0100\n"
+"POT-Creation-Date: 2017-10-29 11:49+0100\n"
 "PO-Revision-Date: 2017-08-29 10:51+0200\n"
 "Last-Translator: Christian Mattes <mac@tasarion.de>\n"
 "Language-Team: German\n"
@@ -466,7 +466,7 @@ msgstr[0] "in %d Tag"
 msgstr[1] "in %d Tagen"
 
 #: data/po_files/../../sections/todo/MAIN.js:262
-#: data/po_files/../../sections/todo/MAIN.js:1155
+#: data/po_files/../../sections/todo/MAIN.js:1154
 msgid "Loading..."
 msgstr "Lade..."
 
@@ -494,7 +494,7 @@ msgid_plural "%d tasks have gone over the threshold"
 msgstr[0] "%d Aufgabe wurde wiederholt"
 msgstr[1] "%d Aufgaben wurden wiederholt"
 
-#: data/po_files/../../sections/todo/MAIN.js:1161
+#: data/po_files/../../sections/todo/MAIN.js:1160
 msgid "Nothing found."
 msgstr "Nichts gefunden."
 

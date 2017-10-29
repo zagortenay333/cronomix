@@ -845,6 +845,22 @@ var Todo = new Lang.Class({
             let n;
 
             for (task of this.tasks) {
+                if (task.hidden) {
+                    this.stats.hidden++;
+                    continue;
+                }
+
+                if (task.threshold_date !== '9999-99-99') {
+                    this.stats.threshold_tasks++;
+                    continue;
+                }
+
+                if (task.completed) {
+                    if (task.rec_str) this.stats.recurring_completed++
+                    else              this.stats.completed++;
+                    continue;
+                }
+
                 for (proj of task.projects) {
                     n = this.stats.projects.get(proj);
                     this.stats.projects.set(proj, n ? ++n : 1);
@@ -855,13 +871,7 @@ var Todo = new Lang.Class({
                     this.stats.contexts.set(context, n ? ++n : 1);
                 }
 
-                if (task.hidden) {
-                    this.stats.hidden++;
-                }
-                else if (task.completed) {
-                    this.stats.completed++;
-                }
-                else if (task.priority === '(_)') {
+                if (task.priority === '(_)') {
                     this.stats.no_priority++;
                 }
                 else {
@@ -869,19 +879,7 @@ var Todo = new Lang.Class({
                     this.stats.priorities.set(task.priority, n ? ++n : 1);
                 }
 
-                if (task.threshold_date !== '9999-99-99') {
-                    this.stats.threshold_tasks++;
-                }
-
-                if (task.rec_str) {
-                    if (task.completed) {
-                        this.stats.recurring_completed++;
-                        this.stats.completed--;
-                    }
-                    else {
-                        this.stats.recurring_incompleted++;
-                    }
-                }
+                if (task.rec_str) this.stats.recurring_incompleted++;
             }
         }
 
@@ -891,9 +889,10 @@ var Todo = new Lang.Class({
         //
         {
             let n_incompleted = this.tasks.length -
-                               this.stats.completed -
-                               this.stats.hidden -
-                               this.stats.recurring_completed;
+                                this.stats.completed -
+                                this.stats.hidden -
+                                this.stats.recurring_completed -
+                                this.stats.threshold_tasks;
 
             this.panel_item.set_label('' + n_incompleted);
 
