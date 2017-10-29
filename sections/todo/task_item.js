@@ -336,7 +336,7 @@ var TaskItem = new Lang.Class({
                 else if (G.REG_DEFER_EXT.test(word)) {
                     if (this.rec_str) continue;
 
-                    this.defer_date = word.slice(2);
+                    this.defer_date = word.slice(word.indexOf(':') + 1);
                     words.splice(i, 1); i--; len--;
                 }
                 else if (G.REG_DUE_EXT.test(word)) {
