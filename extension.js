@@ -456,6 +456,7 @@ const Timepp = new Lang.Class({
     },
 
     _unload_stylesheet: function () {
+
         if (! this.custom_stylesheet) return;
 
         St.ThemeContext.get_for_stage(global.stage).get_theme()

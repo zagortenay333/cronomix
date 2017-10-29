@@ -111,8 +111,10 @@ var ViewManager = new Lang.Class({
         }
 
         if (show_tasks) {
-            if (this.delegate.tasks.length !== 0) this._show_tasks();
-            else this.delegate.tasks_scroll_wrapper.hide();
+            if (this.delegate.tasks.length === 0)
+                this.delegate.tasks_scroll_wrapper.hide();
+            else
+                this._show_tasks();
         }
 
         if (this.ext.menu.isOpen) view.focused_actor.grab_key_focus();

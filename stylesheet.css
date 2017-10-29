@@ -556,9 +556,12 @@
      * These custom properties only work if they are specified on this
      * selector.
      */
-    -timepp-context-color: #f47e00;
-    -timepp-project-color: #009a4b;
-    -timepp-link-color:    #5a94dc;
+    -timepp-context-color:        #f47e00;
+    -timepp-project-color:        #009a4b;
+    -timepp-link-color:           #5a94dc;
+    -timepp-due-date-color:       #e22b2b;
+    -timepp-rec-date-color:       #f47e00;
+    -timepp-threshold-date-color: #5a94dc;
 }
 
 .timepp-menu .todo-section .loading-msg,
@@ -576,7 +579,7 @@
 
 .timepp-menu .todo-section .tasks-container {}
 .timepp-menu .todo-section .tasks-content-box {
-    spacing: .4em;
+    spacing: .5em;
 }
 
 .timepp-menu .todo-section .task-item {
@@ -620,34 +623,27 @@
     border-left-width: 3px;
 }
 
+.timepp-menu .todo-section .task-item-content {
+    spacing: .3em;
+}
+
 .timepp-menu .todo-section .task-item.A .priority-label { color: #e22b2b; }
 .timepp-menu .todo-section .task-item.B .priority-label { color: #f47e00; }
 .timepp-menu .todo-section .task-item.C .priority-label { color: #8b5bff; }
 .timepp-menu .todo-section .task-item.D .priority-label { color: #009a4b; }
 
-.timepp-menu .todo-section .task-item-content {
-    spacing: .3em;
-}
-
-
 .timepp-menu .todo-section .description-label {}
 .timepp-menu .todo-section .date-label {}
 
-.timepp-menu .todo-section .priority-label,
-.timepp-menu .todo-section .due-date-label,
-.timepp-menu .todo-section .recurrence-date-label {
+.timepp-menu .todo-section .priority-label {
     font-weight: bold;
 }
 
-.timepp-menu .todo-section .due-date-label {
-    color: #e22b2b;
-}
-
-.timepp-menu .todo-section .recurrence-date-label {
-    color: #f47e00;
-}
-
 .timepp-menu .todo-section .icon-bin {}
+
+.timepp-menu .todo-section .todotxt-extension-dates {
+    color: #000;
+}
 
 .timepp-menu .todo-section .delete-completed-tasks-label {
     font-weight: bold;
@@ -705,10 +701,10 @@
      * These custom properties only work if they are specified on this
      * selector.
      */
-    -timepp-axes-color: rgba(255, 255, 255, .75);
-    -timepp-y-label-color: rgba(255, 255, 255, .75);
-    -timepp-x-label-color: rgba(255, 255, 255, .75);
-    -timepp-rulers-color: rgba(255, 255, 255, .15);
+    -timepp-axes-color:      rgba(255, 255, 255, .75);
+    -timepp-y-label-color:   rgba(255, 255, 255, .75);
+    -timepp-x-label-color:   rgba(255, 255, 255, .75);
+    -timepp-rulers-color:    rgba(255, 255, 255, .15);
     -timepp-proj-vbar-color: rgba(56, 174, 114, .8);
     -timepp-task-vbar-color: rgba(231, 79, 79, .8);
 }

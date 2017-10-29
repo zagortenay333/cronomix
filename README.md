@@ -171,7 +171,7 @@ Supported todo.txt extensions are:
     <tr>
         <td valign="top"><code>tracker_id:string</code></td>
         <td>
-            This extension is used to identify a task when starting/stopping
+            Used to identify a task when starting/stopping
             the time-tracker via the command-line.<br>
             Multiple tasks can have the same tracker_id.
         </td>
@@ -179,18 +179,25 @@ Supported todo.txt extensions are:
     <tr>
         <td valign="top"><code>pri:A-Z</code></td>
         <td>
-            This extension is used to restore the priority of a completed task
-when<br>
-            it gets reopend.
+            Used to restore the priority of a completed task when it gets reopend.
         </td>
     </tr>
     <tr>
         <td valign="top"><code>h:1</code></td>
         <td>
-            Hides an extension by default<br><br>
+            Hides a task.<br><br>
             <b>This extension disables all other extensions.</b><br><br>
             <i>Among other things, can be used to populate the todo manager<br>
             with context/project keywords for autocompletion.<br>
+            </i>
+        </td>
+    </tr>
+    <tr>
+        <td valign="top"><code>t:yyyy-mm-dd</code></td>
+        <td>
+            Sets a threshold date on a task.<br>
+            <i>
+            The task will remain hidden until the threshold date has arrived.<br>
             </i>
         </td>
     </tr>
@@ -210,7 +217,7 @@ as<br>
         <td>
             Used to automatically reopen a task after a given amount of
 time.<br><br>
-            <b>This extension disables the due date extension.</b><br><br>
+            <b>This extension is incompatible with the due and threshold extensions.</b><br><br>
             <i>Each time a task recurs, it's creation date is updated.<br>
             If a task is already open on the date of the recursion, it's
 creation date will be updated anyway.</i><br><br>

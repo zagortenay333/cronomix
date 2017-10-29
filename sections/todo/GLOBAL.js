@@ -1,3 +1,10 @@
+const ME = imports.misc.extensionUtils.getCurrentExtension();
+
+const Gettext  = imports.gettext.domain(ME.metadata['gettext-domain']);
+const _        = Gettext.gettext;
+const ngettext = Gettext.ngettext;
+
+
 var SortOrder = {
     ASCENDING  : 'ASCENDING',
     DESCENDING : 'DESCENDING',
@@ -37,6 +44,7 @@ var REG_EXT            = /^[^:]+:[^:]+$/;
 var REG_FILE_PATH      = /^~?\//;
 var REG_PRIO_EXT       = /^(?:pri|PRI):[A-Z]$/;
 var REG_HIDE_EXT       = /^h:1$/;
+var REG_THRESHOLD_EXT  = /^t:\d{4}-\d{2}-\d{2}$/;
 var REG_TRACKER_ID_EXT = /^tracker_id:[^:]+$/;
 var REG_REC_EXT_1      = /^rec:[1-9][0-9]*[dw]$/;
 var REG_REC_EXT_2      = /^rec:x-[1-9][0-9]*[dw]$/;
@@ -94,4 +102,22 @@ function split_on_spaces (str) {
     if (word) words.push(word);
 
     return words;
+}
+
+
+function date_delta_str (date) {
+    let diff = Math.round(
+        (Date.parse(date + 'T00:00:00') -
+         Date.parse(date_yyyymmdd() + 'T00:00:00'))
+        / 86400000);
+
+    let abs = Math.abs(diff);
+
+    let res;
+
+    if (diff === 0)    res = _('today');
+    else if (diff < 0) res = ngettext('%d day ago', '%d days ago', abs).format(abs);
+    else               res = ngettext('in %d day', 'in %d days', abs).format(abs);
+
+    return res.replace(/ /g, '&#160;'); // non-breaking-space
 }

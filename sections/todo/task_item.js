@@ -29,17 +29,16 @@ const G = ME.imports.sections.todo.GLOBAL;
 // =====================================================================
 // @@@ Task item/object including the actor to be drawn in the popup menu.
 //
-// @ext                 : obj (main extension object)
-// @delegate            : obj (main section object)
-// @task_str            : string (a single line in todo.txt file)
-// @do_check_recurrence : bool
+// @ext         : obj (main extension object)
+// @delegate    : obj (main section object)
+// @task_str    : string (a single line in todo.txt file)
+// @self_update : bool
 //
-// If @do_check_recurrence is true, then the task object will check to
-// to see if it needs to reopen in case it has a recurrence, and
-// as a result may end up updating it's task_str.
-// To know whether or not a task obj has recurred, one can set this param
-// to false and use the check_recurrence() method manually, which will
-// return a bool.
+// If @self_update is true, the task object will call some funcs
+// which might cause it to update it's task_str which will require
+// that the task is written to the todo.txt file.
+// E.g., the recurrence extension might cause the task_str to change,
+// or the threshold extension.
 // Setting this param to false is useful when we don't intend to update
 // the todo.txt file but must in case a task recurs. (E.g., when we load
 // tasks from the todo.txt file.)
@@ -47,7 +46,7 @@ const G = ME.imports.sections.todo.GLOBAL;
 var TaskItem = new Lang.Class({
     Name: 'Timepp.TaskItem',
 
-    _init: function (ext, delegate, task_str, do_check_recurrence = true) {
+    _init: function (ext, delegate, task_str, self_update = true) {
         this.ext      = ext;
         this.delegate = delegate;
         this.task_str = task_str;
@@ -94,20 +93,6 @@ var TaskItem = new Lang.Class({
 
 
         //
-        // due date label
-        //
-        this.due_date_label = new St.Label({ visible: false, y_align: Clutter.ActorAlign.CENTER, style_class: 'due-date-label' });
-        this.header.add_child(this.due_date_label);
-
-
-        //
-        // recurrence date label
-        //
-        this.rec_date_label = new St.Label({ visible: false, y_align: Clutter.ActorAlign.CENTER, style_class: 'recurrence-date-label' });
-        this.header.add_child(this.rec_date_label);
-
-
-        //
         // body
         //
         this.msg = new St.Label({ reactive: true, y_align: Clutter.ActorAlign.CENTER, x_align: St.Align.START, style_class: 'description-label'});
@@ -121,20 +106,9 @@ var TaskItem = new Lang.Class({
 
 
         //
-        // date labels (creation/completion/due)
-        //
-        this.date_labels = new St.Label({ visible: false, y_align: Clutter.ActorAlign.CENTER, x_align: St.Align.START, style_class: 'date-label popup-inactive-menu-item', pseudo_class: 'insensitive' });
-        this.task_item_content.add_child(this.date_labels);
-
-        this.date_labels.clutter_text.line_wrap      = true;
-        this.date_labels.clutter_text.line_wrap_mode = Pango.WrapMode.WORD_CHAR;
-        this.date_labels.clutter_text.ellipsize      = Pango.EllipsizeMode.NONE;
-
-
-        //
         // init the remaining vars and parse task string
         //
-        this.reset(do_check_recurrence);
+        this.reset(self_update);
 
 
         //
@@ -177,11 +151,17 @@ var TaskItem = new Lang.Class({
         });
     },
 
-    reset: function (do_check_recurrence, task_str) {
+    reset: function (self_update, task_str) {
         if (task_str) {
             this.delegate.time_tracker.update_record_name(this.task_str, task_str);
             this.task_str = task_str;
         }
+
+        // We create these on demand.
+        if (this.base_date_labels) this.base_date_labels.destroy();
+        if (this.ext_date_labels)  this.ext_date_labels.destroy();
+        this.base_date_labels = null; // St.Label for creation/completion dates
+        this.ext_date_labels  = null; // St.Label for todo.txt extension dates
 
         // For sorting purposes, we set the prio to '(_)' when there is no prio.
         this.priority                    = '(_)';
@@ -191,14 +171,9 @@ var TaskItem = new Lang.Class({
         this.creation_date               = '0000-00-00';
         this.completion_date             = '0000-00-00';
         this.due_date                    = '9999-99-99';
+        this.threshold_date              = '9999-99-99';
         this.prio_label.visible          = false;
         this.prio_label.text             = '';
-        this.due_date_label.visible      = false;
-        this.due_date_label.text         = '';
-        this.rec_date_label.visible      = false;
-        this.rec_date_label.text         = '';
-        this.date_labels.visible         = false;
-        this.date_labels.text            = '';
         this.actor.style_class           = 'task-item';
         this.completed                   = false;
         this.completion_checkbox.checked = false;
@@ -221,8 +196,9 @@ var TaskItem = new Lang.Class({
         // The numbers just match the global regex G.REG_REC_EXT_[123]
         this.rec_type = 1;
         this.rec_str  = '';
+        this.rec_next = '0000-00-00';
 
-        // These vars are used by the update_markup_colors() func to make it
+        // These vars are used by the update_body_markup() func to make it
         // possible to update the context/project/url colors without having to
         // re-parse the whole task_str.
         // They are set by the _parse_task_str() func.
@@ -235,7 +211,12 @@ var TaskItem = new Lang.Class({
         this.link_indices       = [];
 
         this._parse_task_str();
-        if (do_check_recurrence && this.rec_str) this.check_recurrence();
+
+        if (self_update) {
+            this.check_recurrence();
+            this.check_threshold_date();
+            this.update_dates_markup();
+        }
     },
 
     _parse_task_str: function () {
@@ -258,17 +239,11 @@ var TaskItem = new Lang.Class({
             this.actor.add_style_class_name('completed');
 
             if (len >= 1 & G.REG_DATE.test(words[1]) && Date.parse(words[1])) {
-                this.completion_date      = words[1];
-                // TRANSLATORS: 'completed:' is followed by a date
-                this.date_labels.text    += _('completed:') + words[1] + '   ';
-                this.date_labels.visible  = true;
+                this.completion_date     = words[1];
 
                 if (len >= 2 && G.REG_DATE.test(words[2]) && Date.parse(words[2])) {
-                    this.creation_date        = words[2];
-                    // TRANSLATORS: 'created:' is followed by a date
-                    this.date_labels.text    += _('created:') + words[2] + '   ';
-                    this.date_labels.visible  = true;
-                    desc_pos                  = 3;
+                    this.creation_date       = words[2];
+                    desc_pos                 = 3;
                 }
                 else desc_pos = 2;
             }
@@ -281,17 +256,13 @@ var TaskItem = new Lang.Class({
             this.priority           = words[0];
 
             if (len >= 1 && G.REG_DATE.test(words[1]) && Date.parse(words[1])) {
-                this.creation_date        = words[1];
-                this.date_labels.text    += _('created:') + words[1] + '   ';
-                this.date_labels.visible  = true;
-                desc_pos                  = 2;
+                this.creation_date       = words[1];
+                desc_pos                 = 2;
             }
             else desc_pos = 1;
         }
         else if (G.REG_DATE.test(words[0]) && Date.parse(words[0])) {
             this.creation_date       = words[0];
-            this.date_labels.text   += _('created:') + words[0] + '   ';
-            this.date_labels.visible = true;
             desc_pos                 = 1;
         }
 
@@ -341,70 +312,65 @@ var TaskItem = new Lang.Class({
                 else if (G.REG_HIDE_EXT.test(word)) {
                     this.completion_checkbox.hide();
                     this.prio_label.hide();
-                    this.due_date_label.hide();
-                    this.due_date_label.text = '';
-                    this.rec_date_label.hide();
-                    this.rec_date_label.text = '';
-                    this.date_labels.hide();
-                    if (this.edit_icon_bin) this.edit_icon_bin.hide();
 
-                    this.tracker_id = '';
-                    this.priority   = '(_)';
-                    this.hidden     = true;
-                    this.completed  = false;
-                    this.completion_checkbox.checked = false;
+                    this.creation_date   = '0000-00-00';
+                    this.completion_date = '0000-00-00';
+                    this.due_date        = '9999-99-99';
+                    this.threshold_date  = '9999-99-99';
+                    this.rec_str         = '';
+                    this.tracker_id      = '';
+                    this.priority        = '(_)';
+                    this.hidden          = true;
+                    this.completed       = false;
+
                     this.actor.add_style_class_name('hidden-task');
-
                     let icon_incognito_bin = new St.Button({ can_focus: true });
                     this.header.insert_child_at_index(icon_incognito_bin, 0);
-                    let icon_incognito = new St.Icon();
-                    icon_incognito_bin.add_actor(icon_incognito);
-                    icon_incognito.icon_name = 'timepp-hidden-symbolic';
+                    icon_incognito_bin.add_actor(new St.Icon({ icon_name: 'timepp-hidden-symbolic' }));
 
                     words.splice(i, 1); i--; len--;
                 }
-                else if (G.REG_DUE_EXT.test(word) && !this.rec_str) {
+                else if (G.REG_THRESHOLD_EXT.test(word)) {
+                    if (this.rec_str) continue;
+
+                    this.threshold_date = word.slice(2);
+                    words.splice(i, 1); i--; len--;
+                }
+                else if (G.REG_DUE_EXT.test(word)) {
+                    if (this.rec_str) continue;
+
                     this.due_date = word.slice(4);
-                    this.due_date_label.text   += _('due:') + word.slice(4);
-                    this.due_date_label.visible = true;
-                    this.update_due_date();
-
                     words.splice(i, 1); i--; len--;
                 }
-                else if (G.REG_REC_EXT_1.test(word) &&
-                         this.creation_date !== '0000-00-00') {
+                else if (G.REG_REC_EXT_1.test(word)) {
+                    if (this.due_date !== '9999-99-99' ||
+                        this.creation_date === '0000-00-00')
+                        continue;
 
-                    this.due_date_label.visible = false;
-                    this.due_date_label.text    = '';
                     this.rec_str  = word;
                     this.rec_type = 1;
-
                     words.splice(i, 1); i--; len--;
                 }
-                else if (G.REG_REC_EXT_2.test(word) &&
-                         (!this.completed ||
-                          this.completion_date !== '0000-00-00')) {
+                else if (G.REG_REC_EXT_2.test(word)) {
+                    if (this.due_date !== '9999-99-99' ||
+                        (this.completed && this.completion_date === '0000-00-00'))
+                        continue;
 
-                    this.due_date_label.visible = false;
-                    this.due_date_label.text    = '';
                     this.rec_str  = word;
                     this.rec_type = 2;
-
                     words.splice(i, 1); i--; len--;
                 }
-                else if (G.REG_REC_EXT_3.test(word) &&
-                         this.creation_date !== '0000-00-00') {
+                else if (G.REG_REC_EXT_3.test(word)) {
+                    if (this.due_date !== '9999-99-99' ||
+                        this.creation_date === '0000-00-00')
+                        continue;
 
-                    this.due_date_label.visible = false;
-                    this.due_date_label.text    = '';
                     this.rec_str  = word;
                     this.rec_type = 3;
-
                     words.splice(i, 1); i--; len--;
                 }
                 else if (G.REG_TRACKER_ID_EXT.test(word)) {
                     this.tracker_id = word.slice(11);
-
                     words.splice(i, 1); i--; len--;
                 }
                 else if (G.REG_PRIO_EXT.test(word)) {
@@ -424,26 +390,48 @@ var TaskItem = new Lang.Class({
         );
     },
 
+    check_threshold_date: function (today = G.date_yyyymmdd()) {
+        if (this.threshold_date === '9999-99-99' || this.threshold_date > today)
+            return;
+
+        let words = this.task_str.split(/ +/);
+
+        for (let i = 0, len = words.length; i < len; i++) {
+            if (G.REG_THRESHOLD_EXT.test(words[i])) {
+                words.splice(i, 1);
+                i--;
+                len--;
+            }
+        }
+
+        this.task_str       = words.join(' ');
+        this.threshold_date = '9999-99-99';
+
+        return true;
+    },
+
     check_recurrence: function () {
         if (! this.rec_str) return false;
 
-        let [do_recur, next_rec, days] = this._get_recurrence_date();
+        let [do_recur, next_rec] = this._get_recurrence_date();
 
         if (do_recur) {
             // update/insert creation date
-            let words = this.task_str.split(/ +/);
-            let idx;
+            {
+                let words = this.task_str.split(/ +/);
+                let idx;
 
-            if      (this.completed)          idx = 2;
-            else if (this.priority !== '(_)') idx = 1;
-            else                              idx = 0;
+                if      (this.completed)          idx = 2;
+                else if (this.priority !== '(_)') idx = 1;
+                else                              idx = 0;
 
-            if (G.REG_DATE.test(words[idx]))
-                words[idx] = G.date_yyyymmdd();
-            else
-                words.splice(idx, 0, G.date_yyyymmdd());
+                if (G.REG_DATE.test(words[idx]))
+                    words[idx] = G.date_yyyymmdd();
+                else
+                    words.splice(idx, 0, G.date_yyyymmdd());
 
-            this.task_str = words.join(' ');
+                this.task_str = words.join(' ');
+            }
 
             if (this.completed) this.toggle_task();
             else                this.reset(true);
@@ -452,11 +440,8 @@ var TaskItem = new Lang.Class({
         }
 
         if (next_rec) {
-            this.rec_date_label.show();
-            // TRANSLATORS: %s is a date string in yyyy-mm-dd format
-            this.rec_date_label.text =
-                ngettext('recurs:%s (in %d day)', 'recurs:%s (in %d days)',
-                         days).format(next_rec, days);
+            this.rec_next = next_rec;
+            this.update_dates_markup();
         }
 
         return do_recur;
@@ -471,13 +456,12 @@ var TaskItem = new Lang.Class({
     //
     // @do_recur        : bool    (whether or not the task should recur today)
     // @next_recurrence : string  (date of next recurrence in yyyy-mm-dd format)
-    // @days_until      : natural (days until next recurrence)
     //
     // @next_recurrence can be an empty string, which indicates that the next
     // recurrence couldn't be computed. E.g., the task recurs n days after
     // completion but isn't completed.
     _get_recurrence_date: function () {
-        let res   = [false, '', 0];
+        let res   = [false, ''];
         let today = G.date_yyyymmdd();
 
         if (this.rec_type === 3) {
@@ -534,17 +518,11 @@ var TaskItem = new Lang.Class({
             }
 
             res[1] = iter;
-            res[2] = Math.round(
-                (Date.parse(iter+'T00:00:00') - Date.parse(today+'T00:00:00')) /
-                86400000
-            );
         }
         else {
             let reference_date, rec_str_offset;
 
             if (this.rec_type === 2) {
-                // An incompleted task has no completion date; therefore, we
-                // cannot compute the next recurrence.
                 if (this.completion_date === '0000-00-00') return res;
 
                 reference_date = this.completion_date;
@@ -569,14 +547,12 @@ var TaskItem = new Lang.Class({
                 iter.setDate(iter.getDate() + increment);
 
             res[1] = G.date_yyyymmdd(iter);
-            res[2] = Math.round(
-                (iter.getTime() - Date.parse(today + 'T00:00:00')) / 86400000);
         }
 
         return res;
     },
 
-    update_markup_colors: function () {
+    update_body_markup: function () {
         let i, idx;
 
         for (i = 0; i < this.context_indices.length; i++) {
@@ -612,24 +588,98 @@ var TaskItem = new Lang.Class({
         this.msg.clutter_text.set_markup(this.description_markup.join(' '));
     },
 
-    update_due_date: function () {
-        if (this.due_date === '9999-99-99') return;
+    update_dates_markup: function () {
+        //
+        // set the custom (todo.txt extension) dates
+        //
+        let markup = '';
 
-        let diff = Math.round(
-            (Date.parse(this.due_date + 'T00:00:00') -
-             Date.parse(G.date_yyyymmdd() + 'T00:00:00'))
-            / 86400000
-        );
-        let abs = Math.abs(diff);
+        if (this.rec_str) {
+            let txt = '';
 
-        if (diff === 0)
-            abs = _('today');
-        else if (diff < 0)
-            abs = ngettext('%d day ago', '%d days ago', abs).format(abs);
-        else
-            abs = ngettext('in %d day', 'in %d days', abs).format(abs);
+            if (this.rec_type === 2) {
+                let type = this.rec_str[this.rec_str.length - 1];
+                let num  = +(this.rec_str.slice(6, -1)) * (type === 'w' ? 7 : 1);
 
-        this.due_date_label.text = _('due:') + this.due_date + ' (' + abs + ')';
+                txt =
+                    _('recurrence') + ': ' +
+                    ngettext('%d day after completion',
+                             '%d days after completion', num).format(num);
+            }
+            else {
+                txt = `${_('recurrence')}:&#160;${this.rec_next}&#160;(${G.date_delta_str(this.rec_next)})   `;
+            }
+
+            markup +=
+                '<span font-weight="bold" foreground="' +
+                this.delegate.markup_colors.get('-timepp-rec-date-color') + '">' +
+                txt + '</span>';
+        }
+
+        if (this.due_date !== '9999-99-99') {
+            markup +=
+                '<span font-weight="bold" foreground="' +
+                this.delegate.markup_colors.get('-timepp-due-date-color') + '">' +
+                `${_('due')}:&#160;${this.due_date}&#160;(${G.date_delta_str(this.due_date)})   ` +
+                '</span>';
+        }
+
+        if (this.threshold_date !== '9999-99-99') {
+            markup +=
+                '<span font-weight="bold" foreground="' +
+                this.delegate.markup_colors.get('-timepp-threshold-date-color') + '">' +
+                `${_('threshold')}:&#160;${this.threshold_date}&#160;(${G.date_delta_str(this.threshold_date)})   ` +
+                '</span>';
+        }
+
+        if (markup) {
+            if (! this.ext_date_labels) {
+                this.ext_date_labels = new St.Label({ y_align: Clutter.ActorAlign.CENTER, x_align: St.Align.START, style_class: 'todotxt-extension-dates' });
+                this.task_item_content.add_child(this.ext_date_labels);
+                this.ext_date_labels.clutter_text.line_wrap      = true;
+                this.ext_date_labels.clutter_text.line_wrap_mode = Pango.WrapMode.WORD_CHAR;
+                this.ext_date_labels.clutter_text.ellipsize      = Pango.EllipsizeMode.NONE;
+            }
+
+            this.ext_date_labels.clutter_text.set_markup(markup);
+        }
+        else if (this.ext_date_labels) {
+            this.ext_date_labels.destroy();
+            this.ext_date_labels = null;
+        }
+
+
+        //
+        // set creation/completion dates
+        //
+        let has_completion = (this.completion_date !== '0000-00-00');
+        let has_creation   = (this.creation_date   !== '0000-00-00');
+
+        if (has_creation || has_completion) {
+            if (! this.base_date_labels) {
+                this.base_date_labels = new St.Label({ y_align: Clutter.ActorAlign.CENTER, x_align: St.Align.START, style_class: 'date-label popup-inactive-menu-item', pseudo_class: 'insensitive' });
+                this.task_item_content.add_child(this.base_date_labels);
+                this.base_date_labels.clutter_text.line_wrap      = true;
+                this.base_date_labels.clutter_text.line_wrap_mode = Pango.WrapMode.WORD_CHAR;
+                this.base_date_labels.clutter_text.ellipsize      = Pango.EllipsizeMode.NONE;
+            }
+
+            this.base_date_labels.text = '';
+
+            if (has_creation) {
+                this.base_date_labels.clutter_text.set_markup(
+                    `${_('created')}:&#160;${this.creation_date}   `);
+            }
+
+            if (has_completion) {
+                this.base_date_labels.clutter_text.set_markup(
+                    `${_('completed')}:&#160;${this.completion_date}`);
+            }
+        }
+        else if (this.base_date_labels) {
+            this.base_date_labels.destroy();
+            this.base_date_labels = null;
+        }
     },
 
     toggle_task: function () {
@@ -724,7 +774,7 @@ var TaskItem = new Lang.Class({
         //
         // show icons
         //
-        if (!this.hidden && !this.completion_checkbox.checked)
+        if (!this.hidden && !this.completed)
             this.tracker_icon_bin.show();
 
         if (this.actor.visible) {

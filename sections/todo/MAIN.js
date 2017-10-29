@@ -155,9 +155,12 @@ var Todo = new Lang.Class({
         //
         // The keys are equal to the names of the css properties.
         this.markup_colors = new Map([
-            ['-timepp-context-color' , 'magenta'],
-            ['-timepp-project-color' , 'green'],
-            ['-timepp-link-color'    , 'blue'],
+            ['-timepp-context-color'        , 'magenta'],
+            ['-timepp-project-color'        , 'green'],
+            ['-timepp-link-color'           , 'blue'],
+            ['-timepp-due-date-color'       , 'red'],
+            ['-timepp-rec-date-color'       , 'tomato'],
+            ['-timepp-threshold-date-color' , 'violet'],
         ]);
 
 
@@ -491,6 +494,7 @@ var Todo = new Lang.Class({
 
                     filters: {
                         invert_filters : false,
+                        threshold      : false,
                         recurring      : false,
                         hidden         : false,
                         completed      : false,
@@ -612,7 +616,7 @@ var Todo = new Lang.Class({
         lines = String(lines).split(/\n|\r/).filter((l) => /\S/.test(l));
 
         this.create_tasks(lines, () => {
-            this._check_recurrences();
+            this._check_dates();
             this.on_tasks_changed();
             this.show_view__default();
         });
@@ -672,27 +676,43 @@ var Todo = new Lang.Class({
     _on_new_day_started: function () {
         this.emit('new-day', G.date_yyyymmdd());
 
-        for (let task of this.tasks)
-            task.update_due_date();
-
-        this._check_recurrences();
+        this._check_dates();
     },
 
-    _check_recurrences: function () {
-        let needs_update = false;
-        let n            = 0;
+    _check_dates: function () {
+        let today           = G.date_yyyymmdd();
+        let tasks_updated   = false;
+        let recurred_tasks  = 0;
+        let threshold_tasks = 0;
 
         for (let task of this.tasks) {
             if (task.check_recurrence()) {
-                needs_update = true;
-                n++;
+                tasks_updated = true;
+                recurred_tasks++;
             }
+
+            if (task.check_threshold_date(today)) {
+                tasks_updated = true;
+                threshold_tasks++;
+            }
+
+            task.update_dates_markup();
         }
 
-        if (needs_update) {
-            Main.notify(ngettext('%d task has recurred',
-                                 '%d tasks have recurred',
-                                  n).format(n));
+        if (tasks_updated) {
+            if (recurred_tasks > 0) {
+                Main.notify(ngettext('%d task has recurred',
+                                     '%d tasks have recurred',
+                                      recurred_tasks).format(recurred_tasks));
+            }
+
+            if (threshold_tasks > 0) {
+                // TRANSLATORS: Here the word 'threshold' refers to an extension
+                // which makes a task invisible until the threshold date is reached.
+                Main.notify(ngettext('%d task has gone over the threshold',
+                                     '%d tasks have gone over the threshold',
+                                      threshold_tasks).format(threshold_tasks));
+            }
 
             this.write_tasks_to_file();
             this.on_tasks_changed();
@@ -717,8 +737,10 @@ var Todo = new Lang.Class({
         });
 
         if (update_needed) {
-            for (let task of this.tasks)
-                task.update_markup_colors();
+            for (let task of this.tasks) {
+                task.update_body_markup();
+                task.update_dates_markup();
+            }
         }
     },
 
@@ -727,6 +749,7 @@ var Todo = new Lang.Class({
     // @val : natural (number of tasks that have that @key)
     _reset_stats_obj: function () {
         this.stats = {
+            threshold_tasks       : 0,
             recurring_completed   : 0,
             recurring_incompleted : 0,
             hidden                : 0,
@@ -819,37 +842,39 @@ var Todo = new Lang.Class({
         {
             this._reset_stats_obj();
 
-            let i, j, n, it, len;
+            let n;
 
-            for (i = 0, len = this.tasks.length; i < len; i++) {
-                it = this.tasks[i];
-
-                for (j = 0; j < it.projects.length; j++) {
-                    n = this.stats.projects.get(it.projects[j]);
-                    this.stats.projects.set(it.projects[j], n ? ++n : 1);
+            for (task of this.tasks) {
+                for (proj of task.projects) {
+                    n = this.stats.projects.get(proj);
+                    this.stats.projects.set(proj, n ? ++n : 1);
                 }
 
-                for (j = 0; j < it.contexts.length; j++) {
-                    n = this.stats.contexts.get(it.contexts[j]);
-                    this.stats.contexts.set(it.contexts[j], n ? ++n : 1);
+                for (context of task.contexts) {
+                    n = this.stats.contexts.get(context);
+                    this.stats.contexts.set(context, n ? ++n : 1);
                 }
 
-                if (it.hidden) {
+                if (task.hidden) {
                     this.stats.hidden++;
                 }
-                else if (it.completed) {
+                else if (task.completed) {
                     this.stats.completed++;
                 }
-                else if (it.priority === '(_)') {
+                else if (task.priority === '(_)') {
                     this.stats.no_priority++;
                 }
                 else {
-                    n = this.stats.priorities.get(it.priority);
-                    this.stats.priorities.set(it.priority, n ? ++n : 1);
+                    n = this.stats.priorities.get(task.priority);
+                    this.stats.priorities.set(task.priority, n ? ++n : 1);
                 }
 
-                if (it.rec_str) {
-                    if (it.completed) {
+                if (task.threshold_date !== '9999-99-99') {
+                    this.stats.threshold_tasks++;
+                }
+
+                if (task.rec_str) {
+                    if (task.completed) {
                         this.stats.recurring_completed++;
                         this.stats.completed--;
                     }
@@ -1292,20 +1317,22 @@ var Todo = new Lang.Class({
         });
     },
 
-    // A predicate used to determine whether a task inside the this.tasks array
-    // will be added to the this.tasks_viewport array (i.e., whether it can be
-    // visible to the user).
-    //
     // @task: obj (a task object)
     //
+    // A predicate used to determine whether a task inside the this.tasks array
+    // will be added to this.tasks_viewport array (i.e., whether it can be
+    // visible to the user).
+    //
     // If invert_filters is false, return true if at least one filter is matched.
-    // If invert_filters is true, return false if at least one filter is matched.
+    // If invert_filters is true,  return false if at least one filter is matched.
     _filter_test: function (task) {
-        if (this.cache.filters.hidden)      return task.hidden;
-        if (task.hidden)                    return false;
-        if (this.cache.filters.recurring)   return Boolean(task.rec_str);
-        if (task.rec_str && task.completed) return false;
-        if (! this.has_active_filters())    return true;
+        if (this.cache.filters.hidden)            return task.hidden;
+        if (task.hidden)                          return false;
+        if (this.cache.filters.threshold)         return task.threshold_date !== '9999-99-99';
+        if (this.cache.filters.recurring)         return Boolean(task.rec_str);
+        if (task.rec_str && task.completed)       return false;
+        if (task.threshold_date !== '9999-99-99') return false;
+        if (! this.has_active_filters())          return true;
 
         if (task.completed) {
             if (this.cache.filters.completed)
@@ -1347,7 +1374,8 @@ var Todo = new Lang.Class({
 
     // Returns true if there are any active filters, else false.
     has_active_filters: function () {
-        if (this.cache.filters.recurring         ||
+        if (this.cache.filters.threshold         ||
+            this.cache.filters.recurring         ||
             this.cache.filters.hidden            ||
             this.cache.filters.completed         ||
             this.cache.filters.no_priority       ||
