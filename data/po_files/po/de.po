@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: timepp@zagortenay 333\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-29 11:49+0100\n"
+"POT-Creation-Date: 2017-10-29 17:55+0100\n"
 "PO-Revision-Date: 2017-08-29 10:51+0200\n"
 "Last-Translator: Christian Mattes <mac@tasarion.de>\n"
 "Language-Team: German\n"
@@ -260,39 +260,39 @@ msgstr "Bereich zum Wechseln der Aufgaben-Datei öffnen"
 msgid "Todo / Time Tracker"
 msgstr "Aufgaben / Zeiterfassung"
 
-#: data/po_files/../../sections/todo/task_item.js:605
-#: data/po_files/../../sections/todo/task_item.js:610
+#: data/po_files/../../sections/todo/task_item.js:603
+#: data/po_files/../../sections/todo/task_item.js:608
 #, fuzzy
 msgid "recurrence"
 msgstr "aktuelle Datei"
 
-#: data/po_files/../../sections/todo/task_item.js:606
+#: data/po_files/../../sections/todo/task_item.js:604
 #, javascript-format
 msgid "%d day after completion"
 msgid_plural "%d days after completion"
 msgstr[0] ""
 msgstr[1] ""
 
-#: data/po_files/../../sections/todo/task_item.js:623
+#: data/po_files/../../sections/todo/task_item.js:621
 #, fuzzy
 msgid "due"
 msgstr "fällig:"
 
-#: data/po_files/../../sections/todo/task_item.js:631
+#: data/po_files/../../sections/todo/task_item.js:629
 msgid "threshold"
 msgstr ""
 
-#: data/po_files/../../sections/todo/task_item.js:671
+#: data/po_files/../../sections/todo/task_item.js:669
 #, fuzzy
 msgid "created"
 msgstr "angelegt:"
 
-#: data/po_files/../../sections/todo/task_item.js:676
+#: data/po_files/../../sections/todo/task_item.js:674
 #, fuzzy
 msgid "completed"
 msgstr "erledigt:"
 
-#: data/po_files/../../sections/todo/task_item.js:928
+#: data/po_files/../../sections/todo/task_item.js:926
 msgid "File or dir not found."
 msgstr "Datei oder Verzeichnis nicht gefunden."
 
@@ -489,8 +489,8 @@ msgstr[1] "%d Aufgaben wurden wiederholt"
 #. which makes a task invisible until the threshold date is reached.
 #: data/po_files/../../sections/todo/MAIN.js:712
 #, fuzzy, javascript-format
-msgid "%d task has gone over the threshold"
-msgid_plural "%d tasks have gone over the threshold"
+msgid "%d task has crossed threshold"
+msgid_plural "%d tasks have crossed threshold"
 msgstr[0] "%d Aufgabe wurde wiederholt"
 msgstr[1] "%d Aufgaben wurden wiederholt"
 

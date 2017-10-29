@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-29 11:49+0100\n"
+"POT-Creation-Date: 2017-10-29 18:10+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -257,35 +257,35 @@ msgstr ""
 msgid "Todo / Time Tracker"
 msgstr ""
 
-#: data/po_files/../../sections/todo/task_item.js:605
-#: data/po_files/../../sections/todo/task_item.js:610
+#: data/po_files/../../sections/todo/task_item.js:603
+#: data/po_files/../../sections/todo/task_item.js:608
 msgid "recurrence"
 msgstr ""
 
-#: data/po_files/../../sections/todo/task_item.js:606
+#: data/po_files/../../sections/todo/task_item.js:604
 #, javascript-format
 msgid "%d day after completion"
 msgid_plural "%d days after completion"
 msgstr[0] ""
 msgstr[1] ""
 
-#: data/po_files/../../sections/todo/task_item.js:623
+#: data/po_files/../../sections/todo/task_item.js:621
 msgid "due"
 msgstr ""
 
-#: data/po_files/../../sections/todo/task_item.js:631
+#: data/po_files/../../sections/todo/task_item.js:629
 msgid "threshold"
 msgstr ""
 
-#: data/po_files/../../sections/todo/task_item.js:671
+#: data/po_files/../../sections/todo/task_item.js:669
 msgid "created"
 msgstr ""
 
-#: data/po_files/../../sections/todo/task_item.js:676
+#: data/po_files/../../sections/todo/task_item.js:674
 msgid "completed"
 msgstr ""
 
-#: data/po_files/../../sections/todo/task_item.js:928
+#: data/po_files/../../sections/todo/task_item.js:926
 msgid "File or dir not found."
 msgstr ""
 
@@ -482,8 +482,8 @@ msgstr[1] ""
 #. which makes a task invisible until the threshold date is reached.
 #: data/po_files/../../sections/todo/MAIN.js:712
 #, javascript-format
-msgid "%d task has gone over the threshold"
-msgid_plural "%d tasks have gone over the threshold"
+msgid "%d task has crossed threshold"
+msgid_plural "%d tasks have crossed threshold"
 msgstr[0] ""
 msgstr[1] ""
 

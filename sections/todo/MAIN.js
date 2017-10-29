@@ -709,8 +709,8 @@ var Todo = new Lang.Class({
             if (threshold_tasks > 0) {
                 // TRANSLATORS: Here the word 'threshold' refers to an extension
                 // which makes a task invisible until the threshold date is reached.
-                Main.notify(ngettext('%d task has gone over the threshold',
-                                     '%d tasks have gone over the threshold',
+                Main.notify(ngettext('%d task has crossed threshold',
+                                     '%d tasks have crossed threshold',
                                       threshold_tasks).format(threshold_tasks));
             }
 
@@ -850,7 +850,7 @@ var Todo = new Lang.Class({
                     continue;
                 }
 
-                if (task.threshold_date !== '9999-99-99') {
+                if (task.is_under_threshold) {
                     this.stats.threshold_tasks++;
                     continue;
                 }
@@ -1325,13 +1325,13 @@ var Todo = new Lang.Class({
     // If invert_filters is false, return true if at least one filter is matched.
     // If invert_filters is true,  return false if at least one filter is matched.
     _filter_test: function (task) {
-        if (this.cache.filters.hidden)            return task.hidden;
-        if (task.hidden)                          return false;
-        if (this.cache.filters.threshold)         return task.threshold_date !== '9999-99-99';
-        if (this.cache.filters.recurring)         return Boolean(task.rec_str);
-        if (task.rec_str && task.completed)       return false;
-        if (task.threshold_date !== '9999-99-99') return false;
-        if (! this.has_active_filters())          return true;
+        if (this.cache.filters.hidden)      return task.hidden;
+        if (task.hidden)                    return false;
+        if (this.cache.filters.threshold)   return task.is_under_threshold;
+        if (this.cache.filters.recurring)   return Boolean(task.rec_str);
+        if (task.rec_str && task.completed) return false;
+        if (task.is_under_threshold)        return false;
+        if (! this.has_active_filters())    return true;
 
         if (task.completed) {
             if (this.cache.filters.completed)

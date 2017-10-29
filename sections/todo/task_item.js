@@ -171,7 +171,6 @@ var TaskItem = new Lang.Class({
         this.creation_date               = '0000-00-00';
         this.completion_date             = '0000-00-00';
         this.due_date                    = '9999-99-99';
-        this.threshold_date              = '9999-99-99';
         this.prio_label.visible          = false;
         this.prio_label.text             = '';
         this.actor.style_class           = 'task-item';
@@ -185,18 +184,21 @@ var TaskItem = new Lang.Class({
         }
         this.hidden = false;
 
+        this.threshold_date        = '';
+        this.is_under_threshold = false;
+
+        // The recurrence type is one of: 1, 2, 3
+        // The numbers just match the global regex G.REG_REC_EXT_[123]
+        this.rec_type = 1;
+        this.rec_str  = '';
+        this.rec_next = '';
+
         // These vars are only used for sorting purposes. They hold the first
         // context/project keyword as they appear in the task_str. If there are
         // no contexts/projects, they are ''.
         // They are set by the _parse_task_str() func.
         this.first_context = '';
         this.first_project = '';
-
-        // The recurrence type is one of: 1, 2, 3
-        // The numbers just match the global regex G.REG_REC_EXT_[123]
-        this.rec_type = 1;
-        this.rec_str  = '';
-        this.rec_next = '0000-00-00';
 
         // These vars are used by the update_body_markup() func to make it
         // possible to update the context/project/url colors without having to
@@ -316,7 +318,8 @@ var TaskItem = new Lang.Class({
                     this.creation_date   = '0000-00-00';
                     this.completion_date = '0000-00-00';
                     this.due_date        = '9999-99-99';
-                    this.threshold_date  = '9999-99-99';
+                    this.threshold_date  = '';
+                    this.is_under_threshold = false;
                     this.rec_str         = '';
                     this.tracker_id      = '';
                     this.priority        = '(_)';
@@ -391,23 +394,18 @@ var TaskItem = new Lang.Class({
     },
 
     check_threshold_date: function (today = G.date_yyyymmdd()) {
-        if (this.threshold_date === '9999-99-99' || this.threshold_date > today)
-            return;
+        if (! this.threshold_date) return false;
 
-        let words = this.task_str.split(/ +/);
+        this.creation_date = this.threshold_date;
 
-        for (let i = 0, len = words.length; i < len; i++) {
-            if (G.REG_THRESHOLD_EXT.test(words[i])) {
-                words.splice(i, 1);
-                i--;
-                len--;
-            }
+        if (this.threshold_date > today) {
+            this.is_under_threshold = true;
+            return false;
         }
 
-        this.task_str       = words.join(' ');
-        this.threshold_date = '9999-99-99';
-
-        return true;
+        let prev = this.is_under_threshold;
+        this.is_under_threshold = false;
+        return prev;
     },
 
     check_recurrence: function () {
@@ -624,7 +622,7 @@ var TaskItem = new Lang.Class({
                 '</span>';
         }
 
-        if (this.threshold_date !== '9999-99-99') {
+        if (this.is_under_threshold) {
             markup +=
                 '<span font-weight="bold" foreground="' +
                 this.delegate.markup_colors.get('-timepp-threshold-date-color') + '">' +
