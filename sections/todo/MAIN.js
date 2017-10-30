@@ -840,7 +840,7 @@ var Todo = new Lang.Class({
         {
             this._reset_stats_obj();
 
-            let n;
+            let n, proj, context;
 
             for (task of this.tasks) {
                 if (task.hidden) {
