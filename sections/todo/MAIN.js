@@ -248,6 +248,7 @@ var Todo = new Lang.Class({
         this.actor.add_actor(this.search_entry_bin.actor);
         this.search_entry_bin.label.hide();
         this.search_entry_bin.actor.hide();
+        this.search_entry_bin.actor.can_focus = false;
 
         this.search_entry = new St.Entry({ can_focus: true });
         this.search_entry_bin.actor.add(this.search_entry, {expand: true});
