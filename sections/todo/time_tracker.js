@@ -361,15 +361,6 @@ var TimeTracker = new Lang.Class({
         }
     },
 
-    _get_week_start_date: function () {
-        let d       = new Date();
-        let day_pos = (7 - Shell.util_get_week_start() + d.getDay()) % 7;
-
-        d.setDate(d.getDate() - day_pos + 1);
-
-        return d.toISOString().substr(0, 10);
-    },
-
     toggle_tracking: function (task) {
         let val = this.daily_csv_map.get(task.task_str);
 
