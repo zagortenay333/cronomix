@@ -541,7 +541,7 @@ var Pomodoro = new Lang.Class({
             );
         }
         else {
-            if (this.clock > 0 && this.clock !== this.cache.pomo_duration) {
+            if (time > 0 && time !== this.cache.pomo_duration) {
                 time += 60;
             }
 
