@@ -403,8 +403,8 @@ var TaskItem = new Lang.Class({
             return false;
         }
 
-        let prev = this.is_under_defer;
-        this.is_under_defer = false;
+        let prev = this.is_defered;
+        this.is_defered = false;
         return prev;
     },
 
@@ -437,10 +437,7 @@ var TaskItem = new Lang.Class({
             return do_recur;
         }
 
-        if (next_rec) {
-            this.rec_next = next_rec;
-            this.update_dates_markup();
-        }
+        if (next_rec) this.rec_next = next_rec;
 
         return do_recur;
     },

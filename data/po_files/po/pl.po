@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-31 12:23+0100\n"
+"POT-Creation-Date: 2017-11-01 12:08+0100\n"
 "PO-Revision-Date: 2017-07-20 07:02+0200\n"
 "Last-Translator: Piotr Komur <pkomur@gmail.com>\n"
 "Language-Team: \n"
@@ -262,12 +262,12 @@ msgstr "Otwórz sekcję, aby wyszukać zadanie"
 msgid "Todo / Time Tracker"
 msgstr "Zadania / Śledzenie"
 
-#: data/po_files/../../sections/todo/task_item.js:603
-#: data/po_files/../../sections/todo/task_item.js:608
+#: data/po_files/../../sections/todo/task_item.js:600
+#: data/po_files/../../sections/todo/task_item.js:605
 msgid "recurrence"
 msgstr ""
 
-#: data/po_files/../../sections/todo/task_item.js:604
+#: data/po_files/../../sections/todo/task_item.js:601
 #, javascript-format
 msgid "%d day after completion"
 msgid_plural "%d days after completion"
@@ -275,26 +275,26 @@ msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
 
-#: data/po_files/../../sections/todo/task_item.js:621
+#: data/po_files/../../sections/todo/task_item.js:618
 #, fuzzy
 msgid "due"
 msgstr "termin:"
 
-#: data/po_files/../../sections/todo/task_item.js:629
+#: data/po_files/../../sections/todo/task_item.js:626
 msgid "defered"
 msgstr ""
 
-#: data/po_files/../../sections/todo/task_item.js:669
+#: data/po_files/../../sections/todo/task_item.js:666
 #, fuzzy
 msgid "created"
 msgstr "utworzono:"
 
-#: data/po_files/../../sections/todo/task_item.js:674
+#: data/po_files/../../sections/todo/task_item.js:671
 #, fuzzy
 msgid "completed"
 msgstr "ukończono:"
 
-#: data/po_files/../../sections/todo/task_item.js:926
+#: data/po_files/../../sections/todo/task_item.js:923
 msgid "File or dir not found."
 msgstr ""
 
