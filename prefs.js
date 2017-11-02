@@ -339,12 +339,13 @@ const Settings = new Lang.Class({
             });
 
         {
-            let sound_f = this.settings.get_string('timer-sound-file-path');
+            let sound_uri     = this.settings.get_string('timer-sound-file-path');
+            let [sound_path,] = GLib.filename_from_uri(sound_uri, null);
 
-            if (! GLib.file_test(sound_f, GLib.FileTest.EXISTS)) {
-                this.settings.set_string('timer-sound-file-path',
-                    GLib.filename_to_uri(ME.path + '/data/sounds/beeps.ogg', null));
-            }
+            if (! GLib.file_test(sound_path, GLib.FileTest.EXISTS))
+                this.settings.set_string('timer-sound-file-path', GLib.filename_to_uri(ME.path + '/data/sounds/beeps.ogg', null));
+            else
+                this.settings.set_string('timer-sound-file-path', sound_uri, null);
         }
         this.builder.get_object('timer-sound-chooser')
             .set_uri(this.settings.get_string('timer-sound-file-path'), null);
@@ -500,12 +501,13 @@ const Settings = new Lang.Class({
             });
 
         {
-            let sound_f = this.settings.get_string('pomodoro-sound-file-path');
+            let sound_uri     = this.settings.get_string('pomodoro-sound-file-path');
+            let [sound_path,] = GLib.filename_from_uri(sound_uri, null);
 
-            if (! GLib.file_test(sound_f, GLib.FileTest.EXISTS)) {
-                this.settings.set_string('pomodoro-sound-file-path',
-                    GLib.filename_to_uri(ME.path + '/data/sounds/beeps.ogg', null));
-            }
+            if (! GLib.file_test(sound_path, GLib.FileTest.EXISTS))
+                this.settings.set_string('pomodoro-sound-file-path', GLib.filename_to_uri(ME.path + '/data/sounds/beeps.ogg', null));
+            else
+                this.settings.set_string('pomodoro-sound-file-path', sound_uri, null);
         }
         this.builder.get_object('pomodoro-sound-chooser')
             .set_uri(this.settings.get_string('pomodoro-sound-file-path'), null);
@@ -584,12 +586,13 @@ const Settings = new Lang.Class({
             Gio.SettingsBindFlags.DEFAULT);
 
         {
-            let sound_f = this.settings.get_string('alarms-sound-file-path');
+            let sound_uri     = this.settings.get_string('alarms-sound-file-path');
+            let [sound_path,] = GLib.filename_from_uri(sound_uri, null);
 
-            if (! GLib.file_test(sound_f, GLib.FileTest.EXISTS)) {
-                this.settings.set_string('alarms-sound-file-path',
-                    GLib.filename_to_uri(ME.path + '/data/sounds/beeps.ogg', null));
-            }
+            if (! GLib.file_test(sound_path, GLib.FileTest.EXISTS))
+                this.settings.set_string('alarms-sound-file-path', GLib.filename_to_uri(ME.path + '/data/sounds/beeps.ogg', null));
+            else
+                this.settings.set_string('alarms-sound-file-path', sound_uri, null);
         }
         this.builder.get_object('alarms-sound-chooser')
             .set_uri(this.settings.get_string('alarms-sound-file-path'), null);
