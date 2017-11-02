@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-01 12:08+0100\n"
+"POT-Creation-Date: 2017-11-02 19:50+0100\n"
 "PO-Revision-Date: 2017-07-20 07:02+0200\n"
 "Last-Translator: Piotr Komur <pkomur@gmail.com>\n"
 "Language-Team: \n"
@@ -449,11 +449,11 @@ msgstr "Usuń wszystkie ukończone zadania"
 msgid "Archive all completed tasks to done.txt and delete them"
 msgstr "Zarchiwizuj ukończone zadania do pliku 'done.txt' przed ich usunięciem"
 
-#: data/po_files/../../sections/todo/GLOBAL.js:118
+#: data/po_files/../../sections/todo/GLOBAL.js:119
 msgid "today"
 msgstr "dziś"
 
-#: data/po_files/../../sections/todo/GLOBAL.js:119
+#: data/po_files/../../sections/todo/GLOBAL.js:120
 #, javascript-format
 msgid "%d day ago"
 msgid_plural "%d days ago"
@@ -461,7 +461,7 @@ msgstr[0] "%d dzień temu"
 msgstr[1] "%d dni temu"
 msgstr[2] "%d dni temu"
 
-#: data/po_files/../../sections/todo/GLOBAL.js:120
+#: data/po_files/../../sections/todo/GLOBAL.js:121
 #, javascript-format
 msgid "in %d day"
 msgid_plural "in %d days"
