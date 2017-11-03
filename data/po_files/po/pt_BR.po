@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: timepp@zagortenay 333\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-11-02 23:12+0100\n"
-"PO-Revision-Date: 2017-11-02 19:22-0200\n"
+"PO-Revision-Date: 2017-11-03 09:24-0200\n"
 "Last-Translator: Helder <he7d3r@gmail.com>\n"
 "Language-Team: Brazilian Portuguese\n"
 "Language: pt_BR\n"
@@ -55,7 +55,7 @@ msgstr "Arquivo de tarefas concluídas (opcional)"
 
 #: data/po_files/../../data/prefs.ui:183
 msgid "Time-tracker csv directory (optional)"
-msgstr "Diretório do csv de monitoramento de tempo (opcional)"
+msgstr "Diretório dos arquivos csv do gerenciador de tempo (opcional)"
 
 #: data/po_files/../../data/prefs.ui:349
 msgid "Show only 1 panel icon for joined menus"
@@ -259,7 +259,7 @@ msgstr "Abrir esta seção para para alterar arquivos de tarefas"
 
 #: data/po_files/../../data/prefs.ui:2994
 msgid "Todo / Time Tracker"
-msgstr "Tarefas / Gerenciamento de tempo"
+msgstr "Tarefas / Gerenciador de Tempo"
 
 #: data/po_files/../../sections/todo/task_item.js:600
 #: data/po_files/../../sections/todo/task_item.js:605
@@ -442,7 +442,7 @@ msgstr "Deletar todas as tarefas concluídas"
 
 #: data/po_files/../../sections/todo/view__clear_tasks.js:66
 msgid "Archive all completed tasks to done.txt and delete them"
-msgstr "Arquivar todas as tarefas concluídas no arquivo done.txt e deletá-las"
+msgstr "Arquivar todas as tarefas finalizadas no arquivo de tarefas concluídas e deletá-las"
 
 #: data/po_files/../../sections/todo/GLOBAL.js:119
 msgid "today"
@@ -452,15 +452,15 @@ msgstr "hoje"
 #, javascript-format
 msgid "%d day ago"
 msgid_plural "%d days ago"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%d dia atrás"
+msgstr[1] "%d dias atrás"
 
 #: data/po_files/../../sections/todo/GLOBAL.js:121
 #, javascript-format
 msgid "in %d day"
 msgid_plural "in %d days"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "em %d dia"
+msgstr[1] "em %d dias"
 
 #: data/po_files/../../sections/todo/MAIN.js:263
 #: data/po_files/../../sections/todo/MAIN.js:1153
@@ -538,11 +538,11 @@ msgstr "Inverter filtros"
 #: data/po_files/../../sections/stopwatch.js:169
 #: data/po_files/../../sections/stopwatch.js:638
 msgid "Reset"
-msgstr "Redefinir"
+msgstr "Reiniciar"
 
 #: data/po_files/../../sections/todo/view__filters.js:307
 msgid "Completed"
-msgstr "Completadas"
+msgstr "Concluídas"
 
 #: data/po_files/../../sections/todo/view__filters.js:318
 msgid "No Priority"
@@ -566,7 +566,7 @@ msgstr "arquivo atual"
 #: data/po_files/../../sections/stopwatch.js:170
 #: data/po_files/../../sections/stopwatch.js:639
 msgid "Lap"
-msgstr "Intervalo"
+msgstr "Volta"
 
 #: data/po_files/../../sections/stopwatch.js:171
 #: data/po_files/../../sections/stopwatch.js:641
