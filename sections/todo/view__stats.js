@@ -112,10 +112,10 @@ var StatsView = new Lang.Class({
 
         // A map from mode names to functions that invoke it.
         this.mode_func_map = {
-            [this.mode.BANNER] : this.show_mode__banner,
-            [this.mode.GLOBAL] : this.show_mode__global,
-            [this.mode.SINGLE] : this.show_mode__single,
-            [this.mode.HOT]    : this.show_mode__hot,
+            [this.mode.BANNER] : this.show_mode__banner.bind(this),
+            [this.mode.GLOBAL] : this.show_mode__global.bind(this),
+            [this.mode.SINGLE] : this.show_mode__single.bind(this),
+            [this.mode.HOT]    : this.show_mode__hot.bind(this),
         };
 
 
