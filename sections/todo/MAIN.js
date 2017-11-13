@@ -684,7 +684,7 @@ var Todo = new Lang.Class({
         let today          = G.date_yyyymmdd();
         let tasks_updated  = false;
         let recurred_tasks = 0;
-        let defered_tasks  = 0;
+        let deferred_tasks = 0;
 
         for (let task of this.tasks) {
             if (task.check_recurrence()) {
@@ -692,9 +692,9 @@ var Todo = new Lang.Class({
                 recurred_tasks++;
             }
 
-            if (task.check_defered_tasks(today)) {
+            if (task.check_deferred_tasks(today)) {
                 tasks_updated = true;
-                defered_tasks++;
+                deferred_tasks++;
             }
 
             task.update_dates_markup();
@@ -707,10 +707,10 @@ var Todo = new Lang.Class({
                                       recurred_tasks).format(recurred_tasks));
             }
 
-            if (defered_tasks > 0) {
-                Main.notify(ngettext('%d defered task has been opened',
-                                     '%d defered tasks have been opened',
-                                      defered_tasks).format(defered_tasks));
+            if (deferred_tasks > 0) {
+                Main.notify(ngettext('%d deferred task has been opened',
+                                     '%d deferred tasks have been opened',
+                                      deferred_tasks).format(deferred_tasks));
             }
 
             this.write_tasks_to_file();
@@ -748,7 +748,7 @@ var Todo = new Lang.Class({
     // @val : natural (number of tasks that have that @key)
     _reset_stats_obj: function () {
         this.stats = {
-            defered_tasks         : 0,
+            deferred_tasks        : 0,
             recurring_completed   : 0,
             recurring_incompleted : 0,
             hidden                : 0,
@@ -849,8 +849,8 @@ var Todo = new Lang.Class({
                     continue;
                 }
 
-                if (task.is_defered) {
-                    this.stats.defered_tasks++;
+                if (task.is_deferred) {
+                    this.stats.deferred_tasks++;
                     continue;
                 }
 
@@ -891,7 +891,7 @@ var Todo = new Lang.Class({
                                 this.stats.completed -
                                 this.stats.hidden -
                                 this.stats.recurring_completed -
-                                this.stats.defered_tasks;
+                                this.stats.deferred_tasks;
 
             this.panel_item.set_label('' + n_incompleted);
 
@@ -1326,10 +1326,10 @@ var Todo = new Lang.Class({
     _filter_test: function (task) {
         if (this.cache.filters.hidden)      return task.hidden;
         if (task.hidden)                    return false;
-        if (this.cache.filters.defered)     return task.is_defered;
+        if (this.cache.filters.deferred)    return task.is_deferred;
         if (this.cache.filters.recurring)   return Boolean(task.rec_str);
         if (task.rec_str && task.completed) return false;
-        if (task.is_defered)                return false;
+        if (task.is_deferred)               return false;
         if (! this.has_active_filters())    return true;
 
         if (task.completed) {
@@ -1372,7 +1372,7 @@ var Todo = new Lang.Class({
 
     // Returns true if there are any active filters, else false.
     has_active_filters: function () {
-        if (this.cache.filters.defered         ||
+        if (this.cache.filters.deferred          ||
             this.cache.filters.recurring         ||
             this.cache.filters.hidden            ||
             this.cache.filters.completed         ||

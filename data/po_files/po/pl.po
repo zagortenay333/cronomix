@@ -281,7 +281,7 @@ msgid "due"
 msgstr "termin:"
 
 #: data/po_files/../../sections/todo/task_item.js:626
-msgid "defered"
+msgid "deferred"
 msgstr ""
 
 #: data/po_files/../../sections/todo/task_item.js:666
@@ -492,8 +492,8 @@ msgstr[2] "%d powtórzyło się"
 
 #: data/po_files/../../sections/todo/MAIN.js:711
 #, javascript-format
-msgid "%d defered task has been opened"
-msgid_plural "%d defered tasks have been opened"
+msgid "%d deferred task has been opened"
+msgid_plural "%d deferred tasks have been opened"
 msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
@@ -534,13 +534,13 @@ msgstr[2] "%d powtarzających się zadań"
 
 #: data/po_files/../../sections/todo/view__filters.js:155
 #, fuzzy
-msgid "Show defered tasks only"
+msgid "Show deferred tasks only"
 msgstr "Pokaż tylko ukryte zadania"
 
 #: data/po_files/../../sections/todo/view__filters.js:164
 #, fuzzy, javascript-format
-msgid "%d defered task"
-msgid_plural "%d defered tasks"
+msgid "%d deferred task"
+msgid_plural "%d deferred tasks"
 msgstr[0] "%d ukryte zadanie"
 msgstr[1] "%d ukryte zadania"
 msgstr[2] "%d ukrytych zadań"

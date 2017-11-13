@@ -147,28 +147,28 @@ var TaskFiltersWindow = new Lang.Class({
 
 
         //
-        // show defered tasks only switch
+        // show deferred tasks only switch
         //
-        this.show_defered_tasks_item = new St.BoxLayout({ style_class: 'row' });
-        this.content_box.add_child(this.show_defered_tasks_item);
+        this.show_deferred_tasks_item = new St.BoxLayout({ style_class: 'row' });
+        this.content_box.add_child(this.show_deferred_tasks_item);
 
-        let show_defered_tasks_label = new St.Label({ text: _('Show defered tasks only'), y_align: Clutter.ActorAlign.CENTER });
-        this.show_defered_tasks_item.add(show_defered_tasks_label, {expand: true});
+        let show_deferred_tasks_label = new St.Label({ text: _('Show deferred tasks only'), y_align: Clutter.ActorAlign.CENTER });
+        this.show_deferred_tasks_item.add(show_deferred_tasks_label, {expand: true});
 
-        let defered_count_label = new St.Label({ y_align: Clutter.ActorAlign.CENTER, style_class: 'popup-inactive-menu-item', pseudo_class: 'insensitive' });
-        this.show_defered_tasks_item.add_child(defered_count_label);
+        let deferred_count_label = new St.Label({ y_align: Clutter.ActorAlign.CENTER, style_class: 'popup-inactive-menu-item', pseudo_class: 'insensitive' });
+        this.show_deferred_tasks_item.add_child(deferred_count_label);
 
-        let n_defered = this.delegate.stats.defered_tasks;
+        let n_deferred = this.delegate.stats.deferred_tasks;
 
-        defered_count_label.text =
-            ngettext('%d defered task', '%d defered tasks', n_defered)
-            .format(n_defered);
+        deferred_count_label.text =
+            ngettext('%d deferred task', '%d deferred tasks', n_deferred)
+            .format(n_deferred);
 
-        this.show_defered_tasks_toggle_btn = new St.Button({ can_focus: true });
-        this.show_defered_tasks_item.add_actor(this.show_defered_tasks_toggle_btn);
-        this.show_defered_tasks_toggle = new PopupMenu.Switch();
-        this.nand_toggles.push(this.show_defered_tasks_toggle);
-        this.show_defered_tasks_toggle_btn.add_actor(this.show_defered_tasks_toggle.actor);
+        this.show_deferred_tasks_toggle_btn = new St.Button({ can_focus: true });
+        this.show_deferred_tasks_item.add_actor(this.show_deferred_tasks_toggle_btn);
+        this.show_deferred_tasks_toggle = new PopupMenu.Switch();
+        this.nand_toggles.push(this.show_deferred_tasks_toggle);
+        this.show_deferred_tasks_toggle_btn.add_actor(this.show_deferred_tasks_toggle.actor);
 
 
         //
@@ -246,13 +246,13 @@ var TaskFiltersWindow = new Lang.Class({
                 this.show_recurring_tasks_toggle.setToggleState(true);
             }
         });
-        this.show_defered_tasks_toggle_btn.connect('clicked', () => {
-            if (this.show_defered_tasks_toggle.state) {
-                this.show_defered_tasks_toggle.setToggleState(false);
+        this.show_deferred_tasks_toggle_btn.connect('clicked', () => {
+            if (this.show_deferred_tasks_toggle.state) {
+                this.show_deferred_tasks_toggle.setToggleState(false);
             }
             else {
                 for (toggle of this.nand_toggles) toggle.setToggleState(false);
-                this.show_defered_tasks_toggle.setToggleState(true);
+                this.show_deferred_tasks_toggle.setToggleState(true);
             }
         });
         this.invert_toggle_btn.connect('clicked', () => {
@@ -277,7 +277,7 @@ var TaskFiltersWindow = new Lang.Class({
 
         this.invert_toggle.setToggleState(filters.invert_filters);
         this.show_hidden_tasks_toggle.setToggleState(filters.hidden);
-        this.show_defered_tasks_toggle.setToggleState(filters.defered);
+        this.show_deferred_tasks_toggle.setToggleState(filters.deferred);
         this.show_recurring_tasks_toggle.setToggleState(filters.recurring);
 
 
@@ -467,7 +467,7 @@ var TaskFiltersWindow = new Lang.Class({
     _on_ok_clicked: function () {
         let filters = {
             invert_filters : this.invert_toggle.state,
-            defered        : this.show_defered_tasks_toggle.state,
+            deferred       : this.show_deferred_tasks_toggle.state,
             recurring      : this.show_recurring_tasks_toggle.state,
             hidden         : this.show_hidden_tasks_toggle.state,
             completed      : Boolean(this.filter_register.completed &&

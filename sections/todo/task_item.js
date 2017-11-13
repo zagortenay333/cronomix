@@ -184,8 +184,8 @@ var TaskItem = new Lang.Class({
         }
         this.hidden = false;
 
-        this.defer_date = '';
-        this.is_defered = false;
+        this.defer_date  = '';
+        this.is_deferred = false;
 
         // The recurrence type is one of: 1, 2, 3
         // The numbers just match the global regex G.REG_REC_EXT_[123]
@@ -216,7 +216,7 @@ var TaskItem = new Lang.Class({
 
         if (self_update) {
             this.check_recurrence();
-            this.check_defered_tasks();
+            this.check_deferred_tasks();
             this.update_dates_markup();
         }
     },
@@ -319,7 +319,7 @@ var TaskItem = new Lang.Class({
                     this.completion_date = '0000-00-00';
                     this.due_date        = '9999-99-99';
                     this.defer_date      = '';
-                    this.is_defered      = false;
+                    this.is_deferred     = false;
                     this.rec_str         = '';
                     this.tracker_id      = '';
                     this.priority        = '(_)';
@@ -393,18 +393,18 @@ var TaskItem = new Lang.Class({
         );
     },
 
-    check_defered_tasks: function (today = G.date_yyyymmdd()) {
+    check_deferred_tasks: function (today = G.date_yyyymmdd()) {
         if (! this.defer_date) return false;
 
         this.creation_date = this.defer_date;
 
         if (this.defer_date > today) {
-            this.is_defered = true;
+            this.is_deferred = true;
             return false;
         }
 
-        let prev = this.is_defered;
-        this.is_defered = false;
+        let prev = this.is_deferred;
+        this.is_deferred = false;
         return prev;
     },
 
@@ -619,11 +619,11 @@ var TaskItem = new Lang.Class({
                 '</span>';
         }
 
-        if (this.is_defered) {
+        if (this.is_deferred) {
             markup +=
                 '<span font-weight="bold" foreground="' +
                 this.delegate.markup_colors.get('-timepp-defer-date-color') + '">' +
-                `${_('defered')}:&#160;${this.defer_date}&#160;(${G.date_delta_str(this.defer_date)})   ` +
+                `${_('deferred')}:&#160;${this.defer_date}&#160;(${G.date_delta_str(this.defer_date)})   ` +
                 '</span>';
         }
 
