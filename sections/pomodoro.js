@@ -220,6 +220,7 @@ var Pomodoro = new Lang.Class({
         this.sigm.connect(this.panel_item, 'left-click', () => this.ext.toggle_menu(this));
         this.sigm.connect(this.panel_item, 'right-click', () => this.ext.toggle_context_menu(this));
         this.sigm.connect(this.panel_item, 'middle-click', () => this.timer_toggle());
+        this.sigm.connect(this.panel_item.actor, 'enter-event', () => { if (Main.panel.menuManager.activeMenu) this.ext.open_menu(this) });
         this.sigm.connect_press(this.settings_btn, () => this._show_settings());
         this.sigm.connect_press(this.fullscreen_btn, () => this.show_fullscreen());
         this.sigm.connect_press(this.button_continue, () => this.start_pomo());
@@ -243,6 +244,7 @@ var Pomodoro = new Lang.Class({
         else {
             this.panel_item.actor.remove_style_pseudo_class('checked');
             this.panel_item.actor.can_focus = true;
+            this.panel_item.actor.remove_style_pseudo_class('focus');
         }
 
         this.emit('section-open-state-changed', state);

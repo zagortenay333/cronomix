@@ -193,20 +193,16 @@ const Timepp = new Lang.Class({
 
             this.open_menu();
         });
-        this.sigm.connect(this.unicon_panel_item, 'left-click', () => {
-            this.toggle_menu();
-        });
-        this.sigm.connect(this.unicon_panel_item, 'right-click', () => {
-            this.toggle_context_menu();
-        });
-        this.sigm.connect(this.pomodoro_section, 'stop-time-tracking', () => {
-            this.emit('stop-time-tracking');
-        });
+        this.sigm.connect(this.unicon_panel_item, 'left-click', () => this.toggle_menu());
+        this.sigm.connect(this.unicon_panel_item, 'right-click', () => this.toggle_context_menu());
+        this.sigm.connect(this.unicon_panel_item.actor, 'enter-event', () => { if (Main.panel.menuManager.activeMenu) this.open_menu() });
+        this.sigm.connect(this.pomodoro_section, 'stop-time-tracking', () => this.emit('stop-time-tracking'));
         this.sigm.connect(this.menu, 'open-state-changed', (_, state) => {
             if (state) return Clutter.EVENT_PROPAGATE;
 
             this.context_menu.actor.hide();
             this.unicon_panel_item.actor.remove_style_pseudo_class('checked');
+            this.unicon_panel_item.actor.remove_style_pseudo_class('focus');
             this.unicon_panel_item.actor.can_focus = true;
 
             for (let i = 0, len = this.section_register.length; i < len; i++) {
@@ -215,6 +211,7 @@ const Timepp = new Lang.Class({
                 if (! section.section_enabled) continue;
 
                 section.panel_item.actor.remove_style_pseudo_class('checked');
+                section.panel_item.actor.remove_style_pseudo_class('focus');
                 section.panel_item.actor.can_focus = true;
 
                 if (section.actor.visible) {
@@ -246,6 +243,7 @@ const Timepp = new Lang.Class({
     //       are enabled.
     open_menu: function (section) {
         this.unicon_panel_item.actor.remove_style_pseudo_class('checked');
+        this.unicon_panel_item.actor.remove_style_pseudo_class('focus');
         this.unicon_panel_item.actor.can_focus = true;
 
         // Track sections whose state has changed and call their
@@ -263,9 +261,7 @@ const Timepp = new Lang.Class({
                 this._update_menu_arrow(section.panel_item.actor);
             }
 
-            for (let i = 0, len = this.section_register.length; i < len; i++) {
-                section = this.section_register[i];
-
+            for (let section of this.section_register) {
                 if (! section.section_enabled) continue;
 
                 if (section.separate_menu) {
@@ -290,9 +286,7 @@ const Timepp = new Lang.Class({
                 section.actor.visible = true;
             }
 
-            for (let i = 0, len = this.section_register.length; i < len; i++) {
-                section = this.section_register[i];
-
+            for (let section of this.section_register) {
                 if (name === section.__name__ ||
                     !section.section_enabled  ||
                     !section.actor.visible) continue;

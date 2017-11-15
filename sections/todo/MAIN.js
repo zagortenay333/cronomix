@@ -422,6 +422,7 @@ var Todo = new Lang.Class({
         });
         this.sigm.connect(this.panel_item, 'left-click', () => this.ext.toggle_menu(this));
         this.sigm.connect(this.panel_item, 'right-click', () => this.ext.toggle_context_menu(this));
+        this.sigm.connect(this.panel_item.actor, 'enter-event', () => { if (Main.panel.menuManager.activeMenu) this.ext.open_menu(this) });
         this.sigm.connect_press(this.add_task_button, () => this.show_view__task_editor());
         this.sigm.connect_press(this.filter_button, () => this.show_view__filters());
         this.sigm.connect_press(this.sort_button, () => this.show_view__sort());
@@ -450,6 +451,7 @@ var Todo = new Lang.Class({
         }
         else {
             this.panel_item.actor.remove_style_pseudo_class('checked');
+            this.panel_item.actor.remove_style_pseudo_class('focus');
             this.panel_item.actor.can_focus = true;
         }
 

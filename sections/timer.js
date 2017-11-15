@@ -199,9 +199,10 @@ var Timer = new Lang.Class({
 
             this.ext.open_menu(this);
         });
-        this.sigm.connect(this.panel_item, 'left-click', () => { this.ext.toggle_menu(this); });
-        this.sigm.connect(this.panel_item, 'right-click', () => { this.ext.toggle_context_menu(this); });
+        this.sigm.connect(this.panel_item, 'left-click', () => this.ext.toggle_menu(this));
+        this.sigm.connect(this.panel_item, 'right-click', () => this.ext.toggle_context_menu(this));
         this.sigm.connect(this.panel_item, 'middle-click', () => this.toggle_timer());
+        this.sigm.connect(this.panel_item.actor, 'enter-event', () => { if (Main.panel.menuManager.activeMenu) this.ext.open_menu(this) });
         this.sigm.connect_press(this.toggle_bin, () => this.toggle_timer());
         this.sigm.connect_press(this.fullscreen_bin, () => this.show_fullscreen());
         this.sigm.connect_press(this.settings_bin, () => this._show_settings());
@@ -225,6 +226,7 @@ var Timer = new Lang.Class({
         }
         else {
             this.panel_item.actor.remove_style_pseudo_class('checked');
+            this.panel_item.actor.remove_style_pseudo_class('focus');
             this.panel_item.actor.can_focus = true;
         }
 

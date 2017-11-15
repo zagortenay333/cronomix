@@ -173,6 +173,7 @@ var Alarms = new Lang.Class({
         });
         this.sigm.connect(this.panel_item, 'left-click', () => { this.ext.toggle_menu(this); });
         this.sigm.connect(this.panel_item, 'right-click', () => { this.ext.toggle_context_menu(this); });
+        this.sigm.connect(this.panel_item.actor, 'enter-event', () => { if (Main.panel.menuManager.activeMenu) this.ext.open_menu(this) });
         this.sigm.connect_press(this.add_alarm_button, () => { this.alarm_editor(); });
         this.sigm.connect(this.alarms_scroll_content, 'queue-redraw', () => {
             this.alarms_scroll.vscrollbar_policy = Gtk.PolicyType.NEVER;
@@ -265,6 +266,7 @@ var Alarms = new Lang.Class({
         else {
             this.panel_item.actor.remove_style_pseudo_class('checked');
             this.panel_item.actor.can_focus = true;
+            this.panel_item.actor.remove_style_pseudo_class('focus');
         }
 
         this.emit('section-open-state-changed', state);
