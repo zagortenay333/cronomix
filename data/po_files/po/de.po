@@ -262,35 +262,31 @@ msgstr "Aufgaben / Zeiterfassung"
 
 #: data/po_files/../../sections/todo/task_item.js:600
 #: data/po_files/../../sections/todo/task_item.js:605
-#, fuzzy
 msgid "recurrence"
-msgstr "aktuelle Datei"
+msgstr "Wiederholung"
 
 #: data/po_files/../../sections/todo/task_item.js:601
 #, javascript-format
 msgid "%d day after completion"
 msgid_plural "%d days after completion"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%d Tag nach Erledigung"
+msgstr[1] "%d Tage nach Erledigung"
 
 #: data/po_files/../../sections/todo/task_item.js:618
-#, fuzzy
 msgid "due"
-msgstr "fällig:"
+msgstr "fällig"
 
 #: data/po_files/../../sections/todo/task_item.js:626
 msgid "deferred"
-msgstr ""
+msgstr "zurückgestellt"
 
 #: data/po_files/../../sections/todo/task_item.js:666
-#, fuzzy
 msgid "created"
-msgstr "angelegt:"
+msgstr "angelegt"
 
 #: data/po_files/../../sections/todo/task_item.js:671
-#, fuzzy
 msgid "completed"
-msgstr "erledigt:"
+msgstr "erledigt"
 
 #: data/po_files/../../sections/todo/task_item.js:923
 msgid "File or dir not found."
@@ -489,8 +485,8 @@ msgstr[1] "%d Aufgaben wurden wiederholt"
 #, javascript-format
 msgid "%d deferred task has been opened"
 msgid_plural "%d deferred tasks have been opened"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%d zurückgestellte Aufgabe wurden geöffnet"
+msgstr[1] "%d zurückgestellte Aufgaben wurden geöffnet"
 
 #: data/po_files/../../sections/todo/MAIN.js:1161
 msgid "Nothing found."
@@ -501,7 +497,6 @@ msgid "Add custom filter..."
 msgstr "Eigenen Filter anlegen..."
 
 #: data/po_files/../../sections/todo/view__filters.js:105
-#, fuzzy
 msgid "Show hidden tasks only"
 msgstr "Nur versteckte Aufgaben zeigen"
 
@@ -513,28 +508,26 @@ msgstr[0] "%d versteckte Aufgabe"
 msgstr[1] "%d versteckte Aufgaben"
 
 #: data/po_files/../../sections/todo/view__filters.js:129
-#, fuzzy
 msgid "Show recurring tasks only"
 msgstr "Nur wiederholte Aufgaben zeigen"
 
 #: data/po_files/../../sections/todo/view__filters.js:139
-#, javascript-format
+# javascript-format
 msgid "%d recurring task"
 msgid_plural "%d recurring tasks"
 msgstr[0] "%d wiederholte Aufgabe"
 msgstr[1] "%d wiederholte Aufgaben"
 
 #: data/po_files/../../sections/todo/view__filters.js:155
-#, fuzzy
 msgid "Show deferred tasks only"
-msgstr "Nur versteckte Aufgaben zeigen"
+msgstr "Nur zurückgestellte Aufgaben zeigen"
 
 #: data/po_files/../../sections/todo/view__filters.js:164
-#, fuzzy, javascript-format
+# javascript-format
 msgid "%d deferred task"
 msgid_plural "%d deferred tasks"
-msgstr[0] "%d versteckte Aufgabe"
-msgstr[1] "%d versteckte Aufgaben"
+msgstr[0] "%d zurückgestellte Aufgabe"
+msgstr[1] "%d zurückgestellte Aufgaben"
 
 #: data/po_files/../../sections/todo/view__filters.js:180
 msgid "Invert filters"
