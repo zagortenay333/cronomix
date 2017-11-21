@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: timepp@zagortenay 333\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-15 19:23+0100\n"
+"POT-Creation-Date: 2017-11-21 13:17+0100\n"
 "PO-Revision-Date: 2017-08-29 10:51+0200\n"
 "Last-Translator: Christian Mattes <mac@tasarion.de>\n"
 "Language-Team: German\n"
@@ -511,8 +511,9 @@ msgstr[1] "%d versteckte Aufgaben"
 msgid "Show recurring tasks only"
 msgstr "Nur wiederholte Aufgaben zeigen"
 
-#: data/po_files/../../sections/todo/view__filters.js:139
 # javascript-format
+#: data/po_files/../../sections/todo/view__filters.js:139
+#, javascript-format
 msgid "%d recurring task"
 msgid_plural "%d recurring tasks"
 msgstr[0] "%d wiederholte Aufgabe"
@@ -522,8 +523,9 @@ msgstr[1] "%d wiederholte Aufgaben"
 msgid "Show deferred tasks only"
 msgstr "Nur zurückgestellte Aufgaben zeigen"
 
-#: data/po_files/../../sections/todo/view__filters.js:164
 # javascript-format
+#: data/po_files/../../sections/todo/view__filters.js:164
+#, javascript-format
 msgid "%d deferred task"
 msgid_plural "%d deferred tasks"
 msgstr[0] "%d zurückgestellte Aufgabe"
