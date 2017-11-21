@@ -601,7 +601,7 @@ var Todo = new Lang.Class({
                 this.todo_txt_file.monitor_file(Gio.FileMonitorFlags.NONE, null);
 
             this.todo_file_monitor.connect(
-                'changed', () => this._on_todo_file_changed(arguments[3]));
+                'changed', (...args) => this._on_todo_file_changed(args[3]));
 
             if (!this.todo_txt_file || !this.todo_txt_file.query_exists(null)) {
                 this.show_view__no_todo_file();
