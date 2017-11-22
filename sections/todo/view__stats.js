@@ -29,6 +29,16 @@ const SCROLL_TO_ITEM = ME.imports.lib.scroll_to_item;
 const G = ME.imports.sections.todo.GLOBAL;
 
 
+const StatsMode = {
+    BANNER : 'BANNER',
+    GLOBAL : 'GLOBAL',
+    SINGLE : 'SINGLE',
+    SEARCH : 'SEARCH',
+    HOT    : 'HOT',
+};
+
+
+
 // =====================================================================
 // @@@ Stats View
 //
@@ -49,8 +59,8 @@ var StatsView = new Lang.Class({
         this.default_style_class = this.actor.style_class;
         this.actor.add_style_class_name('stats');
         this.set_banner_size(0);
-        this.middle_box.vertical = false;
         this.bottom_box.hide();
+
         {
             let visible = this.monitor_button.visible;
             this.top_box_left.remove_child(this.monitor_button);
@@ -83,19 +93,8 @@ var StatsView = new Lang.Class({
             ['six_months'   , [_('Last 6 Months') , ['', '']] ],
             ['all'          , [_('All Time')      , ['', '']] ],
         ]);
-
         this._update_string_date_map();
 
-
-        // See the comment on the _set_mode() func for an explanation on how the
-        // stat modes are handled.
-        this.mode = {
-            BANNER : 'BANNER',
-            GLOBAL : 'GLOBAL',
-            SINGLE : 'SINGLE',
-            SEARCH : 'SEARCH',
-            HOT    : 'HOT',
-        };
 
         this.current_mode = this.prev_mode = {
             name   : '',
@@ -104,18 +103,16 @@ var StatsView = new Lang.Class({
         }
 
 
-        // Used by the _search() func.
         this.selected_search_result = null;
-
         this.hot_mode_show_tasks = false; // true = task, false = projects
 
 
         // A map from mode names to functions that invoke it.
         this.mode_func_map = {
-            [this.mode.BANNER] : this.show_mode__banner.bind(this),
-            [this.mode.GLOBAL] : this.show_mode__global.bind(this),
-            [this.mode.SINGLE] : this.show_mode__single.bind(this),
-            [this.mode.HOT]    : this.show_mode__hot.bind(this),
+            [StatsMode.BANNER] : this.show_mode__banner.bind(this),
+            [StatsMode.GLOBAL] : this.show_mode__global.bind(this),
+            [StatsMode.SINGLE] : this.show_mode__single.bind(this),
+            [StatsMode.HOT]    : this.show_mode__hot.bind(this),
         };
 
 
@@ -133,7 +130,22 @@ var StatsView = new Lang.Class({
             ['-timepp-rulers-color']    : ['#ffffffff', [1, 1, 1, 1]],
             ['-timepp-proj-vbar-color'] : ['#ffffffff', [1, 1, 1, 1]],
             ['-timepp-task-vbar-color'] : ['#ffffffff', [1, 1, 1, 1]],
+            ['-timepp-heatmap-color-A'] : ['#ffffffff', [1, 1, 1, 1]],
+            ['-timepp-heatmap-color-B'] : ['#ffffffff', [1, 1, 1, 1]],
+            ['-timepp-heatmap-color-C'] : ['#ffffffff', [1, 1, 1, 1]],
+            ['-timepp-heatmap-color-D'] : ['#ffffffff', [1, 1, 1, 1]],
+            ['-timepp-heatmap-color-E'] : ['#ffffffff', [1, 1, 1, 1]],
+            ['-timepp-heatmap-color-F'] : ['#ffffffff', [1, 1, 1, 1]],
+            ['-timepp-heatmap-selected-color'] : ['#ffffffff', [1, 1, 1, 1]],
         };
+
+
+        //
+        // heatmap icon
+        //
+        this.heatmap_icon = new St.Button({ checked: this.delegate.settings.get_boolean('todo-stats-heatmap-visible'), visible: false, y_align: St.Align.MIDDLE, can_focus: true, style_class: 'heatmap-icon' });
+        this.top_box_left.insert_child_at_index(this.heatmap_icon, 0);
+        this.heatmap_icon.add_actor(new St.Icon({ icon_name: 'timepp-heatmap-symbolic' }));
 
 
         //
@@ -186,7 +198,7 @@ var StatsView = new Lang.Class({
             );
 
             this.date_picker.actor.hide();
-            this.top_box_left.insert_child_at_index(this.date_picker.actor, 0);
+            this.top_box_left.add_child(this.date_picker.actor);
         }
 
 
@@ -277,6 +289,27 @@ var StatsView = new Lang.Class({
 
 
         //
+        // heatmap graph
+        //
+        this.heatmap_graph = new GRAPHS.HeatMap();
+        this.middle_box.add_child(this.heatmap_graph.actor);
+        this.heatmap_graph.actor.hide();
+
+        this.heatmap_graph.params.tooltip_callback = (label) => {
+            let [date, time] = label.split(/ /);
+
+            let h = Math.floor(time / 60);
+            h     = h ? '' + h + 'h ' : '';
+
+            let m = time % 60;
+            m     = m ? '' + m + 'min' : '';
+
+            if ((time = h + m)) return date + '   ' + time;
+            else                return date;
+        };
+
+
+        //
         // vbars graph
         //
         this.vbars_graph = new GRAPHS.VBars();
@@ -321,6 +354,11 @@ var StatsView = new Lang.Class({
                                    today.getMonth(),
                                    vbar_label);
         });
+        this.heatmap_graph.connect('square-clicked', (_, square_label) => {
+            let [date, time] = square_label.split(/ /);
+            this.current_mode.args[0] = date;
+            this.mode_func_map[this.current_mode.name](...this.current_mode.args);
+        });
         this.entry.clutter_text.connect('text-changed', () => {
             this._search();
         });
@@ -356,15 +394,15 @@ var StatsView = new Lang.Class({
 
             if (direction) this._navigate_search_results(direction);
         });
-        this.single_mode_icon.connect('clicked', (icon) => {
+        this.single_mode_icon.connect('clicked', () => {
             this.show_mode__search();
             return Clutter.EVENT_STOP;
         });
-        this.global_mode_icon.connect('clicked', (icon) => {
-            if (this.current_mode.name === this.mode.GLOBAL) {
+        this.global_mode_icon.connect('clicked', () => {
+            if (this.current_mode.name === StatsMode.GLOBAL) {
                 return Clutter.EVENT_PROPAGATE;
             }
-            else if (this.prev_mode.name === this.mode.GLOBAL) {
+            else if (this.prev_mode.name === StatsMode.GLOBAL) {
                 this.show_mode__global(...this.prev_mode.args);
             }
             else {
@@ -373,11 +411,11 @@ var StatsView = new Lang.Class({
 
             return Clutter.EVENT_STOP;
         });
-        this.hot_mode_icon.connect('clicked', (icon) => {
-            if (this.current_mode.name === this.mode.HOT) {
+        this.hot_mode_icon.connect('clicked', () => {
+            if (this.current_mode.name === StatsMode.HOT) {
                 return Clutter.EVENT_PROPAGATE;
             }
-            else if (this.prev_mode.name === this.mode.HOT) {
+            else if (this.prev_mode.name === StatsMode.HOT) {
                 this.show_mode__hot(...this.prev_mode.args);
             }
             else {
@@ -386,6 +424,9 @@ var StatsView = new Lang.Class({
             }
 
             return Clutter.EVENT_STOP;
+        });
+        this.heatmap_icon.connect('clicked', () => {
+            this._toggle_heatmap();
         });
         this.range_btn.connect('clicked', () => {
             this.range_menu.toggle();
@@ -398,8 +439,8 @@ var StatsView = new Lang.Class({
         this.actor.connect('style-changed', () => {
             this._update_graph_css_info();
         });
-        this.date_picker.connect('date-changed', (_, date_arr, date_str) => {
-            this._on_month_picker_changed(date_arr, date_str);
+        this.date_picker.connect('date-changed', (_, ...args) => {
+            this._on_date_picker_changed(...args);
         });
         this.custom_range_ok_btn.connect('clicked', () => {
             let [, date_str_1] = this.bound_date_1.get_date();
@@ -436,10 +477,15 @@ var StatsView = new Lang.Class({
     },
 
     show_mode__global: function (date) {
-        let actors = [this.vbars_graph.actor, this.date_picker.actor];
+        let actors = [
+            this.vbars_graph.actor,
+            this.date_picker.actor,
+            this.heatmap_icon,
+            this.heatmap_graph.actor,
+        ];
 
         this._set_mode(
-            this.mode.GLOBAL,
+            StatsMode.GLOBAL,
             [date],
             () => {
                 actors.forEach((it) => it.hide());
@@ -447,20 +493,41 @@ var StatsView = new Lang.Class({
             }
         );
 
+        this.middle_box.vertical = true;
         actors.forEach((it) => it.show());
         this.nav_bar.get_children().forEach((it) => it.checked = false);
         this.global_mode_icon.checked = true;
-
         this.date_picker.set_date_from_string(date);
 
-        this.vbars_graph.draw_coord_system({
-            y_max               : 1440,
-            y_conversion_factor : 60,
-            n_rulers            : 12,
-            x_offset            : 30,
-            y_offset            : 12,
-            y_label_suffix      : 'h',
-        });
+        this.heatmap_graph.params.selected_square_rgba =
+            this.graph_css['-timepp-heatmap-selected-color'][1];
+
+        this.heatmap_graph.actor.visible = this.heatmap_icon.checked;
+
+        if (this.heatmap_icon.checked) {
+            if (this.prev_mode.name !== this.current_mode.name ||
+                this.prev_mode.args[0].substr(0, 4) !== date.substr(0, 4)) {
+
+                this.heatmap_graph.update_params(this._get_stats__heatmap());
+                this._update_heatmap_selected_square(date);
+                this.heatmap_graph.draw_heatmap();
+            }
+            else {
+                this._update_heatmap_selected_square(date);
+                this.heatmap_graph.draw_heatmap();
+            }
+        }
+
+        if (this.prev_mode.name !== this.current_mode.name) {
+            this.vbars_graph.draw_coord_system({
+                y_max               : 1440,
+                y_conversion_factor : 60,
+                n_rulers            : 12,
+                x_offset            : 35,
+                y_offset            : 12,
+                y_label_suffix      : 'h',
+            });
+        }
 
         this.vbars_graph.draw_vbars(
             this._get_stats__vbars_global(date),
@@ -489,7 +556,7 @@ var StatsView = new Lang.Class({
         ];
 
         this._set_mode(
-            this.mode.SINGLE,
+            StatsMode.SINGLE,
             [year, month, keyword],
             () => {
                 actors.forEach((it) => it.hide());
@@ -498,6 +565,7 @@ var StatsView = new Lang.Class({
             }
         );
 
+        this.middle_box.vertical = false;
         this.date_picker.day_picker.actor.visible = false;
         actors.forEach((it) => it.show());
         this.nav_bar.get_children().forEach((it) => it.checked = false);
@@ -530,7 +598,7 @@ var StatsView = new Lang.Class({
         );
 
         // update stats card
-        if (this.prev_mode.name !== this.mode.SINGLE ||
+        if (this.prev_mode.name !== StatsMode.SINGLE ||
             this.prev_mode.args[2] !== keyword) {
 
             //
@@ -597,7 +665,7 @@ var StatsView = new Lang.Class({
         let actors = [this.vbars_graph.actor, this.hot_mode_control_box]
 
         this._set_mode(
-            this.mode.HOT,
+            StatsMode.HOT,
             [label, range],
             () => actors.forEach((it) => {
                 it.hide()
@@ -711,7 +779,7 @@ var StatsView = new Lang.Class({
         let actors = [this.entry, this.search_results_container];
 
         this._set_mode(
-            this.mode.SEARCH,
+            StatsMode.SEARCH,
             null,
             () => {
                 this.search_results_content.destroy_all_children();
@@ -732,7 +800,7 @@ var StatsView = new Lang.Class({
 
     show_mode__banner: function (text) {
         this._set_mode(
-            this.mode.BANNER,
+            StatsMode.BANNER,
             null,
             () => {
                 this.set_banner_size(0);
@@ -757,7 +825,7 @@ var StatsView = new Lang.Class({
     // tweak the args and refresh (e.g., change the keyword, but keep month
     // the same for the SINGLE mode.)
     //
-    // @mode_name     : string (use this.mode enum only)
+    // @mode_name     : string (use StatsMode enum only)
     // @args          : array  (of the args passed to a 'show_mode__' func)
     // @hide_callback : func   (used to close the prev mode)
     _set_mode: function (name, args, hide_callback) {
@@ -777,6 +845,108 @@ var StatsView = new Lang.Class({
             this.prev_mode.hide_callback();
             Mainloop.idle_add(() => focused_actor.grab_key_focus());
         }
+    },
+
+    _toggle_heatmap: function () {
+        if (this.current_mode.name !== StatsMode.GLOBAL) return;
+
+        if (this.heatmap_graph.actor.visible) {
+            this.heatmap_icon.checked = false;
+            this.heatmap_graph.actor.visible = false;
+            this.delegate.settings.set_boolean('todo-stats-heatmap-visible', false);
+        }
+        else {
+            this.heatmap_icon.checked = true;
+            this.heatmap_graph.actor.visible = true;
+            this.delegate.settings.set_boolean('todo-stats-heatmap-visible', true);
+
+            let params = this._get_stats__heatmap();
+
+            this.heatmap_graph.draw_heatmap(params);
+        }
+    },
+
+    _get_stats__heatmap: function () {
+        let res = {
+            matrix      : [[], [], [], [], [], [], []],
+            matrix_size : [7, 0],
+            row_labels  : [],
+            col_labels  : [],
+        };
+
+        let selected_year = this.date_picker.get_date()[0][0];
+        let date = new Date(selected_year, 0, 1, 12, 0, 0);
+
+        // row labels
+        {
+            date.setDate(2);
+            res.row_labels.push([1, date.toLocaleFormat('%a')]);
+            date.setDate(4);
+            res.row_labels.push([3, date.toLocaleFormat('%a')]);
+            date.setDate(6);
+            res.row_labels.push([5, date.toLocaleFormat('%a')]);
+            date.setDate(1);
+        }
+
+        let row = 0;
+        let col = 0;
+
+        let color_map = [
+            this.graph_css['-timepp-heatmap-color-A'][1],
+            this.graph_css['-timepp-heatmap-color-B'][1],
+            this.graph_css['-timepp-heatmap-color-C'][1],
+            this.graph_css['-timepp-heatmap-color-D'][1],
+            this.graph_css['-timepp-heatmap-color-E'][1],
+            this.graph_css['-timepp-heatmap-color-F'][1],
+        ];
+
+        res.col_labels.push([0, date.toLocaleFormat('%b')]);
+
+        while (date.getFullYear() === selected_year) {
+            let day      = date.getDate();
+            let yyyymmdd = G.date_yyyymmdd(date);
+            let records  = this.stats_data.get(yyyymmdd) || 0;
+            let rgba     = color_map[5];
+            let time     = 0;
+
+            if (day === 1 && col > 0) {
+                col += 2;
+                res.matrix.forEach((row) => row.push(0, 0));
+                res.col_labels.push([col, date.toLocaleFormat('%b')]);
+            }
+
+            if (records) {
+                for (let [key, val] of records) {
+                    if (! G.REG_PROJ.test(key)) time += val;
+                }
+
+                // in minutes
+                if      (time < 60)   rgba = color_map[4];
+                else if (time < 180)  rgba = color_map[3];
+                else if (time < 360)  rgba = color_map[2];
+                else if (time < 480)  rgba = color_map[1];
+                else                  rgba = color_map[0];
+            }
+
+            res.matrix[row].push({
+                label : yyyymmdd + ' ' + time,
+                rgba  : rgba,
+            });
+
+
+            row++;
+
+            if (row === 7) {
+                row = 0;
+                col++;
+            }
+
+            date.setDate(day + 1);
+        }
+
+        res.matrix_size[1] = col;
+
+        return res;
     },
 
     _get_stats__sum: function (keyword) {
@@ -966,15 +1136,34 @@ var StatsView = new Lang.Class({
         this.selected_search_result.pseudo_class = 'selected';
     },
 
-    _on_month_picker_changed: function (date_arr, date_str) {
-        switch (this.current_mode.name) {
-            case this.mode.GLOBAL:
-                this.show_mode__global(date_str);
-                break;
-            case this.mode.SINGLE:
-                this.show_mode__single(
-                    date_arr[0], date_arr[1], this.current_mode.args[2]);
-                break;
+    _on_date_picker_changed: function (new_date_arr, new_date_str, old_date_arr, old_date_str) {
+        if (this.current_mode.name === StatsMode.GLOBAL) {
+            this.show_mode__global(new_date_str);
+        }
+        else if (this.current_mode.name === StatsMode.SINGLE) {
+            this.show_mode__single(
+                new_date_arr[0], new_date_arr[1], this.current_mode.args[2]);
+        }
+    },
+
+    _update_heatmap_selected_square: function (date) {
+        let m = this.heatmap_graph.params.matrix;
+        let square, d;
+
+        for (let i = 0; i < m.length; i++) {
+            for (let j = 0; j < m[i].length; j++) {
+                square = m[i][j];
+
+                if (! square) continue;
+
+                [d, ] = square.label.split(/ /);
+
+                if (d === date) {
+                    this.heatmap_graph.selected_square     = square;
+                    this.heatmap_graph.selected_square_pos = [j, i];
+                    return;
+                }
+            }
         }
     },
 
@@ -1002,12 +1191,14 @@ var StatsView = new Lang.Class({
     },
 
     _update_graph_css_info: function () {
+        if (! this.is_open) return;
+
         let update_needed = false;
 
         for (let prop in this.graph_css) {
             if (! this.graph_css.hasOwnProperty(prop)) continue;
 
-            let [success, col] = this.vbars_graph.actor.get_theme_node()
+            let [success, col] = this.actor.get_theme_node()
                                  .lookup_color(prop, false);
 
             let hex = col.to_string();

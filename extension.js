@@ -469,9 +469,10 @@ const Timepp = new Lang.Class({
     // in the popup when the popup menu exceeds it's max height which is roughly
     // the height of the monitor.
     needs_scrollbar: function () {
-        let [min_height, nat_height] = this.menu.actor.get_preferred_height(-1);
-        let max_height = this.menu.actor.get_theme_node().get_max_height();
-        return max_height >= 0 && min_height >= max_height;
+        let [min_h,] = this.menu.actor.get_preferred_height(-1);
+        let max_h    = this.menu.actor.get_theme_node().get_max_height();
+
+        return max_h >= 0 && min_h >= max_h;
     },
 
     destroy: function () {

@@ -552,10 +552,7 @@
  * @@@ Todo
  * ===================================================================== */
 .timepp-menu .todo-section {
-    /*
-     * These custom properties only work if they are specified on this
-     * selector.
-     */
+    /* Use these custom properties only on this selector selector. */
     -timepp-context-color:    #f47e00;
     -timepp-project-color:    #009a4b;
     -timepp-link-color:       #5a94dc;
@@ -684,6 +681,24 @@
     spacing: .2em;
 }
 
+.timepp-fullscreen.stats {
+    /* Use these custom properties only on this selector. */
+    -timepp-axes-color:      rgba(255, 255, 255, 1);
+    -timepp-y-label-color:   rgba(255, 255, 255, 1);
+    -timepp-x-label-color:   rgba(255, 255, 255, 1);
+    -timepp-rulers-color:    rgba(255, 255, 255, .15);
+    -timepp-proj-vbar-color: rgba(56, 174, 114, .8);
+    -timepp-task-vbar-color: rgba(231, 79, 79, .8);
+
+    -timepp-heatmap-selected-color: yellow;
+    -timepp-heatmap-color-A:        #c6e48b;
+    -timepp-heatmap-color-B:        #7bc96f;
+    -timepp-heatmap-color-C:        #239a3b;
+    -timepp-heatmap-color-D:        #196127;
+    -timepp-heatmap-color-E:        #103D19;
+    -timepp-heatmap-color-F:        rgba(255, 255, 255, .2);
+}
+
 .timepp-fullscreen.stats .navbar {
     padding: 0;
 }
@@ -696,26 +711,21 @@
     color: tomato;
 }
 
-.timepp-fullscreen.stats .vbars-graph {
-    /*
-     * These custom properties only work if they are specified on this
-     * selector.
-     */
-    -timepp-axes-color:      rgba(255, 255, 255, .75);
-    -timepp-y-label-color:   rgba(255, 255, 255, .75);
-    -timepp-x-label-color:   rgba(255, 255, 255, .75);
-    -timepp-rulers-color:    rgba(255, 255, 255, .15);
-    -timepp-proj-vbar-color: rgba(56, 174, 114, .8);
-    -timepp-task-vbar-color: rgba(231, 79, 79, .8);
-}
-
-.timepp-fullscreen.stats .vbar-tooltip {
+.timepp-fullscreen.stats .graph-tooltip {
     background: rgba(70, 80, 80, .9);
     border-radius: 2px;
     max-width: 500px;
     max-height: 350px;
     padding: .7em 1em;
     font-weight: bold;
+}
+
+.timepp-fullscreen.stats .heatmap-icon:checked StIcon {
+    color: tomato;
+}
+
+.timepp-fullscreen.stats .heatmap-graph {
+    margin-bottom: 2em;
 }
 
 .timepp-fullscreen.stats .sum-stats-card {

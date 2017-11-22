@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-21 13:22+0100\n"
+"POT-Creation-Date: 2017-11-22 22:35+0100\n"
 "PO-Revision-Date: 2017-07-20 07:02+0200\n"
 "Last-Translator: Piotr Komur <pkomur@gmail.com>\n"
 "Language-Team: \n"
@@ -328,7 +328,7 @@ msgstr "Sortuj wg daty zakończenia"
 
 #: data/po_files/../../sections/todo/view__sort.js:78
 #: data/po_files/../../sections/todo/view__task_editor.js:130
-#: data/po_files/../../sections/todo/view__stats.js:217
+#: data/po_files/../../sections/todo/view__stats.js:229
 #: data/po_files/../../sections/todo/view__clear_tasks.js:96
 #: data/po_files/../../sections/todo/view__filters.js:196
 #: data/po_files/../../sections/pomodoro.js:796
@@ -351,7 +351,7 @@ msgid "Archive"
 msgstr "Archiwum"
 
 #: data/po_files/../../sections/todo/view__task_editor.js:127
-#: data/po_files/../../sections/todo/view__stats.js:220
+#: data/po_files/../../sections/todo/view__stats.js:232
 #: data/po_files/../../sections/todo/view__clear_tasks.js:93
 #: data/po_files/../../sections/pomodoro.js:797
 #: data/po_files/../../sections/alarms.js:602
@@ -359,85 +359,85 @@ msgstr "Archiwum"
 msgid "Cancel"
 msgstr "Anuluj"
 
-#: data/po_files/../../sections/todo/view__stats.js:79
+#: data/po_files/../../sections/todo/view__stats.js:89
 msgid "Today"
 msgstr "dziś"
 
-#: data/po_files/../../sections/todo/view__stats.js:80
+#: data/po_files/../../sections/todo/view__stats.js:90
 msgid "This Week"
 msgstr "ten tydzień"
 
-#: data/po_files/../../sections/todo/view__stats.js:81
+#: data/po_files/../../sections/todo/view__stats.js:91
 msgid "This Month"
 msgstr "ten miesiąc"
 
-#: data/po_files/../../sections/todo/view__stats.js:82
+#: data/po_files/../../sections/todo/view__stats.js:92
 msgid "Last 3 Months"
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__stats.js:83
+#: data/po_files/../../sections/todo/view__stats.js:93
 msgid "Last 6 Months"
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__stats.js:84
+#: data/po_files/../../sections/todo/view__stats.js:94
 msgid "All Time"
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__stats.js:161
+#: data/po_files/../../sections/todo/view__stats.js:173
 msgid "Search..."
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__stats.js:185
+#: data/po_files/../../sections/todo/view__stats.js:197
 msgid "Year:"
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__stats.js:185
+#: data/po_files/../../sections/todo/view__stats.js:197
 msgid "Month:"
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__stats.js:185
+#: data/po_files/../../sections/todo/view__stats.js:197
 msgid "Day:"
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__stats.js:207
+#: data/po_files/../../sections/todo/view__stats.js:219
 msgid "From: "
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__stats.js:212
+#: data/po_files/../../sections/todo/view__stats.js:224
 msgid "To: "
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__stats.js:228
+#: data/po_files/../../sections/todo/view__stats.js:240
 msgid "Type: "
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__stats.js:238
+#: data/po_files/../../sections/todo/view__stats.js:250
 msgid "Range: "
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__stats.js:259
+#: data/po_files/../../sections/todo/view__stats.js:271
 msgid "Custom Range..."
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__stats.js:265
-#: data/po_files/../../sections/todo/view__stats.js:628
+#: data/po_files/../../sections/todo/view__stats.js:277
+#: data/po_files/../../sections/todo/view__stats.js:696
 msgid "Projects"
 msgstr "Sortuj wg priorytetu"
 
-#: data/po_files/../../sections/todo/view__stats.js:271
-#: data/po_files/../../sections/todo/view__stats.js:628
+#: data/po_files/../../sections/todo/view__stats.js:283
+#: data/po_files/../../sections/todo/view__stats.js:696
 msgid "Tasks"
 msgstr "Zadanie..."
 
-#: data/po_files/../../sections/todo/view__stats.js:540
+#: data/po_files/../../sections/todo/view__stats.js:608
 msgid "<b>Stats for <i>project</i>: </b>"
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__stats.js:541
+#: data/po_files/../../sections/todo/view__stats.js:609
 msgid "<b>Stats for <i>task</i>: </b>"
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__stats.js:574
+#: data/po_files/../../sections/todo/view__stats.js:642
 msgid "Total time per yearly quarter: "
 msgstr ""
 

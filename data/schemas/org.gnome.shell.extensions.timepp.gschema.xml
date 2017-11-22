@@ -263,6 +263,11 @@
             <description>Array of todo files structs</description>
         </key>
 
+        <key name="todo-stats-heatmap-visible" type="b">
+            <default>true</default>
+            <description>Show heatmap in stats view</description>
+        </key>
+
         <key name="todo-keybinding-open" type="as">
             <default><![CDATA[[""]]]></default>
             <description>Open this section</description>

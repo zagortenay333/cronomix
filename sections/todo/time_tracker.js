@@ -84,9 +84,10 @@ var TimeTracker = new Lang.Class({
         //
         // @val: obj
         //   of the form: {
-        //       time     : int    (in seconds)
-        //       tracking : bool
-        //       type     : string ('++' = project, '()' = task)
+        //       time       : int (in seconds)
+        //       tracking   : bool
+        //       type       : string ('++' = project, '()' = task)
+        //       start_time : int (time in microsec for elapsed time computing)
         //   }
         //
         //   If @type is '()', then @val also has the prop:
@@ -595,6 +596,9 @@ var TimeTracker = new Lang.Class({
 
     close: function () {
         this.stop_all_tracking();
+
+        this._write_daily_csv_file();
+
         this.daily_csv_map.clear();
         this.stats_data.clear();
         this.stats_unique_entries.clear();
@@ -614,8 +618,6 @@ var TimeTracker = new Lang.Class({
             this.yearly_csv_dir_monitor.cancel();
             this.yearly_csv_dir_monitor = null;
         }
-
-        this._write_daily_csv_file();
     },
 });
 Signals.addSignalMethods(TimeTracker.prototype);
