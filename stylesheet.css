@@ -734,10 +734,6 @@
     font-size: 14px;
 }
 
-.timepp-fullscreen.stats .sum-stats-card {
-    spacing: 3em;
-}
-
 .timepp-fullscreen.stats .sum-stats-card StScrollView:first-child {
     max-height: 30em;
 }

@@ -605,53 +605,59 @@ var StatsView = new Lang.Class({
             // title
             //
             let markup = G.REG_PROJ.test(keyword) ?
-                         _('<b>Stats for <i>project</i>: </b>') :
-                         _('<b>Stats for <i>task</i>: </b>');
+                         `<b>${_('Stats for project')}:</b>` :
+                         `<b>${_('Stats for task')}:</b>`;
 
             markup += '\n\n' + keyword;
 
             this.stats_card_title.clutter_text.set_markup(
                 '<tt>' + markup + '</tt>');
 
+
             //
             // stats
             //
-            let longest = 0;
-
-            for (let [,v] of this.string_date_map)
-                if (v[0].length > longest) longest = v[0].length;
-
-            longest++;
-
             let stats = this._get_stats__sum(keyword);
-            markup    = '';
+            markup    = '\n\n\n';
 
             for (let [k, v] of this.string_date_map) {
-                let h = Math.floor(stats[k] / 60);
-                h = h ? '' + h + 'h ' : '';
+                let h = Math.floor(stats[k][0] / 60);
+                h     = h ? '' + h + 'h' : '';
 
-                let m = stats[k] % 60;
-                m = m ? '' + m + 'min' : '0';
+                let m = stats[k][0] % 60;
+                m     = m ? '' + m + 'min' : '0';
 
-                markup +=
-                    '<b>' + v[0] + ': </b>' +
-                    Array(longest - v[0].length).join(' ') +
-                    h + m + '\n\n';
+                let day_str = '';
+
+                if (k !== 'today' && stats[k][0] > 0) {
+                    day_str =
+                        ' (' +
+                        ngettext('%d day', '%d days', stats[k][1]).format(stats[k][1])
+                        + ')';
+                }
+
+                markup += `<b>${v[0]}:</b>\n  ${h} ${m}${day_str}\n\n`;
             };
 
-            markup += `\n\n<b>${_('Total time per yearly quarter: ')}</b>`;
+            markup += `\n\n<b>${_('Total time per year quarter')}:</b>`;
 
             for (let [year, quarters] of stats.quarters) {
                 markup += '\n';
 
                 quarters.forEach((it, i) => {
-                    let h = Math.floor(it / 60);
+                    let h = Math.floor(it[0] / 60);
                     h = h ? '' + h + 'h ' : '';
 
-                    let m = it % 60;
+                    let m = it[0] % 60;
                     m = m ? '' + m + 'min' : '0';
 
-                    markup += `\n<b>Q${i + 1} ${year}:</b> ${h + m}`;
+                    let day_str = '';
+
+                    if (it[1] > 0) {
+                        day_str = ' (' + ngettext('%d day', '%d days', it[1]).format(it[1]) + ')';
+                    }
+
+                    markup += `\n<b>Q${i + 1} ${year}:</b> ${h + m}${day_str}`;
                 });
             }
 
@@ -921,11 +927,12 @@ var StatsView = new Lang.Class({
                 }
 
                 // in minutes
-                if      (time < 60)   rgba = color_map[4];
-                else if (time < 180)  rgba = color_map[3];
-                else if (time < 360)  rgba = color_map[2];
-                else if (time < 480)  rgba = color_map[1];
-                else                  rgba = color_map[0];
+                if      (time === 0) rgba = color_map[5];
+                else if (time < 60)  rgba = color_map[4];
+                else if (time < 180) rgba = color_map[3];
+                else if (time < 360) rgba = color_map[2];
+                else if (time < 480) rgba = color_map[1];
+                else                 rgba = color_map[0];
             }
 
             res.matrix[row].push({
@@ -951,13 +958,13 @@ var StatsView = new Lang.Class({
 
     _get_stats__sum: function (keyword) {
         let sum = {
-            today        : 0,
-            week         : 0,
-            month        : 0,
-            three_months : 0,
-            six_months   : 0,
+            today        : [0, 0],
+            week         : [0, 0],
+            month        : [0, 0],
+            three_months : [0, 0],
+            six_months   : [0, 0],
             quarters     : new Map(),
-            all          : 0,
+            all          : [0, 0],
         };
 
         let month_quarter_map = [0, 0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3];
@@ -972,20 +979,29 @@ var StatsView = new Lang.Class({
 
         this.stats_data.forEach((records, date) => {
             let val = records.get(keyword) || 0;
+            let day = val ? 1 : 0;
 
             bound_dates.forEach((target_date, k) => {
-                if (date >= target_date) sum[k] += val;
-                else                     bound_dates.delete(k);
+                if (date >= target_date) {
+                    sum[k][0]  += val;
+                    sum[k][1]  += day;
+                }
+                else {
+                    bound_dates.delete(k);
+                }
             });
 
-            let year  = date.substr(0, 4);
-            sum.all  += val;
+            if (day) {
+                sum.all[0] += val;
+                sum.all[1] += day;
 
-            if (val > 0) {
+                let year          = date.substr(0, 4);
                 let quarter       = month_quarter_map[+(date.substr(5, 2))];
-                let year_quarters = sum.quarters.get(year) || [0, 0, 0, 0];
+                let year_quarters = sum.quarters.get(year) || [[0, 0], [0, 0], [0, 0], [0, 0]];
 
-                year_quarters[quarter] += val;
+                year_quarters[quarter][0] += val;
+                year_quarters[quarter][1] += 1;
+
                 sum.quarters.set(year, year_quarters);
             }
         });

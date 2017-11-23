@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: timepp@zagortenay 333\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-22 22:35+0100\n"
+"POT-Creation-Date: 2017-11-23 01:09+0100\n"
 "PO-Revision-Date: 2017-08-29 10:51+0200\n"
 "Last-Translator: Christian Mattes <mac@tasarion.de>\n"
 "Language-Team: German\n"
@@ -414,26 +414,27 @@ msgid "Custom Range..."
 msgstr "Eigene Spanne: "
 
 #: data/po_files/../../sections/todo/view__stats.js:277
-#: data/po_files/../../sections/todo/view__stats.js:696
+#: data/po_files/../../sections/todo/view__stats.js:702
 msgid "Projects"
 msgstr "Projekte"
 
 #: data/po_files/../../sections/todo/view__stats.js:283
-#: data/po_files/../../sections/todo/view__stats.js:696
+#: data/po_files/../../sections/todo/view__stats.js:702
 msgid "Tasks"
 msgstr "Aufgaben"
 
 #: data/po_files/../../sections/todo/view__stats.js:608
-msgid "<b>Stats for <i>project</i>: </b>"
+#, fuzzy
+msgid "Stats for project"
 msgstr "<b>Statistik für <i>Projekt</i>: </b>"
 
-#: data/po_files/../../sections/todo/view__stats.js:609
-msgid "<b>Stats for <i>task</i>: </b>"
-msgstr "<b>Statistik für <i>Aufgabe</i>: </b>"
-
-#: data/po_files/../../sections/todo/view__stats.js:642
-msgid "Total time per yearly quarter: "
-msgstr "Gesamtzeit pro Quartal: "
+#: data/po_files/../../sections/todo/view__stats.js:635
+#: data/po_files/../../sections/todo/view__stats.js:657
+#, fuzzy, javascript-format
+msgid "%d day"
+msgid_plural "%d days"
+msgstr[0] "in %d Tag"
+msgstr[1] "in %d Tagen"
 
 #: data/po_files/../../sections/todo/view__clear_tasks.js:53
 msgid "Delete all completed tasks"
