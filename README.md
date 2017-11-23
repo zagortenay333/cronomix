@@ -392,4 +392,4 @@ todo.txt manager.
 
 <b><sub> [Gnome-Shell theme](https://github.com/zagortenay333/ciliora-tertia-shell), [Wallpaper](https://i.imgur.com/raHVKVk.jpg)</sub></b>
 
-![preview](https://i.imgur.com/a7K4NX3.png)
+![preview](https://i.imgur.com/hGn25kC.png)
