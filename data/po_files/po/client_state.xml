@@ -1,0 +1,62 @@
+<client_state>
+<host_info>
+    <timezone>28800</timezone>
+    <domain_name>originpc</domain_name>
+    <ip_addr>218.205.57.154</ip_addr>
+    <host_cpid>ed0a9d8fc58662c45a208f6481effb5c</host_cpid>
+    <p_ncpus>8</p_ncpus>
+    <p_vendor>GenuineIntel</p_vendor>
+    <p_model>Intel(R) Core(TM) i7-6700HQ CPU @ 2.60GHz [Family 6 Model 94 Stepping 3]</p_model>
+    <p_features>fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc art arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf tsc_known_freq pni pclmulqdq dtes64 monitor ds_cpl vmx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch cpuid_fault epb intel_pt tpr_shadow vnmi flexpriority ept vpid fsgsbase tsc_adjust bmi1 hle avx2 smep bmi2 erms invpcid rtm mpx rdseed adx smap clflushopt xsaveopt xsavec xgetbv1 xsaves dtherm ida arat pln pts hwp hwp_notify hwp_act_window hwp_epp</p_features>
+    <p_fpops>1000000000.000000</p_fpops>
+    <p_iops>1000000000.000000</p_iops>
+    <p_membw>1000000000.000000</p_membw>
+    <p_calculated>0.000000</p_calculated>
+    <p_vm_extensions_disabled>0</p_vm_extensions_disabled>
+    <m_nbytes>16732221440.000000</m_nbytes>
+    <m_cache>6291456.000000</m_cache>
+    <m_swap>8434741248.000000</m_swap>
+    <d_total>43047305216.000000</d_total>
+    <d_free>23416635392.000000</d_free>
+    <os_name>Linux</os_name>
+    <os_version>4.13.13-300.fc27.x86_64</os_version>
+    <coprocs>
+    </coprocs>
+</host_info>
+<time_stats>
+    <on_frac>1.000000</on_frac>
+    <connected_frac>-1.000000</connected_frac>
+    <cpu_and_network_available_frac>1.000000</cpu_and_network_available_frac>
+    <active_frac>1.000000</active_frac>
+    <gpu_active_frac>1.000000</gpu_active_frac>
+    <client_start_time>1511530465.995255</client_start_time>
+    <total_start_time>1511530466.026324</total_start_time>
+    <total_duration>20.043227</total_duration>
+    <total_active_duration>20.043227</total_active_duration>
+    <total_gpu_active_duration>20.043227</total_gpu_active_duration>
+    <previous_uptime>23.618126</previous_uptime>
+    <last_update>1511530486.069551</last_update>
+</time_stats>
+<net_stats>
+    <bwup>0.000000</bwup>
+    <avg_up>0.000000</avg_up>
+    <avg_time_up>0.000000</avg_time_up>
+    <bwdown>0.000000</bwdown>
+    <avg_down>0.000000</avg_down>
+    <avg_time_down>0.000000</avg_time_down>
+</net_stats>
+<active_task_set>
+</active_task_set>
+<platform_name>x86_64-pc-linux-gnu</platform_name>
+<core_client_major_version>7</core_client_major_version>
+<core_client_minor_version>6</core_client_minor_version>
+<core_client_release>22</core_client_release>
+<user_run_request>2</user_run_request>
+<user_run_prev_request>2</user_run_prev_request>
+<user_gpu_request>2</user_gpu_request>
+<user_gpu_prev_request>2</user_gpu_prev_request>
+<user_network_request>2</user_network_request>
+<new_version_check_time>0.000000</new_version_check_time>
+<all_projects_list_check_time>0.000000</all_projects_list_check_time>
+<alt_platform>i686-pc-linux-gnu</alt_platform>
+</client_state>
