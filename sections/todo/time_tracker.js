@@ -26,8 +26,8 @@ const G = ME.imports.sections.todo.GLOBAL;
 // =====================================================================
 // @@@ Time tracker
 //
-// @ext      : obj (main extension object)
-// @delegate : obj (main section object)
+// @ext      : obj    (main extension object)
+// @delegate : obj    (main section object)
 // =====================================================================
 var TimeTracker = new Lang.Class({
     Name: 'Timepp.TimeTracker',
@@ -42,14 +42,6 @@ var TimeTracker = new Lang.Class({
             xml = '' + xml;
             this.dbus_impl = Gio.DBusExportedObject.wrapJSObject(xml, this);
             this.dbus_impl.export(Gio.DBus.session, '/timepp/zagortenay333/TimeTracker');
-        }
-
-
-        this.csv_dir =
-            delegate.settings.get_value('todo-current').deep_unpack().csv_dir;
-
-        if (this.csv_dir) {
-            [this.csv_dir, ] = GLib.filename_from_uri(this.csv_dir, null);
         }
 
 
@@ -99,6 +91,10 @@ var TimeTracker = new Lang.Class({
         this.daily_csv_map = new Map();
 
 
+        //
+        // init
+        //
+        this._init_csv_dir();
         this._init_tracker_dir();
         this._init_daily_csv_map();
         this._archive_yearly_csv_file();
@@ -116,13 +112,7 @@ var TimeTracker = new Lang.Class({
             this.stop_all_tracking();
         });
         delegate.settings.connect('changed::todo-current', () => {
-            this.csv_dir = delegate.settings.get_value('todo-current')
-                           .deep_unpack().csv_dir;
-
-            if (this.csv_dir) {
-                [this.csv_dir, ] = GLib.filename_from_uri(this.csv_dir, null);
-            }
-
+            this._init_csv_dir();
             this._init_tracker_dir();
         });
     },
@@ -172,6 +162,19 @@ var TimeTracker = new Lang.Class({
         this._init_tracker_dir();
         this._init_daily_csv_map();
         this._archive_yearly_csv_file();
+    },
+
+    _init_csv_dir: function () {
+        try {
+            this.csv_dir =
+                this.delegate.settings.get_value('todo-current').deep_unpack().csv_dir;
+
+            if (this.csv_dir)
+                [this.csv_dir, ] = GLib.filename_from_uri(this.csv_dir, null);
+        }
+        catch (e) {
+            logError(e);
+        }
     },
 
     _init_tracker_dir: function () {
@@ -245,6 +248,8 @@ var TimeTracker = new Lang.Class({
     },
 
     _init_daily_csv_map: function () {
+        if (! this.csv_dir) return;
+
         let date_str = G.date_yyyymmdd();
 
         let [, lines] = this.daily_csv_file.load_contents(null);

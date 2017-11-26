@@ -582,8 +582,6 @@ var Todo = new Lang.Class({
             }
         }
 
-        this.time_tracker = new TIME_TRACKER.TimeTracker(this.ext, this);
-
         let current = this.settings.get_value('todo-current').deep_unpack();
 
         if (! current.todo_file) {
@@ -591,7 +589,10 @@ var Todo = new Lang.Class({
             return;
         }
 
+        this.time_tracker = new TIME_TRACKER.TimeTracker(this.ext, this);
+
         try {
+            // todo file
             this.todo_txt_file = Gio.file_new_for_uri(current.todo_file);
 
             if (this.todo_file_monitor)

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: timepp@zagortenay 333\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-23 01:09+0100\n"
+"POT-Creation-Date: 2017-11-26 16:48+0100\n"
 "PO-Revision-Date: 2017-11-03 09:24-0200\n"
 "Last-Translator: Helder <he7d3r@gmail.com>\n"
 "Language-Team: Brazilian Portuguese\n"
@@ -466,7 +466,7 @@ msgstr[0] "em %d dia"
 msgstr[1] "em %d dias"
 
 #: data/po_files/../../sections/todo/MAIN.js:263
-#: data/po_files/../../sections/todo/MAIN.js:1155
+#: data/po_files/../../sections/todo/MAIN.js:1156
 msgid "Loading..."
 msgstr "Carregando..."
 
@@ -478,21 +478,21 @@ msgstr "Selecionar o arquivo de tarefas nas configurações..."
 msgid "Add New Task..."
 msgstr "Adicionar nova tarefa..."
 
-#: data/po_files/../../sections/todo/MAIN.js:707
+#: data/po_files/../../sections/todo/MAIN.js:708
 #, javascript-format
 msgid "%d task has recurred"
 msgid_plural "%d tasks have recurred"
 msgstr[0] "%d tarefa ocorreu novamente"
 msgstr[1] "%d tarefas ocorreram novamente"
 
-#: data/po_files/../../sections/todo/MAIN.js:713
+#: data/po_files/../../sections/todo/MAIN.js:714
 #, javascript-format
 msgid "%d deferred task has been opened"
 msgid_plural "%d deferred tasks have been opened"
 msgstr[0] "%d tarefa adiada foi aberta"
 msgstr[1] "%d tarefas adiadas foram abertas"
 
-#: data/po_files/../../sections/todo/MAIN.js:1161
+#: data/po_files/../../sections/todo/MAIN.js:1162
 msgid "Nothing found."
 msgstr "Nada encontrado."
 
