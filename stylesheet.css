@@ -691,11 +691,11 @@
     -timepp-task-vbar-color: rgba(231, 79, 79, .8);
 
     -timepp-heatmap-selected-color: yellow;
-    -timepp-heatmap-color-A:        #c6e48b;
-    -timepp-heatmap-color-B:        #7bc96f;
-    -timepp-heatmap-color-C:        #239a3b;
-    -timepp-heatmap-color-D:        #196127;
-    -timepp-heatmap-color-E:        #103D19;
+    -timepp-heatmap-color-a:        #acd5f2;
+    -timepp-heatmap-color-b:        #7fa8c9;
+    -timepp-heatmap-color-c:        #527ba0;
+    -timepp-heatmap-color-d:        #254e77;
+    -timepp-heatmap-color-e:        #1c3a59;
     -timepp-heatmap-color-F:        rgba(255, 255, 255, .2);
 }
 
