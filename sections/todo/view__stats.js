@@ -524,7 +524,7 @@ var StatsView = new Lang.Class({
                 y_conversion_factor : 60,
                 n_rulers            : 12,
                 x_offset            : 35,
-                y_offset            : 12,
+                y_offset            : 0,
                 y_label_suffix      : 'h',
             });
         }
@@ -740,7 +740,7 @@ var StatsView = new Lang.Class({
                 y_conversion_factor : 60,
                 n_rulers            : 12,
                 x_offset            : 30,
-                y_offset            : 12,
+                y_offset            : 0,
                 y_label_suffix      : 'h',
             });
         }
@@ -750,7 +750,7 @@ var StatsView = new Lang.Class({
                 y_conversion_factor : 60,
                 n_rulers            : 10,
                 x_offset            : (max_hours < 100) ? 30 : 40,
-                y_offset            : 12,
+                y_offset            : 0,
                 y_label_suffix      : 'h',
             });
         }
@@ -760,7 +760,7 @@ var StatsView = new Lang.Class({
                 y_conversion_factor : 60000,
                 n_rulers            : 10,
                 x_offset            : 60,
-                y_offset            : 12,
+                y_offset            : 0,
                 y_label_suffix      : 'Kh',
             });
         }
