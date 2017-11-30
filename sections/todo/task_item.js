@@ -447,7 +447,7 @@ var TaskItem = new Lang.Class({
     // needs a creation/completion date that it will be already there.  This is
     // all done in the _parse_task_str func.
     //
-    // returns array : [do_recur, next_recurrence, days_until]
+    // returns array : [do_recur, next_recurrence]
     //
     // @do_recur        : bool    (whether or not the task should recur today)
     // @next_recurrence : string  (date of next recurrence in yyyy-mm-dd format)
