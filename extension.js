@@ -242,6 +242,8 @@ const Timepp = new Lang.Class({
     //     - If @section is not a sep menu, we show all joined sections that
     //       are enabled.
     open_menu: function (section) {
+        if (this.context_menu.actor.visible) return;
+
         this.unicon_panel_item.actor.remove_style_pseudo_class('checked');
         this.unicon_panel_item.actor.remove_style_pseudo_class('focus');
         this.unicon_panel_item.actor.can_focus = true;
