@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-26 16:48+0100\n"
+"POT-Creation-Date: 2017-12-02 10:11+0100\n"
 "PO-Revision-Date: 2017-11-29 13:36+0200\n"
 "Last-Translator: Sergey Shlyapugin <shlyapugin@gmail.com>\n"
 "Language-Team: Russian\n"
@@ -467,20 +467,20 @@ msgstr[0] "через %d день"
 msgstr[1] "через %d дня"
 msgstr[2] "через %d дней"
 
-#: data/po_files/../../sections/todo/MAIN.js:263
-#: data/po_files/../../sections/todo/MAIN.js:1156
+#: data/po_files/../../sections/todo/MAIN.js:262
+#: data/po_files/../../sections/todo/MAIN.js:1155
 msgid "Loading..."
 msgstr "Загрузка..."
 
-#: data/po_files/../../sections/todo/MAIN.js:273
+#: data/po_files/../../sections/todo/MAIN.js:272
 msgid "Select todo file in settings..."
 msgstr "Выберите файл списка дел в диалоге настройки..."
 
-#: data/po_files/../../sections/todo/MAIN.js:298
+#: data/po_files/../../sections/todo/MAIN.js:297
 msgid "Add New Task..."
 msgstr "Добавить задачу..."
 
-#: data/po_files/../../sections/todo/MAIN.js:708
+#: data/po_files/../../sections/todo/MAIN.js:707
 #, javascript-format
 msgid "%d task has recurred"
 msgid_plural "%d tasks have recurred"
@@ -488,7 +488,7 @@ msgstr[0] "%d задача возобновлена"
 msgstr[1] "%d задачи возобновлены"
 msgstr[2] "%d задач возобновлено"
 
-#: data/po_files/../../sections/todo/MAIN.js:714
+#: data/po_files/../../sections/todo/MAIN.js:713
 #, javascript-format
 msgid "%d deferred task has been opened"
 msgid_plural "%d deferred tasks have been opened"
@@ -496,7 +496,7 @@ msgstr[0] "%d отложенная задача была открыта"
 msgstr[1] "%d отложенных задачи было открыто"
 msgstr[2] "%d отложенных задача было открыто"
 
-#: data/po_files/../../sections/todo/MAIN.js:1162
+#: data/po_files/../../sections/todo/MAIN.js:1161
 msgid "Nothing found."
 msgstr "Ничего не найдено."
 

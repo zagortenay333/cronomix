@@ -205,7 +205,6 @@ var Todo = new Lang.Class({
             }
         });
         this.keym.register('todo-keybinding-open-to-stats', () => {
-            this.ext.open_menu(this);
             if (this.view_manager.current_view !== G.View.LOADING &&
                 this.view_manager.current_view !== G.View.NO_TODO_FILE) {
 
