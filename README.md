@@ -5,7 +5,7 @@
 <img vspace="30" src="data/img/logo.png"></img>
 
 **A [todo.txt manager](https://github.com/todotxt/todotxt/),
-time tracker, timer, stopwatch, pomodoro, and alarms gnome-shell extension.**
+time tracker, timer, stopwatch, pomodoro, and alarms [gnome-shell extension](https://extensions.gnome.org/about/).**
 
 </div>
 
