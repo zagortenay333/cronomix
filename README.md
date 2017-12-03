@@ -260,9 +260,7 @@ date.</li>
 n-th month starting<br>
                 from the month of creation.<br>
                 <i>- This rec type requires a creation date.</i><br>
-                <i>- Note that since when creating a task, one can set the
-creation date to any arbitrary<br>
-                date, 'month of creation' here refers to the month written into
+                <i>- 'Month of creation' here refers to the month written into
 the todo.txt file.<br>
                 - If a month doesn't have the particular n-th day, the last day
 of
