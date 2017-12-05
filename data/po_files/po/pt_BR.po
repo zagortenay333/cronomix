@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: timepp@zagortenay 333\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-02 10:11+0100\n"
+"POT-Creation-Date: 2017-12-05 20:13+0100\n"
 "PO-Revision-Date: 2017-11-03 09:24-0200\n"
 "Last-Translator: Helder <he7d3r@gmail.com>\n"
 "Language-Team: Brazilian Portuguese\n"
@@ -322,7 +322,7 @@ msgid "Sort by Completion Date"
 msgstr "Ordenar por data de conclusão"
 
 #: data/po_files/../../sections/todo/view__sort.js:78
-#: data/po_files/../../sections/todo/view__task_editor.js:130
+#: data/po_files/../../sections/todo/view__task_editor.js:145
 #: data/po_files/../../sections/todo/view__stats.js:229
 #: data/po_files/../../sections/todo/view__clear_tasks.js:96
 #: data/po_files/../../sections/todo/view__filters.js:196
@@ -332,20 +332,24 @@ msgstr "Ordenar por data de conclusão"
 msgid "Ok"
 msgstr "Ok"
 
-#: data/po_files/../../sections/todo/view__task_editor.js:76
+#: data/po_files/../../sections/todo/view__task_editor.js:80
 msgid "Task..."
 msgstr "Tarefa..."
 
-#: data/po_files/../../sections/todo/view__task_editor.js:114
+#: data/po_files/../../sections/todo/view__task_editor.js:103
+msgid "syntax help"
+msgstr ""
+
+#: data/po_files/../../sections/todo/view__task_editor.js:129
 #: data/po_files/../../sections/alarms.js:594
 msgid "Delete"
 msgstr "Deletar"
 
-#: data/po_files/../../sections/todo/view__task_editor.js:122
+#: data/po_files/../../sections/todo/view__task_editor.js:137
 msgid "Archive"
 msgstr "Arquivar"
 
-#: data/po_files/../../sections/todo/view__task_editor.js:127
+#: data/po_files/../../sections/todo/view__task_editor.js:142
 #: data/po_files/../../sections/todo/view__stats.js:232
 #: data/po_files/../../sections/todo/view__clear_tasks.js:93
 #: data/po_files/../../sections/pomodoro.js:797

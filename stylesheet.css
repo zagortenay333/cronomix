@@ -681,6 +681,20 @@
     spacing: .2em;
 }
 
+.timepp-menu .todo-section .task-editor .entry-container {
+    spacing: 0;
+}
+
+.timepp-menu .todo-section .todo-syntax-link {
+    padding: 0 .3em .3em 0;
+}
+
+.timepp-menu .todo-section .todo-syntax-link:focus StLabel,
+.timepp-menu .todo-section .todo-syntax-link:hover StLabel {
+    color: #5a94dc;
+    text-decoration: underline;
+}
+
 .timepp-fullscreen.stats {
     /* Use these custom properties only on this selector. */
     -timepp-axes-color:      rgba(255, 255, 255, 1);

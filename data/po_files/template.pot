@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-02 10:11+0100\n"
+"POT-Creation-Date: 2017-12-05 20:13+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -318,7 +318,7 @@ msgid "Sort by Completion Date"
 msgstr ""
 
 #: data/po_files/../../sections/todo/view__sort.js:78
-#: data/po_files/../../sections/todo/view__task_editor.js:130
+#: data/po_files/../../sections/todo/view__task_editor.js:145
 #: data/po_files/../../sections/todo/view__stats.js:229
 #: data/po_files/../../sections/todo/view__clear_tasks.js:96
 #: data/po_files/../../sections/todo/view__filters.js:196
@@ -328,20 +328,24 @@ msgstr ""
 msgid "Ok"
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__task_editor.js:76
+#: data/po_files/../../sections/todo/view__task_editor.js:80
 msgid "Task..."
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__task_editor.js:114
+#: data/po_files/../../sections/todo/view__task_editor.js:103
+msgid "syntax help"
+msgstr ""
+
+#: data/po_files/../../sections/todo/view__task_editor.js:129
 #: data/po_files/../../sections/alarms.js:594
 msgid "Delete"
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__task_editor.js:122
+#: data/po_files/../../sections/todo/view__task_editor.js:137
 msgid "Archive"
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__task_editor.js:127
+#: data/po_files/../../sections/todo/view__task_editor.js:142
 #: data/po_files/../../sections/todo/view__stats.js:232
 #: data/po_files/../../sections/todo/view__clear_tasks.js:93
 #: data/po_files/../../sections/pomodoro.js:797

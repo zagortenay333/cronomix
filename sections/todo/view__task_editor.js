@@ -1,5 +1,6 @@
 const St       = imports.gi.St;
 const Gtk      = imports.gi.Gtk;
+const Gio      = imports.gi.Gio
 const Meta     = imports.gi.Meta;
 const Clutter  = imports.gi.Clutter;
 const Main     = imports.ui.main;
@@ -19,6 +20,9 @@ const ngettext = Gettext.ngettext;
 const FUZZ           = ME.imports.lib.fuzzy_search;
 const MULTIL_ENTRY   = ME.imports.lib.multiline_entry;
 const SCROLL_TO_ITEM = ME.imports.lib.scroll_to_item;
+
+
+const TODO_TXT_SYNTAX_URL = 'https://github.com/todotxt/todo.txt';
 
 
 const G = ME.imports.sections.todo.GLOBAL;
@@ -91,6 +95,17 @@ var TaskEditor = new Lang.Class({
 
 
         //
+        // help label
+        //
+        {
+            this.help_label = new St.Button({ can_focus: true, reactive: true, x_align: St.Align.END, style_class: 'row todo-syntax-link' });
+            this.entry_container.insert_child_at_index(this.help_label, 0);
+            let label = new St.Label({ text: _('syntax help'), style_class: 'popup-inactive-menu-item', pseudo_class: 'insensitive' });
+            this.help_label.add_actor(label);
+        }
+
+
+        //
         // used to show project/context completions
         //
         this.completion_menu = new St.ScrollView({ visible: false, style_class: 'vfade' });
@@ -139,6 +154,15 @@ var TaskEditor = new Lang.Class({
         });
         this.button_cancel.connect('clicked', () => {
            this.emit('cancel');
+        });
+        this.help_label.connect('button-press-event', () => {
+            try {
+                Gio.app_info_launch_default_for_uri(
+                    TODO_TXT_SYNTAX_URL,
+                    global.create_app_launch_context(0, -1)
+                );
+            }
+            catch (e) { logError(e); }
         });
         this.entry.entry.clutter_text.connect('text-changed', () => {
             if (this.text_changed_handler_block)
