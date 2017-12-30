@@ -464,10 +464,15 @@
     color: #5a94dc;
 }
 
+.timepp-menu .alarm-section .alarm-item.active {
+    border-color: #f47e00;
+}
+
 .timepp-menu .alarm-section .alarm-item {
     background: rgba(125, 125, 125, .15);
     border-radius: 2px;
-    padding: .8em;
+    border-left-width: 3px;
+    padding: 9px 9px 9px 6px;
 }
 
 .timepp-menu .alarm-section .alarm-item .view-box {
@@ -487,7 +492,7 @@
 }
 
 .timepp-menu .alarm-section .alarm-item-time {
-    font-weight: bold;
+    /* font-weight: bold; */
 }
 
 .timepp-fullscreen.alarm {

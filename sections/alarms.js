@@ -78,6 +78,10 @@ var Alarms = new Lang.Class({
         this.wallclock_str = ''; // time_str
 
 
+        // AlarmItem objects
+        this.alarm_items = new Set();
+
+
         // @key: alarm obj
         // @val: time_str
         this.snoozed_alarms = new Map();
@@ -302,6 +306,13 @@ var Alarms = new Lang.Class({
                 this._send_notif(a);
             }
         });
+
+        {
+            let d = new Date();
+
+            for (let it of this.alarm_items)
+                it.update_time_label(d);
+        }
     },
 
     // @alarm_item: obj
@@ -332,7 +343,7 @@ var Alarms = new Lang.Class({
                 this.snoozed_alarms.delete(alarm);
 
                 alarm_item.toggle.setToggleState(alarm.toggle);
-                alarm_item.time.set_text(alarm.time_str);
+                alarm_item.update_time_label();
                 alarm_item.alarm_item_content.show();
 
                 if (alarm.msg) {
@@ -347,6 +358,7 @@ var Alarms = new Lang.Class({
                     alarm_item.msg.visible = false;
                 }
 
+                this._update_panel_item_UI();
                 this.header.actor.show();
                 this.alarms_scroll_wrapper.actor.show();
                 this.add_alarm_button.grab_key_focus();
@@ -360,6 +372,7 @@ var Alarms = new Lang.Class({
                 this.alarms_scroll_wrapper.actor.show();
                 this.add_alarm_button.grab_key_focus();
                 editor.actor.destroy();
+                this.alarm_items.delete(alarm_item);
                 alarm_item.actor.destroy();
                 this._delete_alarm(alarm_item.alarm);
             });
@@ -382,6 +395,7 @@ var Alarms = new Lang.Class({
         this._update_panel_item_UI();
 
         let alarm_item = new AlarmItem(this.ext, this, alarm);
+        this.alarm_items.add(alarm_item);
         this.alarms_scroll_content.add_actor(alarm_item.actor);
         this.alarms_scroll_wrapper.actor.show();
 
@@ -457,8 +471,10 @@ var Alarms = new Lang.Class({
     _update_panel_item_UI: function () {
         this.panel_item.actor.remove_style_class_name('on');
 
-        for (let i = 0, len = this.cache.alarms.length; i < len; i++) {
-            if (this.cache.alarms[i].toggle) {
+        let today = new Date().getDay();
+
+        for (let a of this.cache.alarms) {
+            if (a.toggle && a.days.indexOf(today) !== -1) {
                 this.panel_item.actor.add_style_class_name('on');
                 break;
             }
@@ -671,7 +687,7 @@ const AlarmItem = new Lang.Class({
         //
         // container
         //
-        this.actor = new St.BoxLayout({ reactive: true, vertical:true, style_class: 'alarm-item menu-favorites-box' });
+        this.actor = new St.BoxLayout({ reactive: true, vertical: true, style_class: 'alarm-item menu-favorites-box' });
 
         this.alarm_item_content = new St.BoxLayout({vertical: true, style_class: 'alarm-item-content'});
         this.actor.add_actor(this.alarm_item_content);
@@ -684,7 +700,7 @@ const AlarmItem = new Lang.Class({
         this.alarm_item_content.add_actor(this.header);
 
 
-        this.time = new St.Label({ text: alarm.time_str, y_align: St.Align.END, x_align: St.Align.START, style_class: 'alarm-item-time' });
+        this.time = new St.Label({ y_align: St.Align.END, x_align: St.Align.START, style_class: 'alarm-item-time' });
         this.header.add(this.time, {expand: true});
 
         this.icon_box = new St.BoxLayout({y_align: Clutter.ActorAlign.CENTER, x_align: Clutter.ActorAlign.CENTER, style_class: 'icon-box'});
@@ -693,13 +709,11 @@ const AlarmItem = new Lang.Class({
         let edit_icon = new St.Icon({ icon_name: 'timepp-edit-symbolic' });
         this.edit_bin = new St.Button({ visible: false, can_focus: true, y_align: St.Align.MIDDLE, x_align: St.Align.END, style_class: 'settings-icon'});
         this.edit_bin.add_actor(edit_icon);
-
         this.icon_box.add(this.edit_bin);
 
         this.toggle     = new PopupMenu.Switch(alarm.toggle);
         this.toggle_bin = new St.Button({can_focus: true, y_align: St.Align.START, x_align: St.Align.END });
         this.toggle_bin.add_actor(this.toggle.actor);
-
         this.icon_box.add(this.toggle_bin);
 
 
@@ -717,6 +731,8 @@ const AlarmItem = new Lang.Class({
         this.msg.clutter_text.set_line_wrap(true);
         this.msg.clutter_text.set_line_wrap_mode(Pango.WrapMode.WORD_CHAR);
 
+        this.update_time_label();
+
 
         //
         // listen
@@ -730,9 +746,54 @@ const AlarmItem = new Lang.Class({
         });
     },
 
+    // NOTE: @date will get modified by this func
+    update_time_label: function (date = new Date()) {
+        let markup = `<b>${this.alarm.time_str}</b>`;
+
+        // update clock ETA (time until alarm goes off)
+        if (this.alarm.days.indexOf(date.getDay()) === -1) {
+            markup += `  (${_('inactive today')})`;
+
+            if (this.alarm.toggle) this.actor.remove_style_class_name('active');
+        }
+        else {
+            let clock_then = this.alarm.time_str;
+            let clock_now;
+
+            if (this.delegate.wallclock_str) {
+                clock_now = this.delegate.wallclock_str;
+            }
+            else {
+                clock_now = GLib.DateTime.new_now(this.delegate.wallclock.timezone);
+                clock_now = clock_now.format('%H:%M');
+            }
+
+            if (clock_now >= clock_then) date.setDate(date.getDate() + 1);
+            clock_then = clock_then.split(':');
+            date.setHours(+(clock_then[0]));
+            date.setMinutes(+(clock_then[1]));
+
+            let delta = Math.floor((date.getTime() - Date.now()) / 1000);
+            let h     = Math.floor(delta / 3600);
+            let min   = Math.round(delta % 3600 / 60);
+
+            markup += `  (${h}h ${min}min)`;
+
+            if (this.alarm.toggle) this.actor.add_style_class_name('active');
+        }
+
+        this.time.clutter_text.set_markup(markup);
+    },
+
     _on_toggle: function () {
         this.toggle.toggle();
         this.alarm.toggle = !this.alarm.toggle;
+
+        if (this.alarm.days.indexOf(new Date().getDay()) !== -1) {
+            if (this.alarm.toggle) this.actor.add_style_class_name('active');
+            else                   this.actor.remove_style_class_name('active');
+        }
+
         this.emit('alarm-toggled');
     },
 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-23 12:36+0800\n"
+"POT-Creation-Date: 2017-12-30 21:52+0100\n"
 "PO-Revision-Date: 2017-11-24 21:58+0800\n"
 "Last-Translator: Jack Wu <origincoder@yahoo.com>\n"
 "Language-Team: \n"
@@ -323,7 +323,7 @@ msgstr "根据完成日期排序"
 #: data/po_files/../../sections/todo/view__clear_tasks.js:96
 #: data/po_files/../../sections/todo/view__filters.js:196
 #: data/po_files/../../sections/pomodoro.js:796
-#: data/po_files/../../sections/alarms.js:603
+#: data/po_files/../../sections/alarms.js:619
 #: data/po_files/../../sections/timer.js:656 data/po_files/../../prefs.js:134
 msgid "Ok"
 msgstr "好"
@@ -337,7 +337,7 @@ msgid "syntax help"
 msgstr "语法帮助"
 
 #: data/po_files/../../sections/todo/view__task_editor.js:129
-#: data/po_files/../../sections/alarms.js:594
+#: data/po_files/../../sections/alarms.js:610
 msgid "Delete"
 msgstr "删除"
 
@@ -349,7 +349,7 @@ msgstr "储存"
 #: data/po_files/../../sections/todo/view__stats.js:232
 #: data/po_files/../../sections/todo/view__clear_tasks.js:93
 #: data/po_files/../../sections/pomodoro.js:797
-#: data/po_files/../../sections/alarms.js:602
+#: data/po_files/../../sections/alarms.js:618
 #: data/po_files/../../sections/timer.js:655 data/po_files/../../prefs.js:133
 msgid "Cancel"
 msgstr "取消"
@@ -645,44 +645,44 @@ msgstr "报告Bug"
 msgid "Help with translations"
 msgstr "帮助翻译工作的进行"
 
-#: data/po_files/../../sections/alarms.js:130
+#: data/po_files/../../sections/alarms.js:134
 msgid "Add New Alarm..."
 msgstr "新建闹钟……"
 
 #. TRANSLATORS: %s is a time string in the format HH:MM (e.g., 13:44)
-#: data/po_files/../../sections/alarms.js:436
-#: data/po_files/../../sections/alarms.js:854
+#: data/po_files/../../sections/alarms.js:450
+#: data/po_files/../../sections/alarms.js:915
 #, javascript-format
 msgid "Alarm at %s"
 msgstr "%s 的闹钟"
 
-#: data/po_files/../../sections/alarms.js:450
-#: data/po_files/../../sections/alarms.js:861
+#: data/po_files/../../sections/alarms.js:464
+#: data/po_files/../../sections/alarms.js:922
 msgid "Snooze"
 msgstr "延后"
 
-#: data/po_files/../../sections/alarms.js:511
+#: data/po_files/../../sections/alarms.js:527
 msgid "Alarm time"
 msgstr "闹钟时间"
 
-#: data/po_files/../../sections/alarms.js:511
+#: data/po_files/../../sections/alarms.js:527
 #: data/po_files/../../sections/timer.js:622
 msgid "(h:min)"
 msgstr "（时:分）"
 
-#: data/po_files/../../sections/alarms.js:550
+#: data/po_files/../../sections/alarms.js:566
 msgid "Snooze duration"
 msgstr "延后时长"
 
-#: data/po_files/../../sections/alarms.js:550
+#: data/po_files/../../sections/alarms.js:566
 msgid "(min)"
 msgstr "（分）"
 
-#: data/po_files/../../sections/alarms.js:566
+#: data/po_files/../../sections/alarms.js:582
 msgid "Alarm Message..."
 msgstr "闹钟消息……"
 
-#: data/po_files/../../sections/alarms.js:878
+#: data/po_files/../../sections/alarms.js:939
 #, javascript-format
 msgid "%d alarm went off!"
 msgid_plural "%d alarms went off!"
