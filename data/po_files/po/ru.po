@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-30 21:52+0100\n"
+"POT-Creation-Date: 2017-12-31 20:05+0100\n"
 "PO-Revision-Date: 2017-11-29 13:36+0200\n"
 "Last-Translator: Sergey Shlyapugin <shlyapugin@gmail.com>\n"
 "Language-Team: Russian\n"
@@ -329,7 +329,7 @@ msgstr "Упорядочить по дате выполнения"
 #: data/po_files/../../sections/todo/view__clear_tasks.js:96
 #: data/po_files/../../sections/todo/view__filters.js:196
 #: data/po_files/../../sections/pomodoro.js:796
-#: data/po_files/../../sections/alarms.js:619
+#: data/po_files/../../sections/alarms.js:616
 #: data/po_files/../../sections/timer.js:656 data/po_files/../../prefs.js:134
 msgid "Ok"
 msgstr "ОК"
@@ -343,7 +343,7 @@ msgid "syntax help"
 msgstr ""
 
 #: data/po_files/../../sections/todo/view__task_editor.js:129
-#: data/po_files/../../sections/alarms.js:610
+#: data/po_files/../../sections/alarms.js:607
 msgid "Delete"
 msgstr "Удалить"
 
@@ -355,7 +355,7 @@ msgstr "Архивировать"
 #: data/po_files/../../sections/todo/view__stats.js:232
 #: data/po_files/../../sections/todo/view__clear_tasks.js:93
 #: data/po_files/../../sections/pomodoro.js:797
-#: data/po_files/../../sections/alarms.js:618
+#: data/po_files/../../sections/alarms.js:615
 #: data/po_files/../../sections/timer.js:655 data/po_files/../../prefs.js:133
 msgid "Cancel"
 msgstr "Отмена"
@@ -665,39 +665,39 @@ msgid "Add New Alarm..."
 msgstr "Добавить напоминание..."
 
 #. TRANSLATORS: %s is a time string in the format HH:MM (e.g., 13:44)
-#: data/po_files/../../sections/alarms.js:450
-#: data/po_files/../../sections/alarms.js:915
+#: data/po_files/../../sections/alarms.js:449
+#: data/po_files/../../sections/alarms.js:912
 #, javascript-format
 msgid "Alarm at %s"
 msgstr "Напоминание в %s"
 
-#: data/po_files/../../sections/alarms.js:464
-#: data/po_files/../../sections/alarms.js:922
+#: data/po_files/../../sections/alarms.js:463
+#: data/po_files/../../sections/alarms.js:919
 msgid "Snooze"
 msgstr "Отложить"
 
-#: data/po_files/../../sections/alarms.js:527
+#: data/po_files/../../sections/alarms.js:524
 msgid "Alarm time"
 msgstr "Время напоминания"
 
-#: data/po_files/../../sections/alarms.js:527
+#: data/po_files/../../sections/alarms.js:524
 #: data/po_files/../../sections/timer.js:622
 msgid "(h:min)"
 msgstr "(ч:мин)"
 
-#: data/po_files/../../sections/alarms.js:566
+#: data/po_files/../../sections/alarms.js:563
 msgid "Snooze duration"
 msgstr "Откладывать на"
 
-#: data/po_files/../../sections/alarms.js:566
+#: data/po_files/../../sections/alarms.js:563
 msgid "(min)"
 msgstr "(мин)"
 
-#: data/po_files/../../sections/alarms.js:582
+#: data/po_files/../../sections/alarms.js:579
 msgid "Alarm Message..."
 msgstr "Сообщение напоминания..."
 
-#: data/po_files/../../sections/alarms.js:939
+#: data/po_files/../../sections/alarms.js:936
 #, javascript-format
 msgid "%d alarm went off!"
 msgid_plural "%d alarms went off!"

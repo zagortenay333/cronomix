@@ -294,25 +294,24 @@ var Alarms = new Lang.Class({
 
         let today = new Date().getDay();
 
-        this.cache.alarms.forEach((a) => {
+        for (let it of this.alarm_items) {
+            let a = it.alarm;
+
+            it.update_time_label();
+
             if (a.toggle && a.time_str === time && a.days.indexOf(today) !== -1) {
                 this._send_notif(a);
             }
-        });
+        }
 
-        this.snoozed_alarms.forEach((time_str, a) => {
+        for (let [a, time_str] of this.snoozed_alarms) {
             if (a.toggle && time_str === time) {
                 this.snoozed_alarms.delete(a);
                 this._send_notif(a);
             }
-        });
-
-        {
-            let d = new Date();
-
-            for (let it of this.alarm_items)
-                it.update_time_label(d);
         }
+
+        this._update_panel_item_UI(today);
     },
 
     // @alarm_item: obj
@@ -468,10 +467,8 @@ var Alarms = new Lang.Class({
         source.notify(notif);
     },
 
-    _update_panel_item_UI: function () {
+    _update_panel_item_UI: function (today = new Date().getDay()) {
         this.panel_item.actor.remove_style_class_name('on');
-
-        let today = new Date().getDay();
 
         for (let a of this.cache.alarms) {
             if (a.toggle && a.days.indexOf(today) !== -1) {
@@ -746,8 +743,8 @@ const AlarmItem = new Lang.Class({
         });
     },
 
-    // NOTE: @date will get modified by this func
-    update_time_label: function (date = new Date()) {
+    update_time_label: function () {
+        let date   = new Date();
         let markup = `<b>${this.alarm.time_str}</b>`;
 
         // update clock ETA (time until alarm goes off)
