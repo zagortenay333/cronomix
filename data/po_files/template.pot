@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-02 18:12+0100\n"
+"POT-Creation-Date: 2018-01-03 20:54+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -415,12 +415,12 @@ msgid "Custom Range..."
 msgstr ""
 
 #: data/po_files/../../sections/todo/view__stats.js:277
-#: data/po_files/../../sections/todo/view__stats.js:702
+#: data/po_files/../../sections/todo/view__stats.js:687
 msgid "Projects"
 msgstr ""
 
 #: data/po_files/../../sections/todo/view__stats.js:283
-#: data/po_files/../../sections/todo/view__stats.js:702
+#: data/po_files/../../sections/todo/view__stats.js:687
 msgid "Tasks"
 msgstr ""
 
@@ -430,6 +430,7 @@ msgstr ""
 
 #: data/po_files/../../sections/todo/view__stats.js:635
 #: data/po_files/../../sections/todo/view__stats.js:657
+#: data/po_files/../../sections/todo/view__stats.js:792
 #, javascript-format
 msgid "%d day"
 msgid_plural "%d days"

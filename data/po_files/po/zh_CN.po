@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-31 20:05+0100\n"
+"POT-Creation-Date: 2018-01-03 20:54+0100\n"
 "PO-Revision-Date: 2017-11-24 21:58+0800\n"
 "Last-Translator: Jack Wu <origincoder@yahoo.com>\n"
 "Language-Team: \n"
@@ -415,12 +415,12 @@ msgid "Custom Range..."
 msgstr "自定义范围……"
 
 #: data/po_files/../../sections/todo/view__stats.js:277
-#: data/po_files/../../sections/todo/view__stats.js:702
+#: data/po_files/../../sections/todo/view__stats.js:687
 msgid "Projects"
 msgstr "项目"
 
 #: data/po_files/../../sections/todo/view__stats.js:283
-#: data/po_files/../../sections/todo/view__stats.js:702
+#: data/po_files/../../sections/todo/view__stats.js:687
 msgid "Tasks"
 msgstr "任务"
 
@@ -430,6 +430,7 @@ msgstr "项目状态"
 
 #: data/po_files/../../sections/todo/view__stats.js:635
 #: data/po_files/../../sections/todo/view__stats.js:657
+#: data/po_files/../../sections/todo/view__stats.js:792
 #, javascript-format
 msgid "%d day"
 msgid_plural "%d days"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-31 20:05+0100\n"
+"POT-Creation-Date: 2018-01-03 20:54+0100\n"
 "PO-Revision-Date: 2017-11-29 13:36+0200\n"
 "Last-Translator: Sergey Shlyapugin <shlyapugin@gmail.com>\n"
 "Language-Team: Russian\n"
@@ -421,12 +421,12 @@ msgid "Custom Range..."
 msgstr "Произвольный период..."
 
 #: data/po_files/../../sections/todo/view__stats.js:277
-#: data/po_files/../../sections/todo/view__stats.js:702
+#: data/po_files/../../sections/todo/view__stats.js:687
 msgid "Projects"
 msgstr "Проекты"
 
 #: data/po_files/../../sections/todo/view__stats.js:283
-#: data/po_files/../../sections/todo/view__stats.js:702
+#: data/po_files/../../sections/todo/view__stats.js:687
 msgid "Tasks"
 msgstr "Задачи"
 
@@ -436,6 +436,7 @@ msgstr "Статистика проекта"
 
 #: data/po_files/../../sections/todo/view__stats.js:635
 #: data/po_files/../../sections/todo/view__stats.js:657
+#: data/po_files/../../sections/todo/view__stats.js:792
 #, javascript-format
 msgid "%d day"
 msgid_plural "%d days"

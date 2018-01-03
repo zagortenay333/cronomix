@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: timepp@zagortenay 333\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-31 20:05+0100\n"
+"POT-Creation-Date: 2018-01-03 20:54+0100\n"
 "PO-Revision-Date: 2017-08-29 10:51+0200\n"
 "Last-Translator: Christian Mattes <mac@tasarion.de>\n"
 "Language-Team: German\n"
@@ -418,12 +418,12 @@ msgid "Custom Range..."
 msgstr "Eigene Spanne: "
 
 #: data/po_files/../../sections/todo/view__stats.js:277
-#: data/po_files/../../sections/todo/view__stats.js:702
+#: data/po_files/../../sections/todo/view__stats.js:687
 msgid "Projects"
 msgstr "Projekte"
 
 #: data/po_files/../../sections/todo/view__stats.js:283
-#: data/po_files/../../sections/todo/view__stats.js:702
+#: data/po_files/../../sections/todo/view__stats.js:687
 msgid "Tasks"
 msgstr "Aufgaben"
 
@@ -434,6 +434,7 @@ msgstr "<b>Statistik für <i>Projekt</i>: </b>"
 
 #: data/po_files/../../sections/todo/view__stats.js:635
 #: data/po_files/../../sections/todo/view__stats.js:657
+#: data/po_files/../../sections/todo/view__stats.js:792
 #, fuzzy, javascript-format
 msgid "%d day"
 msgid_plural "%d days"

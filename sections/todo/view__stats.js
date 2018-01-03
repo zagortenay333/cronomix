@@ -679,6 +679,18 @@ var StatsView = new Lang.Class({
             })
         );
 
+        actors.forEach((it) => it.show());
+        this.nav_bar.get_children().forEach((it) => { it.checked = false; });
+        this.hot_mode_icon.checked = true;
+
+        this.range_btn.label = label;
+        this.type_btn.label  = this.hot_mode_show_tasks ? _('Tasks') : _('Projects');
+
+        let stats = new Map();
+        let rgba  = this.hot_mode_show_tasks ?
+                    this.graph_css['-timepp-task-vbar-color'][1] :
+                    this.graph_css['-timepp-proj-vbar-color'][1];
+
         let lower_bound, upper_bound;
 
         if (range[0] <= range[1]) {
@@ -690,21 +702,17 @@ var StatsView = new Lang.Class({
             upper_bound = range[0];
         }
 
-        if (!lower_bound) lower_bound = '0000-00-00';
-        if (!upper_bound) upper_bound = '9999-99-99';
+        let n_days_in_range = 0;
 
-        actors.forEach((it) => it.show());
-        this.nav_bar.get_children().forEach((it) => { it.checked = false; });
-        this.hot_mode_icon.checked = true;
+        if (!upper_bound) upper_bound = G.date_yyyymmdd();
 
-        this.range_btn.label = label;
-        this.type_btn.label  =
-            this.hot_mode_show_tasks ? _('Tasks') : _('Projects');
-
-        let stats            = new Map();
-        let rgba             = this.hot_mode_show_tasks ?
-                               this.graph_css['-timepp-task-vbar-color'][1] :
-                               this.graph_css['-timepp-proj-vbar-color'][1];
+        if (lower_bound) {
+            n_days_in_range = (new Date(upper_bound)) - (new Date(lower_bound));
+            n_days_in_range = Math.round(n_days_in_range / 86400000) + 1;
+        }
+        else {
+            lower_bound = '0000-00-00';
+        }
 
         for (let [date, records] of this.stats_data) {
             if (date < lower_bound) break;
@@ -717,7 +725,6 @@ var StatsView = new Lang.Class({
         }
 
         stats = Array.from(stats);
-
         stats.sort((a, b) => +(a[1] < b[1]) || +(a[1] === b[1]) - 1);
 
         let max_vbars = Math.min(stats.length, 100);
@@ -732,7 +739,7 @@ var StatsView = new Lang.Class({
             };
         }
 
-        let max_hours = (stats.length > 0) ? Math.floor(stats[0][1] / 60) : 24;
+        let max_hours = (stats.length > 0) ? Math.floor(stats[0][1] / 60) + 10 : 24;
 
         if (max_hours <= 24) {
             this.vbars_graph.draw_coord_system({
@@ -746,7 +753,7 @@ var StatsView = new Lang.Class({
         }
         else if (max_hours < 1000) {
             this.vbars_graph.draw_coord_system({
-                y_max               : 60 * (max_hours + 10 - max_hours % 10),
+                y_max               : 60 * (max_hours - max_hours % 10),
                 y_conversion_factor : 60,
                 n_rulers            : 10,
                 x_offset            : (max_hours < 100) ? 30 : 40,
@@ -770,13 +777,28 @@ var StatsView = new Lang.Class({
             8,
             64,
             (label, y_val) => {
+                let avg = '';
+
+                if (n_days_in_range > 0) {
+                    avg = Math.round(y_val / n_days_in_range);
+
+                    let h = Math.floor(avg / 60);
+                    h = h ? '' + h + 'h ' : '';
+
+                    let m = avg % 60;
+                    m = m ? '' + m + 'min' : '';
+
+                    avg = '\n\n' + h + m + ' / day' +
+                          ' (' + ngettext('%d day', '%d days', n_days_in_range).format(n_days_in_range) + ')';
+                }
+
                 let h = Math.floor(y_val / 60);
                 h = h ? '' + h + 'h ' : '';
 
                 let m = y_val % 60;
                 m = m ? '' + m + 'min' : '';
 
-                return h + m + '\n\n' + label;
+                return h + m  + avg + '\n\n' + label;
             }
         );
     },
