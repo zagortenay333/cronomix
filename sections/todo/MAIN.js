@@ -846,11 +846,6 @@ var Todo = new Lang.Class({
             let n, proj, context;
 
             for (let task of this.tasks) {
-                if (task.hidden) {
-                    this.stats.hidden++;
-                    continue;
-                }
-
                 if (task.is_deferred) {
                     this.stats.deferred_tasks++;
                     continue;
@@ -870,6 +865,11 @@ var Todo = new Lang.Class({
                 for (context of task.contexts) {
                     n = this.stats.contexts.get(context);
                     this.stats.contexts.set(context, n ? ++n : 1);
+                }
+
+                if (task.hidden) {
+                    this.stats.hidden++;
+                    continue;
                 }
 
                 if (task.priority === '(_)') {
