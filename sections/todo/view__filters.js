@@ -233,7 +233,7 @@ var TaskFiltersWindow = new Lang.Class({
                 this.show_hidden_tasks_toggle.setToggleState(false);
             }
             else {
-                for (toggle of this.nand_toggles) toggle.setToggleState(false);
+                for (let toggle of this.nand_toggles) toggle.setToggleState(false);
                 this.show_hidden_tasks_toggle.setToggleState(true);
             }
         });
