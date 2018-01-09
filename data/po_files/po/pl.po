@@ -228,7 +228,7 @@ msgstr "godz.:min.:sek."
 
 #: data/po_files/../../data/prefs.ui:1282
 msgid "hours:min:sec:centisec"
-msgstr ""
+msgstr "godz.:min.:sek.:setne cz."
 
 #: data/po_files/../../data/prefs.ui:1821
 msgid "Stop time tracking when pomo is paused"
@@ -252,7 +252,7 @@ msgstr "Otwórz sekcję, aby wyszukać zadanie"
 
 #: data/po_files/../../data/prefs.ui:2898
 msgid "Open the stats view"
-msgstr ""
+msgstr "Otwórz podgląd statystyk"
 
 #: data/po_files/../../data/prefs.ui:2954
 msgid "Open this section to switch todo files"
@@ -265,7 +265,7 @@ msgstr "Zadania / Śledzenie"
 #: data/po_files/../../sections/todo/task_item.js:600
 #: data/po_files/../../sections/todo/task_item.js:605
 msgid "recurrence"
-msgstr ""
+msgstr "rekurencyjnie"
 
 #: data/po_files/../../sections/todo/task_item.js:601
 #, javascript-format
@@ -296,7 +296,7 @@ msgstr "ukończono:"
 
 #: data/po_files/../../sections/todo/task_item.js:923
 msgid "File or dir not found."
-msgstr ""
+msgstr "Nie znaleziono pliku lub katalogu."
 
 #: data/po_files/../../sections/todo/view__sort.js:41
 msgid "Sort by Context"
@@ -377,56 +377,56 @@ msgstr "ten miesiąc"
 
 #: data/po_files/../../sections/todo/view__stats.js:92
 msgid "Last 3 Months"
-msgstr ""
+msgstr "Ostatnie 3 miesiące"
 
 #: data/po_files/../../sections/todo/view__stats.js:93
 msgid "Last 6 Months"
-msgstr ""
+msgstr "Ostatnie 6 miesięcy"
 
 #: data/po_files/../../sections/todo/view__stats.js:94
 msgid "All Time"
-msgstr ""
+msgstr "Cały czas"
 
 #: data/po_files/../../sections/todo/view__stats.js:173
 msgid "Search..."
-msgstr ""
+msgstr "Szukaj..."
 
 #: data/po_files/../../sections/todo/view__stats.js:197
 msgid "Year:"
-msgstr ""
+msgstr "Rok:"
 
 #: data/po_files/../../sections/todo/view__stats.js:197
 msgid "Month:"
-msgstr ""
+msgstr "Miesiąc:"
 
 #: data/po_files/../../sections/todo/view__stats.js:197
 msgid "Day:"
-msgstr ""
+msgstr "Dzień:"
 
 #: data/po_files/../../sections/todo/view__stats.js:219
 msgid "From: "
-msgstr ""
+msgstr "Od:"
 
 #: data/po_files/../../sections/todo/view__stats.js:224
 msgid "To: "
-msgstr ""
+msgstr "Do:"
 
 #: data/po_files/../../sections/todo/view__stats.js:240
 msgid "Type: "
-msgstr ""
+msgstr "Rodzaj:"
 
 #: data/po_files/../../sections/todo/view__stats.js:250
 msgid "Range: "
-msgstr ""
+msgstr "Zakres:"
 
 #: data/po_files/../../sections/todo/view__stats.js:271
 msgid "Custom Range..."
-msgstr ""
+msgstr "Własny zakres..."
 
 #: data/po_files/../../sections/todo/view__stats.js:277
 #: data/po_files/../../sections/todo/view__stats.js:687
 msgid "Projects"
-msgstr "Sortuj wg priorytetu"
+msgstr "Projekty"
 
 #: data/po_files/../../sections/todo/view__stats.js:283
 #: data/po_files/../../sections/todo/view__stats.js:687
@@ -436,7 +436,7 @@ msgstr "Zadanie..."
 #: data/po_files/../../sections/todo/view__stats.js:608
 #, fuzzy
 msgid "Stats for project"
-msgstr "Sortuj wg priorytetu"
+msgstr "Statystyka dla projektu"
 
 #: data/po_files/../../sections/todo/view__stats.js:635
 #: data/po_files/../../sections/todo/view__stats.js:657
@@ -580,11 +580,11 @@ msgstr[2] "%d zadań"
 
 #: data/po_files/../../sections/todo/view__file_switcher.js:65
 msgid "Search files..."
-msgstr ""
+msgstr "Szukaj plikóe..."
 
 #: data/po_files/../../sections/todo/view__file_switcher.js:132
 msgid "current file"
-msgstr ""
+msgstr "bieżacy plik"
 
 #: data/po_files/../../sections/stopwatch.js:170
 #: data/po_files/../../sections/stopwatch.js:641
@@ -605,7 +605,7 @@ msgstr ""
 
 #: data/po_files/../../sections/pomodoro.js:39
 msgid "Work!"
-msgstr ""
+msgstr "Pracuj!"
 
 #: data/po_files/../../sections/pomodoro.js:40
 #, fuzzy
@@ -630,11 +630,11 @@ msgstr "Weź przerwę!"
 #: data/po_files/../../sections/pomodoro.js:181
 #: data/po_files/../../sections/pomodoro.js:888
 msgid "Continue"
-msgstr ""
+msgstr "Kontynuuj"
 
 #: data/po_files/../../sections/pomodoro.js:708
 msgid "Reset pomodoro counter?"
-msgstr ""
+msgstr "Skasować licznik pomodor?"
 
 #: data/po_files/../../sections/pomodoro.js:724
 #: data/po_files/../../sections/pomodoro.js:743
@@ -672,7 +672,7 @@ msgstr "Zgłoś błąd"
 
 #: data/po_files/../../sections/context_menu.js:41
 msgid "Help with translations"
-msgstr ""
+msgstr "Pomóż w tłumaczeniu"
 
 #: data/po_files/../../sections/alarms.js:134
 msgid "Add New Alarm..."
