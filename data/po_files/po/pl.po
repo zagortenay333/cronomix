@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-03 20:54+0100\n"
-"PO-Revision-Date: 2017-07-20 07:02+0200\n"
+"POT-Creation-Date: 2018-01-10 09:59+0100\n"
+"PO-Revision-Date: 2018-01-10 10:35+0100\n"
 "Last-Translator: Piotr Komur <pkomur@gmail.com>\n"
 "Language-Team: \n"
 "Language: pl\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
-"X-Generator: Poedit 2.0.2\n"
+"X-Generator: Poedit 2.0.1\n"
 
 #: data/po_files/../../lib/fullscreen.js:221
 msgid "Move to Primary Monitor"
@@ -228,7 +228,7 @@ msgstr "godz.:min.:sek."
 
 #: data/po_files/../../data/prefs.ui:1282
 msgid "hours:min:sec:centisec"
-msgstr "godz.:min.:sek.:setne cz."
+msgstr "godz.:min.:sek.:1/100"
 
 #: data/po_files/../../data/prefs.ui:1821
 msgid "Stop time tracking when pomo is paused"
@@ -271,26 +271,23 @@ msgstr "rekurencyjnie"
 #, javascript-format
 msgid "%d day after completion"
 msgid_plural "%d days after completion"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "%d dzień po zakończeniu"
+msgstr[1] "%d dni po zakończeniu"
+msgstr[2] "%d dni po zakończeniu"
 
 #: data/po_files/../../sections/todo/task_item.js:618
-#, fuzzy
 msgid "due"
 msgstr "termin:"
 
 #: data/po_files/../../sections/todo/task_item.js:626
 msgid "deferred"
-msgstr ""
+msgstr "odroczono:"
 
 #: data/po_files/../../sections/todo/task_item.js:666
-#, fuzzy
 msgid "created"
 msgstr "utworzono:"
 
 #: data/po_files/../../sections/todo/task_item.js:671
-#, fuzzy
 msgid "completed"
 msgstr "ukończono:"
 
@@ -343,7 +340,7 @@ msgstr "Zadanie..."
 
 #: data/po_files/../../sections/todo/view__task_editor.js:103
 msgid "syntax help"
-msgstr ""
+msgstr "podpowiedź składni"
 
 #: data/po_files/../../sections/todo/view__task_editor.js:129
 #: data/po_files/../../sections/alarms.js:607
@@ -365,15 +362,15 @@ msgstr "Anuluj"
 
 #: data/po_files/../../sections/todo/view__stats.js:89
 msgid "Today"
-msgstr "dziś"
+msgstr "Dziś"
 
 #: data/po_files/../../sections/todo/view__stats.js:90
 msgid "This Week"
-msgstr "ten tydzień"
+msgstr "Ten tydzień"
 
 #: data/po_files/../../sections/todo/view__stats.js:91
 msgid "This Month"
-msgstr "ten miesiąc"
+msgstr "Ten miesiąc"
 
 #: data/po_files/../../sections/todo/view__stats.js:92
 msgid "Last 3 Months"
@@ -434,19 +431,18 @@ msgid "Tasks"
 msgstr "Zadanie..."
 
 #: data/po_files/../../sections/todo/view__stats.js:608
-#, fuzzy
 msgid "Stats for project"
 msgstr "Statystyka dla projektu"
 
 #: data/po_files/../../sections/todo/view__stats.js:635
 #: data/po_files/../../sections/todo/view__stats.js:657
 #: data/po_files/../../sections/todo/view__stats.js:792
-#, fuzzy, javascript-format
+#, javascript-format
 msgid "%d day"
 msgid_plural "%d days"
 msgstr[0] "w ciągu %d dnia"
-msgstr[1] "w ciagu %d dni"
-msgstr[2] "w ciagu %d dni"
+msgstr[1] "w ciągu %d dni"
+msgstr[2] "w ciągu %d dni"
 
 #: data/po_files/../../sections/todo/view__clear_tasks.js:53
 msgid "Delete all completed tasks"
@@ -501,9 +497,9 @@ msgstr[2] "%d powtórzyło się"
 #, javascript-format
 msgid "%d deferred task has been opened"
 msgid_plural "%d deferred tasks have been opened"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "%d odroczone zadanie zostało otwarte"
+msgstr[1] "%d odroczone zadania zostały otwarte"
+msgstr[2] "%d odroczonych zadań zostało otwartych"
 
 #: data/po_files/../../sections/todo/MAIN.js:1161
 msgid "Nothing found."
@@ -514,7 +510,6 @@ msgid "Add custom filter..."
 msgstr "Dodaj własny filtr..."
 
 #: data/po_files/../../sections/todo/view__filters.js:105
-#, fuzzy
 msgid "Show hidden tasks only"
 msgstr "Pokaż tylko ukryte zadania"
 
@@ -527,7 +522,6 @@ msgstr[1] "%d ukryte zadania"
 msgstr[2] "%d ukrytych zadań"
 
 #: data/po_files/../../sections/todo/view__filters.js:129
-#, fuzzy
 msgid "Show recurring tasks only"
 msgstr "Pokaż tylko powtarzające się zadania"
 
@@ -540,12 +534,11 @@ msgstr[1] "%d powtarzające się zadania"
 msgstr[2] "%d powtarzających się zadań"
 
 #: data/po_files/../../sections/todo/view__filters.js:155
-#, fuzzy
 msgid "Show deferred tasks only"
 msgstr "Pokaż tylko ukryte zadania"
 
 #: data/po_files/../../sections/todo/view__filters.js:164
-#, fuzzy, javascript-format
+#, javascript-format
 msgid "%d deferred task"
 msgid_plural "%d deferred tasks"
 msgstr[0] "%d ukryte zadanie"
@@ -580,11 +573,11 @@ msgstr[2] "%d zadań"
 
 #: data/po_files/../../sections/todo/view__file_switcher.js:65
 msgid "Search files..."
-msgstr "Szukaj plikóe..."
+msgstr "Wyszukiwanie plików..."
 
 #: data/po_files/../../sections/todo/view__file_switcher.js:132
 msgid "current file"
-msgstr "bieżacy plik"
+msgstr "bieżący plik"
 
 #: data/po_files/../../sections/stopwatch.js:170
 #: data/po_files/../../sections/stopwatch.js:641
@@ -608,12 +601,10 @@ msgid "Work!"
 msgstr "Pracuj!"
 
 #: data/po_files/../../sections/pomodoro.js:40
-#, fuzzy
 msgid "Long Break!"
 msgstr "Weź długą przerwę!"
 
 #: data/po_files/../../sections/pomodoro.js:41
-#, fuzzy
 msgid "Short break!"
 msgstr "Weź krótką przerwę!"
 
@@ -634,29 +625,25 @@ msgstr "Kontynuuj"
 
 #: data/po_files/../../sections/pomodoro.js:708
 msgid "Reset pomodoro counter?"
-msgstr "Skasować licznik pomodor?"
+msgstr "Skasuj licznik pomodoro?"
 
 #: data/po_files/../../sections/pomodoro.js:724
 #: data/po_files/../../sections/pomodoro.js:743
 #: data/po_files/../../sections/pomodoro.js:762
-#, fuzzy
 msgid "(min:sec)"
-msgstr "Pomodoro (min):"
+msgstr "(min.:sek.)"
 
 #: data/po_files/../../sections/pomodoro.js:743
-#, fuzzy
 msgid "Short break"
-msgstr "Weź krótką przerwę!"
+msgstr "Krótka przerwa"
 
 #: data/po_files/../../sections/pomodoro.js:762
-#, fuzzy
 msgid "Long break"
-msgstr "Weź długą przerwę!"
+msgstr "Długa przerwa"
 
 #: data/po_files/../../sections/pomodoro.js:781
-#, fuzzy
 msgid "Num of pomos until long break"
-msgstr "Liczba pomodoro do długiej przerwy:"
+msgstr "Liczba pomodoro do długiej przerwy"
 
 #: data/po_files/../../sections/context_menu.js:32
 msgid "Open settings"
@@ -691,24 +678,21 @@ msgid "Snooze"
 msgstr "Drzemka"
 
 #: data/po_files/../../sections/alarms.js:524
-#, fuzzy
 msgid "Alarm time"
-msgstr "Alarm o %s"
+msgstr "Alarm o"
 
 #: data/po_files/../../sections/alarms.js:524
 #: data/po_files/../../sections/timer.js:622
-#, fuzzy
 msgid "(h:min)"
-msgstr "godz.:min."
+msgstr "(godz.:min.)"
 
 #: data/po_files/../../sections/alarms.js:563
-#, fuzzy
 msgid "Snooze duration"
-msgstr "Czas drzemki (sek.)"
+msgstr "Czas drzemki"
 
 #: data/po_files/../../sections/alarms.js:563
 msgid "(min)"
-msgstr ""
+msgstr "(min.)"
 
 #: data/po_files/../../sections/alarms.js:579
 msgid "Alarm Message..."
@@ -727,9 +711,8 @@ msgid "Timer Expired!"
 msgstr "Czas minął!"
 
 #: data/po_files/../../sections/timer.js:616
-#, fuzzy
 msgid "(h:min:sec)"
-msgstr "godz.:min.:sek."
+msgstr "(godz.:min.:sek.)"
 
 #: data/po_files/../../sections/timer.js:633
 msgid "Timer message..."
