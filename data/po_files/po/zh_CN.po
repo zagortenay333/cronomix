@@ -202,6 +202,10 @@ msgid ""
 "<shift>super\n"
 "F3"
 msgstr ""
+"示例：\n"
+"<super><ctrl><alt><shift>t\n"
+"<shift>super\n"
+"F3"
 
 #: data/po_files/../../data/prefs.ui:1106
 #: data/po_files/../../data/prefs.ui:1455
