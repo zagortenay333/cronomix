@@ -52,6 +52,22 @@ const Timepp = new Lang.Class({
         this.menu.actor.add_style_class_name('timepp-menu');
 
 
+        // @SPEED @HACK
+        // The GrabHelper.grab() func seems to be tanking popupmenu opening perf
+        // big time.
+        // We patch the menu.open function to emit the 'open-state-changed' sig
+        // in a timeout.
+        this.menu.open = function () {
+            let that = this;
+            if (this.isOpen) return;
+            this.isOpen = true;
+            this._boxPointer.setPosition(this.sourceActor, this._arrowAlignment);
+            this._boxPointer.show(false);
+            this.actor.raise_top();
+            Mainloop.timeout_add(0, () => that.emit('open-state-changed', true));
+        };
+
+
         {
             let GioSSS = Gio.SettingsSchemaSource;
             let schema = GioSSS.new_from_directory(

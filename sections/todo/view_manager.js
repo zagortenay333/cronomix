@@ -117,7 +117,9 @@ var ViewManager = new Lang.Class({
                 this._show_tasks();
         }
 
-        if (this.ext.menu.isOpen) view.focused_actor.grab_key_focus();
+        if (this.ext.menu.isOpen)  {
+            Mainloop.timeout_add(0, () => view.focused_actor.grab_key_focus());
+        }
     },
 
     // @SPEED

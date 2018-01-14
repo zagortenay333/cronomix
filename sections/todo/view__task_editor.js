@@ -86,8 +86,15 @@ var TaskEditor = new Lang.Class({
         if (this.mode === 'edit-task') {
             this.text_changed_handler_block = true;
 
+            // @HACK
+            // We need 2 of these later_add() calls to make this work.
+            // Part of the reason has to do with the view manager which has a
+            // timeout_add() in the show_view() func.
             Meta.later_add(Meta.LaterType.BEFORE_REDRAW, () => {
                 this.entry.entry.set_text(task.task_str);
+            });
+
+            Meta.later_add(Meta.LaterType.BEFORE_REDRAW, () => {
                 this.entry._resize_entry();
                 this.text_changed_handler_block = false;
             });
