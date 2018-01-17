@@ -405,13 +405,13 @@ var Timer = new Lang.Class({
         this.fullscreen.set_banner_text(txt);
     },
 
+    // Update slider based on the clock.
+    // This function is the inverse of the function that is used to calc the
+    // clock based on the slider.
     _update_slider: function () {
-        // Update slider based on the clock.
-        // Use this when the clock changes without using the slider.
-        // This function is the inverse of the function that is used to calc the
-        // clock based on the slider.
         let x = this.clock / TIMER_MAX_DURATION;
         let y = (Math.log(x * (Math.pow(2, 10) - 1) +1)) / Math.log(2) / 10;
+
         this.slider.setValue(y);
         this.fullscreen.slider.setValue(y);
     },
@@ -422,7 +422,7 @@ var Timer = new Lang.Class({
         }
         else {
             this.start();
-            this.cache.last_manually_set_time = this.clock;
+            this.cache.last_manually_set_time = Math.round(this.clock / 1000000);
             this._store_cache();
         }
     },
@@ -814,6 +814,7 @@ const TimerFullscreen = new Lang.Class({
 
     on_timer_off: function () {
         this.toggle_bin.hide();
+        this.slider.setValue(0);
     },
 
     on_timer_expired: function () {
