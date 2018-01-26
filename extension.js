@@ -68,6 +68,31 @@ const Timepp = new Lang.Class({
         };
 
 
+        this.custom_css = {
+            ['-timepp-link-color']       : ['blue'    , [0, 0, 1, 1]],
+
+            ['-timepp-context-color']    : ['magenta' , [1, 0, 1, 1]],
+            ['-timepp-due-date-color']   : ['red'     , [1, 0, 0, 1]],
+            ['-timepp-project-color']    : ['green'   , [0, 1, 0, 1]],
+            ['-timepp-rec-date-color']   : ['tomato'  , [1, .38, .28, 1]],
+            ['-timepp-defer-date-color'] : ['violet'  , [.93, .51, .93, 1]],
+
+            ['-timepp-axes-color']       : ['white'   , [1, 1, 1, 1]],
+            ['-timepp-y-label-color']    : ['white'   , [1, 1, 1, 1]],
+            ['-timepp-x-label-color']    : ['white'   , [1, 1, 1, 1]],
+            ['-timepp-rulers-color']     : ['white'   , [1, 1, 1, 1]],
+            ['-timepp-proj-vbar-color']  : ['white'   , [1, 1, 1, 1]],
+            ['-timepp-task-vbar-color']  : ['white'   , [1, 1, 1, 1]],
+            ['-timepp-heatmap-color-A']  : ['white'   , [1, 1, 1, 1]],
+            ['-timepp-heatmap-color-B']  : ['white'   , [1, 1, 1, 1]],
+            ['-timepp-heatmap-color-C']  : ['white'   , [1, 1, 1, 1]],
+            ['-timepp-heatmap-color-D']  : ['white'   , [1, 1, 1, 1]],
+            ['-timepp-heatmap-color-E']  : ['white'   , [1, 1, 1, 1]],
+            ['-timepp-heatmap-color-F']  : ['white'   , [1, 1, 1, 1]],
+            ['-timepp-heatmap-selected-color'] : ['white', [1, 1, 1, 1]],
+        };
+
+
         {
             let GioSSS = Gio.SettingsSchemaSource;
             let schema = GioSSS.new_from_directory(
@@ -99,7 +124,7 @@ const Timepp = new Lang.Class({
         //
         // panel actor
         //
-        this.panel_item_box = new St.BoxLayout({ style_class: 'timepp-panel-box'});
+        this.panel_item_box = new St.BoxLayout({ style_class: 'timepp-panel-box timepp-custom-css'});
         this.actor.add_actor(this.panel_item_box);
 
 
@@ -209,6 +234,7 @@ const Timepp = new Lang.Class({
 
             this.open_menu();
         });
+        this.sigm.connect(this.panel_item_box, 'style-changed', () => this._update_custom_css());
         this.sigm.connect(this.unicon_panel_item, 'left-click', () => this.toggle_menu());
         this.sigm.connect(this.unicon_panel_item, 'right-click', () => this.toggle_context_menu());
         this.sigm.connect(this.unicon_panel_item.actor, 'enter-event', () => { if (Main.panel.menuManager.activeMenu) this.open_menu() });
@@ -400,6 +426,31 @@ const Timepp = new Lang.Class({
                 section.panel_item.actor.visible = section.section_enabled;
             }
         }
+    },
+
+    _update_custom_css: function () {
+        let update_needed = false;
+        let theme_node    = this.panel_item_box.get_theme_node();
+
+        for (let prop in this.custom_css) {
+            if (! this.custom_css.hasOwnProperty(prop)) continue;
+
+            let [success, col] = theme_node.lookup_color(prop, false);
+            let hex            = col.to_string();
+
+            if (success && this.custom_css[prop][0] !== hex) {
+                update_needed = true;
+
+                this.custom_css[prop] = [hex, [
+                    col.red   / 255,
+                    col.green / 255,
+                    col.blue  / 255,
+                    col.alpha / 255,
+                ]];
+            }
+        }
+
+        if (update_needed) this.emit('custom-css-changed');
     },
 
     _on_panel_position_changed: function (old_pos, new_pos) {

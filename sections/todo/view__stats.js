@@ -69,6 +69,9 @@ var StatsView = new Lang.Class({
         }
 
 
+        this.custom_css = this.ext.custom_css;
+
+
         // Values as returned by the time tracker's get_stats. The unique
         // entries Set is converted to an array.
         this.stats_data           = null;
@@ -113,30 +116,6 @@ var StatsView = new Lang.Class({
             [StatsMode.GLOBAL] : this.show_mode__global.bind(this),
             [StatsMode.SINGLE] : this.show_mode__single.bind(this),
             [StatsMode.HOT]    : this.show_mode__hot.bind(this),
-        };
-
-
-        // We want to be able to style certain parts of the graph using css.
-        // The _update_graph_css_info() func will get that info by looking for
-        // custom css properties and store it in this obj.
-        //
-        // @key: Is equal to the css property.
-        // @val: Array into which we store a color in both hex and rgba format.
-        //       The hex string is used for color comparison.
-        this.graph_css = {
-            ['-timepp-axes-color']      : ['#ffffffff', [1, 1, 1, 1]],
-            ['-timepp-y-label-color']   : ['#ffffffff', [1, 1, 1, 1]],
-            ['-timepp-x-label-color']   : ['#ffffffff', [1, 1, 1, 1]],
-            ['-timepp-rulers-color']    : ['#ffffffff', [1, 1, 1, 1]],
-            ['-timepp-proj-vbar-color'] : ['#ffffffff', [1, 1, 1, 1]],
-            ['-timepp-task-vbar-color'] : ['#ffffffff', [1, 1, 1, 1]],
-            ['-timepp-heatmap-color-A'] : ['#ffffffff', [1, 1, 1, 1]],
-            ['-timepp-heatmap-color-B'] : ['#ffffffff', [1, 1, 1, 1]],
-            ['-timepp-heatmap-color-C'] : ['#ffffffff', [1, 1, 1, 1]],
-            ['-timepp-heatmap-color-D'] : ['#ffffffff', [1, 1, 1, 1]],
-            ['-timepp-heatmap-color-E'] : ['#ffffffff', [1, 1, 1, 1]],
-            ['-timepp-heatmap-color-F'] : ['#ffffffff', [1, 1, 1, 1]],
-            ['-timepp-heatmap-selected-color'] : ['#ffffffff', [1, 1, 1, 1]],
         };
 
 
@@ -436,8 +415,8 @@ var StatsView = new Lang.Class({
             this.type_menu.toggle();
             return Clutter.EVENT_STOP;
         });
-        this.actor.connect('style-changed', () => {
-            this._update_graph_css_info();
+        this.ext.connect('custom-css-changed', () => {
+            this._on_custom_css_colors_updated();
         });
         this.date_picker.connect('date-changed', (_, ...args) => {
             this._on_date_picker_changed(...args);
@@ -500,7 +479,7 @@ var StatsView = new Lang.Class({
         this.date_picker.set_date_from_string(date);
 
         this.heatmap_graph.params.selected_square_rgba =
-            this.graph_css['-timepp-heatmap-selected-color'][1];
+            this.custom_css['-timepp-heatmap-selected-color'][1];
 
         this.heatmap_graph.actor.visible = this.heatmap_icon.checked;
 
@@ -688,8 +667,8 @@ var StatsView = new Lang.Class({
 
         let stats = new Map();
         let rgba  = this.hot_mode_show_tasks ?
-                    this.graph_css['-timepp-task-vbar-color'][1] :
-                    this.graph_css['-timepp-proj-vbar-color'][1];
+                    this.custom_css['-timepp-task-vbar-color'][1] :
+                    this.custom_css['-timepp-proj-vbar-color'][1];
 
         let lower_bound, upper_bound;
 
@@ -920,12 +899,12 @@ var StatsView = new Lang.Class({
         let col = 0;
 
         let color_map = [
-            this.graph_css['-timepp-heatmap-color-A'][1],
-            this.graph_css['-timepp-heatmap-color-B'][1],
-            this.graph_css['-timepp-heatmap-color-C'][1],
-            this.graph_css['-timepp-heatmap-color-D'][1],
-            this.graph_css['-timepp-heatmap-color-E'][1],
-            this.graph_css['-timepp-heatmap-color-F'][1],
+            this.custom_css['-timepp-heatmap-color-A'][1],
+            this.custom_css['-timepp-heatmap-color-B'][1],
+            this.custom_css['-timepp-heatmap-color-C'][1],
+            this.custom_css['-timepp-heatmap-color-D'][1],
+            this.custom_css['-timepp-heatmap-color-E'][1],
+            this.custom_css['-timepp-heatmap-color-F'][1],
         ];
 
         res.col_labels.push([0, date.toLocaleFormat('%b')]);
@@ -1037,8 +1016,8 @@ var StatsView = new Lang.Class({
         let days_in_month = (new Date(year, month, 0)).getDate();
 
         let rgba = G.REG_PROJ.test(keyword) ?
-                   this.graph_css['-timepp-proj-vbar-color'][1] :
-                   this.graph_css['-timepp-task-vbar-color'][1];
+                   this.custom_css['-timepp-proj-vbar-color'][1] :
+                   this.custom_css['-timepp-task-vbar-color'][1];
 
         let vbars = new Array(days_in_month);
 
@@ -1066,8 +1045,8 @@ var StatsView = new Lang.Class({
         if (records) {
             for (let [key, val] of records) {
                 let rgba = G.REG_PROJ.test(key) ?
-                           this.graph_css['-timepp-proj-vbar-color'][1] :
-                           this.graph_css['-timepp-task-vbar-color'][1];
+                           this.custom_css['-timepp-proj-vbar-color'][1] :
+                           this.custom_css['-timepp-task-vbar-color'][1];
 
                 vbars.push({
                     label   : key,
@@ -1228,46 +1207,17 @@ var StatsView = new Lang.Class({
             [G.date_yyyymmdd(date_o), today];
     },
 
-    _update_graph_css_info: function () {
-        if (! this.is_open) return;
+    _on_custom_css_colors_updated: function () {
+        this.vbars_graph.draw_coord_system({
+            axes_rgba    : this.custom_css['-timepp-axes-color'][1],
+            y_label_rgba : this.custom_css['-timepp-y-label-color'][1],
+            x_label_rgba : this.custom_css['-timepp-x-label-color'][1],
+            rulers_rgba  : this.custom_css['-timepp-rulers-color'][1],
+        });
 
-        let update_needed = false;
-
-        for (let prop in this.graph_css) {
-            if (! this.graph_css.hasOwnProperty(prop)) continue;
-
-            let [success, col] = this.actor.get_theme_node()
-                                 .lookup_color(prop, false);
-
-            let hex = col.to_string();
-
-            if (success) {
-                let rgba = [
-                    col.red   / 255,
-                    col.green / 255,
-                    col.blue  / 255,
-                    col.alpha / 255,
-                ];
-
-                if (this.graph_css[prop][0] !== hex) {
-                    update_needed = true;
-                    this.graph_css[prop] = [hex, rgba];
-                }
-            }
-        }
-
-        if (update_needed) {
-            this.vbars_graph.draw_coord_system({
-                axes_rgba    : this.graph_css['-timepp-axes-color'][1],
-                y_label_rgba : this.graph_css['-timepp-y-label-color'][1],
-                x_label_rgba : this.graph_css['-timepp-x-label-color'][1],
-                rulers_rgba  : this.graph_css['-timepp-rulers-color'][1],
-            });
-
-            if (this.current_mode.name) {
-                this.mode_func_map[this.current_mode.name](
-                    ...this.current_mode.args);
-            }
+        if (this.current_mode.name) {
+            this.mode_func_map[this.current_mode.name](
+                ...this.current_mode.args);
         }
     },
 

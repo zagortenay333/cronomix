@@ -51,6 +51,10 @@ var TaskItem = new Lang.Class({
         this.delegate = delegate;
         this.task_str = task_str;
 
+
+        this.custom_css = this.ext.custom_css;
+
+
         // @NOTE
         // If a var needs to be resettable, add it to the reset() method
         // instead of the _init() method.
@@ -286,7 +290,7 @@ var TaskItem = new Lang.Class({
                 }
                 words[i] =
                     '<span foreground="' +
-                    this.delegate.markup_colors.get('-timepp-context-color') +
+                    this.custom_css['-timepp-context-color'][0] +
                     '"><b>' + word + '</b></span>';
             }
             else if (G.REG_PROJ.test(word)) {
@@ -296,14 +300,14 @@ var TaskItem = new Lang.Class({
                 }
                 words[i] =
                     '<span foreground="' +
-                    this.delegate.markup_colors.get('-timepp-project-color') +
+                    this.custom_css['-timepp-project-color'][0] +
                     '"><b>' + word + '</b></span>';
             }
             else if (G.REG_URL.test(word) || G.REG_FILE_PATH.test(word)) {
                 this.link_indices.push(i);
                 words[i] =
                     '<span foreground="' +
-                    this.delegate.markup_colors.get('-timepp-link-color') +
+                    this.custom_css['-timepp-link-color'][0] +
                     '"><u><b>' + word + '</b></u></span>';
             }
             else if (G.REG_EXT.test(word)) {
@@ -555,7 +559,7 @@ var TaskItem = new Lang.Class({
 
             this.description_markup[idx] =
                 '<span foreground="' +
-                this.delegate.markup_colors.get('-timepp-context-color') + '"' +
+                this.custom_css['-timepp-context-color'][0] + '"' +
                 this.description_markup[idx].slice(
                     this.description_markup[idx].indexOf('>'));
         }
@@ -565,7 +569,7 @@ var TaskItem = new Lang.Class({
 
             this.description_markup[idx] =
                 '<span foreground="' +
-                this.delegate.markup_colors.get('-timepp-project-color') + '"' +
+                this.custom_css['-timepp-project-color'][0] + '"' +
                 this.description_markup[idx].slice(
                     this.description_markup[idx].indexOf('>'));
         }
@@ -575,7 +579,7 @@ var TaskItem = new Lang.Class({
 
             this.description_markup[idx] =
                 '<span foreground="' +
-                this.delegate.markup_colors.get('-timepp-link-color') + '"' +
+                this.custom_css['-timepp-link-color'][0] + '"' +
                 this.description_markup[idx].slice(
                     this.description_markup[idx].indexOf('>'));
         }
@@ -607,14 +611,14 @@ var TaskItem = new Lang.Class({
 
             markup +=
                 '<span font-weight="bold" foreground="' +
-                this.delegate.markup_colors.get('-timepp-rec-date-color') + '">' +
+                this.custom_css['-timepp-rec-date-color'][0] + '">' +
                 txt + '</span>';
         }
 
         if (this.due_date !== '9999-99-99') {
             markup +=
                 '<span font-weight="bold" foreground="' +
-                this.delegate.markup_colors.get('-timepp-due-date-color') + '">' +
+                this.custom_css['-timepp-due-date-color'][0] + '">' +
                 `${_('due')}:&#160;${this.due_date}&#160;(${G.date_delta_str(this.due_date)})   ` +
                 '</span>';
         }
@@ -622,7 +626,7 @@ var TaskItem = new Lang.Class({
         if (this.is_deferred) {
             markup +=
                 '<span font-weight="bold" foreground="' +
-                this.delegate.markup_colors.get('-timepp-defer-date-color') + '">' +
+                this.custom_css['-timepp-defer-date-color'][0] + '">' +
                 `${_('deferred')}:&#160;${this.defer_date}&#160;(${G.date_delta_str(this.defer_date)})   ` +
                 '</span>';
         }

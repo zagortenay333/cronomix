@@ -39,6 +39,33 @@
     color: #009a4b;
 }
 
+/* Use these custom properties only on this selector. */
+.timepp-custom-css {
+    /* global */
+    -timepp-link-color: #5a94dc;
+
+    /* todo section */
+    -timepp-context-color:    red;
+    -timepp-project-color:    #009a4b;
+    -timepp-due-date-color:   #e22b2b;
+    -timepp-rec-date-color:   #f47e00;
+    -timepp-defer-date-color: #5a94dc;
+
+    /* stats view */
+    -timepp-axes-color:      rgba(255, 255, 255, 1);
+    -timepp-y-label-color:   rgba(255, 255, 255, 1);
+    -timepp-x-label-color:   rgba(255, 255, 255, 1);
+    -timepp-rulers-color:    rgba(255, 255, 255, .15);
+    -timepp-proj-vbar-color: rgba(56, 174, 114, .8);
+    -timepp-task-vbar-color: rgba(231, 79, 79, .8);
+    -timepp-heatmap-selected-color: yellow;
+    -timepp-heatmap-color-A: #acd5f2;
+    -timepp-heatmap-color-B: #7fa8c9;
+    -timepp-heatmap-color-C: #527ba0;
+    -timepp-heatmap-color-D: #254e77;
+    -timepp-heatmap-color-E: #1c3a59;
+    -timepp-heatmap-color-F: rgba(255, 255, 255, .2);
+}
 
 
 /* =====================================================================
@@ -556,16 +583,6 @@
 /* =====================================================================
  * @@@ Todo
  * ===================================================================== */
-.timepp-menu .todo-section {
-    /* Use these custom properties only on this selector selector. */
-    -timepp-context-color:    #f47e00;
-    -timepp-project-color:    #009a4b;
-    -timepp-link-color:       #5a94dc;
-    -timepp-due-date-color:   #e22b2b;
-    -timepp-rec-date-color:   #f47e00;
-    -timepp-defer-date-color: #5a94dc;
-}
-
 .timepp-menu .todo-section .loading-msg,
 .timepp-menu .todo-section .no-todo-file-msg,
 .timepp-menu .todo-section .add-task {
@@ -698,24 +715,6 @@
 .timepp-menu .todo-section .todo-syntax-link:hover StLabel {
     color: #5a94dc;
     text-decoration: underline;
-}
-
-.timepp-fullscreen.stats {
-    /* Use these custom properties only on this selector. */
-    -timepp-axes-color:      rgba(255, 255, 255, 1);
-    -timepp-y-label-color:   rgba(255, 255, 255, 1);
-    -timepp-x-label-color:   rgba(255, 255, 255, 1);
-    -timepp-rulers-color:    rgba(255, 255, 255, .15);
-    -timepp-proj-vbar-color: rgba(56, 174, 114, .8);
-    -timepp-task-vbar-color: rgba(231, 79, 79, .8);
-
-    -timepp-heatmap-selected-color: yellow;
-    -timepp-heatmap-color-A:        #acd5f2;
-    -timepp-heatmap-color-B:        #7fa8c9;
-    -timepp-heatmap-color-C:        #527ba0;
-    -timepp-heatmap-color-D:        #254e77;
-    -timepp-heatmap-color-E:        #1c3a59;
-    -timepp-heatmap-color-F:        rgba(255, 255, 255, .2);
 }
 
 .timepp-fullscreen.stats .navbar {

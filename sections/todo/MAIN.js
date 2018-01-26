@@ -150,20 +150,6 @@ var Todo = new Lang.Class({
         this.add_tasks_to_menu_mainloop_id = null;
 
 
-        // These css properties need to be added to the
-        // 'timepp-menu todo-section' selector.
-        //
-        // The keys are equal to the names of the css properties.
-        this.markup_colors = new Map([
-            ['-timepp-context-color'    , 'magenta'],
-            ['-timepp-project-color'    , 'green'],
-            ['-timepp-link-color'       , 'blue'],
-            ['-timepp-due-date-color'   , 'red'],
-            ['-timepp-rec-date-color'   , 'tomato'],
-            ['-timepp-defer-date-color' , 'violet'],
-        ]);
-
-
         // @SPEED
         // Tweak this function to completely disable animations when closing
         // the popup menu in order to avoid lag when there are lots of items.
@@ -430,7 +416,7 @@ var Todo = new Lang.Class({
         this.sigm.connect_press(this.stats_button, () => this.show_view__time_tracker_stats());
         this.sigm.connect_press(this.clear_button, () => this.show_view__clear_completed());
         this.sigm.connect(this.search_entry, 'secondary-icon-clicked', () => this.show_view__default());
-        this.sigm.connect(this.actor, 'style-changed', () => this._update_markup_colors());
+        this.sigm.connect(this.ext, 'custom-css-changed', () => this._on_custom_css_changed());
         this.sigm.connect(this.search_entry.clutter_text, 'text-changed', () => {
             Mainloop.idle_add(() => this._search());
         });
@@ -720,28 +706,10 @@ var Todo = new Lang.Class({
         }
     },
 
-    _update_markup_colors: function () {
-        let update_needed = false;
-        let theme_node    = this.actor.get_theme_node();
-
-        this.markup_colors.forEach((old_col, prop) => {
-            let [success, new_col] = theme_node.lookup_color(prop, false);
-
-            if (!success) return;
-
-            new_col = new_col.to_string().substr(0, 7);
-
-            if (old_col !== new_col) {
-                this.markup_colors.set(prop, new_col);
-                update_needed = true;
-            }
-        });
-
-        if (update_needed) {
-            for (let task of this.tasks) {
-                task.update_body_markup();
-                task.update_dates_markup();
-            }
+    _on_custom_css_changed: function () {
+        for (let task of this.tasks) {
+            task.update_body_markup();
+            task.update_dates_markup();
         }
     },
 
