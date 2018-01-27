@@ -21,6 +21,7 @@ const ngettext = Gettext.ngettext;
 
 const RESIZE         = ME.imports.lib.resize_label;
 const SCROLL_TO_ITEM = ME.imports.lib.scroll_to_item;
+const REG            = ME.imports.lib.regex;
 
 
 const G = ME.imports.sections.todo.GLOBAL;
@@ -192,7 +193,7 @@ var TaskItem = new Lang.Class({
         this.is_deferred = false;
 
         // The recurrence type is one of: 1, 2, 3
-        // The numbers just match the global regex G.REG_REC_EXT_[123]
+        // The numbers just match the global regex TODO_REC_EXT_[123]
         this.rec_type = 1;
         this.rec_str  = '';
         this.rec_next = '';
@@ -244,10 +245,10 @@ var TaskItem = new Lang.Class({
             this.completion_checkbox.checked = true;
             this.actor.add_style_class_name('completed');
 
-            if (len >= 1 & G.REG_DATE.test(words[1]) && Date.parse(words[1])) {
+            if (len >= 1 & REG.ISO_DATE.test(words[1]) && Date.parse(words[1])) {
                 this.completion_date     = words[1];
 
-                if (len >= 2 && G.REG_DATE.test(words[2]) && Date.parse(words[2])) {
+                if (len >= 2 && REG.ISO_DATE.test(words[2]) && Date.parse(words[2])) {
                     this.creation_date       = words[2];
                     desc_pos                 = 3;
                 }
@@ -255,19 +256,19 @@ var TaskItem = new Lang.Class({
             }
             else desc_pos = 1;
         }
-        else if (G.REG_PRIO.test(words[0])) {
+        else if (REG.TODO_PRIO.test(words[0])) {
             this.actor.add_style_class_name(words[0][1]);
             this.prio_label.visible = true;
             this.prio_label.text    = words[0];
             this.priority           = words[0];
 
-            if (len >= 1 && G.REG_DATE.test(words[1]) && Date.parse(words[1])) {
+            if (len >= 1 && REG.ISO_DATE.test(words[1]) && Date.parse(words[1])) {
                 this.creation_date       = words[1];
                 desc_pos                 = 2;
             }
             else desc_pos = 1;
         }
-        else if (G.REG_DATE.test(words[0]) && Date.parse(words[0])) {
+        else if (REG.ISO_DATE.test(words[0]) && Date.parse(words[0])) {
             this.creation_date       = words[0];
             desc_pos                 = 1;
         }
@@ -283,7 +284,7 @@ var TaskItem = new Lang.Class({
         for (let i = 0; i < len; i++) {
             word = words[i];
 
-            if (G.REG_CONTEXT.test(word)) {
+            if (REG.TODO_CONTEXT.test(word)) {
                 this.context_indices.push(i);
                 if (this.contexts.indexOf(word) === -1) {
                     this.contexts.push(word);
@@ -293,7 +294,7 @@ var TaskItem = new Lang.Class({
                     this.custom_css['-timepp-context-color'][0] +
                     '"><b>' + word + '</b></span>';
             }
-            else if (G.REG_PROJ.test(word)) {
+            else if (REG.TODO_PROJ.test(word)) {
                 this.project_indices.push(i);
                 if (this.projects.indexOf(word) === -1) {
                     this.projects.push(word);
@@ -303,19 +304,19 @@ var TaskItem = new Lang.Class({
                     this.custom_css['-timepp-project-color'][0] +
                     '"><b>' + word + '</b></span>';
             }
-            else if (G.REG_URL.test(word) || G.REG_FILE_PATH.test(word)) {
+            else if (REG.URL.test(word) || REG.FILE_PATH.test(word)) {
                 this.link_indices.push(i);
                 words[i] =
                     '<span foreground="' +
                     this.custom_css['-timepp-link-color'][0] +
                     '"><u><b>' + word + '</b></u></span>';
             }
-            else if (G.REG_EXT.test(word)) {
+            else if (REG.TODO_EXT.test(word)) {
                 if (this.hidden) {
                     // Ignore all other extensions if task is hidden.
                     continue;
                 }
-                else if (G.REG_HIDE_EXT.test(word)) {
+                else if (REG.TODO_HIDE_EXT.test(word)) {
                     this.completion_checkbox.hide();
                     this.prio_label.hide();
 
@@ -337,19 +338,19 @@ var TaskItem = new Lang.Class({
 
                     words.splice(i, 1); i--; len--;
                 }
-                else if (G.REG_DEFER_EXT.test(word)) {
+                else if (REG.TODO_DEFER_EXT.test(word)) {
                     if (this.rec_str) continue;
 
                     this.defer_date = word.slice(word.indexOf(':') + 1);
                     words.splice(i, 1); i--; len--;
                 }
-                else if (G.REG_DUE_EXT.test(word)) {
+                else if (REG.TODO_DUE_EXT.test(word)) {
                     if (this.rec_str) continue;
 
                     this.due_date = word.slice(4);
                     words.splice(i, 1); i--; len--;
                 }
-                else if (G.REG_REC_EXT_1.test(word)) {
+                else if (REG.TODO_REC_EXT_1.test(word)) {
                     if (this.due_date !== '9999-99-99' ||
                         this.creation_date === '0000-00-00')
                         continue;
@@ -358,7 +359,7 @@ var TaskItem = new Lang.Class({
                     this.rec_type = 1;
                     words.splice(i, 1); i--; len--;
                 }
-                else if (G.REG_REC_EXT_2.test(word)) {
+                else if (REG.TODO_REC_EXT_2.test(word)) {
                     if (this.due_date !== '9999-99-99' ||
                         (this.completed && this.completion_date === '0000-00-00'))
                         continue;
@@ -367,7 +368,7 @@ var TaskItem = new Lang.Class({
                     this.rec_type = 2;
                     words.splice(i, 1); i--; len--;
                 }
-                else if (G.REG_REC_EXT_3.test(word)) {
+                else if (REG.TODO_REC_EXT_3.test(word)) {
                     if (this.due_date !== '9999-99-99' ||
                         this.creation_date === '0000-00-00')
                         continue;
@@ -376,11 +377,11 @@ var TaskItem = new Lang.Class({
                     this.rec_type = 3;
                     words.splice(i, 1); i--; len--;
                 }
-                else if (G.REG_TRACKER_ID_EXT.test(word)) {
+                else if (REG.TODO_TRACKER_ID_EXT.test(word)) {
                     this.tracker_id = word.slice(11);
                     words.splice(i, 1); i--; len--;
                 }
-                else if (G.REG_PRIO_EXT.test(word)) {
+                else if (REG.TODO_PRIO_EXT.test(word)) {
                     words.splice(i, 1); i--; len--;
                 }
             }
@@ -427,7 +428,7 @@ var TaskItem = new Lang.Class({
                 else if (this.priority !== '(_)') idx = 1;
                 else                              idx = 0;
 
-                if (G.REG_DATE.test(words[idx]))
+                if (REG.TODO_DATE.test(words[idx]))
                     words[idx] = G.date_yyyymmdd();
                 else
                     words.splice(idx, 0, G.date_yyyymmdd());
@@ -690,7 +691,7 @@ var TaskItem = new Lang.Class({
             // See if there's an old priority stored in an ext (e.g., pri:A).
             let prio  = '';
             for (let i = 0, len = words.length; i < len; i++) {
-                if (G.REG_PRIO_EXT.test(words[i])) {
+                if (REG.TODO_PRIO_EXT.test(words[i])) {
                     prio = '(' + words[i][4] + ') ';
                     words.splice(i, 1);
                     break;
@@ -851,8 +852,8 @@ var TaskItem = new Lang.Class({
 
         if (i > words.length - 1) return null;
 
-        if (G.REG_CONTEXT.test(words[i]) || G.REG_PROJ.test(words[i]) ||
-            G.REG_URL.test(words[i]) || G.REG_FILE_PATH.test(words[i]))
+        if (REG.TODO_CONTEXT.test(words[i]) || REG.TODO_PROJ.test(words[i]) ||
+            REG.URL.test(words[i]) || REG.FILE_PATH.test(words[i]))
             return words[i];
         else
             return null;
@@ -897,7 +898,7 @@ var TaskItem = new Lang.Class({
 
                     this.delegate.add_task_button.grab_key_focus();
 
-                    if (G.REG_URL.test(this.current_keyword)) {
+                    if (REG.URL.test(this.current_keyword)) {
                         if (this.current_keyword.indexOf(':') === -1)
                             this.current_keyword = 'https://' + this.current_keyword;
 
@@ -907,7 +908,7 @@ var TaskItem = new Lang.Class({
                         }
                         catch (e) { logError(e); }
                     }
-                    else if (G.REG_FILE_PATH.test(this.current_keyword)) {
+                    else if (REG.FILE_PATH.test(this.current_keyword)) {
                         let path = this.current_keyword;
                         path = path.replace(/\\ /g, ' ');
 

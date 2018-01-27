@@ -20,6 +20,7 @@ const ngettext = Gettext.ngettext;
 const FUZZ           = ME.imports.lib.fuzzy_search;
 const MULTIL_ENTRY   = ME.imports.lib.multiline_entry;
 const SCROLL_TO_ITEM = ME.imports.lib.scroll_to_item;
+const REG            = ME.imports.lib.regex;
 
 
 const TODO_TXT_SYNTAX_URL = 'https://github.com/todotxt/todo.txt';
@@ -306,8 +307,8 @@ var TaskEditor = new Lang.Class({
 
         if ((pos === 0 && word === '(') ||
             /[@+]/.test(word) ||
-            G.REG_CONTEXT.test(word) ||
-            G.REG_PROJ.test(word)) {
+            REG.TODO_CONTEXT.test(word) ||
+            REG.TODO_PROJ.test(word)) {
 
             this.current_word_start = start;
             this.current_word_end   = end;
@@ -378,7 +379,7 @@ var TaskEditor = new Lang.Class({
             else if (words[2] && !Date.parse(words[2]))
                 words.splice(2, 0, G.date_yyyymmdd());
         }
-        else if (G.REG_PRIO.test(words[0])) {
+        else if (REG.TODO_PRIO.test(words[0])) {
             if (words[1] && !Date.parse(words[1]))
                 words.splice(1, 0, G.date_yyyymmdd());
         }

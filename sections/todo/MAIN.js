@@ -24,6 +24,7 @@ const SIG_MANAGER = ME.imports.lib.signal_manager;
 const KEY_MANAGER = ME.imports.lib.keybinding_manager;
 const FUZZ        = ME.imports.lib.fuzzy_search;
 const PANEL_ITEM  = ME.imports.lib.panel_item;
+const REG         = ME.imports.lib.regex;
 
 
 const G = ME.imports.sections.todo.GLOBAL;
@@ -1362,9 +1363,9 @@ var Todo = new Lang.Class({
     toggle_filter: function (keyword) {
         let arr;
 
-        if      (G.REG_PRIO.test(keyword))    arr = this.cache.filters.priorities;
-        else if (G.REG_CONTEXT.test(keyword)) arr = this.cache.filters.contexts;
-        else if (G.REG_PROJ.test(keyword))    arr = this.cache.filters.projects;
+        if      (REG.TODO_PRIO.test(keyword))    arr = this.cache.filters.priorities;
+        else if (REG.TODO_CONTEXT.test(keyword)) arr = this.cache.filters.contexts;
+        else if (REG.TODO_PROJ.test(keyword))    arr = this.cache.filters.projects;
 
         let idx = arr.indexOf(keyword);
 

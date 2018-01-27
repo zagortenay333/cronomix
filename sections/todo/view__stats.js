@@ -24,6 +24,7 @@ const GRAPHS         = ME.imports.lib.graphs;
 const FULLSCREEN     = ME.imports.lib.fullscreen;
 const DATE_PICKER    = ME.imports.lib.date_picker;
 const SCROLL_TO_ITEM = ME.imports.lib.scroll_to_item;
+const REG            = ME.imports.lib.regex;
 
 
 const G = ME.imports.sections.todo.GLOBAL;
@@ -583,7 +584,7 @@ var StatsView = new Lang.Class({
             //
             // title
             //
-            let markup = G.REG_PROJ.test(keyword) ?
+            let markup = REG.TODO_PROJ.test(keyword) ?
                          `<b>${_('Stats for project')}:</b>` :
                          `<b>${_('Stats for task')}:</b>`;
 
@@ -698,7 +699,7 @@ var StatsView = new Lang.Class({
             if (date > upper_bound) continue;
 
             records.forEach((val, key) => {
-                if (G.REG_PROJ.test(key) === this.hot_mode_show_tasks) return;
+                if (REG.TODO_PROJ.test(key) === this.hot_mode_show_tasks) return;
                 stats.set(key, (stats.get(key) || 0) + val);
             });
         }
@@ -924,7 +925,7 @@ var StatsView = new Lang.Class({
 
             if (records) {
                 for (let [key, val] of records) {
-                    if (! G.REG_PROJ.test(key)) time += val;
+                    if (! REG.TODO_PROJ.test(key)) time += val;
                 }
 
                 // in minutes
@@ -1015,7 +1016,7 @@ var StatsView = new Lang.Class({
 
         let days_in_month = (new Date(year, month, 0)).getDate();
 
-        let rgba = G.REG_PROJ.test(keyword) ?
+        let rgba = REG.TODO_PROJ.test(keyword) ?
                    this.custom_css['-timepp-proj-vbar-color'][1] :
                    this.custom_css['-timepp-task-vbar-color'][1];
 
@@ -1044,7 +1045,7 @@ var StatsView = new Lang.Class({
 
         if (records) {
             for (let [key, val] of records) {
-                let rgba = G.REG_PROJ.test(key) ?
+                let rgba = REG.TODO_PROJ.test(key) ?
                            this.custom_css['-timepp-proj-vbar-color'][1] :
                            this.custom_css['-timepp-task-vbar-color'][1];
 
