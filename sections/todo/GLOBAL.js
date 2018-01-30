@@ -50,44 +50,6 @@ function date_yyyymmdd (date_obj) {
 }
 
 
-// This function splits the @str into words at spaces and returns array of
-// those words.
-// Escaped spaces ('\ ') are included in their respective words as well as the
-// backslash. E.g., ['as\ df', 'qwert\ y', ...].
-function split_on_spaces (str) {
-    let words = [];
-    let i, word;
-
-    if (str.startsWith('\\ ')) {
-        i    = 2;
-        word = ' ';
-    }
-    else {
-        i    = 1;
-        word = (str[0] === ' ') ? '' : str[0];
-    }
-
-    for (let len = str.length; i < len; i++) {
-        if (str[i] === ' ') {
-            if (str[i - 1] === '\\') {
-                word += ' ';
-            }
-            else if (word) {
-                words.push(word);
-                word = '';
-            }
-        }
-        else {
-            word += str[i];
-        }
-    }
-
-    if (word) words.push(word);
-
-    return words;
-}
-
-
 function date_delta_str (date) {
     let diff = Math.round(
         (Date.parse(date + 'T00:00:00') -

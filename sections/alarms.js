@@ -23,15 +23,18 @@ const _        = Gettext.gettext;
 const ngettext = Gettext.ngettext;
 
 
-const FULLSCREEN     = ME.imports.lib.fullscreen;
-const RESIZE         = ME.imports.lib.resize_label;
-const SIG_MANAGER    = ME.imports.lib.signal_manager;
-const KEY_MANAGER    = ME.imports.lib.keybinding_manager;
-const PANEL_ITEM     = ME.imports.lib.panel_item;
-const MULTIL_ENTRY   = ME.imports.lib.multiline_entry;
-const NUM_PICKER     = ME.imports.lib.num_picker;
-const DAY_CHOOSER    = ME.imports.lib.day_chooser;
-const SCROLL_TO_ITEM = ME.imports.lib.scroll_to_item;
+const FULLSCREEN      = ME.imports.lib.fullscreen;
+const RESIZE          = ME.imports.lib.resize_label;
+const SIG_MANAGER     = ME.imports.lib.signal_manager;
+const KEY_MANAGER     = ME.imports.lib.keybinding_manager;
+const PANEL_ITEM      = ME.imports.lib.panel_item;
+const MULTIL_ENTRY    = ME.imports.lib.multiline_entry;
+const NUM_PICKER      = ME.imports.lib.num_picker;
+const DAY_CHOOSER     = ME.imports.lib.day_chooser;
+const SCROLL_TO_ITEM  = ME.imports.lib.scroll_to_item;
+const MISC_UTILS      = ME.imports.lib.misc_utils;
+const TEXT_LINKS_MNGR = ME.imports.lib.text_links_manager;
+const REG             = ME.imports.lib.regex;
 
 
 const CACHE_FILE = GLib.get_home_dir() +
@@ -42,6 +45,7 @@ const NotifStyle = {
     STANDARD   : 0,
     FULLSCREEN : 1,
 };
+
 
 
 // =====================================================================
@@ -66,12 +70,18 @@ var Alarms = new Lang.Class({
         this.cache           = null;
 
 
+        this.linkm = new TEXT_LINKS_MNGR.TextLinksManager(MISC_UTILS.split_on_whitespace);
+
+
+        this.css = this.ext.custom_css;
+
+
         this.fullscreen = new AlarmFullscreen(this.ext, this,
             this.settings.get_int('alarms-fullscreen-monitor-pos'));
 
 
-        this.sigm = new SIG_MANAGER.SignalManager();
-        this.keym = new KEY_MANAGER.KeybindingManager(this.settings);
+        this.sigm  = new SIG_MANAGER.SignalManager();
+        this.keym  = new KEY_MANAGER.KeybindingManager(this.settings);
 
 
         this.wallclock     = new GnomeDesktop.WallClock();
@@ -346,11 +356,7 @@ var Alarms = new Lang.Class({
                 alarm_item.alarm_item_content.show();
 
                 if (alarm.msg) {
-                    alarm_item.msg.clutter_text.set_markup(
-                        alarm.msg.replace(/&(?!amp;|quot;|apos;|lt;|gt;)/g, '&amp;')
-                                 .replace(/<(?!\/?[^<]*>)/g, '&lt;')
-                    );
-
+                    alarm_item.set_body_text(alarm.msg);
                     alarm_item.msg.visible = true;
                 }
                 else {
@@ -476,6 +482,23 @@ var Alarms = new Lang.Class({
                 break;
             }
         }
+    },
+
+    highlight_tokens: function (text) {
+        text = MISC_UTILS.split_on_whitespace(text);
+        let token;
+
+        for (let i = 0; i < text.length; i++) {
+            token = text[i];
+
+            if (REG.URL.test(token) || REG.FILE_PATH.test(token)) {
+                text[i] =
+                    '<span foreground="' + this.css['-timepp-link-color'][0] +
+                    '"><u><b>' + token + '</b></u></span>';
+            }
+        }
+
+        return text.join(' ').replace(/ \n /g, '\n');
     },
 });
 Signals.addSignalMethods(Alarms.prototype);
@@ -677,7 +700,6 @@ const AlarmItem = new Lang.Class({
         this.delegate = delegate;
         this.alarm    = alarm;
 
-
         this.msg_vert_padding = -1;
 
 
@@ -719,14 +741,18 @@ const AlarmItem = new Lang.Class({
         //
         this.msg = new St.Label({ y_align: St.Align.END, x_align: St.Align.START, style_class: 'alarm-item-message'});
         this.alarm_item_content.add_actor(this.msg);
-
-        if (!alarm.msg) this.msg.hide();
-        else this.msg.clutter_text.set_markup(alarm.msg);
+        this.delegate.linkm.add_label_actor(this.msg, new Map([
+            [REG.URL       , MISC_UTILS.open_web_uri],
+            [REG.FILE_PATH , MISC_UTILS.open_file_path],
+        ]));
 
         this.msg.clutter_text.set_ellipsize(Pango.EllipsizeMode.NONE);
         this.msg.clutter_text.set_single_line_mode(false);
         this.msg.clutter_text.set_line_wrap(true);
         this.msg.clutter_text.set_line_wrap_mode(Pango.WrapMode.WORD_CHAR);
+
+        if (!alarm.msg) this.msg.hide();
+        else this.set_body_text(alarm.msg);
 
         this.update_time_label();
 
@@ -736,11 +762,19 @@ const AlarmItem = new Lang.Class({
         //
         this.toggle_bin.connect('clicked', () => this._on_toggle());
         this.delegate.sigm.connect_press(this.edit_bin, () => this._on_edit());
+        this.ext.connect('custom-css-changed', () => this._on_custom_css_updated());
         this.actor.connect('queue-redraw', () => { RESIZE.resize_label(this.msg); });
         this.actor.connect('enter-event',  () => { this.edit_bin.show(); });
-        this.actor.connect('event', (actor, event) => {
-            this._on_event(actor, event);
-        });
+        this.actor.connect('event', (actor, event) => this._on_event(actor, event));
+    },
+
+    // @markup: string
+    set_body_text: function (markup) {
+        this.msg.clutter_text.set_markup(
+            this.delegate.highlight_tokens(markup)
+                  .replace(/&(?!amp;|quot;|apos;|lt;|gt;)/g, '&amp;')
+                  .replace(/<(?!\/?[^<]*>)/g, '&lt;')
+        );
     },
 
     update_time_label: function () {
@@ -799,6 +833,12 @@ const AlarmItem = new Lang.Class({
         this.delegate.alarm_editor(this);
     },
 
+    _on_custom_css_updated: function () {
+        for (let alarm_item of this.delegate.alarm_items) {
+            alarm_item.set_body_text(alarm_item.alarm.msg);
+        }
+    },
+
     _on_event: function (actor, event) {
         switch (event.type()) {
             case Clutter.EventType.ENTER: {
@@ -854,6 +894,11 @@ const AlarmFullscreen = new Lang.Class({
         this.ext      = ext;
         this.delegate = delegate;
 
+        this.delegate.linkm.add_label_actor(this.banner, new Map([
+            [REG.URL       , MISC_UTILS.open_web_uri],
+            [REG.FILE_PATH , MISC_UTILS.open_file_path],
+        ]));
+
         this.alarms = [];
 
 
@@ -897,6 +942,14 @@ const AlarmFullscreen = new Lang.Class({
 
             this.close();
         });
+    },
+
+    set_banner_text: function (markup) {
+        this.parent(
+            this.delegate.highlight_tokens(markup)
+                .replace(/&(?!amp;|quot;|apos;|lt;|gt;)/g, '&amp;')
+                .replace(/<(?!\/?[^<]*>)/g, '&lt;')
+        );
     },
 
     close: function () {
@@ -949,13 +1002,19 @@ const AlarmFullscreen = new Lang.Class({
         let body;
 
         if (msg) {
-            body = new St.Label({ text: msg, y_align: St.Align.END, x_align: St.Align.START, style_class: 'body'});
+            body = new St.Label({ y_align: St.Align.END, x_align: St.Align.START, style_class: 'body'});
             alarm_card.add_child(body);
 
+            body.clutter_text.set_markup(this.delegate.highlight_tokens(msg));
             body.clutter_text.ellipsize        = Pango.EllipsizeMode.NONE;
             body.clutter_text.single_line_mode = false;
             body.clutter_text.line_wrap        = true;
             body.clutter_text.line_wrap_mode   = Pango.WrapMode.WORD_CHAR;
+
+            this.delegate.linkm.add_label_actor(body, new Map([
+                [REG.URL       , MISC_UTILS.open_web_uri],
+                [REG.FILE_PATH , MISC_UTILS.open_file_path],
+            ]));
 
             alarm_card.connect('queue-redraw', () => RESIZE.resize_label(body));
         }

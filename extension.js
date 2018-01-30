@@ -51,6 +51,9 @@ const Timepp = new Lang.Class({
         this.actor.reactive    = false;
         this.menu.actor.add_style_class_name('timepp-menu');
 
+        this.panel_item_box = new St.BoxLayout({ style_class: 'timepp-panel-box timepp-custom-css-root'});
+        this.actor.add_actor(this.panel_item_box);
+
 
         // @SPEED @HACK
         // The GrabHelper.grab() func seems to be tanking popupmenu opening perf
@@ -120,12 +123,6 @@ const Timepp = new Lang.Class({
                 dir.make_directory_with_parents(null);
         }
 
-
-        //
-        // panel actor
-        //
-        this.panel_item_box = new St.BoxLayout({ style_class: 'timepp-panel-box timepp-custom-css'});
-        this.actor.add_actor(this.panel_item_box);
 
 
         //

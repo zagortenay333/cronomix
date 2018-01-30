@@ -417,7 +417,7 @@ var StatsView = new Lang.Class({
             return Clutter.EVENT_STOP;
         });
         this.ext.connect('custom-css-changed', () => {
-            this._on_custom_css_colors_updated();
+            this._on_custom_css_updated();
         });
         this.date_picker.connect('date-changed', (_, ...args) => {
             this._on_date_picker_changed(...args);
@@ -443,6 +443,7 @@ var StatsView = new Lang.Class({
     close: function () {
         this.stats_data           = null;
         this.stats_unique_entries = null;
+
         this._set_mode('', null, null);
 
         this.parent();
@@ -1208,7 +1209,7 @@ var StatsView = new Lang.Class({
             [G.date_yyyymmdd(date_o), today];
     },
 
-    _on_custom_css_colors_updated: function () {
+    _on_custom_css_updated: function () {
         this.vbars_graph.draw_coord_system({
             axes_rgba    : this.custom_css['-timepp-axes-color'][1],
             y_label_rgba : this.custom_css['-timepp-y-label-color'][1],

@@ -21,6 +21,7 @@ const ngettext = Gettext.ngettext;
 
 const RESIZE         = ME.imports.lib.resize_label;
 const SCROLL_TO_ITEM = ME.imports.lib.scroll_to_item;
+const MISC_UTILS     = ME.imports.lib.misc_utils;
 const REG            = ME.imports.lib.regex;
 
 
@@ -232,7 +233,7 @@ var TaskItem = new Lang.Class({
         // dates.
         // The 'description' is everything else.
 
-        let words    = G.split_on_spaces(this.task_str);
+        let words    = MISC_UTILS.split_on_whitespace(this.task_str);
         let len      = words.length;
         let desc_pos = 0; // idx of first word of 'description' in words arr
 
@@ -837,7 +838,7 @@ var TaskItem = new Lang.Class({
         //
         // get word that contains the clicked char
         //
-        let words   = G.split_on_spaces(this.msg.text);
+        let words   = MISC_UTILS.split_on_whitespace(this.msg.text);
         let i       = 0;
         let abs_idx = 0;
 
@@ -899,34 +900,10 @@ var TaskItem = new Lang.Class({
                     this.delegate.add_task_button.grab_key_focus();
 
                     if (REG.URL.test(this.current_keyword)) {
-                        if (this.current_keyword.indexOf(':') === -1)
-                            this.current_keyword = 'https://' + this.current_keyword;
-
-                        try {
-                            Gio.app_info_launch_default_for_uri(this.current_keyword,
-                                global.create_app_launch_context(0, -1));
-                        }
-                        catch (e) { logError(e); }
+                        MISC_UTILS.open_web_uri(this.current_keyword);
                     }
                     else if (REG.FILE_PATH.test(this.current_keyword)) {
-                        let path = this.current_keyword;
-                        path = path.replace(/\\ /g, ' ');
-
-                        if (this.current_keyword[0] === '~') {
-                            path = GLib.get_home_dir() + path.slice(1);
-                        }
-
-                        if (GLib.file_test(path, GLib.FileTest.EXISTS)) {
-                            try {
-                                Gio.app_info_launch_default_for_uri(
-                                    GLib.filename_to_uri(path, null),
-                                    global.create_app_launch_context(0, -1));
-                            }
-                            catch (e) { logError(e); }
-                        }
-                        else {
-                            Main.notify(_('File or dir not found.'));
-                        }
+                        MISC_UTILS.open_file_path(this.current_keyword);
                     }
                     else this.delegate.toggle_filter(this.current_keyword);
                 }

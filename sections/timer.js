@@ -23,12 +23,15 @@ const _        = Gettext.gettext;
 const ngettext = Gettext.ngettext;
 
 
-const FULLSCREEN    = ME.imports.lib.fullscreen;
-const SIG_MANAGER   = ME.imports.lib.signal_manager;
-const KEY_MANAGER   = ME.imports.lib.keybinding_manager;
-const PANEL_ITEM    = ME.imports.lib.panel_item;
-const NUM_PICKER    = ME.imports.lib.num_picker;
-const MULTIL_ENTRY  = ME.imports.lib.multiline_entry;
+const FULLSCREEN      = ME.imports.lib.fullscreen;
+const SIG_MANAGER     = ME.imports.lib.signal_manager;
+const KEY_MANAGER     = ME.imports.lib.keybinding_manager;
+const PANEL_ITEM      = ME.imports.lib.panel_item;
+const NUM_PICKER      = ME.imports.lib.num_picker;
+const MULTIL_ENTRY    = ME.imports.lib.multiline_entry;
+const TEXT_LINKS_MNGR = ME.imports.lib.text_links_manager;
+const MISC_UTILS      = ME.imports.lib.misc_utils;
+const REG             = ME.imports.lib.regex;
 
 
 const IFACE = `${ME.path}/dbus/timer_iface.xml`;
@@ -70,6 +73,7 @@ var Timer = new Lang.Class({
         this.ext      = ext;
         this.settings = settings;
 
+        this.linkm = new TEXT_LINKS_MNGR.TextLinksManager(MISC_UTILS.split_on_whitespace);
 
         {
             let [,xml,] = Gio.file_new_for_path(IFACE).load_contents(null);
@@ -702,13 +706,22 @@ const TimerFullscreen = new Lang.Class({
 
     _init: function (ext, delegate, monitor) {
         this.parent(monitor);
+        this.default_style_class = this.actor.style_class;
 
         this.ext      = ext;
         this.delegate = delegate;
 
-        this.default_style_class = this.actor.style_class;
+        this.css = this.ext.custom_css;
+
+        this.delegate.linkm.add_label_actor(this.banner, new Map([
+            [REG.URL       , MISC_UTILS.open_web_uri],
+            [REG.FILE_PATH , MISC_UTILS.open_file_path],
+        ]));
 
 
+        //
+        // actors
+        //
         this.title = new St.Label({ x_expand: true, x_align: Clutter.ActorAlign.CENTER, style_class: 'pomo-phase-label' });
         this.middle_box.insert_child_at_index(this.title, 0);
 
@@ -820,12 +833,34 @@ const TimerFullscreen = new Lang.Class({
     on_timer_expired: function () {
         if (this.delegate.cache.notif_msg) {
             this.title.text = TIMER_EXPIRED_MSG;
-            this.set_banner_text(this.delegate.cache.notif_msg);
+
+            this.set_banner_text(
+                this._highlight_tokens(this.delegate.cache.notif_msg)
+                    .replace(/&(?!amp;|quot;|apos;|lt;|gt;)/g, '&amp;')
+                    .replace(/<(?!\/?[^<]*>)/g, '&lt;')
+            );
         }
         else {
             this.set_banner_text(TIMER_EXPIRED_MSG);
         }
         this.actor.style_class = this.default_style_class + ' timer-expired';
+    },
+
+    _highlight_tokens: function (text) {
+        text = MISC_UTILS.split_on_whitespace(text);
+        let token;
+
+        for (let i = 0; i < text.length; i++) {
+            token = text[i];
+
+            if (REG.URL.test(token) || REG.FILE_PATH.test(token)) {
+                text[i] =
+                    '<span foreground="' + this.css['-timepp-link-color'][0] +
+                    '"><u><b>' + token + '</b></u></span>';
+            }
+        }
+
+        return text.join(' ').replace(/ \n /g, '\n');
     },
 });
 Signals.addSignalMethods(TimerFullscreen.prototype);

@@ -39,8 +39,8 @@
     color: #009a4b;
 }
 
-/* Use these custom properties only on this selector. */
-.timepp-custom-css {
+/* These custom css properties only work on this selector */
+.timepp-custom-css-root {
     /* global */
     -timepp-link-color: #5a94dc;
 
@@ -471,6 +471,7 @@
  * @@@ Alarms
  * ===================================================================== */
 .timepp-menu .alarm-section {}
+
 .timepp-menu .alarms-container {}
 
 .timepp-menu .alarm-section .alarms-content-box {
@@ -516,10 +517,6 @@
 
 .timepp-menu .alarm-section .alarm-item-message {
     padding-top: .4em;
-}
-
-.timepp-menu .alarm-section .alarm-item-time {
-    /* font-weight: bold; */
 }
 
 .timepp-fullscreen.alarm {

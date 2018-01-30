@@ -489,18 +489,21 @@ var TimeTracker = new Lang.Class({
     // Swap the old_task_str with the new_task_str in the daily_csv_map only.
     // The time tracked on the old_task_str is copied over to the new_task_str.
     update_record_name: function (old_task_str, new_task_str) {
-        if (!this.csv_dir) return null;
-
-        // We can safely delete this since the get_stats func will add the entry
-        // back if we tracked it before yesterday.
-        this.stats_unique_entries.delete(old_task_str);
+        if (!this.csv_dir || this.daily_csv_map.get(new_task_str)) return;
 
         let val = this.daily_csv_map.get(old_task_str);
 
         if (! val) return;
 
-        this.daily_csv_map.set(new_task_str, val);
         this.daily_csv_map.delete(old_task_str);
+        this.daily_csv_map.set(new_task_str, val);
+
+        // We would like to delete the old task from the stats entries, but we
+        // can't tell whether or not we tracked the old task on days prior to
+        // today.
+        // We clear the cached stats data to let get_stats() rebuild it.
+        this.stats_unique_entries.clear();
+        this.stats_data.clear();
 
         this._write_daily_csv_file();
     },
