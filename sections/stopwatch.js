@@ -84,6 +84,9 @@ var Stopwatch = new Lang.Class({
         this.time_backup_mainloop_id = null;
 
 
+        this.state = StopwatchState.RESET;
+
+
         this.fullscreen = new StopwatchFullscreen(this.ext, this,
             this.settings.get_int('stopwatch-fullscreen-monitor-pos'));
 
@@ -275,7 +278,7 @@ var Stopwatch = new Lang.Class({
             this.time_backup_mainloop_id = null;
         }
 
-        if (this.cache.state === StopwatchState.RUNNING) this.stop();
+        if (this.state === StopwatchState.RUNNING) this.stop();
         this.dbus_impl.unexport();
         this._store_cache();
         this.sigm.disconnect_all();
@@ -305,7 +308,6 @@ var Stopwatch = new Lang.Class({
 
                 this.cache = {
                     format_version : cache_format_version,
-                    state          : StopwatchState.RESET,
                     time           : 0, // microseconds
                     laps           : [],
                 };
@@ -325,15 +327,11 @@ var Stopwatch = new Lang.Class({
         this.sigm.connect_all();
         this.keym.enable_all();
 
-
-        if (this.cache.state === StopwatchState.RESET) return;
-
-
-        this._update_laps();
-        this._update_time_display();
-
-        if (this.cache.state === StopwatchState.RUNNING) this.start();
-        else                                             this.stop();
+        if (this.cache.time > 0) {
+            this._update_laps();
+            this._update_time_display();
+            this.state = StopwatchState.STOPPED;
+        }
     },
 
     _store_cache: function () {
@@ -350,7 +348,7 @@ var Stopwatch = new Lang.Class({
         if (!this.fullscreen.is_open && this.actor.visible)
             this.button_stop.grab_key_focus();
 
-        this.cache.state = StopwatchState.RUNNING;
+        this.state = StopwatchState.RUNNING;
         this._toggle_buttons();
         this._panel_item_UI_update();
         this.fullscreen.on_timer_started();
@@ -362,7 +360,8 @@ var Stopwatch = new Lang.Class({
     },
 
     stop: function () {
-        this.cache.time = GLib.get_monotonic_time() - this.start_time;
+        if (this.start_time)
+            this.cache.time = GLib.get_monotonic_time() - this.start_time;
 
         if (this.tic_mainloop_id) {
             Mainloop.source_remove(this.tic_mainloop_id);
@@ -379,7 +378,7 @@ var Stopwatch = new Lang.Class({
         if (!this.fullscreen.is_open && this.actor.visible)
             this.button_start.grab_key_focus();
 
-        this.cache.state = StopwatchState.STOPPED;
+        this.state = StopwatchState.STOPPED;
         this._panel_item_UI_update();
         this._toggle_buttons();
 
@@ -402,7 +401,7 @@ var Stopwatch = new Lang.Class({
         if (!this.fullscreen.is_open && this.actor.visible)
             this.button_start.grab_key_focus();
 
-        this.cache.state = StopwatchState.RESET;
+        this.state = StopwatchState.RESET;
         this.cache.laps = [];
         this.cache.time = 0;
         this._store_cache();
@@ -414,7 +413,7 @@ var Stopwatch = new Lang.Class({
     },
 
     stopwatch_toggle: function () {
-        if (this.cache.state === StopwatchState.RUNNING)
+        if (this.state === StopwatchState.RUNNING)
             this.stop();
         else
             this.start();
@@ -466,14 +465,14 @@ var Stopwatch = new Lang.Class({
     },
 
     _panel_item_UI_update: function () {
-        if (this.cache.state === StopwatchState.RUNNING)
+        if (this.state === StopwatchState.RUNNING)
             this.panel_item.actor.add_style_class_name('on');
         else
             this.panel_item.actor.remove_style_class_name('on');
     },
 
     lap: function () {
-        if (this.cache.state !== StopwatchState.RUNNING) return;
+        if (this.state !== StopwatchState.RUNNING) return;
 
         this.cache.laps.push(this._time_format_str());
         this._store_cache();
@@ -508,7 +507,7 @@ var Stopwatch = new Lang.Class({
     },
 
     _toggle_buttons: function () {
-        switch (this.cache.state) {
+        switch (this.state) {
             case StopwatchState.RESET:
                 this.button_reset.hide();
                 this.button_lap.hide();
@@ -565,10 +564,9 @@ var Stopwatch = new Lang.Class({
         this.cache.time = GLib.get_monotonic_time() - this.start_time;
         this._store_cache();
 
-        this.time_backup_mainloop_id =
-            Mainloop.timeout_add_seconds(60, () => {
-                this._periodic_time_backup();
-            });
+        this.time_backup_mainloop_id = Mainloop.timeout_add_seconds(60, () => {
+            this._periodic_time_backup();
+        });
     },
 
     _toggle_panel_mode: function () {
@@ -582,7 +580,7 @@ var Stopwatch = new Lang.Class({
 
     // returns int (microseconds)
     get_time: function () {
-        if (this.cache.state === StopwatchState.RUNNING)
+        if (this.state === StopwatchState.RUNNING)
             return GLib.get_monotonic_time() - this.start_time;
         else
             return this.cache.time;
@@ -688,7 +686,7 @@ const StopwatchFullscreen = new Lang.Class({
     },
 
     close: function () {
-        if (this.delegate.cache.state === StopwatchState.RESET) {
+        if (this.delegate.state === StopwatchState.RESET) {
             this.actor.style_class = this.default_style_class;
 
             switch (this.delegate.clock_format) {
