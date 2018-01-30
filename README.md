@@ -154,7 +154,7 @@ Some of the features of the todo.txt manager are:
 * Deleting all completed tasks and optionally storing them into a done.txt file.
 * Switching between different views via keyboard shortcuts.
 
-The todo.txt manager also has support for urls and file paths:
+The todo.txt manager _(as well as alarms and timer)_ also has support for urls and file paths:
 ```
 (A) @asdf https://www.google.com
 (A) @asdf www.google.com
