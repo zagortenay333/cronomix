@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-14 15:48+0100\n"
+"POT-Creation-Date: 2018-01-30 11:32+0100\n"
 "PO-Revision-Date: 2017-11-29 13:36+0200\n"
 "Last-Translator: Sergey Shlyapugin <shlyapugin@gmail.com>\n"
 "Language-Team: Russian\n"
@@ -19,11 +19,15 @@ msgstr ""
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Generator: Poedit 2.0.4\n"
 
-#: data/po_files/../../lib/fullscreen.js:221
+#: data/po_files/../../lib/misc_utils.js:33
+msgid "File or dir not found."
+msgstr "Файл или папка не найдена."
+
+#: data/po_files/../../lib/fullscreen.js:224
 msgid "Move to Primary Monitor"
 msgstr "Переместить на основной экран"
 
-#: data/po_files/../../lib/fullscreen.js:227
+#: data/po_files/../../lib/fullscreen.js:230
 msgid "Move to Secondary Monitor"
 msgstr "Переместить на дополнительный экран"
 
@@ -83,14 +87,14 @@ msgid "Enabled Sections"
 msgstr "Включенные разделы"
 
 #: data/po_files/../../data/prefs.ui:482 data/po_files/../../data/prefs.ui:1162
-#: data/po_files/../../sections/timer.js:137
-#: data/po_files/../../sections/timer.js:352
+#: data/po_files/../../sections/timer.js:141
+#: data/po_files/../../sections/timer.js:356
 msgid "Timer"
 msgstr "Таймер"
 
 #: data/po_files/../../data/prefs.ui:526 data/po_files/../../data/prefs.ui:1511
-#: data/po_files/../../sections/stopwatch.js:143
-#: data/po_files/../../sections/stopwatch.js:413
+#: data/po_files/../../sections/stopwatch.js:146
+#: data/po_files/../../sections/stopwatch.js:412
 msgid "Stopwatch"
 msgstr "Секундомер"
 
@@ -262,12 +266,12 @@ msgstr "Открыть этот раздел для переключения ф�
 msgid "Todo / Time Tracker"
 msgstr "Список дел / тайм-трекер"
 
-#: data/po_files/../../sections/todo/task_item.js:600
-#: data/po_files/../../sections/todo/task_item.js:605
+#: data/po_files/../../sections/todo/task_item.js:606
+#: data/po_files/../../sections/todo/task_item.js:611
 msgid "recurrence"
 msgstr "возобновление"
 
-#: data/po_files/../../sections/todo/task_item.js:601
+#: data/po_files/../../sections/todo/task_item.js:607
 #, javascript-format
 msgid "%d day after completion"
 msgid_plural "%d days after completion"
@@ -275,25 +279,21 @@ msgstr[0] "%d день после выполнения"
 msgstr[1] "%d дня после выполнения"
 msgstr[2] "%d дней после выполнения"
 
-#: data/po_files/../../sections/todo/task_item.js:618
+#: data/po_files/../../sections/todo/task_item.js:624
 msgid "due"
 msgstr "до"
 
-#: data/po_files/../../sections/todo/task_item.js:626
+#: data/po_files/../../sections/todo/task_item.js:632
 msgid "deferred"
 msgstr "отложена"
 
-#: data/po_files/../../sections/todo/task_item.js:666
+#: data/po_files/../../sections/todo/task_item.js:672
 msgid "created"
 msgstr "создана"
 
-#: data/po_files/../../sections/todo/task_item.js:671
+#: data/po_files/../../sections/todo/task_item.js:677
 msgid "completed"
 msgstr "выполнена"
-
-#: data/po_files/../../sections/todo/task_item.js:923
-msgid "File or dir not found."
-msgstr "Файл или папка не найдена."
 
 #: data/po_files/../../sections/todo/view__sort.js:41
 msgid "Sort by Context"
@@ -324,119 +324,119 @@ msgid "Sort by Completion Date"
 msgstr "Упорядочить по дате выполнения"
 
 #: data/po_files/../../sections/todo/view__sort.js:78
-#: data/po_files/../../sections/todo/view__task_editor.js:152
-#: data/po_files/../../sections/todo/view__stats.js:229
+#: data/po_files/../../sections/todo/view__task_editor.js:153
+#: data/po_files/../../sections/todo/view__stats.js:209
 #: data/po_files/../../sections/todo/view__clear_tasks.js:96
 #: data/po_files/../../sections/todo/view__filters.js:196
 #: data/po_files/../../sections/pomodoro.js:796
-#: data/po_files/../../sections/alarms.js:616
-#: data/po_files/../../sections/timer.js:656 data/po_files/../../prefs.js:134
+#: data/po_files/../../sections/alarms.js:639
+#: data/po_files/../../sections/timer.js:660 data/po_files/../../prefs.js:134
 msgid "Ok"
 msgstr "ОК"
 
-#: data/po_files/../../sections/todo/view__task_editor.js:80
+#: data/po_files/../../sections/todo/view__task_editor.js:81
 msgid "Task..."
 msgstr "Задача..."
 
-#: data/po_files/../../sections/todo/view__task_editor.js:110
+#: data/po_files/../../sections/todo/view__task_editor.js:111
 msgid "syntax help"
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__task_editor.js:136
-#: data/po_files/../../sections/alarms.js:607
+#: data/po_files/../../sections/todo/view__task_editor.js:137
+#: data/po_files/../../sections/alarms.js:630
 msgid "Delete"
 msgstr "Удалить"
 
-#: data/po_files/../../sections/todo/view__task_editor.js:144
+#: data/po_files/../../sections/todo/view__task_editor.js:145
 msgid "Archive"
 msgstr "Архивировать"
 
-#: data/po_files/../../sections/todo/view__task_editor.js:149
-#: data/po_files/../../sections/todo/view__stats.js:232
+#: data/po_files/../../sections/todo/view__task_editor.js:150
+#: data/po_files/../../sections/todo/view__stats.js:212
 #: data/po_files/../../sections/todo/view__clear_tasks.js:93
 #: data/po_files/../../sections/pomodoro.js:797
-#: data/po_files/../../sections/alarms.js:615
-#: data/po_files/../../sections/timer.js:655 data/po_files/../../prefs.js:133
+#: data/po_files/../../sections/alarms.js:638
+#: data/po_files/../../sections/timer.js:659 data/po_files/../../prefs.js:133
 msgid "Cancel"
 msgstr "Отмена"
 
-#: data/po_files/../../sections/todo/view__stats.js:89
+#: data/po_files/../../sections/todo/view__stats.js:93
 msgid "Today"
 msgstr "Сегодня"
 
-#: data/po_files/../../sections/todo/view__stats.js:90
+#: data/po_files/../../sections/todo/view__stats.js:94
 msgid "This Week"
 msgstr "Эта неделя"
 
-#: data/po_files/../../sections/todo/view__stats.js:91
+#: data/po_files/../../sections/todo/view__stats.js:95
 msgid "This Month"
 msgstr "Этот месяц"
 
-#: data/po_files/../../sections/todo/view__stats.js:92
+#: data/po_files/../../sections/todo/view__stats.js:96
 msgid "Last 3 Months"
 msgstr "3 последних месяца"
 
-#: data/po_files/../../sections/todo/view__stats.js:93
+#: data/po_files/../../sections/todo/view__stats.js:97
 msgid "Last 6 Months"
 msgstr "6 последних месяцев"
 
-#: data/po_files/../../sections/todo/view__stats.js:94
+#: data/po_files/../../sections/todo/view__stats.js:98
 msgid "All Time"
 msgstr "Все время"
 
-#: data/po_files/../../sections/todo/view__stats.js:173
+#: data/po_files/../../sections/todo/view__stats.js:153
 msgid "Search..."
 msgstr "Поиск..."
 
-#: data/po_files/../../sections/todo/view__stats.js:197
+#: data/po_files/../../sections/todo/view__stats.js:177
 msgid "Year:"
 msgstr "Год:"
 
-#: data/po_files/../../sections/todo/view__stats.js:197
+#: data/po_files/../../sections/todo/view__stats.js:177
 msgid "Month:"
 msgstr "Месяц:"
 
-#: data/po_files/../../sections/todo/view__stats.js:197
+#: data/po_files/../../sections/todo/view__stats.js:177
 msgid "Day:"
 msgstr "День:"
 
-#: data/po_files/../../sections/todo/view__stats.js:219
+#: data/po_files/../../sections/todo/view__stats.js:199
 msgid "From: "
 msgstr "С: "
 
-#: data/po_files/../../sections/todo/view__stats.js:224
+#: data/po_files/../../sections/todo/view__stats.js:204
 msgid "To: "
 msgstr "По: "
 
-#: data/po_files/../../sections/todo/view__stats.js:240
+#: data/po_files/../../sections/todo/view__stats.js:220
 msgid "Type: "
 msgstr "Тип: "
 
-#: data/po_files/../../sections/todo/view__stats.js:250
+#: data/po_files/../../sections/todo/view__stats.js:230
 msgid "Range: "
 msgstr "Период: "
 
-#: data/po_files/../../sections/todo/view__stats.js:271
+#: data/po_files/../../sections/todo/view__stats.js:251
 msgid "Custom Range..."
 msgstr "Произвольный период..."
 
-#: data/po_files/../../sections/todo/view__stats.js:277
-#: data/po_files/../../sections/todo/view__stats.js:687
+#: data/po_files/../../sections/todo/view__stats.js:257
+#: data/po_files/../../sections/todo/view__stats.js:668
 msgid "Projects"
 msgstr "Проекты"
 
-#: data/po_files/../../sections/todo/view__stats.js:283
-#: data/po_files/../../sections/todo/view__stats.js:687
+#: data/po_files/../../sections/todo/view__stats.js:263
+#: data/po_files/../../sections/todo/view__stats.js:668
 msgid "Tasks"
 msgstr "Задачи"
 
-#: data/po_files/../../sections/todo/view__stats.js:608
+#: data/po_files/../../sections/todo/view__stats.js:589
 msgid "Stats for project"
 msgstr "Статистика проекта"
 
-#: data/po_files/../../sections/todo/view__stats.js:635
-#: data/po_files/../../sections/todo/view__stats.js:657
-#: data/po_files/../../sections/todo/view__stats.js:792
+#: data/po_files/../../sections/todo/view__stats.js:616
+#: data/po_files/../../sections/todo/view__stats.js:638
+#: data/po_files/../../sections/todo/view__stats.js:773
 #, javascript-format
 msgid "%d day"
 msgid_plural "%d days"
@@ -452,11 +452,11 @@ msgstr "Удалить все выполненные задачи"
 msgid "Archive all completed tasks to done.txt and delete them"
 msgstr "Архивировать все выполненные задачи в done.txt, а затем удалить"
 
-#: data/po_files/../../sections/todo/GLOBAL.js:119
+#: data/po_files/../../sections/todo/GLOBAL.js:63
 msgid "today"
 msgstr "сегодня"
 
-#: data/po_files/../../sections/todo/GLOBAL.js:120
+#: data/po_files/../../sections/todo/GLOBAL.js:64
 #, javascript-format
 msgid "%d day ago"
 msgid_plural "%d days ago"
@@ -464,7 +464,7 @@ msgstr[0] "%d день назад"
 msgstr[1] "%d дня назад"
 msgstr[2] "%d дней назад"
 
-#: data/po_files/../../sections/todo/GLOBAL.js:121
+#: data/po_files/../../sections/todo/GLOBAL.js:65
 #, javascript-format
 msgid "in %d day"
 msgid_plural "in %d days"
@@ -472,20 +472,20 @@ msgstr[0] "через %d день"
 msgstr[1] "через %d дня"
 msgstr[2] "через %d дней"
 
-#: data/po_files/../../sections/todo/MAIN.js:262
-#: data/po_files/../../sections/todo/MAIN.js:1155
+#: data/po_files/../../sections/todo/MAIN.js:249
+#: data/po_files/../../sections/todo/MAIN.js:1124
 msgid "Loading..."
 msgstr "Загрузка..."
 
-#: data/po_files/../../sections/todo/MAIN.js:272
+#: data/po_files/../../sections/todo/MAIN.js:259
 msgid "Select todo file in settings..."
 msgstr "Выберите файл списка дел в диалоге настройки..."
 
-#: data/po_files/../../sections/todo/MAIN.js:297
+#: data/po_files/../../sections/todo/MAIN.js:284
 msgid "Add New Task..."
 msgstr "Добавить задачу..."
 
-#: data/po_files/../../sections/todo/MAIN.js:707
+#: data/po_files/../../sections/todo/MAIN.js:694
 #, javascript-format
 msgid "%d task has recurred"
 msgid_plural "%d tasks have recurred"
@@ -493,7 +493,7 @@ msgstr[0] "%d задача возобновлена"
 msgstr[1] "%d задачи возобновлены"
 msgstr[2] "%d задач возобновлено"
 
-#: data/po_files/../../sections/todo/MAIN.js:713
+#: data/po_files/../../sections/todo/MAIN.js:700
 #, javascript-format
 msgid "%d deferred task has been opened"
 msgid_plural "%d deferred tasks have been opened"
@@ -501,7 +501,7 @@ msgstr[0] "%d отложенная задача была открыта"
 msgstr[1] "%d отложенных задачи было открыто"
 msgstr[2] "%d отложенных задача было открыто"
 
-#: data/po_files/../../sections/todo/MAIN.js:1161
+#: data/po_files/../../sections/todo/MAIN.js:1130
 msgid "Nothing found."
 msgstr "Ничего не найдено."
 
@@ -550,8 +550,8 @@ msgid "Invert filters"
 msgstr "Инвертировать фильтры"
 
 #: data/po_files/../../sections/todo/view__filters.js:195
-#: data/po_files/../../sections/stopwatch.js:169
-#: data/po_files/../../sections/stopwatch.js:640
+#: data/po_files/../../sections/stopwatch.js:172
+#: data/po_files/../../sections/stopwatch.js:638
 msgid "Reset"
 msgstr "Сбросить"
 
@@ -579,18 +579,18 @@ msgstr "Поиск файлов..."
 msgid "current file"
 msgstr "текущий файл"
 
-#: data/po_files/../../sections/stopwatch.js:170
-#: data/po_files/../../sections/stopwatch.js:641
+#: data/po_files/../../sections/stopwatch.js:173
+#: data/po_files/../../sections/stopwatch.js:639
 msgid "Lap"
 msgstr "Круг"
 
-#: data/po_files/../../sections/stopwatch.js:171
-#: data/po_files/../../sections/stopwatch.js:643
+#: data/po_files/../../sections/stopwatch.js:174
+#: data/po_files/../../sections/stopwatch.js:641
 msgid "Start"
 msgstr "Старт"
 
-#: data/po_files/../../sections/stopwatch.js:172
-#: data/po_files/../../sections/stopwatch.js:642
+#: data/po_files/../../sections/stopwatch.js:175
+#: data/po_files/../../sections/stopwatch.js:640
 #: data/po_files/../../sections/pomodoro.js:182
 #: data/po_files/../../sections/pomodoro.js:889
 msgid "Stop"
@@ -661,44 +661,44 @@ msgstr "Отчет об ошибке"
 msgid "Help with translations"
 msgstr "Помочь с переводом"
 
-#: data/po_files/../../sections/alarms.js:134
+#: data/po_files/../../sections/alarms.js:144
 msgid "Add New Alarm..."
 msgstr "Добавить напоминание..."
 
 #. TRANSLATORS: %s is a time string in the format HH:MM (e.g., 13:44)
-#: data/po_files/../../sections/alarms.js:449
-#: data/po_files/../../sections/alarms.js:912
+#: data/po_files/../../sections/alarms.js:455
+#: data/po_files/../../sections/alarms.js:965
 #, javascript-format
 msgid "Alarm at %s"
 msgstr "Напоминание в %s"
 
-#: data/po_files/../../sections/alarms.js:463
-#: data/po_files/../../sections/alarms.js:919
+#: data/po_files/../../sections/alarms.js:469
+#: data/po_files/../../sections/alarms.js:972
 msgid "Snooze"
 msgstr "Отложить"
 
-#: data/po_files/../../sections/alarms.js:524
+#: data/po_files/../../sections/alarms.js:547
 msgid "Alarm time"
 msgstr "Время напоминания"
 
-#: data/po_files/../../sections/alarms.js:524
-#: data/po_files/../../sections/timer.js:622
+#: data/po_files/../../sections/alarms.js:547
+#: data/po_files/../../sections/timer.js:626
 msgid "(h:min)"
 msgstr "(ч:мин)"
 
-#: data/po_files/../../sections/alarms.js:563
+#: data/po_files/../../sections/alarms.js:586
 msgid "Snooze duration"
 msgstr "Откладывать на"
 
-#: data/po_files/../../sections/alarms.js:563
+#: data/po_files/../../sections/alarms.js:586
 msgid "(min)"
 msgstr "(мин)"
 
-#: data/po_files/../../sections/alarms.js:579
+#: data/po_files/../../sections/alarms.js:602
 msgid "Alarm Message..."
 msgstr "Сообщение напоминания..."
 
-#: data/po_files/../../sections/alarms.js:936
+#: data/po_files/../../sections/alarms.js:989
 #, javascript-format
 msgid "%d alarm went off!"
 msgid_plural "%d alarms went off!"
@@ -706,14 +706,14 @@ msgstr[0] "%d напоминание ушло!"
 msgstr[1] "%d напоминания ушли!"
 msgstr[2] "%d напоминаний ушло!"
 
-#: data/po_files/../../sections/timer.js:42
+#: data/po_files/../../sections/timer.js:45
 msgid "Timer Expired!"
 msgstr "Время по таймеру истекло!"
 
-#: data/po_files/../../sections/timer.js:616
+#: data/po_files/../../sections/timer.js:620
 msgid "(h:min:sec)"
 msgstr "(ч:мин:сек)"
 
-#: data/po_files/../../sections/timer.js:633
+#: data/po_files/../../sections/timer.js:637
 msgid "Timer message..."
 msgstr "Сообщение таймера..."
