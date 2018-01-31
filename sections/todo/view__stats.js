@@ -19,7 +19,7 @@ const ngettext = Gettext.ngettext;
 
 
 const FUZZ           = ME.imports.lib.fuzzy_search;
-const RESIZE         = ME.imports.lib.resize_label;
+const MISC_UTILS     = ME.imports.lib.misc_utils;
 const GRAPHS         = ME.imports.lib.graphs;
 const FULLSCREEN     = ME.imports.lib.fullscreen;
 const DATE_PICKER    = ME.imports.lib.date_picker;
@@ -1131,7 +1131,7 @@ var StatsView = new Lang.Class({
 
             label.connect('queue-redraw', () => {
                 if (! this.search_scrollview.vscrollbar_visible)
-                    RESIZE.resize_label(label);
+                    MISC_UTILS.resize_label(label);
             });
 
             label.connect('notify::hover', (label) => {

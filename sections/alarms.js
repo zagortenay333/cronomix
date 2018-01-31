@@ -24,7 +24,6 @@ const ngettext = Gettext.ngettext;
 
 
 const FULLSCREEN      = ME.imports.lib.fullscreen;
-const RESIZE          = ME.imports.lib.resize_label;
 const SIG_MANAGER     = ME.imports.lib.signal_manager;
 const KEY_MANAGER     = ME.imports.lib.keybinding_manager;
 const PANEL_ITEM      = ME.imports.lib.panel_item;
@@ -763,7 +762,7 @@ const AlarmItem = new Lang.Class({
         this.toggle_bin.connect('clicked', () => this._on_toggle());
         this.delegate.sigm.connect_press(this.edit_bin, () => this._on_edit());
         this.ext.connect('custom-css-changed', () => this._on_custom_css_updated());
-        this.actor.connect('queue-redraw', () => { RESIZE.resize_label(this.msg); });
+        this.actor.connect('queue-redraw', () => { MISC_UTILS.resize_label(this.msg); });
         this.actor.connect('enter-event',  () => { this.edit_bin.show(); });
         this.actor.connect('event', (actor, event) => this._on_event(actor, event));
     },
@@ -1016,7 +1015,7 @@ const AlarmFullscreen = new Lang.Class({
                 [REG.FILE_PATH , MISC_UTILS.open_file_path],
             ]));
 
-            alarm_card.connect('queue-redraw', () => RESIZE.resize_label(body));
+            alarm_card.connect('queue-redraw', () => MISC_UTILS.resize_label(body));
         }
     },
 });

@@ -19,7 +19,6 @@ const _        = Gettext.gettext;
 const ngettext = Gettext.ngettext;
 
 
-const RESIZE         = ME.imports.lib.resize_label;
 const SCROLL_TO_ITEM = ME.imports.lib.scroll_to_item;
 const MISC_UTILS     = ME.imports.lib.misc_utils;
 const REG            = ME.imports.lib.regex;
@@ -127,7 +126,7 @@ var TaskItem = new Lang.Class({
                 return;
             }
 
-            RESIZE.resize_label(this.msg);
+            MISC_UTILS.resize_label(this.msg);
         });
         this.actor.connect('event', (actor, event) => {
             this._on_event(actor, event);
