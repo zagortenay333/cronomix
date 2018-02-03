@@ -146,6 +146,10 @@ var StatsView = new Lang.Class({
         this.nav_bar.add_actor(this.hot_mode_icon);
         this.hot_mode_icon.add_actor(new St.Icon({ icon_name: 'timepp-fire-symbolic' }));
 
+        this.csv_dir_icon = new St.Button({ y_align: St.Align.MIDDLE, can_focus: true });
+        this.nav_bar.add_actor(this.csv_dir_icon);
+        this.csv_dir_icon.add_actor(new St.Icon({ icon_name: 'timepp-file-symbolic' }));
+
 
         //
         // search entry and results container
@@ -404,6 +408,10 @@ var StatsView = new Lang.Class({
             }
 
             return Clutter.EVENT_STOP;
+        });
+        this.csv_dir_icon.connect('clicked', () => {
+            this.close();
+            MISC_UTILS.open_file_path(this.delegate.time_tracker.get_csv_dir_path());
         });
         this.heatmap_icon.connect('clicked', () => {
             this._toggle_heatmap();

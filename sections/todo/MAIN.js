@@ -310,7 +310,7 @@ var Todo = new Lang.Class({
         this.file_switcher_button = new St.Button({ can_focus: true, x_align: St.Align.END, style_class: 'file-switcher-icon' });
         this.icon_box.add(this.file_switcher_button);
 
-        this.file_switcher_icon = new St.Icon({ icon_name: 'timepp-file-switch-symbolic', y_align: Clutter.ActorAlign.CENTER });
+        this.file_switcher_icon = new St.Icon({ icon_name: 'timepp-file-symbolic', y_align: Clutter.ActorAlign.CENTER });
         this.file_switcher_button.add_actor(this.file_switcher_icon);
 
         if (this.settings.get_value('todo-files').deep_unpack().length > 1)

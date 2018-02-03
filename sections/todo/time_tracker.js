@@ -49,6 +49,11 @@ var TimeTracker = new Lang.Class({
         this.tic_mainloop_id         = null;
 
 
+        // Holds the path of the current csv directory.
+        // We also use this as a flag to check whether the tracker is active.
+        this.csv_dir = null;
+
+
         // GFiles
         this.yearly_csv_dir  = null;
         this.yearly_csv_file = null;
@@ -94,7 +99,7 @@ var TimeTracker = new Lang.Class({
         //
         // init
         //
-        this._init_csv_dir();
+        this.csv_dir = this.get_csv_dir_path();
         this._init_tracker_dir();
         this._init_daily_csv_map();
         this._archive_yearly_csv_file();
@@ -112,7 +117,7 @@ var TimeTracker = new Lang.Class({
             this.stop_all_tracking();
         });
         delegate.settings.connect('changed::todo-current', () => {
-            this._init_csv_dir();
+            this.csv_dir = this.get_csv_dir_path();
             this._init_tracker_dir();
         });
     },
@@ -162,19 +167,6 @@ var TimeTracker = new Lang.Class({
         this._init_tracker_dir();
         this._init_daily_csv_map();
         this._archive_yearly_csv_file();
-    },
-
-    _init_csv_dir: function () {
-        try {
-            this.csv_dir =
-                this.delegate.settings.get_value('todo-current').deep_unpack().csv_dir;
-
-            if (this.csv_dir)
-                [this.csv_dir, ] = GLib.filename_from_uri(this.csv_dir, null);
-        }
-        catch (e) {
-            logError(e);
-        }
     },
 
     _init_tracker_dir: function () {
@@ -506,6 +498,18 @@ var TimeTracker = new Lang.Class({
         this.stats_data.clear();
 
         this._write_daily_csv_file();
+    },
+
+    get_csv_dir_path: function () {
+        try {
+            let d = this.delegate.settings.get_value('todo-current').deep_unpack().csv_dir;
+
+            if (d) [d, error] = GLib.filename_from_uri(d, null);
+
+            if (error) return null;
+            else       return d;
+        }
+        catch (e) { logError(e); }
     },
 
     // NOTE: The returned values are cached, use for READ-ONLY!
