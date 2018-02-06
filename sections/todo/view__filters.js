@@ -16,8 +16,8 @@ const _        = Gettext.gettext;
 const ngettext = Gettext.ngettext;
 
 
-const MULTIL_ENTRY   = ME.imports.lib.multiline_entry;
-const SCROLL_TO_ITEM = ME.imports.lib.scroll_to_item;
+const MULTIL_ENTRY = ME.imports.lib.multiline_entry;
+const MISC_UTILS   = ME.imports.lib.misc_utils;
 
 
 const G = ME.imports.sections.todo.GLOBAL;
@@ -209,9 +209,9 @@ var TaskFiltersWindow = new Lang.Class({
         // listen
         //
         this.entry.entry.clutter_text.connect('key-focus-in', () => {
-            SCROLL_TO_ITEM.scroll(this.filter_sectors_scroll,
-                                  this.filter_sectors_scroll_box,
-                                  this.custom_filters_box);
+            MISC_UTILS.scroll(this.filter_sectors_scroll,
+                              this.filter_sectors_scroll_box,
+                              this.custom_filters_box);
         });
         this.entry.entry.clutter_text.connect('activate', () => {
             if (! this.entry.entry.get_text()) return;
@@ -436,9 +436,9 @@ var TaskFiltersWindow = new Lang.Class({
         let actor_to_connect = is_deletable ? close_button : item.checkbox.actor;
 
         actor_to_connect.connect('key-focus-in', () => {
-            SCROLL_TO_ITEM.scroll(this.filter_sectors_scroll,
-                                  this.filter_sectors_scroll_box,
-                                  parent_box);
+            MISC_UTILS.scroll(this.filter_sectors_scroll,
+                              this.filter_sectors_scroll_box,
+                              parent_box);
         });
 
         return item;

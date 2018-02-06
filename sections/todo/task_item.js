@@ -19,9 +19,8 @@ const _        = Gettext.gettext;
 const ngettext = Gettext.ngettext;
 
 
-const SCROLL_TO_ITEM = ME.imports.lib.scroll_to_item;
-const MISC_UTILS     = ME.imports.lib.misc_utils;
-const REG            = ME.imports.lib.regex;
+const MISC_UTILS = ME.imports.lib.misc_utils;
+const REG        = ME.imports.lib.regex;
 
 
 const G = ME.imports.sections.todo.GLOBAL;
@@ -874,9 +873,9 @@ var TaskItem = new Lang.Class({
 
             case Clutter.EventType.KEY_RELEASE: {
                 this._show_header_icons();
-                SCROLL_TO_ITEM.scroll(this.delegate.tasks_scroll,
-                                      this.delegate.tasks_scroll_content,
-                                      actor);
+                MISC_UTILS.scroll(this.delegate.tasks_scroll,
+                                  this.delegate.tasks_scroll_content,
+                                  actor);
                 break;
             }
 

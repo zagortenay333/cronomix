@@ -13,9 +13,9 @@ const _        = Gettext.gettext;
 const ngettext = Gettext.ngettext;
 
 
-const FUZZ           = ME.imports.lib.fuzzy_search;
-const MULTIL_ENTRY   = ME.imports.lib.multiline_entry;
-const SCROLL_TO_ITEM = ME.imports.lib.scroll_to_item;
+const FUZZ         = ME.imports.lib.fuzzy_search;
+const MULTIL_ENTRY = ME.imports.lib.multiline_entry;
+const MISC_UTILS   = ME.imports.lib.misc_utils;
 
 
 const G = ME.imports.sections.todo.GLOBAL;
@@ -146,9 +146,9 @@ var TodoFileSwitcher = new Lang.Class({
                 this.selected_item = item._delegate;
                 item.pseudo_class  = 'active';
 
-                SCROLL_TO_ITEM.scroll(this.items_scroll,
-                                      this.items_scroll_content,
-                                      item);
+                MISC_UTILS.scroll(this.items_scroll,
+                                  this.items_scroll_content,
+                                  item);
             });
             item.actor.connect('clicked', (item) => {
                 // Destroy the actor before emiting to get rid of any signals

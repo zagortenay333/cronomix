@@ -30,7 +30,6 @@ const PANEL_ITEM      = ME.imports.lib.panel_item;
 const MULTIL_ENTRY    = ME.imports.lib.multiline_entry;
 const NUM_PICKER      = ME.imports.lib.num_picker;
 const DAY_CHOOSER     = ME.imports.lib.day_chooser;
-const SCROLL_TO_ITEM  = ME.imports.lib.scroll_to_item;
 const MISC_UTILS      = ME.imports.lib.misc_utils;
 const TEXT_LINKS_MNGR = ME.imports.lib.text_links_manager;
 const REG             = ME.imports.lib.regex;
@@ -853,9 +852,9 @@ const AlarmItem = new Lang.Class({
 
             case Clutter.EventType.KEY_RELEASE: {
                 this.edit_bin.show();
-                SCROLL_TO_ITEM.scroll(this.delegate.alarms_scroll,
-                                      this.delegate.alarms_scroll_content,
-                                      actor);
+                MISC_UTILS.scroll(this.delegate.alarms_scroll,
+                                  this.delegate.alarms_scroll_content,
+                                  actor);
                 break;
             }
 

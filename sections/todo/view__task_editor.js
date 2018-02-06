@@ -17,10 +17,10 @@ const _        = Gettext.gettext;
 const ngettext = Gettext.ngettext;
 
 
-const FUZZ           = ME.imports.lib.fuzzy_search;
-const MULTIL_ENTRY   = ME.imports.lib.multiline_entry;
-const SCROLL_TO_ITEM = ME.imports.lib.scroll_to_item;
-const REG            = ME.imports.lib.regex;
+const FUZZ         = ME.imports.lib.fuzzy_search;
+const MULTIL_ENTRY = ME.imports.lib.multiline_entry;
+const MISC_UTILS   = ME.imports.lib.misc_utils;
+const REG          = ME.imports.lib.regex;
 
 
 const TODO_TXT_SYNTAX_URL = 'https://github.com/todotxt/todo.txt';
@@ -334,9 +334,9 @@ var TaskEditor = new Lang.Class({
             this.curr_selected_completion.pseudo_class = 'active';
         }
 
-        SCROLL_TO_ITEM.scroll(this.completion_menu,
-                              this.completion_menu_content,
-                              this.curr_selected_completion);
+        MISC_UTILS.scroll(this.completion_menu,
+                          this.completion_menu_content,
+                          this.curr_selected_completion);
     },
 
     _on_completion_selected: function () {

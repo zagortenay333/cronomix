@@ -18,13 +18,12 @@ const _        = Gettext.gettext;
 const ngettext = Gettext.ngettext;
 
 
-const FUZZ           = ME.imports.lib.fuzzy_search;
-const MISC_UTILS     = ME.imports.lib.misc_utils;
-const GRAPHS         = ME.imports.lib.graphs;
-const FULLSCREEN     = ME.imports.lib.fullscreen;
-const DATE_PICKER    = ME.imports.lib.date_picker;
-const SCROLL_TO_ITEM = ME.imports.lib.scroll_to_item;
-const REG            = ME.imports.lib.regex;
+const FUZZ        = ME.imports.lib.fuzzy_search;
+const MISC_UTILS  = ME.imports.lib.misc_utils;
+const GRAPHS      = ME.imports.lib.graphs;
+const FULLSCREEN  = ME.imports.lib.fullscreen;
+const DATE_PICKER = ME.imports.lib.date_picker;
+const REG         = ME.imports.lib.regex;
 
 
 const G = ME.imports.sections.todo.GLOBAL;
@@ -1094,9 +1093,9 @@ var StatsView = new Lang.Class({
         new_selected.pseudo_class                = 'selected';
         this.selected_search_result              = new_selected;
 
-        SCROLL_TO_ITEM.scroll(this.search_scrollview,
-                              this.search_results_content,
-                              new_selected);
+        MISC_UTILS.scroll(this.search_scrollview,
+                          this.search_results_content,
+                          new_selected);
     },
 
     _search: function () {
