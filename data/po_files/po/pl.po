@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-03 20:54+0100\n"
+"POT-Creation-Date: 2018-02-06 19:35+0100\n"
 "PO-Revision-Date: 2018-01-10 10:35+0100\n"
 "Last-Translator: Piotr Komur <pkomur@gmail.com>\n"
 "Language-Team: \n"
@@ -266,12 +266,12 @@ msgstr "Otwórz sekcję, aby wyszukać zadanie"
 msgid "Todo / Time Tracker"
 msgstr "Zadania / Śledzenie"
 
-#: data/po_files/../../sections/todo/task_item.js:605
-#: data/po_files/../../sections/todo/task_item.js:610
+#: data/po_files/../../sections/todo/task_item.js:604
+#: data/po_files/../../sections/todo/task_item.js:609
 msgid "recurrence"
 msgstr "rekurencyjnie"
 
-#: data/po_files/../../sections/todo/task_item.js:606
+#: data/po_files/../../sections/todo/task_item.js:605
 #, javascript-format
 msgid "%d day after completion"
 msgid_plural "%d days after completion"
@@ -279,19 +279,19 @@ msgstr[0] "%d dzień po zakończeniu"
 msgstr[1] "%d dni po zakończeniu"
 msgstr[2] "%d dni po zakończeniu"
 
-#: data/po_files/../../sections/todo/task_item.js:623
+#: data/po_files/../../sections/todo/task_item.js:622
 msgid "due"
 msgstr "termin:"
 
-#: data/po_files/../../sections/todo/task_item.js:631
+#: data/po_files/../../sections/todo/task_item.js:630
 msgid "deferred"
 msgstr "odroczono:"
 
-#: data/po_files/../../sections/todo/task_item.js:671
+#: data/po_files/../../sections/todo/task_item.js:670
 msgid "created"
 msgstr "utworzono:"
 
-#: data/po_files/../../sections/todo/task_item.js:676
+#: data/po_files/../../sections/todo/task_item.js:675
 msgid "completed"
 msgstr "ukończono:"
 
@@ -325,11 +325,11 @@ msgstr "Sortuj wg daty zakończenia"
 
 #: data/po_files/../../sections/todo/view__sort.js:78
 #: data/po_files/../../sections/todo/view__task_editor.js:153
-#: data/po_files/../../sections/todo/view__stats.js:213
+#: data/po_files/../../sections/todo/view__stats.js:212
 #: data/po_files/../../sections/todo/view__clear_tasks.js:96
 #: data/po_files/../../sections/todo/view__filters.js:196
 #: data/po_files/../../sections/pomodoro.js:796
-#: data/po_files/../../sections/alarms.js:638
+#: data/po_files/../../sections/alarms.js:637
 #: data/po_files/../../sections/timer.js:660 data/po_files/../../prefs.js:134
 msgid "Ok"
 msgstr "OK"
@@ -343,7 +343,7 @@ msgid "syntax help"
 msgstr "podpowiedź składni"
 
 #: data/po_files/../../sections/todo/view__task_editor.js:137
-#: data/po_files/../../sections/alarms.js:629
+#: data/po_files/../../sections/alarms.js:628
 msgid "Delete"
 msgstr "Usuń"
 
@@ -352,91 +352,91 @@ msgid "Archive"
 msgstr "Archiwum"
 
 #: data/po_files/../../sections/todo/view__task_editor.js:150
-#: data/po_files/../../sections/todo/view__stats.js:216
+#: data/po_files/../../sections/todo/view__stats.js:215
 #: data/po_files/../../sections/todo/view__clear_tasks.js:93
 #: data/po_files/../../sections/pomodoro.js:797
-#: data/po_files/../../sections/alarms.js:637
+#: data/po_files/../../sections/alarms.js:636
 #: data/po_files/../../sections/timer.js:659 data/po_files/../../prefs.js:133
 msgid "Cancel"
 msgstr "Anuluj"
 
-#: data/po_files/../../sections/todo/view__stats.js:93
+#: data/po_files/../../sections/todo/view__stats.js:92
 msgid "Today"
 msgstr "Dziś"
 
-#: data/po_files/../../sections/todo/view__stats.js:94
+#: data/po_files/../../sections/todo/view__stats.js:93
 msgid "This Week"
 msgstr "Ten tydzień"
 
-#: data/po_files/../../sections/todo/view__stats.js:95
+#: data/po_files/../../sections/todo/view__stats.js:94
 msgid "This Month"
 msgstr "Ten miesiąc"
 
-#: data/po_files/../../sections/todo/view__stats.js:96
+#: data/po_files/../../sections/todo/view__stats.js:95
 msgid "Last 3 Months"
 msgstr "Ostatnie 3 miesiące"
 
-#: data/po_files/../../sections/todo/view__stats.js:97
+#: data/po_files/../../sections/todo/view__stats.js:96
 msgid "Last 6 Months"
 msgstr "Ostatnie 6 miesięcy"
 
-#: data/po_files/../../sections/todo/view__stats.js:98
+#: data/po_files/../../sections/todo/view__stats.js:97
 msgid "All Time"
 msgstr "Cały czas"
 
-#: data/po_files/../../sections/todo/view__stats.js:157
+#: data/po_files/../../sections/todo/view__stats.js:156
 msgid "Search..."
 msgstr "Szukaj..."
 
-#: data/po_files/../../sections/todo/view__stats.js:181
+#: data/po_files/../../sections/todo/view__stats.js:180
 msgid "Year:"
 msgstr "Rok:"
 
-#: data/po_files/../../sections/todo/view__stats.js:181
+#: data/po_files/../../sections/todo/view__stats.js:180
 msgid "Month:"
 msgstr "Miesiąc:"
 
-#: data/po_files/../../sections/todo/view__stats.js:181
+#: data/po_files/../../sections/todo/view__stats.js:180
 msgid "Day:"
 msgstr "Dzień:"
 
-#: data/po_files/../../sections/todo/view__stats.js:203
+#: data/po_files/../../sections/todo/view__stats.js:202
 msgid "From: "
 msgstr "Od:"
 
-#: data/po_files/../../sections/todo/view__stats.js:208
+#: data/po_files/../../sections/todo/view__stats.js:207
 msgid "To: "
 msgstr "Do:"
 
-#: data/po_files/../../sections/todo/view__stats.js:224
+#: data/po_files/../../sections/todo/view__stats.js:223
 msgid "Type: "
 msgstr "Rodzaj:"
 
-#: data/po_files/../../sections/todo/view__stats.js:234
+#: data/po_files/../../sections/todo/view__stats.js:233
 msgid "Range: "
 msgstr "Zakres:"
 
-#: data/po_files/../../sections/todo/view__stats.js:255
+#: data/po_files/../../sections/todo/view__stats.js:254
 msgid "Custom Range..."
 msgstr "Własny zakres..."
 
-#: data/po_files/../../sections/todo/view__stats.js:261
-#: data/po_files/../../sections/todo/view__stats.js:676
+#: data/po_files/../../sections/todo/view__stats.js:260
+#: data/po_files/../../sections/todo/view__stats.js:675
 msgid "Projects"
 msgstr "Projekty"
 
-#: data/po_files/../../sections/todo/view__stats.js:267
-#: data/po_files/../../sections/todo/view__stats.js:676
+#: data/po_files/../../sections/todo/view__stats.js:266
+#: data/po_files/../../sections/todo/view__stats.js:675
 msgid "Tasks"
 msgstr "Zadanie..."
 
-#: data/po_files/../../sections/todo/view__stats.js:597
+#: data/po_files/../../sections/todo/view__stats.js:596
 msgid "Stats for project"
 msgstr "Statystyka dla projektu"
 
-#: data/po_files/../../sections/todo/view__stats.js:624
-#: data/po_files/../../sections/todo/view__stats.js:646
-#: data/po_files/../../sections/todo/view__stats.js:781
+#: data/po_files/../../sections/todo/view__stats.js:623
+#: data/po_files/../../sections/todo/view__stats.js:645
+#: data/po_files/../../sections/todo/view__stats.js:780
 #, javascript-format
 msgid "%d day"
 msgid_plural "%d days"
@@ -661,44 +661,44 @@ msgstr "Zgłoś błąd"
 msgid "Help with translations"
 msgstr "Pomóż w tłumaczeniu"
 
-#: data/po_files/../../sections/alarms.js:143
+#: data/po_files/../../sections/alarms.js:142
 msgid "Add New Alarm..."
 msgstr "Dodaj nowy alarm..."
 
 #. TRANSLATORS: %s is a time string in the format HH:MM (e.g., 13:44)
-#: data/po_files/../../sections/alarms.js:454
-#: data/po_files/../../sections/alarms.js:964
+#: data/po_files/../../sections/alarms.js:453
+#: data/po_files/../../sections/alarms.js:963
 #, javascript-format
 msgid "Alarm at %s"
 msgstr "Alarm o %s"
 
-#: data/po_files/../../sections/alarms.js:468
-#: data/po_files/../../sections/alarms.js:971
+#: data/po_files/../../sections/alarms.js:467
+#: data/po_files/../../sections/alarms.js:970
 msgid "Snooze"
 msgstr "Drzemka"
 
-#: data/po_files/../../sections/alarms.js:546
+#: data/po_files/../../sections/alarms.js:545
 msgid "Alarm time"
 msgstr "Alarm o"
 
-#: data/po_files/../../sections/alarms.js:546
+#: data/po_files/../../sections/alarms.js:545
 #: data/po_files/../../sections/timer.js:626
 msgid "(h:min)"
 msgstr "(godz.:min.)"
 
-#: data/po_files/../../sections/alarms.js:585
+#: data/po_files/../../sections/alarms.js:584
 msgid "Snooze duration"
 msgstr "Czas drzemki"
 
-#: data/po_files/../../sections/alarms.js:585
+#: data/po_files/../../sections/alarms.js:584
 msgid "(min)"
 msgstr "(min.)"
 
-#: data/po_files/../../sections/alarms.js:601
+#: data/po_files/../../sections/alarms.js:600
 msgid "Alarm Message..."
 msgstr "Komunikat alarmu..."
 
-#: data/po_files/../../sections/alarms.js:988
+#: data/po_files/../../sections/alarms.js:987
 #, javascript-format
 msgid "%d alarm went off!"
 msgid_plural "%d alarms went off!"
