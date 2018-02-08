@@ -172,7 +172,7 @@ Supported todo.txt extensions are:
         <td valign="top"><code>tracker_id:string</code></td>
         <td>
             Used to identify a task when starting/stopping
-            the time-tracker via the command-line.<br>
+            the time-tracker via the dbus cli or using pomodoro.<br>
             Multiple tasks can have the same tracker_id.
         </td>
     </tr>
@@ -347,9 +347,6 @@ date, time spent (hh:mm), type ('++' = project, '()' = task), task or project
 2017-02-05, 02:03, (), "x 2017-02-05 Catch Joker."
 2017-02-05, 02:03, (), "(Z) Take the trash out."
 ```
-
-> **HINT:**  
-> There is an option to pause the time tracker when the pomodoro stops!
 
 ---
 
