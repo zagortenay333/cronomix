@@ -501,6 +501,7 @@
     border-radius: 2px;
     border-left-width: 3px;
     padding: 9px 9px 9px 6px;
+    min-width: 240px;
 }
 
 .timepp-menu .alarm-section .alarm-item .view-box {
