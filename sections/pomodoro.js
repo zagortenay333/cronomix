@@ -22,11 +22,12 @@ const _        = Gettext.gettext;
 const ngettext = Gettext.ngettext;
 
 
-const FULLSCREEN    = ME.imports.lib.fullscreen;
-const SIG_MANAGER   = ME.imports.lib.signal_manager;
-const KEY_MANAGER   = ME.imports.lib.keybinding_manager;
-const PANEL_ITEM    = ME.imports.lib.panel_item;
-const NUM_PICKER    = ME.imports.lib.num_picker;
+const FULLSCREEN   = ME.imports.lib.fullscreen;
+const SIG_MANAGER  = ME.imports.lib.signal_manager;
+const KEY_MANAGER  = ME.imports.lib.keybinding_manager;
+const PANEL_ITEM   = ME.imports.lib.panel_item;
+const NUM_PICKER   = ME.imports.lib.num_picker;
+const MULTIL_ENTRY = ME.imports.lib.multiline_entry;
 
 
 const IFACE = `${ME.path}/dbus/pomodoro_iface.xml`;
@@ -63,7 +64,8 @@ const NotifStyle = {
 //
 // @signals:
 //   - 'section-open-state-changed'
-//   - 'stop-time-tracking'
+//   - 'start-time-tracking-by-id'  (return a tracker_id)
+//   - 'stop-time-tracking-by-id'   (return a tracker_id)
 // =====================================================================
 var Pomodoro = new Lang.Class({
     Name: 'Timepp.Pomodoro',
@@ -72,13 +74,7 @@ var Pomodoro = new Lang.Class({
         this.ext      = ext;
         this.settings = settings;
 
-
-        {
-            let [,xml,] = Gio.file_new_for_path(IFACE).load_contents(null);
-            xml = '' + xml;
-            this.dbus_impl = Gio.DBusExportedObject.wrapJSObject(xml, this);
-        }
-
+        this.section_name = 'Pomodoro';
 
         this.section_enabled  = this.settings.get_boolean('pomodoro-enabled');
         this.separate_menu    = this.settings.get_boolean('pomodoro-separate-menu');
@@ -89,6 +85,13 @@ var Pomodoro = new Lang.Class({
         this.notif_source     = null;
         this.clock            = 0; // microseconds
         this.end_time         = 0; // For computing elapsed time (microseconds)
+
+
+        {
+            let [,xml,] = Gio.file_new_for_path(IFACE).load_contents(null);
+            xml = '' + xml;
+            this.dbus_impl = Gio.DBusExportedObject.wrapJSObject(xml, this);
+        }
 
 
         this.fullscreen = new PomodoroFullscreen(this.ext, this,
@@ -294,6 +297,7 @@ var Pomodoro = new Lang.Class({
                     short_break     : 300,  // seconds
                     long_break      : 900,  // seconds
                     long_break_rate : 4,
+                    todo_task_id    : '',
                 };
             }
         }
@@ -327,7 +331,7 @@ var Pomodoro = new Lang.Class({
     },
 
     _show_settings: function () {
-        let settings = new PomodoroSettings(this, this.cache);
+        let settings = new PomodoroSettings(this.ext, this, this.cache);
         this.settings_container.add_actor(settings.actor);
         settings.button_cancel.grab_key_focus();
 
@@ -335,6 +339,8 @@ var Pomodoro = new Lang.Class({
         this.btn_box_wrapper.actor.hide();
 
         settings.connect('ok', (_, res) => {
+            this.cache.todo_task_id = res.todo_task_id;
+
             this.set_phase_durations(
                 res.pomo, res.short_break, res.long_break, res.break_rate);
 
@@ -391,13 +397,6 @@ var Pomodoro = new Lang.Class({
         this._store_cache();
     },
 
-    _stop_todo_time_tracker: function () {
-        if (! this.settings.get_boolean('pomodoro-stop-tracking'))
-            return;
-
-        this.emit('stop-time-tracking');
-    },
-
     stop: function () {
         this.clock = this.end_time - GLib.get_monotonic_time();
 
@@ -440,7 +439,8 @@ var Pomodoro = new Lang.Class({
         this.dbus_impl.emit_signal(
             'pomo_state_changed', GLib.Variant.new('(s)', [this.pomo_state]));
 
-        this._stop_todo_time_tracker();
+        if (this.cache.todo_task_id)
+            this.emit('stop-time-tracking-by-id', this.cache.todo_task_id);
     },
 
     start_new_pomo: function () {
@@ -461,6 +461,10 @@ var Pomodoro = new Lang.Class({
 
         this.dbus_impl.emit_signal(
             'pomo_state_changed', GLib.Variant.new('(s)', [this.pomo_state]));
+
+        if (this.cache.todo_task_id)
+            this.emit('start-time-tracking-by-id', this.cache.todo_task_id);
+
 
         this.end_time = GLib.get_monotonic_time() + time;
 
@@ -505,7 +509,6 @@ var Pomodoro = new Lang.Class({
         this._update_time_display();
         this._update_phase_label();
         this._update_panel_item();
-        this._stop_todo_time_tracker();
         this.fullscreen.on_break();
 
         this.button_continue.visible              = false;
@@ -518,6 +521,9 @@ var Pomodoro = new Lang.Class({
 
         this.dbus_impl.emit_signal(
             'pomo_state_changed', GLib.Variant.new('(s)', [this.pomo_state]));
+
+        if (this.cache.todo_task_id)
+            this.emit('stop-time-tracking-by-id', this.cache.todo_task_id);
 
         this._tic();
     },
@@ -690,7 +696,8 @@ Signals.addSignalMethods(Pomodoro.prototype);
 const PomodoroSettings = new Lang.Class({
     Name: 'Timepp.PomodoroSettings',
 
-    _init: function(delegate, pomo_cache) {
+    _init: function(ext, delegate, pomo_cache) {
+        this.ext      = ext;
         this.delegate = delegate;
 
         this.actor = new St.BoxLayout({style_class: 'view-box'});
@@ -788,6 +795,20 @@ const PomodoroSettings = new Lang.Class({
 
 
         //
+        // task id entry
+        //
+        if (this.ext.is_section_enabled('Todo')) {
+            let entry_container = new St.BoxLayout({ vertical: true, x_expand: true, style_class: 'row' });
+            this.content_box.add_child(entry_container);
+
+            this.entry = new MULTIL_ENTRY.MultiLineEntry(_('Control todo time tracker by task id...'), false, true);
+            entry_container.add_child(this.entry.actor);
+
+            this.entry.set_text(this.delegate.cache.todo_task_id);
+        }
+
+
+        //
         // buttons
         //
         this.button_box = new St.BoxLayout({ style_class: 'row btn-box' });
@@ -813,6 +834,7 @@ const PomodoroSettings = new Lang.Class({
                                 this.short_break_sec_picker.counter,
                 long_break    : this.long_break_min_picker.counter * 60 +
                                 this.long_break_sec_picker.counter,
+                todo_task_id :  this.entry ? this.entry.entry.get_text() : this.delegate.cache.todo_task_id,
             });
         });
         this.button_cancel.connect('clicked', () => {

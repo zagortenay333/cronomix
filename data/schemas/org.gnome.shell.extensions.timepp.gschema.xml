@@ -185,11 +185,6 @@
             <description>Play sound with notification</description>
         </key>
 
-        <key name="pomodoro-stop-tracking" type="b">
-            <default>false</default>
-            <description>Stop time tracking when pomo is paused</description>
-        </key>
-
         <key name="pomodoro-keybinding-open" type="as">
             <default><![CDATA[[""]]]></default>
             <description>Open this section</description>

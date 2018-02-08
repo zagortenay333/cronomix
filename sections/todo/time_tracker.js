@@ -113,8 +113,11 @@ var TimeTracker = new Lang.Class({
             this._archive_yearly_csv_file();
             this._init_tracker_dir(); // to ensure the new yearly_csv_file
         });
-        this.ext.connect('stop-time-tracking', () => {
-            this.stop_all_tracking();
+        this.ext.connect('start-time-tracking-by-id', (_, id) => {
+            this.start_tracking_by_id(id);
+        });
+        this.ext.connect('stop-time-tracking-by-id', (_, id) => {
+            this.stop_tracking_by_id(id);
         });
         delegate.settings.connect('changed::todo-current', () => {
             this.csv_dir = this.get_csv_dir_path();
@@ -503,6 +506,7 @@ var TimeTracker = new Lang.Class({
     get_csv_dir_path: function () {
         try {
             let d = this.delegate.settings.get_value('todo-current').deep_unpack().csv_dir;
+            let error;
 
             if (d) [d, error] = GLib.filename_from_uri(d, null);
 

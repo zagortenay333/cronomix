@@ -63,6 +63,7 @@ var Todo = new Lang.Class({
         this.ext      = ext;
         this.settings = settings;
 
+        this.section_name = 'Todo';
 
         this.section_enabled = this.settings.get_boolean('todo-enabled');
         this.separate_menu   = this.settings.get_boolean('todo-separate-menu');

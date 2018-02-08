@@ -541,12 +541,6 @@ const Settings = new Lang.Class({
             'active',
             Gio.SettingsBindFlags.DEFAULT);
 
-        this.settings.bind(
-            'pomodoro-stop-tracking',
-            this.builder.get_object('pomodoro-stop-tracking-switch'),
-            'active',
-            Gio.SettingsBindFlags.DEFAULT);
-
         this.builder.get_object('pomodoro-keybinding-open')
             .set_text(this.settings.get_strv('pomodoro-keybinding-open')[0]);
         this.builder.get_object('pomodoro-keybinding-open')

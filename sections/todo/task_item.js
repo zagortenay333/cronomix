@@ -720,59 +720,59 @@ var TaskItem = new Lang.Class({
         }
     },
 
+     // @SPEED Lazy load the icons.
+    _create_header_icons: function () {
+        if (this.header_icon_box) return;
+
+        // icon box
+        this.header_icon_box = new St.BoxLayout({ x_align: Clutter.ActorAlign.END, style_class: 'icon-box' });
+        this.header.add(this.header_icon_box, {expand: true});
+
+
+        // statistics icon
+        this.stat_icon_bin = new St.Button({ visible:false, can_focus: true, y_align: St.Align.MIDDLE });
+        this.header_icon_box.add_actor(this.stat_icon_bin);
+
+        this.stat_icon = new St.Icon({ icon_name: 'timepp-graph-symbolic' });
+        this.stat_icon_bin.add_actor(this.stat_icon);
+
+
+        // settings icon
+        this.edit_icon_bin = new St.Button({ visible:false, can_focus: true, y_align: St.Align.MIDDLE });
+        this.header_icon_box.add_actor(this.edit_icon_bin);
+
+        this.edit_icon = new St.Icon({ icon_name: 'timepp-edit-symbolic' });
+        this.edit_icon_bin.add_actor(this.edit_icon);
+
+
+        // time tracker start button
+        this.tracker_icon_bin = new St.Button({ visible:false, can_focus: true, y_align: St.Align.MIDDLE, style_class: 'tracker-start-icon'});
+        this.header_icon_box.add_actor(this.tracker_icon_bin);
+
+        this.tracker_icon = new St.Icon({ icon_name: 'timepp-start-symbolic' });
+        this.tracker_icon_bin.add_actor(this.tracker_icon);
+
+
+        // listen
+        this.delegate.sigm.connect_press(this.stat_icon_bin, () => {
+            this.delegate.show_view__time_tracker_stats(this);
+            Mainloop.idle_add(() => this._hide_header_icons());
+            return Clutter.EVENT_STOP;
+        });
+        this.delegate.sigm.connect_press(this.edit_icon_bin, () => {
+            this.delegate.show_view__task_editor(this);
+            Mainloop.idle_add(() => this._hide_header_icons());
+            return Clutter.EVENT_STOP;
+        });
+        this.delegate.sigm.connect_press(this.tracker_icon_bin, () => {
+            this.delegate.time_tracker.toggle_tracking(this);
+            return Clutter.EVENT_STOP;
+        });
+    },
+
     _show_header_icons: function () {
-        //
-        // @SPEED
-        // Lazy load the icons.
-        //
-        if (!this.header_icon_box) {
-            // icon box
-            this.header_icon_box = new St.BoxLayout({ x_align: Clutter.ActorAlign.END, style_class: 'icon-box' });
-            this.header.add(this.header_icon_box, {expand: true});
+        this._create_header_icons();
 
-            // statistics icon
-            this.stat_icon_bin = new St.Button({ visible:false, can_focus: true, y_align: St.Align.MIDDLE });
-            this.header_icon_box.add_actor(this.stat_icon_bin);
-
-            this.stat_icon = new St.Icon({ icon_name: 'timepp-graph-symbolic' });
-            this.stat_icon_bin.add_actor(this.stat_icon);
-
-
-            // settings icon
-            this.edit_icon_bin = new St.Button({ visible:false, can_focus: true, y_align: St.Align.MIDDLE });
-            this.header_icon_box.add_actor(this.edit_icon_bin);
-
-            this.edit_icon = new St.Icon({ icon_name: 'timepp-edit-symbolic' });
-            this.edit_icon_bin.add_actor(this.edit_icon);
-
-
-            // time tracker start button
-            this.tracker_icon_bin = new St.Button({ visible:false, can_focus: true, y_align: St.Align.MIDDLE, style_class: 'tracker-start-icon'});
-            this.header_icon_box.add_actor(this.tracker_icon_bin);
-
-            this.tracker_icon = new St.Icon({ icon_name: 'timepp-start-symbolic' });
-            this.tracker_icon_bin.add_actor(this.tracker_icon);
-
-
-            // listen
-            this.delegate.sigm.connect_press(this.stat_icon_bin, () => {
-                this.delegate.show_view__time_tracker_stats(this);
-                Mainloop.idle_add(() => { this._hide_header_icons(); });
-                return Clutter.EVENT_STOP;
-            });
-            this.delegate.sigm.connect_press(this.edit_icon_bin, () => {
-                this.delegate.show_view__task_editor(this);
-                Mainloop.idle_add(() => { this._hide_header_icons(); });
-            });
-            this.delegate.sigm.connect_press(this.tracker_icon_bin, () => {
-                this.delegate.time_tracker.toggle_tracking(this);
-                return Clutter.EVENT_STOP;
-            });
-        }
-
-        //
-        // show icons
-        //
         if (!this.hidden && !this.completed)
             this.tracker_icon_bin.show();
 
@@ -785,10 +785,16 @@ var TaskItem = new Lang.Class({
     _hide_header_icons: function () {
         if (! this.header_icon_box) return;
 
-        this.stat_icon_bin.hide();
-        this.edit_icon_bin.hide();
-        if (this.tracker_icon_bin.style_class === 'tracker-start-icon')
-            this.tracker_icon_bin.hide();
+        if (this.tracker_icon_bin.style_class === 'tracker-start-icon') {
+            // If we are not tracking the task (no need to show the play/pause
+            // button), then we might as well destroy the icon box.
+            this.header_icon_box.destroy();
+            this.header_icon_box = null;
+        }
+        else {
+            this.stat_icon_bin.hide();
+            this.edit_icon_bin.hide();
+        }
     },
 
     _toggle_tracker_icon: function () {
@@ -799,7 +805,7 @@ var TaskItem = new Lang.Class({
     },
 
     _show_tracker_running_icon: function () {
-        this._show_header_icons();
+        this._create_header_icons();
         this.tracker_icon.icon_name       = 'timepp-stop-symbolic';
         this.tracker_icon_bin.style_class = 'tracker-pause-icon';
         this.tracker_icon_bin.visible     = true;
@@ -861,13 +867,19 @@ var TaskItem = new Lang.Class({
     _on_event: function (actor, event) {
         switch (event.type()) {
             case Clutter.EventType.ENTER: {
-                this._show_header_icons();
+                if (!this.actor.contains(event.get_related())) {
+                    this._show_header_icons();
+                }
                 break;
             }
 
             case Clutter.EventType.LEAVE: {
-                if (! this.header.contains(global.stage.get_key_focus()))
+                if (!this.header.contains(global.stage.get_key_focus()) &&
+                    !this.actor.contains(event.get_related())) {
+
                     this._hide_header_icons();
+                }
+
                 break;
             }
 
@@ -876,6 +888,7 @@ var TaskItem = new Lang.Class({
                 MISC_UTILS.scroll(this.delegate.tasks_scroll,
                                   this.delegate.tasks_scroll_content,
                                   actor);
+
                 break;
             }
 

@@ -235,7 +235,8 @@ const Timepp = new Lang.Class({
         this.sigm.connect(this.unicon_panel_item, 'left-click', () => this.toggle_menu());
         this.sigm.connect(this.unicon_panel_item, 'right-click', () => this.toggle_context_menu());
         this.sigm.connect(this.unicon_panel_item.actor, 'enter-event', () => { if (Main.panel.menuManager.activeMenu) this.open_menu() });
-        this.sigm.connect(this.pomodoro_section, 'stop-time-tracking', () => this.emit('stop-time-tracking'));
+        this.sigm.connect(this.pomodoro_section, 'stop-time-tracking-by-id', (_, id) => this.emit('stop-time-tracking-by-id', id));
+        this.sigm.connect(this.pomodoro_section, 'start-time-tracking-by-id', (_, id) => this.emit('start-time-tracking-by-id', id));
         this.sigm.connect(this.menu, 'open-state-changed', (_, state) => {
             if (state) return Clutter.EVENT_PROPAGATE;
 
@@ -259,6 +260,16 @@ const Timepp = new Lang.Class({
                 }
             }
         });
+    },
+
+    is_section_enabled: function (section_name) {
+        for (let section of this.section_register) {
+            if (section.section_name === section_name && section.section_enabled) {
+                return true;
+            }
+        }
+
+        return false;
     },
 
     toggle_menu: function (section) {
@@ -320,7 +331,7 @@ const Timepp = new Lang.Class({
         else if (section.separate_menu) {
             this._update_menu_arrow(section.panel_item.actor);
 
-            let name = section.__name__;
+            let name = section.section_name;
 
             if (! section.actor.visible) {
                 shown_sections.push(section);
@@ -328,7 +339,7 @@ const Timepp = new Lang.Class({
             }
 
             for (let section of this.section_register) {
-                if (name === section.__name__ ||
+                if (name === section.section_name ||
                     !section.section_enabled  ||
                     !section.actor.visible) continue;
 

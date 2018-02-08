@@ -12,7 +12,7 @@
     "cache-file-format-version" : {
         "timer"     : 2,
         "stopwatch" : 4,
-        "pomodoro"  : 2,
+        "pomodoro"  : 3,
         "alarms"    : 2,
         "todo"      : 3
     }

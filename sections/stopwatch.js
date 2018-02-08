@@ -66,13 +66,7 @@ var Stopwatch = new Lang.Class({
         this.ext      = ext;
         this.settings = settings;
 
-
-        {
-            let [,xml,] = Gio.file_new_for_path(IFACE).load_contents(null);
-            xml = '' + xml;
-            this.dbus_impl = Gio.DBusExportedObject.wrapJSObject(xml, this);
-        }
-
+        this.section_name = 'Stopwatch';
 
         this.section_enabled = this.settings.get_boolean('stopwatch-enabled');
         this.separate_menu   = this.settings.get_boolean('stopwatch-separate-menu');
@@ -83,8 +77,14 @@ var Stopwatch = new Lang.Class({
         this.tic_mainloop_id = null;
         this.time_backup_mainloop_id = null;
 
-
         this.state = StopwatchState.RESET;
+
+
+        {
+            let [,xml,] = Gio.file_new_for_path(IFACE).load_contents(null);
+            xml = '' + xml;
+            this.dbus_impl = Gio.DBusExportedObject.wrapJSObject(xml, this);
+        }
 
 
         this.fullscreen = new StopwatchFullscreen(this.ext, this,

@@ -73,14 +73,7 @@ var Timer = new Lang.Class({
         this.ext      = ext;
         this.settings = settings;
 
-        this.linkm = new TEXT_LINKS_MNGR.TextLinksManager(MISC_UTILS.split_on_whitespace);
-
-        {
-            let [,xml,] = Gio.file_new_for_path(IFACE).load_contents(null);
-            xml = '' + xml;
-            this.dbus_impl = Gio.DBusExportedObject.wrapJSObject(xml, this);
-        }
-
+        this.section_name = 'Timer';
 
         this.section_enabled = this.settings.get_boolean('timer-enabled');
         this.separate_menu   = this.settings.get_boolean('timer-separate-menu');
@@ -92,6 +85,15 @@ var Timer = new Lang.Class({
         this.clock           = 0; // microseconds
         this.end_time        = 0; // For computing elapsed time (microseconds)
 
+
+        {
+            let [,xml,] = Gio.file_new_for_path(IFACE).load_contents(null);
+            xml = '' + xml;
+            this.dbus_impl = Gio.DBusExportedObject.wrapJSObject(xml, this);
+        }
+
+
+        this.linkm = new TEXT_LINKS_MNGR.TextLinksManager(MISC_UTILS.split_on_whitespace);
 
         this.fullscreen = new TimerFullscreen(this.ext, this,
             this.settings.get_int('timer-fullscreen-monitor-pos'));
@@ -640,14 +642,7 @@ const TimerSettings = new Lang.Class({
         this.entry.scroll_box.vscrollbar_policy = Gtk.PolicyType.NEVER;
         this.entry.scroll_box.hscrollbar_policy = Gtk.PolicyType.NEVER;
 
-        // fill entry with notif_msg
-        Meta.later_add(Meta.LaterType.BEFORE_REDRAW, () => {
-            this.entry.entry.set_text(notif_msg);
-        });
-
-        Meta.later_add(Meta.LaterType.BEFORE_REDRAW, () => {
-            this.entry._resize_entry();
-        });
+        this.entry.set_text(notif_msg);
 
 
         //

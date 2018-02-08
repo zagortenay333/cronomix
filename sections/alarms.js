@@ -61,6 +61,7 @@ var Alarms = new Lang.Class({
         this.ext      = ext;
         this.settings = settings;
 
+        this.section_name = 'Alarms';
 
         this.section_enabled = this.settings.get_boolean('alarms-enabled');
         this.separate_menu   = this.settings.get_boolean('alarms-separate-menu');
@@ -604,18 +605,8 @@ const AlarmEditor = new Lang.Class({
 
         this.alarm_entry_container.add_actor(this.entry.actor);
 
-        if (alarm) {
-            // @HACK
-            // Pretty much the only way to make the entry fit the multiline text
-            // properly...
-            Meta.later_add(Meta.LaterType.BEFORE_REDRAW, () => {
-                this.entry.entry.set_text(alarm.msg);
-            });
-
-            Meta.later_add(Meta.LaterType.BEFORE_REDRAW, () => {
-                this.entry._resize_entry();
-            });
-        }
+        if (alarm)
+            this.entry.set_text(alarm.msg);
 
 
         //
