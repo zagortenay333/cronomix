@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-08 10:53+0100\n"
+"POT-Creation-Date: 2018-02-08 17:00+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -411,22 +411,22 @@ msgid "Custom Range..."
 msgstr ""
 
 #: data/po_files/../../sections/todo/view__stats.js:260
-#: data/po_files/../../sections/todo/view__stats.js:675
+#: data/po_files/../../sections/todo/view__stats.js:676
 msgid "Projects"
 msgstr ""
 
 #: data/po_files/../../sections/todo/view__stats.js:266
-#: data/po_files/../../sections/todo/view__stats.js:675
+#: data/po_files/../../sections/todo/view__stats.js:676
 msgid "Tasks"
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__stats.js:596
+#: data/po_files/../../sections/todo/view__stats.js:597
 msgid "Stats for project"
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__stats.js:623
-#: data/po_files/../../sections/todo/view__stats.js:645
-#: data/po_files/../../sections/todo/view__stats.js:780
+#: data/po_files/../../sections/todo/view__stats.js:624
+#: data/po_files/../../sections/todo/view__stats.js:646
+#: data/po_files/../../sections/todo/view__stats.js:781
 #, javascript-format
 msgid "%d day"
 msgid_plural "%d days"
@@ -460,7 +460,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: data/po_files/../../sections/todo/MAIN.js:250
-#: data/po_files/../../sections/todo/MAIN.js:1125
+#: data/po_files/../../sections/todo/MAIN.js:1135
 msgid "Loading..."
 msgstr ""
 
@@ -472,21 +472,21 @@ msgstr ""
 msgid "Add New Task..."
 msgstr ""
 
-#: data/po_files/../../sections/todo/MAIN.js:695
+#: data/po_files/../../sections/todo/MAIN.js:700
 #, javascript-format
 msgid "%d task has recurred"
 msgid_plural "%d tasks have recurred"
 msgstr[0] ""
 msgstr[1] ""
 
-#: data/po_files/../../sections/todo/MAIN.js:701
+#: data/po_files/../../sections/todo/MAIN.js:706
 #, javascript-format
 msgid "%d deferred task has been opened"
 msgid_plural "%d deferred tasks have been opened"
 msgstr[0] ""
 msgstr[1] ""
 
-#: data/po_files/../../sections/todo/MAIN.js:1131
+#: data/po_files/../../sections/todo/MAIN.js:1141
 msgid "Nothing found."
 msgstr ""
 
@@ -556,7 +556,7 @@ msgstr[1] ""
 msgid "Search files..."
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__file_switcher.js:132
+#: data/po_files/../../sections/todo/view__file_switcher.js:133
 msgid "current file"
 msgstr ""
 
