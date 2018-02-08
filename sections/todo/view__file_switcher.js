@@ -84,9 +84,10 @@ var TodoFileSwitcher = new Lang.Class({
         //
         // listen
         //
-        this.delegate.settings.connect('changed::todo-files', () => {
-            this.emit('close');
-        });
+        this.settings_sig_id =
+            this.delegate.settings.connect('changed::todo-files', () => {
+                this.emit('close');
+            });
         this.entry.entry.clutter_text.connect('text-changed', () => {
             this._search_files();
         });
@@ -151,12 +152,13 @@ var TodoFileSwitcher = new Lang.Class({
                                   item);
             });
             item.actor.connect('clicked', (item) => {
+                let name = item._delegate.name;
+
                 // Destroy the actor before emiting to get rid of any signals
                 // that are set on the actor.
                 // In particular, the 'key-focus-in' signal calls SCROLL_TO_ITEM
                 // which will call get_allocation_box() at a bad time and will
                 // cause clutter to spit assertion errors.
-                let name = item._delegate.name;
                 item.destroy();
 
                 if (name !== this.current_name) this.emit('switch', name)
@@ -215,6 +217,15 @@ var TodoFileSwitcher = new Lang.Class({
         else {
             this.selected_item = null;
         }
+    },
+
+    close: function () {
+        if (this.settings_sig_id) {
+            this.delegate.settings.disconnect(this.settings_sig_id);
+            this.settings_sig_id = null;
+        }
+
+        this.actor.destroy();
     },
 });
 Signals.addSignalMethods(TodoFileSwitcher.prototype);

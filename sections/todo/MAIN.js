@@ -376,6 +376,9 @@ var Todo = new Lang.Class({
             if (todo_files.length > 1) this.file_switcher_button.show();
             else                       this.file_switcher_button.hide();
         });
+        this.sigm.connect(this.settings, 'changed::todo-current', () => {
+            this._init_todo_file();
+        });
         this.sigm.connect(this.settings, 'changed::todo-separate-menu', () => {
             this.separate_menu = this.settings.get_boolean('todo-separate-menu');
             this.ext.update_panel_items();
@@ -390,9 +393,6 @@ var Todo = new Lang.Class({
             let width = this.settings.get_int('todo-task-width');
             for (let task of this.tasks)
                 task.actor.width = width;
-        });
-        this.sigm.connect(this.settings, 'changed::todo-current', () => {
-            this._on_todo_file_changed();
         });
         this.sigm.connect(this.panel_item.actor, 'key-focus-in', () => {
             // user has right-clicked to show the context menu
@@ -551,6 +551,11 @@ var Todo = new Lang.Class({
     _init_todo_file: function () {
         // reset
         {
+            if (this.create_tasks_mainloop_id) {
+                Mainloop.source_remove(this.create_tasks_mainloop_id);
+                this.create_tasks_mainloop_id = null;
+            }
+
             this.tasks_viewport = [];
             this.tasks_scroll_content.remove_all_children();
 
@@ -749,6 +754,11 @@ var Todo = new Lang.Class({
     // @todo_strings : array (of strings; each string is a line in todo.txt file)
     // @callback     : func
     create_tasks: function (todo_strings, callback) {
+        if (this.create_tasks_mainloop_id) {
+            Mainloop.source_remove(this.create_tasks_mainloop_id);
+            this.create_tasks_mainloop_id = null;
+        }
+
         if (this.add_tasks_to_menu_mainloop_id) {
             Mainloop.source_remove(this.add_tasks_to_menu_mainloop_id);
             this.add_tasks_to_menu_mainloop_id = null;
@@ -1181,7 +1191,7 @@ var Todo = new Lang.Class({
             view_name      : G.View.FILE_SWITCH,
             actors         : [filter_switcher.actor],
             focused_actor  : filter_switcher.entry.entry,
-            close_callback : () => { filter_switcher.actor.destroy(); },
+            close_callback : () => { filter_switcher.close(); },
         });
 
         filter_switcher.connect('switch', (_, name) => {
