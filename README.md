@@ -165,7 +165,7 @@ The todo.txt manager _(as well as alarms and timer)_ also has support for urls a
 (A) @asdf ~/Documents/file\ with\ spaces.png
 ```
 
-Supported todo.txt extensions are:
+##### Supported todo.txt extensions:
 
 <table>
     <tr>
