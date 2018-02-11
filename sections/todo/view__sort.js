@@ -131,16 +131,16 @@ var TaskSortWindow = new Lang.Class({
 
         // DND
         // Note that the various funcs that are being called from within
-        // item._draggable rely on the '_delegate' property, so make sure that
+        // item.draggable rely on the '_delegate' property, so make sure that
         // the relevant actors have those, since we don't usually use the
         // '_delegate' pattern heavily in this extension.
-        item._draggable = DND.makeDraggable(item.actor, { restoreOnSuccess: false, manualMode: false, dragActorOpacity: 0 });
+        item.draggable = DND.makeDraggable(item.actor, { restoreOnSuccess: false, manualMode: false, dragActorOpacity: 0 });
 
 
         //
         // listen
         //
-        item._draggable.connect('drag-begin', () => {
+        item.draggable.connect('drag-begin', () => {
             if (! this.dnd_placeholder) {
                 this.dnd_placeholder = new St.Bin();
                 this.dnd_placeholder._delegate = this.sort_items_box;
@@ -158,7 +158,7 @@ var TaskSortWindow = new Lang.Class({
             }
         });
 
-        item._draggable.connect('drag-end', () => {
+        item.draggable.connect('drag-end', () => {
             item.actor.opacity = 255;
 
             if (this.dnd_placeholder) {
@@ -212,7 +212,7 @@ var TaskSortWindow = new Lang.Class({
         });
     },
 
-    // Called from within item._draggable.
+    // Called from within item.draggable.
     handleDragOver: function (source, actor, x, y, time) {
         if (source._delegate !== this.sort_items_box)
             return DND.DragMotionResult.NO_DROP;
@@ -229,7 +229,7 @@ var TaskSortWindow = new Lang.Class({
         return DND.DragMotionResult.MOVE_DROP;
     },
 
-    // Called from within item._draggable.
+    // Called from within item.draggable.
     acceptDrop: function (source, actor, x, y, time) {
         if (source._delegate !== this.sort_items_box || this.dnd_pos === null)
             return false;

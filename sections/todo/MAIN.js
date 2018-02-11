@@ -356,8 +356,10 @@ var Todo = new Lang.Class({
         // will cause major lag when entering the wrapper with the mouse.
         // We replicate the PopupMenuItem by adding an ornament to ensure
         // proper horizontal padding.
-        let ornament = new St.Label({style_class: 'popup-menu-ornament' });
-        this.tasks_scroll_wrapper.add_actor(ornament);
+        {
+            let ornament = new St.Label({style_class: 'popup-menu-ornament' });
+            this.tasks_scroll_wrapper.add_actor(ornament);
+        }
 
         this.tasks_scroll = new St.ScrollView({ style_class: 'tasks-container vfade', x_fill: true, y_align: St.Align.START});
         this.tasks_scroll_wrapper.add(this.tasks_scroll, {expand: true});
@@ -924,6 +926,7 @@ var Todo = new Lang.Class({
         //
         this.clear_button.visible = this.stats.completed > 0;
         this.sort_tasks();
+        this.add_tasks_to_menu(true);
     },
 
     // Add actors of task objects from this.tasks_viewport to the popup menu.
@@ -1228,6 +1231,7 @@ var Todo = new Lang.Class({
             this.cache.sort = new_sort_obj;
             this.store_cache();
             this.sort_tasks();
+            this.add_tasks_to_menu(true);
             this.show_view__default();
         });
     },
@@ -1444,8 +1448,6 @@ var Todo = new Lang.Class({
                     }
             }
         });
-
-        this.add_tasks_to_menu(true);
 
         // Update sort icon.
         //
