@@ -334,7 +334,7 @@ var TaskEditor = new Lang.Class({
 
         let text =
             this.entry.entry.get_text().slice(0, this.current_word_start) +
-            completion +
+            completion + ' ' +
             this.entry.entry.get_text().slice(this.current_word_end + 1);
 
         this.entry.entry.text = text;
@@ -342,7 +342,7 @@ var TaskEditor = new Lang.Class({
         // @BUG or feature?
         // Setting the cursor pos directly seeems to also select the text, so
         // use this func instead.
-        let p = this.current_word_start + completion.length;
+        let p = this.current_word_start + completion.length + 1;
         this.entry.entry.clutter_text.set_selection(p, p);
 
         this.text_changed_handler_block = false;
