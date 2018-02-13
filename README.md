@@ -11,10 +11,8 @@ time tracker, timer, stopwatch, pomodoro, and alarms [gnome-shell extension](htt
 
 ---
 
-<h3>
 <details>
     <summary><b>Table of Contents</b></summary>
-    <h5> 
         
 * [Installation](#installation)
 * [Compatibility](#compatibility)
@@ -30,9 +28,7 @@ time tracker, timer, stopwatch, pomodoro, and alarms [gnome-shell extension](htt
 * [Custom Theme Support](#custom-theme-support)
 * [Preview](#preview)
 
-    </h5>
 </details>
-</h3>
 
 ---
 
