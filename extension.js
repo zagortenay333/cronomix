@@ -71,8 +71,28 @@ const Timepp = new Lang.Class({
         };
 
 
+        this.markup_map = new Map([
+            ['`'   , ['<tt>', '</tt>']],
+            ['``'  , ['<tt>', '</tt>']],
+            ['```' , ['<tt>', '</tt>']],
+
+            ['*'   , ['<b>', '</b>']],
+            ['**'  , ['<i>', '</i>']],
+            ['***' , ['<b><span foreground="black" background="tomato">', '</span></b>']],
+
+            ['_'   , ['<i>', '</i>']],
+            ['__'  , ['<u>', '</u>']],
+            ['___' , ['<s>', '</s>']],
+
+            ['$'   , ['<span size="xx-large">', '</span>']],
+            ['$$'  , ['<span size="x-large">', '</span>']],
+            ['$$$' , ['<span size="large">', '</span>']],
+        ]);
+
+
         this.custom_css = {
             ['-timepp-link-color']       : ['blue'    , [0, 0, 1, 1]],
+            ['-timepp-markup-bg-color']  : ['white'   , [1, 1, 1, 1]],
 
             ['-timepp-context-color']    : ['magenta' , [1, 0, 1, 1]],
             ['-timepp-due-date-color']   : ['red'     , [1, 0, 0, 1]],

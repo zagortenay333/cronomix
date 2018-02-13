@@ -600,7 +600,7 @@ var StatsView = new Lang.Class({
             markup += '\n\n' + keyword;
 
             this.stats_card_title.clutter_text.set_markup(
-                '<tt>' + markup + '</tt>');
+                MISC_UTILS.markup_to_pango(markup, this.ext.markup_map));
 
 
             //

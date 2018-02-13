@@ -842,7 +842,9 @@ const TimerFullscreen = new Lang.Class({
     },
 
     _highlight_tokens: function (text) {
-        text = MISC_UTILS.split_on_whitespace(text);
+        text = MISC_UTILS.split_on_whitespace(
+            MISC_UTILS.markup_to_pango(text, this.ext.markup_map));
+
         let token;
 
         for (let i = 0; i < text.length; i++) {

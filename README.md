@@ -11,6 +11,31 @@ time tracker, timer, stopwatch, pomodoro, and alarms [gnome-shell extension](htt
 
 ---
 
+<h3>
+<details>
+    <summary><b>Table of Contents</b></summary>
+    <h5> 
+        
+* [Installation](#installation)
+* [Compatibility](#compatibility)
+* [Translations](#translations)
+* [Lock Screen](#lock-screen)
+* [Sections](#sections)
+* [Fullscreen interface](#fullscreen-interface)
+* [Todo.txt Manager](#todotxt-manager)
+    * [Supported todotxt extensions](#supported-todotxt-extensions)
+* [Time Tracker](#time-tracker)
+* [Markup](#markup)
+* [DBus API](#dbus-api)
+* [Custom Theme Support](#custom-theme-support)
+* [Preview](#preview)
+
+    </h5>
+</details>
+</h3>
+
+---
+
 ### Installation
 
 * You can install this extension from the [gnome-shell extensions
@@ -154,18 +179,7 @@ Some of the features of the todo.txt manager are:
 * Deleting all completed tasks and optionally storing them into a done.txt file.
 * Switching between different views via keyboard shortcuts.
 
-The todo.txt manager _(as well as alarms and timer)_ also has support for urls and file paths:
-```
-(A) @asdf https://www.google.com
-(A) @asdf www.google.com
-
-(A) @asdf /home/user/Documents
-(A) @asdf ~/Documents
-(A) @asdf ~/Documents/img.png
-(A) @asdf ~/Documents/file\ with\ spaces.png
-```
-
-##### Supported todo.txt extensions:
+##### Supported todo.txt extensions
 
 <table>
     <tr>
@@ -350,6 +364,42 @@ date, time spent (hh:mm), type ('++' = project, '()' = task), task or project
 
 ---
 
+### Markup
+
+In various places throughout the extension (todo.txt, alarms, timer) there is
+support for some markup stuff.
+
+* There is support for [pango markup](https://developer.gnome.org/pango/stable/PangoMarkupFormat.html).
+
+* In addition to that, a simple version of markdown is supported:
+    ```
+    (`), (``), (```) monospaced and all markdown inside a pair of these is ignored
+    (*)              bold                  
+    (_), (**)        italic               
+    (***)            bold with a red bg
+    (__)             underscore       
+    (___)            strikethrough        
+    ($$$)            large             
+    ($$)             x-large            
+    ($)              xx-large            
+
+    For example, *bold*, and $$extra large$$, and `monospaced`, and
+    ***this __one__ is nested***, etc...
+    ```
+
+* File paths and web links are supported:
+    ```
+    https://www.google.com
+    www.google.com
+
+    /home/user/Documents
+    ~/Documents
+    ~/Documents/img.png
+    ~/Documents/file\ with\ spaces.png
+    ```
+
+---
+
 ### DBus API
 
 This extension comes with a dbus api. Check out the [dbus dir](dbus) for info on
@@ -367,19 +417,6 @@ This extension supports custom themes. In order to style it, place a
 
 You must use the `!important` directive in order to override a property from the
 extensions' stylesheet.
-
----
-
-### Pango Markup
-
-The todo.txt manager, timer and alarm support
-[pango markup](https://developer.gnome.org/pango/stable/PangoMarkupFormat.html).
-
-
-> **NOTE:**  
-> The pango markup will appear in the `todo.txt` file as well if used in the 
-todo.txt manager.  
-> Notifications will only show the `<b>`, `<i>`, `<u>` tags and links.
 
 ---
 

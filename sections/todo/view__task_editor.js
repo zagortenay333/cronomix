@@ -327,7 +327,8 @@ var TaskEditor = new Lang.Class({
     },
 
     _on_completion_selected: function () {
-        this.completion_menu.hide();
+        if (!this.curr_selected_completion) return;
+
         this.text_changed_handler_block = true;
 
         let completion = this.curr_selected_completion.label;
@@ -344,6 +345,9 @@ var TaskEditor = new Lang.Class({
         // use this func instead.
         let p = this.current_word_start + completion.length + 1;
         this.entry.entry.clutter_text.set_selection(p, p);
+
+        this.curr_selected_completion = null;
+        this.completion_menu.hide();
 
         this.text_changed_handler_block = false;
     },

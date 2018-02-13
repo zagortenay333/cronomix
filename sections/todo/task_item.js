@@ -391,10 +391,12 @@ var TaskItem = new Lang.Class({
 
         this.description_markup = words;
 
-        this.msg.clutter_text.set_markup(
-            words.join(' ').replace(/&(?!amp;|quot;|apos;|lt;|gt;)/g, '&amp;')
-                           .replace(/<(?!\/?[^<]*>)/g, '&lt;')
-        );
+        words = MISC_UTILS.markup_to_pango(words.join(' '), this.ext.markup_map);
+
+        words = words.replace(/&(?!amp;|quot;|apos;|lt;|gt;)/g, '&amp;')
+                     .replace(/<(?!\/?[^<]*>)/g, '&lt;')
+
+        this.msg.clutter_text.set_markup(words);
     },
 
     check_deferred_tasks: function (today = G.date_yyyymmdd()) {

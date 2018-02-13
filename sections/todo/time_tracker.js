@@ -303,6 +303,7 @@ var TimeTracker = new Lang.Class({
             else                 tasks    += line;
         }
 
+        log (">>>>>>>>>>>>>>>>>>>>>> " + tasks);
         try {
             if (! this.daily_csv_file.query_exists(null))
                 this.daily_csv_file.create(Gio.FileCreateFlags.NONE, null);

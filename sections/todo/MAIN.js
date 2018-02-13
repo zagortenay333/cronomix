@@ -558,22 +558,22 @@ var Todo = new Lang.Class({
                 this.create_tasks_mainloop_id = null;
             }
 
-            this.tasks_viewport = [];
-            this.tasks_scroll_content.remove_all_children();
-
-            this.stats.priorities.clear();
-            this.stats.contexts.clear();
-            this.stats.projects.clear();
+            if (this.time_tracker) {
+                this.time_tracker.close();
+                this.time_tracker = null;
+            }
 
             if (this.todo_file_monitor) {
                 this.todo_file_monitor.cancel();
                 this.todo_file_monitor = null;
             }
 
-            if (this.time_tracker) {
-                this.time_tracker.close();
-                this.time_tracker = null;
-            }
+            this.stats.priorities.clear();
+            this.stats.contexts.clear();
+            this.stats.projects.clear();
+
+            this.tasks_viewport = [];
+            this.tasks_scroll_content.remove_all_children();
         }
 
         let current = this.settings.get_value('todo-current').deep_unpack();
@@ -766,26 +766,17 @@ var Todo = new Lang.Class({
             this.add_tasks_to_menu_mainloop_id = null;
         }
 
-        let len = todo_strings.length;
-
         // Since we are reusing already instantiated objects, get rid of any
         // excess task object.
-        while (this.tasks.length > len) this.tasks.pop().actor.destroy();
-
-        let n = Math.min(len, 21);
-        let i = 0;
-
-        for (; i < n; i++) {
-            let str = todo_strings[i];
-
-            if (this.tasks[i])
-                this.tasks[i].reset(false, todo_strings[i]);
-            else
-                this.tasks.push(new TASK.TaskItem(this.ext, this, str, false));
+        //
+        // @NOTE Reusing old objects can be the source of evil...
+        {
+            let len = todo_strings.length;
+            while (this.tasks.length > len) this.tasks.pop().actor.destroy();
         }
 
         this.create_tasks_mainloop_id = Mainloop.idle_add(() => {
-            this._create_tasks__finish(i, todo_strings, callback);
+            this._create_tasks__finish(0, todo_strings, callback);
         });
     },
 
