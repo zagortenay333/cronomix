@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: timepp@zagortenay 333\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-12 00:42+0100\n"
+"POT-Creation-Date: 2018-02-13 22:11+0100\n"
 "PO-Revision-Date: 2017-11-03 09:24-0200\n"
 "Last-Translator: Helder <he7d3r@gmail.com>\n"
 "Language-Team: Brazilian Portuguese\n"
@@ -261,31 +261,31 @@ msgstr "Abrir esta seção para para alterar arquivos de tarefas"
 msgid "Todo / Time Tracker"
 msgstr "Tarefas / Gerenciador de Tempo"
 
-#: data/po_files/../../sections/todo/task_item.js:604
-#: data/po_files/../../sections/todo/task_item.js:609
+#: data/po_files/../../sections/todo/task_item.js:606
+#: data/po_files/../../sections/todo/task_item.js:611
 msgid "recurrence"
 msgstr "repetição"
 
-#: data/po_files/../../sections/todo/task_item.js:605
+#: data/po_files/../../sections/todo/task_item.js:607
 #, javascript-format
 msgid "%d day after completion"
 msgid_plural "%d days after completion"
 msgstr[0] "%d dia após a conclusão"
 msgstr[1] "%d dias após a conclusão"
 
-#: data/po_files/../../sections/todo/task_item.js:622
+#: data/po_files/../../sections/todo/task_item.js:624
 msgid "due"
 msgstr "prazo"
 
-#: data/po_files/../../sections/todo/task_item.js:630
+#: data/po_files/../../sections/todo/task_item.js:632
 msgid "deferred"
 msgstr "adiado"
 
-#: data/po_files/../../sections/todo/task_item.js:670
+#: data/po_files/../../sections/todo/task_item.js:672
 msgid "created"
 msgstr "criado"
 
-#: data/po_files/../../sections/todo/task_item.js:675
+#: data/po_files/../../sections/todo/task_item.js:677
 msgid "completed"
 msgstr "concluído"
 
@@ -323,7 +323,7 @@ msgstr "Ordenar por data de conclusão"
 #: data/po_files/../../sections/todo/view__clear_tasks.js:96
 #: data/po_files/../../sections/todo/view__filters.js:196
 #: data/po_files/../../sections/pomodoro.js:817
-#: data/po_files/../../sections/alarms.js:628
+#: data/po_files/../../sections/alarms.js:630
 #: data/po_files/../../sections/timer.js:655 data/po_files/../../prefs.js:134
 msgid "Ok"
 msgstr "Ok"
@@ -337,7 +337,7 @@ msgid "syntax help"
 msgstr ""
 
 #: data/po_files/../../sections/todo/view__task_editor.js:124
-#: data/po_files/../../sections/alarms.js:619
+#: data/po_files/../../sections/alarms.js:621
 msgid "Delete"
 msgstr "Deletar"
 
@@ -349,7 +349,7 @@ msgstr "Arquivar"
 #: data/po_files/../../sections/todo/view__stats.js:215
 #: data/po_files/../../sections/todo/view__clear_tasks.js:93
 #: data/po_files/../../sections/pomodoro.js:818
-#: data/po_files/../../sections/alarms.js:627
+#: data/po_files/../../sections/alarms.js:629
 #: data/po_files/../../sections/timer.js:654 data/po_files/../../prefs.js:133
 msgid "Cancel"
 msgstr "Cancelar"
@@ -467,7 +467,7 @@ msgstr[0] "em %d dia"
 msgstr[1] "em %d dias"
 
 #: data/po_files/../../sections/todo/MAIN.js:250
-#: data/po_files/../../sections/todo/MAIN.js:1138
+#: data/po_files/../../sections/todo/MAIN.js:1129
 msgid "Loading..."
 msgstr "Carregando..."
 
@@ -493,7 +493,7 @@ msgid_plural "%d deferred tasks have been opened"
 msgstr[0] "%d tarefa adiada foi aberta"
 msgstr[1] "%d tarefas adiadas foram abertas"
 
-#: data/po_files/../../sections/todo/MAIN.js:1144
+#: data/po_files/../../sections/todo/MAIN.js:1135
 msgid "Nothing found."
 msgstr "Nada encontrado."
 
@@ -659,38 +659,38 @@ msgstr "Adicionar um novo alarme"
 
 #. TRANSLATORS: %s is a time string in the format HH:MM (e.g., 13:44)
 #: data/po_files/../../sections/alarms.js:454
-#: data/po_files/../../sections/alarms.js:954
+#: data/po_files/../../sections/alarms.js:958
 #, javascript-format
 msgid "Alarm at %s"
 msgstr "Alarme às %s"
 
 #: data/po_files/../../sections/alarms.js:468
-#: data/po_files/../../sections/alarms.js:961
+#: data/po_files/../../sections/alarms.js:965
 msgid "Snooze"
 msgstr "Soneca"
 
-#: data/po_files/../../sections/alarms.js:546
+#: data/po_files/../../sections/alarms.js:548
 msgid "Alarm time"
 msgstr "Hora do alarme"
 
-#: data/po_files/../../sections/alarms.js:546
+#: data/po_files/../../sections/alarms.js:548
 #: data/po_files/../../sections/timer.js:628
 msgid "(h:min)"
 msgstr "(h:min)"
 
-#: data/po_files/../../sections/alarms.js:585
+#: data/po_files/../../sections/alarms.js:587
 msgid "Snooze duration"
 msgstr "Duração da soneca"
 
-#: data/po_files/../../sections/alarms.js:585
+#: data/po_files/../../sections/alarms.js:587
 msgid "(min)"
 msgstr "(min)"
 
-#: data/po_files/../../sections/alarms.js:601
+#: data/po_files/../../sections/alarms.js:603
 msgid "Alarm Message..."
 msgstr "Mensagem do alerta..."
 
-#: data/po_files/../../sections/alarms.js:978
+#: data/po_files/../../sections/alarms.js:982
 #, javascript-format
 msgid "%d alarm went off!"
 msgid_plural "%d alarms went off!"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-12 00:42+0100\n"
+"POT-Creation-Date: 2018-02-13 22:11+0100\n"
 "PO-Revision-Date: 2017-11-29 13:36+0200\n"
 "Last-Translator: Sergey Shlyapugin <shlyapugin@gmail.com>\n"
 "Language-Team: Russian\n"
@@ -262,12 +262,12 @@ msgstr "Открыть этот раздел для переключения ф�
 msgid "Todo / Time Tracker"
 msgstr "Список дел / тайм-трекер"
 
-#: data/po_files/../../sections/todo/task_item.js:604
-#: data/po_files/../../sections/todo/task_item.js:609
+#: data/po_files/../../sections/todo/task_item.js:606
+#: data/po_files/../../sections/todo/task_item.js:611
 msgid "recurrence"
 msgstr "возобновление"
 
-#: data/po_files/../../sections/todo/task_item.js:605
+#: data/po_files/../../sections/todo/task_item.js:607
 #, javascript-format
 msgid "%d day after completion"
 msgid_plural "%d days after completion"
@@ -275,19 +275,19 @@ msgstr[0] "%d день после выполнения"
 msgstr[1] "%d дня после выполнения"
 msgstr[2] "%d дней после выполнения"
 
-#: data/po_files/../../sections/todo/task_item.js:622
+#: data/po_files/../../sections/todo/task_item.js:624
 msgid "due"
 msgstr "до"
 
-#: data/po_files/../../sections/todo/task_item.js:630
+#: data/po_files/../../sections/todo/task_item.js:632
 msgid "deferred"
 msgstr "отложена"
 
-#: data/po_files/../../sections/todo/task_item.js:670
+#: data/po_files/../../sections/todo/task_item.js:672
 msgid "created"
 msgstr "создана"
 
-#: data/po_files/../../sections/todo/task_item.js:675
+#: data/po_files/../../sections/todo/task_item.js:677
 msgid "completed"
 msgstr "выполнена"
 
@@ -325,7 +325,7 @@ msgstr "Упорядочить по дате выполнения"
 #: data/po_files/../../sections/todo/view__clear_tasks.js:96
 #: data/po_files/../../sections/todo/view__filters.js:196
 #: data/po_files/../../sections/pomodoro.js:817
-#: data/po_files/../../sections/alarms.js:628
+#: data/po_files/../../sections/alarms.js:630
 #: data/po_files/../../sections/timer.js:655 data/po_files/../../prefs.js:134
 msgid "Ok"
 msgstr "ОК"
@@ -339,7 +339,7 @@ msgid "syntax help"
 msgstr ""
 
 #: data/po_files/../../sections/todo/view__task_editor.js:124
-#: data/po_files/../../sections/alarms.js:619
+#: data/po_files/../../sections/alarms.js:621
 msgid "Delete"
 msgstr "Удалить"
 
@@ -351,7 +351,7 @@ msgstr "Архивировать"
 #: data/po_files/../../sections/todo/view__stats.js:215
 #: data/po_files/../../sections/todo/view__clear_tasks.js:93
 #: data/po_files/../../sections/pomodoro.js:818
-#: data/po_files/../../sections/alarms.js:627
+#: data/po_files/../../sections/alarms.js:629
 #: data/po_files/../../sections/timer.js:654 data/po_files/../../prefs.js:133
 msgid "Cancel"
 msgstr "Отмена"
@@ -469,7 +469,7 @@ msgstr[1] "через %d дня"
 msgstr[2] "через %d дней"
 
 #: data/po_files/../../sections/todo/MAIN.js:250
-#: data/po_files/../../sections/todo/MAIN.js:1138
+#: data/po_files/../../sections/todo/MAIN.js:1129
 msgid "Loading..."
 msgstr "Загрузка..."
 
@@ -497,7 +497,7 @@ msgstr[0] "%d отложенная задача была открыта"
 msgstr[1] "%d отложенных задачи было открыто"
 msgstr[2] "%d отложенных задача было открыто"
 
-#: data/po_files/../../sections/todo/MAIN.js:1144
+#: data/po_files/../../sections/todo/MAIN.js:1135
 msgid "Nothing found."
 msgstr "Ничего не найдено."
 
@@ -667,38 +667,38 @@ msgstr "Добавить напоминание..."
 
 #. TRANSLATORS: %s is a time string in the format HH:MM (e.g., 13:44)
 #: data/po_files/../../sections/alarms.js:454
-#: data/po_files/../../sections/alarms.js:954
+#: data/po_files/../../sections/alarms.js:958
 #, javascript-format
 msgid "Alarm at %s"
 msgstr "Напоминание в %s"
 
 #: data/po_files/../../sections/alarms.js:468
-#: data/po_files/../../sections/alarms.js:961
+#: data/po_files/../../sections/alarms.js:965
 msgid "Snooze"
 msgstr "Отложить"
 
-#: data/po_files/../../sections/alarms.js:546
+#: data/po_files/../../sections/alarms.js:548
 msgid "Alarm time"
 msgstr "Время напоминания"
 
-#: data/po_files/../../sections/alarms.js:546
+#: data/po_files/../../sections/alarms.js:548
 #: data/po_files/../../sections/timer.js:628
 msgid "(h:min)"
 msgstr "(ч:мин)"
 
-#: data/po_files/../../sections/alarms.js:585
+#: data/po_files/../../sections/alarms.js:587
 msgid "Snooze duration"
 msgstr "Откладывать на"
 
-#: data/po_files/../../sections/alarms.js:585
+#: data/po_files/../../sections/alarms.js:587
 msgid "(min)"
 msgstr "(мин)"
 
-#: data/po_files/../../sections/alarms.js:601
+#: data/po_files/../../sections/alarms.js:603
 msgid "Alarm Message..."
 msgstr "Сообщение напоминания..."
 
-#: data/po_files/../../sections/alarms.js:978
+#: data/po_files/../../sections/alarms.js:982
 #, javascript-format
 msgid "%d alarm went off!"
 msgid_plural "%d alarms went off!"
