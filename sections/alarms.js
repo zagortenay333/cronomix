@@ -23,8 +23,6 @@ const _        = Gettext.gettext;
 const ngettext = Gettext.ngettext;
 
 
-const SECTION_BASE    = ME.imports.sections.section_base;
-
 const FULLSCREEN      = ME.imports.lib.fullscreen;
 const SIG_MANAGER     = ME.imports.lib.signal_manager;
 const KEY_MANAGER     = ME.imports.lib.keybinding_manager;
@@ -58,7 +56,7 @@ const NotifStyle = {
 // =====================================================================
 var SectionMain = new Lang.Class({
     Name    : 'Timepp.Alarms',
-    Extends : SECTION_BASE.SectionBase,
+    Extends : ME.imports.sections.section_base.SectionBase,
 
     _init: function (section_name, ext, settings) {
         this.parent(section_name, ext, settings);

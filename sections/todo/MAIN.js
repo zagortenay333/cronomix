@@ -20,8 +20,6 @@ const _        = Gettext.gettext;
 const ngettext = Gettext.ngettext;
 
 
-const SECTION_BASE = ME.imports.sections.section_base;
-
 const SIG_MANAGER  = ME.imports.lib.signal_manager;
 const KEY_MANAGER  = ME.imports.lib.keybinding_manager;
 const FUZZ         = ME.imports.lib.fuzzy_search;
@@ -60,7 +58,7 @@ const CACHE_FILE = GLib.get_home_dir() +
 // =====================================================================
 var SectionMain = new Lang.Class({
     Name    : 'Timepp.Todo',
-    Extends : SECTION_BASE.SectionBase,
+    Extends : ME.imports.sections.section_base.SectionBase,
 
     _init: function (section_name, ext, settings) {
         this.parent(section_name, ext, settings);
