@@ -199,31 +199,23 @@ const Timepp = new Lang.Class({
         //
         // listen
         //
-        this.sigm.connect(this.settings, 'changed::unicon-mode', () => this.update_panel_items());
-        this.sigm.connect(this.settings, 'changed::sections', () => {
-            this._sync_sections_with_settings();
+        this.sigm.connect(St.ThemeContext.get_for_stage(global.stage), 'changed', () => {
+            if (this.theme_change_signal_block) return;
+            this._on_theme_changed();
         });
         this.sigm.connect(this.settings, 'changed::panel-item-position', () => {
             let new_val = this.settings.get_enum('panel-item-position');
             this._on_panel_position_changed(this.panel_item_position, new_val);
             this.panel_item_position = new_val;
         });
-        this.sigm.connect(St.ThemeContext.get_for_stage(global.stage), 'changed', () => {
-            if (this.theme_change_signal_block) return;
-            this._on_theme_changed();
-        });
-        this.sigm.connect(this.unicon_panel_item.actor, 'key-focus-in', () => {
-            // user has right-clicked to show the context menu
-            if (this.menu.isOpen && this.context_menu.actor.visible)
-                return;
-
-            this.open_menu();
-        });
-        this.sigm.connect(this.unicon_panel_item, 'left-click', () => this.toggle_menu());
-        this.sigm.connect(this.unicon_panel_item, 'right-click', () => this.toggle_context_menu());
-        this.sigm.connect(this.unicon_panel_item.actor, 'enter-event', () => { if (Main.panel.menuManager.activeMenu) this.open_menu() });
+        this.sigm.connect(this.settings, 'changed::sections', () => this._sync_sections_with_settings());
+        this.sigm.connect(this.settings, 'changed::unicon-mode', () => this.update_panel_items());
         this.sigm.connect(this.panel_item_box, 'style-changed', () => this._update_custom_css());
         this.sigm.connect(this.menu, 'open-state-changed', (_, state) => this._on_open_state_changed(state));
+        this.sigm.connect(this.unicon_panel_item.actor, 'key-focus-in', () => this.open_menu());
+        this.sigm.connect(this.unicon_panel_item, 'left-click', () => this.toggle_menu());
+        this.sigm.connect(this.unicon_panel_item, 'right-click', () => this.toggle_context_menu());
+        this.sigm.connect(this.unicon_panel_item.actor, 'enter-event', () => { if (Main.panel.menuManager.activeMenu) this.open_menu(); });
     },
 
     _sync_sections_with_settings: function () {
