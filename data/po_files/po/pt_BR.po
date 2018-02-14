@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: timepp@zagortenay 333\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-14 18:08+0100\n"
+"POT-Creation-Date: 2018-02-14 18:27+0100\n"
 "PO-Revision-Date: 2017-11-03 09:24-0200\n"
 "Last-Translator: Helder <he7d3r@gmail.com>\n"
 "Language-Team: Brazilian Portuguese\n"
@@ -86,22 +86,22 @@ msgid "Enabled Sections"
 msgstr "Seções ativas"
 
 #: data/po_files/../../data/prefs.ui:482 data/po_files/../../data/prefs.ui:1162
-#: data/po_files/../../sections/timer.js:157
-#: data/po_files/../../sections/timer.js:306
+#: data/po_files/../../sections/timer.js:155
+#: data/po_files/../../sections/timer.js:304
 msgid "Timer"
 msgstr "Timer"
 
 #: data/po_files/../../data/prefs.ui:526 data/po_files/../../data/prefs.ui:1511
-#: data/po_files/../../sections/stopwatch.js:161
-#: data/po_files/../../sections/stopwatch.js:364
+#: data/po_files/../../sections/stopwatch.js:160
+#: data/po_files/../../sections/stopwatch.js:363
 msgid "Stopwatch"
 msgstr "Cronometro"
 
 #: data/po_files/../../data/prefs.ui:570 data/po_files/../../data/prefs.ui:1966
-#: data/po_files/../../sections/pomodoro.js:154
-#: data/po_files/../../sections/pomodoro.js:256
-#: data/po_files/../../sections/pomodoro.js:362
-#: data/po_files/../../sections/pomodoro.js:686
+#: data/po_files/../../sections/pomodoro.js:152
+#: data/po_files/../../sections/pomodoro.js:254
+#: data/po_files/../../sections/pomodoro.js:360
+#: data/po_files/../../sections/pomodoro.js:684
 msgid "Pomodoro"
 msgstr "Pomodoro"
 
@@ -322,9 +322,9 @@ msgstr "Ordenar por data de conclusão"
 #: data/po_files/../../sections/todo/view__stats.js:212
 #: data/po_files/../../sections/todo/view__clear_tasks.js:96
 #: data/po_files/../../sections/todo/view__filters.js:196
-#: data/po_files/../../sections/pomodoro.js:772
-#: data/po_files/../../sections/alarms.js:579
-#: data/po_files/../../sections/timer.js:603 data/po_files/../../prefs.js:134
+#: data/po_files/../../sections/pomodoro.js:770
+#: data/po_files/../../sections/alarms.js:577
+#: data/po_files/../../sections/timer.js:601 data/po_files/../../prefs.js:134
 msgid "Ok"
 msgstr "Ok"
 
@@ -337,7 +337,7 @@ msgid "syntax help"
 msgstr ""
 
 #: data/po_files/../../sections/todo/view__task_editor.js:124
-#: data/po_files/../../sections/alarms.js:570
+#: data/po_files/../../sections/alarms.js:568
 msgid "Delete"
 msgstr "Deletar"
 
@@ -348,9 +348,9 @@ msgstr "Arquivar"
 #: data/po_files/../../sections/todo/view__task_editor.js:137
 #: data/po_files/../../sections/todo/view__stats.js:215
 #: data/po_files/../../sections/todo/view__clear_tasks.js:93
-#: data/po_files/../../sections/pomodoro.js:773
-#: data/po_files/../../sections/alarms.js:578
-#: data/po_files/../../sections/timer.js:602 data/po_files/../../prefs.js:133
+#: data/po_files/../../sections/pomodoro.js:771
+#: data/po_files/../../sections/alarms.js:576
+#: data/po_files/../../sections/timer.js:600 data/po_files/../../prefs.js:133
 msgid "Cancel"
 msgstr "Cancelar"
 
@@ -466,34 +466,34 @@ msgid_plural "in %d days"
 msgstr[0] "em %d dia"
 msgstr[1] "em %d dias"
 
-#: data/po_files/../../sections/todo/MAIN.js:294
-#: data/po_files/../../sections/todo/MAIN.js:1092
+#: data/po_files/../../sections/todo/MAIN.js:292
+#: data/po_files/../../sections/todo/MAIN.js:1090
 msgid "Loading..."
 msgstr "Carregando..."
 
-#: data/po_files/../../sections/todo/MAIN.js:304
+#: data/po_files/../../sections/todo/MAIN.js:302
 msgid "Select todo file in settings..."
 msgstr "Selecionar o arquivo de tarefas nas configurações..."
 
-#: data/po_files/../../sections/todo/MAIN.js:329
+#: data/po_files/../../sections/todo/MAIN.js:327
 msgid "Add New Task..."
 msgstr "Adicionar nova tarefa..."
 
-#: data/po_files/../../sections/todo/MAIN.js:665
+#: data/po_files/../../sections/todo/MAIN.js:663
 #, javascript-format
 msgid "%d task has recurred"
 msgid_plural "%d tasks have recurred"
 msgstr[0] "%d tarefa ocorreu novamente"
 msgstr[1] "%d tarefas ocorreram novamente"
 
-#: data/po_files/../../sections/todo/MAIN.js:671
+#: data/po_files/../../sections/todo/MAIN.js:669
 #, javascript-format
 msgid "%d deferred task has been opened"
 msgid_plural "%d deferred tasks have been opened"
 msgstr[0] "%d tarefa adiada foi aberta"
 msgstr[1] "%d tarefas adiadas foram abertas"
 
-#: data/po_files/../../sections/todo/MAIN.js:1098
+#: data/po_files/../../sections/todo/MAIN.js:1096
 msgid "Nothing found."
 msgstr "Nada encontrado."
 
@@ -539,8 +539,8 @@ msgid "Invert filters"
 msgstr "Inverter filtros"
 
 #: data/po_files/../../sections/todo/view__filters.js:195
-#: data/po_files/../../sections/stopwatch.js:187
-#: data/po_files/../../sections/stopwatch.js:590
+#: data/po_files/../../sections/stopwatch.js:186
+#: data/po_files/../../sections/stopwatch.js:589
 msgid "Reset"
 msgstr "Reiniciar"
 
@@ -567,73 +567,73 @@ msgstr "Pesquisar arquivos..."
 msgid "current file"
 msgstr "arquivo atual"
 
-#: data/po_files/../../sections/stopwatch.js:188
-#: data/po_files/../../sections/stopwatch.js:591
+#: data/po_files/../../sections/stopwatch.js:187
+#: data/po_files/../../sections/stopwatch.js:590
 msgid "Lap"
 msgstr "Volta"
 
-#: data/po_files/../../sections/stopwatch.js:189
-#: data/po_files/../../sections/stopwatch.js:593
+#: data/po_files/../../sections/stopwatch.js:188
+#: data/po_files/../../sections/stopwatch.js:592
 msgid "Start"
 msgstr "Iniciar"
 
-#: data/po_files/../../sections/stopwatch.js:190
-#: data/po_files/../../sections/stopwatch.js:592
-#: data/po_files/../../sections/pomodoro.js:200
-#: data/po_files/../../sections/pomodoro.js:866
+#: data/po_files/../../sections/stopwatch.js:189
+#: data/po_files/../../sections/stopwatch.js:591
+#: data/po_files/../../sections/pomodoro.js:198
+#: data/po_files/../../sections/pomodoro.js:864
 msgid "Stop"
 msgstr "Interromper"
 
-#: data/po_files/../../sections/pomodoro.js:42
+#: data/po_files/../../sections/pomodoro.js:40
 msgid "Work!"
 msgstr "Trabalhar!"
 
-#: data/po_files/../../sections/pomodoro.js:43
+#: data/po_files/../../sections/pomodoro.js:41
 msgid "Long Break!"
 msgstr "Pausa longa!"
 
-#: data/po_files/../../sections/pomodoro.js:44
+#: data/po_files/../../sections/pomodoro.js:42
 msgid "Short break!"
 msgstr "Pausa curta"
 
-#: data/po_files/../../sections/pomodoro.js:197
-#: data/po_files/../../sections/pomodoro.js:863
+#: data/po_files/../../sections/pomodoro.js:195
+#: data/po_files/../../sections/pomodoro.js:861
 msgid "New Pomo"
 msgstr "Novo pomo"
 
-#: data/po_files/../../sections/pomodoro.js:198
-#: data/po_files/../../sections/pomodoro.js:864
+#: data/po_files/../../sections/pomodoro.js:196
+#: data/po_files/../../sections/pomodoro.js:862
 msgid "Take Break"
 msgstr "Fazer um intervalo"
 
-#: data/po_files/../../sections/pomodoro.js:199
-#: data/po_files/../../sections/pomodoro.js:865
+#: data/po_files/../../sections/pomodoro.js:197
+#: data/po_files/../../sections/pomodoro.js:863
 msgid "Continue"
 msgstr "Continuar"
 
-#: data/po_files/../../sections/pomodoro.js:670
+#: data/po_files/../../sections/pomodoro.js:668
 msgid "Reset pomodoro counter?"
 msgstr "Reiniciar o contador de pomodoros?"
 
-#: data/po_files/../../sections/pomodoro.js:686
-#: data/po_files/../../sections/pomodoro.js:705
-#: data/po_files/../../sections/pomodoro.js:724
+#: data/po_files/../../sections/pomodoro.js:684
+#: data/po_files/../../sections/pomodoro.js:703
+#: data/po_files/../../sections/pomodoro.js:722
 msgid "(min:sec)"
 msgstr "(min:seg)"
 
-#: data/po_files/../../sections/pomodoro.js:705
+#: data/po_files/../../sections/pomodoro.js:703
 msgid "Short break"
 msgstr "Pausa curta"
 
-#: data/po_files/../../sections/pomodoro.js:724
+#: data/po_files/../../sections/pomodoro.js:722
 msgid "Long break"
 msgstr "Pausa longa"
 
-#: data/po_files/../../sections/pomodoro.js:743
+#: data/po_files/../../sections/pomodoro.js:741
 msgid "Num of pomos until long break"
 msgstr "Número de pomos até uma pausa longa"
 
-#: data/po_files/../../sections/pomodoro.js:759
+#: data/po_files/../../sections/pomodoro.js:757
 msgid "Control todo time tracker by task id..."
 msgstr ""
 
@@ -653,58 +653,58 @@ msgstr "Informar um erro"
 msgid "Help with translations"
 msgstr "Ajudar com traduções"
 
-#: data/po_files/../../sections/alarms.js:162
+#: data/po_files/../../sections/alarms.js:160
 msgid "Add New Alarm..."
 msgstr "Adicionar um novo alarme"
 
 #. TRANSLATORS: %s is a time string in the format HH:MM (e.g., 13:44)
-#: data/po_files/../../sections/alarms.js:403
-#: data/po_files/../../sections/alarms.js:907
+#: data/po_files/../../sections/alarms.js:401
+#: data/po_files/../../sections/alarms.js:905
 #, javascript-format
 msgid "Alarm at %s"
 msgstr "Alarme às %s"
 
-#: data/po_files/../../sections/alarms.js:417
-#: data/po_files/../../sections/alarms.js:914
+#: data/po_files/../../sections/alarms.js:415
+#: data/po_files/../../sections/alarms.js:912
 msgid "Snooze"
 msgstr "Soneca"
 
-#: data/po_files/../../sections/alarms.js:497
+#: data/po_files/../../sections/alarms.js:495
 msgid "Alarm time"
 msgstr "Hora do alarme"
 
-#: data/po_files/../../sections/alarms.js:497
-#: data/po_files/../../sections/timer.js:576
+#: data/po_files/../../sections/alarms.js:495
+#: data/po_files/../../sections/timer.js:574
 msgid "(h:min)"
 msgstr "(h:min)"
 
-#: data/po_files/../../sections/alarms.js:536
+#: data/po_files/../../sections/alarms.js:534
 msgid "Snooze duration"
 msgstr "Duração da soneca"
 
-#: data/po_files/../../sections/alarms.js:536
+#: data/po_files/../../sections/alarms.js:534
 msgid "(min)"
 msgstr "(min)"
 
-#: data/po_files/../../sections/alarms.js:552
+#: data/po_files/../../sections/alarms.js:550
 msgid "Alarm Message..."
 msgstr "Mensagem do alerta..."
 
-#: data/po_files/../../sections/alarms.js:931
+#: data/po_files/../../sections/alarms.js:929
 #, javascript-format
 msgid "%d alarm went off!"
 msgid_plural "%d alarms went off!"
 msgstr[0] "%d alarme disparou!"
 msgstr[1] "%d alarmes dispararam!"
 
-#: data/po_files/../../sections/timer.js:47
+#: data/po_files/../../sections/timer.js:45
 msgid "Timer Expired!"
 msgstr "O timer expirou!"
 
-#: data/po_files/../../sections/timer.js:570
+#: data/po_files/../../sections/timer.js:568
 msgid "(h:min:sec)"
 msgstr "(h:min:seg)"
 
-#: data/po_files/../../sections/timer.js:587
+#: data/po_files/../../sections/timer.js:585
 msgid "Timer message..."
 msgstr "Mensagem do timer..."
