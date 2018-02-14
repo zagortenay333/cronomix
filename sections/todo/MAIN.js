@@ -20,11 +20,13 @@ const _        = Gettext.gettext;
 const ngettext = Gettext.ngettext;
 
 
-const SIG_MANAGER = ME.imports.lib.signal_manager;
-const KEY_MANAGER = ME.imports.lib.keybinding_manager;
-const FUZZ        = ME.imports.lib.fuzzy_search;
-const PANEL_ITEM  = ME.imports.lib.panel_item;
-const REG         = ME.imports.lib.regex;
+const SECTION_BASE = ME.imports.sections.section_base;
+
+const SIG_MANAGER  = ME.imports.lib.signal_manager;
+const KEY_MANAGER  = ME.imports.lib.keybinding_manager;
+const FUZZ         = ME.imports.lib.fuzzy_search;
+const PANEL_ITEM   = ME.imports.lib.panel_item;
+const REG          = ME.imports.lib.regex;
 
 
 const G = ME.imports.sections.todo.GLOBAL;
@@ -56,25 +58,77 @@ const CACHE_FILE = GLib.get_home_dir() +
 //   - 'new-day' (new day started) (returns string in yyyy-mm-dd iso format)
 //   - 'section-open-state-changed'
 // =====================================================================
-var Todo = new Lang.Class({
-    Name: 'Timepp.Todo',
+var SectionMain = new Lang.Class({
+    Name    : 'Timepp.Todo',
+    Extends : SECTION_BASE.SectionBase,
 
-    _init: function (ext, settings) {
-        this.ext      = ext;
-        this.settings = settings;
+    _init: function (section_name, ext, settings) {
+        this.parent(section_name, ext, settings);
 
-        this.section_name = 'Todo';
+        this.actor.add_style_class_name('todo-section');
 
-        this.section_enabled = this.settings.get_boolean('todo-enabled');
-        this.separate_menu   = this.settings.get_boolean('todo-separate-menu');
-
+        this.separate_menu = this.settings.get_boolean('todo-separate-menu');
 
         this.cache_file   = null;
         this.cache        = null;
         this.sigm         = new SIG_MANAGER.SignalManager();
         this.keym         = new KEY_MANAGER.KeybindingManager(this.settings);
-        this.view_manager = null;
+        this.view_manager = new VIEW_MANAGER.ViewManager(this.ext, this);
         this.time_tracker = null;
+
+        this.stats_view = new VIEW_STATS.StatsView(this.ext, this, 0);
+
+
+        //
+        // init cache file
+        //
+        try {
+            this.cache_file = Gio.file_new_for_path(CACHE_FILE);
+
+            let cache_format_version =
+                ME.metadata['cache-file-format-version'].todo;
+
+            if (this.cache_file.query_exists(null)) {
+                let [, contents] = this.cache_file.load_contents(null);
+                this.cache = JSON.parse(contents);
+            }
+
+            if (!this.cache || !this.cache.format_version ||
+                this.cache.format_version !== cache_format_version) {
+
+                this.cache = {
+                    format_version: cache_format_version,
+
+                    sort: [
+                        [G.SortType.COMPLETED       , G.SortOrder.ASCENDING],
+                        [G.SortType.PRIORITY        , G.SortOrder.ASCENDING],
+                        [G.SortType.DUE_DATE        , G.SortOrder.ASCENDING],
+                        [G.SortType.CONTEXT         , G.SortOrder.ASCENDING],
+                        [G.SortType.PROJECT         , G.SortOrder.ASCENDING],
+                        [G.SortType.CREATION_DATE   , G.SortOrder.ASCENDING],
+                        [G.SortType.COMPLETION_DATE , G.SortOrder.ASCENDING],
+                    ],
+
+                    filters: {
+                        invert_filters : false,
+                        defer          : false,
+                        recurring      : false,
+                        hidden         : false,
+                        completed      : false,
+                        no_priority    : false,
+                        priorities     : [],
+                        contexts       : [],
+                        projects       : [],
+                        custom         : [],
+                        custom_active  : [],
+                    },
+                };
+            }
+        }
+        catch (e) {
+            logError(e);
+            return;
+        }
 
 
         // We use this for tracking when a new day begins.
@@ -213,19 +267,9 @@ var Todo = new Lang.Class({
         //
         // panel item
         //
-        this.panel_item = new PANEL_ITEM.PanelItem(ext.menu);
-
         this.panel_item.actor.add_style_class_name('todo-panel-item');
         this.panel_item.icon.icon_name = 'timepp-todo-symbolic';
         this._toggle_panel_item_mode();
-
-        ext.panel_item_box.add_actor(this.panel_item.actor);
-
-
-        //
-        // todo section
-        //
-        this.actor = new St.BoxLayout({ vertical: true, style_class: 'section todo-section' });
 
 
         //
@@ -410,8 +454,6 @@ var Todo = new Lang.Class({
             if (t === '00:00') this._on_new_day_started();
         });
         this.sigm.connect(this.panel_item, 'left-click', () => this.ext.toggle_menu(this));
-        this.sigm.connect(this.panel_item, 'right-click', () => this.ext.toggle_context_menu(this));
-        this.sigm.connect(this.panel_item.actor, 'enter-event', () => { if (Main.panel.menuManager.activeMenu) this.ext.open_menu(this) });
         this.sigm.connect_press(this.add_task_button, () => this.show_view__task_editor());
         this.sigm.connect_press(this.filter_button, () => this.show_view__filters());
         this.sigm.connect_press(this.sort_button, () => this.show_view__sort());
@@ -427,90 +469,9 @@ var Todo = new Lang.Class({
 
 
         //
-        // Init the rest of the section or disconnect signals for now.
+        // finally
         //
-        if (this.section_enabled) this.enable_section();
-        else                      this.sigm.disconnect_all();
-    },
-
-    on_section_open_state_changed: function (state) {
-        if (state) {
-            this.panel_item.actor.add_style_pseudo_class('checked');
-            this.panel_item.actor.can_focus = false;
-        }
-        else {
-            this.panel_item.actor.remove_style_pseudo_class('checked');
-            this.panel_item.actor.remove_style_pseudo_class('focus');
-            this.panel_item.actor.can_focus = true;
-        }
-
-        this.emit('section-open-state-changed', state);
-    },
-
-    toggle_section: function () {
-        if (this.section_enabled) this.disable_section();
-        else                      this.enable_section();
-
-        this.section_enabled = this.settings.get_boolean('todo-enabled');
-        this.ext.update_panel_items();
-    },
-
-    enable_section: function () {
-        // init cache file
-        try {
-            this.cache_file = Gio.file_new_for_path(CACHE_FILE);
-
-            let cache_format_version =
-                ME.metadata['cache-file-format-version'].todo;
-
-            if (this.cache_file.query_exists(null)) {
-                let [, contents] = this.cache_file.load_contents(null);
-                this.cache = JSON.parse(contents);
-            }
-
-            if (!this.cache || !this.cache.format_version ||
-                this.cache.format_version !== cache_format_version) {
-
-                this.cache = {
-                    format_version: cache_format_version,
-
-                    sort: [
-                        [G.SortType.COMPLETED       , G.SortOrder.ASCENDING],
-                        [G.SortType.PRIORITY        , G.SortOrder.ASCENDING],
-                        [G.SortType.DUE_DATE        , G.SortOrder.ASCENDING],
-                        [G.SortType.CONTEXT         , G.SortOrder.ASCENDING],
-                        [G.SortType.PROJECT         , G.SortOrder.ASCENDING],
-                        [G.SortType.CREATION_DATE   , G.SortOrder.ASCENDING],
-                        [G.SortType.COMPLETION_DATE , G.SortOrder.ASCENDING],
-                    ],
-
-                    filters: {
-                        invert_filters : false,
-                        defer          : false,
-                        recurring      : false,
-                        hidden         : false,
-                        completed      : false,
-                        no_priority    : false,
-                        priorities     : [],
-                        contexts       : [],
-                        projects       : [],
-                        custom         : [],
-                        custom_active  : [],
-                    },
-                };
-            }
-        }
-        catch (e) {
-            logError(e);
-            return;
-        }
-
-        this.view_manager = new VIEW_MANAGER.ViewManager(this.ext, this);
-        this.stats_view   = new VIEW_STATS.StatsView(this.ext, this, 0);
-
         this._init_todo_file();
-        this.keym.enable_all();
-        this.sigm.connect_all();
     },
 
     disable_section: function () {
@@ -548,6 +509,8 @@ var Todo = new Lang.Class({
             this.stats_view.destroy();
             this.stats_view = null;
         }
+
+        this.parent();
     },
 
     _init_todo_file: function () {
@@ -1526,4 +1489,4 @@ var Todo = new Lang.Class({
         else                 return [true,  this.tasks];
     },
 });
-Signals.addSignalMethods(Todo.prototype);
+Signals.addSignalMethods(SectionMain.prototype);

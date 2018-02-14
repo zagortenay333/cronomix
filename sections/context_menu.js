@@ -14,6 +14,10 @@ const _        = Gettext.gettext;
 const ngettext = Gettext.ngettext;
 
 
+const MISC_UTILS = ME.imports.lib.misc_utils;
+
+
+
 // =====================================================================
 // @@@ Context Menu
 //
@@ -50,33 +54,15 @@ var ContextMenu = new Lang.Class({
             ext.toggle_context_menu();
         });
         this.website_link.connect('activate', () => {
-            try {
-                Gio.app_info_launch_default_for_uri(
-                    ME.metadata.url,
-                    global.create_app_launch_context(0, -1)
-                );
-            }
-            catch (e) { logError(e); }
+            MISC_UTILS.open_web_uri(ME.metadata.url);
             ext.toggle_context_menu();
         });
         this.report_bug_link.connect('activate', () => {
-            try {
-                Gio.app_info_launch_default_for_uri(
-                    ME.metadata.issues_url,
-                    global.create_app_launch_context(0, -1)
-                );
-            }
-            catch (e) { logError(e); }
+            MISC_UTILS.open_web_uri(ME.metadata.issues_url);
             ext.toggle_context_menu();
         });
         this.translations_link.connect('activate', () => {
-            try {
-                Gio.app_info_launch_default_for_uri(
-                    ME.metadata.translations_url,
-                    global.create_app_launch_context(0, -1)
-                );
-            }
-            catch (e) { logError(e); }
+            MISC_UTILS.open_web_uri(ME.metadata.translations_url);
             ext.toggle_context_menu();
         });
     },

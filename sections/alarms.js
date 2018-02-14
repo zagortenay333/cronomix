@@ -23,6 +23,8 @@ const _        = Gettext.gettext;
 const ngettext = Gettext.ngettext;
 
 
+const SECTION_BASE    = ME.imports.sections.section_base;
+
 const FULLSCREEN      = ME.imports.lib.fullscreen;
 const SIG_MANAGER     = ME.imports.lib.signal_manager;
 const KEY_MANAGER     = ME.imports.lib.keybinding_manager;
@@ -54,37 +56,72 @@ const NotifStyle = {
 //
 // @signals: 'section-open-state-changed'
 // =====================================================================
-var Alarms = new Lang.Class({
-    Name: 'Timepp.Alarms',
+var SectionMain = new Lang.Class({
+    Name    : 'Timepp.Alarms',
+    Extends : SECTION_BASE.SectionBase,
 
-    _init: function (ext, settings) {
-        this.ext      = ext;
-        this.settings = settings;
+    _init: function (section_name, ext, settings) {
+        this.parent(section_name, ext, settings);
 
-        this.section_name = 'Alarms';
+        this.actor = new St.BoxLayout({ vertical: true, style_class: 'section alarm-section' });
+        this.panel_item.icon.icon_name = 'timepp-alarms-symbolic';
+        this.panel_item.actor.add_style_class_name('alarm-panel-item');
+        this.panel_item.set_mode('icon');
 
-        this.section_enabled = this.settings.get_boolean('alarms-enabled');
-        this.separate_menu   = this.settings.get_boolean('alarms-separate-menu');
-        this.cache_file      = null;
-        this.cache           = null;
+
+        this.separate_menu = this.settings.get_boolean('alarms-separate-menu');
+
+        this.cache_file = null;
+        this.cache      = null;
+        this.css        = this.ext.custom_css;
 
 
         this.linkm = new TEXT_LINKS_MNGR.TextLinksManager(MISC_UTILS.split_on_whitespace);
-
-
-        this.css = this.ext.custom_css;
+        this.sigm  = new SIG_MANAGER.SignalManager();
+        this.keym  = new KEY_MANAGER.KeybindingManager(this.settings);
 
 
         this.fullscreen = new AlarmFullscreen(this.ext, this,
             this.settings.get_int('alarms-fullscreen-monitor-pos'));
 
 
-        this.sigm  = new SIG_MANAGER.SignalManager();
-        this.keym  = new KEY_MANAGER.KeybindingManager(this.settings);
-
-
         this.wallclock     = new GnomeDesktop.WallClock();
         this.wallclock_str = ''; // time_str
+
+
+        try {
+            this.cache_file = Gio.file_new_for_path(CACHE_FILE);
+
+            let cache_format_version =
+                ME.metadata['cache-file-format-version'].alarms;
+
+            if (this.cache_file.query_exists(null)) {
+                let [, contents] = this.cache_file.load_contents(null);
+                this.cache = JSON.parse(contents);
+            }
+
+            if (!this.cache || !this.cache.format_version ||
+                this.cache.format_version !== cache_format_version) {
+
+                this.cache = {
+                    format_version: cache_format_version,
+
+                    // Array of alarm objects where each object is of the form:
+                    // {
+                    //     time_str   : string (a time_str)
+                    //     msg        : string
+                    //     days       : array  (of ints; Sunday is 0)
+                    //     snooze_dur : int    (minutes)
+                    //     toogle     : bool
+                    // }
+                    alarms: [],
+                };
+            }
+        }
+        catch (e) {
+            logError(e);
+            return;
+        }
 
 
         // AlarmItem objects
@@ -102,24 +139,6 @@ var Alarms = new Lang.Class({
         this.keym.register('alarms-keybinding-open', () => {
              this.ext.open_menu(this);
         });
-
-
-        //
-        // add panel item
-        //
-        this.panel_item = new PANEL_ITEM.PanelItem(ext.menu);
-        this.panel_item.icon.icon_name = 'timepp-alarms-symbolic';
-
-        this.panel_item.actor.add_style_class_name('alarm-panel-item');
-        this.panel_item.set_mode('icon');
-
-        ext.panel_item_box.add_actor(this.panel_item.actor);
-
-
-        //
-        // alarms pane
-        //
-        this.actor = new St.BoxLayout({ vertical: true, style_class: 'section alarm-section' });
 
 
         //
@@ -185,8 +204,6 @@ var Alarms = new Lang.Class({
             this.ext.open_menu(this);
         });
         this.sigm.connect(this.panel_item, 'left-click', () => { this.ext.toggle_menu(this); });
-        this.sigm.connect(this.panel_item, 'right-click', () => { this.ext.toggle_context_menu(this); });
-        this.sigm.connect(this.panel_item.actor, 'enter-event', () => { if (Main.panel.menuManager.activeMenu) this.ext.open_menu(this) });
         this.sigm.connect_press(this.add_alarm_button, () => { this.alarm_editor(); });
         this.sigm.connect(this.alarms_scroll_content, 'queue-redraw', () => {
             this.alarms_scroll.vscrollbar_policy = Gtk.PolicyType.NEVER;
@@ -197,18 +214,10 @@ var Alarms = new Lang.Class({
 
 
         //
-        // Init the rest of the section or disconnect signals for now.
+        // finally
         //
-        if (this.section_enabled) this.enable_section();
-        else                      this.sigm.disconnect_all();
-    },
-
-    toggle_section: function () {
-        if (this.section_enabled) this.disable_section();
-        else                      this.enable_section();
-
-        this.section_enabled = this.settings.get_boolean('alarms-enabled');
-        this.ext.update_panel_items();
+        this.cache.alarms.forEach((a) => this._add_alarm(a));
+        this._update_panel_item_UI();
     },
 
     disable_section: function () {
@@ -221,68 +230,8 @@ var Alarms = new Lang.Class({
             this.fullscreen.destroy();
             this.fullscreen = null;
         }
-    },
 
-    enable_section: function () {
-        // init cache file
-        try {
-            this.cache_file = Gio.file_new_for_path(CACHE_FILE);
-
-            let cache_format_version =
-                ME.metadata['cache-file-format-version'].alarms;
-
-            if (this.cache_file.query_exists(null)) {
-                let [, contents] = this.cache_file.load_contents(null);
-                this.cache = JSON.parse(contents);
-            }
-
-            if (!this.cache || !this.cache.format_version ||
-                this.cache.format_version !== cache_format_version) {
-
-                this.cache = {
-                    format_version: cache_format_version,
-
-                    // Array of alarm objects where each object is of the form:
-                    // {
-                    //     time_str   : string (a time_str)
-                    //     msg        : string
-                    //     days       : array  (of ints; Sunday is 0)
-                    //     snooze_dur : int    (minutes)
-                    //     toogle     : bool
-                    // }
-                    alarms: [],
-                };
-            }
-        }
-        catch (e) {
-            logError(e);
-            return;
-        }
-
-        this.cache.alarms.forEach((a) => this._add_alarm(a));
-
-        if (! this.fullscreen) {
-            this.fullscreen = new AlarmFullscreen(this.ext, this,
-                this.settings.get_int('alarms-fullscreen-monitor-pos'));
-        }
-
-        this.sigm.connect_all();
-        this.keym.enable_all();
-        this._update_panel_item_UI();
-    },
-
-    on_section_open_state_changed: function (state) {
-        if (state) {
-            this.panel_item.actor.add_style_pseudo_class('checked');
-            this.panel_item.actor.can_focus = false;
-        }
-        else {
-            this.panel_item.actor.remove_style_pseudo_class('checked');
-            this.panel_item.actor.can_focus = true;
-            this.panel_item.actor.remove_style_pseudo_class('focus');
-        }
-
-        this.emit('section-open-state-changed', state);
+        this.parent();
     },
 
     _store_cache: function () {
@@ -502,7 +451,7 @@ var Alarms = new Lang.Class({
         return text.join(' ').replace(/ \n /g, '\n');
     },
 });
-Signals.addSignalMethods(Alarms.prototype);
+Signals.addSignalMethods(SectionMain.prototype);
 
 
 

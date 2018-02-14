@@ -269,6 +269,8 @@ const Settings = new Lang.Class({
 
     // Bind the gtk window to the schema settings
     _bind_settings: function () {
+        let widget;
+
         //
         // General
         //
@@ -278,42 +280,51 @@ const Settings = new Lang.Class({
             'active',
             Gio.SettingsBindFlags.DEFAULT);
 
-        this.builder.get_object('panel-item-position-combo')
-            .set_active(this.settings.get_enum('panel-item-position'));
-        this.builder.get_object('panel-item-position-combo').connect('changed',
-            (widget) => {
-                this.settings.set_enum('panel-item-position', widget.get_active());
-            });
+        widget = this.builder.get_object('panel-item-position-combo');
+        widget.set_active(this.settings.get_enum('panel-item-position'));
+        widget.connect('changed', (widget) => {
+            this.settings.set_enum('panel-item-position', widget.get_active());
+        });
 
-        this.settings.bind(
-            'timer-enabled',
-            this.builder.get_object('timer-enable-switch'),
-            'active',
-            Gio.SettingsBindFlags.DEFAULT);
+        widget = this.builder.get_object('timer-enable-switch');
+        widget.set_active(this.settings.get_value('sections').deep_unpack()['Timer'].enabled);
+        widget.connect('state-set', (_, s) => {
+            let v = this.settings.get_value('sections').deep_unpack();
+            v['Timer'].enabled = s;
+            this.settings.set_value('sections', GLib.Variant.new('a{sa{sb}}', v));
+        });
 
-        this.settings.bind(
-            'stopwatch-enabled',
-            this.builder.get_object('stopwatch-enable-switch'),
-            'active',
-            Gio.SettingsBindFlags.DEFAULT);
+        widget = this.builder.get_object('stopwatch-enable-switch');
+        widget.set_active(this.settings.get_value('sections').deep_unpack()['Stopwatch'].enabled);
+        widget.connect('state-set', (_, s) => {
+            let v = this.settings.get_value('sections').deep_unpack();
+            v['Stopwatch'].enabled = s;
+            this.settings.set_value('sections', GLib.Variant.new('a{sa{sb}}', v));
+        });
 
-        this.settings.bind(
-            'pomodoro-enabled',
-            this.builder.get_object('pomodoro-enable-switch'),
-            'active',
-            Gio.SettingsBindFlags.DEFAULT);
+        widget = this.builder.get_object('pomodoro-enable-switch');
+        widget.set_active( this.settings.get_value('sections').deep_unpack()['Pomodoro'].enabled);
+        widget.connect('state-set', (_, s) => {
+            let v = this.settings.get_value('sections').deep_unpack();
+            v['Pomodoro'].enabled = s;
+            this.settings.set_value('sections', GLib.Variant.new('a{sa{sb}}', v));
+        });
 
-        this.settings.bind(
-            'alarms-enabled',
-            this.builder.get_object('alarms-enable-switch'),
-            'active',
-            Gio.SettingsBindFlags.DEFAULT);
+        widget = this.builder.get_object('alarms-enable-switch');
+        widget.set_active( this.settings.get_value('sections').deep_unpack()['Alarms'].enabled);
+        widget.connect('state-set', (_, s) => {
+            let v = this.settings.get_value('sections').deep_unpack();
+            v['Alarms'].enabled = s;
+            this.settings.set_value('sections', GLib.Variant.new('a{sa{sb}}', v));
+        });
 
-        this.settings.bind(
-            'todo-enabled',
-            this.builder.get_object('todo-enable-switch'),
-            'active',
-            Gio.SettingsBindFlags.DEFAULT);
+        widget = this.builder.get_object('todo-enable-switch');
+        widget.set_active(this.settings.get_value('sections').deep_unpack()['Todo'].enabled);
+        widget.connect('state-set', (_, s) => {
+            let v = this.settings.get_value('sections').deep_unpack();
+            v['Todo'].enabled = s;
+            this.settings.set_value('sections', GLib.Variant.new('a{sa{sb}}', v));
+        });
 
 
         //
@@ -331,12 +342,11 @@ const Settings = new Lang.Class({
             'active',
             Gio.SettingsBindFlags.DEFAULT);
 
-        this.builder.get_object('timer-panel-mode-combo')
-            .set_active(this.settings.get_enum('timer-panel-mode'));
-        this.builder.get_object('timer-panel-mode-combo')
-            .connect('changed', (widget) => {
-                this.settings.set_enum('timer-panel-mode', widget.get_active());
-            });
+        widget = this.builder.get_object('timer-panel-mode-combo');
+        widget.set_active(this.settings.get_enum('timer-panel-mode'));
+        widget.connect('changed', (widget) => {
+            this.settings.set_enum('timer-panel-mode', widget.get_active());
+        });
 
         {
             let sound_uri = this.settings.get_string('timer-sound-file-path');
@@ -353,19 +363,18 @@ const Settings = new Lang.Class({
                 this.settings.set_string('timer-sound-file-path', GLib.filename_to_uri(ME.path + '/data/sounds/beeps.ogg', null));
             }
         }
-        this.builder.get_object('timer-sound-chooser')
-            .set_uri(this.settings.get_string('timer-sound-file-path'), null);
-        this.builder.get_object('timer-sound-chooser')
-            .connect('selection-changed', (widget) => {
-                this.settings.set_string('timer-sound-file-path', widget.get_uri());
-            });
 
-        this.builder.get_object('timer-notif-style-combo')
-            .set_active(this.settings.get_enum('timer-notif-style'));
-        this.builder.get_object('timer-notif-style-combo')
-            .connect('changed', (widget) => {
-                this.settings.set_enum('timer-notif-style', widget.get_active());
-            });
+        widget = this.builder.get_object('timer-sound-chooser');
+        widget.set_uri(this.settings.get_string('timer-sound-file-path'), null);
+        widget.connect('selection-changed', (widget) => {
+            this.settings.set_string('timer-sound-file-path', widget.get_uri());
+        });
+
+        widget = this.builder.get_object('timer-notif-style-combo');
+        widget.set_active(this.settings.get_enum('timer-notif-style'));
+        widget.connect('changed', (widget) => {
+            this.settings.set_enum('timer-notif-style', widget.get_active());
+        });
 
         this.settings.bind(
             'timer-play-sound',
@@ -379,31 +388,29 @@ const Settings = new Lang.Class({
             'text',
             Gio.SettingsBindFlags.DEFAULT);
 
-        this.builder.get_object('timer-keybinding-open')
-            .set_text(this.settings.get_strv('timer-keybinding-open')[0]);
-        this.builder.get_object('timer-keybinding-open')
-            .connect('changed', (entry) => {
-                let [key, mods] = Gtk.accelerator_parse(entry.get_text());
+        widget = this.builder.get_object('timer-keybinding-open');
+        widget.set_text(this.settings.get_strv('timer-keybinding-open')[0]);
+        widget.connect('changed', (entry) => {
+            let [key, mods] = Gtk.accelerator_parse(entry.get_text());
 
-                if (Gtk.accelerator_valid(key, mods)) {
-                    entry["secondary-icon-name"] = null;
-                    let shortcut = Gtk.accelerator_name(key, mods);
-                    this.settings.set_strv('timer-keybinding-open', [shortcut]);
-                }
-                else {
-                    if (entry.get_text() !== '')
-                        entry["secondary-icon-name"] = "dialog-warning-symbolic";
-                    else
-                        entry["secondary-icon-name"] = "";
-                    this.settings.set_strv('timer-keybinding-open', ['']);
-                }
-            });
+            if (Gtk.accelerator_valid(key, mods)) {
+                entry["secondary-icon-name"] = null;
+                let shortcut = Gtk.accelerator_name(key, mods);
+                this.settings.set_strv('timer-keybinding-open', [shortcut]);
+            }
+            else {
+                if (entry.get_text() !== '')
+                    entry["secondary-icon-name"] = "dialog-warning-symbolic";
+                else
+                    entry["secondary-icon-name"] = "";
+                this.settings.set_strv('timer-keybinding-open', ['']);
+            }
+        });
 
-        this.builder.get_object('timer-keybinding-open-fullscreen')
-            .set_text(this.settings.get_strv('timer-keybinding-open-fullscreen')[0]);
-        this.builder.get_object('timer-keybinding-open-fullscreen')
-            .connect('changed', (entry) => {
-                let [key, mods] = Gtk.accelerator_parse(entry.get_text());
+        widget = this.builder.get_object('timer-keybinding-open-fullscreen');
+        widget.set_text(this.settings.get_strv('timer-keybinding-open-fullscreen')[0]);
+        widget.connect('changed', (entry) => {
+            let [key, mods] = Gtk.accelerator_parse(entry.get_text());
 
                 if (Gtk.accelerator_valid(key, mods)) {
                     entry["secondary-icon-name"] = null;
@@ -429,59 +436,55 @@ const Settings = new Lang.Class({
             'active',
             Gio.SettingsBindFlags.DEFAULT);
 
-        this.builder.get_object('stopwatch-clock-format-combo')
-            .set_active(this.settings.get_enum('stopwatch-clock-format'));
-        this.builder.get_object('stopwatch-clock-format-combo')
-            .connect('changed', (widget) => {
-                this.settings.set_enum('stopwatch-clock-format', widget.get_active());
-            });
+        widget = this.builder.get_object('stopwatch-clock-format-combo');
+        widget.set_active(this.settings.get_enum('stopwatch-clock-format'));
+        widget.connect('changed', (widget) => {
+            this.settings.set_enum('stopwatch-clock-format', widget.get_active());
+        });
 
-        this.builder.get_object('stopwatch-panel-mode-combo')
-            .set_active(this.settings.get_enum('stopwatch-panel-mode'));
-        this.builder.get_object('stopwatch-panel-mode-combo')
-            .connect('changed', (widget) => {
-                this.settings.set_enum('stopwatch-panel-mode', widget.get_active());
-            });
+        widget = this.builder.get_object('stopwatch-panel-mode-combo');
+        widget.set_active(this.settings.get_enum('stopwatch-panel-mode'));
+        widget.connect('changed', (widget) => {
+            this.settings.set_enum('stopwatch-panel-mode', widget.get_active());
+        });
 
-        this.builder.get_object('stopwatch-keybinding-open')
-            .set_text(this.settings.get_strv('stopwatch-keybinding-open')[0]);
-        this.builder.get_object('stopwatch-keybinding-open')
-            .connect('changed', (entry) => {
-                let [key, mods] = Gtk.accelerator_parse(entry.get_text());
+        widget = this.builder.get_object('stopwatch-keybinding-open');
+        widget.set_text(this.settings.get_strv('stopwatch-keybinding-open')[0]);
+        widget.connect('changed', (entry) => {
+            let [key, mods] = Gtk.accelerator_parse(entry.get_text());
 
-                if (Gtk.accelerator_valid(key, mods)) {
-                    entry["secondary-icon-name"] = null;
-                    let shortcut = Gtk.accelerator_name(key, mods);
-                    this.settings.set_strv('stopwatch-keybinding-open', [shortcut]);
-                }
-                else {
-                    if (entry.get_text() !== '')
-                        entry["secondary-icon-name"] = "dialog-warning-symbolic";
-                    else
-                        entry["secondary-icon-name"] = "";
-                    this.settings.set_strv('stopwatch-keybinding-open', ['']);
-                }
-            });
+            if (Gtk.accelerator_valid(key, mods)) {
+                entry["secondary-icon-name"] = null;
+                let shortcut = Gtk.accelerator_name(key, mods);
+                this.settings.set_strv('stopwatch-keybinding-open', [shortcut]);
+            }
+            else {
+                if (entry.get_text() !== '')
+                    entry["secondary-icon-name"] = "dialog-warning-symbolic";
+                else
+                    entry["secondary-icon-name"] = "";
+                this.settings.set_strv('stopwatch-keybinding-open', ['']);
+            }
+        });
 
-        this.builder.get_object('stopwatch-keybinding-open-fullscreen')
-            .set_text(this.settings.get_strv('stopwatch-keybinding-open-fullscreen')[0]);
-        this.builder.get_object('stopwatch-keybinding-open-fullscreen')
-            .connect('changed', (entry) => {
-                let [key, mods] = Gtk.accelerator_parse(entry.get_text());
+        widget = this.builder.get_object('stopwatch-keybinding-open-fullscreen');
+        widget.set_text(this.settings.get_strv('stopwatch-keybinding-open-fullscreen')[0]);
+        widget.connect('changed', (entry) => {
+            let [key, mods] = Gtk.accelerator_parse(entry.get_text());
 
-                if (Gtk.accelerator_valid(key, mods)) {
-                    entry["secondary-icon-name"] = null;
-                    let shortcut = Gtk.accelerator_name(key, mods);
-                    this.settings.set_strv('stopwatch-keybinding-open-fullscreen', [shortcut]);
-                }
-                else {
-                    if (entry.get_text() !== '')
-                        entry["secondary-icon-name"] = "dialog-warning-symbolic";
-                    else
-                        entry["secondary-icon-name"] = "";
-                    this.settings.set_strv('stopwatch-keybinding-open-fullscreen', ['']);
-                }
-            });
+            if (Gtk.accelerator_valid(key, mods)) {
+                entry["secondary-icon-name"] = null;
+                let shortcut = Gtk.accelerator_name(key, mods);
+                this.settings.set_strv('stopwatch-keybinding-open-fullscreen', [shortcut]);
+            }
+            else {
+                if (entry.get_text() !== '')
+                    entry["secondary-icon-name"] = "dialog-warning-symbolic";
+                else
+                    entry["secondary-icon-name"] = "";
+                this.settings.set_strv('stopwatch-keybinding-open-fullscreen', ['']);
+            }
+        });
 
 
         //
@@ -499,12 +502,11 @@ const Settings = new Lang.Class({
             'active',
             Gio.SettingsBindFlags.DEFAULT);
 
-        this.builder.get_object('pomodoro-panel-mode-combo')
-            .set_active(this.settings.get_enum('pomodoro-panel-mode'));
-        this.builder.get_object('pomodoro-panel-mode-combo')
-            .connect('changed', (widget) => {
-                this.settings.set_enum('pomodoro-panel-mode', widget.get_active());
-            });
+        widget = this.builder.get_object('pomodoro-panel-mode-combo');
+        widget.set_active(this.settings.get_enum('pomodoro-panel-mode'));
+        widget.connect('changed', (widget) => {
+            this.settings.set_enum('pomodoro-panel-mode', widget.get_active());
+        });
 
         {
             let sound_uri = this.settings.get_string('pomodoro-sound-file-path');
@@ -521,19 +523,18 @@ const Settings = new Lang.Class({
                 this.settings.set_string('pomodoro-sound-file-path', GLib.filename_to_uri(ME.path + '/data/sounds/beeps.ogg', null));
             }
         }
-        this.builder.get_object('pomodoro-sound-chooser')
-            .set_uri(this.settings.get_string('pomodoro-sound-file-path'), null);
-        this.builder.get_object('pomodoro-sound-chooser')
-            .connect('selection-changed', (widget) => {
-                this.settings.set_string('pomodoro-sound-file-path', widget.get_uri());
-            });
 
-        this.builder.get_object('pomodoro-notif-style-combo')
-            .set_active(this.settings.get_enum('pomodoro-notif-style'));
-        this.builder.get_object('pomodoro-notif-style-combo')
-            .connect('changed', (widget) => {
-                this.settings.set_enum('pomodoro-notif-style', widget.get_active());
-            });
+        widget = this.builder.get_object('pomodoro-sound-chooser');
+        widget.set_uri(this.settings.get_string('pomodoro-sound-file-path'), null);
+        widget.connect('selection-changed', (widget) => {
+            this.settings.set_string('pomodoro-sound-file-path', widget.get_uri());
+        });
+
+        widget = this.builder.get_object('pomodoro-notif-style-combo');
+        widget.set_active(this.settings.get_enum('pomodoro-notif-style'));
+        widget.connect('changed', (widget) => {
+            this.settings.set_enum('pomodoro-notif-style', widget.get_active());
+        });
 
         this.settings.bind(
             'pomodoro-play-sound',
@@ -541,11 +542,10 @@ const Settings = new Lang.Class({
             'active',
             Gio.SettingsBindFlags.DEFAULT);
 
-        this.builder.get_object('pomodoro-keybinding-open')
-            .set_text(this.settings.get_strv('pomodoro-keybinding-open')[0]);
-        this.builder.get_object('pomodoro-keybinding-open')
-            .connect('changed', (entry) => {
-                let [key, mods] = Gtk.accelerator_parse(entry.get_text());
+        widget = this.builder.get_object('pomodoro-keybinding-open');
+        widget.set_text(this.settings.get_strv('pomodoro-keybinding-open')[0]);
+        widget.connect('changed', (entry) => {
+            let [key, mods] = Gtk.accelerator_parse(entry.get_text());
 
                 if (Gtk.accelerator_valid(key, mods)) {
                     entry["secondary-icon-name"] = null;
@@ -561,25 +561,24 @@ const Settings = new Lang.Class({
                 }
             });
 
-        this.builder.get_object('pomodoro-keybinding-open-fullscreen')
-            .set_text(this.settings.get_strv('pomodoro-keybinding-open-fullscreen')[0]);
-        this.builder.get_object('pomodoro-keybinding-open-fullscreen')
-            .connect('changed', (entry) => {
-                let [key, mods] = Gtk.accelerator_parse(entry.get_text());
+        widget = this.builder.get_object('pomodoro-keybinding-open-fullscreen');
+        widget.set_text(this.settings.get_strv('pomodoro-keybinding-open-fullscreen')[0]);
+        widget.connect('changed', (entry) => {
+            let [key, mods] = Gtk.accelerator_parse(entry.get_text());
 
-                if (Gtk.accelerator_valid(key, mods)) {
-                    entry["secondary-icon-name"] = null;
-                    let shortcut = Gtk.accelerator_name(key, mods);
-                    this.settings.set_strv('pomodoro-keybinding-open-fullscreen', [shortcut]);
-                }
-                else {
-                    if (entry.get_text() !== '')
-                        entry["secondary-icon-name"] = "dialog-warning-symbolic";
-                    else
-                        entry["secondary-icon-name"] = "";
-                    this.settings.set_strv('pomodoro-keybinding-open-fullscreen', ['']);
-                }
-            });
+            if (Gtk.accelerator_valid(key, mods)) {
+                entry["secondary-icon-name"] = null;
+                let shortcut = Gtk.accelerator_name(key, mods);
+                this.settings.set_strv('pomodoro-keybinding-open-fullscreen', [shortcut]);
+            }
+            else {
+                if (entry.get_text() !== '')
+                    entry["secondary-icon-name"] = "dialog-warning-symbolic";
+                else
+                    entry["secondary-icon-name"] = "";
+                this.settings.set_strv('pomodoro-keybinding-open-fullscreen', ['']);
+            }
+        });
 
 
         //
@@ -606,19 +605,18 @@ const Settings = new Lang.Class({
                 this.settings.set_string('alarms-sound-file-path', GLib.filename_to_uri(ME.path + '/data/sounds/beeps.ogg', null));
             }
         }
-        this.builder.get_object('alarms-sound-chooser')
-            .set_uri(this.settings.get_string('alarms-sound-file-path'), null);
-        this.builder.get_object('alarms-sound-chooser')
-            .connect('selection-changed', (widget) => {
-                this.settings.set_string('alarms-sound-file-path', widget.get_uri());
-            });
 
-        this.builder.get_object('alarms-notif-style-combo')
-            .set_active(this.settings.get_enum('alarms-notif-style'));
-        this.builder.get_object('alarms-notif-style-combo')
-            .connect('changed', (widget) => {
-                this.settings.set_enum('alarms-notif-style', widget.get_active());
-            });
+        widget = this.builder.get_object('alarms-sound-chooser');
+        widget.set_uri(this.settings.get_string('alarms-sound-file-path'), null);
+        widget.connect('selection-changed', (widget) => {
+            this.settings.set_string('alarms-sound-file-path', widget.get_uri());
+        });
+
+        widget = this.builder.get_object('alarms-notif-style-combo');
+        widget.set_active(this.settings.get_enum('alarms-notif-style'));
+        widget.connect('changed', (widget) => {
+            this.settings.set_enum('alarms-notif-style', widget.get_active());
+        });
 
         this.settings.bind(
             'alarms-play-sound',
@@ -626,25 +624,24 @@ const Settings = new Lang.Class({
             'active',
             Gio.SettingsBindFlags.DEFAULT);
 
-        this.builder.get_object('alarms-keybinding-open')
-            .set_text(this.settings.get_strv('alarms-keybinding-open')[0]);
-        this.builder.get_object('alarms-keybinding-open')
-            .connect('changed', (entry) => {
-                let [key, mods] = Gtk.accelerator_parse(entry.get_text());
+        widget = this.builder.get_object('alarms-keybinding-open');
+        widget.set_text(this.settings.get_strv('alarms-keybinding-open')[0]);
+        widget.connect('changed', (entry) => {
+            let [key, mods] = Gtk.accelerator_parse(entry.get_text());
 
-                if (Gtk.accelerator_valid(key, mods)) {
-                    entry["secondary-icon-name"] = null;
-                    let shortcut = Gtk.accelerator_name(key, mods);
-                    this.settings.set_strv('alarms-keybinding-open', [shortcut]);
-                }
-                else {
-                    if (entry.get_text() !== '')
-                        entry["secondary-icon-name"] = "dialog-warning-symbolic";
-                    else
-                        entry["secondary-icon-name"] = "";
-                    this.settings.set_strv('alarms-keybinding-open', ['']);
-                }
-            });
+            if (Gtk.accelerator_valid(key, mods)) {
+                entry["secondary-icon-name"] = null;
+                let shortcut = Gtk.accelerator_name(key, mods);
+                this.settings.set_strv('alarms-keybinding-open', [shortcut]);
+            }
+            else {
+                if (entry.get_text() !== '')
+                    entry["secondary-icon-name"] = "dialog-warning-symbolic";
+                else
+                    entry["secondary-icon-name"] = "";
+                this.settings.set_strv('alarms-keybinding-open', ['']);
+            }
+        });
 
 
         //
@@ -656,12 +653,11 @@ const Settings = new Lang.Class({
             'active',
             Gio.SettingsBindFlags.DEFAULT);
 
-        this.builder.get_object('todo-panel-mode-combo')
-            .set_active(this.settings.get_enum('todo-panel-mode'));
-        this.builder.get_object('todo-panel-mode-combo')
-            .connect('changed', (widget) => {
-                this.settings.set_enum('todo-panel-mode', widget.get_active());
-            });
+        widget = this.builder.get_object('todo-panel-mode-combo');
+        widget.set_active(this.settings.get_enum('todo-panel-mode'));
+        widget.connect('changed', (widget) => {
+            this.settings.set_enum('todo-panel-mode', widget.get_active());
+        });
 
         this.settings.bind(
             'todo-task-width',
@@ -669,105 +665,100 @@ const Settings = new Lang.Class({
             'value',
             Gio.SettingsBindFlags.DEFAULT);
 
-        this.builder.get_object('todo-keybinding-open')
-            .set_text(this.settings.get_strv('todo-keybinding-open')[0]);
-        this.builder.get_object('todo-keybinding-open')
-            .connect('changed', (entry) => {
-                let [key, mods] = Gtk.accelerator_parse(entry.get_text());
+        widget = this.builder.get_object('todo-keybinding-open');
+        widget.set_text(this.settings.get_strv('todo-keybinding-open')[0]);
+        widget.connect('changed', (entry) => {
+            let [key, mods] = Gtk.accelerator_parse(entry.get_text());
 
-                if (Gtk.accelerator_valid(key, mods)) {
-                    entry["secondary-icon-name"] = null;
-                    let shortcut = Gtk.accelerator_name(key, mods);
-                    this.settings.set_strv('todo-keybinding-open', [shortcut]);
-                }
-                else {
-                    if (entry.get_text() !== '')
-                        entry["secondary-icon-name"] = "dialog-warning-symbolic";
-                    else
-                        entry["secondary-icon-name"] = "";
-                    this.settings.set_strv('todo-keybinding-open', ['']);
-                }
-            });
+            if (Gtk.accelerator_valid(key, mods)) {
+                entry["secondary-icon-name"] = null;
+                let shortcut = Gtk.accelerator_name(key, mods);
+                this.settings.set_strv('todo-keybinding-open', [shortcut]);
+            }
+            else {
+                if (entry.get_text() !== '')
+                    entry["secondary-icon-name"] = "dialog-warning-symbolic";
+                else
+                    entry["secondary-icon-name"] = "";
+                this.settings.set_strv('todo-keybinding-open', ['']);
+            }
+        });
 
-        this.builder.get_object('todo-keybinding-open-to-add')
-            .set_text(this.settings.get_strv('todo-keybinding-open-to-add')[0]);
-        this.builder.get_object('todo-keybinding-open-to-add')
-            .connect('changed', (entry) => {
-                let [key, mods] = Gtk.accelerator_parse(entry.get_text());
+        widget = this.builder.get_object('todo-keybinding-open-to-add');
+        widget.set_text(this.settings.get_strv('todo-keybinding-open-to-add')[0]);
+        widget.connect('changed', (entry) => {
+            let [key, mods] = Gtk.accelerator_parse(entry.get_text());
 
-                if (Gtk.accelerator_valid(key, mods)) {
-                    entry["secondary-icon-name"] = null;
-                    let shortcut = Gtk.accelerator_name(key, mods);
-                    this.settings.set_strv('todo-keybinding-open-to-add', [shortcut]);
-                }
-                else {
-                    if (entry.get_text() !== '')
-                        entry["secondary-icon-name"] = "dialog-warning-symbolic";
-                    else
-                        entry["secondary-icon-name"] = "";
-                    this.settings.set_strv('todo-keybinding-open-to-add', ['']);
-                }
-            });
+            if (Gtk.accelerator_valid(key, mods)) {
+                entry["secondary-icon-name"] = null;
+                let shortcut = Gtk.accelerator_name(key, mods);
+                this.settings.set_strv('todo-keybinding-open-to-add', [shortcut]);
+            }
+            else {
+                if (entry.get_text() !== '')
+                    entry["secondary-icon-name"] = "dialog-warning-symbolic";
+                else
+                    entry["secondary-icon-name"] = "";
+                this.settings.set_strv('todo-keybinding-open-to-add', ['']);
+            }
+        });
 
-        this.builder.get_object('todo-keybinding-open-to-search')
-            .set_text(this.settings.get_strv('todo-keybinding-open-to-search')[0]);
-        this.builder.get_object('todo-keybinding-open-to-search')
-            .connect('changed', (entry) => {
-                let [key, mods] = Gtk.accelerator_parse(entry.get_text());
+        widget = this.builder.get_object('todo-keybinding-open-to-search');
+        widget.set_text(this.settings.get_strv('todo-keybinding-open-to-search')[0]);
+        widget.connect('changed', (entry) => {
+            let [key, mods] = Gtk.accelerator_parse(entry.get_text());
 
-                if (Gtk.accelerator_valid(key, mods)) {
-                    entry["secondary-icon-name"] = null;
-                    let shortcut = Gtk.accelerator_name(key, mods);
-                    this.settings.set_strv('todo-keybinding-open-to-search', [shortcut]);
-                }
-                else {
-                    if (entry.get_text() !== '')
-                        entry["secondary-icon-name"] = "dialog-warning-symbolic";
-                    else
-                        entry["secondary-icon-name"] = "";
-                    this.settings.set_strv('todo-keybinding-open-to-search', ['']);
-                }
-            });
+            if (Gtk.accelerator_valid(key, mods)) {
+                entry["secondary-icon-name"] = null;
+                let shortcut = Gtk.accelerator_name(key, mods);
+                this.settings.set_strv('todo-keybinding-open-to-search', [shortcut]);
+            }
+            else {
+                if (entry.get_text() !== '')
+                    entry["secondary-icon-name"] = "dialog-warning-symbolic";
+                else
+                    entry["secondary-icon-name"] = "";
+                this.settings.set_strv('todo-keybinding-open-to-search', ['']);
+            }
+        });
 
-        this.builder.get_object('todo-keybinding-open-to-stats')
-            .set_text(this.settings.get_strv('todo-keybinding-open-to-stats')[0]);
-        this.builder.get_object('todo-keybinding-open-to-stats')
-            .connect('changed', (entry) => {
-                let [key, mods] = Gtk.accelerator_parse(entry.get_text());
+        widget = this.builder.get_object('todo-keybinding-open-to-stats');
+        widget.set_text(this.settings.get_strv('todo-keybinding-open-to-stats')[0]);
+        widget.connect('changed', (entry) => {
+            let [key, mods] = Gtk.accelerator_parse(entry.get_text());
 
-                if (Gtk.accelerator_valid(key, mods)) {
-                    entry["secondary-icon-name"] = null;
-                    let shortcut = Gtk.accelerator_name(key, mods);
-                    this.settings.set_strv('todo-keybinding-open-to-stats', [shortcut]);
-                }
-                else {
-                    if (entry.get_text() !== '')
-                        entry["secondary-icon-name"] = "dialog-warning-symbolic";
-                    else
-                        entry["secondary-icon-name"] = "";
-                    this.settings.set_strv('todo-keybinding-open-to-stats', ['']);
-                }
-            });
+            if (Gtk.accelerator_valid(key, mods)) {
+                entry["secondary-icon-name"] = null;
+                let shortcut = Gtk.accelerator_name(key, mods);
+                this.settings.set_strv('todo-keybinding-open-to-stats', [shortcut]);
+            }
+            else {
+                if (entry.get_text() !== '')
+                    entry["secondary-icon-name"] = "dialog-warning-symbolic";
+                else
+                    entry["secondary-icon-name"] = "";
+                this.settings.set_strv('todo-keybinding-open-to-stats', ['']);
+            }
+        });
 
-        this.builder.get_object('todo-keybinding-open-to-switch-files')
-            .set_text(this.settings.get_strv('todo-keybinding-open-to-switch-files')[0]);
-        this.builder.get_object('todo-keybinding-open-to-switch-files')
-            .connect('changed', (entry) => {
-                let [key, mods] = Gtk.accelerator_parse(entry.get_text());
+        widget = this.builder.get_object('todo-keybinding-open-to-switch-files');
+        widget.set_text(this.settings.get_strv('todo-keybinding-open-to-switch-files')[0]);
+        widget.connect('changed', (entry) => {
+            let [key, mods] = Gtk.accelerator_parse(entry.get_text());
 
-                if (Gtk.accelerator_valid(key, mods)) {
-                    entry["secondary-icon-name"] = null;
-                    let shortcut = Gtk.accelerator_name(key, mods);
-                    this.settings.set_strv('todo-keybinding-open-to-switch-files', [shortcut]);
-                }
-                else {
-                    if (entry.get_text() !== '')
-                        entry["secondary-icon-name"] = "dialog-warning-symbolic";
-                    else
-                        entry["secondary-icon-name"] = "";
-                    this.settings.set_strv('todo-keybinding-open-to-switch-files', ['']);
-                }
-            });
+            if (Gtk.accelerator_valid(key, mods)) {
+                entry["secondary-icon-name"] = null;
+                let shortcut = Gtk.accelerator_name(key, mods);
+                this.settings.set_strv('todo-keybinding-open-to-switch-files', [shortcut]);
+            }
+            else {
+                if (entry.get_text() !== '')
+                    entry["secondary-icon-name"] = "dialog-warning-symbolic";
+                else
+                    entry["secondary-icon-name"] = "";
+                this.settings.set_strv('todo-keybinding-open-to-switch-files', ['']);
+            }
+        });
 
         let todo_files = this.settings.get_value('todo-files').deep_unpack();
         for (let i = 0; i < todo_files.length; i++) {

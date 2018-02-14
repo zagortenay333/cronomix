@@ -38,29 +38,14 @@
             <description>Position in panel</description>
         </key>
 
-        <key name="timer-enabled" type="b">
-            <default>true</default>
-            <description>Enabled this section</description>
-        </key>
-
-        <key name="stopwatch-enabled" type="b">
-            <default>true</default>
-            <description>Enabled this section</description>
-        </key>
-
-        <key name="pomodoro-enabled" type="b">
-            <default>true</default>
-            <description>Enabled this section</description>
-        </key>
-
-        <key name="alarms-enabled" type="b">
-            <default>true</default>
-            <description>Enabled this section</description>
-        </key>
-
-        <key name="todo-enabled" type="b">
-            <default>true</default>
-            <description>Enabled this section</description>
+        <key name="sections" type="a{sa{sb}}">
+            <default>{
+                'Timer'     : {'enabled': true},
+                'Stopwatch' : {'enabled': true},
+                'Pomodoro'  : {'enabled': true},
+                'Alarms'    : {'enabled': true},
+                'Todo'      : {'enabled': true}
+            }</default>
         </key>
 
 

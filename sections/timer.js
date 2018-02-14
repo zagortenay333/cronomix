@@ -23,6 +23,8 @@ const _        = Gettext.gettext;
 const ngettext = Gettext.ngettext;
 
 
+const SECTION_BASE    = ME.imports.sections.section_base;
+
 const FULLSCREEN      = ME.imports.lib.fullscreen;
 const SIG_MANAGER     = ME.imports.lib.signal_manager;
 const KEY_MANAGER     = ME.imports.lib.keybinding_manager;
@@ -66,17 +68,17 @@ const NotifStyle = {
 //
 // @signals: 'section-open-state-changed'
 // =====================================================================
-var Timer = new Lang.Class({
-    Name: 'Timepp.Timer',
+var SectionMain = new Lang.Class({
+    Name    : 'Timepp.Timer',
+    Extends : SECTION_BASE.SectionBase,
 
-    _init: function (ext, settings) {
-        this.ext      = ext;
-        this.settings = settings;
+    _init: function (section_name, ext, settings) {
+        this.parent(section_name, ext, settings);
 
-        this.section_name = 'Timer';
+        this.actor.add_style_class_name('timer-section');
 
-        this.section_enabled = this.settings.get_boolean('timer-enabled');
-        this.separate_menu   = this.settings.get_boolean('timer-separate-menu');
+        this.separate_menu = this.settings.get_boolean('timer-separate-menu');
+
         this.timer_state     = TimerState.OFF;
         this.tic_mainloop_id = null;
         this.cache_file      = null;
@@ -85,25 +87,48 @@ var Timer = new Lang.Class({
         this.clock           = 0; // microseconds
         this.end_time        = 0; // For computing elapsed time (microseconds)
 
-
         {
             let [,xml,] = Gio.file_new_for_path(IFACE).load_contents(null);
             xml = '' + xml;
             this.dbus_impl = Gio.DBusExportedObject.wrapJSObject(xml, this);
+            this.dbus_impl.export(Gio.DBus.session, '/timepp/zagortenay333/Timer');
         }
 
-
         this.linkm = new TEXT_LINKS_MNGR.TextLinksManager(MISC_UTILS.split_on_whitespace);
+        this.sigm  = new SIG_MANAGER.SignalManager();
+        this.keym  = new KEY_MANAGER.KeybindingManager(this.settings);
 
         this.fullscreen = new TimerFullscreen(this.ext, this,
             this.settings.get_int('timer-fullscreen-monitor-pos'));
-
         this.fullscreen.set_banner_text(
             this.settings.get_boolean('timer-show-seconds') ? '00:00:00' : '00:00');
 
 
-        this.sigm = new SIG_MANAGER.SignalManager();
-        this.keym = new KEY_MANAGER.KeybindingManager(this.settings);
+        try {
+            this.cache_file = Gio.file_new_for_path(CACHE_FILE);
+
+            let cache_format_version =
+                ME.metadata['cache-file-format-version'].timer;
+
+            if (this.cache_file.query_exists(null)) {
+                let [a, contents, b] = this.cache_file.load_contents(null);
+                this.cache = JSON.parse(contents);
+            }
+
+            if (!this.cache || !this.cache.format_version ||
+                this.cache.format_version !== cache_format_version) {
+
+                this.cache = {
+                    format_version         : cache_format_version,
+                    notif_msg              : '',
+                    last_manually_set_time : 30, // seconds
+                };
+            }
+        }
+        catch (e) {
+            logError(e);
+            return;
+        }
 
 
         //
@@ -118,23 +143,12 @@ var Timer = new Lang.Class({
 
 
         //
-        // add panel item
+        // panel item
         //
-        this.panel_item = new PANEL_ITEM.PanelItem(ext.menu);
         this.panel_item.icon.icon_name = 'timepp-timer-symbolic';
-
-        this.panel_item.set_label(this.settings.get_boolean('timer-show-seconds') ? '00:00:00' : '00:00');
         this.panel_item.actor.add_style_class_name('timer-panel-item');
-
+        this.panel_item.set_label(this.settings.get_boolean('timer-show-seconds') ? '00:00:00' : '00:00');
         this._toggle_panel_item_mode();
-
-        ext.panel_item_box.add_actor(this.panel_item.actor);
-
-
-        //
-        // section
-        //
-        this.actor = new St.BoxLayout({ vertical: true, style_class: 'section timer-section', x_expand: true });
 
 
         //
@@ -206,9 +220,7 @@ var Timer = new Lang.Class({
             this.ext.open_menu(this);
         });
         this.sigm.connect(this.panel_item, 'left-click', () => this.ext.toggle_menu(this));
-        this.sigm.connect(this.panel_item, 'right-click', () => this.ext.toggle_context_menu(this));
         this.sigm.connect(this.panel_item, 'middle-click', () => this.toggle_timer());
-        this.sigm.connect(this.panel_item.actor, 'enter-event', () => { if (Main.panel.menuManager.activeMenu) this.ext.open_menu(this) });
         this.sigm.connect_press(this.toggle_bin, () => this.toggle_timer());
         this.sigm.connect_press(this.fullscreen_bin, () => this.show_fullscreen());
         this.sigm.connect_press(this.settings_bin, () => this._show_settings());
@@ -216,35 +228,6 @@ var Timer = new Lang.Class({
         this.sigm.connect(this.slider, 'drag-end', () => this.slider_released());
         this.sigm.connect(this.slider.actor, 'scroll-event', () => this.slider_released());
         this.sigm.connect(this.slider_item.actor, 'button-press-event', (_, event) => this.slider.startDragging(event));
-
-
-        //
-        // Init the rest of the section or disconnect signals for now.
-        //
-        if (this.section_enabled) this.enable_section();
-        else                      this.sigm.disconnect_all();
-    },
-
-    on_section_open_state_changed: function (state) {
-        if (state) {
-            this.panel_item.actor.add_style_pseudo_class('checked');
-            this.panel_item.actor.can_focus = false;
-        }
-        else {
-            this.panel_item.actor.remove_style_pseudo_class('checked');
-            this.panel_item.actor.remove_style_pseudo_class('focus');
-            this.panel_item.actor.can_focus = true;
-        }
-
-        this.emit('section-open-state-changed', state);
-    },
-
-    toggle_section: function () {
-        if (this.section_enabled) this.disable_section();
-        else                      this.enable_section();
-
-        this.section_enabled = this.settings.get_boolean('timer-enabled');
-        this.ext.update_panel_items();
     },
 
     disable_section: function () {
@@ -258,43 +241,8 @@ var Timer = new Lang.Class({
             this.fullscreen.destroy();
             this.fullscreen = null;
         }
-    },
 
-    enable_section: function () {
-        // init cache file
-        try {
-            this.cache_file = Gio.file_new_for_path(CACHE_FILE);
-
-            let cache_format_version =
-                ME.metadata['cache-file-format-version'].timer;
-
-            if (this.cache_file.query_exists(null)) {
-                let [a, contents, b] = this.cache_file.load_contents(null);
-                this.cache = JSON.parse(contents);
-            }
-
-            if (!this.cache || !this.cache.format_version ||
-                this.cache.format_version !== cache_format_version) {
-
-                this.cache = {
-                    format_version         : cache_format_version,
-                    notif_msg              : '',
-                    last_manually_set_time : 30, // seconds
-                };
-            }
-        }
-        catch (e) {
-            logError(e);
-            return;
-        }
-
-        if (! this.fullscreen)
-            this.fullscreen = new TimerFullscreen(
-                this.ext, this, this.settings.get_int('timer-fullscreen-monitor-pos'));
-
-        this.dbus_impl.export(Gio.DBus.session, '/timepp/zagortenay333/Timer');
-        this.keym.enable_all();
-        this.sigm.connect_all();
+        this.parent();
     },
 
     _store_cache: function () {
@@ -575,7 +523,7 @@ var Timer = new Lang.Class({
             this.panel_item.set_mode('icon_text');
     },
 });
-Signals.addSignalMethods(Timer.prototype);
+Signals.addSignalMethods(SectionMain.prototype);
 
 
 

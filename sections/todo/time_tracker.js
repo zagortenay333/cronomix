@@ -113,11 +113,11 @@ var TimeTracker = new Lang.Class({
             this._archive_yearly_csv_file();
             this._init_tracker_dir(); // to ensure the new yearly_csv_file
         });
-        this.ext.connect('start-time-tracking-by-id', (_, id) => {
-            this.start_tracking_by_id(id);
+        this.ext.connect('start-time-tracking-by-id', (_, info) => {
+            this.start_tracking_by_id(info.data);
         });
-        this.ext.connect('stop-time-tracking-by-id', (_, id) => {
-            this.stop_tracking_by_id(id);
+        this.ext.connect('stop-time-tracking-by-id', (_, info) => {
+            this.stop_tracking_by_id(info.data);
         });
         delegate.settings.connect('changed::todo-current', () => {
             this.csv_dir = this.get_csv_dir_path();
@@ -303,7 +303,6 @@ var TimeTracker = new Lang.Class({
             else                 tasks    += line;
         }
 
-        log (">>>>>>>>>>>>>>>>>>>>>> " + tasks);
         try {
             if (! this.daily_csv_file.query_exists(null))
                 this.daily_csv_file.create(Gio.FileCreateFlags.NONE, null);

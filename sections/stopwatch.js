@@ -19,6 +19,7 @@ const Gettext  = imports.gettext.domain(ME.metadata['gettext-domain']);
 const _        = Gettext.gettext;
 const ngettext = Gettext.ngettext;
 
+const SECTION_BASE  = ME.imports.sections.section_base;
 
 const FULLSCREEN    = ME.imports.lib.fullscreen;
 const SIG_MANAGER   = ME.imports.lib.signal_manager;
@@ -59,17 +60,17 @@ const NotifStyle = {
 //
 // @signals: 'section-open-state-changed'
 // =====================================================================
-var Stopwatch = new Lang.Class({
-    Name: 'Timepp.Stopwatch',
+var SectionMain = new Lang.Class({
+    Name    : 'Timepp.Stopwatch',
+    Extends : SECTION_BASE.SectionBase,
 
-    _init: function (ext, settings) {
-        this.ext      = ext;
-        this.settings = settings;
+    _init: function (section_name, ext, settings) {
+        this.parent(section_name, ext, settings);
 
-        this.section_name = 'Stopwatch';
+        this.actor.add_style_class_name('stopwatch-section');
 
-        this.section_enabled = this.settings.get_boolean('stopwatch-enabled');
-        this.separate_menu   = this.settings.get_boolean('stopwatch-separate-menu');
+        this.separate_menu = this.settings.get_boolean('stopwatch-separate-menu');
+
         this.clock_format    = this.settings.get_enum('stopwatch-clock-format');
         this.start_time      = 0; // for computing elapsed time (microseconds)
         this.cache_file      = null;
@@ -79,20 +80,45 @@ var Stopwatch = new Lang.Class({
 
         this.state = StopwatchState.RESET;
 
-
         {
             let [,xml,] = Gio.file_new_for_path(IFACE).load_contents(null);
             xml = '' + xml;
             this.dbus_impl = Gio.DBusExportedObject.wrapJSObject(xml, this);
+            this.dbus_impl.export(Gio.DBus.session, '/timepp/zagortenay333/Stopwatch');
         }
-
 
         this.fullscreen = new StopwatchFullscreen(this.ext, this,
             this.settings.get_int('stopwatch-fullscreen-monitor-pos'));
 
-
         this.sigm = new SIG_MANAGER.SignalManager();
         this.keym = new KEY_MANAGER.KeybindingManager(this.settings);
+
+
+        try {
+            this.cache_file = Gio.file_new_for_path(CACHE_FILE);
+
+            let cache_format_version =
+                ME.metadata['cache-file-format-version'].stopwatch;
+
+            if (this.cache_file.query_exists(null)) {
+                let [a, contents, b] = this.cache_file.load_contents(null);
+                this.cache = JSON.parse(contents);
+            }
+
+            if (!this.cache || !this.cache.format_version ||
+                this.cache.format_version !== cache_format_version) {
+
+                this.cache = {
+                    format_version : cache_format_version,
+                    time           : 0, // microseconds
+                    laps           : [],
+                };
+            }
+        }
+        catch (e) {
+            logError(e);
+            return;
+        }
 
 
         //
@@ -109,14 +135,9 @@ var Stopwatch = new Lang.Class({
         //
         // panel item
         //
-        this.panel_item = new PANEL_ITEM.PanelItem(ext.menu);
         this.panel_item.icon.icon_name = 'timepp-stopwatch-symbolic';
-
         this.panel_item.actor.add_style_class_name('stopwatch-panel-item');
         this._toggle_panel_mode();
-
-        ext.panel_item_box.add_actor(this.panel_item.actor);
-
 
         switch (this.clock_format) {
             case ClockFormat.H_M:
@@ -132,12 +153,6 @@ var Stopwatch = new Lang.Class({
                 this.fullscreen.set_banner_text('00:00:00.00')
                 break;
         }
-
-
-        //
-        // section
-        //
-        this.actor = new St.BoxLayout({ vertical: true, style_class: 'section stopwatch-section' });
 
 
         //
@@ -228,9 +243,7 @@ var Stopwatch = new Lang.Class({
             this.ext.open_menu(this);
         });
         this.sigm.connect(this.panel_item, 'left-click', () => this.ext.toggle_menu(this));
-        this.sigm.connect(this.panel_item, 'right-click', () => this.ext.toggle_context_menu(this));
         this.sigm.connect(this.panel_item, 'middle-click', () => this.stopwatch_toggle());
-        this.sigm.connect(this.panel_item.actor, 'enter-event', () => { if (Main.panel.menuManager.activeMenu) this.ext.open_menu(this) });
         this.sigm.connect_press(this.fullscreen_bin, () => this.show_fullscreen());
         this.sigm.connect_press(this.button_start, () => this.start());
         this.sigm.connect_press(this.button_reset, () => this.reset());
@@ -244,32 +257,13 @@ var Stopwatch = new Lang.Class({
 
 
         //
-        // Init the rest of the section or disconnect signals for now.
+        // finally
         //
-        if (this.section_enabled) this.enable_section();
-        else                      this.sigm.disconnect_all();
-    },
-
-    on_section_open_state_changed: function (state) {
-        if (state) {
-            this.panel_item.actor.add_style_pseudo_class('checked');
-            this.panel_item.actor.can_focus = false;
+        if (this.cache.time > 0) {
+            this._update_laps();
+            this._update_time_display();
+            this.state = StopwatchState.STOPPED;
         }
-        else {
-            this.panel_item.actor.remove_style_pseudo_class('checked');
-            this.panel_item.actor.remove_style_pseudo_class('focus');
-            this.panel_item.actor.can_focus = true;
-        }
-
-        this.emit('section-open-state-changed', state);
-    },
-
-    toggle_section: function () {
-        if (this.section_enabled) this.disable_section();
-        else                      this.enable_section();
-
-        this.section_enabled = this.settings.get_boolean('stopwatch-enabled');
-        this.ext.update_panel_items();
     },
 
     disable_section: function () {
@@ -288,50 +282,8 @@ var Stopwatch = new Lang.Class({
             this.fullscreen.destroy();
             this.fullscreen = null;
         }
-    },
 
-    enable_section: function () {
-        // init cache file
-        try {
-            this.cache_file = Gio.file_new_for_path(CACHE_FILE);
-
-            let cache_format_version =
-                ME.metadata['cache-file-format-version'].stopwatch;
-
-            if (this.cache_file.query_exists(null)) {
-                let [a, contents, b] = this.cache_file.load_contents(null);
-                this.cache = JSON.parse(contents);
-            }
-
-            if (!this.cache || !this.cache.format_version ||
-                this.cache.format_version !== cache_format_version) {
-
-                this.cache = {
-                    format_version : cache_format_version,
-                    time           : 0, // microseconds
-                    laps           : [],
-                };
-            }
-        }
-        catch (e) {
-            logError(e);
-            return;
-        }
-
-        if (! this.fullscreen) {
-            this.fullscreen = new StopwatchFullscreen(
-                this.ext, this, this.settings.get_int('stopwatch-fullscreen-monitor-pos'));
-        }
-
-        this.dbus_impl.export(Gio.DBus.session, '/timepp/zagortenay333/Stopwatch');
-        this.sigm.connect_all();
-        this.keym.enable_all();
-
-        if (this.cache.time > 0) {
-            this._update_laps();
-            this._update_time_display();
-            this.state = StopwatchState.STOPPED;
-        }
+        this.parent();
     },
 
     _store_cache: function () {
@@ -586,7 +538,7 @@ var Stopwatch = new Lang.Class({
             return this.cache.time;
     },
 });
-Signals.addSignalMethods(Stopwatch.prototype);
+Signals.addSignalMethods(SectionMain.prototype);
 
 
 

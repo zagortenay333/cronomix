@@ -586,7 +586,8 @@ var TaskItem = new Lang.Class({
                     this.description_markup[idx].indexOf('>'));
         }
 
-        this.msg.clutter_text.set_markup(this.description_markup.join(' '));
+        this.msg.clutter_text.set_markup(
+            MISC_UTILS.markup_to_pango(this.description_markup.join(' '), this.ext.markup_map));
     },
 
     update_dates_markup: function () {

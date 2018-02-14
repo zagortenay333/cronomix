@@ -12,20 +12,25 @@ const Mainloop  = imports.mainloop;
 const ME = imports.misc.extensionUtils.getCurrentExtension();
 
 
+const Gettext = imports.gettext;
+Gettext.bindtextdomain(ME.metadata['gettext-domain'], ME.path + '/locale');
+
+
 const SIG_MANAGER = ME.imports.lib.signal_manager;
 const PANEL_ITEM  = ME.imports.lib.panel_item;
 
 
+// To add a section, add the module here and update 'sections' entry in the
+// gschema.xml file.
+const SECTIONS = new Map([
+    ['Alarms'     , ME.imports.sections.alarms],
+    ['Pomodoro'   , ME.imports.sections.pomodoro],
+    ['Stopwatch'  , ME.imports.sections.stopwatch],
+    ['Timer'      , ME.imports.sections.timer],
+    ['Todo'       , ME.imports.sections.todo.MAIN],
+]);
+
 const ContextMenu = ME.imports.sections.context_menu;
-const Timer       = ME.imports.sections.timer;
-const Stopwatch   = ME.imports.sections.stopwatch;
-const Pomodoro    = ME.imports.sections.pomodoro;
-const Alarms      = ME.imports.sections.alarms;
-const Todo        = ME.imports.sections.todo.MAIN;
-
-
-const Gettext = imports.gettext;
-Gettext.bindtextdomain(ME.metadata['gettext-domain'], ME.path + '/locale');
 
 
 const PanelPosition = {
@@ -44,7 +49,6 @@ const Timepp = new Lang.Class({
 
     _init: function () {
         this.parent(0.5, 'Timepp');
-
 
         this.actor.style_class = '';
         this.actor.can_focus   = false;
@@ -126,11 +130,21 @@ const Timepp = new Lang.Class({
         }
 
 
+        // @key: string (a section name)
+        // @val: object (an instantiated main section object)
+        //
+        // This map only holds sections that are currently enabled.
+        this.sections = new Map();
+
+        // @key: string (a section name)
+        // @val: object (a PopupSeparatorMenuItem().actor)
+        this.separators = new Map();
+
+
         this.sigm                = new SIG_MANAGER.SignalManager();
-        this.section_register    = [];
-        this.separator_register  = [];
         this.panel_item_position = this.settings.get_enum('panel-item-position');
         this.custom_stylesheet   = null;
+
         this.theme_change_signal_block = false;
 
 
@@ -142,7 +156,6 @@ const Timepp = new Lang.Class({
             if (!dir.query_exists(null))
                 dir.make_directory_with_parents(null);
         }
-
 
 
         //
@@ -175,41 +188,9 @@ const Timepp = new Lang.Class({
 
 
         //
-        // init sections
-        //
-        this.timer_section = new Timer.Timer(this, this.settings);
-        this.section_register.push(this.timer_section);
-
-        this.stopwatch_section = new Stopwatch.Stopwatch(this, this.settings);
-        this.section_register.push(this.stopwatch_section);
-
-        this.pomodoro_section = new Pomodoro.Pomodoro(this, this.settings);
-        this.section_register.push(this.pomodoro_section);
-
-        this.alarms_section = new Alarms.Alarms(this, this.settings);
-        this.section_register.push(this.alarms_section);
-
-        this.todo_section = new Todo.Todo(this, this.settings);
-        this.section_register.push(this.todo_section);
-
-        for (let i = 0, len = this.section_register.length; i < len; i++) {
-            let section = this.section_register[i];
-
-            section.actor.hide();
-            this.content_box.add_actor(section.actor);
-
-            if (i !== len - 1) {
-                let sep = new PopupMenu.PopupSeparatorMenuItem();
-                sep.actor.add_style_class_name('timepp-separator');
-                this.separator_register.push(sep.actor);
-                this.content_box.add_actor(sep.actor);
-            }
-        }
-
-
-        //
         // more init
         //
+        this._sync_sections_with_settings();
         this.update_panel_items();
         Mainloop.idle_add(() => this._load_stylesheet());
 
@@ -217,32 +198,18 @@ const Timepp = new Lang.Class({
         //
         // listen
         //
-        this.sigm.connect(this.settings, 'changed::timer-enabled', () => {
-            this.timer_section.toggle_section();
-        });
-        this.sigm.connect(this.settings, 'changed::stopwatch-enabled', () => {
-            this.stopwatch_section.toggle_section();
-        });
-        this.sigm.connect(this.settings, 'changed::pomodoro-enabled', () => {
-            this.pomodoro_section.toggle_section();
-        });
-        this.sigm.connect(this.settings, 'changed::alarms-enabled', () => {
-            this.alarms_section.toggle_section();
-        });
-        this.sigm.connect(this.settings, 'changed::todo-enabled', () => {
-            this.todo_section.toggle_section();
-        });
-        this.sigm.connect(St.ThemeContext.get_for_stage(global.stage), 'changed', () => {
-            if (this.theme_change_signal_block) return;
-            this._on_theme_changed();
+        this.sigm.connect(this.settings, 'changed::unicon-mode', () => this.update_panel_items());
+        this.sigm.connect(this.settings, 'changed::sections', () => {
+            this._sync_sections_with_settings();
         });
         this.sigm.connect(this.settings, 'changed::panel-item-position', () => {
             let new_val = this.settings.get_enum('panel-item-position');
             this._on_panel_position_changed(this.panel_item_position, new_val);
             this.panel_item_position = new_val;
         });
-        this.sigm.connect(this.settings, 'changed::unicon-mode', () => {
-            this.update_panel_items();
+        this.sigm.connect(St.ThemeContext.get_for_stage(global.stage), 'changed', () => {
+            if (this.theme_change_signal_block) return;
+            this._on_theme_changed();
         });
         this.sigm.connect(this.unicon_panel_item.actor, 'key-focus-in', () => {
             // user has right-clicked to show the context menu
@@ -251,45 +218,44 @@ const Timepp = new Lang.Class({
 
             this.open_menu();
         });
-        this.sigm.connect(this.panel_item_box, 'style-changed', () => this._update_custom_css());
         this.sigm.connect(this.unicon_panel_item, 'left-click', () => this.toggle_menu());
         this.sigm.connect(this.unicon_panel_item, 'right-click', () => this.toggle_context_menu());
         this.sigm.connect(this.unicon_panel_item.actor, 'enter-event', () => { if (Main.panel.menuManager.activeMenu) this.open_menu() });
-        this.sigm.connect(this.pomodoro_section, 'stop-time-tracking-by-id', (_, id) => this.emit('stop-time-tracking-by-id', id));
-        this.sigm.connect(this.pomodoro_section, 'start-time-tracking-by-id', (_, id) => this.emit('start-time-tracking-by-id', id));
-        this.sigm.connect(this.menu, 'open-state-changed', (_, state) => {
-            if (state) return Clutter.EVENT_PROPAGATE;
-
-            this.context_menu.actor.hide();
-            this.unicon_panel_item.actor.remove_style_pseudo_class('checked');
-            this.unicon_panel_item.actor.remove_style_pseudo_class('focus');
-            this.unicon_panel_item.actor.can_focus = true;
-
-            for (let i = 0, len = this.section_register.length; i < len; i++) {
-                let section = this.section_register[i];
-
-                if (! section.section_enabled) continue;
-
-                section.panel_item.actor.remove_style_pseudo_class('checked');
-                section.panel_item.actor.remove_style_pseudo_class('focus');
-                section.panel_item.actor.can_focus = true;
-
-                if (section.actor.visible) {
-                    section.on_section_open_state_changed(false);
-                    section.actor.visible = false;
-                }
-            }
-        });
+        this.sigm.connect(this.panel_item_box, 'style-changed', () => this._update_custom_css());
+        this.sigm.connect(this.menu, 'open-state-changed', (_, state) => this._on_open_state_changed(state));
     },
 
-    is_section_enabled: function (section_name) {
-        for (let section of this.section_register) {
-            if (section.section_name === section_name && section.section_enabled) {
-                return true;
+    _sync_sections_with_settings: function () {
+        let sections = this.settings.get_value('sections').deep_unpack();
+
+        for (let key in sections) {
+            if (! sections.hasOwnProperty(key)) continue;
+
+            if (sections[key].enabled) {
+                if (! this.sections.has(key)) {
+                    let module = SECTIONS.get(key);
+                    let section = new module.SectionMain(key, this, this.settings);
+
+                    this.sections.set(key, section);
+                    section.actor.hide();
+                    this.content_box.add_child(section.actor);
+
+                    this.panel_item_box.add_child(section.panel_item.actor);
+
+                    let sep = new PopupMenu.PopupSeparatorMenuItem();
+                    sep.actor.add_style_class_name('timepp-separator');
+                    this.content_box.add_child(sep.actor);
+                    this.separators.set(key, sep.actor);
+                }
+            }
+            else if (this.sections.has(key)) {
+                let s = this.sections.get(key);
+                s.disable_section();
+                this.sections.delete(key);
+                this.separators.get(key).destroy();
+                this.separators.delete(key);
             }
         }
-
-        return false;
     },
 
     toggle_menu: function (section) {
@@ -333,9 +299,7 @@ const Timepp = new Lang.Class({
                 this._update_menu_arrow(section.panel_item.actor);
             }
 
-            for (let section of this.section_register) {
-                if (! section.section_enabled) continue;
-
+            for (let [, section] of this.sections) {
                 if (section.separate_menu) {
                     if (section.actor.visible) {
                         hidden_sections.push(section);
@@ -358,9 +322,8 @@ const Timepp = new Lang.Class({
                 section.actor.visible = true;
             }
 
-            for (let section of this.section_register) {
+            for (let [, section] of this.sections) {
                 if (name === section.section_name ||
-                    !section.section_enabled  ||
                     !section.actor.visible) continue;
 
                 hidden_sections.push(section);
@@ -378,13 +341,6 @@ const Timepp = new Lang.Class({
             hidden_sections[i].on_section_open_state_changed(false);
     },
 
-    _update_menu_arrow: function (source_actor) {
-        if (this.menu.isOpen)
-            this.menu._boxPointer.setPosition(source_actor, this.menu._arrowAlignment);
-        else
-            this.menu.sourceActor = source_actor;
-    },
-
     toggle_context_menu: function (section) {
         if (this.menu.isOpen) {
             this.menu.close(false);
@@ -398,9 +354,7 @@ const Timepp = new Lang.Class({
         this.unicon_panel_item.actor.add_style_pseudo_class('checked');
         this.unicon_panel_item.actor.can_focus = false;
 
-        for (let i = 0, len = this.section_register.length; i < len; i++) {
-            let section = this.section_register[i];
-
+        for (let [, section] of this.sections) {
             if (section.panel_item.actor.visible) {
                 section.panel_item.actor.add_style_pseudo_class('checked');
                 section.panel_item.actor.can_focus = false;
@@ -411,49 +365,27 @@ const Timepp = new Lang.Class({
         this.menu.open(false);
     },
 
-    _update_separators: function () {
-        let any_prev_visible = this.section_register[0].actor.visible;
-
-        for (let i = 0; i < this.separator_register.length; i++) {
-            if (this.section_register[i + 1].actor.visible) {
-                this.separator_register[i].visible = any_prev_visible;
-                any_prev_visible = true;
-            }
-            else {
-                this.separator_register[i].visible = false;
-            }
-        }
+    _update_menu_arrow: function (source_actor) {
+        if (this.menu.isOpen)
+            this.menu._boxPointer.setPosition(source_actor, this.menu._arrowAlignment);
+        else
+            this.menu.sourceActor = source_actor;
     },
 
-    update_panel_items: function () {
-        if (this.settings.get_boolean('unicon-mode')) {
-            let show_unicon = false;
+    _update_separators: function () {
+        let last_visible;
 
-            for (let i = 0, len = this.section_register.length; i < len; i++) {
-                let section = this.section_register[i];
-
-                if (! section.section_enabled) {
-                    section.panel_item.actor.hide();
-                }
-                else if (section.separate_menu) {
-                    section.panel_item.actor.show();
-                }
-                else {
-                    section.panel_item.actor.hide();
-                    show_unicon = true;
-                }
+        for (let [k, sep] of this.separators) {
+            if (this.sections.get(k).actor.visible) {
+                last_visible = sep;
+                sep.show();
             }
-
-            this.unicon_panel_item.actor.visible = show_unicon;
-        }
-        else {
-            this.unicon_panel_item.actor.hide();
-
-            for (let i = 0, len = this.section_register.length; i < len; i++) {
-                let section = this.section_register[i];
-                section.panel_item.actor.visible = section.section_enabled;
+            else {
+                sep.hide();
             }
         }
+
+        if (last_visible) last_visible.hide();
     },
 
     _update_custom_css: function () {
@@ -481,6 +413,31 @@ const Timepp = new Lang.Class({
         if (update_needed) this.emit('custom-css-changed');
     },
 
+    update_panel_items: function () {
+        if (this.settings.get_boolean('unicon-mode')) {
+            let show_unicon = false;
+
+            for (let [, section] of this.sections) {
+                if (section.separate_menu) {
+                    section.panel_item.actor.show();
+                }
+                else {
+                    section.panel_item.actor.hide();
+                    show_unicon = true;
+                }
+            }
+
+            this.unicon_panel_item.actor.visible = show_unicon;
+        }
+        else {
+            this.unicon_panel_item.actor.hide();
+
+            for (let [, section] of this.sections) {
+                section.panel_item.actor.visible = true;
+            }
+        }
+    },
+
     _on_panel_position_changed: function (old_pos, new_pos) {
         let ref = this.container;
 
@@ -505,6 +462,26 @@ const Timepp = new Lang.Class({
                 break;
             case PanelPosition.RIGHT:
                 Main.panel._rightBox.insert_child_at_index(ref, 0);
+        }
+    },
+
+    _on_open_state_changed: function (state) {
+        if (state) return Clutter.EVENT_PROPAGATE;
+
+        this.context_menu.actor.hide();
+        this.unicon_panel_item.actor.remove_style_pseudo_class('checked');
+        this.unicon_panel_item.actor.remove_style_pseudo_class('focus');
+        this.unicon_panel_item.actor.can_focus = true;
+
+        for (let [, section] of this.sections) {
+            section.panel_item.actor.remove_style_pseudo_class('checked');
+            section.panel_item.actor.remove_style_pseudo_class('focus');
+            section.panel_item.actor.can_focus = true;
+
+            if (section.actor.visible) {
+                section.on_section_open_state_changed(false);
+                section.actor.visible = false;
+            }
         }
     },
 
@@ -556,6 +533,16 @@ const Timepp = new Lang.Class({
         this.custom_stylesheet = null;
     },
 
+    is_section_enabled: function (section_name) {
+        return this.sections.has(section_name);
+    },
+
+    // Used by sections to communicate with each other.
+    // This way any section can listen for signals on the main ext object.
+    emit_to_sections: function (sig, section_name, data) {
+        this.emit(sig, {section_name, data});
+    },
+
     // @HACK
     // ScrollView always allocates horizontal space for the scrollbar when the
     // policy is set to AUTOMATIC. The result is an ugly padding on the right
@@ -573,13 +560,16 @@ const Timepp = new Lang.Class({
     },
 
     destroy: function () {
-        for (let i = 0, len = this.section_register.length; i < len; i++) {
-            if (this.section_register[i].section_enabled)
-                this.section_register[i].disable_section();
+        for (let [, section] of this.sections) {
+            section.disable_section();
         }
+
+        this.sections.clear();
+        this.separators.clear();
 
         this._unload_stylesheet();
         this.sigm.clear();
+
         this.parent();
     },
 });
