@@ -20,8 +20,9 @@ const SIG_MANAGER = ME.imports.lib.signal_manager;
 const PANEL_ITEM  = ME.imports.lib.panel_item;
 
 
-// To add a section, add the module here and update 'sections' entry in the
-// gschema.xml file.
+// To add a section, add the module here, update the 'sections' entry in the
+// gschema.xml file, and add a toggle to enable/disable it (update ui and
+// prefs.js files).
 const SECTIONS = new Map([
     ['Alarms'     , ME.imports.sections.alarms],
     ['Pomodoro'   , ME.imports.sections.pomodoro],

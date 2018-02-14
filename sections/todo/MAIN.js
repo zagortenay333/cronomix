@@ -74,6 +74,9 @@ var SectionMain = new Lang.Class({
         this.view_manager = new VIEW_MANAGER.ViewManager(this.ext, this);
         this.time_tracker = null;
 
+        // The view manager only allows one view to be visible at time; however,
+        // since the stats view uses the fullscreen iface, it is orthogonal to
+        // the other views, so we don't use the view manager for it.
         this.stats_view = new VIEW_STATS.StatsView(this.ext, this, 0);
 
 
@@ -131,12 +134,6 @@ var SectionMain = new Lang.Class({
 
         // We use this for tracking when a new day begins.
         this.wallclock = new GnomeDesktop.WallClock();
-
-
-        // The view manager only allows one view to be visible at time; however,
-        // since the stats view uses the fullscreen iface, it is orthogonal to
-        // the other views, so we don't use the view manager for it.
-        this.stats_view = null;
 
 
         // Track how many tasks have a particular proj/context/prio, a
@@ -217,9 +214,6 @@ var SectionMain = new Lang.Class({
         };
 
 
-        //
-        // register shortcuts (need to be enabled later on)
-        //
         this.keym.register('todo-keybinding-open', () => {
             this.ext.open_menu(this);
             if (this.view_manager.current_view !== G.View.LOADING &&

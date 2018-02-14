@@ -126,9 +126,6 @@ var SectionMain = new Lang.Class({
         }
 
 
-        //
-        // register shortcuts (need to be enabled later on)
-        //
         this.keym.register('pomodoro-keybinding-open', () => {
              this.ext.open_menu(this);
         });

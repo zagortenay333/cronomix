@@ -120,9 +120,6 @@ var SectionMain = new Lang.Class({
         }
 
 
-        //
-        // register shortcuts (need to be enabled later on)
-        //
         this.keym.register('stopwatch-keybinding-open', () => {
              this.ext.open_menu(this);
         });
