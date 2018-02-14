@@ -870,15 +870,22 @@ var TaskItem = new Lang.Class({
     _on_event: function (actor, event) {
         switch (event.type()) {
             case Clutter.EventType.ENTER: {
-                if (!this.actor.contains(event.get_related())) {
+                let related = event.get_related();
+
+                if (related && !this.actor.contains(related)) {
                     this._show_header_icons();
                 }
+
                 break;
             }
 
             case Clutter.EventType.LEAVE: {
+                // related is the new actor we hovered over with the mouse
+                let related = event.get_related();
+
                 if (!this.header.contains(global.stage.get_key_focus()) &&
-                    !this.actor.contains(event.get_related())) {
+                    related &&
+                    !this.actor.contains(related)) {
 
                     this._hide_header_icons();
                 }
@@ -900,6 +907,7 @@ var TaskItem = new Lang.Class({
                     if (! this.header.contains(global.stage.get_key_focus()))
                         this._hide_header_icons();
                 });
+
                 break;
             }
 
