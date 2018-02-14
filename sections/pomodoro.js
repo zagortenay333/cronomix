@@ -127,7 +127,7 @@ var SectionMain = new Lang.Class({
 
 
         this.keym.register('pomodoro-keybinding-open', () => {
-             this.ext.open_menu(this);
+             this.ext.open_menu(this.section_name);
         });
         this.keym.register('pomodoro-keybinding-open-fullscreen', () => {
             this.show_fullscreen();
@@ -217,20 +217,9 @@ var SectionMain = new Lang.Class({
             this.separate_menu = this.settings.get_boolean('pomodoro-separate-menu');
             this.ext.update_panel_items();
         });
-        this.sigm.connect(this.settings, 'changed::pomodoro-show-seconds', () => {
-            this._update_time_display();
-        });
-        this.sigm.connect(this.settings, 'changed::pomodoro-panel-mode', () => {
-            this._toggle_panel_mode();
-        });
-        this.sigm.connect(this.panel_item.actor, 'key-focus-in', () => {
-            // user has right-clicked to show the context menu
-            if (this.ext.menu.isOpen && this.ext.context_menu.actor.visible)
-                return;
-
-            this.ext.open_menu(this);
-        });
-        this.sigm.connect(this.panel_item, 'left-click', () => this.ext.toggle_menu(this));
+        this.sigm.connect(this.settings, 'changed::pomodoro-show-seconds', () => this._update_time_display());
+        this.sigm.connect(this.settings, 'changed::pomodoro-panel-mode', () => this._toggle_panel_mode());
+        this.sigm.connect(this.panel_item, 'left-click', () => this.ext.toggle_menu(this.section_name));
         this.sigm.connect(this.panel_item, 'middle-click', () => this.timer_toggle());
         this.sigm.connect_press(this.settings_btn, () => this._show_settings());
         this.sigm.connect_press(this.fullscreen_btn, () => this.show_fullscreen());

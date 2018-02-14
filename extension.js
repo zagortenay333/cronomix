@@ -259,13 +259,9 @@ const Timepp = new Lang.Class({
         }
     },
 
-    toggle_menu: function (section) {
-        if (this.menu.isOpen) {
-            this.menu.close(false);
-        }
-        else {
-            this.open_menu(section);
-        }
+    toggle_menu: function (section_name) {
+        if (this.menu.isOpen) this.menu.close(false);
+        else                  this.open_menu(section_name);
     },
 
     // @section: obj (a section's main object)
@@ -278,12 +274,14 @@ const Timepp = new Lang.Class({
     //
     //     - If @section is not a sep menu, we show all joined sections that
     //       are enabled.
-    open_menu: function (section) {
+    open_menu: function (section_name) {
         if (this.context_menu.actor.visible) return;
 
         this.unicon_panel_item.actor.remove_style_pseudo_class('checked');
         this.unicon_panel_item.actor.remove_style_pseudo_class('focus');
         this.unicon_panel_item.actor.can_focus = true;
+
+        let section = this.sections.get(section_name);
 
         // Track sections whose state has changed and call their
         // on_section_open_state_changed method after the menu has been shown.
@@ -316,15 +314,13 @@ const Timepp = new Lang.Class({
         else if (section.separate_menu) {
             this._update_menu_arrow(section.panel_item.actor);
 
-            let name = section.section_name;
-
             if (! section.actor.visible) {
                 shown_sections.push(section);
                 section.actor.visible = true;
             }
 
             for (let [, section] of this.sections) {
-                if (name === section.section_name ||
+                if (section_name === section.section_name ||
                     !section.actor.visible) continue;
 
                 hidden_sections.push(section);
@@ -342,11 +338,13 @@ const Timepp = new Lang.Class({
             hidden_sections[i].on_section_open_state_changed(false);
     },
 
-    toggle_context_menu: function (section) {
+    toggle_context_menu: function (section_name) {
         if (this.menu.isOpen) {
             this.menu.close(false);
             return;
         }
+
+        let section  = this.sections.get(section_name);
 
         if (section) this._update_menu_arrow(section.panel_item.actor);
         else         this._update_menu_arrow(this.unicon_panel_item.actor);

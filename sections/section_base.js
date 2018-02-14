@@ -33,8 +33,9 @@ var SectionBase = new Lang.Class({
         //
         // listen
         //
-        this.panel_item.connect('right-click', () => this.ext.toggle_context_menu(this));
-        this.panel_item.actor.connect('enter-event', () => { if (Main.panel.menuManager.activeMenu) this.ext.open_menu(this)});
+        this.panel_item.connect('right-click', () => this.ext.toggle_context_menu(this.section_name));
+        this.panel_item.actor.connect('enter-event', () => { if (Main.panel.menuManager.activeMenu) this.ext.open_menu(this.section_name)});
+        this.panel_item.actor.connect('key-focus-in', () => this.ext.open_menu(this.section_name));
     },
 
     disable_section: function () {

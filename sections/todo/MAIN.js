@@ -215,7 +215,7 @@ var SectionMain = new Lang.Class({
 
 
         this.keym.register('todo-keybinding-open', () => {
-            this.ext.open_menu(this);
+            this.ext.open_menu(this.section_name);
             if (this.view_manager.current_view !== G.View.LOADING &&
                 this.view_manager.current_view !== G.View.NO_TODO_FILE) {
 
@@ -223,7 +223,7 @@ var SectionMain = new Lang.Class({
             }
         });
         this.keym.register('todo-keybinding-open-to-add', () => {
-            this.ext.open_menu(this);
+            this.ext.open_menu(this.section_name);
             if (this.view_manager.current_view !== G.View.LOADING &&
                 this.view_manager.current_view !== G.View.NO_TODO_FILE) {
 
@@ -231,7 +231,7 @@ var SectionMain = new Lang.Class({
             }
         });
         this.keym.register('todo-keybinding-open-to-search', () => {
-            this.ext.open_menu(this);
+            this.ext.open_menu(this.section_name);
             if (this.view_manager.current_view !== G.View.LOADING &&
                 this.view_manager.current_view !== G.View.NO_TODO_FILE) {
 
@@ -246,7 +246,7 @@ var SectionMain = new Lang.Class({
             }
         });
         this.keym.register('todo-keybinding-open-to-switch-files', () => {
-            this.ext.open_menu(this);
+            this.ext.open_menu(this.section_name);
             if (this.view_manager.current_view !== G.View.LOADING &&
                 this.view_manager.current_view !== G.View.NO_TODO_FILE &&
                 this.settings.get_value('todo-files').deep_unpack().length > 1) {
@@ -432,20 +432,13 @@ var SectionMain = new Lang.Class({
             for (let task of this.tasks)
                 task.actor.width = width;
         });
-        this.sigm.connect(this.panel_item.actor, 'key-focus-in', () => {
-            // user has right-clicked to show the context menu
-            if (this.ext.menu.isOpen && this.ext.context_menu.actor.visible)
-                return;
-
-            this.ext.open_menu(this);
-        });
         this.sigm.connect(this.wallclock, 'notify::clock', () => {
             let t = GLib.DateTime.new_now(this.wallclock.timezone);
             t     = t.format('%H:%M');
 
             if (t === '00:00') this._on_new_day_started();
         });
-        this.sigm.connect(this.panel_item, 'left-click', () => this.ext.toggle_menu(this));
+        this.sigm.connect(this.panel_item, 'left-click', () => this.ext.toggle_menu(this.section_name));
         this.sigm.connect_press(this.add_task_button, () => this.show_view__task_editor());
         this.sigm.connect_press(this.filter_button, () => this.show_view__filters());
         this.sigm.connect_press(this.sort_button, () => this.show_view__sort());

@@ -135,7 +135,7 @@ var SectionMain = new Lang.Class({
         // register shortcuts (need to be enabled later on)
         //
         this.keym.register('alarms-keybinding-open', () => {
-             this.ext.open_menu(this);
+             this.ext.open_menu(this.section_name);
         });
 
 
@@ -184,31 +184,19 @@ var SectionMain = new Lang.Class({
         //
         // listen
         //
-        this.sigm.connect(this.wallclock, 'notify::clock', () => {
-            this._tic();
-        });
-        this.sigm.connect(this.fullscreen, 'monitor-changed', () => {
-            this.settings.set_int('alarms-fullscreen-monitor-pos', this.fullscreen.monitor);
-        });
         this.sigm.connect(this.settings, 'changed::alarms-separate-menu', () => {
             this.separate_menu = this.settings.get_boolean('alarms-separate-menu');
             this.ext.update_panel_items();
         });
-        this.sigm.connect(this.panel_item.actor, 'key-focus-in', () => {
-            // user has right-clicked to show the context menu
-            if (this.ext.menu.isOpen && this.ext.context_menu.actor.visible)
-                return;
-
-            this.ext.open_menu(this);
-        });
-        this.sigm.connect(this.panel_item, 'left-click', () => { this.ext.toggle_menu(this); });
-        this.sigm.connect_press(this.add_alarm_button, () => { this.alarm_editor(); });
         this.sigm.connect(this.alarms_scroll_content, 'queue-redraw', () => {
             this.alarms_scroll.vscrollbar_policy = Gtk.PolicyType.NEVER;
-
             if (ext.needs_scrollbar())
                 this.alarms_scroll.vscrollbar_policy = Gtk.PolicyType.ALWAYS;
         });
+        this.sigm.connect(this.wallclock, 'notify::clock', () => this._tic());
+        this.sigm.connect(this.fullscreen, 'monitor-changed', () => this.settings.set_int('alarms-fullscreen-monitor-pos', this.fullscreen.monitor));
+        this.sigm.connect(this.panel_item, 'left-click', () => this.ext.toggle_menu(this.section_name));
+        this.sigm.connect_press(this.add_alarm_button, () => this.alarm_editor());
 
 
         //

@@ -121,7 +121,7 @@ var SectionMain = new Lang.Class({
 
 
         this.keym.register('stopwatch-keybinding-open', () => {
-             this.ext.open_menu(this);
+             this.ext.open_menu(this.section_name);
         });
         this.keym.register('stopwatch-keybinding-open-fullscreen', () => {
             this.show_fullscreen();
@@ -228,28 +228,19 @@ var SectionMain = new Lang.Class({
             this.panel_item.set_label(txt);
             this.fullscreen.set_banner_text(txt);
         });
-        this.sigm.connect(this.settings, 'changed::stopwatch-panel-mode', () => {
-            this._toggle_panel_mode();
+        this.sigm.connect(this.laps_string, 'queue-redraw', () => {
+            this.laps_scroll.vscrollbar_policy = Gtk.PolicyType.NEVER;
+            if (ext.needs_scrollbar())
+                this.laps_scroll.vscrollbar_policy = Gtk.PolicyType.ALWAYS;
         });
-        this.sigm.connect(this.panel_item.actor, 'key-focus-in', () => {
-            // user has right-clicked to show the context menu
-            if (this.ext.menu.isOpen && this.ext.context_menu.actor.visible)
-                return;
-
-            this.ext.open_menu(this);
-        });
-        this.sigm.connect(this.panel_item, 'left-click', () => this.ext.toggle_menu(this));
+        this.sigm.connect(this.settings, 'changed::stopwatch-panel-mode', () => this._toggle_panel_mode());
+        this.sigm.connect(this.panel_item, 'left-click', () => this.ext.toggle_menu(this.section_name));
         this.sigm.connect(this.panel_item, 'middle-click', () => this.stopwatch_toggle());
         this.sigm.connect_press(this.fullscreen_bin, () => this.show_fullscreen());
         this.sigm.connect_press(this.button_start, () => this.start());
         this.sigm.connect_press(this.button_reset, () => this.reset());
         this.sigm.connect_press(this.button_stop, () => this.stop());
         this.sigm.connect_press(this.button_lap, () => this.lap());
-        this.sigm.connect(this.laps_string, 'queue-redraw', () => {
-            this.laps_scroll.vscrollbar_policy = Gtk.PolicyType.NEVER;
-            if (ext.needs_scrollbar())
-                this.laps_scroll.vscrollbar_policy = Gtk.PolicyType.ALWAYS;
-        });
 
 
         //
