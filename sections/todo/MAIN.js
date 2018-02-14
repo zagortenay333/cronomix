@@ -54,7 +54,6 @@ const CACHE_FILE = GLib.get_home_dir() +
 //
 // @signals:
 //   - 'new-day' (new day started) (returns string in yyyy-mm-dd iso format)
-//   - 'section-open-state-changed'
 // =====================================================================
 var SectionMain = new Lang.Class({
     Name    : 'Timepp.Todo',

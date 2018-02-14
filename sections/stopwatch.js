@@ -56,8 +56,6 @@ const NotifStyle = {
 //
 // @ext      : obj (main extension object)
 // @settings : obj (extension settings)
-//
-// @signals: 'section-open-state-changed'
 // =====================================================================
 var SectionMain = new Lang.Class({
     Name    : 'Timepp.Stopwatch',

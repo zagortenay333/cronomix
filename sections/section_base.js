@@ -15,6 +15,9 @@ const PANEL_ITEM = ME.imports.lib.panel_item;
 //
 // @ext      : obj (main extension object)
 // @settings : obj (extension settings)
+//
+// @signals:
+//     - 'section-open-state-changed' (return bool (state))
 // =====================================================================
 var SectionBase = new Lang.Class({
     Name: 'Timepp.SectionBase',
