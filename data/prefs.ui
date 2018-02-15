@@ -2499,6 +2499,8 @@ F3</property>
                               <object class="GtkBox">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
+                                <property name="hexpand">True</property>
+                                <property name="vexpand">True</property>
                                 <property name="orientation">vertical</property>
                                 <child>
                                   <object class="GtkToolbar">
@@ -2520,13 +2522,12 @@ F3</property>
                                       </packing>
                                     </child>
                                     <child>
-                                      <object class="GtkToolButton" id="tree-remove-button">
-                                        <property name="name">(</property>
+                                      <object class="GtkToolButton" id="tree-edit-button">
                                         <property name="visible">True</property>
                                         <property name="sensitive">False</property>
                                         <property name="can_focus">False</property>
                                         <property name="use_underline">True</property>
-                                        <property name="icon_name">list-remove-symbolic</property>
+                                        <property name="icon_name">edit-symbolic</property>
                                       </object>
                                       <packing>
                                         <property name="expand">False</property>
@@ -2534,15 +2535,19 @@ F3</property>
                                       </packing>
                                     </child>
                                     <child>
-                                      <object class="GtkToolButton" id="tree-edit-button">
+                                      <object class="GtkToolButton" id="tree-remove-button">
+                                        <property name="name">(</property>
                                         <property name="visible">True</property>
                                         <property name="sensitive">False</property>
                                         <property name="can_focus">False</property>
+                                        <property name="halign">end</property>
+                                        <property name="hexpand">True</property>
+                                        <property name="vexpand">True</property>
                                         <property name="use_underline">True</property>
-                                        <property name="icon_name">document-properties-symbolic</property>
+                                        <property name="icon_name">list-remove-symbolic</property>
                                       </object>
                                       <packing>
-                                        <property name="expand">False</property>
+                                        <property name="expand">True</property>
                                         <property name="homogeneous">True</property>
                                       </packing>
                                     </child>
@@ -2551,7 +2556,7 @@ F3</property>
                                     </style>
                                   </object>
                                   <packing>
-                                    <property name="expand">False</property>
+                                    <property name="expand">True</property>
                                     <property name="fill">True</property>
                                     <property name="position">0</property>
                                   </packing>
