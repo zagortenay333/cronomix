@@ -221,12 +221,12 @@ var SectionMain = new Lang.Class({
         this.sigm.connect(this.settings, 'changed::pomodoro-panel-mode', () => this._toggle_panel_mode());
         this.sigm.connect(this.panel_item, 'left-click', () => this.ext.toggle_menu(this.section_name));
         this.sigm.connect(this.panel_item, 'middle-click', () => this.timer_toggle());
-        this.sigm.connect_press(this.settings_btn, () => this._show_settings());
-        this.sigm.connect_press(this.fullscreen_btn, () => this.show_fullscreen());
-        this.sigm.connect_press(this.button_continue, () => this.start_pomo());
-        this.sigm.connect_press(this.button_stop, () => this.stop());
-        this.sigm.connect_press(this.button_new_pomo, () => this.start_new_pomo());
-        this.sigm.connect_press(this.button_take_break, () => this.take_break());
+        this.sigm.connect_press(this.settings_btn, Clutter.BUTTON_PRIMARY, true, () => this._show_settings());
+        this.sigm.connect_press(this.fullscreen_btn, Clutter.BUTTON_PRIMARY, true, () => this.show_fullscreen());
+        this.sigm.connect_press(this.button_continue, Clutter.BUTTON_PRIMARY, true, () => this.start_pomo());
+        this.sigm.connect_press(this.button_stop, Clutter.BUTTON_PRIMARY, true, () => this.stop());
+        this.sigm.connect_press(this.button_new_pomo, Clutter.BUTTON_PRIMARY, true, () => this.start_new_pomo());
+        this.sigm.connect_press(this.button_take_break, Clutter.BUTTON_PRIMARY, true, () => this.take_break());
 
 
         //

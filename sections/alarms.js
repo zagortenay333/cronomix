@@ -194,7 +194,7 @@ var SectionMain = new Lang.Class({
         this.sigm.connect(this.wallclock, 'notify::clock', () => this._tic());
         this.sigm.connect(this.fullscreen, 'monitor-changed', () => this.settings.set_int('alarms-fullscreen-monitor-pos', this.fullscreen.monitor));
         this.sigm.connect(this.panel_item, 'left-click', () => this.ext.toggle_menu(this.section_name));
-        this.sigm.connect_press(this.add_alarm_button, () => this.alarm_editor());
+        this.sigm.connect_press(this.add_alarm_button, Clutter.BUTTON_PRIMARY, true, () => this.alarm_editor());
 
 
         //
@@ -685,7 +685,7 @@ const AlarmItem = new Lang.Class({
         // listen
         //
         this.toggle_bin.connect('clicked', () => this._on_toggle());
-        this.delegate.sigm.connect_press(this.edit_bin, () => this._on_edit());
+        this.delegate.sigm.connect_press(this.edit_bin, Clutter.BUTTON_PRIMARY, true, () => this._on_edit());
         this.ext.connect('custom-css-changed', () => this._on_custom_css_updated());
         this.actor.connect('queue-redraw', () => { MISC_UTILS.resize_label(this.msg); });
         this.actor.connect('enter-event',  () => { this.edit_bin.show(); });

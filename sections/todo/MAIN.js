@@ -330,7 +330,7 @@ var SectionMain = new Lang.Class({
         this.filter_button = new St.Button({ can_focus: true, x_align: St.Align.END, style_class: 'filter-icon' });
         this.icon_box.add(this.filter_button);
 
-        this.filter_icon = new St.Icon({ icon_name: 'timepp-filter-symbolic', y_align: Clutter.ActorAlign.CENTER });
+        this.filter_icon = new St.Icon({ y_align: Clutter.ActorAlign.CENTER });
         this.filter_button.add_actor(this.filter_icon);
 
 
@@ -438,13 +438,14 @@ var SectionMain = new Lang.Class({
             if (t === '00:00') this._on_new_day_started();
         });
         this.sigm.connect(this.panel_item, 'left-click', () => this.ext.toggle_menu(this.section_name));
-        this.sigm.connect_press(this.add_task_button, () => this.show_view__task_editor());
-        this.sigm.connect_press(this.filter_button, () => this.show_view__filters());
-        this.sigm.connect_press(this.sort_button, () => this.show_view__sort());
-        this.sigm.connect_press(this.file_switcher_button, () => this.show_view__file_switcher());
-        this.sigm.connect_press(this.search_button, () => this.show_view__search());
-        this.sigm.connect_press(this.stats_button, () => this.show_view__time_tracker_stats());
-        this.sigm.connect_press(this.clear_button, () => this.show_view__clear_completed());
+        this.sigm.connect_press(this.add_task_button, Clutter.BUTTON_PRIMARY, true, () => this.show_view__task_editor());
+        this.sigm.connect_press(this.filter_button, Clutter.BUTTON_PRIMARY, true, () => this.show_view__filters());
+        this.sigm.connect_press(this.filter_button, Clutter.BUTTON_MIDDLE, false, () => this.toggle_invert_filters());
+        this.sigm.connect_press(this.sort_button, Clutter.BUTTON_PRIMARY, true, () => this.show_view__sort());
+        this.sigm.connect_press(this.file_switcher_button, Clutter.BUTTON_PRIMARY, true, () => this.show_view__file_switcher());
+        this.sigm.connect_press(this.search_button, Clutter.BUTTON_PRIMARY, true, () => this.show_view__search());
+        this.sigm.connect_press(this.stats_button, Clutter.BUTTON_PRIMARY, true, () => this.show_view__time_tracker_stats());
+        this.sigm.connect_press(this.clear_button, Clutter.BUTTON_PRIMARY, true, () => this.show_view__clear_completed());
         this.sigm.connect(this.search_entry, 'secondary-icon-clicked', () => this.show_view__default());
         this.sigm.connect(this.ext, 'custom-css-changed', () => this._on_custom_css_changed());
         this.sigm.connect(this.search_entry.clutter_text, 'text-changed', () => {
@@ -1331,11 +1332,24 @@ var SectionMain = new Lang.Class({
             this.add_tasks_to_menu(true);
     },
 
+    toggle_invert_filters: function () {
+        this.cache.filters.invert_filters = !this.cache.filters.invert_filters;
+        this.store_cache();
+        this.on_tasks_changed();
+    },
+
     _update_filter_icon: function () {
-        if (this.has_active_filters())
+        if (this.cache.filters.invert_filters) {
+            this.filter_icon.icon_name = 'timepp-filter-inverted-symbolic';
+        } else {
+            this.filter_icon.icon_name = 'timepp-filter-symbolic';
+        }
+
+        if (this.has_active_filters()) {
             this.filter_button.add_style_class_name('active');
-        else
+        } else {
             this.filter_button.remove_style_class_name('active');
+        }
     },
 
     // This func will sort this.tasks array as well as call add_tasks_to_menu to

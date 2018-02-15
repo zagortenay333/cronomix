@@ -234,11 +234,11 @@ var SectionMain = new Lang.Class({
         this.sigm.connect(this.settings, 'changed::stopwatch-panel-mode', () => this._toggle_panel_mode());
         this.sigm.connect(this.panel_item, 'left-click', () => this.ext.toggle_menu(this.section_name));
         this.sigm.connect(this.panel_item, 'middle-click', () => this.stopwatch_toggle());
-        this.sigm.connect_press(this.fullscreen_bin, () => this.show_fullscreen());
-        this.sigm.connect_press(this.button_start, () => this.start());
-        this.sigm.connect_press(this.button_reset, () => this.reset());
-        this.sigm.connect_press(this.button_stop, () => this.stop());
-        this.sigm.connect_press(this.button_lap, () => this.lap());
+        this.sigm.connect_press(this.fullscreen_bin, Clutter.BUTTON_PRIMARY, true, () => this.show_fullscreen());
+        this.sigm.connect_press(this.button_start, Clutter.BUTTON_PRIMARY, true, () => this.start());
+        this.sigm.connect_press(this.button_reset, Clutter.BUTTON_PRIMARY, true, () => this.reset());
+        this.sigm.connect_press(this.button_stop, Clutter.BUTTON_PRIMARY, true, () => this.stop());
+        this.sigm.connect_press(this.button_lap, Clutter.BUTTON_PRIMARY, true, () => this.lap());
 
 
         //
