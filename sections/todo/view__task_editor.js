@@ -144,21 +144,6 @@ var TaskEditor = new Lang.Class({
         //
         // listen
         //
-        this.button_ok.connect('clicked', () => {
-            this.emit(this.mode, this._create_task_str());
-        });
-        this.button_cancel.connect('clicked', () => {
-           this.emit('cancel');
-        });
-        this.help_label.connect('button-press-event', () => {
-            try {
-                Gio.app_info_launch_default_for_uri(
-                    TODO_TXT_SYNTAX_URL,
-                    global.create_app_launch_context(0, -1)
-                );
-            }
-            catch (e) { logError(e); }
-        });
         this.entry.entry.clutter_text.connect('text-changed', () => {
             if (this.text_changed_handler_block)
                 return Clutter.EVENT_PROPAGATE;
@@ -192,6 +177,10 @@ var TaskEditor = new Lang.Class({
             if (this.ext.needs_scrollbar())
                 this.completion_menu.vscrollbar_policy = Gtk.PolicyType.ALWAYS;
         });
+        this.button_ok.connect('clicked', () => this.emit(this.mode, this._create_task_str()));
+        this.button_cancel.connect('clicked', () => this.emit('cancel'));
+        this.help_label.connect('button-press-event', () => MISC_UTILS.open_web_uri(TODO_TXT_SYNTAX_URL));
+        this.help_label.connect('key-press-event', () => MISC_UTILS.open_web_uri(TODO_TXT_SYNTAX_URL));
     },
 
     // @word: string (a context or project)
