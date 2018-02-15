@@ -127,25 +127,11 @@ var TaskItem = new Lang.Class({
 
             MISC_UTILS.resize_label(this.msg);
         });
-        this.actor.connect('event', (actor, event) => {
-            this._on_event(actor, event);
-            return Clutter.EVENT_PROPAGATE;
-        });
-        this.prio_label.connect('leave-event', () => {
-            global.screen.set_cursor(Meta.Cursor.DEFAULT);
-        });
-        this.prio_label.connect('enter-event', () => {
-            global.screen.set_cursor(Meta.Cursor.POINTING_HAND);
-        });
-        this.msg.connect('leave-event', () => {
-            global.screen.set_cursor(Meta.Cursor.DEFAULT);
-        });
         this.msg.connect('motion-event', (_, event) => {
             this.current_keyword = this._find_keyword(event);
-            if (this.current_keyword)
-                global.screen.set_cursor(Meta.Cursor.POINTING_HAND);
-            else
-                global.screen.set_cursor(Meta.Cursor.DEFAULT);
+
+            if (this.current_keyword) global.screen.set_cursor(Meta.Cursor.POINTING_HAND);
+            else                      global.screen.set_cursor(Meta.Cursor.DEFAULT);
         });
         this.completion_checkbox.connect('clicked', () => {
             this.toggle_task();
@@ -153,6 +139,10 @@ var TaskItem = new Lang.Class({
             this.delegate.on_tasks_changed();
             this.delegate.write_tasks_to_file();
         });
+        this.actor.connect('event', (actor, event) => this._on_event(actor, event));
+        this.prio_label.connect('enter-event', () => global.screen.set_cursor(Meta.Cursor.POINTING_HAND));
+        this.prio_label.connect('leave-event', () => global.screen.set_cursor(Meta.Cursor.DEFAULT));
+        this.msg.connect('leave-event', () => global.screen.set_cursor(Meta.Cursor.DEFAULT));
     },
 
     reset: function (self_update, task_str) {
@@ -759,17 +749,14 @@ var TaskItem = new Lang.Class({
         // listen
         this.delegate.sigm.connect_press(this.stat_icon_bin, Clutter.BUTTON_PRIMARY, true, () => {
             this.delegate.show_view__time_tracker_stats(this);
-            Mainloop.idle_add(() => this._hide_header_icons());
-            return Clutter.EVENT_STOP;
+            this._hide_header_icons();
         });
         this.delegate.sigm.connect_press(this.edit_icon_bin, Clutter.BUTTON_PRIMARY, true, () => {
             this.delegate.show_view__task_editor(this);
-            Mainloop.idle_add(() => this._hide_header_icons());
-            return Clutter.EVENT_STOP;
+            this._hide_header_icons();
         });
         this.delegate.sigm.connect_press(this.tracker_icon_bin, Clutter.BUTTON_PRIMARY, true, () => {
             this.delegate.time_tracker.toggle_tracking(this);
-            return Clutter.EVENT_STOP;
         });
     },
 

@@ -56,13 +56,11 @@ var ViewManager = new Lang.Class({
         });
     },
 
-    // @view:
-    //   is an object of the form: { view_name      : View,
-    //                               actors         : array,
-    //                               focused_actors : object,
-    //                               close_callback : func, }
-    //
-    // When calling this function all properties must be provided.
+    // @view: object of the form: { view_name      : View,
+    //                              actors         : array,
+    //                              focused_actors : object,
+    //                              close_callback : func,
+    //                              open_callback  : func, }
     //
     // @view_name:
     //   Name of the new view. Only use the View enum here.
@@ -82,14 +80,6 @@ var ViewManager = new Lang.Class({
     //   Function that is used to open the view. If it is not given, then
     //   opening the view means that the actors will be added to the popup menu.
     show_view: function (view) {
-        // When switching to a different view, the size of the menu can change
-        // and the mouse pointer can end up outside of the menu.
-        // Since we change the view on mouse press, the user might release the
-        // mouse outside the popup-menu which will end up closing it.
-        // ignoreRelease() is used just in case we need to ignore the next mouse
-        // release.
-        Main.panel.menuManager.ignoreRelease();
-
         if (this.delegate.tasks_scroll_wrapper.visible)
             this._hide_tasks();
 
@@ -105,8 +95,7 @@ var ViewManager = new Lang.Class({
 
         if (typeof this.open_callback === 'function') {
             this.open_callback();
-        }
-        else {
+        } else {
             this.delegate.actor.remove_all_children();
 
             for (let i = 0; i < this.actors.length; i++) {
@@ -125,9 +114,8 @@ var ViewManager = new Lang.Class({
                 this._show_tasks();
         }
 
-        if (this.ext.menu.isOpen)  {
+        if (this.ext.menu.isOpen)
             Mainloop.timeout_add(0, () => view.focused_actor.grab_key_focus());
-        }
     },
 
     // @SPEED
