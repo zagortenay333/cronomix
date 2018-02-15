@@ -368,7 +368,7 @@ var SectionMain = new Lang.Class({
             let sound_file = this.settings.get_string('alarms-sound-file-path');
 
             if (sound_file) {
-                [sound_file,] = GLib.filename_from_uri(sound_file, null);
+                [sound_file,] = GLib.filename_from_uri(sound_file);
                 global.play_sound_file(0, sound_file, '', null);
             }
         }

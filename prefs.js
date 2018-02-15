@@ -352,7 +352,7 @@ const Settings = new Lang.Class({
             let sound_uri = this.settings.get_string('timer-sound-file-path');
 
             if (sound_uri) {
-                let [sound_path,] = GLib.filename_from_uri(sound_uri, null);
+                let [sound_path,] = GLib.filename_from_uri(sound_uri);
 
                 if (GLib.file_test(sound_path, GLib.FileTest.EXISTS))
                     this.settings.set_string('timer-sound-file-path', sound_uri, null);
@@ -512,7 +512,7 @@ const Settings = new Lang.Class({
             let sound_uri = this.settings.get_string('pomodoro-sound-file-path');
 
             if (sound_uri) {
-                let [sound_path,] = GLib.filename_from_uri(sound_uri, null);
+                let [sound_path,] = GLib.filename_from_uri(sound_uri);
 
                 if (GLib.file_test(sound_path, GLib.FileTest.EXISTS))
                     this.settings.set_string('pomodoro-sound-file-path', sound_uri, null);
@@ -594,7 +594,7 @@ const Settings = new Lang.Class({
             let sound_uri = this.settings.get_string('alarms-sound-file-path');
 
             if (sound_uri) {
-                let [sound_path,] = GLib.filename_from_uri(sound_uri, null);
+                let [sound_path,] = GLib.filename_from_uri(sound_uri);
 
                 if (GLib.file_test(sound_path, GLib.FileTest.EXISTS))
                     this.settings.set_string('alarms-sound-file-path', sound_uri, null);

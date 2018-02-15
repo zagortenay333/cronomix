@@ -508,7 +508,7 @@ var TimeTracker = new Lang.Class({
             let d = this.delegate.settings.get_value('todo-current').deep_unpack().csv_dir;
             let error;
 
-            if (d) [d, error] = GLib.filename_from_uri(d, null);
+            if (d) [d, error] = GLib.filename_from_uri(d);
 
             if (error) return null;
             else       return d;
@@ -613,13 +613,6 @@ var TimeTracker = new Lang.Class({
     close: function () {
         this.stop_all_tracking();
 
-        this._write_daily_csv_file();
-
-        this.daily_csv_map.clear();
-        this.stats_data.clear();
-        this.stats_unique_entries.clear();
-        this.dbus_impl.unexport();
-
         if (this.daily_csv_file_monitor) {
             this.daily_csv_file_monitor.cancel();
             this.daily_csv_file_monitor = null;
@@ -634,6 +627,13 @@ var TimeTracker = new Lang.Class({
             this.yearly_csv_dir_monitor.cancel();
             this.yearly_csv_dir_monitor = null;
         }
+
+        this._write_daily_csv_file();
+
+        this.daily_csv_map.clear();
+        this.stats_data.clear();
+        this.stats_unique_entries.clear();
+        this.dbus_impl.unexport();
     },
 });
 Signals.addSignalMethods(TimeTracker.prototype);
