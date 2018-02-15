@@ -180,7 +180,10 @@ var TaskEditor = new Lang.Class({
         this.button_ok.connect('clicked', () => this.emit(this.mode, this._create_task_str()));
         this.button_cancel.connect('clicked', () => this.emit('cancel'));
         this.help_label.connect('button-press-event', () => MISC_UTILS.open_web_uri(TODO_TXT_SYNTAX_URL));
-        this.help_label.connect('key-press-event', () => MISC_UTILS.open_web_uri(TODO_TXT_SYNTAX_URL));
+        this.help_label.connect('key-press-event', (_, event) => {
+            if (event.get_key_symbol() === Clutter.Return)
+                MISC_UTILS.open_web_uri(TODO_TXT_SYNTAX_URL)
+        });
     },
 
     // @word: string (a context or project)
