@@ -249,6 +249,8 @@ const Timepp = new Lang.Class({
                 this.separators.delete(key);
             }
         }
+
+        this.update_panel_items();
     },
 
     toggle_menu: function (section_name) {
