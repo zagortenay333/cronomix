@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-14 23:17+0100\n"
+"POT-Creation-Date: 2018-02-15 19:02+0100\n"
 "PO-Revision-Date: 2018-01-10 10:35+0100\n"
 "Last-Translator: Piotr Komur <pkomur@gmail.com>\n"
 "Language-Team: \n"
@@ -42,11 +42,11 @@ msgstr "Unikatowa nazwa"
 #: data/po_files/../../data/prefs.ui:1877
 #: data/po_files/../../data/prefs.ui:1927
 #: data/po_files/../../data/prefs.ui:2238
-#: data/po_files/../../data/prefs.ui:2703
-#: data/po_files/../../data/prefs.ui:2753
-#: data/po_files/../../data/prefs.ui:2791
-#: data/po_files/../../data/prefs.ui:2841
-#: data/po_files/../../data/prefs.ui:2897
+#: data/po_files/../../data/prefs.ui:2708
+#: data/po_files/../../data/prefs.ui:2758
+#: data/po_files/../../data/prefs.ui:2796
+#: data/po_files/../../data/prefs.ui:2846
+#: data/po_files/../../data/prefs.ui:2902
 msgid "not set"
 msgstr "nie ustawiono"
 
@@ -177,7 +177,7 @@ msgstr "Na pełnym ekranie"
 #: data/po_files/../../data/prefs.ui:1364
 #: data/po_files/../../data/prefs.ui:1819
 #: data/po_files/../../data/prefs.ui:2180
-#: data/po_files/../../data/prefs.ui:2643
+#: data/po_files/../../data/prefs.ui:2648
 msgid "Keyboard shortcuts"
 msgstr "Skróty klawiaturowe"
 
@@ -185,7 +185,7 @@ msgstr "Skróty klawiaturowe"
 #: data/po_files/../../data/prefs.ui:1405
 #: data/po_files/../../data/prefs.ui:1860
 #: data/po_files/../../data/prefs.ui:2221
-#: data/po_files/../../data/prefs.ui:2686
+#: data/po_files/../../data/prefs.ui:2691
 msgid "Open this section"
 msgstr "Otwórz sekcję"
 
@@ -196,11 +196,11 @@ msgstr "Otwórz sekcję"
 #: data/po_files/../../data/prefs.ui:1872
 #: data/po_files/../../data/prefs.ui:1922
 #: data/po_files/../../data/prefs.ui:2233
-#: data/po_files/../../data/prefs.ui:2698
-#: data/po_files/../../data/prefs.ui:2748
-#: data/po_files/../../data/prefs.ui:2786
-#: data/po_files/../../data/prefs.ui:2836
-#: data/po_files/../../data/prefs.ui:2892
+#: data/po_files/../../data/prefs.ui:2703
+#: data/po_files/../../data/prefs.ui:2753
+#: data/po_files/../../data/prefs.ui:2791
+#: data/po_files/../../data/prefs.ui:2841
+#: data/po_files/../../data/prefs.ui:2897
 msgid ""
 "Examples:\n"
 "<super><ctrl><alt><shift>t\n"
@@ -242,32 +242,32 @@ msgstr "Szerokość zadania (px)"
 msgid "Todo files"
 msgstr "Pliki zadań"
 
-#: data/po_files/../../data/prefs.ui:2736
+#: data/po_files/../../data/prefs.ui:2741
 msgid "Open this section to add task"
 msgstr "Otwórz sekcję, aby dodać zadanie"
 
-#: data/po_files/../../data/prefs.ui:2804
+#: data/po_files/../../data/prefs.ui:2809
 msgid "Open this section to search tasks"
 msgstr "Otwórz sekcję, aby wyszukać zadanie"
 
-#: data/po_files/../../data/prefs.ui:2854
+#: data/po_files/../../data/prefs.ui:2859
 msgid "Open the stats view"
 msgstr "Otwórz podgląd statystyk"
 
-#: data/po_files/../../data/prefs.ui:2910
+#: data/po_files/../../data/prefs.ui:2915
 msgid "Open this section to switch todo files"
 msgstr "Otwórz sekcję, aby wyszukać zadanie"
 
-#: data/po_files/../../data/prefs.ui:2950
+#: data/po_files/../../data/prefs.ui:2955
 msgid "Todo / Time Tracker"
 msgstr "Zadania / Śledzenie"
 
-#: data/po_files/../../sections/todo/task_item.js:607
-#: data/po_files/../../sections/todo/task_item.js:612
+#: data/po_files/../../sections/todo/task_item.js:597
+#: data/po_files/../../sections/todo/task_item.js:602
 msgid "recurrence"
 msgstr "rekurencyjnie"
 
-#: data/po_files/../../sections/todo/task_item.js:608
+#: data/po_files/../../sections/todo/task_item.js:598
 #, javascript-format
 msgid "%d day after completion"
 msgid_plural "%d days after completion"
@@ -275,19 +275,19 @@ msgstr[0] "%d dzień po zakończeniu"
 msgstr[1] "%d dni po zakończeniu"
 msgstr[2] "%d dni po zakończeniu"
 
-#: data/po_files/../../sections/todo/task_item.js:625
+#: data/po_files/../../sections/todo/task_item.js:615
 msgid "due"
 msgstr "termin:"
 
-#: data/po_files/../../sections/todo/task_item.js:633
+#: data/po_files/../../sections/todo/task_item.js:623
 msgid "deferred"
 msgstr "odroczono:"
 
-#: data/po_files/../../sections/todo/task_item.js:673
+#: data/po_files/../../sections/todo/task_item.js:663
 msgid "created"
 msgstr "utworzono:"
 
-#: data/po_files/../../sections/todo/task_item.js:678
+#: data/po_files/../../sections/todo/task_item.js:668
 msgid "completed"
 msgstr "ukończono:"
 
@@ -469,7 +469,7 @@ msgstr[1] "w ciagu %d dni"
 msgstr[2] "w ciagu %d dni"
 
 #: data/po_files/../../sections/todo/MAIN.js:285
-#: data/po_files/../../sections/todo/MAIN.js:1076
+#: data/po_files/../../sections/todo/MAIN.js:1077
 msgid "Loading..."
 msgstr "Wczytuję..."
 
@@ -481,7 +481,7 @@ msgstr "Wskaż w ustawieniach plik 'todo'..."
 msgid "Add New Task..."
 msgstr "Dodaj nowe zadanie..."
 
-#: data/po_files/../../sections/todo/MAIN.js:649
+#: data/po_files/../../sections/todo/MAIN.js:650
 #, javascript-format
 msgid "%d task has recurred"
 msgid_plural "%d tasks have recurred"
@@ -489,7 +489,7 @@ msgstr[0] "%d powtórzyło się"
 msgstr[1] "%d powtórzyły się"
 msgstr[2] "%d powtórzyło się"
 
-#: data/po_files/../../sections/todo/MAIN.js:655
+#: data/po_files/../../sections/todo/MAIN.js:656
 #, javascript-format
 msgid "%d deferred task has been opened"
 msgid_plural "%d deferred tasks have been opened"
@@ -497,7 +497,7 @@ msgstr[0] "%d odroczone zadanie zostało otwarte"
 msgstr[1] "%d odroczone zadania zostały otwarte"
 msgstr[2] "%d odroczonych zadań zostało otwartych"
 
-#: data/po_files/../../sections/todo/MAIN.js:1082
+#: data/po_files/../../sections/todo/MAIN.js:1083
 msgid "Nothing found."
 msgstr "Nic nie znaleziono..."
 

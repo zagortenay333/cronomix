@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: timepp@zagortenay 333\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-14 23:17+0100\n"
+"POT-Creation-Date: 2018-02-15 19:02+0100\n"
 "PO-Revision-Date: 2017-11-03 09:24-0200\n"
 "Last-Translator: Helder <he7d3r@gmail.com>\n"
 "Language-Team: Brazilian Portuguese\n"
@@ -41,11 +41,11 @@ msgstr "Nome único"
 #: data/po_files/../../data/prefs.ui:1877
 #: data/po_files/../../data/prefs.ui:1927
 #: data/po_files/../../data/prefs.ui:2238
-#: data/po_files/../../data/prefs.ui:2703
-#: data/po_files/../../data/prefs.ui:2753
-#: data/po_files/../../data/prefs.ui:2791
-#: data/po_files/../../data/prefs.ui:2841
-#: data/po_files/../../data/prefs.ui:2897
+#: data/po_files/../../data/prefs.ui:2708
+#: data/po_files/../../data/prefs.ui:2758
+#: data/po_files/../../data/prefs.ui:2796
+#: data/po_files/../../data/prefs.ui:2846
+#: data/po_files/../../data/prefs.ui:2902
 msgid "not set"
 msgstr "não definido"
 
@@ -176,7 +176,7 @@ msgstr "Tela cheia"
 #: data/po_files/../../data/prefs.ui:1364
 #: data/po_files/../../data/prefs.ui:1819
 #: data/po_files/../../data/prefs.ui:2180
-#: data/po_files/../../data/prefs.ui:2643
+#: data/po_files/../../data/prefs.ui:2648
 msgid "Keyboard shortcuts"
 msgstr "Atalhos de teclado"
 
@@ -184,7 +184,7 @@ msgstr "Atalhos de teclado"
 #: data/po_files/../../data/prefs.ui:1405
 #: data/po_files/../../data/prefs.ui:1860
 #: data/po_files/../../data/prefs.ui:2221
-#: data/po_files/../../data/prefs.ui:2686
+#: data/po_files/../../data/prefs.ui:2691
 msgid "Open this section"
 msgstr "Abrir esta seção"
 
@@ -195,11 +195,11 @@ msgstr "Abrir esta seção"
 #: data/po_files/../../data/prefs.ui:1872
 #: data/po_files/../../data/prefs.ui:1922
 #: data/po_files/../../data/prefs.ui:2233
-#: data/po_files/../../data/prefs.ui:2698
-#: data/po_files/../../data/prefs.ui:2748
-#: data/po_files/../../data/prefs.ui:2786
-#: data/po_files/../../data/prefs.ui:2836
-#: data/po_files/../../data/prefs.ui:2892
+#: data/po_files/../../data/prefs.ui:2703
+#: data/po_files/../../data/prefs.ui:2753
+#: data/po_files/../../data/prefs.ui:2791
+#: data/po_files/../../data/prefs.ui:2841
+#: data/po_files/../../data/prefs.ui:2897
 msgid ""
 "Examples:\n"
 "<super><ctrl><alt><shift>t\n"
@@ -241,51 +241,51 @@ msgstr "Largura da tarefa (px)"
 msgid "Todo files"
 msgstr "Arquivos de listas de tarefas"
 
-#: data/po_files/../../data/prefs.ui:2736
+#: data/po_files/../../data/prefs.ui:2741
 msgid "Open this section to add task"
 msgstr "Abrir esta seção para adicionar uma tarefa"
 
-#: data/po_files/../../data/prefs.ui:2804
+#: data/po_files/../../data/prefs.ui:2809
 msgid "Open this section to search tasks"
 msgstr "Abrir esta seção para pesquisar tarefas"
 
-#: data/po_files/../../data/prefs.ui:2854
+#: data/po_files/../../data/prefs.ui:2859
 msgid "Open the stats view"
 msgstr "Abrir a visualização de estatísticas"
 
-#: data/po_files/../../data/prefs.ui:2910
+#: data/po_files/../../data/prefs.ui:2915
 msgid "Open this section to switch todo files"
 msgstr "Abrir esta seção para para alterar arquivos de tarefas"
 
-#: data/po_files/../../data/prefs.ui:2950
+#: data/po_files/../../data/prefs.ui:2955
 msgid "Todo / Time Tracker"
 msgstr "Tarefas / Gerenciador de Tempo"
 
-#: data/po_files/../../sections/todo/task_item.js:607
-#: data/po_files/../../sections/todo/task_item.js:612
+#: data/po_files/../../sections/todo/task_item.js:597
+#: data/po_files/../../sections/todo/task_item.js:602
 msgid "recurrence"
 msgstr "repetição"
 
-#: data/po_files/../../sections/todo/task_item.js:608
+#: data/po_files/../../sections/todo/task_item.js:598
 #, javascript-format
 msgid "%d day after completion"
 msgid_plural "%d days after completion"
 msgstr[0] "%d dia após a conclusão"
 msgstr[1] "%d dias após a conclusão"
 
-#: data/po_files/../../sections/todo/task_item.js:625
+#: data/po_files/../../sections/todo/task_item.js:615
 msgid "due"
 msgstr "prazo"
 
-#: data/po_files/../../sections/todo/task_item.js:633
+#: data/po_files/../../sections/todo/task_item.js:623
 msgid "deferred"
 msgstr "adiado"
 
-#: data/po_files/../../sections/todo/task_item.js:673
+#: data/po_files/../../sections/todo/task_item.js:663
 msgid "created"
 msgstr "criado"
 
-#: data/po_files/../../sections/todo/task_item.js:678
+#: data/po_files/../../sections/todo/task_item.js:668
 msgid "completed"
 msgstr "concluído"
 
@@ -467,7 +467,7 @@ msgstr[0] "em %d dia"
 msgstr[1] "em %d dias"
 
 #: data/po_files/../../sections/todo/MAIN.js:285
-#: data/po_files/../../sections/todo/MAIN.js:1076
+#: data/po_files/../../sections/todo/MAIN.js:1077
 msgid "Loading..."
 msgstr "Carregando..."
 
@@ -479,21 +479,21 @@ msgstr "Selecionar o arquivo de tarefas nas configurações..."
 msgid "Add New Task..."
 msgstr "Adicionar nova tarefa..."
 
-#: data/po_files/../../sections/todo/MAIN.js:649
+#: data/po_files/../../sections/todo/MAIN.js:650
 #, javascript-format
 msgid "%d task has recurred"
 msgid_plural "%d tasks have recurred"
 msgstr[0] "%d tarefa ocorreu novamente"
 msgstr[1] "%d tarefas ocorreram novamente"
 
-#: data/po_files/../../sections/todo/MAIN.js:655
+#: data/po_files/../../sections/todo/MAIN.js:656
 #, javascript-format
 msgid "%d deferred task has been opened"
 msgid_plural "%d deferred tasks have been opened"
 msgstr[0] "%d tarefa adiada foi aberta"
 msgstr[1] "%d tarefas adiadas foram abertas"
 
-#: data/po_files/../../sections/todo/MAIN.js:1082
+#: data/po_files/../../sections/todo/MAIN.js:1083
 msgid "Nothing found."
 msgstr "Nada encontrado."
 

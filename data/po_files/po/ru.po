@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-14 23:17+0100\n"
+"POT-Creation-Date: 2018-02-15 19:02+0100\n"
 "PO-Revision-Date: 2017-11-29 13:36+0200\n"
 "Last-Translator: Sergey Shlyapugin <shlyapugin@gmail.com>\n"
 "Language-Team: Russian\n"
@@ -42,11 +42,11 @@ msgstr "Уникальное имя"
 #: data/po_files/../../data/prefs.ui:1877
 #: data/po_files/../../data/prefs.ui:1927
 #: data/po_files/../../data/prefs.ui:2238
-#: data/po_files/../../data/prefs.ui:2703
-#: data/po_files/../../data/prefs.ui:2753
-#: data/po_files/../../data/prefs.ui:2791
-#: data/po_files/../../data/prefs.ui:2841
-#: data/po_files/../../data/prefs.ui:2897
+#: data/po_files/../../data/prefs.ui:2708
+#: data/po_files/../../data/prefs.ui:2758
+#: data/po_files/../../data/prefs.ui:2796
+#: data/po_files/../../data/prefs.ui:2846
+#: data/po_files/../../data/prefs.ui:2902
 msgid "not set"
 msgstr "не установлено"
 
@@ -177,7 +177,7 @@ msgstr "На весь экран"
 #: data/po_files/../../data/prefs.ui:1364
 #: data/po_files/../../data/prefs.ui:1819
 #: data/po_files/../../data/prefs.ui:2180
-#: data/po_files/../../data/prefs.ui:2643
+#: data/po_files/../../data/prefs.ui:2648
 msgid "Keyboard shortcuts"
 msgstr "Комбинации клавиш"
 
@@ -185,7 +185,7 @@ msgstr "Комбинации клавиш"
 #: data/po_files/../../data/prefs.ui:1405
 #: data/po_files/../../data/prefs.ui:1860
 #: data/po_files/../../data/prefs.ui:2221
-#: data/po_files/../../data/prefs.ui:2686
+#: data/po_files/../../data/prefs.ui:2691
 msgid "Open this section"
 msgstr "Открыть этот раздел"
 
@@ -196,11 +196,11 @@ msgstr "Открыть этот раздел"
 #: data/po_files/../../data/prefs.ui:1872
 #: data/po_files/../../data/prefs.ui:1922
 #: data/po_files/../../data/prefs.ui:2233
-#: data/po_files/../../data/prefs.ui:2698
-#: data/po_files/../../data/prefs.ui:2748
-#: data/po_files/../../data/prefs.ui:2786
-#: data/po_files/../../data/prefs.ui:2836
-#: data/po_files/../../data/prefs.ui:2892
+#: data/po_files/../../data/prefs.ui:2703
+#: data/po_files/../../data/prefs.ui:2753
+#: data/po_files/../../data/prefs.ui:2791
+#: data/po_files/../../data/prefs.ui:2841
+#: data/po_files/../../data/prefs.ui:2897
 msgid ""
 "Examples:\n"
 "<super><ctrl><alt><shift>t\n"
@@ -242,32 +242,32 @@ msgstr "Ширина задачи (пикс)"
 msgid "Todo files"
 msgstr "Файлы списков дел"
 
-#: data/po_files/../../data/prefs.ui:2736
+#: data/po_files/../../data/prefs.ui:2741
 msgid "Open this section to add task"
 msgstr "Открыть этот раздел для создания задачи"
 
-#: data/po_files/../../data/prefs.ui:2804
+#: data/po_files/../../data/prefs.ui:2809
 msgid "Open this section to search tasks"
 msgstr "Открыть этот раздел для поиска задач"
 
-#: data/po_files/../../data/prefs.ui:2854
+#: data/po_files/../../data/prefs.ui:2859
 msgid "Open the stats view"
 msgstr "Открыть статистику"
 
-#: data/po_files/../../data/prefs.ui:2910
+#: data/po_files/../../data/prefs.ui:2915
 msgid "Open this section to switch todo files"
 msgstr "Открыть этот раздел для переключения файлов списков дел"
 
-#: data/po_files/../../data/prefs.ui:2950
+#: data/po_files/../../data/prefs.ui:2955
 msgid "Todo / Time Tracker"
 msgstr "Список дел / тайм-трекер"
 
-#: data/po_files/../../sections/todo/task_item.js:607
-#: data/po_files/../../sections/todo/task_item.js:612
+#: data/po_files/../../sections/todo/task_item.js:597
+#: data/po_files/../../sections/todo/task_item.js:602
 msgid "recurrence"
 msgstr "возобновление"
 
-#: data/po_files/../../sections/todo/task_item.js:608
+#: data/po_files/../../sections/todo/task_item.js:598
 #, javascript-format
 msgid "%d day after completion"
 msgid_plural "%d days after completion"
@@ -275,19 +275,19 @@ msgstr[0] "%d день после выполнения"
 msgstr[1] "%d дня после выполнения"
 msgstr[2] "%d дней после выполнения"
 
-#: data/po_files/../../sections/todo/task_item.js:625
+#: data/po_files/../../sections/todo/task_item.js:615
 msgid "due"
 msgstr "до"
 
-#: data/po_files/../../sections/todo/task_item.js:633
+#: data/po_files/../../sections/todo/task_item.js:623
 msgid "deferred"
 msgstr "отложена"
 
-#: data/po_files/../../sections/todo/task_item.js:673
+#: data/po_files/../../sections/todo/task_item.js:663
 msgid "created"
 msgstr "создана"
 
-#: data/po_files/../../sections/todo/task_item.js:678
+#: data/po_files/../../sections/todo/task_item.js:668
 msgid "completed"
 msgstr "выполнена"
 
@@ -469,7 +469,7 @@ msgstr[1] "через %d дня"
 msgstr[2] "через %d дней"
 
 #: data/po_files/../../sections/todo/MAIN.js:285
-#: data/po_files/../../sections/todo/MAIN.js:1076
+#: data/po_files/../../sections/todo/MAIN.js:1077
 msgid "Loading..."
 msgstr "Загрузка..."
 
@@ -481,7 +481,7 @@ msgstr "Выберите файл списка дел в диалоге наст
 msgid "Add New Task..."
 msgstr "Добавить задачу..."
 
-#: data/po_files/../../sections/todo/MAIN.js:649
+#: data/po_files/../../sections/todo/MAIN.js:650
 #, javascript-format
 msgid "%d task has recurred"
 msgid_plural "%d tasks have recurred"
@@ -489,7 +489,7 @@ msgstr[0] "%d задача возобновлена"
 msgstr[1] "%d задачи возобновлены"
 msgstr[2] "%d задач возобновлено"
 
-#: data/po_files/../../sections/todo/MAIN.js:655
+#: data/po_files/../../sections/todo/MAIN.js:656
 #, javascript-format
 msgid "%d deferred task has been opened"
 msgid_plural "%d deferred tasks have been opened"
@@ -497,7 +497,7 @@ msgstr[0] "%d отложенная задача была открыта"
 msgstr[1] "%d отложенных задачи было открыто"
 msgstr[2] "%d отложенных задача было открыто"
 
-#: data/po_files/../../sections/todo/MAIN.js:1082
+#: data/po_files/../../sections/todo/MAIN.js:1083
 msgid "Nothing found."
 msgstr "Ничего не найдено."
 
