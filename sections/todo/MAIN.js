@@ -1266,29 +1266,23 @@ var SectionMain = new Lang.Class({
                 return !this.cache.filters.invert_filters;
         }
 
-        let i, arr, len;
-
-        arr = this.cache.filters.priorities;
-        for (i = 0, len = arr.length; i < len; i++) {
-            if (arr[i] === task.priority)
+        for (let it of this.cache.filters.priorities) {
+            if (it === task.priority)
                 return !this.cache.filters.invert_filters;
         }
 
-        arr = this.cache.filters.contexts;
-        for (i = 0, len = arr.length; i < len; i++) {
-            if (task.contexts.indexOf(arr[i]) !== -1)
+        for (let it of this.cache.filters.contexts) {
+            if (task.contexts.indexOf(it) !== -1)
                 return !this.cache.filters.invert_filters;
         }
 
-        arr = this.cache.filters.projects;
-        for (i = 0, len = arr.length; i < len; i++) {
-            if (task.projects.indexOf(arr[i]) !== -1)
+        for (let it of this.cache.filters.projects) {
+            if (task.projects.indexOf(it) !== -1)
                 return !this.cache.filters.invert_filters;
         }
 
-        arr = this.cache.filters.custom_active;
-        for (i = 0, len = arr.length; i < len; i++) {
-            if (FUZZ.fuzzy_search_v1(arr[i], task.task_str) !== null)
+        for (let it of this.cache.filters.custom_active) {
+            if (FUZZ.fuzzy_search_v1(it, task.task_str) !== null)
                 return !this.cache.filters.invert_filters;
         }
 
