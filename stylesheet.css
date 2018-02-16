@@ -36,7 +36,7 @@
 /* The 'done' selector is added to the todo item when all tasks are done. */
 .timepp-panel-box .todo-panel-item.done StLabel,
 .timepp-panel-box .todo-panel-item.done StIcon  {
-    color: #009a4b;
+    color: #38ae72;
 }
 
 /* These custom css properties only work on this selector */
@@ -46,8 +46,8 @@
 
     /* todo section */
     -timepp-context-color:    #f47e00;
-    -timepp-project-color:    #009a4b;
-    -timepp-due-date-color:   #e22b2b;
+    -timepp-project-color:    #38ae72;
+    -timepp-due-date-color:   #e74f4f;
     -timepp-rec-date-color:   #f47e00;
     -timepp-defer-date-color: #5a94dc;
 
@@ -127,7 +127,7 @@
 
 .timepp-menu .close-icon:hover,
 .timepp-menu .close-icon:focus {
-    color: #e22b2b;
+    color: #e74f4f;
 }
 
 .timepp-menu .radiobutton StBin {
@@ -243,7 +243,7 @@
 }
 
 .timepp-fullscreen .close-icon:hover StIcon {
-    color: #e22b2b;
+    color: #e74f4f;
 }
 
 .timepp-fullscreen StEntry {
@@ -621,7 +621,7 @@
 }
 
 .timepp-menu .todo-section .task-item.A {
-    border-color: #e22b2b;
+    border-color: #e74f4f;
     border-left-width: 3px;
 }
 
@@ -636,7 +636,7 @@
 }
 
 .timepp-menu .todo-section .task-item.D {
-    border-color: #009a4b;
+    border-color: #38ae72;
     border-left-width: 3px;
 }
 
@@ -644,10 +644,10 @@
     spacing: .3em;
 }
 
-.timepp-menu .todo-section .task-item.A .priority-label { color: #e22b2b; }
+.timepp-menu .todo-section .task-item.A .priority-label { color: #e74f4f; }
 .timepp-menu .todo-section .task-item.B .priority-label { color: #f47e00; }
 .timepp-menu .todo-section .task-item.C .priority-label { color: #8b5bff; }
-.timepp-menu .todo-section .task-item.D .priority-label { color: #009a4b; }
+.timepp-menu .todo-section .task-item.D .priority-label { color: #38ae72; }
 
 .timepp-menu .todo-section .description-label {}
 .timepp-menu .todo-section .date-label {}
@@ -664,7 +664,7 @@
 
 .timepp-menu .todo-section .delete-completed-tasks-label {
     font-weight: bold;
-    color: #e22b2b;
+    color: #e74f4f;
 }
 
 .timepp-menu .todo-section .task-item StButton:hover,
@@ -724,7 +724,7 @@
 }
 
 .timepp-fullscreen.stats .navbar StButton:checked StIcon {
-    color: tomato;
+    color: #f47e00;
 }
 
 .timepp-fullscreen.stats .graph-tooltip {
@@ -737,7 +737,7 @@
 }
 
 .timepp-fullscreen.stats .heatmap-icon:checked StIcon {
-    color: tomato;
+    color: #f47e00;
 }
 
 .timepp-fullscreen.stats .heatmap-graph {

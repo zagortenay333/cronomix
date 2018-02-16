@@ -83,7 +83,7 @@ const Timepp = new Lang.Class({
 
             ['*'   , ['<b>', '</b>']],
             ['**'  , ['<i>', '</i>']],
-            ['***' , ['<b><span foreground="black" background="tomato">', '</span></b>']],
+            ['***' , ['<b><span foreground="black" background="#e74f4f">', '</span></b>']],
 
             ['_'   , ['<i>', '</i>']],
             ['__'  , ['<u>', '</u>']],
