@@ -20,7 +20,7 @@ const Settings = new Lang.Class({
             let GioSSS = Gio.SettingsSchemaSource;
             let schema = GioSSS.new_from_directory(
                 ME.path + '/data/schemas', GioSSS.get_default(), false);
-            schema = schema.lookup('org.gnome.shell.extensions.timepp', true);
+            schema = schema.lookup('org.gnome.shell.extensions.timepp', false);
 
             this.settings = new Gio.Settings({ settings_schema: schema });
         }
@@ -53,9 +53,7 @@ const Settings = new Lang.Class({
         //
         this.builder.get_object('treeview-selection')
         .connect('changed', (selection) => {
-            this.selected_row =
-                selection.get_selected_rows(this.list_store)[0][0];
-
+            this.selected_row = selection.get_selected_rows()[0][0];
             this.tree_remove_button.sensitive = Boolean(this.selected_row);
             this.tree_edit_button.sensitive   = Boolean(this.selected_row);
         });
