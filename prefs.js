@@ -355,7 +355,7 @@ const Settings = new Lang.Class({
                 let [sound_path,] = GLib.filename_from_uri(sound_uri);
 
                 if (GLib.file_test(sound_path, GLib.FileTest.EXISTS))
-                    this.settings.set_string('timer-sound-file-path', sound_uri, null);
+                    this.settings.set_string('timer-sound-file-path', sound_uri);
                 else
                     this.settings.set_string('timer-sound-file-path', GLib.filename_to_uri(ME.path + '/data/sounds/beeps.ogg', null));
             }
@@ -365,7 +365,7 @@ const Settings = new Lang.Class({
         }
 
         widget = this.builder.get_object('timer-sound-chooser');
-        widget.set_uri(this.settings.get_string('timer-sound-file-path'), null);
+        widget.set_uri(this.settings.get_string('timer-sound-file-path'));
         widget.connect('selection-changed', (widget) => {
             this.settings.set_string('timer-sound-file-path', widget.get_uri());
         });
@@ -380,12 +380,6 @@ const Settings = new Lang.Class({
             'timer-play-sound',
             this.builder.get_object('timer-play-sound-switch'),
             'active',
-            Gio.SettingsBindFlags.DEFAULT);
-
-        this.settings.bind(
-            'timer-keybinding-open',
-            this.builder.get_object('timer-keybinding-open'),
-            'text',
             Gio.SettingsBindFlags.DEFAULT);
 
         widget = this.builder.get_object('timer-keybinding-open');
@@ -515,7 +509,7 @@ const Settings = new Lang.Class({
                 let [sound_path,] = GLib.filename_from_uri(sound_uri);
 
                 if (GLib.file_test(sound_path, GLib.FileTest.EXISTS))
-                    this.settings.set_string('pomodoro-sound-file-path', sound_uri, null);
+                    this.settings.set_string('pomodoro-sound-file-path', sound_uri);
                 else
                     this.settings.set_string('pomodoro-sound-file-path', GLib.filename_to_uri(ME.path + '/data/sounds/beeps.ogg', null));
             }
@@ -525,7 +519,7 @@ const Settings = new Lang.Class({
         }
 
         widget = this.builder.get_object('pomodoro-sound-chooser');
-        widget.set_uri(this.settings.get_string('pomodoro-sound-file-path'), null);
+        widget.set_uri(this.settings.get_string('pomodoro-sound-file-path'));
         widget.connect('selection-changed', (widget) => {
             this.settings.set_string('pomodoro-sound-file-path', widget.get_uri());
         });
@@ -597,7 +591,7 @@ const Settings = new Lang.Class({
                 let [sound_path,] = GLib.filename_from_uri(sound_uri);
 
                 if (GLib.file_test(sound_path, GLib.FileTest.EXISTS))
-                    this.settings.set_string('alarms-sound-file-path', sound_uri, null);
+                    this.settings.set_string('alarms-sound-file-path', sound_uri);
                 else
                     this.settings.set_string('alarms-sound-file-path', GLib.filename_to_uri(ME.path + '/data/sounds/beeps.ogg', null));
             }
@@ -607,7 +601,7 @@ const Settings = new Lang.Class({
         }
 
         widget = this.builder.get_object('alarms-sound-chooser');
-        widget.set_uri(this.settings.get_string('alarms-sound-file-path'), null);
+        widget.set_uri(this.settings.get_string('alarms-sound-file-path'));
         widget.connect('selection-changed', (widget) => {
             this.settings.set_string('alarms-sound-file-path', widget.get_uri());
         });
