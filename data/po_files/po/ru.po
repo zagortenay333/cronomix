@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-15 21:40+0100\n"
+"POT-Creation-Date: 2018-02-16 22:29+0100\n"
 "PO-Revision-Date: 2017-11-29 13:36+0200\n"
 "Last-Translator: Sergey Shlyapugin <shlyapugin@gmail.com>\n"
 "Language-Team: Russian\n"
@@ -326,7 +326,7 @@ msgstr "Упорядочить по дате выполнения"
 #: data/po_files/../../sections/todo/view__filters.js:196
 #: data/po_files/../../sections/pomodoro.js:756
 #: data/po_files/../../sections/alarms.js:563
-#: data/po_files/../../sections/timer.js:585 data/po_files/../../prefs.js:134
+#: data/po_files/../../sections/timer.js:585 data/po_files/../../prefs.js:132
 msgid "Ok"
 msgstr "ОК"
 
@@ -352,7 +352,7 @@ msgstr "Архивировать"
 #: data/po_files/../../sections/todo/view__clear_tasks.js:93
 #: data/po_files/../../sections/pomodoro.js:757
 #: data/po_files/../../sections/alarms.js:562
-#: data/po_files/../../sections/timer.js:584 data/po_files/../../prefs.js:133
+#: data/po_files/../../sections/timer.js:584 data/po_files/../../prefs.js:131
 msgid "Cancel"
 msgstr "Отмена"
 

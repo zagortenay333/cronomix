@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: timepp@zagortenay 333\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-15 21:40+0100\n"
+"POT-Creation-Date: 2018-02-16 22:29+0100\n"
 "PO-Revision-Date: 2017-11-03 09:24-0200\n"
 "Last-Translator: Helder <he7d3r@gmail.com>\n"
 "Language-Team: Brazilian Portuguese\n"
@@ -324,7 +324,7 @@ msgstr "Ordenar por data de conclusão"
 #: data/po_files/../../sections/todo/view__filters.js:196
 #: data/po_files/../../sections/pomodoro.js:756
 #: data/po_files/../../sections/alarms.js:563
-#: data/po_files/../../sections/timer.js:585 data/po_files/../../prefs.js:134
+#: data/po_files/../../sections/timer.js:585 data/po_files/../../prefs.js:132
 msgid "Ok"
 msgstr "Ok"
 
@@ -350,7 +350,7 @@ msgstr "Arquivar"
 #: data/po_files/../../sections/todo/view__clear_tasks.js:93
 #: data/po_files/../../sections/pomodoro.js:757
 #: data/po_files/../../sections/alarms.js:562
-#: data/po_files/../../sections/timer.js:584 data/po_files/../../prefs.js:133
+#: data/po_files/../../sections/timer.js:584 data/po_files/../../prefs.js:131
 msgid "Cancel"
 msgstr "Cancelar"
 

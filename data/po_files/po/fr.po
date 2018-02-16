@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-15 21:40+0100\n"
+"POT-Creation-Date: 2018-02-16 22:29+0100\n"
 "PO-Revision-Date: 2018-01-09 19:02+0100\n"
 "Last-Translator: Luc Bournaud <luc.bournaud@hotmail.fr>\n"
 "Language-Team: français <>\n"
@@ -325,7 +325,7 @@ msgstr "Trier par date de complétition"
 #: data/po_files/../../sections/todo/view__filters.js:196
 #: data/po_files/../../sections/pomodoro.js:756
 #: data/po_files/../../sections/alarms.js:563
-#: data/po_files/../../sections/timer.js:585 data/po_files/../../prefs.js:134
+#: data/po_files/../../sections/timer.js:585 data/po_files/../../prefs.js:132
 msgid "Ok"
 msgstr "OK"
 
@@ -351,7 +351,7 @@ msgstr "Archiver"
 #: data/po_files/../../sections/todo/view__clear_tasks.js:93
 #: data/po_files/../../sections/pomodoro.js:757
 #: data/po_files/../../sections/alarms.js:562
-#: data/po_files/../../sections/timer.js:584 data/po_files/../../prefs.js:133
+#: data/po_files/../../sections/timer.js:584 data/po_files/../../prefs.js:131
 msgid "Cancel"
 msgstr "Annuler"
 
