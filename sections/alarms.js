@@ -8,6 +8,7 @@ const Pango        = imports.gi.Pango;
 const GnomeDesktop = imports.gi.GnomeDesktop;
 const Clutter      = imports.gi.Clutter;
 const Main         = imports.ui.main;
+const CheckBox     = imports.ui.checkBox;
 const PopupMenu    = imports.ui.popupMenu;
 const MessageTray  = imports.ui.messageTray;
 const Lang         = imports.lang;
@@ -23,6 +24,7 @@ const _        = Gettext.gettext;
 const ngettext = Gettext.ngettext;
 
 
+const SOUND_PLAYER    = ME.imports.lib.sound_player;
 const FULLSCREEN      = ME.imports.lib.fullscreen;
 const SIG_MANAGER     = ME.imports.lib.signal_manager;
 const KEY_MANAGER     = ME.imports.lib.keybinding_manager;
@@ -64,8 +66,8 @@ var SectionMain = new Lang.Class({
         this.panel_item.actor.add_style_class_name('alarm-panel-item');
         this.panel_item.set_mode('icon');
 
-
         this.separate_menu = this.settings.get_boolean('alarms-separate-menu');
+
 
         this.cache_file = null;
         this.cache      = null;
@@ -75,6 +77,9 @@ var SectionMain = new Lang.Class({
         this.linkm = new TEXT_LINKS_MNGR.TextLinksManager(MISC_UTILS.split_on_whitespace);
         this.sigm  = new SIG_MANAGER.SignalManager();
         this.keym  = new KEY_MANAGER.KeybindingManager(this.settings);
+
+
+        this.sound_player = new SOUND_PLAYER.SoundPlayer();
 
 
         this.fullscreen = new AlarmFullscreen(this.ext, this,
@@ -104,11 +109,12 @@ var SectionMain = new Lang.Class({
 
                     // Array of alarm objects where each object is of the form:
                     // {
-                    //     time_str   : string (a time_str)
-                    //     msg        : string
-                    //     days       : array  (of ints; Sunday is 0)
-                    //     snooze_dur : int    (minutes)
-                    //     toogle     : bool
+                    //     time_str     : string (a time_str)
+                    //     msg          : string
+                    //     days         : array (of ints; Sunday is 0)
+                    //     toogle       : bool
+                    //     snooze_dur   : int (minutes)
+                    //     repeat_sound : bool
                     // }
                     alarms: [],
                 };
@@ -130,7 +136,7 @@ var SectionMain = new Lang.Class({
 
 
         //
-        // register shortcuts (need to be enabled later on)
+        // keybindings
         //
         this.keym.register('alarms-keybinding-open', () => {
              this.ext.open_menu(this.section_name);
@@ -241,15 +247,18 @@ var SectionMain = new Lang.Class({
 
             it.update_time_label();
 
-            if (a.toggle && a.time_str === time && a.days.indexOf(today) !== -1) {
+            if (a.toggle && (a.time_str === time) && (a.days.indexOf(today) !== -1)) {
                 this._send_notif(a);
             }
         }
 
         for (let [a, time_str] of this.snoozed_alarms) {
             if (a.toggle && time_str === time) {
-                this.snoozed_alarms.delete(a);
                 this._send_notif(a);
+                this.snoozed_alarms.delete(a);
+                for (let it of this.alarm_items) {
+                    if (a === it.alarm) it.update_time_label();
+                }
             }
         }
 
@@ -325,8 +334,7 @@ var SectionMain = new Lang.Class({
         });
     },
 
-    // NOTE:
-    // This func assumes that @alarm has already been added to the
+    // NOTE: This func assumes that @alarm has already been added to the
     // this.cache.alarms array.
     _add_alarm: function (alarm) {
         this._update_panel_item_UI();
@@ -361,16 +369,16 @@ var SectionMain = new Lang.Class({
         t = t.format('%H:%M');
 
         this.snoozed_alarms.set(alarm, t);
+
+        for (let it of this.alarm_items) {
+            if (it.alarm === alarm) it.update_time_label();
+        }
     },
 
     _send_notif: function (alarm) {
         if (this.settings.get_boolean('alarms-play-sound')) {
-            let sound_file = this.settings.get_string('alarms-sound-file-path');
-
-            if (sound_file) {
-                [sound_file,] = GLib.filename_from_uri(sound_file);
-                global.play_sound_file(0, sound_file, '', null);
-            }
+            this.sound_player.set_sound_uri(this.settings.get_string('alarms-sound-file-path'));
+            this.sound_player.play(alarm.repeat_sound);
         }
 
         if (this.settings.get_enum('alarms-notif-style') === NotifStyle.FULLSCREEN) {
@@ -380,6 +388,7 @@ var SectionMain = new Lang.Class({
 
         let source = new MessageTray.Source();
         Main.messageTray.add(source);
+        source.connect('destroy', () => this.sound_player.stop());
 
         let icon = new St.Icon({ icon_name: 'timepp-alarms-symbolic' });
 
@@ -391,10 +400,12 @@ var SectionMain = new Lang.Class({
             gicon        : icon.gicon,
         };
 
-        let notif = new MessageTray.Notification(source,
-                                                 title,
-                                                 alarm.msg,
-                                                 params);
+        let notif = new MessageTray.Notification(
+            source,
+            title,
+            alarm.msg,
+            params
+        );
 
         notif.setUrgency(MessageTray.Urgency.CRITICAL);
 
@@ -520,12 +531,26 @@ const AlarmEditor = new Lang.Class({
             let label = new St.Label({ text: `${_('Snooze duration')} ${_('(min)')} `, x_expand: true, y_align: Clutter.ActorAlign.CENTER });
             box.add_child(label);
 
-            this.snooze_duration_picker = new NUM_PICKER.NumPicker(1, null);
+            this.snooze_duration_picker = new NUM_PICKER.NumPicker(5, null);
             box.add_child(this.snooze_duration_picker.actor);
 
             if (alarm)
                 this.snooze_duration_picker.set_counter(alarm.snooze_dur);
         }
+
+
+        //
+        // repeat sound checkbox
+        //
+        this.checkbox_item = new St.BoxLayout({ reactive: true, x_expand: true, style_class: 'row' });
+        this.content_box.add_actor(this.checkbox_item);
+
+        this.checkbox_item.add_child(
+            new St.Label({ text: _('Repeat notification sound?'), x_expand: true, y_align: Clutter.ActorAlign.CENTER }));
+
+        this.sound_checkbox = new CheckBox.CheckBox();
+        this.checkbox_item.add_child(this.sound_checkbox.actor);
+        this.sound_checkbox.actor.checked = alarm && alarm.repeat_sound;
 
 
         //
@@ -570,25 +595,30 @@ const AlarmEditor = new Lang.Class({
         //
         this.button_ok.connect('clicked', () => {
             if (alarm) {
-                alarm.time_str   = this._get_time_str(),
-                alarm.msg        = this.entry.entry.get_text(),
-                alarm.days       = this.day_chooser.get_days(),
-                alarm.snooze_dur = this.snooze_duration_picker.counter;
+                alarm.time_str     = this._get_time_str(),
+                alarm.msg          = this.entry.entry.get_text(),
+                alarm.days         = this.day_chooser.get_days(),
+                alarm.snooze_dur   = this.snooze_duration_picker.counter;
+                alarm.repeat_sound = this.sound_checkbox.actor.checked;
 
                 this.emit('edited-alarm', alarm);
             }
             else {
                 this.emit('add-alarm', {
-                    time_str   : this._get_time_str(),
-                    msg        : this.entry.entry.get_text(),
-                    days       : this.day_chooser.get_days(),
-                    toggle     : true,
-                    snooze_dur : this.snooze_duration_picker.counter,
+                    time_str     : this._get_time_str(),
+                    msg          : this.entry.entry.get_text(),
+                    days         : this.day_chooser.get_days(),
+                    toggle       : true,
+                    snooze_dur   : this.snooze_duration_picker.counter,
+                    repeat_sound : this.sound_checkbox.actor.checked,
                 });
             }
         });
         this.button_cancel.connect('clicked', () => {
             this.emit('cancel');
+        });
+        this.checkbox_item.connect('button-press-event', () => {
+            this.sound_checkbox.actor.checked = !this.sound_checkbox.actor.checked;
         });
         this.entry.entry.connect('queue-redraw', () => {
             this.entry.scroll_box.vscrollbar_policy = Gtk.PolicyType.NEVER;
@@ -709,18 +739,26 @@ const AlarmItem = new Lang.Class({
 
         // update clock ETA (time until alarm goes off)
         if (this.alarm.days.indexOf(date.getDay()) === -1) {
-            markup += `  (${_('inactive today')})`;
+            markup += `  <b>${_('inactive today')}</b>`;
 
             if (this.alarm.toggle) this.actor.remove_style_class_name('active');
         }
-        else {
-            let clock_then = this.alarm.time_str;
+        else if (this.alarm.toggle) {
+            let clock_then;
             let clock_now;
+            let snoozed_string = '';
+
+            if (this.delegate.snoozed_alarms.has(this.alarm)) {
+                clock_then     = this.delegate.snoozed_alarms.get(this.alarm);
+                snoozed_string = `  <b>${_('Snoozed')}</b>`;
+
+            } else {
+                clock_then = this.alarm.time_str;
+            }
 
             if (this.delegate.wallclock_str) {
                 clock_now = this.delegate.wallclock_str;
-            }
-            else {
+            } else {
                 clock_now = GLib.DateTime.new_now(this.delegate.wallclock.timezone);
                 clock_now = clock_now.format('%H:%M');
             }
@@ -734,7 +772,7 @@ const AlarmItem = new Lang.Class({
             let h     = Math.floor(delta / 3600);
             let min   = Math.round(delta % 3600 / 60);
 
-            markup += `  (${h}h ${min}min)`;
+            markup += `  (${h}h ${min}min)${snoozed_string}`;
 
             if (this.alarm.toggle) this.actor.add_style_class_name('active');
         }
@@ -751,6 +789,7 @@ const AlarmItem = new Lang.Class({
             else                   this.actor.remove_style_class_name('active');
         }
 
+        this.update_time_label();
         this.emit('alarm-toggled');
     },
 
@@ -879,6 +918,7 @@ const AlarmFullscreen = new Lang.Class({
     },
 
     close: function () {
+        this.delegate.sound_player.stop();
         this.alarms = [];
         this.alarm_cards_scroll_bin.destroy_all_children();
         this.parent();

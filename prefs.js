@@ -346,20 +346,8 @@ const Settings = new Lang.Class({
             this.settings.set_enum('timer-panel-mode', widget.get_active());
         });
 
-        {
-            let sound_uri = this.settings.get_string('timer-sound-file-path');
-
-            if (sound_uri) {
-                let [sound_path,] = GLib.filename_from_uri(sound_uri);
-
-                if (GLib.file_test(sound_path, GLib.FileTest.EXISTS))
-                    this.settings.set_string('timer-sound-file-path', sound_uri);
-                else
-                    this.settings.set_string('timer-sound-file-path', GLib.filename_to_uri(ME.path + '/data/sounds/beeps.ogg', null));
-            }
-            else {
-                this.settings.set_string('timer-sound-file-path', GLib.filename_to_uri(ME.path + '/data/sounds/beeps.ogg', null));
-            }
+        if (! this.settings.get_string('timer-sound-file-path')) {
+            this.settings.set_string('timer-sound-file-path', GLib.filename_to_uri(ME.path + '/data/sounds/beeps.ogg', null));
         }
 
         widget = this.builder.get_object('timer-sound-chooser');
@@ -500,28 +488,6 @@ const Settings = new Lang.Class({
             this.settings.set_enum('pomodoro-panel-mode', widget.get_active());
         });
 
-        {
-            let sound_uri = this.settings.get_string('pomodoro-sound-file-path');
-
-            if (sound_uri) {
-                let [sound_path,] = GLib.filename_from_uri(sound_uri);
-
-                if (GLib.file_test(sound_path, GLib.FileTest.EXISTS))
-                    this.settings.set_string('pomodoro-sound-file-path', sound_uri);
-                else
-                    this.settings.set_string('pomodoro-sound-file-path', GLib.filename_to_uri(ME.path + '/data/sounds/beeps.ogg', null));
-            }
-            else {
-                this.settings.set_string('pomodoro-sound-file-path', GLib.filename_to_uri(ME.path + '/data/sounds/beeps.ogg', null));
-            }
-        }
-
-        widget = this.builder.get_object('pomodoro-sound-chooser');
-        widget.set_uri(this.settings.get_string('pomodoro-sound-file-path'));
-        widget.connect('selection-changed', (widget) => {
-            this.settings.set_string('pomodoro-sound-file-path', widget.get_uri());
-        });
-
         widget = this.builder.get_object('pomodoro-notif-style-combo');
         widget.set_active(this.settings.get_enum('pomodoro-notif-style'));
         widget.connect('changed', (widget) => {
@@ -529,8 +495,59 @@ const Settings = new Lang.Class({
         });
 
         this.settings.bind(
-            'pomodoro-play-sound',
-            this.builder.get_object('pomodoro-play-sound-switch'),
+            'pomodoro-do-repeat-notif-sound',
+            this.builder.get_object('pomodoro-do-repeat-notif-sound-switch'),
+            'active',
+            Gio.SettingsBindFlags.DEFAULT);
+
+        if (! this.settings.get_string('pomodoro-sound-file-path-pomo')) {
+            this.settings.set_string('pomodoro-sound-file-path-pomo',
+                GLib.filename_to_uri(ME.path + '/data/sounds/beeps.ogg', null));
+        }
+
+        if (! this.settings.get_string('pomodoro-sound-file-path-short-break')) {
+            this.settings.set_string('pomodoro-sound-file-path-short-break',
+                GLib.filename_to_uri(ME.path + '/data/sounds/beeps.ogg', null));
+        }
+
+        if (!  this.settings.get_string('pomodoro-sound-file-path-long-break')) {
+            this.settings.set_string('pomodoro-sound-file-path-long-break',
+                GLib.filename_to_uri(ME.path + '/data/sounds/beeps.ogg', null));
+        }
+
+        widget = this.builder.get_object('pomodoro-sound-chooser-pomo');
+        widget.set_uri(this.settings.get_string('pomodoro-sound-file-path-pomo'));
+        widget.connect('selection-changed', (widget) => {
+            this.settings.set_string('pomodoro-sound-file-path-pomo', widget.get_uri());
+        });
+
+        widget = this.builder.get_object('pomodoro-sound-chooser-short-break');
+        widget.set_uri(this.settings.get_string('pomodoro-sound-file-path-short-break'));
+        widget.connect('selection-changed', (widget) => {
+            this.settings.set_string('pomodoro-sound-file-path-short-break', widget.get_uri());
+        });
+
+        widget = this.builder.get_object('pomodoro-sound-chooser-long-break');
+        widget.set_uri(this.settings.get_string('pomodoro-sound-file-path-long-break'));
+        widget.connect('selection-changed', (widget) => {
+            this.settings.set_string('pomodoro-sound-file-path-long-break', widget.get_uri());
+        });
+
+        this.settings.bind(
+            'pomodoro-play-sound-pomo',
+            this.builder.get_object('pomodoro-play-sound-switch-pomo'),
+            'active',
+            Gio.SettingsBindFlags.DEFAULT);
+
+        this.settings.bind(
+            'pomodoro-play-sound-short-break',
+            this.builder.get_object('pomodoro-play-sound-switch-short-break'),
+            'active',
+            Gio.SettingsBindFlags.DEFAULT);
+
+        this.settings.bind(
+            'pomodoro-play-sound-long-break',
+            this.builder.get_object('pomodoro-play-sound-switch-long-break'),
             'active',
             Gio.SettingsBindFlags.DEFAULT);
 
@@ -582,20 +599,9 @@ const Settings = new Lang.Class({
             'active',
             Gio.SettingsBindFlags.DEFAULT);
 
-        {
-            let sound_uri = this.settings.get_string('alarms-sound-file-path');
 
-            if (sound_uri) {
-                let [sound_path,] = GLib.filename_from_uri(sound_uri);
-
-                if (GLib.file_test(sound_path, GLib.FileTest.EXISTS))
-                    this.settings.set_string('alarms-sound-file-path', sound_uri);
-                else
-                    this.settings.set_string('alarms-sound-file-path', GLib.filename_to_uri(ME.path + '/data/sounds/beeps.ogg', null));
-            }
-            else {
-                this.settings.set_string('alarms-sound-file-path', GLib.filename_to_uri(ME.path + '/data/sounds/beeps.ogg', null));
-            }
+        if (this.settings.get_string('alarms-sound-file-path')) {
+            this.settings.set_string('alarms-sound-file-path', GLib.filename_to_uri(ME.path + '/data/sounds/beeps.ogg', null));
         }
 
         widget = this.builder.get_object('alarms-sound-chooser');

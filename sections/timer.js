@@ -7,6 +7,7 @@ const Shell       = imports.gi.Shell;
 const Pango       = imports.gi.Pango;
 const Clutter     = imports.gi.Clutter;
 const Main        = imports.ui.main;
+const CheckBox    = imports.ui.checkBox;
 const PopupMenu   = imports.ui.popupMenu;
 const MessageTray = imports.ui.messageTray;
 const Slider      = imports.ui.slider;
@@ -23,6 +24,7 @@ const _        = Gettext.gettext;
 const ngettext = Gettext.ngettext;
 
 
+const SOUND_PLAYER    = ME.imports.lib.sound_player;
 const FULLSCREEN      = ME.imports.lib.fullscreen;
 const SIG_MANAGER     = ME.imports.lib.signal_manager;
 const KEY_MANAGER     = ME.imports.lib.keybinding_manager;
@@ -75,6 +77,7 @@ var SectionMain = new Lang.Class({
 
         this.separate_menu = this.settings.get_boolean('timer-separate-menu');
 
+
         this.timer_state     = TimerState.OFF;
         this.tic_mainloop_id = null;
         this.cache_file      = null;
@@ -83,6 +86,7 @@ var SectionMain = new Lang.Class({
         this.clock           = 0; // microseconds
         this.end_time        = 0; // For computing elapsed time (microseconds)
 
+
         {
             let [,xml,] = Gio.file_new_for_path(IFACE).load_contents(null);
             xml = '' + xml;
@@ -90,9 +94,14 @@ var SectionMain = new Lang.Class({
             this.dbus_impl.export(Gio.DBus.session, '/timepp/zagortenay333/Timer');
         }
 
+
         this.linkm = new TEXT_LINKS_MNGR.TextLinksManager(MISC_UTILS.split_on_whitespace);
         this.sigm  = new SIG_MANAGER.SignalManager();
         this.keym  = new KEY_MANAGER.KeybindingManager(this.settings);
+
+
+        this.sound_player = new SOUND_PLAYER.SoundPlayer();
+
 
         this.fullscreen = new TimerFullscreen(this.ext, this,
             this.settings.get_int('timer-fullscreen-monitor-pos'));
@@ -127,6 +136,9 @@ var SectionMain = new Lang.Class({
         }
 
 
+        //
+        // keybindings
+        //
         this.keym.register('timer-keybinding-open', () => {
              this.ext.open_menu(this.section_name);
         });
@@ -169,7 +181,6 @@ var SectionMain = new Lang.Class({
         this.settings_bin  = new St.Button({ can_focus: true, y_align: St.Align.MIDDLE, x_align: St.Align.END, style_class: 'settings-icon' });
         this.settings_bin.add_actor(this.settings_icon);
         this.icon_box.add(this.settings_bin);
-
 
 
         //
@@ -242,15 +253,18 @@ var SectionMain = new Lang.Class({
 
     // @time: int (seconds)
     start: function (time) {
-        if (time) time *= 1000000;
-        else      time  = this.clock;
-
         if (this.tic_mainloop_id) {
             Mainloop.source_remove(this.tic_mainloop_id);
             this.tic_mainloop_id = null;
         }
 
+        this.sound_player.stop();
+        if (this.notif_source) this.notif_source.destroyNonResidentNotifications();
+
         this.timer_state = TimerState.RUNNING;
+
+        if (time) time *= 1000000;
+        else      time  = this.clock;
 
         this.end_time = GLib.get_monotonic_time() + time;
 
@@ -400,12 +414,12 @@ var SectionMain = new Lang.Class({
 
     _send_notif: function () {
         if (this.settings.get_boolean('timer-play-sound')) {
-            let sound_file = this.settings.get_string('timer-sound-file-path');
+            this.sound_player.set_sound_uri(this.settings.get_string('timer-sound-file-path'));
+            this.sound_player.play(this.settings.get_boolean('timer-do-repeat-notif-sound'));
+        }
 
-            if (sound_file) {
-                [sound_file,] = GLib.filename_from_uri(sound_file);
-                global.play_sound_file(0, sound_file, '', null);
-            }
+        if (this.fullscreen.is_open) {
+            return;
         }
 
         if (this.settings.get_enum('timer-notif-style') === NotifStyle.FULLSCREEN) {
@@ -413,14 +427,13 @@ var SectionMain = new Lang.Class({
             return;
         }
 
-        if (this.fullscreen.is_open)
-            return;
-
-        if (this.notif_source)
+        if (this.notif_source) {
             this.notif_source.destroyNonResidentNotifications();
+        }
 
         this.notif_source = new MessageTray.Source();
         Main.messageTray.add(this.notif_source);
+        this.notif_source.connect('destroy', () => this.sound_player.stop());
 
         let icon = new St.Icon({ icon_name: 'timepp-timer-symbolic' });
 
@@ -455,19 +468,20 @@ var SectionMain = new Lang.Class({
         this.header.actor.hide();
         this.slider_item.actor.hide();
 
-        settings.connect('ok', (actor, time, notif_msg) => {
+        settings.connect('ok', (_, info) => {
             this.actor.grab_key_focus();
             settings.actor.destroy();
             this.header.actor.show();
             this.slider_item.actor.show();
 
-            this.set_notif_msg(notif_msg);
+            this.settings.set_boolean('timer-do-repeat-notif-sound', info.repeat_sound);
+            this.set_notif_msg(info.notif_msg);
 
-            if (time) {
-                this.clock = time;
+            if (info.time) {
+                this.clock = info.time;
                 this.start();
                 this._update_slider();
-                this.cache.last_manually_set_time = time;
+                this.cache.last_manually_set_time = info.time;
                 this._store_cache();
             }
         });
@@ -576,6 +590,20 @@ const TimerSettings = new Lang.Class({
 
 
         //
+        // repeat sound checkbox
+        //
+        this.checkbox_item = new St.BoxLayout({ reactive: true, x_expand: true, style_class: 'row' });
+        this.content_box.add_actor(this.checkbox_item);
+
+        this.checkbox_item.add_child(
+            new St.Label({ text: _('Repeat notification sound?'), x_expand: true, y_align: Clutter.ActorAlign.CENTER }));
+
+        this.sound_checkbox = new CheckBox.CheckBox();
+        this.checkbox_item.add_child(this.sound_checkbox.actor);
+        this.sound_checkbox.actor.checked = this.delegate.settings.get_boolean('timer-do-repeat-notif-sound');
+
+
+        //
         // buttons
         //
         let btn_box = new St.BoxLayout({ style_class: 'row btn-box' });
@@ -590,17 +618,22 @@ const TimerSettings = new Lang.Class({
         //
         // listen
         //
-        this.button_ok.connect('clicked', () => {
-            this.emit('ok', this._get_time(), this.entry.entry.get_text());
-        })
-        this.button_cancel.connect('clicked', () => {
-            this.emit('cancel');
-        });
         this.entry.entry.connect('queue-redraw', () => {
             this.entry.scroll_box.vscrollbar_policy = Gtk.PolicyType.NEVER;
 
             if (ext.needs_scrollbar())
                 this.entry.scroll_box.vscrollbar_policy = Gtk.PolicyType.ALWAYS;
+        });
+        this.button_ok.connect('clicked', () => {
+            this.emit('ok', {
+                time         : this._get_time(),
+                msg          : this.entry.entry.get_text(),
+                repeat_sound : this.sound_checkbox.actor.checked,
+            });
+        });
+        this.button_cancel.connect('clicked', () => this.emit('cancel'));
+        this.checkbox_item.connect('button-press-event', () => {
+            this.sound_checkbox.actor.checked = !this.sound_checkbox.actor.checked;
         });
     },
 
@@ -728,6 +761,8 @@ const TimerFullscreen = new Lang.Class({
     },
 
     close: function () {
+        this.delegate.sound_player.stop();
+
         if (this.delegate.timer_state === TimerState.OFF) {
             this.actor.style_class = this.default_style_class;
             this.title.text = '';

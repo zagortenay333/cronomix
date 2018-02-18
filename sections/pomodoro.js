@@ -22,6 +22,7 @@ const _        = Gettext.gettext;
 const ngettext = Gettext.ngettext;
 
 
+const SOUND_PLAYER = ME.imports.lib.sound_player;
 const FULLSCREEN   = ME.imports.lib.fullscreen;
 const SIG_MANAGER  = ME.imports.lib.signal_manager;
 const KEY_MANAGER  = ME.imports.lib.keybinding_manager;
@@ -37,9 +38,9 @@ const CACHE_FILE = GLib.get_home_dir() +
                    '/.cache/timepp_gnome_shell_extension/timepp_pomodoro.json';
 
 
-const START_MSG       = _('Work!');
-const LONG_BREAK_MSG  = _('Long Break!')
-const SHORT_BREAK_MSG = _('Short break!')
+const POMO_STARTED_MSG = _('Pomodoro');
+const LONG_BREAK_MSG   = _('Long Break')
+const SHORT_BREAK_MSG  = _('Short Break')
 
 
 const PomoState = {
@@ -73,6 +74,7 @@ var SectionMain = new Lang.Class({
 
         this.separate_menu = this.settings.get_boolean('pomodoro-separate-menu');
 
+
         this.pomo_state       = PomoState.STOPPED;
         this.tic_mainloop_id  = null;
         this.cache_file       = null;
@@ -85,8 +87,13 @@ var SectionMain = new Lang.Class({
         this.sigm = new SIG_MANAGER.SignalManager();
         this.keym = new KEY_MANAGER.KeybindingManager(this.settings);
 
+
+        this.sound_player = new SOUND_PLAYER.SoundPlayer();
+
+
         this.fullscreen = new PomodoroFullscreen(this.ext, this,
             this.settings.get_int('pomodoro-fullscreen-monitor-pos'));
+
 
         {
             let [,xml,] = Gio.file_new_for_path(IFACE).load_contents(null);
@@ -94,6 +101,7 @@ var SectionMain = new Lang.Class({
             this.dbus_impl = Gio.DBusExportedObject.wrapJSObject(xml, this);
             this.dbus_impl.export(Gio.DBus.session, '/timepp/zagortenay333/Pomodoro');
         }
+
 
         try {
             this.cache_file = Gio.file_new_for_path(CACHE_FILE);
@@ -126,6 +134,9 @@ var SectionMain = new Lang.Class({
         }
 
 
+        //
+        // keybindings
+        //
         this.keym.register('pomodoro-keybinding-open', () => {
              this.ext.open_menu(this.section_name);
         });
@@ -346,6 +357,9 @@ var SectionMain = new Lang.Class({
             this.header.label.text = _('Pomodoro');
         }
 
+        this.sound_player.stop();
+        if (this.notif_source) this.notif_source.destroyNonResidentNotifications();
+
         {
             let in_break = this.pomo_state === PomoState.LONG_BREAK ||
                            this.pomo_state === PomoState.SHORT_BREAK;
@@ -392,6 +406,9 @@ var SectionMain = new Lang.Class({
             this.tic_mainloop_id = null;
         }
 
+        this.sound_player.stop();
+        if (this.notif_source) this.notif_source.destroyNonResidentNotifications();
+
         this.pomo_state = PomoState.POMO;
 
         this.dbus_impl.emit_signal(
@@ -401,7 +418,6 @@ var SectionMain = new Lang.Class({
             this.ext.emit_to_sections(
                 'start-time-tracking-by-id', this.section_name, this.cache.todo_task_id);
         }
-
 
         this.end_time = GLib.get_monotonic_time() + time;
 
@@ -418,8 +434,9 @@ var SectionMain = new Lang.Class({
         this.fullscreen.button_take_break.visible = true;
         this.fullscreen.button_new_pomo.visible   = true;
 
-        if (!this.fullscreen.is_open && this.actor.visible)
+        if (!this.fullscreen.is_open && this.actor.visible) {
             this.button_stop.grab_key_focus();
+        }
 
         this._tic();
     },
@@ -442,6 +459,9 @@ var SectionMain = new Lang.Class({
         }
 
         this.end_time = GLib.get_monotonic_time() + this.clock;
+
+        this.sound_player.stop();
+        if (this.notif_source) this.notif_source.destroyNonResidentNotifications();
 
         this._update_time_display();
         this._update_phase_label();
@@ -506,8 +526,8 @@ var SectionMain = new Lang.Class({
     _update_phase_label: function () {
         switch (this.pomo_state) {
             case PomoState.POMO:
-                this.phase_label.text            = START_MSG;
-                this.fullscreen.phase_label.text = START_MSG;
+                this.phase_label.text            = POMO_STARTED_MSG;
+                this.fullscreen.phase_label.text = POMO_STARTED_MSG;
                 break;
             case PomoState.LONG_BREAK:
                 this.phase_label.text            = LONG_BREAK_MSG;
@@ -564,22 +584,30 @@ var SectionMain = new Lang.Class({
     },
 
     _send_notif: function () {
-        let msg;
+        let do_play_sound, msg;
 
         switch (this.pomo_state) {
-            case PomoState.POMO:        msg = START_MSG;       break;
-            case PomoState.SHORT_BREAK: msg = SHORT_BREAK_MSG; break;
-            case PomoState.LONG_BREAK:  msg = LONG_BREAK_MSG;  break;
-            default: return;
+            case PomoState.POMO:
+                msg = POMO_STARTED_MSG;
+                do_play_sound = this.settings.get_boolean('pomodoro-play-sound-pomo');
+                this.sound_player.set_sound_uri(this.settings.get_string('pomodoro-sound-file-path-pomo'));
+                break;
+            case PomoState.SHORT_BREAK:
+                msg = SHORT_BREAK_MSG;
+                do_play_sound = this.settings.get_boolean('pomodoro-play-sound-short-break');
+                this.sound_player.set_sound_uri(this.settings.get_string('pomodoro-sound-file-path-short-break'));
+                break;
+            case PomoState.LONG_BREAK:
+                msg = LONG_BREAK_MSG;
+                do_play_sound = this.settings.get_boolean('pomodoro-play-sound-long-break');
+                this.sound_player.set_sound_uri(this.settings.get_string('pomodoro-sound-file-path-long-break'));
+                break;
+            default:
+                return;
         }
 
-        if (this.settings.get_boolean('pomodoro-play-sound')) {
-            let sound_file = this.settings.get_string('pomodoro-sound-file-path');
-
-            if (sound_file) {
-                [sound_file,] = GLib.filename_from_uri(sound_file);
-                global.play_sound_file(0, sound_file, '', null);
-            }
+        if (do_play_sound) {
+            this.sound_player.play(this.settings.get_boolean('pomodoro-do-repeat-notif-sound'));
         }
 
         if (this.settings.get_enum('pomodoro-notif-style') === NotifStyle.FULLSCREEN) {
@@ -587,14 +615,17 @@ var SectionMain = new Lang.Class({
             return;
         }
 
-        if (this.fullscreen.is_open)
+        if (this.fullscreen.is_open) {
             return;
+        }
 
-        if (this.notif_source)
+        if (this.notif_source) {
             this.notif_source.destroyNonResidentNotifications();
+        }
 
         this.notif_source = new MessageTray.Source();
         Main.messageTray.add(this.notif_source);
+        this.notif_source.connect('destroy', () => this.sound_player.stop());
 
         let icon = new St.Icon({ icon_name: 'timepp-pomodoro-symbolic' });
 
@@ -603,8 +634,7 @@ var SectionMain = new Lang.Class({
             gicon        : icon.gicon,
         };
 
-        let notif =
-            new MessageTray.Notification(this.notif_source, msg, '', params);
+        let notif = new MessageTray.Notification(this.notif_source, msg, '', params);
 
         notif.setUrgency(MessageTray.Urgency.CRITICAL);
 
@@ -667,7 +697,7 @@ const PomodoroSettings = new Lang.Class({
         this.pomo_duration = new St.BoxLayout({style_class: 'row'});
         this.content_box.add_actor(this.pomo_duration);
 
-        this.pomo_label = new St.Label({text: `${_('Pomodoro')} ${_('(min:sec)')} `, y_align: Clutter.ActorAlign.CENTER});
+        this.pomo_label = new St.Label({text: `${POMO_STARTED_MSG} ${_('(min:sec)')} `, y_align: Clutter.ActorAlign.CENTER});
         this.pomo_duration.add(this.pomo_label, {expand: true});
 
         this.pomo_dur_min_picker = new NUM_PICKER.NumPicker(0, null);
@@ -686,7 +716,7 @@ const PomodoroSettings = new Lang.Class({
         this.short_break = new St.BoxLayout({style_class: 'row'});
         this.content_box.add_actor(this.short_break);
 
-        this.short_break_label = new St.Label({text: `${_('Short break')} ${_('(min:sec)')} `, y_align: Clutter.ActorAlign.CENTER});
+        this.short_break_label = new St.Label({text: `${SHORT_BREAK_MSG} ${_('(min:sec)')} `, y_align: Clutter.ActorAlign.CENTER});
         this.short_break.add(this.short_break_label, {expand: true});
 
         this.short_break_min_picker = new NUM_PICKER.NumPicker(0, null);
@@ -705,7 +735,7 @@ const PomodoroSettings = new Lang.Class({
         this.long_break = new St.BoxLayout({style_class: 'row'});
         this.content_box.add_actor(this.long_break);
 
-        this.long_break_label = new St.Label({text: `${_('Long break')} ${_('(min:sec)')} `, y_align: Clutter.ActorAlign.CENTER});
+        this.long_break_label = new St.Label({text: `${LONG_BREAK_MSG} ${_('(min:sec)')} `, y_align: Clutter.ActorAlign.CENTER});
         this.long_break.add(this.long_break_label, {expand: true});
 
         this.long_break_min_picker = new NUM_PICKER.NumPicker(0, null);
@@ -884,6 +914,11 @@ const PomodoroFullscreen = new Lang.Class({
         });
     },
 
+    close: function () {
+        this.delegate.sound_player.stop();
+        this.parent();
+    },
+
     on_start: function () {
         switch (this.delegate.pomo_state) {
             case PomoState.POMO:
@@ -905,7 +940,7 @@ const PomodoroFullscreen = new Lang.Class({
 
     on_new_pomo: function () {
         this.actor.style_class = this.default_style_class + ' pomo-running';
-        this.phase_label.text  = START_MSG;
+        this.phase_label.text  = POMO_STARTED_MSG;
     },
 
     on_break: function () {

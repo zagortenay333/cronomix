@@ -30,12 +30,10 @@
         ======================================= -->
         <key name="unicon-mode" type="b">
             <default>false</default>
-            <description>Show single icon in panel</description>
         </key>
 
         <key name="panel-item-position" enum="org.gnome.shell.extensions.timepp.position-in-panel">
             <default>"Right"</default>
-            <description>Position in panel</description>
         </key>
 
         <key name="sections" type="a{sa{sb}}">
@@ -54,47 +52,42 @@
         ======================================= -->
         <key name="timer-fullscreen-monitor-pos" type="i">
             <default>0</default>
-            <description>Monitor on which the fullscreen is shown</description>
         </key>
 
         <key name="timer-separate-menu" type="b">
             <default>false</default>
-            <description>Show in separate menu</description>
         </key>
 
         <key name="timer-show-seconds" type="b">
             <default>false</default>
-            <description>Show in separate menu</description>
         </key>
 
         <key name="timer-panel-mode" enum="org.gnome.shell.extensions.timepp.panel-mode">
             <default>"Icon and Text"</default>
-            <description>Position in panel</description>
         </key>
 
         <key name="timer-sound-file-path" type="s">
             <default>""</default>
-            <description>Sound file path</description>
         </key>
 
         <key name="timer-notif-style" enum="org.gnome.shell.extensions.timepp.notif-style">
             <default>"Standard"</default>
-            <description>Notification style</description>
         </key>
 
         <key name="timer-play-sound" type="b">
             <default>false</default>
-            <description>Play sound with notification</description>
+        </key>
+
+        <key name="timer-do-repeat-notif-sound" type="b">
+            <default>false</default>
         </key>
 
         <key name="timer-keybinding-open" type="as">
             <default><![CDATA[[""]]]></default>
-            <description>Open this section</description>
         </key>
 
         <key name="timer-keybinding-open-fullscreen" type="as">
             <default><![CDATA[[""]]]></default>
-            <description>Open this section in fullscreen</description>
         </key>
 
 
@@ -103,32 +96,26 @@
         ======================================= -->
         <key name="stopwatch-fullscreen-monitor-pos" type="i">
             <default>0</default>
-            <description>Monitor on which the fullscreen is shown</description>
         </key>
 
         <key name="stopwatch-separate-menu" type="b">
             <default>false</default>
-            <description>Show in separate menu</description>
         </key>
 
         <key name="stopwatch-clock-format" enum="org.gnome.shell.extensions.timepp.clock-format">
             <default>"h:m:s"</default>
-            <description>Clock Format</description>
         </key>
 
         <key name="stopwatch-panel-mode" enum="org.gnome.shell.extensions.timepp.panel-mode">
             <default>"Icon and Text"</default>
-            <description>Position in panel</description>
         </key>
 
         <key name="stopwatch-keybinding-open" type="as">
             <default><![CDATA[[""]]]></default>
-            <description>Open this section</description>
         </key>
 
         <key name="stopwatch-keybinding-open-fullscreen" type="as">
             <default><![CDATA[[""]]]></default>
-            <description>Open this section in fullscreen</description>
         </key>
 
 
@@ -137,47 +124,58 @@
         ======================================= -->
         <key name="pomodoro-fullscreen-monitor-pos" type="i">
             <default>0</default>
-            <description>Monitor on which the fullscreen is shown</description>
         </key>
 
         <key name="pomodoro-separate-menu" type="b">
             <default>false</default>
-            <description>Show in separate menu</description>
         </key>
 
         <key name="pomodoro-show-seconds" type="b">
             <default>false</default>
-            <description>Show in separate menu</description>
         </key>
 
         <key name="pomodoro-panel-mode" enum="org.gnome.shell.extensions.timepp.panel-mode">
             <default>"Icon and Text"</default>
-            <description>Position in panel</description>
-        </key>
-
-        <key name="pomodoro-sound-file-path" type="s">
-            <default>""</default>
-            <description>Sound file path</description>
         </key>
 
         <key name="pomodoro-notif-style" enum="org.gnome.shell.extensions.timepp.notif-style">
             <default>"Standard"</default>
-            <description>Notification style</description>
         </key>
 
-        <key name="pomodoro-play-sound" type="b">
+        <key name="pomodoro-do-repeat-notif-sound" type="b">
             <default>false</default>
-            <description>Play sound with notification</description>
+        </key>
+
+        <key name="pomodoro-sound-file-path-pomo" type="s">
+            <default>""</default>
+        </key>
+
+        <key name="pomodoro-sound-file-path-short-break" type="s">
+            <default>""</default>
+        </key>
+
+        <key name="pomodoro-sound-file-path-long-break" type="s">
+            <default>""</default>
+        </key>
+
+        <key name="pomodoro-play-sound-pomo" type="b">
+            <default>false</default>
+        </key>
+
+        <key name="pomodoro-play-sound-short-break" type="b">
+            <default>false</default>
+        </key>
+
+        <key name="pomodoro-play-sound-long-break" type="b">
+            <default>false</default>
         </key>
 
         <key name="pomodoro-keybinding-open" type="as">
             <default><![CDATA[[""]]]></default>
-            <description>Open this section</description>
         </key>
 
         <key name="pomodoro-keybinding-open-fullscreen" type="as">
             <default><![CDATA[[""]]]></default>
-            <description>Open this section in fullscreen</description>
         </key>
 
 
@@ -186,32 +184,30 @@
         ======================================= -->
         <key name="alarms-fullscreen-monitor-pos" type="i">
             <default>0</default>
-            <description>Monitor on which the fullscreen is shown</description>
         </key>
 
         <key name="alarms-separate-menu" type="b">
             <default>true</default>
-            <description>Show in separate menu</description>
         </key>
 
         <key name="alarms-sound-file-path" type="s">
             <default>""</default>
-            <description>Sound file path</description>
         </key>
 
         <key name="alarms-play-sound" type="b">
             <default>false</default>
-            <description>Play sound with notification</description>
+        </key>
+
+        <key name="alarms-do-repeat-notif-sound" type="b">
+            <default>false</default>
         </key>
 
         <key name="alarms-notif-style" enum="org.gnome.shell.extensions.timepp.notif-style">
             <default>"Standard"</default>
-            <description>Notification style</description>
         </key>
 
         <key name="alarms-keybinding-open" type="as">
             <default><![CDATA[[""]]]></default>
-            <description>Open this section</description>
         </key>
 
 
@@ -220,57 +216,46 @@
         ======================================= -->
         <key name="todo-separate-menu" type="b">
             <default>true</default>
-            <description>Show in separate menu</description>
         </key>
 
         <key name="todo-panel-mode" enum="org.gnome.shell.extensions.timepp.panel-mode">
             <default>"Icon and Text"</default>
-            <description>Position in panel</description>
         </key>
 
         <key name="todo-task-width" type="i">
             <default>300</default>
-            <description>Snooze duration</description>
         </key>
 
         <key name="todo-current" type="a{ss}">
             <default>{}</default>
-            <description>Current todo files and corresponding done file and csv dir</description>
         </key>
 
         <key name="todo-files" type="aa{ss}">
             <default>[]</default>
-            <description>Array of todo files structs</description>
         </key>
 
         <key name="todo-stats-heatmap-visible" type="b">
             <default>true</default>
-            <description>Show heatmap in stats view</description>
         </key>
 
         <key name="todo-keybinding-open" type="as">
             <default><![CDATA[[""]]]></default>
-            <description>Open this section</description>
         </key>
 
         <key name="todo-keybinding-open-to-add" type="as">
             <default><![CDATA[[""]]]></default>
-            <description>Open this section to add new task</description>
         </key>
 
         <key name="todo-keybinding-open-to-search" type="as">
             <default><![CDATA[[""]]]></default>
-            <description>Open this section to search task</description>
         </key>
 
         <key name="todo-keybinding-open-to-stats" type="as">
             <default><![CDATA[[""]]]></default>
-            <description>Open the stats view</description>
         </key>
 
         <key name="todo-keybinding-open-to-switch-files" type="as">
             <default><![CDATA[[""]]]></default>
-            <description>Open this section to search task</description>
         </key>
     </schema>
 </schemalist>

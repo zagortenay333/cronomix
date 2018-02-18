@@ -13,7 +13,7 @@
         "timer"     : 2,
         "stopwatch" : 4,
         "pomodoro"  : 3,
-        "alarms"    : 2,
+        "alarms"    : 3,
         "todo"      : 3
     }
 }

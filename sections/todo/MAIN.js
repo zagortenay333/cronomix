@@ -213,6 +213,9 @@ var SectionMain = new Lang.Class({
         };
 
 
+        //
+        // keybindings
+        //
         this.keym.register('todo-keybinding-open', () => {
             this.ext.open_menu(this.section_name);
             if (this.view_manager.current_view !== G.View.LOADING &&

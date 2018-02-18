@@ -118,6 +118,9 @@ var SectionMain = new Lang.Class({
         }
 
 
+        //
+        // keybindings
+        //
         this.keym.register('stopwatch-keybinding-open', () => {
              this.ext.open_menu(this.section_name);
         });
