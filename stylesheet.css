@@ -688,7 +688,13 @@
     padding-left: 3em;
 }
 
+.timepp-menu .todo-section .filter-settings-sector {
+    spacing: 0;
+}
+
 .timepp-menu .todo-section .filter-window-item {
+    padding-top: .7em;
+    padding-bottom: .7em;
     max-width: 32em;
 }
 

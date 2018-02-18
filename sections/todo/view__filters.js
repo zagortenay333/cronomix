@@ -99,7 +99,7 @@ var TaskFiltersWindow = new Lang.Class({
         //
         // show hidden only switch
         //
-        this.show_hidden_tasks_item = new St.BoxLayout({ style_class: 'row' });
+        this.show_hidden_tasks_item = new St.BoxLayout({ reactive: true, style_class: 'row' });
         this.content_box.add_child(this.show_hidden_tasks_item);
 
         let show_hidden_tasks_label = new St.Label({ text: _('Show hidden tasks only'), y_align: Clutter.ActorAlign.CENTER });
@@ -123,7 +123,7 @@ var TaskFiltersWindow = new Lang.Class({
         //
         // show recurring only switch
         //
-        this.show_recurring_tasks_item = new St.BoxLayout({ style_class: 'row' });
+        this.show_recurring_tasks_item = new St.BoxLayout({ reactive: true, style_class: 'row' });
         this.content_box.add_child(this.show_recurring_tasks_item);
 
         let show_recurring_tasks_label = new St.Label({ text: _('Show recurring tasks only'), y_align: Clutter.ActorAlign.CENTER });
@@ -149,7 +149,7 @@ var TaskFiltersWindow = new Lang.Class({
         //
         // show deferred tasks only switch
         //
-        this.show_deferred_tasks_item = new St.BoxLayout({ style_class: 'row' });
+        this.show_deferred_tasks_item = new St.BoxLayout({ reactive: true, style_class: 'row' });
         this.content_box.add_child(this.show_deferred_tasks_item);
 
         let show_deferred_tasks_label = new St.Label({ text: _('Show deferred tasks only'), y_align: Clutter.ActorAlign.CENTER });
@@ -174,7 +174,7 @@ var TaskFiltersWindow = new Lang.Class({
         //
         // Invert switch (whitelist/blacklist)
         //
-        this.invert_item = new St.BoxLayout({ style_class: 'row' });
+        this.invert_item = new St.BoxLayout({ reactive: true, style_class: 'row' });
         this.content_box.add_child(this.invert_item);
 
         let invert_label = new St.Label({ text: _('Invert filters'), y_align: St.Align.END });
@@ -228,48 +228,22 @@ var TaskFiltersWindow = new Lang.Class({
             this.filter_register.custom.push(item);
             this.entry.entry.text = '';
         });
-        this.show_hidden_tasks_toggle_btn.connect('clicked', () => {
-            if (this.show_hidden_tasks_toggle.state) {
-                this.show_hidden_tasks_toggle.setToggleState(false);
-            }
-            else {
-                for (let toggle of this.nand_toggles) toggle.setToggleState(false);
-                this.show_hidden_tasks_toggle.setToggleState(true);
-            }
-        });
-        this.show_recurring_tasks_toggle_btn.connect('clicked', () => {
-            if (this.show_recurring_tasks_toggle.state) {
-                this.show_recurring_tasks_toggle.setToggleState(false);
-            }
-            else {
-                for (toggle of this.nand_toggles) toggle.setToggleState(false);
-                this.show_recurring_tasks_toggle.setToggleState(true);
-            }
-        });
-        this.show_deferred_tasks_toggle_btn.connect('clicked', () => {
-            if (this.show_deferred_tasks_toggle.state) {
-                this.show_deferred_tasks_toggle.setToggleState(false);
-            }
-            else {
-                for (toggle of this.nand_toggles) toggle.setToggleState(false);
-                this.show_deferred_tasks_toggle.setToggleState(true);
-            }
-        });
-        this.invert_toggle_btn.connect('clicked', () => {
-            this.invert_toggle.toggle();
-        });
-        this.button_reset.connect('clicked', () => {
-            this._reset_all();
-        });
-        this.button_ok.connect('clicked', () => {
-            this._on_ok_clicked();
-        });
         this.filter_sectors_scroll_box.connect('queue-redraw', () => {
             this.filter_sectors_scroll.vscrollbar_policy = Gtk.PolicyType.NEVER;
 
             if (this.ext.needs_scrollbar())
                 this.filter_sectors_scroll.vscrollbar_policy = Gtk.PolicyType.ALWAYS;
         });
+        this.show_hidden_tasks_toggle_btn.connect('clicked', () => this._on_nand_toggle_clicked(this.show_hidden_tasks_toggle));
+        this.show_hidden_tasks_item.connect('button-press-event', () => this._on_nand_toggle_clicked(this.show_hidden_tasks_toggle));
+        this.show_deferred_tasks_toggle_btn.connect('clicked', () => this._on_nand_toggle_clicked(this.show_deferred_tasks_toggle));
+        this.show_deferred_tasks_item.connect('button-press-event', () => this._on_nand_toggle_clicked(this.show_deferred_tasks_toggle));
+        this.show_recurring_tasks_toggle_btn.connect('clicked', () => this._on_nand_toggle_clicked(this.show_recurring_tasks_toggle));
+        this.show_recurring_tasks_item.connect('button-press-event', () => this._on_nand_toggle_clicked(this.show_recurring_tasks_toggle));
+        this.invert_toggle_btn.connect('clicked', () => this.invert_toggle.toggle());
+        this.invert_item.connect('button-press-event', () => this.invert_toggle.toggle());
+        this.button_reset.connect('clicked', () => this._reset_all());
+        this.button_ok.connect('clicked', () => this._on_ok_clicked());
     },
 
     _load_filters: function () {
@@ -404,8 +378,8 @@ var TaskFiltersWindow = new Lang.Class({
 
         item.filter = label;
 
-        item.label = new St.Label({ text: label, y_align: Clutter.ActorAlign.CENTER });
-        item.actor.add(item.label, {expand: true});
+        item.label = new St.Label({ text: label, x_expand: true, y_align: Clutter.ActorAlign.CENTER });
+        item.actor.add_child(item.label);
 
         if (count) {
             item.count_label = new St.Label({ y_align: Clutter.ActorAlign.CENTER, style_class: 'popup-inactive-menu-item', pseudo_class: 'insensitive' });
@@ -417,21 +391,18 @@ var TaskFiltersWindow = new Lang.Class({
         item.checkbox = new CheckBox.CheckBox();
         item.actor.add_actor(item.checkbox.actor);
         item.checkbox.actor.checked = is_checked;
-
+        item.checkbox.actor.y_align = St.Align.MIDDLE;
 
         let close_button;
 
         if (is_deletable) {
             close_button = new St.Button({ can_focus: true, style_class: 'close-icon' });
             item.actor.add_actor(close_button);
-
-            let close_icon = new St.Icon({ icon_name: 'timepp-close-symbolic' });
-            close_button.add_actor(close_icon);
-
-            close_button.connect('clicked', () => {
-                this._delete_custom_item(item);
-            });
+            close_button.add_actor(new St.Icon({ icon_name: 'timepp-close-symbolic' }));
+            close_button.connect('clicked', () => this._delete_custom_item(item));
         }
+
+        item.actor.connect('button-press-event', () => { item.checkbox.actor.checked = !item.checkbox.actor.checked; });
 
         let actor_to_connect = is_deletable ? close_button : item.checkbox.actor;
 
@@ -462,6 +433,16 @@ var TaskFiltersWindow = new Lang.Class({
         let sep = new PopupMenu.PopupSeparatorMenuItem();
         sep.actor.add_style_class_name('timepp-separator');
         container.add_child(sep.actor);
+    },
+
+    _on_nand_toggle_clicked: function (toggle_actor) {
+        if (toggle_actor.state) {
+            toggle_actor.setToggleState(false);
+        }
+        else {
+            for (let toggle of this.nand_toggles) toggle.setToggleState(false);
+            toggle_actor.setToggleState(true);
+        }
     },
 
     _on_ok_clicked: function () {
