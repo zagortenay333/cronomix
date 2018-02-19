@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-18 20:27+0100\n"
+"POT-Creation-Date: 2018-02-19 22:44+0100\n"
 "PO-Revision-Date: 2018-01-10 10:35+0100\n"
 "Last-Translator: Piotr Komur <pkomur@gmail.com>\n"
 "Language-Team: \n"
@@ -347,7 +347,7 @@ msgstr "Sortuj wg daty zakończenia"
 #: data/po_files/../../sections/todo/view__task_editor.js:140
 #: data/po_files/../../sections/todo/view__stats.js:212
 #: data/po_files/../../sections/todo/view__clear_tasks.js:96
-#: data/po_files/../../sections/todo/view__filters.js:196
+#: data/po_files/../../sections/todo/view__filters.js:203
 #: data/po_files/../../sections/pomodoro.js:786
 #: data/po_files/../../sections/alarms.js:588
 #: data/po_files/../../sections/timer.js:613 data/po_files/../../prefs.js:132
@@ -529,11 +529,11 @@ msgstr "Nic nie znaleziono..."
 msgid "Add custom filter..."
 msgstr "Dodaj własny filtr..."
 
-#: data/po_files/../../sections/todo/view__filters.js:105
+#: data/po_files/../../sections/todo/view__filters.js:113
 msgid "Show hidden tasks only"
 msgstr "Pokaż tylko ukryte zadania"
 
-#: data/po_files/../../sections/todo/view__filters.js:112
+#: data/po_files/../../sections/todo/view__filters.js:120
 #, javascript-format
 msgid "%d hidden task"
 msgid_plural "%d hidden tasks"
@@ -541,11 +541,11 @@ msgstr[0] "%d ukryte zadanie"
 msgstr[1] "%d ukryte zadania"
 msgstr[2] "%d ukrytych zadań"
 
-#: data/po_files/../../sections/todo/view__filters.js:129
+#: data/po_files/../../sections/todo/view__filters.js:136
 msgid "Show recurring tasks only"
 msgstr "Pokaż tylko powtarzające się zadania"
 
-#: data/po_files/../../sections/todo/view__filters.js:139
+#: data/po_files/../../sections/todo/view__filters.js:146
 #, javascript-format
 msgid "%d recurring task"
 msgid_plural "%d recurring tasks"
@@ -553,11 +553,11 @@ msgstr[0] "%d powtarzające się zadanie"
 msgstr[1] "%d powtarzające się zadania"
 msgstr[2] "%d powtarzających się zadań"
 
-#: data/po_files/../../sections/todo/view__filters.js:155
+#: data/po_files/../../sections/todo/view__filters.js:162
 msgid "Show deferred tasks only"
 msgstr "Pokaż tylko ukryte zadania"
 
-#: data/po_files/../../sections/todo/view__filters.js:164
+#: data/po_files/../../sections/todo/view__filters.js:171
 #, javascript-format
 msgid "%d deferred task"
 msgid_plural "%d deferred tasks"
@@ -565,25 +565,25 @@ msgstr[0] "%d ukryte zadanie"
 msgstr[1] "%d ukryte zadania"
 msgstr[2] "%d ukrytych zadań"
 
-#: data/po_files/../../sections/todo/view__filters.js:180
+#: data/po_files/../../sections/todo/view__filters.js:187
 msgid "Invert filters"
 msgstr "Odwróć filtry"
 
-#: data/po_files/../../sections/todo/view__filters.js:195
+#: data/po_files/../../sections/todo/view__filters.js:202
 #: data/po_files/../../sections/stopwatch.js:184
 #: data/po_files/../../sections/stopwatch.js:578
 msgid "Reset"
 msgstr "Zeruj"
 
-#: data/po_files/../../sections/todo/view__filters.js:281
+#: data/po_files/../../sections/todo/view__filters.js:288
 msgid "Completed"
 msgstr "Ukończone"
 
-#: data/po_files/../../sections/todo/view__filters.js:292
+#: data/po_files/../../sections/todo/view__filters.js:299
 msgid "No Priority"
 msgstr "Bez priorytetu"
 
-#: data/po_files/../../sections/todo/view__filters.js:388
+#: data/po_files/../../sections/todo/view__filters.js:395
 #, javascript-format
 msgid "%d task"
 msgid_plural "%d tasks"
