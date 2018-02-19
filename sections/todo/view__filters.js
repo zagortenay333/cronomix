@@ -77,19 +77,20 @@ var TaskFiltersWindow = new Lang.Class({
         this.filter_sectors_scroll_box = new St.BoxLayout({ vertical: true });
         this.filter_sectors_scroll.add_actor(this.filter_sectors_scroll_box);
 
-        this.custom_filters_box = new St.BoxLayout({ vertical: true, x_expand: true, style_class: 'row filter-settings-sector' });
+        this.custom_filters_box = new St.BoxLayout({ vertical: true, x_expand: true, style_class: 'filter-settings-sector' });
         this.filter_sectors_scroll_box.add_actor(this.custom_filters_box);
 
         this.entry = new MULTIL_ENTRY.MultiLineEntry(_('Add custom filter...'), false, true);
         this.custom_filters_box.add_child(this.entry.actor);
+        this.entry.actor.add_style_class_name('row');
 
-        this.priority_filters_box = new St.BoxLayout({ vertical: true, x_expand: true, style_class: 'row filter-settings-sector' });
+        this.priority_filters_box = new St.BoxLayout({ vertical: true, x_expand: true, style_class: 'filter-settings-sector' });
         this.filter_sectors_scroll_box.add_actor(this.priority_filters_box);
 
-        this.context_filters_box = new St.BoxLayout({ vertical: true, x_expand: true, style_class: 'row filter-settings-sector' });
+        this.context_filters_box = new St.BoxLayout({ vertical: true, x_expand: true, style_class: 'filter-settings-sector' });
         this.filter_sectors_scroll_box.add_actor(this.context_filters_box);
 
-        this.project_filters_box = new St.BoxLayout({ vertical: true, x_expand: true, style_class: 'row filter-settings-sector' });
+        this.project_filters_box = new St.BoxLayout({ vertical: true, x_expand: true, style_class: 'filter-settings-sector' });
         this.filter_sectors_scroll_box.add_actor(this.project_filters_box);
 
 
@@ -97,10 +98,17 @@ var TaskFiltersWindow = new Lang.Class({
 
 
         //
+        // toggles sector
+        //
+        this.toggles_sector = new St.BoxLayout({ vertical: true, x_expand: true, style_class: 'filter-settings-sector' });
+        this.content_box.add_child(this.toggles_sector);
+
+
+        //
         // show hidden only switch
         //
-        this.show_hidden_tasks_item = new St.BoxLayout({ reactive: true, style_class: 'row' });
-        this.content_box.add_child(this.show_hidden_tasks_item);
+        this.show_hidden_tasks_item = new St.BoxLayout({ reactive: true, style_class: 'row filter-window-item' });
+        this.toggles_sector.add_child(this.show_hidden_tasks_item);
 
         let show_hidden_tasks_label = new St.Label({ text: _('Show hidden tasks only'), y_align: Clutter.ActorAlign.CENTER });
         this.show_hidden_tasks_item.add(show_hidden_tasks_label, {expand: true});
@@ -108,10 +116,9 @@ var TaskFiltersWindow = new Lang.Class({
         let hidden_count_label = new St.Label({ y_align: Clutter.ActorAlign.CENTER, style_class: 'popup-inactive-menu-item', pseudo_class: 'insensitive' });
         this.show_hidden_tasks_item.add_child(hidden_count_label);
 
-        hidden_count_label.text = ngettext(
-                '%d hidden task',
-                '%d hidden tasks',
-                this.delegate.stats.hidden).format(this.delegate.stats.hidden);
+        hidden_count_label.text =
+            ngettext('%d hidden task', '%d hidden tasks', this.delegate.stats.hidden)
+            .format(this.delegate.stats.hidden);
 
         this.show_hidden_tasks_toggle_btn = new St.Button({ can_focus: true });
         this.show_hidden_tasks_item.add_actor(this.show_hidden_tasks_toggle_btn);
@@ -123,8 +130,8 @@ var TaskFiltersWindow = new Lang.Class({
         //
         // show recurring only switch
         //
-        this.show_recurring_tasks_item = new St.BoxLayout({ reactive: true, style_class: 'row' });
-        this.content_box.add_child(this.show_recurring_tasks_item);
+        this.show_recurring_tasks_item = new St.BoxLayout({ reactive: true, style_class: 'row filter-window-item' });
+        this.toggles_sector.add_child(this.show_recurring_tasks_item);
 
         let show_recurring_tasks_label = new St.Label({ text: _('Show recurring tasks only'), y_align: Clutter.ActorAlign.CENTER });
         this.show_recurring_tasks_item.add(show_recurring_tasks_label, {expand: true});
@@ -149,8 +156,8 @@ var TaskFiltersWindow = new Lang.Class({
         //
         // show deferred tasks only switch
         //
-        this.show_deferred_tasks_item = new St.BoxLayout({ reactive: true, style_class: 'row' });
-        this.content_box.add_child(this.show_deferred_tasks_item);
+        this.show_deferred_tasks_item = new St.BoxLayout({ reactive: true, style_class: 'row filter-window-item' });
+        this.toggles_sector.add_child(this.show_deferred_tasks_item);
 
         let show_deferred_tasks_label = new St.Label({ text: _('Show deferred tasks only'), y_align: Clutter.ActorAlign.CENTER });
         this.show_deferred_tasks_item.add(show_deferred_tasks_label, {expand: true});
@@ -174,8 +181,8 @@ var TaskFiltersWindow = new Lang.Class({
         //
         // Invert switch (whitelist/blacklist)
         //
-        this.invert_item = new St.BoxLayout({ reactive: true, style_class: 'row' });
-        this.content_box.add_child(this.invert_item);
+        this.invert_item = new St.BoxLayout({ reactive: true, style_class: 'row filter-window-item' });
+        this.toggles_sector.add_child(this.invert_item);
 
         let invert_label = new St.Label({ text: _('Invert filters'), y_align: St.Align.END });
         this.invert_item.add(invert_label, {expand: true});
@@ -374,7 +381,7 @@ var TaskFiltersWindow = new Lang.Class({
     _new_filter_item: function (is_checked, label, count, is_deletable, parent_box) {
         let item = {};
 
-        item.actor = new St.BoxLayout({ reactive: true, style_class: 'filter-window-item' });
+        item.actor = new St.BoxLayout({ reactive: true, style_class: 'row filter-window-item' });
 
         item.filter = label;
 
