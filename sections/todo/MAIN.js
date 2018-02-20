@@ -1184,7 +1184,7 @@ var SectionMain = new Lang.Class({
         this.view_manager.show_view({
             view_name      : G.View.SELECT_FILTER,
             actors         : [filters_window.actor],
-            focused_actor  : filters_window.button_ok,
+            focused_actor  : filters_window.entry.entry,
             close_callback : () => { filters_window.actor.destroy(); },
         });
 

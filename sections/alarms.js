@@ -819,9 +819,9 @@ const AlarmItem = new Lang.Class({
 
             case Clutter.EventType.KEY_RELEASE: {
                 this.edit_bin.show();
-                MISC_UTILS.scroll(this.delegate.alarms_scroll,
-                                  this.delegate.alarms_scroll_content,
-                                  actor);
+                MISC_UTILS.scroll_to_item(this.delegate.alarms_scroll,
+                                          this.delegate.alarms_scroll_content,
+                                          actor);
                 break;
             }
 

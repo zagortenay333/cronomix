@@ -313,9 +313,9 @@ var TaskEditor = new Lang.Class({
             this.curr_selected_completion.pseudo_class = 'active';
         }
 
-        MISC_UTILS.scroll(this.completion_menu,
-                          this.completion_menu_content,
-                          this.curr_selected_completion);
+        MISC_UTILS.scroll_to_item(this.completion_menu,
+                                  this.completion_menu_content,
+                                  this.curr_selected_completion);
     },
 
     _on_completion_selected: function () {

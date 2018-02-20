@@ -882,9 +882,9 @@ var TaskItem = new Lang.Class({
 
             case Clutter.EventType.KEY_RELEASE: {
                 this._show_header_icons();
-                MISC_UTILS.scroll(this.delegate.tasks_scroll,
-                                  this.delegate.tasks_scroll_content,
-                                  actor);
+                MISC_UTILS.scroll_to_item(this.delegate.tasks_scroll,
+                                          this.delegate.tasks_scroll_content,
+                                          actor);
 
                 break;
             }

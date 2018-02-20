@@ -147,9 +147,9 @@ var TodoFileSwitcher = new Lang.Class({
                 this.selected_item = item._delegate;
                 item.pseudo_class  = 'active';
 
-                MISC_UTILS.scroll(this.items_scroll,
-                                  this.items_scroll_content,
-                                  item);
+                MISC_UTILS.scroll_to_item(this.items_scroll,
+                                          this.items_scroll_content,
+                                          item);
             });
             item.actor.connect('clicked', (item) => {
                 let name = item._delegate.name;

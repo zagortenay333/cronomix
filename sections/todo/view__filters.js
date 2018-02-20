@@ -66,11 +66,18 @@ var TaskFiltersWindow = new Lang.Class({
 
 
         //
+        // custom filters entry
+        //
+        this.entry = new MULTIL_ENTRY.MultiLineEntry(_('Add custom filter...'), false, true);
+        this.content_box.add_child(this.entry.actor);
+        this.entry.actor.add_style_class_name('row');
+
+
+        //
         // filters
         //
         this.filter_sectors_scroll = new St.ScrollView({ style_class: 'vfade' });
         this.content_box.add_actor(this.filter_sectors_scroll);
-
         this.filter_sectors_scroll.vscrollbar_policy = Gtk.PolicyType.NEVER;
         this.filter_sectors_scroll.hscrollbar_policy = Gtk.PolicyType.NEVER;
 
@@ -79,10 +86,6 @@ var TaskFiltersWindow = new Lang.Class({
 
         this.custom_filters_box = new St.BoxLayout({ vertical: true, x_expand: true, style_class: 'filter-settings-sector' });
         this.filter_sectors_scroll_box.add_actor(this.custom_filters_box);
-
-        this.entry = new MULTIL_ENTRY.MultiLineEntry(_('Add custom filter...'), false, true);
-        this.custom_filters_box.add_child(this.entry.actor);
-        this.entry.actor.add_style_class_name('row');
 
         this.priority_filters_box = new St.BoxLayout({ vertical: true, x_expand: true, style_class: 'filter-settings-sector' });
         this.filter_sectors_scroll_box.add_actor(this.priority_filters_box);
@@ -215,11 +218,6 @@ var TaskFiltersWindow = new Lang.Class({
         //
         // listen
         //
-        this.entry.entry.clutter_text.connect('key-focus-in', () => {
-            MISC_UTILS.scroll(this.filter_sectors_scroll,
-                              this.filter_sectors_scroll_box,
-                              this.custom_filters_box);
-        });
         this.entry.entry.clutter_text.connect('activate', () => {
             if (! this.entry.entry.get_text()) return;
 
@@ -262,17 +260,11 @@ var TaskFiltersWindow = new Lang.Class({
         this.show_recurring_tasks_toggle.setToggleState(filters.recurring);
 
 
-        let i, len, key, value, item, check;
-
-
-        //
         // custom filters
-        //
-        len = filters.custom.length;
-        for (i = 0; i < len; i++) {
-            value = filters.custom[i];
-            check = filters.custom_active.indexOf(value) === -1 ? false : true;
-            item  = this._new_filter_item(check, value, 0, true, this.custom_filters_box);
+        for (let i = 0, len = filters.custom.length; i < len; i++) {
+            let value = filters.custom[i];
+            let check = filters.custom_active.indexOf(value) === -1 ? false : true;
+            let item  = this._new_filter_item(check, value, 0, true, this.custom_filters_box);
             this.custom_filters_box.add_child(item.actor);
             this.filter_register.custom.push(item);
         }
@@ -281,42 +273,33 @@ var TaskFiltersWindow = new Lang.Class({
         this._add_separator(this.priority_filters_box);
 
 
-        //
         // completed
-        //
         if (this.delegate.stats.completed > 0) {
-            item = this._new_filter_item(filters.completed, _('Completed'),
-                this.delegate.stats.completed, 0, this.priority_filters_box);
+            let item = this._new_filter_item(filters.completed, _('Completed'), this.delegate.stats.completed, 0, this.priority_filters_box);
             this.filter_register.completed = item;
             this.priority_filters_box.add_child(item.actor);
         }
 
-
-        //
         // no priority
-        //
         if (this.delegate.stats.no_priority > 0) {
-            item = this._new_filter_item(filters.no_priority, _('No Priority'),
-                this.delegate.stats.no_priority, 0, this.priority_filters_box);
+            let item = this._new_filter_item(filters.no_priority, _('No Priority'), this.delegate.stats.no_priority, 0, this.priority_filters_box);
             this.filter_register.no_priority = item;
             this.priority_filters_box.add_child(item.actor);
         }
 
 
-        //
         // priorities
-        //
-        for ([key, value] of this.delegate.stats.priorities) {
-            check = filters.priorities.indexOf(key) === -1 ? false : true;
-            item  = this._new_filter_item(check, key, value, false, this.priority_filters_box);
-            this.filter_register.priorities.push(item);
+        for (let [key, value] of this.delegate.stats.priorities) {
+            let check = filters.priorities.indexOf(key) === -1 ? false : true;
+            this.filter_register.priorities.push(
+                this._new_filter_item(check, key, value, false, this.priority_filters_box));
         }
 
         this.filter_register.priorities.sort((a, b) => {
             return +(a.filter > b.filter) || +(a.filter === b.filter) - 1;
         });
 
-        for (i = 0; i < this.filter_register.priorities.length; i++) {
+        for (let i = 0; i < this.filter_register.priorities.length; i++) {
             this.priority_filters_box.add_child(this.filter_register.priorities[i].actor);
         }
 
@@ -324,12 +307,10 @@ var TaskFiltersWindow = new Lang.Class({
         this._add_separator(this.context_filters_box);
 
 
-        //
         // contexts
-        //
-        for ([key, value] of this.delegate.stats.contexts) {
-            check = filters.contexts.indexOf(key) === -1 ? false : true;
-            item  = this._new_filter_item(check, key, value, false, this.context_filters_box);
+        for (let [key, value] of this.delegate.stats.contexts) {
+            let check = filters.contexts.indexOf(key) === -1 ? false : true;
+            let item  = this._new_filter_item(check, key, value, false, this.context_filters_box);
             this.context_filters_box.add_child(item.actor);
             this.filter_register.contexts.push(item);
         }
@@ -338,20 +319,16 @@ var TaskFiltersWindow = new Lang.Class({
         this._add_separator(this.project_filters_box);
 
 
-        //
         // projects
-        //
-        for ([key, value] of this.delegate.stats.projects) {
-            check = filters.projects.indexOf(key) === -1 ? false : true;
-            item  = this._new_filter_item(check, key, value, false, this.project_filters_box);
+        for (let [key, value] of this.delegate.stats.projects) {
+            let check = filters.projects.indexOf(key) === -1 ? false : true;
+            let item  = this._new_filter_item(check, key, value, false, this.project_filters_box);
             this.project_filters_box.add_child(item.actor);
             this.filter_register.projects.push(item);
         }
 
 
-        //
         // hide the sections that don't have any items
-        //
         [
             this.priority_filters_box,
             this.context_filters_box,
@@ -372,9 +349,8 @@ var TaskFiltersWindow = new Lang.Class({
             this.filter_register.projects,
             this.filter_register.custom,
         ].forEach((arr) => {
-            for (let i = 0; i < arr.length; i++) {
+            for (let i = 0; i < arr.length; i++)
                 arr[i].checkbox.actor.checked = false;
-            }
         });
     },
 
@@ -400,24 +376,16 @@ var TaskFiltersWindow = new Lang.Class({
         item.checkbox.actor.checked = is_checked;
         item.checkbox.actor.y_align = St.Align.MIDDLE;
 
-        let close_button;
-
         if (is_deletable) {
-            close_button = new St.Button({ can_focus: true, style_class: 'close-icon' });
+            let close_button = new St.Button({ can_focus: true, style_class: 'close-icon' });
             item.actor.add_actor(close_button);
             close_button.add_actor(new St.Icon({ icon_name: 'timepp-close-symbolic' }));
             close_button.connect('clicked', () => this._delete_custom_item(item));
+            close_button.connect('key-focus-in', () => MISC_UTILS.scroll_to_item(this.filter_sectors_scroll, this.filter_sectors_scroll_box, item.actor, parent_box));
         }
 
         item.actor.connect('button-press-event', () => { item.checkbox.actor.checked = !item.checkbox.actor.checked; });
-
-        let actor_to_connect = is_deletable ? close_button : item.checkbox.actor;
-
-        actor_to_connect.connect('key-focus-in', () => {
-            MISC_UTILS.scroll(this.filter_sectors_scroll,
-                              this.filter_sectors_scroll_box,
-                              parent_box);
-        });
+        item.checkbox.actor.connect('key-focus-in', () => MISC_UTILS.scroll_to_item(this.filter_sectors_scroll, this.filter_sectors_scroll_box, item.actor, parent_box));
 
         return item;
     },

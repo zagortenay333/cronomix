@@ -1094,9 +1094,9 @@ var StatsView = new Lang.Class({
         new_selected.pseudo_class                = 'selected';
         this.selected_search_result              = new_selected;
 
-        MISC_UTILS.scroll(this.search_scrollview,
-                          this.search_results_content,
-                          new_selected);
+        MISC_UTILS.scroll_to_item(this.search_scrollview,
+                                  this.search_results_content,
+                                  new_selected);
     },
 
     _search: function () {
