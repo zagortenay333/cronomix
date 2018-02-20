@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 22:44+0100\n"
+"POT-Creation-Date: 2018-02-20 22:16+0100\n"
 "PO-Revision-Date: 2017-11-24 21:58+0800\n"
 "Last-Translator: Jack Wu <origincoder@yahoo.com>\n"
 "Language-Team: \n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: data/po_files/../../lib/misc_utils.js:41
+#: data/po_files/../../lib/misc_utils.js:42
 msgid "File or dir not found."
 msgstr "目录或文件无法找到。"
 
@@ -345,7 +345,7 @@ msgstr "根据完成日期排序"
 #: data/po_files/../../sections/todo/view__task_editor.js:140
 #: data/po_files/../../sections/todo/view__stats.js:212
 #: data/po_files/../../sections/todo/view__clear_tasks.js:96
-#: data/po_files/../../sections/todo/view__filters.js:203
+#: data/po_files/../../sections/todo/view__filters.js:206
 #: data/po_files/../../sections/pomodoro.js:786
 #: data/po_files/../../sections/alarms.js:588
 #: data/po_files/../../sections/timer.js:613 data/po_files/../../prefs.js:132
@@ -518,62 +518,62 @@ msgstr[1] "%d 个延时任务已经打开"
 msgid "Nothing found."
 msgstr "无物可寻。"
 
-#: data/po_files/../../sections/todo/view__filters.js:83
+#: data/po_files/../../sections/todo/view__filters.js:71
 msgid "Add custom filter..."
 msgstr "添加自定义过滤器"
 
-#: data/po_files/../../sections/todo/view__filters.js:113
+#: data/po_files/../../sections/todo/view__filters.js:116
 msgid "Show hidden tasks only"
 msgstr "仅显示隐藏的任务"
 
-#: data/po_files/../../sections/todo/view__filters.js:120
+#: data/po_files/../../sections/todo/view__filters.js:123
 #, javascript-format
 msgid "%d hidden task"
 msgid_plural "%d hidden tasks"
 msgstr[0] "%d 个隐藏的任务"
 msgstr[1] "%d 个隐藏的任务"
 
-#: data/po_files/../../sections/todo/view__filters.js:136
+#: data/po_files/../../sections/todo/view__filters.js:139
 msgid "Show recurring tasks only"
 msgstr "仅显示重新执行的任务"
 
-#: data/po_files/../../sections/todo/view__filters.js:146
+#: data/po_files/../../sections/todo/view__filters.js:149
 #, javascript-format
 msgid "%d recurring task"
 msgid_plural "%d recurring tasks"
 msgstr[0] "%d 个重新执行的任务"
 msgstr[1] "%d 个重新执行的任务"
 
-#: data/po_files/../../sections/todo/view__filters.js:162
+#: data/po_files/../../sections/todo/view__filters.js:165
 msgid "Show deferred tasks only"
 msgstr "仅显示延时任务"
 
-#: data/po_files/../../sections/todo/view__filters.js:171
+#: data/po_files/../../sections/todo/view__filters.js:174
 #, javascript-format
 msgid "%d deferred task"
 msgid_plural "%d deferred tasks"
 msgstr[0] "%d 个延时任务"
 msgstr[1] "%d 个延时任务"
 
-#: data/po_files/../../sections/todo/view__filters.js:187
+#: data/po_files/../../sections/todo/view__filters.js:190
 msgid "Invert filters"
 msgstr "反转过滤器"
 
-#: data/po_files/../../sections/todo/view__filters.js:202
+#: data/po_files/../../sections/todo/view__filters.js:205
 #: data/po_files/../../sections/stopwatch.js:184
 #: data/po_files/../../sections/stopwatch.js:578
 msgid "Reset"
 msgstr "重置"
 
-#: data/po_files/../../sections/todo/view__filters.js:288
+#: data/po_files/../../sections/todo/view__filters.js:278
 msgid "Completed"
 msgstr "已完成"
 
-#: data/po_files/../../sections/todo/view__filters.js:299
+#: data/po_files/../../sections/todo/view__filters.js:285
 msgid "No Priority"
 msgstr "无优先级"
 
-#: data/po_files/../../sections/todo/view__filters.js:395
+#: data/po_files/../../sections/todo/view__filters.js:371
 #, javascript-format
 msgid "%d task"
 msgid_plural "%d tasks"

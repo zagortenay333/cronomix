@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-19 22:44+0100\n"
+"POT-Creation-Date: 2018-02-20 22:16+0100\n"
 "PO-Revision-Date: 2017-11-29 13:36+0200\n"
 "Last-Translator: Sergey Shlyapugin <shlyapugin@gmail.com>\n"
 "Language-Team: Russian\n"
@@ -19,7 +19,7 @@ msgstr ""
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Generator: Poedit 2.0.4\n"
 
-#: data/po_files/../../lib/misc_utils.js:41
+#: data/po_files/../../lib/misc_utils.js:42
 msgid "File or dir not found."
 msgstr "Файл или папка не найдена."
 
@@ -347,7 +347,7 @@ msgstr "Упорядочить по дате выполнения"
 #: data/po_files/../../sections/todo/view__task_editor.js:140
 #: data/po_files/../../sections/todo/view__stats.js:212
 #: data/po_files/../../sections/todo/view__clear_tasks.js:96
-#: data/po_files/../../sections/todo/view__filters.js:203
+#: data/po_files/../../sections/todo/view__filters.js:206
 #: data/po_files/../../sections/pomodoro.js:786
 #: data/po_files/../../sections/alarms.js:588
 #: data/po_files/../../sections/timer.js:613 data/po_files/../../prefs.js:132
@@ -525,15 +525,15 @@ msgstr[2] "%d отложенных задача было открыто"
 msgid "Nothing found."
 msgstr "Ничего не найдено."
 
-#: data/po_files/../../sections/todo/view__filters.js:83
+#: data/po_files/../../sections/todo/view__filters.js:71
 msgid "Add custom filter..."
 msgstr "Добавить свой фильтр..."
 
-#: data/po_files/../../sections/todo/view__filters.js:113
+#: data/po_files/../../sections/todo/view__filters.js:116
 msgid "Show hidden tasks only"
 msgstr "Показать только скрытые задачи"
 
-#: data/po_files/../../sections/todo/view__filters.js:120
+#: data/po_files/../../sections/todo/view__filters.js:123
 #, javascript-format
 msgid "%d hidden task"
 msgid_plural "%d hidden tasks"
@@ -541,11 +541,11 @@ msgstr[0] "%d скрытая задача"
 msgstr[1] "%d скрытых задачи"
 msgstr[2] "%d скрытых задач"
 
-#: data/po_files/../../sections/todo/view__filters.js:136
+#: data/po_files/../../sections/todo/view__filters.js:139
 msgid "Show recurring tasks only"
 msgstr "Показать только возобновленные задачи"
 
-#: data/po_files/../../sections/todo/view__filters.js:146
+#: data/po_files/../../sections/todo/view__filters.js:149
 #, javascript-format
 msgid "%d recurring task"
 msgid_plural "%d recurring tasks"
@@ -553,11 +553,11 @@ msgstr[0] "%d возобновленная задача"
 msgstr[1] "%d возобновленных задачи"
 msgstr[2] "%d возобновленных задач"
 
-#: data/po_files/../../sections/todo/view__filters.js:162
+#: data/po_files/../../sections/todo/view__filters.js:165
 msgid "Show deferred tasks only"
 msgstr "Показать только отложенные задачи"
 
-#: data/po_files/../../sections/todo/view__filters.js:171
+#: data/po_files/../../sections/todo/view__filters.js:174
 #, javascript-format
 msgid "%d deferred task"
 msgid_plural "%d deferred tasks"
@@ -565,25 +565,25 @@ msgstr[0] "%d отложенная задача"
 msgstr[1] "%d отложенных задачи"
 msgstr[2] "%d отложенных задач"
 
-#: data/po_files/../../sections/todo/view__filters.js:187
+#: data/po_files/../../sections/todo/view__filters.js:190
 msgid "Invert filters"
 msgstr "Инвертировать фильтры"
 
-#: data/po_files/../../sections/todo/view__filters.js:202
+#: data/po_files/../../sections/todo/view__filters.js:205
 #: data/po_files/../../sections/stopwatch.js:184
 #: data/po_files/../../sections/stopwatch.js:578
 msgid "Reset"
 msgstr "Сбросить"
 
-#: data/po_files/../../sections/todo/view__filters.js:288
+#: data/po_files/../../sections/todo/view__filters.js:278
 msgid "Completed"
 msgstr "Выполнено"
 
-#: data/po_files/../../sections/todo/view__filters.js:299
+#: data/po_files/../../sections/todo/view__filters.js:285
 msgid "No Priority"
 msgstr "Нет приоритета"
 
-#: data/po_files/../../sections/todo/view__filters.js:395
+#: data/po_files/../../sections/todo/view__filters.js:371
 #, javascript-format
 msgid "%d task"
 msgid_plural "%d tasks"
