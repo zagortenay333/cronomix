@@ -673,8 +673,6 @@ var TaskItem = new Lang.Class({
     },
 
     toggle_task: function () {
-        this._hide_header_icons();
-
         if (this.completed) {
             let words = this.task_str.split(/ +/);
 
@@ -697,17 +695,14 @@ var TaskItem = new Lang.Class({
         else {
             this.delegate.time_tracker.stop_tracking(this);
 
-            if (this.priority === '(_)') {
-                this.task_str = 'x ' + G.date_yyyymmdd() + ' ' + this.task_str;
-            }
-            else {
-                this.task_str = 'x ' +
-                                G.date_yyyymmdd() +
-                                this.task_str.slice(3) +
-                                ' pri:' + this.priority[1];
-            }
+            let task_str = this.task_str;
 
-            this.reset(true);
+            if (this.priority === '(_)')
+                task_str = `x ${G.date_yyyymmdd()} ${task_str}`;
+            else
+                task_str = `x ${G.date_yyyymmdd()} ${task_str.slice(3)} pri:${this.priority[1]}`;
+
+            this.reset(true, task_str);
         }
     },
 
