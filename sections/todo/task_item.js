@@ -656,17 +656,15 @@ var TaskItem = new Lang.Class({
                 this.base_date_labels.clutter_text.ellipsize      = Pango.EllipsizeMode.NONE;
             }
 
-            this.base_date_labels.text = '';
+            let markup = '';
 
-            if (has_creation) {
-                this.base_date_labels.clutter_text.set_markup(
-                    `${_('created')}:&#160;${this.creation_date}   `);
-            }
+            if (has_creation)
+                markup += `${_('created')}:&#160;${this.creation_date}   `;
 
-            if (has_completion) {
-                this.base_date_labels.clutter_text.set_markup(
-                    `${_('completed')}:&#160;${this.completion_date}`);
-            }
+            if (has_completion)
+                markup += `${_('completed')}:&#160;${this.completion_date}`;
+
+            this.base_date_labels.clutter_text.set_markup(markup);
         }
         else if (this.base_date_labels) {
             this.base_date_labels.destroy();
