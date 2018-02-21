@@ -402,11 +402,11 @@ var TimeTracker = new Lang.Class({
 
     start_tracking: function (task) {
         if (!this.csv_dir) {
-            Main.notify(
-                _('To track time, select a dir for csv files in the settings.'));
-
+            Main.notify(_('To track time, select a dir for csv files in the settings.'));
             return null;
         }
+
+        if (task.completed) return;
 
         let val = this.daily_csv_map.get(task.task_str);
 
