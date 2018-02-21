@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-20 22:16+0100\n"
+"POT-Creation-Date: 2018-02-21 15:17+0100\n"
 "PO-Revision-Date: 2018-01-10 10:35+0100\n"
 "Last-Translator: Piotr Komur <pkomur@gmail.com>\n"
 "Language-Team: \n"
@@ -307,11 +307,11 @@ msgstr "termin:"
 msgid "deferred"
 msgstr "odroczono:"
 
-#: data/po_files/../../sections/todo/task_item.js:663
+#: data/po_files/../../sections/todo/task_item.js:662
 msgid "created"
 msgstr "utworzono:"
 
-#: data/po_files/../../sections/todo/task_item.js:668
+#: data/po_files/../../sections/todo/task_item.js:665
 msgid "completed"
 msgstr "ukończono:"
 

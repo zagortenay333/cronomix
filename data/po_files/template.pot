@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-20 22:16+0100\n"
+"POT-Creation-Date: 2018-02-21 15:17+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -297,11 +297,11 @@ msgstr ""
 msgid "deferred"
 msgstr ""
 
-#: data/po_files/../../sections/todo/task_item.js:663
+#: data/po_files/../../sections/todo/task_item.js:662
 msgid "created"
 msgstr ""
 
-#: data/po_files/../../sections/todo/task_item.js:668
+#: data/po_files/../../sections/todo/task_item.js:665
 msgid "completed"
 msgstr ""
 
