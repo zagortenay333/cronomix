@@ -59,6 +59,7 @@ var TaskItem = new Lang.Class({
         // If a var needs to be resettable, add it to the reset() method
         // instead of the _init() method.
 
+
         // Project/context/url below mouse pointer, null if none of those.
         this.current_keyword = null;
 
@@ -66,8 +67,7 @@ var TaskItem = new Lang.Class({
         //
         // container
         //
-        this.actor = new St.Bin({ reactive: true, style: 'width: ' + this.delegate.settings.get_int('todo-task-width') + 'px;', x_fill: true, style_class: 'task-item' });
-
+        this.actor = new St.Bin({ reactive: true, style: `width: ${this.delegate.settings.get_int('todo-task-width')}px;`, x_fill: true, style_class: 'task-item' });
         this.task_item_content = new St.BoxLayout({ vertical: true, style_class: 'task-item-content' });
         this.actor.add_actor(this.task_item_content);
 
@@ -84,7 +84,6 @@ var TaskItem = new Lang.Class({
         //
         this.completion_checkbox = new St.Button({ style_class: 'check-box', toggle_mode: true, can_focus: true, y_align: St.Align.MIDDLE });
         this.header.add_child(this.completion_checkbox);
-
         let checkmark = new St.Bin();
         this.completion_checkbox.add_actor(checkmark);
 
@@ -101,9 +100,6 @@ var TaskItem = new Lang.Class({
         //
         this.msg = new St.Label({ reactive: true, y_align: Clutter.ActorAlign.CENTER, x_align: St.Align.START, style_class: 'description-label'});
         this.task_item_content.add_child(this.msg);
-
-        if (! task_str) this.msg.hide();
-
         this.msg.clutter_text.line_wrap      = true;
         this.msg.clutter_text.ellipsize      = Pango.EllipsizeMode.NONE;
         this.msg.clutter_text.line_wrap_mode = Pango.WrapMode.WORD_CHAR;
@@ -120,11 +116,10 @@ var TaskItem = new Lang.Class({
         //
         this.actor.connect('queue-redraw', () => {
             if (this.delegate.tasks_scroll.vscrollbar_visible ||
-                ! this.delegate.tasks_scroll_wrapper.visible) {
+                !this.delegate.tasks_scroll_wrapper.visible) {
 
                 return;
             }
-
             MISC_UTILS.resize_label(this.msg);
         });
         this.msg.connect('motion-event', (_, event) => {
@@ -140,9 +135,9 @@ var TaskItem = new Lang.Class({
             this.delegate.write_tasks_to_file();
         });
         this.actor.connect('event', (actor, event) => this._on_event(actor, event));
+        this.msg.connect('leave-event', () => global.screen.set_cursor(Meta.Cursor.DEFAULT));
         this.prio_label.connect('enter-event', () => global.screen.set_cursor(Meta.Cursor.POINTING_HAND));
         this.prio_label.connect('leave-event', () => global.screen.set_cursor(Meta.Cursor.DEFAULT));
-        this.msg.connect('leave-event', () => global.screen.set_cursor(Meta.Cursor.DEFAULT));
     },
 
     reset: function (self_update, task_str) {
@@ -151,27 +146,33 @@ var TaskItem = new Lang.Class({
             this.task_str = task_str;
         }
 
-        // We create these on demand.
+        this.actor.style_class = 'task-item';
+        this.msg.text = '';
+
+        this.tracker_id = '';
+
+        // We create these St.Label's on demand.
         if (this.base_date_labels) this.base_date_labels.destroy();
         if (this.ext_date_labels)  this.ext_date_labels.destroy();
-        this.base_date_labels = null; // St.Label for creation/completion dates
-        this.ext_date_labels  = null; // St.Label for todo.txt extension dates
+        this.base_date_labels = null; // creation/completion dates
+        this.ext_date_labels  = null; // todo.txt extension dates
 
         // For sorting purposes, we set the prio to '(_)' when there is no prio.
-        this.priority                    = '(_)';
-        this.projects                    = [];
-        this.contexts                    = [];
+        this.priority           = '(_)';
+        this.prio_label.visible = false;
+        this.prio_label.text    = '';
+
+        this.projects = [];
+        this.contexts = [];
+
         // For sorting purposes, we set the dates to this when they don't exist.
-        this.creation_date               = '0000-00-00';
-        this.completion_date             = '0000-00-00';
-        this.due_date                    = '9999-99-99';
-        this.prio_label.visible          = false;
-        this.prio_label.text             = '';
-        this.actor.style_class           = 'task-item';
+        this.creation_date   = '0000-00-00';
+        this.completion_date = '0000-00-00';
+        this.due_date        = '9999-99-99';
+
         this.completed                   = false;
         this.completion_checkbox.checked = false;
         this.completion_checkbox.visible = true;
-        this.tracker_id                  = '';
 
         if (this.hidden) {
             this.header.remove_child(this.header.get_child_at_index(0));
@@ -544,36 +545,30 @@ var TaskItem = new Lang.Class({
     },
 
     update_body_markup: function () {
-        let i, idx;
+        this.msg.text = '';
 
-        for (i = 0; i < this.context_indices.length; i++) {
-            idx = this.context_indices[i];
-
-            this.description_markup[idx] =
+        for (let it of this.context_indices) {
+            this.description_markup[it] =
                 '<span foreground="' +
                 this.custom_css['-timepp-context-color'][0] + '"' +
-                this.description_markup[idx].slice(
-                    this.description_markup[idx].indexOf('>'));
+                this.description_markup[it].slice(
+                    this.description_markup[it].indexOf('>'));
         }
 
-        for (i = 0; i < this.project_indices.length; i++) {
-            idx = this.project_indices[i];
-
-            this.description_markup[idx] =
+        for (let it of this.project_indices) {
+            this.description_markup[it] =
                 '<span foreground="' +
                 this.custom_css['-timepp-project-color'][0] + '"' +
-                this.description_markup[idx].slice(
-                    this.description_markup[idx].indexOf('>'));
+                this.description_markup[it].slice(
+                    this.description_markup[it].indexOf('>'));
         }
 
-        for (i = 0; i < this.link_indices.length; i++) {
-            idx = this.link_indices[i];
-
-            this.description_markup[idx] =
+        for (let it of this.link_indices) {
+            this.description_markup[it] =
                 '<span foreground="' +
                 this.custom_css['-timepp-link-color'][0] + '"' +
-                this.description_markup[idx].slice(
-                    this.description_markup[idx].indexOf('>'));
+                this.description_markup[it].slice(
+                    this.description_markup[it].indexOf('>'));
         }
 
         this.msg.clutter_text.set_markup(

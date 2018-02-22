@@ -463,17 +463,6 @@ var SectionMain = new Lang.Class({
     },
 
     disable_section: function () {
-        this.sigm.disconnect_all();
-        this.keym.disable_all();
-        this.tasks          = [];
-        this.tasks_viewport = [];
-        this.tasks_scroll_content.destroy_all_children();
-
-        if (this.todo_file_monitor) {
-            this.todo_file_monitor.cancel();
-            this.todo_file_monitor = null;
-        }
-
         if (this.create_tasks_mainloop_id) {
             Mainloop.source_remove(this.create_tasks_mainloop_id);
             this.create_tasks_mainloop_id = null;
@@ -482,6 +471,11 @@ var SectionMain = new Lang.Class({
         if (this.add_tasks_to_menu_mainloop_id) {
             Mainloop.source_remove(this.add_tasks_to_menu_mainloop_id);
             this.add_tasks_to_menu_mainloop_id = null;
+        }
+
+        if (this.todo_file_monitor) {
+            this.todo_file_monitor.cancel();
+            this.todo_file_monitor = null;
         }
 
         if (this.time_tracker) {
@@ -497,6 +491,14 @@ var SectionMain = new Lang.Class({
             this.stats_view.destroy();
             this.stats_view = null;
         }
+
+        this.sigm.disconnect_all();
+        this.keym.disable_all();
+
+        this.tasks          = [];
+        this.tasks_viewport = [];
+
+        this.tasks_scroll_content.destroy_all_children();
 
         this.parent();
     },
@@ -565,7 +567,7 @@ var SectionMain = new Lang.Class({
         lines = String(lines).split(/\n|\r/).filter((l) => /\S/.test(l));
 
         this.create_tasks(lines, () => {
-            this._check_dates();
+            if (this._check_dates()) this.write_tasks_to_file();
             this.on_tasks_changed();
             this.show_view__default();
         });
@@ -625,7 +627,10 @@ var SectionMain = new Lang.Class({
     _on_new_day_started: function () {
         this.emit('new-day', G.date_yyyymmdd());
 
-        this._check_dates();
+        if (this._check_dates()) {
+            this.write_tasks_to_file();
+            this.on_tasks_changed();
+        }
     },
 
     _check_dates: function () {
@@ -660,10 +665,9 @@ var SectionMain = new Lang.Class({
                                      '%d deferred tasks have been opened',
                                       deferred_tasks).format(deferred_tasks));
             }
-
-            this.write_tasks_to_file();
-            this.on_tasks_changed();
         }
+
+        return tasks_updated;
     },
 
     _on_custom_css_changed: function () {
