@@ -99,8 +99,6 @@ var SectionMain = new Lang.Class({
         this.linkm = new TEXT_LINKS_MNGR.TextLinksManager(MISC_UTILS.split_on_whitespace);
         this.sigm  = new SIG_MANAGER.SignalManager();
         this.keym  = new KEY_MANAGER.KeybindingManager(this.settings);
-
-
         this.sound_player = new SOUND_PLAYER.SoundPlayer();
 
 
@@ -548,6 +546,25 @@ var SectionMain = new Lang.Class({
         else
             this.panel_item.set_mode('icon_text');
     },
+
+    highlight_tokens: function (text) {
+        text = MISC_UTILS.split_on_whitespace(
+            MISC_UTILS.markup_to_pango(text, this.ext.markup_map));
+
+        let token;
+
+        for (let i = 0; i < text.length; i++) {
+            token = text[i];
+
+            if (REG.URL.test(token) || REG.FILE_PATH.test(token)) {
+                text[i] =
+                    '<span foreground="' + this.ext.custom_css['-timepp-link-color'][0] +
+                    '"><u><b>' + token + '</b></u></span>';
+            }
+        }
+
+        return text.join(' ').replace(/ \n /g, '\n');
+    },
 });
 Signals.addSignalMethods(SectionMain.prototype);
 
@@ -572,6 +589,8 @@ const TimerPresetsView = new Lang.Class({
     _init: function(ext, delegate) {
         this.ext      = ext;
         this.delegate = delegate;
+
+        this.css = this.ext.custom_css;
 
 
         // objects returned by _new_preset_item() func
@@ -700,8 +719,12 @@ const TimerPresetsView = new Lang.Class({
                 it.preset.time         = info.time;
                 it.preset.repeat_sound = info.repeat_sound;
 
-                it.msg.text = info.msg;
-                it.msg.visible = Boolean(info.msg);
+                if (info.msg) {
+                    it.msg.clutter_text.set_markup(this.delegate.highlight_tokens(info.msg));
+                    it.msg.show();
+                } else {
+                    it.msg.hide();
+                }
 
                 let time_label = "%02d:%02d:%02d".format(
                     Math.floor(info.time / 3600),
@@ -753,9 +776,20 @@ const TimerPresetsView = new Lang.Class({
         item.header = new St.BoxLayout();
         item.actor.add_child(item.header);
 
-        item.msg = new St.Label({ text: preset.msg, y_align: Clutter.ActorAlign.CENTER });
+        item.msg = new St.Label({ y_align: Clutter.ActorAlign.CENTER });
         item.actor.add_child(item.msg);
-        item.msg.visible = Boolean(preset.msg);
+
+        this.delegate.linkm.add_label_actor(item.msg, new Map([
+            [REG.URL       , MISC_UTILS.open_web_uri],
+            [REG.FILE_PATH , MISC_UTILS.open_file_path],
+        ]));
+
+        if (preset.msg) {
+            item.msg.clutter_text.set_markup(this.delegate.highlight_tokens(preset.msg));
+            item.msg.show();
+        } else {
+            item.msg.hide();
+        }
 
         item.time_label = new St.Label({ x_expand: true, y_align: Clutter.ActorAlign.CENTER });
         item.header.add_child(item.time_label);
@@ -1006,8 +1040,6 @@ const TimerFullscreen = new Lang.Class({
         this.ext      = ext;
         this.delegate = delegate;
 
-        this.css = this.ext.custom_css;
-
         this.delegate.linkm.add_label_actor(this.banner, new Map([
             [REG.URL       , MISC_UTILS.open_web_uri],
             [REG.FILE_PATH , MISC_UTILS.open_file_path],
@@ -1132,7 +1164,7 @@ const TimerFullscreen = new Lang.Class({
             this.title.text = TIMER_EXPIRED_MSG;
 
             this.set_banner_text(
-                this._highlight_tokens(this.delegate.current_preset.msg)
+                this.delegate.highlight_tokens(this.delegate.current_preset.msg)
                     .replace(/&(?!amp;|quot;|apos;|lt;|gt;)/g, '&amp;')
                     .replace(/<(?!\/?[^<]*>)/g, '&lt;')
             );
@@ -1141,25 +1173,6 @@ const TimerFullscreen = new Lang.Class({
         }
 
         this.actor.style_class = this.default_style_class + ' timer-expired';
-    },
-
-    _highlight_tokens: function (text) {
-        text = MISC_UTILS.split_on_whitespace(
-            MISC_UTILS.markup_to_pango(text, this.ext.markup_map));
-
-        let token;
-
-        for (let i = 0; i < text.length; i++) {
-            token = text[i];
-
-            if (REG.URL.test(token) || REG.FILE_PATH.test(token)) {
-                text[i] =
-                    '<span foreground="' + this.css['-timepp-link-color'][0] +
-                    '"><u><b>' + token + '</b></u></span>';
-            }
-        }
-
-        return text.join(' ').replace(/ \n /g, '\n');
     },
 });
 Signals.addSignalMethods(TimerFullscreen.prototype);
