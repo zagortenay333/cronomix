@@ -766,7 +766,7 @@ var TaskItem = new Lang.Class({
 
     _show_tracker_running_icon: function () {
         this._create_header_icons();
-        this.tracker_icon.icon_name   = 'timepp-stop-symbolic';
+        this.tracker_icon.icon_name   = 'timepp-pause-symbolic';
         this.tracker_icon.style_class = 'tracker-pause-icon';
         this.tracker_icon.visible     = true;
     },

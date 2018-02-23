@@ -179,13 +179,11 @@ var SectionMain = new Lang.Class({
         this.header.label.add_style_class_name('clock');
         this.actor.add_actor(this.header.actor);
 
-        this.toggle_bin = new St.Button({ visible: false, can_focus: true, y_align: St.Align.MIDDLE });
-        this.header.actor.add(this.toggle_bin);
-        this.toggle = new PopupMenu.Switch('');
-        this.toggle_bin.add_actor(this.toggle.actor);
-
         this.icon_box = new St.BoxLayout({ y_align: Clutter.ActorAlign.CENTER, style_class: 'icon-box' });
         this.header.actor.add(this.icon_box);
+
+        this.start_pause_icon = new St.Icon({ visible: false, reactive: true, can_focus: true, track_hover: true, icon_name: 'timepp-pause-symbolic', style_class: 'pause-icon' });
+        this.icon_box.add_actor(this.start_pause_icon);
 
         this.fullscreen_icon = new St.Icon({ reactive: true, can_focus: true, track_hover: true, icon_name: 'timepp-fullscreen-symbolic', style_class: 'fullscreen-icon' });
         this.icon_box.add_actor(this.fullscreen_icon);
@@ -224,7 +222,7 @@ var SectionMain = new Lang.Class({
         this.sigm.connect(this.settings, 'changed::timer-panel-mode', () => this._toggle_panel_item_mode());
         this.sigm.connect(this.panel_item, 'left-click', () => this.ext.toggle_menu(this.section_name));
         this.sigm.connect(this.panel_item, 'middle-click', () => this.toggle_timer());
-        this.sigm.connect_press(this.toggle_bin, Clutter.BUTTON_PRIMARY, true, () => this.toggle_timer());
+        this.sigm.connect_press(this.start_pause_icon, Clutter.BUTTON_PRIMARY, true, () => this.toggle_timer());
         this.sigm.connect_press(this.fullscreen_icon, Clutter.BUTTON_PRIMARY, true, () => this.show_fullscreen());
         this.sigm.connect_press(this.settings_icon, Clutter.BUTTON_PRIMARY, true, () => this._show_presets());
         this.sigm.connect(this.slider, 'value-changed', (slider, value) => this.slider_changed(slider, value));
@@ -290,8 +288,9 @@ var SectionMain = new Lang.Class({
         this.end_time = GLib.get_monotonic_time() + time;
 
         this.fullscreen.on_timer_started();
-        this.toggle.setToggleState('checked');
-        this.toggle_bin.show();
+        this.start_pause_icon.icon_name   = 'timepp-pause-symbolic';
+        this.start_pause_icon.style_class = 'pause-icon';
+        this.start_pause_icon.show();
         this.panel_item.actor.add_style_class_name('on');
 
         this._tic();
@@ -307,7 +306,8 @@ var SectionMain = new Lang.Class({
 
         this.fullscreen.on_timer_stopped();
         this.timer_state = TimerState.STOPPED;
-        this.toggle.setToggleState('');
+        this.start_pause_icon.icon_name   = 'timepp-start-symbolic';
+        this.start_pause_icon.style_class = 'start-icon';
         this.panel_item.actor.remove_style_class_name('on');
     },
 
@@ -321,7 +321,7 @@ var SectionMain = new Lang.Class({
         this.fullscreen.on_timer_off();
         this.timer_state = TimerState.OFF;
         this.header.label.text = _('Timer');
-        this.toggle_bin.hide();
+        this.start_pause_icon.hide();
         this.panel_item.actor.remove_style_class_name('on');
     },
 
@@ -1019,23 +1019,20 @@ const TimerFullscreen = new Lang.Class({
         this.title = new St.Label({ x_expand: true, x_align: Clutter.ActorAlign.CENTER, style_class: 'pomo-phase-label' });
         this.middle_box.insert_child_at_index(this.title, 0);
 
-
         this.slider = new Slider.Slider(0);
         this.bottom_box.add_child(this.slider.actor);
         this.slider.actor.can_focus = true;
 
-
-        this.toggle_bin = new St.Button({ can_focus: true, y_align: St.Align.MIDDLE });
-        this.top_box.insert_child_at_index(this.toggle_bin, 0);
-        this.toggle_bin.hide();
-        this.toggle = new PopupMenu.Switch('');
-        this.toggle_bin.add_actor(this.toggle.actor);
+        this.start_pause_btn = new St.Button();
+        this.top_box.insert_child_at_index(this.start_pause_btn, 0);
+        this.start_pause_icon = new St.Icon({ visible: false, reactive: true, can_focus: true, track_hover: true, icon_name: 'timepp-pause-symbolic', style_class: 'pause-icon' });
+        this.start_pause_btn.add_actor(this.start_pause_icon);
 
 
         //
         // listen
         //
-        this.toggle_bin.connect('clicked', () => {
+        this.start_pause_btn.connect('clicked', () => {
             this.delegate.toggle_timer();
         });
         this.slider.connect('drag-end', () => {
@@ -1113,17 +1110,19 @@ const TimerFullscreen = new Lang.Class({
     on_timer_started: function () {
         this.actor.style_class = this.default_style_class;
         this.title.text = '';
-        this.toggle.setToggleState('checked');
-        this.toggle_bin.show();
+        this.start_pause_icon.icon_name   = 'timepp-pause-symbolic';
+        this.start_pause_icon.style_class = 'pause-icon';
+        this.start_pause_icon.show();
     },
 
     on_timer_stopped: function () {
         this.actor.style_class = this.default_style_class + ' timer-stopped';
-        this.toggle.setToggleState('');
+        this.start_pause_icon.icon_name = 'timepp-start-symbolic';
+        this.start_pause_icon.style_class = 'start-icon';
     },
 
     on_timer_off: function () {
-        this.toggle_bin.hide();
+        this.start_pause_icon.hide();
         this.slider.setValue(0);
     },
 

@@ -398,6 +398,10 @@
     color: rgba(0, 0, 0, .5);
 }
 
+.timepp-fullscreen .pause-icon,
+.timepp-menu .header .pause-icon {
+    color: #f47e00;
+}
 
 
 /* =====================================================================
