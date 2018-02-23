@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-23 20:18+0100\n"
+"POT-Creation-Date: 2018-02-23 20:52+0100\n"
 "PO-Revision-Date: 2018-01-09 19:02+0100\n"
 "Last-Translator: Luc Bournaud <luc.bournaud@hotmail.fr>\n"
 "Language-Team: français <>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Gtranslator 2.91.7\n"
 
-#: data/po_files/../../lib/misc_utils.js:42
+#: data/po_files/../../lib/misc_utils.js:44
 msgid "File or dir not found."
 msgstr "Fichier ou dossier non trouvée."
 
@@ -88,8 +88,8 @@ msgid "Enabled Sections"
 msgstr "Sections activées"
 
 #: data/po_files/../../data/prefs.ui:482 data/po_files/../../data/prefs.ui:1212
-#: data/po_files/../../sections/timer.js:176
-#: data/po_files/../../sections/timer.js:323
+#: data/po_files/../../sections/timer.js:174
+#: data/po_files/../../sections/timer.js:321
 msgid "Timer"
 msgstr "Minuteur"
 
@@ -714,11 +714,11 @@ msgstr[1] "%d alarmes éteintes !"
 msgid "Timer Expired!"
 msgstr "Minuteur terminé !"
 
-#: data/po_files/../../sections/timer.js:597
+#: data/po_files/../../sections/timer.js:616
 #, fuzzy
 msgid "Search presets..."
 msgstr "Chercher des fichiers..."
 
-#: data/po_files/../../sections/timer.js:625
+#: data/po_files/../../sections/timer.js:644
 msgid "Default preset"
 msgstr ""

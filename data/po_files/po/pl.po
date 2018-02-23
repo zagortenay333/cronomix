@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-23 20:18+0100\n"
+"POT-Creation-Date: 2018-02-23 20:52+0100\n"
 "PO-Revision-Date: 2018-01-10 10:35+0100\n"
 "Last-Translator: Piotr Komur <pkomur@gmail.com>\n"
 "Language-Team: \n"
@@ -19,7 +19,7 @@ msgstr ""
 "|| n%100>=20) ? 1 : 2);\n"
 "X-Generator: Poedit 2.0.1\n"
 
-#: data/po_files/../../lib/misc_utils.js:42
+#: data/po_files/../../lib/misc_utils.js:44
 msgid "File or dir not found."
 msgstr "Nie znaleziono pliku lub katalogu."
 
@@ -88,8 +88,8 @@ msgid "Enabled Sections"
 msgstr "Dostępne sekcje"
 
 #: data/po_files/../../data/prefs.ui:482 data/po_files/../../data/prefs.ui:1212
-#: data/po_files/../../sections/timer.js:176
-#: data/po_files/../../sections/timer.js:323
+#: data/po_files/../../sections/timer.js:174
+#: data/po_files/../../sections/timer.js:321
 msgid "Timer"
 msgstr "Minutnik"
 
@@ -725,11 +725,11 @@ msgstr[2] "%d alarmów minęło!"
 msgid "Timer Expired!"
 msgstr "Czas minął!"
 
-#: data/po_files/../../sections/timer.js:597
+#: data/po_files/../../sections/timer.js:616
 #, fuzzy
 msgid "Search presets..."
 msgstr "Wyszukiwanie plików..."
 
-#: data/po_files/../../sections/timer.js:625
+#: data/po_files/../../sections/timer.js:644
 msgid "Default preset"
 msgstr ""

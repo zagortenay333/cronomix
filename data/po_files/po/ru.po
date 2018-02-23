@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-23 20:18+0100\n"
+"POT-Creation-Date: 2018-02-23 20:52+0100\n"
 "PO-Revision-Date: 2017-11-29 13:36+0200\n"
 "Last-Translator: Sergey Shlyapugin <shlyapugin@gmail.com>\n"
 "Language-Team: Russian\n"
@@ -19,7 +19,7 @@ msgstr ""
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Generator: Poedit 2.0.4\n"
 
-#: data/po_files/../../lib/misc_utils.js:42
+#: data/po_files/../../lib/misc_utils.js:44
 msgid "File or dir not found."
 msgstr "Файл или папка не найдена."
 
@@ -88,8 +88,8 @@ msgid "Enabled Sections"
 msgstr "Включенные разделы"
 
 #: data/po_files/../../data/prefs.ui:482 data/po_files/../../data/prefs.ui:1212
-#: data/po_files/../../sections/timer.js:176
-#: data/po_files/../../sections/timer.js:323
+#: data/po_files/../../sections/timer.js:174
+#: data/po_files/../../sections/timer.js:321
 msgid "Timer"
 msgstr "Таймер"
 
@@ -725,11 +725,11 @@ msgstr[2] "%d напоминаний ушло!"
 msgid "Timer Expired!"
 msgstr "Время по таймеру истекло!"
 
-#: data/po_files/../../sections/timer.js:597
+#: data/po_files/../../sections/timer.js:616
 #, fuzzy
 msgid "Search presets..."
 msgstr "Поиск файлов..."
 
-#: data/po_files/../../sections/timer.js:625
+#: data/po_files/../../sections/timer.js:644
 msgid "Default preset"
 msgstr ""

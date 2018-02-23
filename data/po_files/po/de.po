@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: timepp@zagortenay 333\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-23 20:18+0100\n"
+"POT-Creation-Date: 2018-02-23 20:52+0100\n"
 "PO-Revision-Date: 2017-08-29 10:51+0200\n"
 "Last-Translator: Christian Mattes <mac@tasarion.de>\n"
 "Language-Team: German\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: data/po_files/../../lib/misc_utils.js:42
+#: data/po_files/../../lib/misc_utils.js:44
 msgid "File or dir not found."
 msgstr "Datei oder Verzeichnis nicht gefunden."
 
@@ -86,8 +86,8 @@ msgid "Enabled Sections"
 msgstr "Aktivierte Bereiche"
 
 #: data/po_files/../../data/prefs.ui:482 data/po_files/../../data/prefs.ui:1212
-#: data/po_files/../../sections/timer.js:176
-#: data/po_files/../../sections/timer.js:323
+#: data/po_files/../../sections/timer.js:174
+#: data/po_files/../../sections/timer.js:321
 msgid "Timer"
 msgstr "Timer"
 
@@ -715,11 +715,11 @@ msgstr[1] "%d Wecker wurden ausgelöst"
 msgid "Timer Expired!"
 msgstr "Timer abgelaufen"
 
-#: data/po_files/../../sections/timer.js:597
+#: data/po_files/../../sections/timer.js:616
 #, fuzzy
 msgid "Search presets..."
 msgstr "Dateien suchen..."
 
-#: data/po_files/../../sections/timer.js:625
+#: data/po_files/../../sections/timer.js:644
 msgid "Default preset"
 msgstr ""
