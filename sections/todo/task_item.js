@@ -750,6 +750,9 @@ var TaskItem = new Lang.Class({
             // button), then we might as well destroy the icon box.
             this.header_icon_box.destroy();
             this.header_icon_box = null;
+            this.edit_icon       = null;
+            this.stat_icon       = null;
+            this.tracker_icon    = null;
         }
         else {
             this.stat_icon.hide();
