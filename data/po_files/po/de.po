@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: timepp@zagortenay 333\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-23 19:12+0100\n"
+"POT-Creation-Date: 2018-02-23 20:18+0100\n"
 "PO-Revision-Date: 2017-08-29 10:51+0200\n"
 "Last-Translator: Christian Mattes <mac@tasarion.de>\n"
 "Language-Team: German\n"
@@ -715,11 +715,11 @@ msgstr[1] "%d Wecker wurden ausgelöst"
 msgid "Timer Expired!"
 msgstr "Timer abgelaufen"
 
-#: data/po_files/../../sections/timer.js:596
+#: data/po_files/../../sections/timer.js:597
 #, fuzzy
 msgid "Search presets..."
 msgstr "Dateien suchen..."
 
-#: data/po_files/../../sections/timer.js:624
+#: data/po_files/../../sections/timer.js:625
 msgid "Default preset"
 msgstr ""

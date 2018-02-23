@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: timepp@zagortenay 333\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-23 19:12+0100\n"
+"POT-Creation-Date: 2018-02-23 20:18+0100\n"
 "PO-Revision-Date: 2017-11-03 09:24-0200\n"
 "Last-Translator: Helder <he7d3r@gmail.com>\n"
 "Language-Team: Brazilian Portuguese\n"
@@ -716,11 +716,11 @@ msgstr[1] "%d alarmes dispararam!"
 msgid "Timer Expired!"
 msgstr "O timer expirou!"
 
-#: data/po_files/../../sections/timer.js:596
+#: data/po_files/../../sections/timer.js:597
 #, fuzzy
 msgid "Search presets..."
 msgstr "Pesquisar arquivos..."
 
-#: data/po_files/../../sections/timer.js:624
+#: data/po_files/../../sections/timer.js:625
 msgid "Default preset"
 msgstr ""
