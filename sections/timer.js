@@ -327,7 +327,6 @@ var SectionMain = new Lang.Class({
 
     _on_timer_expired: function () {
         this.reset();
-        this.fullscreen.on_timer_expired();
         this._send_notif();
         this.dbus_impl.emit_signal('timer_expired', null);
     },
@@ -335,14 +334,14 @@ var SectionMain = new Lang.Class({
     _tic: function () {
         this.clock = this.end_time - GLib.get_monotonic_time();
 
+        this._update_slider();
+        this._update_time_display();
+
         if (this.clock <= 0) {
             this.clock = 0;
             this._on_timer_expired();
             return;
         }
-
-        this._update_slider();
-        this._update_time_display();
 
         this.tic_mainloop_id = Mainloop.timeout_add_seconds(1, () => {
             this._tic();
@@ -440,11 +439,13 @@ var SectionMain = new Lang.Class({
         }
 
         if (this.fullscreen.is_open) {
+            this.fullscreen.on_timer_expired();
             return;
         }
 
         if (this.settings.get_enum('timer-notif-style') === NotifStyle.FULLSCREEN) {
             this.fullscreen.open();
+            this.fullscreen.on_timer_expired();
             return;
         }
 
@@ -1127,8 +1128,6 @@ const TimerFullscreen = new Lang.Class({
     },
 
     on_timer_expired: function () {
-        if (! this.is_open) return;
-
         if (this.delegate.current_preset.msg) {
             this.title.text = TIMER_EXPIRED_MSG;
 
