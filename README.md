@@ -118,7 +118,7 @@ When in fullscreen, some keyboard shortcuts are available:
     </tr>
     <tr>
         <td><kbd>r</kbd> or <kbd>Backspace</kbd></td>
-        <td>start timer at the last manually set time</td>
+        <td>repeat last timer preset</td>
     </tr>
     <tr>
         <td><kbd>1</kbd> ... <kbd>9</kbd> and <kbd>0</kbd></td>
