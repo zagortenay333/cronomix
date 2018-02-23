@@ -163,10 +163,8 @@ var SectionMain = new Lang.Class({
         this.icon_box = new St.BoxLayout({ y_align: Clutter.ActorAlign.CENTER, x_align: Clutter.ActorAlign.END, style_class: 'icon-box' });
         this.header.actor.add(this.icon_box, {expand: true});
 
-        this.fullscreen_bin  = new St.Button({ can_focus: true, y_align: St.Align.MIDDLE, x_align: St.Align.END, style_class: 'fullscreen-icon' });
-        this.icon_box.add(this.fullscreen_bin);
-        this.fullscreen_icon = new St.Icon({ icon_name: 'timepp-fullscreen-symbolic' });
-        this.fullscreen_bin.add_actor(this.fullscreen_icon);
+        this.fullscreen_icon = new St.Icon({ reactive: true, can_focus: true, track_hover: true, icon_name: 'timepp-fullscreen-symbolic', style_class: 'fullscreen-icon' });
+        this.icon_box.add_actor(this.fullscreen_icon);
 
 
         //
@@ -237,7 +235,7 @@ var SectionMain = new Lang.Class({
         this.sigm.connect(this.settings, 'changed::stopwatch-panel-mode', () => this._toggle_panel_mode());
         this.sigm.connect(this.panel_item, 'left-click', () => this.ext.toggle_menu(this.section_name));
         this.sigm.connect(this.panel_item, 'middle-click', () => this.stopwatch_toggle());
-        this.sigm.connect_press(this.fullscreen_bin, Clutter.BUTTON_PRIMARY, true, () => this.show_fullscreen());
+        this.sigm.connect_press(this.fullscreen_icon, Clutter.BUTTON_PRIMARY, true, () => this.show_fullscreen());
         this.sigm.connect_press(this.button_start, Clutter.BUTTON_PRIMARY, true, () => this.start());
         this.sigm.connect_press(this.button_reset, Clutter.BUTTON_PRIMARY, true, () => this.reset());
         this.sigm.connect_press(this.button_stop, Clutter.BUTTON_PRIMARY, true, () => this.stop());

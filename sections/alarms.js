@@ -672,17 +672,14 @@ const AlarmItem = new Lang.Class({
         this.header = new St.BoxLayout({style_class: 'alarm-item-header'});
         this.alarm_item_content.add_actor(this.header);
 
-
         this.time = new St.Label({ y_align: St.Align.END, x_align: St.Align.START, style_class: 'alarm-item-time' });
         this.header.add(this.time, {expand: true});
 
         this.icon_box = new St.BoxLayout({y_align: Clutter.ActorAlign.CENTER, x_align: Clutter.ActorAlign.CENTER, style_class: 'icon-box'});
         this.header.add_actor(this.icon_box);
 
-        let edit_icon = new St.Icon({ icon_name: 'timepp-edit-symbolic' });
-        this.edit_bin = new St.Button({ visible: false, can_focus: true, y_align: St.Align.MIDDLE, x_align: St.Align.END, style_class: 'settings-icon'});
-        this.edit_bin.add_actor(edit_icon);
-        this.icon_box.add(this.edit_bin);
+        this.edit_icon = new St.Icon({ visible: false, reactive: true, can_focus: true, track_hover: true, icon_name: 'timepp-edit-symbolic', style_class: 'settings-icon' });
+        this.icon_box.add(this.edit_icon);
 
         this.toggle     = new PopupMenu.Switch(alarm.toggle);
         this.toggle_bin = new St.Button({can_focus: true, y_align: St.Align.START, x_align: St.Align.END });
@@ -715,10 +712,10 @@ const AlarmItem = new Lang.Class({
         // listen
         //
         this.toggle_bin.connect('clicked', () => this._on_toggle());
-        this.delegate.sigm.connect_press(this.edit_bin, Clutter.BUTTON_PRIMARY, true, () => this._on_edit());
+        this.delegate.sigm.connect_press(this.edit_icon, Clutter.BUTTON_PRIMARY, true, () => this._on_edit());
         this.ext.connect('custom-css-changed', () => this._on_custom_css_updated());
         this.actor.connect('queue-redraw', () => { MISC_UTILS.resize_label(this.msg); });
-        this.actor.connect('enter-event',  () => { this.edit_bin.show(); });
+        this.actor.connect('enter-event',  () => { this.edit_icon.show(); });
         this.actor.connect('event', (actor, event) => this._on_event(actor, event));
     },
 
@@ -794,7 +791,7 @@ const AlarmItem = new Lang.Class({
     },
 
     _on_edit: function () {
-        this.edit_bin.hide();
+        this.edit_icon.hide();
         this.delegate.alarm_editor(this);
     },
 
@@ -807,18 +804,18 @@ const AlarmItem = new Lang.Class({
     _on_event: function (actor, event) {
         switch (event.type()) {
             case Clutter.EventType.ENTER: {
-                this.edit_bin.show();
+                this.edit_icon.show();
                 break;
             }
 
             case Clutter.EventType.LEAVE: {
                 if (! this.header.contains(global.stage.get_key_focus()))
-                    this.edit_bin.hide();
+                    this.edit_icon.hide();
                 break;
             }
 
             case Clutter.EventType.KEY_RELEASE: {
-                this.edit_bin.show();
+                this.edit_icon.show();
                 MISC_UTILS.scroll_to_item(this.delegate.alarms_scroll,
                                           this.delegate.alarms_scroll_content,
                                           actor);
@@ -828,7 +825,7 @@ const AlarmItem = new Lang.Class({
             case Clutter.EventType.KEY_PRESS: {
                 Mainloop.idle_add(() => {
                     if (! this.header.contains(global.stage.get_key_focus()))
-                        this.edit_bin.hide();
+                        this.edit_icon.hide();
                 });
                 break;
             }

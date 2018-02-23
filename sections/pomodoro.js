@@ -178,15 +178,11 @@ var SectionMain = new Lang.Class({
         this.icon_box = new St.BoxLayout({ y_align: Clutter.ActorAlign.CENTER, x_align: Clutter.ActorAlign.END, style_class: 'icon-box' });
         this.header.actor.add_actor(this.icon_box);
 
-        this.fullscreen_btn = new St.Button({ can_focus: true, y_align: St.Align.MIDDLE, x_align: St.Align.END, style_class: 'fullscreen-icon' });
-        this.icon_box.add_actor(this.fullscreen_btn);
-        this.fullscreen_icon = new St.Icon({ icon_name: 'timepp-fullscreen-symbolic' });
-        this.fullscreen_btn.add_actor(this.fullscreen_icon);
+        this.fullscreen_icon = new St.Icon({ reactive: true, can_focus: true, track_hover: true, icon_name: 'timepp-fullscreen-symbolic', style_class: 'fullscreen-icon' });
+        this.icon_box.add_actor(this.fullscreen_icon);
 
-        this.settings_btn = new St.Button({ can_focus: true, x_align: St.Align.END, y_align: St.Align.MIDDLE, style_class: 'settings-icon' });
-        this.icon_box.add_actor(this.settings_btn);
-        this.settings_icon = new St.Icon({ icon_name: 'timepp-settings-symbolic' });
-        this.settings_btn.add_actor(this.settings_icon);
+        this.settings_icon = new St.Icon({ reactive: true, can_focus: true, track_hover: true, icon_name: 'timepp-settings-symbolic', style_class: 'settings-icon' });
+        this.icon_box.add_actor(this.settings_icon);
 
 
         //
@@ -232,8 +228,8 @@ var SectionMain = new Lang.Class({
         this.sigm.connect(this.settings, 'changed::pomodoro-panel-mode', () => this._toggle_panel_mode());
         this.sigm.connect(this.panel_item, 'left-click', () => this.ext.toggle_menu(this.section_name));
         this.sigm.connect(this.panel_item, 'middle-click', () => this.timer_toggle());
-        this.sigm.connect_press(this.settings_btn, Clutter.BUTTON_PRIMARY, true, () => this._show_settings());
-        this.sigm.connect_press(this.fullscreen_btn, Clutter.BUTTON_PRIMARY, true, () => this.show_fullscreen());
+        this.sigm.connect_press(this.settings_icon, Clutter.BUTTON_PRIMARY, true, () => this._show_settings());
+        this.sigm.connect_press(this.fullscreen_icon, Clutter.BUTTON_PRIMARY, true, () => this.show_fullscreen());
         this.sigm.connect_press(this.button_continue, Clutter.BUTTON_PRIMARY, true, () => this.start_pomo());
         this.sigm.connect_press(this.button_stop, Clutter.BUTTON_PRIMARY, true, () => this.stop());
         this.sigm.connect_press(this.button_new_pomo, Clutter.BUTTON_PRIMARY, true, () => this.start_new_pomo());

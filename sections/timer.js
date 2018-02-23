@@ -175,26 +175,23 @@ var SectionMain = new Lang.Class({
         //
         this.header = new PopupMenu.PopupMenuItem(_('Timer'), { hover: false, activate: false, style_class: 'header' });
         this.header.actor.can_focus = false;
+        this.header.label.x_expand = true;
         this.header.label.add_style_class_name('clock');
         this.actor.add_actor(this.header.actor);
 
-        this.icon_box = new St.BoxLayout({ y_align: Clutter.ActorAlign.CENTER, x_align: Clutter.ActorAlign.END, style_class: 'icon-box' });
-        this.header.actor.add(this.icon_box, {expand: true});
-
-        this.toggle = new PopupMenu.Switch('');
         this.toggle_bin = new St.Button({ visible: false, can_focus: true, y_align: St.Align.MIDDLE });
+        this.header.actor.add(this.toggle_bin);
+        this.toggle = new PopupMenu.Switch('');
         this.toggle_bin.add_actor(this.toggle.actor);
-        this.icon_box.add(this.toggle_bin);
 
-        this.fullscreen_bin  = new St.Button({ can_focus: true, y_align: St.Align.MIDDLE, x_align: St.Align.END, style_class: 'fullscreen-icon' });
-        this.icon_box.add(this.fullscreen_bin);
-        this.fullscreen_icon = new St.Icon({ icon_name: 'timepp-fullscreen-symbolic' });
-        this.fullscreen_bin.add_actor(this.fullscreen_icon);
+        this.icon_box = new St.BoxLayout({ y_align: Clutter.ActorAlign.CENTER, style_class: 'icon-box' });
+        this.header.actor.add(this.icon_box);
 
-        this.settings_icon = new St.Icon({ icon_name: 'timepp-settings-symbolic' });
-        this.settings_bin  = new St.Button({ can_focus: true, y_align: St.Align.MIDDLE, x_align: St.Align.END, style_class: 'settings-icon' });
-        this.settings_bin.add_actor(this.settings_icon);
-        this.icon_box.add(this.settings_bin);
+        this.fullscreen_icon = new St.Icon({ reactive: true, can_focus: true, track_hover: true, icon_name: 'timepp-fullscreen-symbolic', style_class: 'fullscreen-icon' });
+        this.icon_box.add_actor(this.fullscreen_icon);
+
+        this.settings_icon = new St.Icon({ reactive: true, can_focus: true, track_hover: true, icon_name: 'timepp-settings-symbolic', style_class: 'settings-icon' });
+        this.icon_box.add(this.settings_icon);
 
 
         //
@@ -202,7 +199,6 @@ var SectionMain = new Lang.Class({
         //
         this.slider_item = new PopupMenu.PopupBaseMenuItem({ activate: false });
         this.actor.add_actor(this.slider_item.actor);
-
         this.slider = new Slider.Slider(0);
         this.slider_item.actor.add(this.slider.actor, { expand: true });
 
@@ -229,8 +225,8 @@ var SectionMain = new Lang.Class({
         this.sigm.connect(this.panel_item, 'left-click', () => this.ext.toggle_menu(this.section_name));
         this.sigm.connect(this.panel_item, 'middle-click', () => this.toggle_timer());
         this.sigm.connect_press(this.toggle_bin, Clutter.BUTTON_PRIMARY, true, () => this.toggle_timer());
-        this.sigm.connect_press(this.fullscreen_bin, Clutter.BUTTON_PRIMARY, true, () => this.show_fullscreen());
-        this.sigm.connect_press(this.settings_bin, Clutter.BUTTON_PRIMARY, true, () => this._show_presets());
+        this.sigm.connect_press(this.fullscreen_icon, Clutter.BUTTON_PRIMARY, true, () => this.show_fullscreen());
+        this.sigm.connect_press(this.settings_icon, Clutter.BUTTON_PRIMARY, true, () => this._show_presets());
         this.sigm.connect(this.slider, 'value-changed', (slider, value) => this.slider_changed(slider, value));
         this.sigm.connect(this.slider, 'drag-end', () => this.slider_released());
         this.sigm.connect(this.slider.actor, 'scroll-event', () => this.slider_released());

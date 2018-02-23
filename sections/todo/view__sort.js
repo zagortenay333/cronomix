@@ -116,11 +116,8 @@ var TaskSortWindow = new Lang.Class({
         item.icn_box = new St.BoxLayout({ style_class: 'icon-box' });
         item.actor.add_actor(item.icn_box);
 
-        item.sort_btn = new St.Button({ reactive: true, can_focus: true });
-        item.icn_box.add_actor(item.sort_btn);
-
-        item.sort_icon = new St.Icon();
-        item.sort_btn.add_actor(item.sort_icon);
+        item.sort_icon = new St.Icon({ reactive: true, can_focus: true, track_hover: true });
+        item.icn_box.add_actor(item.sort_icon);
 
         item.sort_icon.set_icon_name(
             sort_order === G.SortOrder.ASCENDING ?
@@ -168,7 +165,7 @@ var TaskSortWindow = new Lang.Class({
             }
         });
 
-        item.sort_btn.connect('key-press-event', (_, event) => {
+        item.sort_icon.connect('key-press-event', (_, event) => {
             if (event.get_state() !== Clutter.ModifierType.CONTROL_MASK)
                 return Clutter.EVENT_PROPAGATE;
 
@@ -192,7 +189,7 @@ var TaskSortWindow = new Lang.Class({
             return Clutter.EVENT_PROPAGATE;
         });
 
-        item.sort_btn.connect('clicked', () => {
+        this.delegate.sigm.connect_press(item.sort_icon, Clutter.BUTTON_PRIMARY, true, () => {
             if (item.sort_order === G.SortOrder.ASCENDING) {
                 item.sort_order = G.SortOrder.DESCENDING;
                 item.sort_icon.icon_name = 'timepp-sort-descending-symbolic';

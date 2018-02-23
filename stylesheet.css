@@ -91,10 +91,6 @@
     spacing: .7em;
 }
 
-.timepp-menu .section .header .clock {
-    margin-right: 2em;
-}
-
 .timepp-menu .view-box {
     padding: 1em 1.5em;
 }
@@ -178,9 +174,7 @@
 .numpicker-arrow:focus StIcon,
 .numpicker-arrow:hover StIcon,
 .timepp-menu .icon-box StIcon:focus,
-.timepp-menu .icon-box StIcon:hover,
-.timepp-menu .icon-box StButton:focus StIcon,
-.timepp-menu .icon-box StButton:hover StIcon {
+.timepp-menu .icon-box StIcon:hover {
     color: #5a94dc;
 }
 
