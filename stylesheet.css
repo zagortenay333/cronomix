@@ -177,6 +177,8 @@
 
 .numpicker-arrow:focus StIcon,
 .numpicker-arrow:hover StIcon,
+.timepp-menu .icon-box StIcon:focus,
+.timepp-menu .icon-box StIcon:hover,
 .timepp-menu .icon-box StButton:focus StIcon,
 .timepp-menu .icon-box StButton:hover StIcon {
     color: #5a94dc;
@@ -372,6 +374,23 @@
  * @@@ Timer
  * ===================================================================== */
 .timepp-menu .timer-section {}
+
+.timepp-menu .timer-section .timer-preset-item {
+    background: rgba(125, 125, 125, .15);
+    border-radius: 2px;
+    border-left-width: 3px;
+    padding: 9px 9px 9px 6px;
+    min-width: 240px;
+    spacing: .4em;
+}
+
+.timepp-menu .timer-section .timer-preset-item-default {
+    background: rgba(130, 130, 130, .3);
+}
+
+.timepp-menu .timer-section .timer-preset-item-default-indicator-label {
+    color: #38ae72;
+}
 
 .timepp-fullscreen.timer-expired {
     background-color: rgba(226, 43, 43, .9);

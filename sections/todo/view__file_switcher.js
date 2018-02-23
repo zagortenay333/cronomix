@@ -174,36 +174,24 @@ var TodoFileSwitcher = new Lang.Class({
     },
 
     _search_files: function () {
+        this.items_scroll_content.remove_all_children();
         let needle = this.entry.entry.get_text().toLowerCase();
-        let len    = this.file_items.length;
 
         if (!needle) {
-            this.items_scroll_content.remove_all_children();
-
-            for (let i = 0; i < len; i++) {
-                this.items_scroll_content.add_child(this.file_items[i].actor);
-            }
-        }
-        else {
+            for (let it of this.file_items)
+                this.items_scroll_content.add_child(it.actor);
+        } else {
             let reduced_results = [];
-            let i, item, score;
 
-            for (i = 0; i < len; i++) {
-                item = this.file_items[i];
-
-                score = FUZZ.fuzzy_search_v1(
-                    needle, item.label.text.toLowerCase());
-
-                if (score) reduced_results.push([score, item]);
+            for (let it of this.file_items) {
+                let score = FUZZ.fuzzy_search_v1(needle, it.label.text.toLowerCase());
+                if (score) reduced_results.push([score, it]);
             }
 
             reduced_results.sort((a, b) => a[0] < b[0]);
 
-            this.items_scroll_content.remove_all_children();
-
-            for (i = 0, len = reduced_results.length; i < len; i++) {
-                this.items_scroll_content.add_child(reduced_results[i][1].actor);
-            }
+            for (let it of reduced_results)
+                this.items_scroll_content.add_child(it[1].actor);
         }
 
         if (this.selected_item) this.selected_item.actor.pseudo_class = '';

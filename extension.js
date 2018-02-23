@@ -97,7 +97,6 @@ const Timepp = new Lang.Class({
 
         this.custom_css = {
             ['-timepp-link-color']       : ['blue'    , [0, 0, 1, 1]],
-            ['-timepp-markup-bg-color']  : ['white'   , [1, 1, 1, 1]],
 
             ['-timepp-context-color']    : ['magenta' , [1, 0, 1, 1]],
             ['-timepp-due-date-color']   : ['red'     , [1, 0, 0, 1]],

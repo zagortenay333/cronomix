@@ -90,6 +90,10 @@
             <default><![CDATA[[""]]]></default>
         </key>
 
+        <key name="timer-keybinding-open-to-search-presets" type="as">
+            <default><![CDATA[[""]]]></default>
+        </key>
+
 
         <!-- ======================================
         @@@  Stopwatch

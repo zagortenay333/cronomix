@@ -33,6 +33,7 @@ const NUM_PICKER      = ME.imports.lib.num_picker;
 const MULTIL_ENTRY    = ME.imports.lib.multiline_entry;
 const TEXT_LINKS_MNGR = ME.imports.lib.text_links_manager;
 const MISC_UTILS      = ME.imports.lib.misc_utils;
+const FUZZ            = ME.imports.lib.fuzzy_search;
 const REG             = ME.imports.lib.regex;
 
 
@@ -43,7 +44,7 @@ const CACHE_FILE = GLib.get_home_dir() +
                    '/.cache/timepp_gnome_shell_extension/timepp_timer.json';
 
 
-const TIMER_MAX_DURATION = 86400000000; // 24 hours in microseconds
+const TIMER_MAX_DURATION = 24 * 60 * 60 * 1000000; // microseconds
 const TIMER_EXPIRED_MSG  = _('Timer Expired!');
 
 
@@ -83,9 +84,9 @@ var SectionMain = new Lang.Class({
         this.cache_file      = null;
         this.cache           = null;
         this.notif_source    = null;
-        this.clock           = 0; // microseconds
-        this.end_time        = 0; // For computing elapsed time (microseconds)
 
+        this.clock           = 0; // microseconds
+        this.end_time        = 0; // for computing elapsed time (microseconds)
 
         {
             let [,xml,] = Gio.file_new_for_path(IFACE).load_contents(null);
@@ -123,10 +124,16 @@ var SectionMain = new Lang.Class({
             if (!this.cache || !this.cache.format_version ||
                 this.cache.format_version !== cache_format_version) {
 
+                // @preset_object  : { time: number (seconds),
+                //                     msg: string,
+                //                     repeat_sound: bool, }
+                //
+                // @custom_presets : array of @preset_object
+                // @default_preset : @preset_object
                 this.cache = {
                     format_version         : cache_format_version,
-                    notif_msg              : '',
-                    last_manually_set_time : 30, // seconds
+                    default_preset         : {time: 60, msg: '', repeat_sound: false},
+                    custom_presets         : [],
                 };
             }
         }
@@ -136,14 +143,21 @@ var SectionMain = new Lang.Class({
         }
 
 
+        this.current_preset = this.cache.default_preset;
+
+
         //
         // keybindings
         //
         this.keym.register('timer-keybinding-open', () => {
-             this.ext.open_menu(this.section_name);
+            this.ext.open_menu(this.section_name);
         });
         this.keym.register('timer-keybinding-open-fullscreen', () => {
             this.show_fullscreen();
+        });
+        this.keym.register('timer-keybinding-open-to-search-presets', () => {
+            this.ext.open_menu(this.section_name);
+            this._show_presets();
         });
 
 
@@ -216,7 +230,7 @@ var SectionMain = new Lang.Class({
         this.sigm.connect(this.panel_item, 'middle-click', () => this.toggle_timer());
         this.sigm.connect_press(this.toggle_bin, Clutter.BUTTON_PRIMARY, true, () => this.toggle_timer());
         this.sigm.connect_press(this.fullscreen_bin, Clutter.BUTTON_PRIMARY, true, () => this.show_fullscreen());
-        this.sigm.connect_press(this.settings_bin, Clutter.BUTTON_PRIMARY, true, () => this._show_settings());
+        this.sigm.connect_press(this.settings_bin, Clutter.BUTTON_PRIMARY, true, () => this._show_presets());
         this.sigm.connect(this.slider, 'value-changed', (slider, value) => this.slider_changed(slider, value));
         this.sigm.connect(this.slider, 'drag-end', () => this.slider_released());
         this.sigm.connect(this.slider.actor, 'scroll-event', () => this.slider_released());
@@ -249,6 +263,17 @@ var SectionMain = new Lang.Class({
     toggle_timer: function () {
         if      (this.timer_state === TimerState.STOPPED) this.start();
         else if (this.timer_state === TimerState.RUNNING) this.stop();
+    },
+
+    start_from_preset: function (preset, time = null) {
+        this.current_preset = preset;
+
+        if (time !== null) {
+            preset.time = time;
+            Mainloop.idle_add(() => this._store_cache());
+        }
+
+        this.start(preset.time);
     },
 
     // @time: int (seconds)
@@ -371,8 +396,8 @@ var SectionMain = new Lang.Class({
             this.reset();
         }
         else {
+            this.start_from_preset(this.cache.default_preset, Math.round(this.clock / 1000000));
             this.start();
-            this.cache.last_manually_set_time = Math.round(this.clock / 1000000);
             this._store_cache();
         }
     },
@@ -415,7 +440,7 @@ var SectionMain = new Lang.Class({
     _send_notif: function () {
         if (this.settings.get_boolean('timer-play-sound')) {
             this.sound_player.set_sound_uri(this.settings.get_string('timer-sound-file-path'));
-            this.sound_player.play(this.settings.get_boolean('timer-do-repeat-notif-sound'));
+            this.sound_player.play(this.current_preset.repeat_sound);
         }
 
         if (this.fullscreen.is_open) {
@@ -445,7 +470,7 @@ var SectionMain = new Lang.Class({
         let notif = new MessageTray.Notification(
             this.notif_source,
             TIMER_EXPIRED_MSG,
-            this.cache.notif_msg,
+            this.current_preset.msg || '',
             params
         );
 
@@ -454,41 +479,49 @@ var SectionMain = new Lang.Class({
         this.notif_source.notify(notif);
     },
 
-    _show_settings: function () {
-        let settings = new TimerSettings(
-            this.ext,
-            this,
-            this.settings.get_boolean('timer-show-seconds'),
-            this.cache.notif_msg
-        );
+    _show_presets: function () {
+        let presets_view = new TimerPresetsView(this.ext, this);
 
-        this.timepicker_container.add_actor(settings.actor);
-        settings.button_cancel.grab_key_focus();
+        this.timepicker_container.add_actor(presets_view.actor);
 
+        Mainloop.timeout_add(0, () => presets_view.entry.entry.grab_key_focus());
         this.header.actor.hide();
         this.slider_item.actor.hide();
 
-        settings.connect('ok', (_, info) => {
+        presets_view.connect('start-timer', (_, preset) => {
             this.actor.grab_key_focus();
-            settings.actor.destroy();
+            presets_view.actor.destroy();
             this.header.actor.show();
             this.slider_item.actor.show();
-
-            this.settings.set_boolean('timer-do-repeat-notif-sound', info.repeat_sound);
-            this.set_notif_msg(info.notif_msg);
-
-            if (info.time) {
-                this.clock = info.time;
-                this.start();
-                this._update_slider();
-                this.cache.last_manually_set_time = info.time;
-                this._store_cache();
-            }
+            this.start_from_preset(preset);
+            this.ext.menu.close(false);
         });
 
-        settings.connect('cancel', () => {
+        presets_view.connect('add-preset', (_, preset) => {
+            this.cache.custom_presets.push(preset);
+            this._store_cache();
+        });
+
+        presets_view.connect('edited-preset', (_, preset) => {
+            this._store_cache();
+        });
+
+        presets_view.connect('delete-preset', (_, preset) => {
+            if (this.current_preset === preset) {
+                this.current_preset = this.cache.default_preset;
+            }
+
+            for (let i = 0; i < this.cache.custom_presets.length; i++) {
+                if (this.cache.custom_presets[i] === preset)
+                    this.cache.custom_presets.splice(i, 1);
+            }
+
+            this._store_cache();
+        });
+
+        presets_view.connect('ok', () => {
             this.actor.grab_key_focus();
-            settings.actor.destroy();
+            presets_view.actor.destroy();
             this.header.actor.show();
             this.slider_item.actor.show();
         });
@@ -524,24 +557,318 @@ Signals.addSignalMethods(SectionMain.prototype);
 
 
 // =====================================================================
-// @@@ Settings window
+// @@@ TimerPresetsView
 //
-// @ext       : obj (main extension object)
-// @delegate  : obj (main section object)
-// @show_secs : bool
-// @notif_msg : string
+// @ext      : obj (main extension object)
+// @delegate : obj (main section object)
 //
-// signals: 'ok', 'cancel'
+// @signals:
+//    - 'ok'
+//    - 'edited-preset'
+//    - 'add-preset'    (returns a preset obj)
+//    - 'start-timer'   (returns a preset obj)
+//    - 'delete-preset' (returns a preset obj)
 // =====================================================================
-const TimerSettings = new Lang.Class({
-    Name: 'Timepp.TimerSettings',
+const TimerPresetsView = new Lang.Class({
+    Name: 'Timepp.TimerPresetsView',
 
-    _init: function(ext, delegate, show_secs, notif_msg) {
+    _init: function(ext, delegate) {
         this.ext      = ext;
         this.delegate = delegate;
 
-        this.actor = new St.Bin({ x_fill: true, style_class: 'view-box' });
 
+        // objects returned by _new_preset_item() func
+        this.preset_items = new Set();
+
+
+        //
+        // container
+        //
+        this.actor = new St.BoxLayout({ x_expand: true, vertical: true, style_class: 'view-box' });
+
+        this.inner_box = new St.BoxLayout({ x_expand: true, vertical: true, style_class: 'view-box-content' });
+        this.actor.add_actor(this.inner_box);
+
+        // We add an extra inner box because we nest the presets editor.
+        this.content_box = new St.BoxLayout({ x_expand: true, vertical: true });
+        this.inner_box.add_child(this.content_box);
+
+
+        //
+        // search presets entry
+        //
+        this.entry = new MULTIL_ENTRY.MultiLineEntry(_('Search presets...'), true);
+        this.content_box.add(this.entry.actor);
+        this.entry.actor.add_style_class_name('row');
+        this.entry.scroll_box.vscrollbar_policy = Gtk.PolicyType.NEVER;
+        this.entry.scroll_box.hscrollbar_policy = Gtk.PolicyType.NEVER;
+
+
+        //
+        // preset items container
+        //
+        this.preset_items_scrollview = new St.ScrollView({ style_class: 'vfade' });
+        this.content_box.add_actor(this.preset_items_scrollview);
+        this.preset_items_scrollview.vscrollbar_policy = Gtk.PolicyType.NEVER;
+        this.preset_items_scrollview.hscrollbar_policy = Gtk.PolicyType.NEVER;
+
+        this.preset_items_scrollbox = new St.BoxLayout({ vertical: true, style_class: 'row' });
+        this.preset_items_scrollview.add_actor(this.preset_items_scrollbox);
+
+        {
+            let it = this._new_preset_item(this.delegate.cache.default_preset);
+            this.preset_items_scrollbox.add_child(it.actor);
+
+            it.actor.add_style_class_name('timer-preset-item-default');
+            it.is_default = true;
+
+            let label = new St.Label({ x_expand: true, y_align: Clutter.ActorAlign.CENTER, style_class: 'timer-preset-item-default-indicator-label' });
+            it.header.insert_child_at_index(label, 1);
+
+            label.clutter_text.set_markup(`   <b>${_('Default preset')}</b>`);
+            it.header.get_first_child().x_expand = false;
+        }
+
+        for (let preset of this.delegate.cache.custom_presets) {
+            this.preset_items_scrollbox.add_child(this._new_preset_item(preset).actor);
+        }
+
+
+        //
+        // buttons
+        //
+        let btn_box = new St.BoxLayout({ x_expand: true, style_class: 'row btn-box' });
+        this.content_box.add_child(btn_box);
+        this.button_add_preset = new St.Button({ can_focus: true, label: _('Add Preset'), style_class: 'button', x_expand: true });
+        this.button_ok         = new St.Button({ can_focus: true, label: _('Ok'), style_class: 'button', x_expand: true });
+        btn_box.add(this.button_add_preset, {expand: true});
+        btn_box.add(this.button_ok, {expand: true});
+
+
+        //
+        // listen
+        //
+        this.preset_items_scrollbox.connect('queue-redraw', () => {
+            this.preset_items_scrollview.vscrollbar_policy = Gtk.PolicyType.NEVER;
+            if (ext.needs_scrollbar()) this.preset_items_scrollview.vscrollbar_policy = Gtk.PolicyType.ALWAYS;
+        });
+        this.entry.entry.connect('queue-redraw', () => {
+            this.entry.scroll_box.vscrollbar_policy = Gtk.PolicyType.NEVER;
+            if (ext.needs_scrollbar()) this.entry.scroll_box.vscrollbar_policy = Gtk.PolicyType.ALWAYS;
+        });
+        this.entry.entry.clutter_text.connect('text-changed', () => this._search_presets());
+        this.button_add_preset.connect('clicked', () => this._show_preset_editor());
+        this.button_ok.connect('clicked', () => this.emit('ok'));
+    },
+
+    _search_presets: function () {
+        this.preset_items_scrollbox.remove_all_children();
+        let needle = this.entry.entry.get_text().toLowerCase();
+
+        if (!needle) {
+            for (let it of this.preset_items)
+                this.preset_items_scrollbox.add_child(it.actor);
+        } else {
+            let reduced_results = [];
+
+            for (let it of this.preset_items) {
+                let score = FUZZ.fuzzy_search_v1(needle, it.msg.text.toLowerCase());
+                if (score) reduced_results.push([score, it]);
+            }
+
+            reduced_results.sort((a, b) => a[0] < b[0]);
+
+            for (let it of reduced_results)
+                this.preset_items_scrollbox.add_child(it[1].actor);
+        }
+    },
+
+    _show_preset_editor: function (item) {
+        let preset       = item ? item.preset : null;
+        let is_deletable = Boolean(preset) && !item.is_default;
+
+        let editor = new TimerPresetEditor(this.ext, this.delegate, preset, is_deletable);
+
+        this.inner_box.add_child(editor.actor);
+        editor.entry.entry.grab_key_focus();
+        this.content_box.hide();
+
+        editor.connect('ok', (_, info) => {
+            this.content_box.show();
+            let it;
+
+            if (item) {
+                it                     = item;
+                it.preset.msg          = info.msg;
+                it.preset.time         = info.time;
+                it.preset.repeat_sound = info.repeat_sound;
+
+                it.msg.text = info.msg;
+                it.msg.visible = Boolean(info.msg);
+
+                let time_label = "%02d:%02d:%02d".format(
+                    Math.floor(info.time / 3600),
+                    Math.floor(info.time % 3600 / 60),
+                    info.time % 60
+                );
+                it.time_label.clutter_text.set_markup(`<b>${time_label}</b>`);
+                this.emit('edited-preset');
+            } else {
+                it = this._new_preset_item(info);
+                this.preset_items_scrollbox.add_child(it.actor);
+                this.emit('add-preset', info);
+            }
+
+            it.icon_box.show();
+            it.icon_box.get_first_child().grab_key_focus();
+            Mainloop.idle_add(() => {
+                MISC_UTILS.scroll_to_item(this.preset_items_scrollview,
+                                          this.preset_items_scrollbox,
+                                          it.actor);
+            });
+            editor.actor.destroy();
+        });
+
+        editor.connect('delete', () => {
+            this.preset_items.delete(item);
+            item.actor.destroy();
+            this.content_box.show();
+            editor.actor.destroy();
+
+            this.emit('delete-preset', preset);
+        });
+
+        editor.connect('cancel', () => {
+            this.content_box.show();
+            editor.actor.destroy();
+        });
+    },
+
+    _new_preset_item: function (preset) {
+        let item = {};
+
+        item.preset = preset;
+
+        this.preset_items.add(item);
+
+        item.actor = new St.BoxLayout({ can_focus: true, reactive: true, vertical: true, style_class: 'timer-preset-item' });
+
+        item.header = new St.BoxLayout();
+        item.actor.add_child(item.header);
+
+        item.msg = new St.Label({ text: preset.msg, y_align: Clutter.ActorAlign.CENTER });
+        item.actor.add_child(item.msg);
+        item.msg.visible = Boolean(preset.msg);
+
+        item.time_label = new St.Label({ x_expand: true, y_align: Clutter.ActorAlign.CENTER });
+        item.header.add_child(item.time_label);
+
+        {
+            let time_label = "%02d:%02d:%02d".format(
+                Math.floor(preset.time / 3600),
+                Math.floor(preset.time % 3600 / 60),
+                preset.time % 60
+            );
+            item.time_label.clutter_text.set_markup(`<b>${time_label}</b>`);
+        }
+
+
+        // icons
+        item.icon_box = new St.BoxLayout({ visible: false, style_class: 'icon-box' });
+        item.header.add_child(item.icon_box);
+
+        let start_icon = new St.Icon({ track_hover: true, can_focus: true, reactive: true, icon_name: 'timepp-start-symbolic' });
+        item.icon_box.add_child(start_icon);
+
+        let edit_icon = new St.Icon({ track_hover: true, can_focus: true, reactive: true, icon_name: 'timepp-edit-symbolic' });
+        item.icon_box.add_child(edit_icon);
+
+
+        // listen
+        this.delegate.sigm.connect_press(start_icon, Clutter.BUTTON_PRIMARY, true, () => {
+            this.emit('start-timer', preset);
+        });
+        this.delegate.sigm.connect_press(edit_icon, Clutter.BUTTON_PRIMARY, true, () => {
+            Main.panel.menuManager.ignoreRelease();
+            this._show_preset_editor(item);
+        });
+        item.actor.connect('key-focus-in', () => { item.actor.can_focus = false; });
+        item.actor.connect('event', (_, event) => this._on_preset_item_event(item, event));
+
+
+        return item;
+    },
+
+    _on_preset_item_event: function (item, event) {
+        switch (event.type()) {
+            case Clutter.EventType.ENTER: {
+                let related = event.get_related();
+                if (related && !item.actor.contains(related)) item.icon_box.show();
+                break;
+            }
+
+            case Clutter.EventType.LEAVE: {
+                let related = event.get_related();
+
+                if (!item.header.contains(global.stage.get_key_focus()) &&
+                    related &&
+                    !item.actor.contains(related)) {
+
+                    item.icon_box.hide();
+                    item.actor.can_focus = true;
+                }
+                break;
+            }
+
+            case Clutter.EventType.KEY_RELEASE: {
+                item.icon_box.show();
+                if (!item.header.contains(global.stage.get_key_focus())) {
+                    item.icon_box.get_first_child().grab_key_focus();
+                }
+                MISC_UTILS.scroll_to_item(this.preset_items_scrollview,
+                                          this.preset_items_scrollbox,
+                                          item.actor);
+                break;
+            }
+
+            case Clutter.EventType.KEY_PRESS: {
+                Mainloop.idle_add(() => {
+                    if (item.icon_box && !item.header.contains(global.stage.get_key_focus())) {
+                        item.actor.can_focus = true;
+                        item.icon_box.hide();
+                    }
+                });
+                break;
+            }
+        }
+    },
+});
+Signals.addSignalMethods(TimerPresetsView.prototype);
+
+
+
+// =====================================================================
+// @@@ TimerPresetEditor
+//
+// @ext          : obj (main extension object)
+// @delegate     : obj (main section object)
+// @preset       : obj
+//
+// @signals: 'ok', 'cancel', 'delete'
+// =====================================================================
+const TimerPresetEditor = new Lang.Class({
+    Name: 'Timepp.TimerPresetEditor',
+
+    _init: function(ext, delegate, preset, is_deletable) {
+        this.ext      = ext;
+        this.delegate = delegate;
+        this.preset   = preset;
+
+
+        //
+        // container
+        //
+        this.actor = new St.Bin({ x_fill: true, style_class: 'view-box' });
         this.content_box = new St.BoxLayout({ x_expand: true, vertical: true, style_class: 'view-box-content' });
         this.actor.add_actor(this.content_box);
 
@@ -562,16 +889,16 @@ const TimerSettings = new Lang.Class({
             this.min = new NUM_PICKER.NumPicker(0, 59);
             box.add_child(this.min.actor);
 
-            if (show_secs) {
+            if (this.delegate.settings.get_boolean('timer-show-seconds')) {
                 label.text = `${_('(h:min:sec)')} `;
-
                 this.sec = new NUM_PICKER.NumPicker(0, 59);
                 box.add_child(this.sec.actor);
-            }
-            else {
+            } else {
                 label.text = `${_('(h:min)')} `;
             }
         }
+
+        this._set_time();
 
 
         //
@@ -586,7 +913,7 @@ const TimerSettings = new Lang.Class({
         this.entry.scroll_box.vscrollbar_policy = Gtk.PolicyType.NEVER;
         this.entry.scroll_box.hscrollbar_policy = Gtk.PolicyType.NEVER;
 
-        this.entry.set_text(notif_msg);
+        if (preset) this.entry.set_text(preset.msg);
 
 
         //
@@ -600,7 +927,7 @@ const TimerSettings = new Lang.Class({
 
         this.sound_checkbox = new CheckBox.CheckBox();
         this.checkbox_item.add_child(this.sound_checkbox.actor);
-        this.sound_checkbox.actor.checked = this.delegate.settings.get_boolean('timer-do-repeat-notif-sound');
+        this.sound_checkbox.actor.checked = preset ? preset.repeat_sound : false;
 
 
         //
@@ -609,10 +936,17 @@ const TimerSettings = new Lang.Class({
         let btn_box = new St.BoxLayout({ style_class: 'row btn-box' });
         this.content_box.add(btn_box, {expand: true});
 
-        this.button_cancel = new St.Button({ can_focus: true, label: _('Cancel'), style_class: 'button', x_expand: true });
-        this.button_ok     = new St.Button({ can_focus: true, label: _('Ok'), style_class: 'button', x_expand: true });
+        if (is_deletable) {
+            this.button_delete = new St.Button({ can_focus: true, label: _('Delete'), style_class: 'btn-delete button', x_expand: true });
+            btn_box.add(this.button_delete, {expand: true});
+            this.button_delete.connect('clicked', () => this.emit('delete'));
+        }
+
+        this.button_cancel = new St.Button({ can_focus: true, label: _('Cancel'), style_class: 'btn-cancel button', x_expand: true });
+        this.button_ok     = new St.Button({ can_focus: true, label: _('Ok'), style_class: 'btn-ok button', x_expand: true });
         btn_box.add(this.button_cancel, {expand: true});
         btn_box.add(this.button_ok, {expand: true});
+
 
 
         //
@@ -620,9 +954,7 @@ const TimerSettings = new Lang.Class({
         //
         this.entry.entry.connect('queue-redraw', () => {
             this.entry.scroll_box.vscrollbar_policy = Gtk.PolicyType.NEVER;
-
-            if (ext.needs_scrollbar())
-                this.entry.scroll_box.vscrollbar_policy = Gtk.PolicyType.ALWAYS;
+            if (ext.needs_scrollbar()) this.entry.scroll_box.vscrollbar_policy = Gtk.PolicyType.ALWAYS;
         });
         this.button_ok.connect('clicked', () => {
             this.emit('ok', {
@@ -637,15 +969,23 @@ const TimerSettings = new Lang.Class({
         });
     },
 
+    _set_time: function () {
+        if (! this.preset) return;
+
+        this.hr.set_counter(Math.floor(this.preset.time / 3600));
+        this.min.set_counter(Math.floor(this.preset.time % 3600 / 60));
+        if (this.sec) this.sec.set_counter(this.preset.time % 60);
+    },
+
     _get_time: function () {
         let h   = this.hr.counter * 3600;
         let min = this.min.counter * 60;
         let sec = this.sec ? this.sec.counter : 0;
 
-        return (h + min + sec) * 1000000;
+        return h + min + sec;
     },
 });
-Signals.addSignalMethods(TimerSettings.prototype);
+Signals.addSignalMethods(TimerPresetEditor.prototype);
 
 
 
@@ -656,7 +996,7 @@ Signals.addSignalMethods(TimerSettings.prototype);
 // @delegate : obj (main section object)
 // @monitor  : int
 //
-// signals: 'monitor-changed'
+// @signals: 'monitor-changed'
 // =====================================================================
 const TimerFullscreen = new Lang.Class({
     Name    : 'Timepp.TimerFullscreen',
@@ -722,37 +1062,38 @@ const TimerFullscreen = new Lang.Class({
                     return Clutter.EVENT_STOP;
                 case Clutter.KEY_r:
                 case Clutter.KEY_BackSpace:
-                    this.delegate.start(this.delegate.cache.last_manually_set_time);
+                    this.delegate.start(this.delegate.current_preset.time);
                     return Clutter.EVENT_STOP;
                 case Clutter.KEY_1:
+                    this.delegate.start_from_preset(this.delegate.cache.default_preset, 60);
                     this.delegate.start(60);
                     return Clutter.EVENT_STOP;
                 case Clutter.KEY_2:
-                    this.delegate.start(2 * 60);
+                    this.delegate.start_from_preset(this.delegate.cache.default_preset, 2 * 60);
                     return Clutter.EVENT_STOP;
                 case Clutter.KEY_3:
-                    this.delegate.start(3 * 60);
+                    this.delegate.start_from_preset(this.delegate.cache.default_preset, 3 * 60);
                     return Clutter.EVENT_STOP;
                 case Clutter.KEY_4:
-                    this.delegate.start(4 * 60);
+                    this.delegate.start_from_preset(this.delegate.cache.default_preset, 4 * 60);
                     return Clutter.EVENT_STOP;
                 case Clutter.KEY_5:
-                    this.delegate.start(5 * 60);
+                    this.delegate.start_from_preset(this.delegate.cache.default_preset, 5 * 60);
                     return Clutter.EVENT_STOP;
                 case Clutter.KEY_6:
-                    this.delegate.start(6 * 60);
+                    this.delegate.start_from_preset(this.delegate.cache.default_preset, 6 * 60);
                     return Clutter.EVENT_STOP;
                 case Clutter.KEY_7:
-                    this.delegate.start(7 * 60);
+                    this.delegate.start_from_preset(this.delegate.cache.default_preset, 7 * 60);
                     return Clutter.EVENT_STOP;
                 case Clutter.KEY_8:
-                    this.delegate.start(8 * 60);
+                    this.delegate.start_from_preset(this.delegate.cache.default_preset, 8 * 60);
                     return Clutter.EVENT_STOP;
                 case Clutter.KEY_9:
-                    this.delegate.start(9 * 60);
+                    this.delegate.start_from_preset(this.delegate.cache.default_preset, 9 * 60);
                     return Clutter.EVENT_STOP;
                 case Clutter.KEY_0:
-                    this.delegate.start(10 * 60);
+                    this.delegate.start_from_preset(this.delegate.cache.default_preset, 10 * 60);
                     return Clutter.EVENT_STOP;
                 default:
                     return Clutter.EVENT_PROPAGATE;
@@ -791,18 +1132,20 @@ const TimerFullscreen = new Lang.Class({
     },
 
     on_timer_expired: function () {
-        if (this.delegate.cache.notif_msg) {
+        if (! this.is_open) return;
+
+        if (this.delegate.current_preset.msg) {
             this.title.text = TIMER_EXPIRED_MSG;
 
             this.set_banner_text(
-                this._highlight_tokens(this.delegate.cache.notif_msg)
+                this._highlight_tokens(this.delegate.current_preset.msg)
                     .replace(/&(?!amp;|quot;|apos;|lt;|gt;)/g, '&amp;')
                     .replace(/<(?!\/?[^<]*>)/g, '&lt;')
             );
-        }
-        else {
+        } else {
             this.set_banner_text(TIMER_EXPIRED_MSG);
         }
+
         this.actor.style_class = this.default_style_class + ' timer-expired';
     },
 

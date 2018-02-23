@@ -705,36 +705,28 @@ var TaskItem = new Lang.Class({
     _create_header_icons: function () {
         if (this.header_icon_box) return;
 
-        // icon box
         this.header_icon_box = new St.BoxLayout({ x_align: Clutter.ActorAlign.END, style_class: 'icon-box' });
         this.header.add(this.header_icon_box, {expand: true});
 
 
-        // statistics icon
         this.stat_icon_bin = new St.Button({ visible:false, can_focus: true, y_align: St.Align.MIDDLE });
         this.header_icon_box.add_actor(this.stat_icon_bin);
-
         this.stat_icon = new St.Icon({ icon_name: 'timepp-graph-symbolic' });
         this.stat_icon_bin.add_actor(this.stat_icon);
 
 
-        // settings icon
         this.edit_icon_bin = new St.Button({ visible:false, can_focus: true, y_align: St.Align.MIDDLE });
         this.header_icon_box.add_actor(this.edit_icon_bin);
-
         this.edit_icon = new St.Icon({ icon_name: 'timepp-edit-symbolic' });
         this.edit_icon_bin.add_actor(this.edit_icon);
 
 
-        // time tracker start button
         this.tracker_icon_bin = new St.Button({ visible:false, can_focus: true, y_align: St.Align.MIDDLE, style_class: 'tracker-start-icon'});
         this.header_icon_box.add_actor(this.tracker_icon_bin);
-
         this.tracker_icon = new St.Icon({ icon_name: 'timepp-start-symbolic' });
         this.tracker_icon_bin.add_actor(this.tracker_icon);
 
 
-        // listen
         this.delegate.sigm.connect_press(this.stat_icon_bin, Clutter.BUTTON_PRIMARY, true, () => {
             this.delegate.show_view__time_tracker_stats(this);
             this._hide_header_icons();

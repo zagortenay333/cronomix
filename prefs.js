@@ -406,6 +406,25 @@ const Settings = new Lang.Class({
                 }
             });
 
+        widget = this.builder.get_object('timer-keybinding-open-to-search-presets');
+        widget.set_text(this.settings.get_strv('timer-keybinding-open-to-search-presets')[0]);
+        widget.connect('changed', (entry) => {
+            let [key, mods] = Gtk.accelerator_parse(entry.get_text());
+
+            if (Gtk.accelerator_valid(key, mods)) {
+                entry["secondary-icon-name"] = null;
+                let shortcut = Gtk.accelerator_name(key, mods);
+                this.settings.set_strv('timer-keybinding-open-to-search-presets', [shortcut]);
+            }
+            else {
+                if (entry.get_text() !== '')
+                    entry["secondary-icon-name"] = "dialog-warning-symbolic";
+                else
+                    entry["secondary-icon-name"] = "";
+                this.settings.set_strv('timer-keybinding-open-to-search-presets', ['']);
+            }
+        });
+
 
         //
         // Stopwatch
