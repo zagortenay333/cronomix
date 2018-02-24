@@ -409,7 +409,7 @@ var SectionMain = new Lang.Class({
             if (t === '00:00') this._on_new_day_started();
         });
         this.sigm.connect(this.panel_item, 'left-click', () => this.ext.toggle_menu(this.section_name));
-        this.sigm.connect_press(this.add_task_bin, Clutter.BUTTON_PRIMARY, true, () => this.show_view__task_editor());
+        this.sigm.connect_press(this.add_task_button, Clutter.BUTTON_PRIMARY, true, () => this.show_view__task_editor());
         this.sigm.connect_press(this.filter_icon, Clutter.BUTTON_PRIMARY, true, () => this.show_view__filters());
         this.sigm.connect_press(this.filter_icon, Clutter.BUTTON_MIDDLE, false, () => this.toggle_invert_filters());
         this.sigm.connect_press(this.sort_icon, Clutter.BUTTON_PRIMARY, true, () => this.show_view__sort());
