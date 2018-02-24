@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-23 20:52+0100\n"
+"POT-Creation-Date: 2018-02-24 01:07+0100\n"
 "PO-Revision-Date: 2017-11-29 13:36+0200\n"
 "Last-Translator: Sergey Shlyapugin <shlyapugin@gmail.com>\n"
 "Language-Team: Russian\n"
@@ -500,7 +500,7 @@ msgstr[1] "через %d дня"
 msgstr[2] "через %d дней"
 
 #: data/po_files/../../sections/todo/MAIN.js:288
-#: data/po_files/../../sections/todo/MAIN.js:1052
+#: data/po_files/../../sections/todo/MAIN.js:1050
 msgid "Loading..."
 msgstr "Загрузка..."
 
@@ -512,7 +512,7 @@ msgstr "Выберите файл списка дел в диалоге наст
 msgid "Add New Task..."
 msgstr "Добавить задачу..."
 
-#: data/po_files/../../sections/todo/MAIN.js:626
+#: data/po_files/../../sections/todo/MAIN.js:624
 #, javascript-format
 msgid "%d task has recurred"
 msgid_plural "%d tasks have recurred"
@@ -520,7 +520,7 @@ msgstr[0] "%d задача возобновлена"
 msgstr[1] "%d задачи возобновлены"
 msgstr[2] "%d задач возобновлено"
 
-#: data/po_files/../../sections/todo/MAIN.js:632
+#: data/po_files/../../sections/todo/MAIN.js:630
 #, javascript-format
 msgid "%d deferred task has been opened"
 msgid_plural "%d deferred tasks have been opened"
@@ -528,7 +528,7 @@ msgstr[0] "%d отложенная задача была открыта"
 msgstr[1] "%d отложенных задачи было открыто"
 msgstr[2] "%d отложенных задача было открыто"
 
-#: data/po_files/../../sections/todo/MAIN.js:1058
+#: data/po_files/../../sections/todo/MAIN.js:1056
 msgid "Nothing found."
 msgstr "Ничего не найдено."
 
