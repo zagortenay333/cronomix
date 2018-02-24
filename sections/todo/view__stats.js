@@ -327,7 +327,7 @@ var StatsView = new Lang.Class({
         //
         // listen
         //
-        this.delegate_sig =
+        this.new_day_sig_id =
             this.delegate.connect('new-day', (_, today) => {
                 this._on_new_day_started(today);
             });
@@ -1238,8 +1238,8 @@ var StatsView = new Lang.Class({
     },
 
     destroy: function () {
-        if (this.delegate_sig)
-            this.delegate.disconnect(this.delegate_sig);
+        if (this.new_day_sig_id)
+            this.delegate.disconnect(this.new_day_sig_id);
 
         this.parent();
     },

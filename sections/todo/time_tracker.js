@@ -108,11 +108,12 @@ var TimeTracker = new Lang.Class({
         //
         // listen
         //
-        this.delegate.connect('new-day', () => {
-            this._archive_daily_csv_file();
-            this._archive_yearly_csv_file();
-            this._init_tracker_dir(); // to ensure the new yearly_csv_file
-        });
+        this.new_day_sig_id =
+            this.delegate.connect('new-day', () => {
+                this._archive_daily_csv_file();
+                this._archive_yearly_csv_file();
+                this._init_tracker_dir(); // to ensure the new yearly_csv_file
+            });
         this.ext.connect('start-time-tracking-by-id', (_, info) => {
             this.start_tracking_by_id(info.data);
         });
@@ -626,6 +627,11 @@ var TimeTracker = new Lang.Class({
         if (this.yearly_csv_dir_monitor) {
             this.yearly_csv_dir_monitor.cancel();
             this.yearly_csv_dir_monitor = null;
+        }
+
+        if (this.new_day_sig_id) {
+            this.delegate.disconnect(this.new_day_sig_id);
+            this.new_day_sig_id = 0;
         }
 
         this._write_daily_csv_file();
