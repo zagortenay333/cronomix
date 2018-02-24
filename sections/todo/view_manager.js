@@ -80,6 +80,8 @@ var ViewManager = new Lang.Class({
     //   Function that is used to open the view. If it is not given, then
     //   opening the view means that the actors will be added to the popup menu.
     show_view: function (view) {
+        Main.panel.menuManager.ignoreRelease();
+
         if (this.delegate.tasks_scroll_wrapper.visible)
             this._hide_tasks();
 

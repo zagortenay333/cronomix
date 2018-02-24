@@ -714,8 +714,8 @@ const AlarmItem = new Lang.Class({
         this.toggle_bin.connect('clicked', () => this._on_toggle());
         this.delegate.sigm.connect_press(this.edit_icon, Clutter.BUTTON_PRIMARY, true, () => this._on_edit());
         this.ext.connect('custom-css-changed', () => this._on_custom_css_updated());
-        this.actor.connect('queue-redraw', () => { MISC_UTILS.resize_label(this.msg); });
-        this.actor.connect('enter-event',  () => { this.edit_icon.show(); });
+        this.actor.connect('queue-redraw', () => MISC_UTILS.resize_label(this.msg));
+        this.actor.connect('enter-event',  () => this.edit_icon.show());
         this.actor.connect('event', (actor, event) => this._on_event(actor, event));
     },
 
@@ -791,6 +791,7 @@ const AlarmItem = new Lang.Class({
     },
 
     _on_edit: function () {
+        Main.panel.menuManager.ignoreRelease();
         this.edit_icon.hide();
         this.delegate.alarm_editor(this);
     },
