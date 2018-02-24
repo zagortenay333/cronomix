@@ -114,15 +114,16 @@ var TimeTracker = new Lang.Class({
                 this._archive_yearly_csv_file();
                 this._init_tracker_dir(); // to ensure the new yearly_csv_file
             });
+        this.todo_current_sig_id =
+            this.delegate.settings.connect('changed::todo-current', () => {
+                this.csv_dir = this.get_csv_dir_path();
+                this._init_tracker_dir();
+            });
         this.ext.connect('start-time-tracking-by-id', (_, info) => {
             this.start_tracking_by_id(info.data);
         });
         this.ext.connect('stop-time-tracking-by-id', (_, info) => {
             this.stop_tracking_by_id(info.data);
-        });
-        delegate.settings.connect('changed::todo-current', () => {
-            this.csv_dir = this.get_csv_dir_path();
-            this._init_tracker_dir();
         });
     },
 
@@ -629,10 +630,8 @@ var TimeTracker = new Lang.Class({
             this.yearly_csv_dir_monitor = null;
         }
 
-        if (this.new_day_sig_id) {
-            this.delegate.disconnect(this.new_day_sig_id);
-            this.new_day_sig_id = 0;
-        }
+        if (this.new_day_sig_id) this.delegate.disconnect(this.new_day_sig_id);
+        if (this.todo_current_sig_id) this.delegate.settings.disconnect(this.todo_current_sig_id);
 
         this._write_daily_csv_file();
 

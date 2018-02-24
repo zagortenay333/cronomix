@@ -1238,8 +1238,7 @@ var StatsView = new Lang.Class({
     },
 
     destroy: function () {
-        if (this.new_day_sig_id)
-            this.delegate.disconnect(this.new_day_sig_id);
+        if (this.new_day_sig_id) this.delegate.disconnect(this.new_day_sig_id);
 
         this.parent();
     },
