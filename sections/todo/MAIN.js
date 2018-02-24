@@ -409,7 +409,7 @@ var SectionMain = new Lang.Class({
             if (t === '00:00') this._on_new_day_started();
         });
         this.sigm.connect(this.panel_item, 'left-click', () => this.ext.toggle_menu(this.section_name));
-        this.sigm.connect_press(this.add_task_icon, Clutter.BUTTON_PRIMARY, true, () => this.show_view__task_editor());
+        this.sigm.connect_press(this.add_task_bin, Clutter.BUTTON_PRIMARY, true, () => this.show_view__task_editor());
         this.sigm.connect_press(this.filter_icon, Clutter.BUTTON_PRIMARY, true, () => this.show_view__filters());
         this.sigm.connect_press(this.filter_icon, Clutter.BUTTON_MIDDLE, false, () => this.toggle_invert_filters());
         this.sigm.connect_press(this.sort_icon, Clutter.BUTTON_PRIMARY, true, () => this.show_view__sort());
@@ -419,9 +419,7 @@ var SectionMain = new Lang.Class({
         this.sigm.connect_press(this.clear_icon, Clutter.BUTTON_PRIMARY, true, () => this.show_view__clear_completed());
         this.sigm.connect(this.search_entry, 'secondary-icon-clicked', () => this.show_view__default());
         this.sigm.connect(this.ext, 'custom-css-changed', () => this._on_custom_css_changed());
-        this.sigm.connect(this.search_entry.clutter_text, 'text-changed', () => {
-            Mainloop.idle_add(() => this._search());
-        });
+        this.sigm.connect(this.search_entry.clutter_text, 'text-changed', () => Mainloop.idle_add(() => this._search()));
 
 
         //
