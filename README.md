@@ -175,7 +175,57 @@ Some of the features of the todo.txt manager are:
 * Deleting all completed tasks and optionally storing them into a done.txt file.
 * Switching between different views via keyboard shortcuts.
 
-##### Supported todo.txt extensions
+---
+
+### Todo.txt syntax
+
+* The todo.txt format is specified here: https://github.com/todotxt/todo.txt
+
+* In various places throughout this extension (todo.txt, alarms, timer) there is
+support for some **markup** stuff:
+
+    * There is support for [pango markup](https://developer.gnome.org/pango/stable/PangoMarkupFormat.html).
+
+    * In addition to that, a simple version of markdown is supported:
+        ```
+        `     escape other markdown
+        ``    monospace and escape other markdown
+
+        *     bold
+        **    italic
+        ***   bold with a red bg
+
+        __    italic
+        ___   underscore
+
+        ~~    strikethrough
+
+        $     xx-large
+        $$    x-large
+        $$$   large
+
+        -------------------------------------
+
+        For example, *bold*, and $$extra large$$, and ``monospaced``, and
+        ***this __one__ is nested***, etc...
+        ```
+
+    * File paths and web links are supported:
+        ```
+        https://www.google.com
+        www.google.com
+
+        /home/user/Documents
+        ~/Documents
+        ~/Documents/img.png
+        ~/Documents/file\ with\ spaces.png
+        ```
+
+---
+
+### Todo.txt extensions
+
+This extension supports the following todo.txt extensions:
 
 <table>
     <tr>
@@ -358,51 +408,6 @@ date, time spent (hh:mm), type ('++' = project, '()' = task), task or project
 2017-02-05, 02:03, (), "(Z) Take the trash out."
 ```
 
----
-
-### Todo.txt syntax
-
-* The todo.txt format is specified here: https://github.com/todotxt/todo.txt
-
-* In various places throughout this extension (todo.txt, alarms, timer) there is
-support for some **markup** stuff:
-
-    * There is support for [pango markup](https://developer.gnome.org/pango/stable/PangoMarkupFormat.html).
-
-    * In addition to that, a simple version of markdown is supported:
-        ```
-        `     escape other markdown
-        ``    monospace and escape other markdown
-
-        *     bold
-        **    italic
-        ***   bold with a red bg
-
-        __    italic
-        ___   underscore
-
-        ~~    strikethrough
-
-        $     xx-large
-        $$    x-large
-        $$$   large
-
-        -------------------------------------
-
-        For example, *bold*, and $$extra large$$, and ``monospaced``, and
-        ***this __one__ is nested***, etc...
-        ```
-
-    * File paths and web links are supported:
-        ```
-        https://www.google.com
-        www.google.com
-
-        /home/user/Documents
-        ~/Documents
-        ~/Documents/img.png
-        ~/Documents/file\ with\ spaces.png
-        ```
 ---
 
 ### DBus API

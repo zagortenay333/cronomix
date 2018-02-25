@@ -23,7 +23,7 @@ const MISC_UTILS   = ME.imports.lib.misc_utils;
 const REG          = ME.imports.lib.regex;
 
 
-const TODO_TXT_SYNTAX_URL = 'https://github.com/todotxt/todo.txt';
+const TODO_TXT_SYNTAX_URL = 'https://github.com/zagortenay333/timepp__gnome#todotxt-syntax';
 
 
 const G = ME.imports.sections.todo.GLOBAL;
