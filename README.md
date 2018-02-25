@@ -23,7 +23,7 @@ time tracker, timer, stopwatch, pomodoro, and alarms [gnome-shell extension](htt
 * [Todo.txt Manager](#todotxt-manager)
     * [Supported todotxt extensions](#supported-todotxt-extensions)
 * [Time Tracker](#time-tracker)
-* [Markup](#markup)
+* [Todo.txt syntax](#todotxt-syntax)
 * [DBus API](#dbus-api)
 * [Custom Theme Support](#custom-theme-support)
 * [Preview](#preview)
@@ -360,48 +360,49 @@ date, time spent (hh:mm), type ('++' = project, '()' = task), task or project
 
 ---
 
-### Markup
+### Todo.txt syntax
 
-In various places throughout the extension (todo.txt, alarms, timer) there is
-support for some markup stuff.
+* The todo.txt format is specified here: https://github.com/todotxt/todo.txt
 
-* There is support for [pango markup](https://developer.gnome.org/pango/stable/PangoMarkupFormat.html).
+* In various places throughout this extension (todo.txt, alarms, timer) there is
+support for some **markup** stuff:
 
-* In addition to that, a simple version of markdown is supported:
-    ```
-    `     escape other markdown
-    ``    monospace and escape other markdown
+    * There is support for [pango markup](https://developer.gnome.org/pango/stable/PangoMarkupFormat.html).
 
-    *     bold
-    **    italic
-    ***   bold with a red bg
+    * In addition to that, a simple version of markdown is supported:
+        ```
+        `     escape other markdown
+        ``    monospace and escape other markdown
 
-    __    italic
-    ___   underscore
+        *     bold
+        **    italic
+        ***   bold with a red bg
 
-    ~~    strikethrough
+        __    italic
+        ___   underscore
 
-    $     xx-large
-    $$    x-large
-    $$$   large
+        ~~    strikethrough
 
-    -------------------------------------
+        $     xx-large
+        $$    x-large
+        $$$   large
 
-    For example, *bold*, and $$extra large$$, and ``monospaced``, and
-    ***this __one__ is nested***, etc...
-    ```
+        -------------------------------------
 
-* File paths and web links are supported:
-    ```
-    https://www.google.com
-    www.google.com
+        For example, *bold*, and $$extra large$$, and ``monospaced``, and
+        ***this __one__ is nested***, etc...
+        ```
 
-    /home/user/Documents
-    ~/Documents
-    ~/Documents/img.png
-    ~/Documents/file\ with\ spaces.png
-    ```
+    * File paths and web links are supported:
+        ```
+        https://www.google.com
+        www.google.com
 
+        /home/user/Documents
+        ~/Documents
+        ~/Documents/img.png
+        ~/Documents/file\ with\ spaces.png
+        ```
 ---
 
 ### DBus API
