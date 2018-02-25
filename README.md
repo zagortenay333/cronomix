@@ -369,17 +369,25 @@ support for some markup stuff.
 
 * In addition to that, a simple version of markdown is supported:
     ```
-    (`), (``), (```) monospaced and all markdown inside a pair of these is ignored
-    (*)              bold                  
-    (_), (**)        italic               
-    (***)            bold with a red bg
-    (__)             underscore       
-    (___)            strikethrough        
-    ($$$)            large             
-    ($$)             x-large            
-    ($)              xx-large            
+    `,        (backtick) escape other markdown
+    ``, ```   monospace and escape other markdown
 
-    For example, *bold*, and $$extra large$$, and `monospaced`, and
+    *         bold
+    **        italic
+    ***       bold with a red bg
+
+    __        italic
+    ___       underscore
+
+    ~~        strikethrough
+
+    $         xx-large
+    $$        x-large
+    $$$       large
+
+    -------------------------------------
+
+    For example, *bold*, and $$extra large$$, and ``monospaced``, and
     ***this __one__ is nested***, etc...
     ```
 

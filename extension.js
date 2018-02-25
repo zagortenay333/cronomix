@@ -77,7 +77,7 @@ const Timepp = new Lang.Class({
 
 
         this.markup_map = new Map([
-            ['`'   , ['<tt>', '</tt>']],
+            ['`'   , ['', '']],
             ['``'  , ['<tt>', '</tt>']],
             ['```' , ['<tt>', '</tt>']],
 
@@ -85,9 +85,12 @@ const Timepp = new Lang.Class({
             ['**'  , ['<i>', '</i>']],
             ['***' , ['<b><span foreground="black" background="#e74f4f">', '</span></b>']],
 
-            ['_'   , ['<i>', '</i>']],
-            ['__'  , ['<u>', '</u>']],
-            ['___' , ['<s>', '</s>']],
+            ['_'   , null],
+            ['__'  , ['<i>', '</i>']],
+            ['___' , ['<u>', '</u>']],
+
+            ['~'   , null],
+            ['~~'  , ['<s>', '</s>']],
 
             ['$'   , ['<span size="xx-large">', '</span>']],
             ['$$'  , ['<span size="x-large">', '</span>']],
