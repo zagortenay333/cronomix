@@ -19,10 +19,10 @@ time tracker, timer, stopwatch, pomodoro, and alarms [gnome-shell extension](htt
 * [Translations](#translations)
 * [Lock Screen](#lock-screen)
 * [Sections](#sections)
-* [Fullscreen interface](#fullscreen-interface)
+* [Fullscreen Interface](#fullscreen-interface)
 * [Todo.txt Manager](#todotxt-manager)
-* [Todo.txt syntax](#todotxt-syntax)
-* [Todo.txt extensions](#todotxt-extensions)
+* [Todo.txt Syntax](#todotxt-syntax)
+* [Todo.txt Extensions](#todotxt-extensions)
 * [Time Tracker](#time-tracker)
 * [DBus API](#dbus-api)
 * [Custom Theme Support](#custom-theme-support)
@@ -177,7 +177,7 @@ Some of the features of the todo.txt manager are:
 
 ---
 
-### Todo.txt syntax
+### Todo.txt Syntax
 
 * The todo.txt format is specified here: https://github.com/todotxt/todo.txt
 
@@ -223,7 +223,7 @@ support for some **markup** stuff:
 
 ---
 
-### Todo.txt extensions
+### Todo.txt Extensions
 
 A todo.txt extension is just a `key:val` string you type into your todo.txt
 file.
@@ -256,7 +256,7 @@ The following extensions are supported:
         </td>
     </tr>
     <tr>
-        <td valign="top"><code>(t|defer):yyyy-mm-dd</code></td>
+        <td valign="top"><code>t|defer:yyyy-mm-dd</code></td>
         <td>
             Defers opening a task until specified date.<br>
         </td>
