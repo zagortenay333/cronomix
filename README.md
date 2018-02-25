@@ -21,9 +21,9 @@ time tracker, timer, stopwatch, pomodoro, and alarms [gnome-shell extension](htt
 * [Sections](#sections)
 * [Fullscreen interface](#fullscreen-interface)
 * [Todo.txt Manager](#todotxt-manager)
-    * [Supported todotxt extensions](#supported-todotxt-extensions)
-* [Time Tracker](#time-tracker)
 * [Todo.txt syntax](#todotxt-syntax)
+* [Supported todotxt extensions](#supported-todotxt-extensions)
+* [Time Tracker](#time-tracker)
 * [DBus API](#dbus-api)
 * [Custom Theme Support](#custom-theme-support)
 * [Preview](#preview)
@@ -225,7 +225,9 @@ support for some **markup** stuff:
 
 ### Todo.txt extensions
 
-This extension supports the following todo.txt extensions:
+A todo.txt extension is just a `key:val` string you type into your todo.txt
+file.  
+The following extensions are supported:
 
 <table>
     <tr>
