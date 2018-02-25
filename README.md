@@ -369,21 +369,21 @@ support for some markup stuff.
 
 * In addition to that, a simple version of markdown is supported:
     ```
-    `,        (backtick) escape other markdown
-    ``, ```   monospace and escape other markdown
+    `     escape other markdown
+    ``    monospace and escape other markdown
 
-    *         bold
-    **        italic
-    ***       bold with a red bg
+    *     bold
+    **    italic
+    ***   bold with a red bg
 
-    __        italic
-    ___       underscore
+    __    italic
+    ___   underscore
 
-    ~~        strikethrough
+    ~~    strikethrough
 
-    $         xx-large
-    $$        x-large
-    $$$       large
+    $     xx-large
+    $$    x-large
+    $$$   large
 
     -------------------------------------
 
