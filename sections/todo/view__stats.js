@@ -457,7 +457,6 @@ var StatsView = new Lang.Class({
         this.parent();
     },
 
-    // @params as returned by the time tracker's get_stats func()
     set_stats: function (stats_data, stats_unique_entries) {
         this.stats_data           = stats_data;
         this.stats_unique_entries = Array.from(stats_unique_entries);
@@ -654,8 +653,8 @@ var StatsView = new Lang.Class({
         }
     },
 
-    // @label      : string
-    // @range      : array  (of the form [date_str_1, date_str_2])
+    // @label : string
+    // @range : array  (of the form [date_str_1, date_str_2])
     show_mode__hot: function (label, range) {
         let actors = [this.vbars_graph.actor, this.hot_mode_control_box]
 
