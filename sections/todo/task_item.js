@@ -571,8 +571,11 @@ var TaskItem = new Lang.Class({
                     this.description_markup[it].indexOf('>'));
         }
 
-        this.msg.clutter_text.set_markup(
-            MISC_UTILS.markup_to_pango(this.description_markup.join(' '), this.ext.markup_map));
+        let markup = MISC_UTILS.markup_to_pango(this.description_markup.join(' '), this.ext.markup_map);
+        markup = markup.replace(/&(?!amp;|quot;|apos;|lt;|gt;)/g, '&amp;')
+                       .replace(/<(?!\/?[^<]*>)/g, '&lt;')
+
+        this.msg.clutter_text.set_markup(markup);
     },
 
     update_dates_markup: function () {
