@@ -746,6 +746,8 @@ const TimerPresetsView = new Lang.Class({
                                           this.preset_items_scrollbox,
                                           it.actor);
             });
+
+            this.entry.entry.grab_key_focus();
             editor.actor.destroy();
         });
 
@@ -753,6 +755,7 @@ const TimerPresetsView = new Lang.Class({
             this.preset_items.delete(item);
             item.actor.destroy();
             this.content_box.show();
+            this.entry.entry.grab_key_focus();
             editor.actor.destroy();
 
             this.emit('delete-preset', preset);
@@ -760,6 +763,7 @@ const TimerPresetsView = new Lang.Class({
 
         editor.connect('cancel', () => {
             this.content_box.show();
+            this.entry.entry.grab_key_focus();
             editor.actor.destroy();
         });
     },
