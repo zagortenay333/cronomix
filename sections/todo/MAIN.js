@@ -216,7 +216,7 @@ var SectionMain = new Lang.Class({
         //
         // keybindings
         //
-        this.keym.register('todo-keybinding-open', () => {
+        this.keym.add('todo-keybinding-open', () => {
             this.ext.open_menu(this.section_name);
             if (this.view_manager.current_view !== G.View.LOADING &&
                 this.view_manager.current_view !== G.View.NO_TODO_FILE) {
@@ -224,7 +224,7 @@ var SectionMain = new Lang.Class({
                 this.show_view__default();
             }
         });
-        this.keym.register('todo-keybinding-open-to-add', () => {
+        this.keym.add('todo-keybinding-open-to-add', () => {
             this.ext.open_menu(this.section_name);
             if (this.view_manager.current_view !== G.View.LOADING &&
                 this.view_manager.current_view !== G.View.NO_TODO_FILE) {
@@ -232,7 +232,7 @@ var SectionMain = new Lang.Class({
                 this.show_view__task_editor();
             }
         });
-        this.keym.register('todo-keybinding-open-to-search', () => {
+        this.keym.add('todo-keybinding-open-to-search', () => {
             this.ext.open_menu(this.section_name);
             if (this.view_manager.current_view !== G.View.LOADING &&
                 this.view_manager.current_view !== G.View.NO_TODO_FILE) {
@@ -240,14 +240,14 @@ var SectionMain = new Lang.Class({
                 this.show_view__search();
             }
         });
-        this.keym.register('todo-keybinding-open-to-stats', () => {
+        this.keym.add('todo-keybinding-open-to-stats', () => {
             if (this.view_manager.current_view !== G.View.LOADING &&
                 this.view_manager.current_view !== G.View.NO_TODO_FILE) {
 
                 this.show_view__time_tracker_stats();
             }
         });
-        this.keym.register('todo-keybinding-open-to-switch-files', () => {
+        this.keym.add('todo-keybinding-open-to-switch-files', () => {
             this.ext.open_menu(this.section_name);
             if (this.view_manager.current_view !== G.View.LOADING &&
                 this.view_manager.current_view !== G.View.NO_TODO_FILE &&
@@ -458,8 +458,8 @@ var SectionMain = new Lang.Class({
             this.stats_view = null;
         }
 
-        this.sigm.disconnect_all();
-        this.keym.disable_all();
+        this.sigm.clear();
+        this.keym.clear();
 
         this.tasks          = [];
         this.tasks_viewport = [];

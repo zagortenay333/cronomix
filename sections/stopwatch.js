@@ -121,10 +121,10 @@ var SectionMain = new Lang.Class({
         //
         // keybindings
         //
-        this.keym.register('stopwatch-keybinding-open', () => {
+        this.keym.add('stopwatch-keybinding-open', () => {
              this.ext.open_menu(this.section_name);
         });
-        this.keym.register('stopwatch-keybinding-open-fullscreen', () => {
+        this.keym.add('stopwatch-keybinding-open-fullscreen', () => {
             this.show_fullscreen();
         });
 
@@ -261,8 +261,8 @@ var SectionMain = new Lang.Class({
         if (this.state === StopwatchState.RUNNING) this.stop();
         this.dbus_impl.unexport();
         this._store_cache();
-        this.sigm.disconnect_all();
-        this.keym.disable_all();
+        this.sigm.clear();
+        this.keym.clear();
 
         if (this.fullscreen) {
             this.fullscreen.destroy();

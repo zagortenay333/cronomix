@@ -138,7 +138,7 @@ var SectionMain = new Lang.Class({
         //
         // keybindings
         //
-        this.keym.register('alarms-keybinding-open', () => {
+        this.keym.add('alarms-keybinding-open', () => {
              this.ext.open_menu(this.section_name);
         });
 
@@ -212,8 +212,8 @@ var SectionMain = new Lang.Class({
 
     disable_section: function () {
         this.alarms_scroll_content.destroy_all_children();
-        this.sigm.disconnect_all();
-        this.keym.disable_all();
+        this.sigm.clear();
+        this.keym.clear();
         this.snoozed_alarms.clear();
 
         if (this.fullscreen) {

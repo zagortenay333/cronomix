@@ -147,13 +147,13 @@ var SectionMain = new Lang.Class({
         //
         // keybindings
         //
-        this.keym.register('timer-keybinding-open', () => {
+        this.keym.add('timer-keybinding-open', () => {
             this.ext.open_menu(this.section_name);
         });
-        this.keym.register('timer-keybinding-open-fullscreen', () => {
+        this.keym.add('timer-keybinding-open-fullscreen', () => {
             this.show_fullscreen();
         });
-        this.keym.register('timer-keybinding-open-to-search-presets', () => {
+        this.keym.add('timer-keybinding-open-to-search-presets', () => {
             this.ext.open_menu(this.section_name);
             this._show_presets();
         });
@@ -233,8 +233,8 @@ var SectionMain = new Lang.Class({
         this.dbus_impl.unexport();
         this.stop();
         this._store_cache();
-        this.sigm.disconnect_all();
-        this.keym.disable_all();
+        this.sigm.clear();
+        this.keym.clear();
 
         if (this.fullscreen) {
             this.fullscreen.destroy();
