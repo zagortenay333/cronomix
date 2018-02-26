@@ -209,12 +209,8 @@ var TaskEditor = new Lang.Class({
             let item = new St.Button({ label: completions[i], reactive: true, track_hover: true, x_align: St.Align.START, style_class: 'row popup-menu-item' });
             this.completion_menu_content.add_child(item);
 
-            item.connect('notify::hover', (item) => {
-                this._on_completion_hovered(item);
-            });
-            item.connect('clicked', (item) => {
-                this._on_completion_selected();
-            });
+            item.connect('notify::hover', (item) => this._on_completion_hovered(item));
+            item.connect('clicked', (item) => this._on_completion_selected());
         }
 
         this.completion_menu_content.first_child.pseudo_class = 'active';
@@ -345,6 +341,12 @@ var TaskEditor = new Lang.Class({
     },
 
     _on_completion_hovered: function (item) {
+        // It seems that when the completion menu gets hidden, the items are
+        // moving for a brief moment which triggers the hover callback.
+        // We prevent any possible issues in this case by just checking whether
+        // the menu is visible.
+        if (! this.completion_menu.visible) return;
+
         this.curr_selected_completion.pseudo_class = '';
         this.curr_selected_completion = item;
         item.pseudo_class = 'active';
