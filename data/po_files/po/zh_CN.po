@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-24 01:21+0100\n"
+"POT-Creation-Date: 2018-02-27 19:22+0100\n"
 "PO-Revision-Date: 2017-11-24 21:58+0800\n"
 "Last-Translator: Jack Wu <origincoder@yahoo.com>\n"
 "Language-Team: \n"
@@ -294,31 +294,31 @@ msgstr "打开状态视图"
 msgid "Todo / Time Tracker"
 msgstr "TODO/时间跟踪器"
 
-#: data/po_files/../../sections/todo/task_item.js:592
-#: data/po_files/../../sections/todo/task_item.js:597
+#: data/po_files/../../sections/todo/task_item.js:595
+#: data/po_files/../../sections/todo/task_item.js:600
 msgid "recurrence"
 msgstr "循环"
 
-#: data/po_files/../../sections/todo/task_item.js:593
+#: data/po_files/../../sections/todo/task_item.js:596
 #, javascript-format
 msgid "%d day after completion"
 msgid_plural "%d days after completion"
 msgstr[0] "完成后 %d 天"
 msgstr[1] "完成后 %d 天"
 
-#: data/po_files/../../sections/todo/task_item.js:610
+#: data/po_files/../../sections/todo/task_item.js:613
 msgid "due"
 msgstr "截止"
 
-#: data/po_files/../../sections/todo/task_item.js:618
+#: data/po_files/../../sections/todo/task_item.js:621
 msgid "deferred"
 msgstr "已延时"
 
-#: data/po_files/../../sections/todo/task_item.js:657
+#: data/po_files/../../sections/todo/task_item.js:660
 msgid "created"
 msgstr "已创建"
 
-#: data/po_files/../../sections/todo/task_item.js:660
+#: data/po_files/../../sections/todo/task_item.js:663
 msgid "completed"
 msgstr "已完成"
 
@@ -446,22 +446,22 @@ msgid "Custom Range..."
 msgstr "自定义范围……"
 
 #: data/po_files/../../sections/todo/view__stats.js:260
-#: data/po_files/../../sections/todo/view__stats.js:676
+#: data/po_files/../../sections/todo/view__stats.js:675
 msgid "Projects"
 msgstr "项目"
 
 #: data/po_files/../../sections/todo/view__stats.js:266
-#: data/po_files/../../sections/todo/view__stats.js:676
+#: data/po_files/../../sections/todo/view__stats.js:675
 msgid "Tasks"
 msgstr "任务"
 
-#: data/po_files/../../sections/todo/view__stats.js:597
+#: data/po_files/../../sections/todo/view__stats.js:596
 msgid "Stats for project"
 msgstr "项目状态"
 
-#: data/po_files/../../sections/todo/view__stats.js:624
-#: data/po_files/../../sections/todo/view__stats.js:646
-#: data/po_files/../../sections/todo/view__stats.js:781
+#: data/po_files/../../sections/todo/view__stats.js:623
+#: data/po_files/../../sections/todo/view__stats.js:645
+#: data/po_files/../../sections/todo/view__stats.js:780
 #, javascript-format
 msgid "%d day"
 msgid_plural "%d days"

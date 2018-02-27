@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-24 01:21+0100\n"
+"POT-Creation-Date: 2018-02-27 19:22+0100\n"
 "PO-Revision-Date: 2017-11-29 13:36+0200\n"
 "Last-Translator: Sergey Shlyapugin <shlyapugin@gmail.com>\n"
 "Language-Team: Russian\n"
@@ -295,12 +295,12 @@ msgstr "Открыть статистику"
 msgid "Todo / Time Tracker"
 msgstr "Список дел / тайм-трекер"
 
-#: data/po_files/../../sections/todo/task_item.js:592
-#: data/po_files/../../sections/todo/task_item.js:597
+#: data/po_files/../../sections/todo/task_item.js:595
+#: data/po_files/../../sections/todo/task_item.js:600
 msgid "recurrence"
 msgstr "возобновление"
 
-#: data/po_files/../../sections/todo/task_item.js:593
+#: data/po_files/../../sections/todo/task_item.js:596
 #, javascript-format
 msgid "%d day after completion"
 msgid_plural "%d days after completion"
@@ -308,19 +308,19 @@ msgstr[0] "%d день после выполнения"
 msgstr[1] "%d дня после выполнения"
 msgstr[2] "%d дней после выполнения"
 
-#: data/po_files/../../sections/todo/task_item.js:610
+#: data/po_files/../../sections/todo/task_item.js:613
 msgid "due"
 msgstr "до"
 
-#: data/po_files/../../sections/todo/task_item.js:618
+#: data/po_files/../../sections/todo/task_item.js:621
 msgid "deferred"
 msgstr "отложена"
 
-#: data/po_files/../../sections/todo/task_item.js:657
+#: data/po_files/../../sections/todo/task_item.js:660
 msgid "created"
 msgstr "создана"
 
-#: data/po_files/../../sections/todo/task_item.js:660
+#: data/po_files/../../sections/todo/task_item.js:663
 msgid "completed"
 msgstr "выполнена"
 
@@ -448,22 +448,22 @@ msgid "Custom Range..."
 msgstr "Произвольный период..."
 
 #: data/po_files/../../sections/todo/view__stats.js:260
-#: data/po_files/../../sections/todo/view__stats.js:676
+#: data/po_files/../../sections/todo/view__stats.js:675
 msgid "Projects"
 msgstr "Проекты"
 
 #: data/po_files/../../sections/todo/view__stats.js:266
-#: data/po_files/../../sections/todo/view__stats.js:676
+#: data/po_files/../../sections/todo/view__stats.js:675
 msgid "Tasks"
 msgstr "Задачи"
 
-#: data/po_files/../../sections/todo/view__stats.js:597
+#: data/po_files/../../sections/todo/view__stats.js:596
 msgid "Stats for project"
 msgstr "Статистика проекта"
 
-#: data/po_files/../../sections/todo/view__stats.js:624
-#: data/po_files/../../sections/todo/view__stats.js:646
-#: data/po_files/../../sections/todo/view__stats.js:781
+#: data/po_files/../../sections/todo/view__stats.js:623
+#: data/po_files/../../sections/todo/view__stats.js:645
+#: data/po_files/../../sections/todo/view__stats.js:780
 #, javascript-format
 msgid "%d day"
 msgid_plural "%d days"
