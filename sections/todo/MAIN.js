@@ -530,7 +530,7 @@ var SectionMain = new Lang.Class({
         this.show_view__loading();
 
         let [, lines] = this.todo_txt_file.load_contents(null);
-        lines = String(lines).split(/\n|\r/).filter((l) => /\S/.test(l));
+        lines = String(lines).split(/\r?\n/).filter((l) => /\S/.test(l));
 
         this.create_tasks(lines, () => {
             if (this._check_dates()) this.write_tasks_to_file();

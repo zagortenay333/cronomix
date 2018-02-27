@@ -250,7 +250,7 @@ var TimeTracker = new Lang.Class({
         let date_str = G.date_yyyymmdd();
 
         let [, lines] = this.daily_csv_file.load_contents(null);
-        lines = String(lines).split(/\n|\r/).filter((l) => /\S/.test(l));
+        lines = String(lines).split(/\r?\n/).filter((l) => /\S/.test(l));
 
         for (let it of lines) {
             if (it.substr(0, 10) !== date_str) {
@@ -583,7 +583,7 @@ var TimeTracker = new Lang.Class({
 
             csv_files.forEach((it) => {
                 let [, content] = it[0].load_contents(null);
-                content         = String(content).split(/\n|\r/);
+                content         = String(content).split(/\r?\n/);
 
                 let string, date, entry, time;
 

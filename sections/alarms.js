@@ -443,7 +443,7 @@ var SectionMain = new Lang.Class({
             }
         }
 
-        return text.join(' ').replace(/ \n /g, '\n');
+        return text.join(' ').replace(/ *\r?\n */g, '\n');
     },
 });
 Signals.addSignalMethods(SectionMain.prototype);
