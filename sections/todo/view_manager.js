@@ -100,11 +100,11 @@ var ViewManager = new Lang.Class({
         } else {
             this.delegate.actor.remove_all_children();
 
-            for (let i = 0; i < this.actors.length; i++) {
-                this.delegate.actor.add_actor(this.actors[i]);
-                this.actors[i].show();
+            for (let actor of this.actors) {
+                this.delegate.actor.add_actor(actor);
+                actor.show();
 
-                if (this.actors[i] === this.delegate.tasks_scroll_wrapper)
+                if (actor === this.delegate.tasks_scroll_wrapper)
                     show_tasks = true;
             }
         }
