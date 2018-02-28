@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-27 19:22+0100\n"
+"POT-Creation-Date: 2018-02-28 12:33+0100\n"
 "PO-Revision-Date: 2018-01-10 10:35+0100\n"
 "Last-Translator: Piotr Komur <pkomur@gmail.com>\n"
 "Language-Team: \n"
@@ -35,19 +35,19 @@ msgstr "Przenieś na dodatkowy monitor"
 msgid "Unique name"
 msgstr "Unikatowa nazwa"
 
-#: data/po_files/../../data/prefs.ui:57 data/po_files/../../data/prefs.ui:1073
-#: data/po_files/../../data/prefs.ui:1123
-#: data/po_files/../../data/prefs.ui:1173
-#: data/po_files/../../data/prefs.ui:1472
-#: data/po_files/../../data/prefs.ui:1522
-#: data/po_files/../../data/prefs.ui:2138
-#: data/po_files/../../data/prefs.ui:2188
-#: data/po_files/../../data/prefs.ui:2499
-#: data/po_files/../../data/prefs.ui:2969
-#: data/po_files/../../data/prefs.ui:3019
-#: data/po_files/../../data/prefs.ui:3057
-#: data/po_files/../../data/prefs.ui:3113
-#: data/po_files/../../data/prefs.ui:3165
+#: data/po_files/../../data/prefs.ui:57 data/po_files/../../data/prefs.ui:1055
+#: data/po_files/../../data/prefs.ui:1105
+#: data/po_files/../../data/prefs.ui:1155
+#: data/po_files/../../data/prefs.ui:1454
+#: data/po_files/../../data/prefs.ui:1504
+#: data/po_files/../../data/prefs.ui:2120
+#: data/po_files/../../data/prefs.ui:2170
+#: data/po_files/../../data/prefs.ui:2481
+#: data/po_files/../../data/prefs.ui:2951
+#: data/po_files/../../data/prefs.ui:3001
+#: data/po_files/../../data/prefs.ui:3039
+#: data/po_files/../../data/prefs.ui:3095
+#: data/po_files/../../data/prefs.ui:3147
 msgid "not set"
 msgstr "nie ustawiono"
 
@@ -63,44 +63,44 @@ msgstr "Plik z ukończonymi zadaniami (opcjonalnie)"
 msgid "Time-tracker csv directory (optional)"
 msgstr "Katalog z plikami śledzenia csv (opcjonalnie)"
 
-#: data/po_files/../../data/prefs.ui:349
+#: data/po_files/../../data/prefs.ui:331
 msgid "Show only 1 panel icon for joined menus"
 msgstr "Pokaż tylko 1 ikonę na panelu, gdy menu są połączone"
 
-#: data/po_files/../../data/prefs.ui:393
+#: data/po_files/../../data/prefs.ui:375
 msgid "Position in the panel"
 msgstr "Położenie na panelu"
 
-#: data/po_files/../../data/prefs.ui:407
+#: data/po_files/../../data/prefs.ui:389
 msgid "Left"
 msgstr "Z lewej"
 
-#: data/po_files/../../data/prefs.ui:408
+#: data/po_files/../../data/prefs.ui:390
 msgid "Center"
 msgstr "Na środku"
 
-#: data/po_files/../../data/prefs.ui:409
+#: data/po_files/../../data/prefs.ui:391
 msgid "Right"
 msgstr "Z prawej"
 
-#: data/po_files/../../data/prefs.ui:441
+#: data/po_files/../../data/prefs.ui:423
 msgid "Enabled Sections"
 msgstr "Dostępne sekcje"
 
-#: data/po_files/../../data/prefs.ui:482 data/po_files/../../data/prefs.ui:1212
+#: data/po_files/../../data/prefs.ui:464 data/po_files/../../data/prefs.ui:1194
 #: data/po_files/../../sections/timer.js:174
 #: data/po_files/../../sections/timer.js:321
 msgid "Timer"
 msgstr "Minutnik"
 
-#: data/po_files/../../data/prefs.ui:526 data/po_files/../../data/prefs.ui:1561
+#: data/po_files/../../data/prefs.ui:508 data/po_files/../../data/prefs.ui:1543
 #: data/po_files/../../sections/stopwatch.js:158
 #: data/po_files/../../sections/stopwatch.js:350
 msgid "Stopwatch"
 msgstr "Stoper"
 
-#: data/po_files/../../data/prefs.ui:570 data/po_files/../../data/prefs.ui:1894
-#: data/po_files/../../data/prefs.ui:2227
+#: data/po_files/../../data/prefs.ui:552 data/po_files/../../data/prefs.ui:1876
+#: data/po_files/../../data/prefs.ui:2209
 #: data/po_files/../../sections/pomodoro.js:41
 #: data/po_files/../../sections/pomodoro.js:160
 #: data/po_files/../../sections/pomodoro.js:247
@@ -108,101 +108,100 @@ msgstr "Stoper"
 msgid "Pomodoro"
 msgstr ""
 
-#: data/po_files/../../data/prefs.ui:614 data/po_files/../../data/prefs.ui:2538
+#: data/po_files/../../data/prefs.ui:596 data/po_files/../../data/prefs.ui:2520
 msgid "Alarms"
 msgstr "Alarmy"
 
-#: data/po_files/../../data/prefs.ui:658
+#: data/po_files/../../data/prefs.ui:640
 msgid "Todo and Time Tracker"
 msgstr "Zadania i śledzenie"
 
-#: data/po_files/../../data/prefs.ui:708
+#: data/po_files/../../data/prefs.ui:690
 msgid "General"
 msgstr "Ogólne"
 
-#: data/po_files/../../data/prefs.ui:767 data/po_files/../../data/prefs.ui:1272
-#: data/po_files/../../data/prefs.ui:1621
-#: data/po_files/../../data/prefs.ui:2287
-#: data/po_files/../../data/prefs.ui:2598
+#: data/po_files/../../data/prefs.ui:749 data/po_files/../../data/prefs.ui:1254
+#: data/po_files/../../data/prefs.ui:1603
+#: data/po_files/../../data/prefs.ui:2269
+#: data/po_files/../../data/prefs.ui:2580
 msgid "Show in separate menu"
 msgstr "Pokaż w oddzielnym menu"
 
-#: data/po_files/../../data/prefs.ui:811 data/po_files/../../data/prefs.ui:1665
+#: data/po_files/../../data/prefs.ui:793 data/po_files/../../data/prefs.ui:1647
 msgid "Show seconds"
 msgstr "Pokaż sekundy"
 
-#: data/po_files/../../data/prefs.ui:855 data/po_files/../../data/prefs.ui:1366
-#: data/po_files/../../data/prefs.ui:1709
-#: data/po_files/../../data/prefs.ui:2642
+#: data/po_files/../../data/prefs.ui:837 data/po_files/../../data/prefs.ui:1348
+#: data/po_files/../../data/prefs.ui:1691
+#: data/po_files/../../data/prefs.ui:2624
 msgid "Panel Item Mode"
 msgstr "Prezentacja na panelu"
 
-#: data/po_files/../../data/prefs.ui:869 data/po_files/../../data/prefs.ui:1380
-#: data/po_files/../../data/prefs.ui:1723
-#: data/po_files/../../data/prefs.ui:2656
+#: data/po_files/../../data/prefs.ui:851 data/po_files/../../data/prefs.ui:1362
+#: data/po_files/../../data/prefs.ui:1705
+#: data/po_files/../../data/prefs.ui:2638
 msgid "Icon only"
 msgstr "Tylko ikona"
 
-#: data/po_files/../../data/prefs.ui:870 data/po_files/../../data/prefs.ui:1381
-#: data/po_files/../../data/prefs.ui:1724
-#: data/po_files/../../data/prefs.ui:2657
+#: data/po_files/../../data/prefs.ui:852 data/po_files/../../data/prefs.ui:1363
+#: data/po_files/../../data/prefs.ui:1706
+#: data/po_files/../../data/prefs.ui:2639
 msgid "Text only"
 msgstr "Tylko tekst"
 
-#: data/po_files/../../data/prefs.ui:871 data/po_files/../../data/prefs.ui:1382
-#: data/po_files/../../data/prefs.ui:1725
-#: data/po_files/../../data/prefs.ui:2658
+#: data/po_files/../../data/prefs.ui:853 data/po_files/../../data/prefs.ui:1364
+#: data/po_files/../../data/prefs.ui:1707
+#: data/po_files/../../data/prefs.ui:2640
 msgid "Icon and Text"
 msgstr "Ikona i tekst"
 
-#: data/po_files/../../data/prefs.ui:906 data/po_files/../../data/prefs.ui:2332
+#: data/po_files/../../data/prefs.ui:888 data/po_files/../../data/prefs.ui:2314
 msgid "Notification sound"
 msgstr "Dźwięk powiadomienia"
 
-#: data/po_files/../../data/prefs.ui:968 data/po_files/../../data/prefs.ui:1759
-#: data/po_files/../../data/prefs.ui:2394
+#: data/po_files/../../data/prefs.ui:950 data/po_files/../../data/prefs.ui:1741
+#: data/po_files/../../data/prefs.ui:2376
 msgid "Notification style"
 msgstr "Styl powiadomienia"
 
-#: data/po_files/../../data/prefs.ui:982 data/po_files/../../data/prefs.ui:1773
-#: data/po_files/../../data/prefs.ui:2408
+#: data/po_files/../../data/prefs.ui:964 data/po_files/../../data/prefs.ui:1755
+#: data/po_files/../../data/prefs.ui:2390
 msgid "Standard"
 msgstr "Standardowy"
 
-#: data/po_files/../../data/prefs.ui:983 data/po_files/../../data/prefs.ui:1774
-#: data/po_files/../../data/prefs.ui:2409
+#: data/po_files/../../data/prefs.ui:965 data/po_files/../../data/prefs.ui:1756
+#: data/po_files/../../data/prefs.ui:2391
 msgid "Fullscreen"
 msgstr "Na pełnym ekranie"
 
-#: data/po_files/../../data/prefs.ui:1015
-#: data/po_files/../../data/prefs.ui:1414
-#: data/po_files/../../data/prefs.ui:2080
-#: data/po_files/../../data/prefs.ui:2441
-#: data/po_files/../../data/prefs.ui:2909
+#: data/po_files/../../data/prefs.ui:997 data/po_files/../../data/prefs.ui:1396
+#: data/po_files/../../data/prefs.ui:2062
+#: data/po_files/../../data/prefs.ui:2423
+#: data/po_files/../../data/prefs.ui:2891
 msgid "Keyboard shortcuts"
 msgstr "Skróty klawiaturowe"
 
-#: data/po_files/../../data/prefs.ui:1056
-#: data/po_files/../../data/prefs.ui:1455
-#: data/po_files/../../data/prefs.ui:2121
-#: data/po_files/../../data/prefs.ui:2482
-#: data/po_files/../../data/prefs.ui:2952
+#: data/po_files/../../data/prefs.ui:1038
+#: data/po_files/../../data/prefs.ui:1437
+#: data/po_files/../../data/prefs.ui:2103
+#: data/po_files/../../data/prefs.ui:2464
+#: data/po_files/../../data/prefs.ui:2934
 msgid "Open popup menu"
 msgstr ""
 
-#: data/po_files/../../data/prefs.ui:1068
-#: data/po_files/../../data/prefs.ui:1118
-#: data/po_files/../../data/prefs.ui:1168
-#: data/po_files/../../data/prefs.ui:1467
-#: data/po_files/../../data/prefs.ui:1517
-#: data/po_files/../../data/prefs.ui:2133
-#: data/po_files/../../data/prefs.ui:2183
-#: data/po_files/../../data/prefs.ui:2494
-#: data/po_files/../../data/prefs.ui:2964
-#: data/po_files/../../data/prefs.ui:3014
-#: data/po_files/../../data/prefs.ui:3052
-#: data/po_files/../../data/prefs.ui:3108
-#: data/po_files/../../data/prefs.ui:3160
+#: data/po_files/../../data/prefs.ui:1050
+#: data/po_files/../../data/prefs.ui:1100
+#: data/po_files/../../data/prefs.ui:1150
+#: data/po_files/../../data/prefs.ui:1449
+#: data/po_files/../../data/prefs.ui:1499
+#: data/po_files/../../data/prefs.ui:2115
+#: data/po_files/../../data/prefs.ui:2165
+#: data/po_files/../../data/prefs.ui:2476
+#: data/po_files/../../data/prefs.ui:2946
+#: data/po_files/../../data/prefs.ui:2996
+#: data/po_files/../../data/prefs.ui:3034
+#: data/po_files/../../data/prefs.ui:3090
+#: data/po_files/../../data/prefs.ui:3142
 msgid ""
 "Examples:\n"
 "<super><ctrl><alt><shift>t\n"
@@ -214,84 +213,84 @@ msgstr ""
 "<shift>super\n"
 "F3"
 
-#: data/po_files/../../data/prefs.ui:1106
-#: data/po_files/../../data/prefs.ui:1505
-#: data/po_files/../../data/prefs.ui:2171
+#: data/po_files/../../data/prefs.ui:1088
+#: data/po_files/../../data/prefs.ui:1487
+#: data/po_files/../../data/prefs.ui:2153
 msgid "Open in fullscreen"
 msgstr "Otwórz na pełnym ekranie"
 
-#: data/po_files/../../data/prefs.ui:1156
+#: data/po_files/../../data/prefs.ui:1138
 msgid "Open popup menu and search presets"
 msgstr ""
 
-#: data/po_files/../../data/prefs.ui:1316
+#: data/po_files/../../data/prefs.ui:1298
 msgid "Format"
 msgstr ""
 
-#: data/po_files/../../data/prefs.ui:1330
+#: data/po_files/../../data/prefs.ui:1312
 msgid "hours:min"
 msgstr "godz.:min."
 
-#: data/po_files/../../data/prefs.ui:1331
+#: data/po_files/../../data/prefs.ui:1313
 msgid "hours:min:sec"
 msgstr "godz.:min.:sek."
 
-#: data/po_files/../../data/prefs.ui:1332
+#: data/po_files/../../data/prefs.ui:1314
 msgid "hours:min:sec:centisec"
 msgstr "godz.:min.:sek.:1/100"
 
-#: data/po_files/../../data/prefs.ui:1806
+#: data/po_files/../../data/prefs.ui:1788
 #, fuzzy
 msgid "Notification Sounds"
 msgstr "Dźwięk powiadomienia"
 
-#: data/po_files/../../data/prefs.ui:1849
+#: data/po_files/../../data/prefs.ui:1831
 #: data/po_files/../../sections/alarms.js:549
 #, fuzzy
 msgid "Repeat notification sound?"
 msgstr "Dźwięk powiadomienia"
 
-#: data/po_files/../../data/prefs.ui:1957
+#: data/po_files/../../data/prefs.ui:1939
 #: data/po_files/../../sections/pomodoro.js:43
 #, fuzzy
 msgid "Short Break"
 msgstr "Krótka przerwa"
 
-#: data/po_files/../../data/prefs.ui:2020
+#: data/po_files/../../data/prefs.ui:2002
 #: data/po_files/../../sections/pomodoro.js:42
 #, fuzzy
 msgid "Long Break"
 msgstr "Weź długą przerwę!"
 
-#: data/po_files/../../data/prefs.ui:2710
+#: data/po_files/../../data/prefs.ui:2692
 msgid "Task width (px)"
 msgstr "Szerokość zadania (px)"
 
-#: data/po_files/../../data/prefs.ui:2740
+#: data/po_files/../../data/prefs.ui:2722
 msgid "Todo files"
 msgstr "Pliki zadań"
 
-#: data/po_files/../../data/prefs.ui:3002
+#: data/po_files/../../data/prefs.ui:2984
 #, fuzzy
 msgid "Open popup menu and add task"
 msgstr "Otwórz sekcję, aby dodać zadanie"
 
-#: data/po_files/../../data/prefs.ui:3070
+#: data/po_files/../../data/prefs.ui:3052
 #, fuzzy
 msgid "Open popup menu and search tasks"
 msgstr "Otwórz sekcję, aby wyszukać zadanie"
 
-#: data/po_files/../../data/prefs.ui:3126
+#: data/po_files/../../data/prefs.ui:3108
 #, fuzzy
 msgid "Open popup menu and switch todo files"
 msgstr "Otwórz sekcję, aby wyszukać zadanie"
 
-#: data/po_files/../../data/prefs.ui:3178
+#: data/po_files/../../data/prefs.ui:3160
 #, fuzzy
 msgid "Open stats view"
 msgstr "Otwórz podgląd statystyk"
 
-#: data/po_files/../../data/prefs.ui:3216
+#: data/po_files/../../data/prefs.ui:3198
 msgid "Todo / Time Tracker"
 msgstr "Zadania / Śledzenie"
 
@@ -358,7 +357,7 @@ msgstr "Sortuj wg daty zakończenia"
 #: data/po_files/../../sections/todo/view__clear_tasks.js:96
 #: data/po_files/../../sections/todo/view__filters.js:206
 #: data/po_files/../../sections/pomodoro.js:782
-#: data/po_files/../../sections/alarms.js:588 data/po_files/../../prefs.js:132
+#: data/po_files/../../sections/alarms.js:588 data/po_files/../../prefs.js:133
 msgid "Ok"
 msgstr "OK"
 
@@ -383,7 +382,7 @@ msgstr "Archiwum"
 #: data/po_files/../../sections/todo/view__stats.js:215
 #: data/po_files/../../sections/todo/view__clear_tasks.js:93
 #: data/po_files/../../sections/pomodoro.js:783
-#: data/po_files/../../sections/alarms.js:587 data/po_files/../../prefs.js:131
+#: data/po_files/../../sections/alarms.js:587 data/po_files/../../prefs.js:132
 msgid "Cancel"
 msgstr "Anuluj"
 
