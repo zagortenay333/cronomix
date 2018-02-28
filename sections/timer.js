@@ -257,6 +257,21 @@ var SectionMain = new Lang.Class({
         else if (this.timer_state === TimerState.RUNNING) this.stop();
     },
 
+    // This func is used for DBus.
+    // DBus has no optional arguments, so @time === 0 and @msg === "null" means
+    // that those arguments are omitted, and in that case we don't update the
+    // default preset.
+    start_from_default_preset: function (time, msg) {
+        this.current_preset = this.cache.default_preset;
+
+        if (time > 0)       this.current_preset.time = time;
+        if (msg !== "null") this.current_preset.msg  = msg;
+
+        Mainloop.idle_add(() => this._store_cache());
+
+        this.start(this.current_preset.time);
+    },
+
     start_from_preset: function (preset, time = null) {
         this.current_preset = preset;
 
@@ -520,11 +535,6 @@ var SectionMain = new Lang.Class({
             this.header.actor.show();
             this.slider_item.actor.show();
         });
-    },
-
-    set_notif_msg: function (msg) {
-        this.cache.notif_msg = msg;
-        this._store_cache();
     },
 
     show_fullscreen: function () {
