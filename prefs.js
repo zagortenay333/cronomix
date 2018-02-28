@@ -1,7 +1,8 @@
-const Gio  = imports.gi.Gio;
-const Gtk  = imports.gi.Gtk;
-const GLib = imports.gi.GLib;
-const Lang = imports.lang;
+const Gio      = imports.gi.Gio;
+const Gtk      = imports.gi.Gtk;
+const GLib     = imports.gi.GLib;
+const Lang     = imports.lang;
+const Mainloop = imports.mainloop;
 
 
 const ME = imports.misc.extensionUtils.getCurrentExtension();
@@ -43,7 +44,7 @@ const Settings = new Lang.Class({
         this.tree_add_button    = this.builder.get_object('tree-add-button');
         this.tree_remove_button = this.builder.get_object('tree-remove-button');
         this.tree_edit_button   = this.builder.get_object('tree-edit-button');
-
+        this.switcher = new Gtk.StackSwitcher({ visible: true, stack: this.builder.get_object('settings_stack'), halign: Gtk.Align.CENTER, });
 
         this._bind_settings();
 
@@ -795,6 +796,13 @@ function init () {}
 function buildPrefsWidget () {
     let settings = new Settings();
     let widget = settings.widget;
+
+    Mainloop.timeout_add(0, () => {
+        let header_bar = widget.get_toplevel().get_titlebar();
+        header_bar.custom_title = settings.switcher;
+        return false;
+    });
+
     widget.show_all();
     return widget;
 }
