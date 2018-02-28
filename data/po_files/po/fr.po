@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-28 12:33+0100\n"
+"POT-Creation-Date: 2018-02-28 21:24+0100\n"
 "PO-Revision-Date: 2018-01-09 19:02+0100\n"
 "Last-Translator: Luc Bournaud <luc.bournaud@hotmail.fr>\n"
 "Language-Team: français <>\n"
@@ -89,7 +89,7 @@ msgstr "Sections activées"
 
 #: data/po_files/../../data/prefs.ui:464 data/po_files/../../data/prefs.ui:1194
 #: data/po_files/../../sections/timer.js:174
-#: data/po_files/../../sections/timer.js:321
+#: data/po_files/../../sections/timer.js:336
 msgid "Timer"
 msgstr "Minuteur"
 
@@ -713,11 +713,11 @@ msgstr[1] "%d alarmes éteintes !"
 msgid "Timer Expired!"
 msgstr "Minuteur terminé !"
 
-#: data/po_files/../../sections/timer.js:616
+#: data/po_files/../../sections/timer.js:626
 #, fuzzy
 msgid "Search presets..."
 msgstr "Chercher des fichiers..."
 
-#: data/po_files/../../sections/timer.js:644
+#: data/po_files/../../sections/timer.js:654
 msgid "Default preset"
 msgstr ""

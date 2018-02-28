@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-28 12:33+0100\n"
+"POT-Creation-Date: 2018-02-28 21:24+0100\n"
 "PO-Revision-Date: 2017-11-29 13:36+0200\n"
 "Last-Translator: Sergey Shlyapugin <shlyapugin@gmail.com>\n"
 "Language-Team: Russian\n"
@@ -89,7 +89,7 @@ msgstr "Включенные разделы"
 
 #: data/po_files/../../data/prefs.ui:464 data/po_files/../../data/prefs.ui:1194
 #: data/po_files/../../sections/timer.js:174
-#: data/po_files/../../sections/timer.js:321
+#: data/po_files/../../sections/timer.js:336
 msgid "Timer"
 msgstr "Таймер"
 
@@ -724,11 +724,11 @@ msgstr[2] "%d напоминаний ушло!"
 msgid "Timer Expired!"
 msgstr "Время по таймеру истекло!"
 
-#: data/po_files/../../sections/timer.js:616
+#: data/po_files/../../sections/timer.js:626
 #, fuzzy
 msgid "Search presets..."
 msgstr "Поиск файлов..."
 
-#: data/po_files/../../sections/timer.js:644
+#: data/po_files/../../sections/timer.js:654
 msgid "Default preset"
 msgstr ""
