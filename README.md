@@ -367,54 +367,29 @@ day of February every 2 years starting from 2000.</li>
 
 ### Time Tracker
 
-The time tracker is built into the todo.txt manager and allows you to track the
-time spent on a particular task as well as the time spent on a particular
-project.  
+The time tracker is built into the todo.txt manager.
 
-> This extension features a fullscreen stats view for browsing your time-tracker data
-> * The stats view has a cool looking vbars graph for displaying data
-> * It supports viewing time spent on tasks/projects on any recorded day
-> * You can see a detailed view for a particular task/project
-> * You can fuzzy search your history
-> * You can view the most worked on tasks/projects in a particular time interval
+* When the play button is pressed, the task as well as all projects in that task
+will be tracked.
 
-When pressing the play button to track a task, all projects associated with that
-task will also be tracked.
+* When a task that has been tracked is edited, only the corresponding entry
+in the daily csv file will be updated; the yearly csv file will not be changed.
 
-At the start of each year, the current yearly csv file will be archived and a 
-new file will be started.
+* The directory structure of the tracker and the csv specification can be found
+[here](data/tracker_spec.md).
 
-There is also a daily csv file which gets appended to the yearly file at the 
-start of each day.
-
-> **NOTE:**  
-> When editing a task that has been time-tracked, only the corresponding entry
-in the daily csv file will be updated. The yearly csv file will not be changed.
-
-The csv file has the form:
-
-```csv
-date, time spent (hh:mm), type ('++' = project, '()' = task), task or project
-
-2017-02-04, 08:03, ++, "+my_project"
-2017-02-04, 23:59, ++, "+protect_gotham"
-2017-02-04, 02:03, ++, "+protect_gotham"
-2017-02-04, 02:03, (), "(A) Watch the world burn."
-2017-02-04, 02:03, (), "(A) Catch Joker."
-2017-02-04, 02:03, (), "(Z) Take the trash out."
-2017-02-05, 08:03, ++, "+my_project"
-2017-02-05, 23:59, ++, "+protect_gotham"
-2017-02-05, 02:03, ++, "+protect_gotham"
-2017-02-05, 02:03, (), "(A) Watch the world burn."
-2017-02-05, 02:03, (), "x 2017-02-05 Catch Joker."
-2017-02-05, 02:03, (), "(Z) Take the trash out."
-```
+* This extension features a fullscreen stats view for browsing/searching your time-tracker data.
+    * The stats uses vbar graphs to display total time and/or work intervals.
+    * It supports viewing time spent on tasks/projects on any recorded day.
+    * You can see a detailed view for a particular task/project.
+    * You can fuzzy search your history.
+    * You can view the most worked on tasks/projects in a particular time interval.
 
 ---
 
 ### DBus API
 
-This extension comes with a dbus api. Check out the [dbus dir](dbus) for info on
+There is a pretty comprehensive dbus api. Check out the [dbus dir](dbus) for info on
 what you can do.
 
 There are also some example scripts that might come in handy. :smile:

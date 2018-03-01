@@ -327,7 +327,7 @@ const Settings = new Lang.Class({
 
 
         //
-        // Timer
+        // @@@ Timer
         //
         this.settings.bind(
             'timer-separate-menu',
@@ -428,7 +428,7 @@ const Settings = new Lang.Class({
 
 
         //
-        // Stopwatch
+        // @@@ Stopwatch
         //
         this.settings.bind(
             'stopwatch-separate-menu',
@@ -488,7 +488,7 @@ const Settings = new Lang.Class({
 
 
         //
-        // Pomodoro
+        // @@@ Pomodoro
         //
         this.settings.bind(
             'pomodoro-separate-menu',
@@ -611,7 +611,7 @@ const Settings = new Lang.Class({
 
 
         //
-        // Alarms
+        // @@@ Alarms
         //
         this.settings.bind(
             'alarms-separate-menu',
@@ -663,7 +663,7 @@ const Settings = new Lang.Class({
 
 
         //
-        // Todo and Time Tracker
+        // @@@ Todo
         //
         this.settings.bind(
             'todo-separate-menu',
@@ -681,6 +681,12 @@ const Settings = new Lang.Class({
             'todo-task-width',
             this.builder.get_object('todo-task-width-spin'),
             'value',
+            Gio.SettingsBindFlags.DEFAULT);
+
+        this.settings.bind(
+            'todo-resume-tracking',
+            this.builder.get_object('todo-resume-tracking-switch'),
+            'active',
             Gio.SettingsBindFlags.DEFAULT);
 
         widget = this.builder.get_object('todo-keybinding-open');
@@ -775,6 +781,25 @@ const Settings = new Lang.Class({
                 else
                     entry["secondary-icon-name"] = "";
                 this.settings.set_strv('todo-keybinding-open-to-switch-files', ['']);
+            }
+        });
+
+        widget = this.builder.get_object('todo-keybinding-open-todotxt-file');
+        widget.set_text(this.settings.get_strv('todo-keybinding-open-todotxt-file')[0]);
+        widget.connect('changed', (entry) => {
+            let [key, mods] = Gtk.accelerator_parse(entry.get_text());
+
+            if (Gtk.accelerator_valid(key, mods)) {
+                entry["secondary-icon-name"] = null;
+                let shortcut = Gtk.accelerator_name(key, mods);
+                this.settings.set_strv('todo-keybinding-open-todotxt-file', [shortcut]);
+            }
+            else {
+                if (entry.get_text() !== '')
+                    entry["secondary-icon-name"] = "dialog-warning-symbolic";
+                else
+                    entry["secondary-icon-name"] = "";
+                this.settings.set_strv('todo-keybinding-open-todotxt-file', ['']);
             }
         });
 

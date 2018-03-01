@@ -142,7 +142,10 @@ var TaskItem = new Lang.Class({
 
     reset: function (self_update, task_str) {
         if (task_str) {
-            this.delegate.time_tracker.update_record_name(this.task_str, task_str);
+            if (this.delegate.time_tracker) {
+                this.delegate.time_tracker.update_record_name(this.task_str, task_str);
+            }
+
             this.task_str = task_str;
         }
 
@@ -689,8 +692,7 @@ var TaskItem = new Lang.Class({
             else                      words.splice(0, 1);
 
             this.reset(true, prio + words.join(' '));
-        }
-        else {
+        } else {
             this.delegate.time_tracker.stop_tracking(this);
 
             let task_str = this.task_str;

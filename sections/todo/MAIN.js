@@ -23,6 +23,7 @@ const ngettext = Gettext.ngettext;
 const SIG_MANAGER  = ME.imports.lib.signal_manager;
 const KEY_MANAGER  = ME.imports.lib.keybinding_manager;
 const FUZZ         = ME.imports.lib.fuzzy_search;
+const MISC_UTILS   = ME.imports.lib.misc_utils;
 const PANEL_ITEM   = ME.imports.lib.panel_item;
 const REG          = ME.imports.lib.regex;
 
@@ -219,7 +220,8 @@ var SectionMain = new Lang.Class({
         this.keym.add('todo-keybinding-open', () => {
             this.ext.open_menu(this.section_name);
             if (this.view_manager.current_view !== G.View.LOADING &&
-                this.view_manager.current_view !== G.View.NO_TODO_FILE) {
+                this.view_manager.current_view !== G.View.NO_TODO_FILE &&
+                this.view_manager.current_view !== G.View.EDITOR) {
 
                 this.show_view__default();
             }
@@ -235,14 +237,16 @@ var SectionMain = new Lang.Class({
         this.keym.add('todo-keybinding-open-to-search', () => {
             this.ext.open_menu(this.section_name);
             if (this.view_manager.current_view !== G.View.LOADING &&
-                this.view_manager.current_view !== G.View.NO_TODO_FILE) {
+                this.view_manager.current_view !== G.View.NO_TODO_FILE &&
+                this.view_manager.current_view !== G.View.EDITOR) {
 
                 this.show_view__search();
             }
         });
         this.keym.add('todo-keybinding-open-to-stats', () => {
             if (this.view_manager.current_view !== G.View.LOADING &&
-                this.view_manager.current_view !== G.View.NO_TODO_FILE) {
+                this.view_manager.current_view !== G.View.NO_TODO_FILE &&
+                this.view_manager.current_view !== G.View.EDITOR) {
 
                 this.show_view__time_tracker_stats();
             }
@@ -251,10 +255,16 @@ var SectionMain = new Lang.Class({
             this.ext.open_menu(this.section_name);
             if (this.view_manager.current_view !== G.View.LOADING &&
                 this.view_manager.current_view !== G.View.NO_TODO_FILE &&
+                this.view_manager.current_view !== G.View.EDITOR &&
                 this.settings.get_value('todo-files').deep_unpack().length > 1) {
 
                 this.show_view__file_switcher();
             }
+        });
+        this.keym.add('todo-keybinding-open-todotxt-file', () => {
+            if (! this.todo_txt_file) return;
+            let path = this.todo_txt_file.get_path();
+            if (path) MISC_UTILS.open_file_path(path);
         });
 
 
@@ -502,8 +512,6 @@ var SectionMain = new Lang.Class({
             return;
         }
 
-        this.time_tracker = new TIME_TRACKER.TimeTracker(this.ext, this);
-
         try {
             // todo file
             this.todo_txt_file = Gio.file_new_for_uri(current.todo_file);
@@ -521,8 +529,7 @@ var SectionMain = new Lang.Class({
                 this.show_view__no_todo_file();
                 return;
             }
-        }
-        catch (e) {
+        } catch (e) {
             logError(e);
             return;
         }
@@ -536,6 +543,7 @@ var SectionMain = new Lang.Class({
             if (this._check_dates()) this.write_tasks_to_file();
             this.on_tasks_changed();
             this.show_view__default();
+            this.time_tracker = new TIME_TRACKER.TimeTracker(this.ext, this);
         });
     },
 
@@ -1052,21 +1060,15 @@ var SectionMain = new Lang.Class({
         Mainloop.idle_add(() => {
             let stats = this.time_tracker.get_stats();
 
-            if (! stats) {
+            if (!stats) {
                 this.stats_view.show_mode__banner(_('Nothing found.'));
-            }
-            else {
+            } else if (!task) {
                 this.stats_view.set_stats(...stats);
-
+                this.stats_view.show_mode__global(G.date_yyyymmdd());
+            } else {
+                this.stats_view.set_stats(...stats);
                 let d = new Date();
-
-                if (task) {
-                    this.stats_view.show_mode__single(
-                        d.getFullYear(), d.getMonth(), task.task_str);
-                }
-                else {
-                    this.stats_view.show_mode__global(G.date_yyyymmdd(d));
-                }
+                this.stats_view.show_mode__single(d.getFullYear(), d.getMonth(), task.task_str, '()');
             }
         });
     },

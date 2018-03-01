@@ -112,6 +112,7 @@ const Timepp = new Lang.Class({
             ['-timepp-rulers-color']     : ['white'   , [1, 1, 1, 1]],
             ['-timepp-proj-vbar-color']  : ['white'   , [1, 1, 1, 1]],
             ['-timepp-task-vbar-color']  : ['white'   , [1, 1, 1, 1]],
+            ['-timepp-vbar-bg-color']    : ['white'   , [1, 1, 1, 1]],
             ['-timepp-heatmap-color-A']  : ['white'   , [1, 1, 1, 1]],
             ['-timepp-heatmap-color-B']  : ['white'   , [1, 1, 1, 1]],
             ['-timepp-heatmap-color-C']  : ['white'   , [1, 1, 1, 1]],

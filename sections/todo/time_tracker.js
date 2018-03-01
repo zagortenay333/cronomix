@@ -18,8 +18,8 @@ const ngettext = Gettext.ngettext;
 
 const IFACE = `${ME.path}/dbus/time_tracker_iface.xml`;
 
-
-const G = ME.imports.sections.todo.GLOBAL;
+const REG = ME.imports.lib.regex;
+const G   = ME.imports.sections.todo.GLOBAL;
 
 
 
@@ -46,7 +46,7 @@ var TimeTracker = new Lang.Class({
 
 
         this.number_of_tracked_tasks = 0;
-        this.tic_mainloop_id         = null;
+        this.tic_mainloop_id         = 0;
 
 
         // Holds the path of the current csv directory.
@@ -68,23 +68,42 @@ var TimeTracker = new Lang.Class({
         this.monitors_block = false;
 
 
-        // The stats data is cached with the exception of today's stats which
-        // get appended.
-        this.stats_data           = new Map();
-        this.stats_unique_entries = new Set();
+        // @stats_data: Map
+        //   - @key: string (date in 'yyyy-mm-dd' iso format)
+        //   - @val: array of objects of form:
+        //      {
+        //          label      : string (a project or task)
+        //          type       : string ('++' or '()')
+        //          total_time : int (seconds spent working on this task/proj)
+        //          intervals  : string
+        //      }
+        //
+        // The keys in @stats_data are sorted from newest to oldest.
+        // In each @val inside @stats_data, the projects are sorted after tasks.
+        this.stats_data = new Map();
+
+
+        // @stats_unique_task     : Set (of all unique tasks strings)
+        // @stats_unique_projcets : Set (of all unique projects strings)
+        this.stats_unique_tasks    = new Set();
+        this.stats_unique_projects = new Set();
+
+        // string (in yyyy-mm-dd iso format)
+        // This is the oldest date in the stats data entry
+        this.oldest_date = '';
 
 
         // @key: string
-        //   which is either a task string (a single line in the
-        //   todo.txt file) or a project keyword (e.g., '+my_project', '+stuff',
-        //   etc...)
+        //   - task string (a single line in the todo.txt file)
+        //   - or project keyword (e.g., '+my_project', '+stuff', etc...)
         //
         // @val: obj
         //   of the form: {
-        //       time       : int (in seconds)
+        //       time       : int (miscroseconds)
+        //       start_time : int (microseconds for elapsed time computing)
         //       tracking   : bool
         //       type       : string ('++' = project, '()' = task)
-        //       start_time : int (time in microsec for elapsed time computing)
+        //       intervals  : string
         //   }
         //
         //   If @type is '()', then @val also has the prop:
@@ -109,11 +128,7 @@ var TimeTracker = new Lang.Class({
         // listen
         //
         this.new_day_sig_id =
-            this.delegate.connect('new-day', () => {
-                this._archive_daily_csv_file();
-                this._archive_yearly_csv_file();
-                this._init_tracker_dir(); // to ensure the new yearly_csv_file
-            });
+            this.delegate.connect('new-day', () => this._on_new_day_started());
         this.todo_current_sig_id =
             this.delegate.settings.connect('changed::todo-current', () => {
                 this.csv_dir = this.get_csv_dir_path();
@@ -128,26 +143,36 @@ var TimeTracker = new Lang.Class({
     },
 
     _tracker_tic: function (...args) {
-        if (this.number_of_tracked_tasks === 0) {
-            this.tic_mainloop_id = null;
-            return;
+        let d        = new Date();
+        let time     = GLib.get_monotonic_time();
+        let time_str = "%02d:%02d:%02d".format(d.getHours(), d.getMinutes(), d.getSeconds());
+
+        for (let [,v] of this.daily_csv_map) {
+            if (v.tracking) {
+                v.time      = time - v.start_time;
+                v.intervals = v.intervals.slice(0, -10) + time_str + '..';
+            }
         }
 
-        let time = GLib.get_monotonic_time();
-        let min  = args[0] || 1;
+        let seconds = args[0] || 30;
+
+        if (seconds === 30) {
+            seconds = 0;
+            this._write_daily_csv_file();
+        }
 
         this.tic_mainloop_id = Mainloop.timeout_add_seconds(1, () => {
-            for (let [,v] of this.daily_csv_map) {
-                if (v.tracking) v.time = time - v.start_time;
-            }
-
-            if (min === 60) {
-                min = 0;
-                Mainloop.idle_add(() => this._write_daily_csv_file());
-            }
-
-            this._tracker_tic(++min);
+            this._tracker_tic(seconds + 1);
         });
+    },
+
+    _on_new_day_started: function () {
+        this._archive_daily_csv_file();
+
+        let yearly_file_was_archived = this._archive_yearly_csv_file();
+
+        // To ensure a fresh yearly csv file.
+        if (yearly_file_was_archived) this._init_tracker_dir();
     },
 
     _on_tracker_files_modified: function () {
@@ -159,19 +184,87 @@ var TimeTracker = new Lang.Class({
             return;
         }
 
-        this.stop_all_tracking();
+        this.stop_all_tracking(false);
+
         this.daily_csv_map.clear();
         this.stats_data.clear();
-        this.stats_unique_entries.clear();
-
-        if (this.tic_mainloop_id) {
-            Mainloop.source_remove(this.tic_mainloop_id);
-            this.tic_mainloop_id = null;
-        }
+        this.stats_unique_tasks.clear();
+        this.stats_unique_projects.clear();
 
         this._init_tracker_dir();
         this._init_daily_csv_map();
         this._archive_yearly_csv_file();
+    },
+
+    _write_daily_csv_file: function () {
+        if (! this.csv_dir) return;
+
+        let today    = G.date_yyyymmdd();
+        let projects = '';
+        let tasks    = '';
+
+        for (let [k, v] of this.daily_csv_map) {
+            let line = this._create_csv_line(today, v.time, v.type, k, v.intervals);
+            if (v.type === '++') projects += line;
+            else                 tasks    += line;
+        }
+
+        try {
+            this.monitors_block = true;
+
+            if (! this.daily_csv_file.query_exists(null))
+                this.daily_csv_file.create(Gio.FileCreateFlags.NONE, null);
+
+            this.daily_csv_file.replace_contents(projects + tasks, null, false,
+                Gio.FileCreateFlags.REPLACE_DESTINATION, null);
+        } catch (e) { logError(e); }
+    },
+
+    _archive_daily_csv_file: function () {
+        if (! this.csv_dir) return;
+
+        this.monitors_block = true;
+
+        try {
+            let [, contents]  = this.daily_csv_file.load_contents(null);
+
+            let append_stream = this.yearly_csv_file.append_to(
+                Gio.FileCreateFlags.NONE, null);
+
+            append_stream.write_all(contents, null);
+
+            this.daily_csv_file.replace_contents('', null, false,
+                Gio.FileCreateFlags.REPLACE_DESTINATION, null);
+        } catch (e) { logError(e); }
+
+        let d        = new Date();
+        let time_str = "%02d:%02d:%02d".format(d.getHours(), d.getMinutes(), d.getSeconds());
+        let d_str    = G.date_yyyymmdd(d);
+
+        for (let [,v] of this.daily_csv_map) {
+            v.time = 0;
+            v.date = d_str;
+            if (v.tracking) v.intervals = `${time_str}..${time_str}..`;
+            else            v.intervals = '';
+        }
+    },
+
+    // Returns bool (true = we archived the yearly file)
+    _archive_yearly_csv_file: function () {
+        if (! this.csv_dir) return;
+
+        let d = new Date();
+
+        let prev_f = `${this.csv_dir}/${d.getFullYear() - 1}__time_tracker.csv`;
+
+        if (GLib.file_test(prev_f, GLib.FileTest.EXISTS)) {
+            this.monitors_block = true;
+            let dir = `${this.csv_dir}/YEARS__time_tracker`;
+            Util.spawnCommandLine(`mv ${prev_f} ${dir}`);
+            return true;
+        }
+
+        return false;
     },
 
     _init_tracker_dir: function () {
@@ -238,126 +331,160 @@ var TimeTracker = new Lang.Class({
             this.daily_csv_file_monitor.connect('changed', () => {
                 this._on_tracker_files_modified();
             });
-        }
-        catch (e) {
-            logError(e);
-        }
+        } catch (e) { logError(e); }
     },
 
     _init_daily_csv_map: function () {
         if (! this.csv_dir) return;
 
-        let date_str = G.date_yyyymmdd();
+        this.daily_csv_map.clear();
+
+        let today = G.date_yyyymmdd();
 
         let [, lines] = this.daily_csv_file.load_contents(null);
         lines = String(lines).split(/\r?\n/).filter((l) => /\S/.test(l));
 
-        for (let it of lines) {
-            if (it.substr(0, 10) !== date_str) {
-                this._archive_daily_csv_file();
-                this.daily_csv_map.clear();
-                break;
+        let do_write_daily_csv_file = false;
+        let tasks_to_be_tracked = [];
+
+        for (let i = 0; i < lines.length; i++) {
+            let [e, date, time, type, val, intervals] = this._parse_csv_line(lines[i]);
+
+            if (e) {
+                let file_path = this.daily_csv_file.get_path();
+                let msg       = 'line: %d\nfile: %s'.format(i, file_path);
+
+                Main.notify(_('Error while parsing csv file. See logs.'), msg);
+                log("ERROR timepp (csv file):\nline: %d\nfile: %s".format(i, file_path));
+
+                continue;
             }
 
-            if (it === '') continue;
+            if (date !== today) {
+                this._archive_daily_csv_file();
+                this.daily_csv_map.clear();
+                return;
+            }
 
-            let key  = it.substring(24, it.length - 1).replace(/""/g, '"');
-            let type = it.substr(19, 2);
+            if (intervals.endsWith('..')) {
+                intervals = intervals.slice(0, -2);
+                if (type === '()') tasks_to_be_tracked.push(val);
+                do_write_daily_csv_file = true;
+            }
 
             let entry = {
-                tracking : false,
-                type     : type,
-                time     : 1000000 * (+(it.substr(12, 2)) * 3600 +
-                                      +(it.substr(15, 2)) * 60),
+                tracking  : false,
+                type      : type,
+                time      : time * 1000000,
+                intervals : intervals,
             };
+
+            let t = GLib.get_monotonic_time();
 
             if (type === '++') entry.tracked_children = 0;
             else               entry.task_ref = null;
 
-            this.daily_csv_map.set(key, entry);
+            this.daily_csv_map.set(val, entry);
+        }
+
+        if (do_write_daily_csv_file) this._write_daily_csv_file();
+
+        if (this.delegate.settings.get_boolean('todo-resume-tracking')) {
+            for (let task_str of tasks_to_be_tracked) {
+                for (let task of this.delegate.tasks) {
+                    if (task.task_str === task_str) {
+                        this.start_tracking(task);
+                        break;
+                    }
+                }
+            }
         }
     },
 
-    _write_daily_csv_file: function () {
-        if (! this.csv_dir) return;
+    _parse_csv_line: function (line) {
+        let res           = [false];
+        let field         = '';
+        let inside_quotes = false;
 
-        this.monitors_block = true;
+        for (let i = 0, len = line.length; i < len; i++) {
+            let ch = line[i];
 
-        let d        = G.date_yyyymmdd();
-        let projects = '';
-        let tasks    = '';
-
-        for (let [k, v] of this.daily_csv_map) {
-            let t = Math.floor(v.time / 1000000);
-
-            if (t < 60) continue;
-
-            let hh = Math.floor(t / 3600);
-            hh     = (hh < 10) ? ('0' + hh) : ('' + hh);
-
-            let mm = Math.round(t % 3600 / 60);
-            mm     = (mm < 10) ? ('0' + mm) : ('' +  mm);
-
-            let line =
-                `${d}, ${hh}:${mm}, ${v.type}, \"${k.replace(/"/g, '""')}\"\n`;
-
-            if (v.type === '++') projects += line;
-            else                 tasks    += line;
+            if (ch === '"') {
+                if (i+1 === len || line[i+1] === ',') { // quote at end of field
+                    inside_quotes = false;
+                    res.push(field);
+                    field = '';
+                    i += 2; // eat the next comma and space after it
+                }
+                else if (!field) { // quote at start of field
+                    inside_quotes = true;
+                }
+                else {
+                    field += '"';
+                }
+            } else if (ch === ',' && !inside_quotes) {
+                res.push(field);
+                field = '';
+                i++; // eat space after comma
+            } else {
+                field += ch;
+            }
         }
 
-        try {
-            if (! this.daily_csv_file.query_exists(null))
-                this.daily_csv_file.create(Gio.FileCreateFlags.NONE, null);
+        res.push(field);
 
-            this.daily_csv_file.replace_contents(projects + tasks, null, false,
-                Gio.FileCreateFlags.REPLACE_DESTINATION, null);
+        if (!REG.ISO_DATE.test(res[1]) ||
+            !/\d{2}:\d{2}(:\d{2})?$/.test(res[2]) ||
+            (res[3] !== '++' && res[3] !== '()')) {
+
+            return [true];
         }
-        catch (e) {
-            logError(e);
-        }
+
+        // No intervals field found (backwards compatibility.)
+        if (res.length !== 6) res.push('');
+
+        let t  = res[2].split(':');
+        res[2] = +(t[0])*3600 + +(t[1])*60 + (t.length === 3 ? +(t[2]) : 0);
+
+        res[4] = res[4].replace(/""/g, '"');
+
+        return res;
     },
 
-    _archive_daily_csv_file: function () {
-        if (! this.csv_dir) return;
+    _create_csv_line: function (date, time, type, val, intervals) {
+        let h, m, s;
 
-        this.monitors_block = true;
+        {
+            time = Math.round(time / 1000000);
 
-        try {
-            let [, contents]  = this.daily_csv_file.load_contents(null);
+            h = Math.floor(time / 3600);
+            h = (h < 10) ? ('0' + h) : ('' + h);
 
-            let append_stream = this.yearly_csv_file.append_to(
-                Gio.FileCreateFlags.NONE, null);
+            time %= 3600;
 
-            append_stream.write_all(contents, null);
+            m = Math.floor(time / 60);
+            m = (m < 10) ? ('0' + m) : ('' +  m);
 
-            this.daily_csv_file.replace_contents('', null, false,
-                Gio.FileCreateFlags.REPLACE_DESTINATION, null);
-        }
-        catch (e) {
-            logError(e);
+            s = time % 60;
+            s = (s < 10) ? ('0' + s) : ('' +  s);
         }
 
-        let d = G.date_yyyymmdd();
+        val = val.replace(/"/g, '""');
 
-        for (let [,v] of this.daily_csv_map) {
-            v.date = d;
-            v.time = 0;
-        }
-    },
+        if (intervals) {
+            let tokens = intervals.split('||');
+            let non_zero_intervals = [];
 
-    _archive_yearly_csv_file: function () {
-        if (! this.csv_dir) return;
+            for (let token of tokens) {
+                let [start, end] = token.split('..');
+                if (start !== end) non_zero_intervals.push(token);
+            }
 
-        this.monitors_block = true;
+            intervals = non_zero_intervals.join('||');
 
-        let d = new Date();
-
-        let prev_f =
-            `${this.csv_dir}/${d.getFullYear() - 1}__time_tracker.csv`;
-
-        if (GLib.file_test(prev_f, GLib.FileTest.EXISTS)) {
-            let dir = `${this.csv_dir}/YEARS__time_tracker`;
-            Util.spawnCommandLine(`mv ${prev_f} ${dir}`);
+            return `${date}, ${h}:${m}:${s}, ${type}, "${val}", ${intervals}\n`;
+        } else {
+            return `${date}, ${h}:${m}:${s}, ${type}, "${val}"\n`;
         }
     },
 
@@ -368,44 +495,37 @@ var TimeTracker = new Lang.Class({
         else                     this.start_tracking(task);
     },
 
-    stop_all_tracking: function () {
-        if (!this.csv_dir) return;
-
-        if (this.tic_mainloop_id) {
-            Mainloop.source_remove(this.tic_mainloop_id);
-            this.tic_mainloop_id = null;
-        }
-
-        this.number_of_tracked_tasks = 0;
+    stop_all_tracking: function (do_write_daily_csv_file = true) {
+        if (! this.csv_dir) return;
 
         for (let [k, v] of this.daily_csv_map) {
-            if (v.tracking) {
-                v.tracking = false;
-
-                if (v.type === '()' && v.task_ref)
-                    v.task_ref.on_tracker_stopped();
-            }
+            if (v.type === '()' && v.tracking)
+                this.stop_tracking(v.task_ref, false);
         }
 
-        this.delegate.panel_item.actor.remove_style_class_name('on');
+        if (do_write_daily_csv_file) this._write_daily_csv_file();
     },
 
     start_tracking_by_id: function (id) {
+        if (! this.csv_dir) return;
+
         for (let it of this.delegate.tasks) {
             if (it.tracker_id === id) this.start_tracking(it);
         }
     },
 
     stop_tracking_by_id: function (id) {
+        if (! this.csv_dir) return;
+
         for (let it of this.delegate.tasks) {
             if (it.tracker_id === id) this.stop_tracking(it);
         }
     },
 
     start_tracking: function (task) {
-        if (!this.csv_dir) {
+        if (! this.csv_dir) {
             Main.notify(_('To track time, select a dir for csv files in the settings.'));
-            return null;
+            return;
         }
 
         if (task.completed) return;
@@ -415,53 +535,62 @@ var TimeTracker = new Lang.Class({
         if (val && val.tracking) return;
 
         let start_time = GLib.get_monotonic_time();
+        let d          = new Date();
+        let time_str   = "%02d:%02d:%02d".format(d.getHours(), d.getMinutes(), d.getSeconds());
 
         if (val) {
             val.tracking   = true;
             val.task_ref   = task;
             val.start_time = start_time - val.time;
-        }
-        else {
+            if (val.intervals) val.intervals += `||${time_str}..${time_str}..`;
+            else               val.intervals  = `${time_str}..${time_str}..`;
+        } else {
             this.daily_csv_map.set(task.task_str, {
                 time       : 0,
+                start_time : start_time,
                 tracking   : true,
                 type       : '()',
                 task_ref   : task,
-                start_time : start_time,
+                intervals  : `${time_str}..${time_str}..`,
             });
         }
 
         for (let project of task.projects) {
-            val = this.daily_csv_map.get(project);
+            let val = this.daily_csv_map.get(project);
 
             if (val) {
-                val.tracking = true;
                 val.tracked_children++;
-                val.start_time = start_time - val.time;
-            }
-            else {
+                if (!val.tracking) {
+                    val.tracking = true;
+                    val.start_time = start_time - val.time;
+                    if (val.intervals) val.intervals += `||${time_str}..${time_str}..`;
+                    else               val.intervals  = `${time_str}..${time_str}..`;
+                }
+            } else {
                 this.daily_csv_map.set(project, {
                     time             : 0,
                     tracking         : true,
                     type             : '++',
                     tracked_children : 1,
                     start_time       : start_time,
+                    intervals        : `${time_str}..${time_str}..`,
                 });
             }
         }
 
         this.number_of_tracked_tasks++;
-        if (! this.tic_mainloop_id) this._tracker_tic();
+
+        if (this.tic_mainloop_id === 0) this._tracker_tic();
+
+        this.delegate.panel_item.actor.add_style_class_name('on');
 
         for (let it of this.delegate.tasks) {
             if (it.task_str === task.task_str) it.on_tracker_started();
         }
-
-        this.delegate.panel_item.actor.add_style_class_name('on');
     },
 
-    stop_tracking: function (task) {
-        if (!this.csv_dir) return null;
+    stop_tracking: function (task, do_write_daily_csv_file = true) {
+        if (!this.csv_dir) return;
 
         let val = this.daily_csv_map.get(task.task_str);
 
@@ -470,17 +599,34 @@ var TimeTracker = new Lang.Class({
         val.tracking = false;
         this.number_of_tracked_tasks--;
 
+        if (val.intervals.endsWith('..'))
+            val.intervals = val.intervals.slice(0, -2);
+
         for (let project of task.projects) {
             let val = this.daily_csv_map.get(project);
-            if (--val.tracked_children === 0) val.tracking = false;
+
+            if (--val.tracked_children === 0) {
+                val.tracking = false;
+
+                if (val.intervals.endsWith('..'))
+                    val.intervals = val.intervals.slice(0, -2);
+            }
         }
 
         for (let it of this.delegate.tasks) {
             if (it.task_str === task.task_str) it.on_tracker_stopped();
         }
 
-        if (this.number_of_tracked_tasks === 0)
+        if (this.number_of_tracked_tasks === 0) {
             this.delegate.panel_item.actor.remove_style_class_name('on');
+
+            if (this.tic_mainloop_id > 0) {
+                Mainloop.source_remove(this.tic_mainloop_id);
+                this.tic_mainloop_id = 0;
+            }
+        }
+
+        if (do_write_daily_csv_file) this._write_daily_csv_file();
     },
 
     // Swap the old_task_str with the new_task_str in the daily_csv_map only.
@@ -499,7 +645,8 @@ var TimeTracker = new Lang.Class({
         // can't tell whether or not we tracked the old task on days prior to
         // today.
         // We clear the cached stats data to let get_stats() rebuild it.
-        this.stats_unique_entries.clear();
+        this.stats_unique_tasks.clear();
+        this.stats_unique_projects.clear();
         this.stats_data.clear();
 
         this._write_daily_csv_file();
@@ -514,42 +661,41 @@ var TimeTracker = new Lang.Class({
 
             if (error) return null;
             else       return d;
-        }
-        catch (e) { logError(e); }
+        } catch (e) { logError(e); }
     },
 
     // NOTE: The returned values are cached, use for READ-ONLY!
     //
-    // returns: [@stats_data, @stats_unique_entries]
-    //
-    // @stats_data: Map
-    //   - @key: string (date in 'yyyy-mm-dd' iso format)
-    //   - @val: Map
-    //       - @key: string (a project or task)
-    //       - @val: int    (minutes spent working on task/project that date)
-    //
-    // @stats_unique_entries: Set (of all unique tasks/projects)
-    //
-    // The keys in @stats_data are sorted from newest to oldest.
-    // In each @val inside @stats_data, the projects are sorted after tasks.
+    // returns: [@stats_data, @stats_unique_tasks, @stats_unique_projects, oldest_date]
     get_stats: function () {
-        if (!this.csv_dir) return null;
+        if (! this.csv_dir) return null;
+
+        let today = G.date_yyyymmdd();
+        let oldest_date = this.oldest_date ? this.oldest_date : today;
+
+        let stats_unique_tasks    = this.stats_unique_tasks;
+        let stats_unique_projects = this.stats_unique_projects;
 
         // update todays data
         {
-            let today       = G.date_yyyymmdd();
             let stats_today = [];
 
             for (let [k, v] of this.daily_csv_map) {
-                this.stats_unique_entries.add(k);
+                if (v.type === '()') stats_unique_tasks.add(k);
+                else                 stats_unique_projects.add(k);
 
-                let time = Math.floor(v.time / 60000000);
+                let record = {
+                    label      : k,
+                    type       : v.type,
+                    total_time : Math.round(v.time / 1000000),
+                    intervals  : v.intervals,
+                };
 
-                if (v.type === '++') stats_today.push([k, time]);
-                else                 stats_today.unshift([k, time]);
+                if (v.type === '++') stats_today.push(record);
+                else                 stats_today.unshift(record);
             }
 
-            this.stats_data.set(today, new Map(stats_today));
+            this.stats_data.set(today, stats_today);
         }
 
         // add the rest if we don't have it cached
@@ -564,8 +710,7 @@ var TimeTracker = new Lang.Class({
                     Gio.FileQueryInfoFlags.NONE,
                     null
                 );
-            }
-            catch (e) { file_enum = null; }
+            } catch (e) { file_enum = null; }
 
             if (file_enum !== null) {
                 let info;
@@ -576,40 +721,60 @@ var TimeTracker = new Lang.Class({
                 }
             }
 
-            csv_files.push(
-                [this.yearly_csv_file, this.yearly_csv_file.get_basename()]);
-
+            csv_files.push([this.yearly_csv_file, this.yearly_csv_file.get_basename()]);
             csv_files.sort((a, b) => a[1] < b[1]);
 
-            csv_files.forEach((it) => {
-                let [, content] = it[0].load_contents(null);
-                content         = String(content).split(/\r?\n/);
+            for (let file of csv_files) {
+                let [, content] = file[0].load_contents(null);
+                content         = String(content).split(/[\r\n]/).filter((l) => /\S/.test(l));
 
-                let string, date, entry, time;
+                let parse      = this._parse_csv_line;
+                let stats_data = this.stats_data;
+                let found_at_least_one_error = false;
 
                 let i = content.length;
+
                 while (i--) {
-                    it = content[i];
+                    let [e, date, time, type, label, intervals] = parse(content[i]);
 
-                    if (!it) continue;
+                    if (e) {
+                        let file_path = file[0].get_path();
+                        log("ERROR timepp (csv file):\nline: %d\nfile: %s".format(i+1, file_path));
 
-                    date   = it.substr(0, 10);
-                    time   = +(it.substr(12, 2)) * 60 + +(it.substr(15, 2));
-                    string = it.slice(24, -1).replace(/""/g, '"');
+                        // If there are multiple errors, we don't want to bring
+                        // the system to a halt we a bazillion notifs.
+                        if (!found_at_least_one_error) {
+                            let msg = 'line: %d\nfile: %s'.format(i+1, file_path);
+                            Main.notify(_('Error while parsing csv file. See logs.'), msg);
+                            found_at_least_one_error = true;
+                        }
 
-                    entry  = this.stats_data.get(date);
+                        continue;
+                    }
 
-                    this.stats_unique_entries.add(string);
+                    if (type === '()') stats_unique_tasks.add(label);
+                    else               stats_unique_projects.add(label);
 
-                    if (entry)
-                        entry.set(string, time);
-                    else
-                        this.stats_data.set(date, new Map([ [string, time] ]));
+                    let record = {
+                        label      : label,
+                        type       : type,
+                        total_time : time,
+                        intervals  : intervals,
+                    };
+
+                    let records = stats_data.get(date);
+
+                    if (records) records.push(record);
+                    else         stats_data.set(date, [record]);
+
+                    oldest_date = date;
                 }
-            });
+            }
         }
 
-        return [this.stats_data, this.stats_unique_entries];
+        this.oldest_date = oldest_date;
+
+        return [this.stats_data, this.stats_unique_tasks, this.stats_unique_projects, oldest_date];
     },
 
     close: function () {
@@ -633,11 +798,10 @@ var TimeTracker = new Lang.Class({
         if (this.new_day_sig_id) this.delegate.disconnect(this.new_day_sig_id);
         if (this.todo_current_sig_id) this.delegate.settings.disconnect(this.todo_current_sig_id);
 
-        this._write_daily_csv_file();
-
         this.daily_csv_map.clear();
         this.stats_data.clear();
-        this.stats_unique_entries.clear();
+        this.stats_unique_tasks.clear();
+        this.stats_unique_projects.clear();
         this.dbus_impl.unexport();
     },
 });

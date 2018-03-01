@@ -58,6 +58,7 @@
     -timepp-rulers-color:    rgba(255, 255, 255, .15);
     -timepp-proj-vbar-color: rgba(56, 174, 114, .8);
     -timepp-task-vbar-color: rgba(231, 79, 79, .8);
+    -timepp-vbar-bg-color:   rgba(255, 255, 255, .1);
     -timepp-heatmap-selected-color: yellow;
     -timepp-heatmap-color-A: #acd5f2;
     -timepp-heatmap-color-B: #7fa8c9;
@@ -204,7 +205,7 @@
 
 .timepp-fullscreen .middle-box,
 .timepp-fullscreen .bottom-box {
-    padding: 2em 1.2em;
+    padding: 1.2em;
 }
 
 .timepp-fullscreen .slider {
@@ -764,7 +765,7 @@
 }
 
 .timepp-fullscreen.stats .heatmap-graph {
-    margin-bottom: 2em;
+    margin-bottom: 1.2em;
 }
 
 .timepp-fullscreen.stats .sum-stats-card {
@@ -799,8 +800,27 @@
     margin-right: 4em;
 }
 
+.timepp-fullscreen.stats .search-results-box {
+    spacing: 7em;
+}
+
 .timepp-fullscreen.stats .search-results-box StBoxLayout {
     spacing: 2em;
+}
+
+.timepp-fullscreen.stats .search-results-label-tasks,
+.timepp-fullscreen.stats .search-results-label-projects {
+    padding: 0 1em;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.timepp-fullscreen.stats .search-results-label-tasks {
+    color: #e74f4f;
+}
+
+.timepp-fullscreen.stats .search-results-label-projects {
+    color: #38ae72;
 }
 
 .timepp-fullscreen.stats .search-results-box .search-result-item {

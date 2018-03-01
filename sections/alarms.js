@@ -748,7 +748,6 @@ const AlarmItem = new Lang.Class({
             if (this.delegate.snoozed_alarms.has(this.alarm)) {
                 clock_then     = this.delegate.snoozed_alarms.get(this.alarm);
                 snoozed_string = `  <b>${_('Snoozed')}</b>`;
-
             } else {
                 clock_then = this.alarm.time_str;
             }

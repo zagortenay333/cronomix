@@ -255,17 +255,6 @@
     <property name="can_focus">False</property>
     <property name="orientation">vertical</property>
     <child>
-      <object class="GtkSeparator">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
-      </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">1</property>
-      </packing>
-    </child>
-    <child>
       <object class="GtkStack" id="settings_stack">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
@@ -2557,6 +2546,7 @@ F3</property>
                               <object class="GtkListBox">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
+                                <property name="activate_on_single_click">False</property>
                                 <child>
                                   <object class="GtkListBoxRow">
                                     <property name="width_request">100</property>
@@ -2701,6 +2691,51 @@ F3</property>
                                     </child>
                                   </object>
                                 </child>
+                                <child>
+                                  <object class="GtkListBoxRow">
+                                    <property name="width_request">100</property>
+                                    <property name="height_request">40</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="activatable">False</property>
+                                    <property name="selectable">False</property>
+                                    <child>
+                                      <object class="GtkBox">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">False</property>
+                                        <property name="margin_left">10</property>
+                                        <property name="margin_right">10</property>
+                                        <property name="margin_top">10</property>
+                                        <property name="margin_bottom">10</property>
+                                        <child>
+                                          <object class="GtkLabel">
+                                            <property name="visible">True</property>
+                                            <property name="can_focus">False</property>
+                                            <property name="label" translatable="yes">Resume tracking after abrupt restart?</property>
+                                          </object>
+                                          <packing>
+                                            <property name="expand">False</property>
+                                            <property name="fill">True</property>
+                                            <property name="position">0</property>
+                                          </packing>
+                                        </child>
+                                        <child>
+                                          <object class="GtkSwitch" id="todo-resume-tracking-switch">
+                                            <property name="visible">True</property>
+                                            <property name="can_focus">True</property>
+                                            <property name="active">True</property>
+                                          </object>
+                                          <packing>
+                                            <property name="expand">False</property>
+                                            <property name="fill">True</property>
+                                            <property name="pack_type">end</property>
+                                            <property name="position">1</property>
+                                          </packing>
+                                        </child>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
                               </object>
                             </child>
                             <child type="label_item">
@@ -2751,6 +2786,7 @@ F3</property>
                                     <property name="can_focus">False</property>
                                     <property name="vexpand">True</property>
                                     <property name="toolbar_style">icons</property>
+                                    <property name="show_arrow">False</property>
                                     <property name="icon_size">4</property>
                                     <child>
                                       <object class="GtkToolButton" id="tree-add-button">
@@ -2911,6 +2947,7 @@ F3</property>
                               <object class="GtkListBox">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
+                                <property name="activate_on_single_click">False</property>
                                 <child>
                                   <object class="GtkListBoxRow">
                                     <property name="width_request">100</property>
@@ -3067,6 +3104,8 @@ F3</property>
                                     <property name="height_request">40</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
+                                    <property name="activatable">False</property>
+                                    <property name="selectable">False</property>
                                     <child>
                                       <object class="GtkListBoxRow">
                                         <property name="width_request">100</property>
@@ -3162,6 +3201,56 @@ F3</property>
                                           <packing>
                                             <property name="expand">False</property>
                                             <property name="fill">True</property>
+                                            <property name="position">1</property>
+                                          </packing>
+                                        </child>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkListBoxRow">
+                                    <property name="width_request">100</property>
+                                    <property name="height_request">40</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="activatable">False</property>
+                                    <property name="selectable">False</property>
+                                    <child>
+                                      <object class="GtkBox">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">False</property>
+                                        <property name="margin_left">10</property>
+                                        <property name="margin_right">10</property>
+                                        <property name="margin_top">10</property>
+                                        <property name="margin_bottom">10</property>
+                                        <child>
+                                          <object class="GtkLabel">
+                                            <property name="visible">True</property>
+                                            <property name="can_focus">False</property>
+                                            <property name="label" translatable="yes">Open current todo.txt file</property>
+                                          </object>
+                                          <packing>
+                                            <property name="expand">False</property>
+                                            <property name="fill">True</property>
+                                            <property name="position">0</property>
+                                          </packing>
+                                        </child>
+                                        <child>
+                                          <object class="GtkEntry" id="todo-keybinding-open-todotxt-file">
+                                            <property name="visible">True</property>
+                                            <property name="can_focus">True</property>
+                                            <property name="tooltip_text" translatable="yes">Examples:
+&lt;super&gt;&lt;ctrl&gt;&lt;alt&gt;&lt;shift&gt;t
+&lt;shift&gt;super
+F3</property>
+                                            <property name="truncate_multiline">True</property>
+                                            <property name="placeholder_text" translatable="yes">not set</property>
+                                          </object>
+                                          <packing>
+                                            <property name="expand">False</property>
+                                            <property name="fill">True</property>
+                                            <property name="pack_type">end</property>
                                             <property name="position">1</property>
                                           </packing>
                                         </child>

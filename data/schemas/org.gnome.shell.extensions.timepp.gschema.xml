@@ -230,6 +230,10 @@
             <default>300</default>
         </key>
 
+        <key name="todo-resume-tracking" type="b">
+            <default>true</default>
+        </key>
+
         <key name="todo-current" type="a{ss}">
             <default>{}</default>
         </key>
@@ -239,6 +243,10 @@
         </key>
 
         <key name="todo-stats-heatmap-visible" type="b">
+            <default>true</default>
+        </key>
+
+        <key name="todo-graph-shows-intervals" type="b">
             <default>true</default>
         </key>
 
@@ -259,6 +267,10 @@
         </key>
 
         <key name="todo-keybinding-open-to-switch-files" type="as">
+            <default><![CDATA[[""]]]></default>
+        </key>
+
+        <key name="todo-keybinding-open-todotxt-file" type="as">
             <default><![CDATA[[""]]]></default>
         </key>
     </schema>
