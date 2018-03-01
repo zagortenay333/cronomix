@@ -280,9 +280,9 @@ var TaskItem = new Lang.Class({
                     this.contexts.push(word);
                 }
                 words[i] =
-                    '<span foreground="' +
+                    '`<span foreground="' +
                     this.custom_css['-timepp-context-color'][0] +
-                    '"><b>' + word + '</b></span>';
+                    '"><b>' + word + '</b></span>`';
             }
             else if (REG.TODO_PROJ.test(word)) {
                 this.project_indices.push(i);
@@ -290,16 +290,16 @@ var TaskItem = new Lang.Class({
                     this.projects.push(word);
                 }
                 words[i] =
-                    '<span foreground="' +
+                    '`<span foreground="' +
                     this.custom_css['-timepp-project-color'][0] +
-                    '"><b>' + word + '</b></span>';
+                    '"><b>' + word + '</b></span>`';
             }
             else if (REG.URL.test(word) || REG.FILE_PATH.test(word)) {
                 this.link_indices.push(i);
                 words[i] =
-                    '<span foreground="' +
+                    '`<span foreground="' +
                     this.custom_css['-timepp-link-color'][0] +
-                    '"><u><b>' + word + '</b></u></span>';
+                    '"><u><b>' + word + '</b></u></span>`';
             }
             else if (REG.TODO_EXT.test(word)) {
                 if (this.hidden) {
@@ -549,7 +549,7 @@ var TaskItem = new Lang.Class({
 
         for (let it of this.context_indices) {
             this.description_markup[it] =
-                '<span foreground="' +
+                '`<span foreground="' +
                 this.custom_css['-timepp-context-color'][0] + '"' +
                 this.description_markup[it].slice(
                     this.description_markup[it].indexOf('>'));
@@ -557,7 +557,7 @@ var TaskItem = new Lang.Class({
 
         for (let it of this.project_indices) {
             this.description_markup[it] =
-                '<span foreground="' +
+                '`<span foreground="' +
                 this.custom_css['-timepp-project-color'][0] + '"' +
                 this.description_markup[it].slice(
                     this.description_markup[it].indexOf('>'));
@@ -565,7 +565,7 @@ var TaskItem = new Lang.Class({
 
         for (let it of this.link_indices) {
             this.description_markup[it] =
-                '<span foreground="' +
+                '`<span foreground="' +
                 this.custom_css['-timepp-link-color'][0] + '"' +
                 this.description_markup[it].slice(
                     this.description_markup[it].indexOf('>'));
@@ -601,25 +601,25 @@ var TaskItem = new Lang.Class({
             }
 
             markup +=
-                '<span font-weight="bold" foreground="' +
+                '`<span font-weight="bold" foreground="' +
                 this.custom_css['-timepp-rec-date-color'][0] + '">' +
-                txt + '</span>';
+                txt + '</span>`';
         }
 
         if (this.due_date !== '9999-99-99') {
             markup +=
-                '<span font-weight="bold" foreground="' +
+                '`<span font-weight="bold" foreground="' +
                 this.custom_css['-timepp-due-date-color'][0] + '">' +
                 `${_('due')}:&#160;${this.due_date}&#160;(${G.date_delta_str(this.due_date)})   ` +
-                '</span>';
+                '</span>`';
         }
 
         if (this.is_deferred) {
             markup +=
-                '<span font-weight="bold" foreground="' +
+                '`<span font-weight="bold" foreground="' +
                 this.custom_css['-timepp-defer-date-color'][0] + '">' +
                 `${_('deferred')}:&#160;${this.defer_date}&#160;(${G.date_delta_str(this.defer_date)})   ` +
-                '</span>';
+                '</span>`';
         }
 
         if (markup) {

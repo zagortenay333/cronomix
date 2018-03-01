@@ -438,8 +438,8 @@ var SectionMain = new Lang.Class({
 
             if (REG.URL.test(token) || REG.FILE_PATH.test(token)) {
                 text[i] =
-                    '<span foreground="' + this.css['-timepp-link-color'][0] +
-                    '"><u><b>' + token + '</b></u></span>';
+                    '`<span foreground="' + this.css['-timepp-link-color'][0] +
+                    '"><u><b>' + token + '</b></u></span>`';
             }
         }
 
