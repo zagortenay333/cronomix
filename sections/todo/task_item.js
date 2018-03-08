@@ -604,25 +604,25 @@ var TaskItem = new Lang.Class({
             }
 
             markup +=
-                '`<span font-weight="bold" foreground="' +
+                '<span font-weight="bold" foreground="' +
                 this.custom_css['-timepp-rec-date-color'][0] + '">' +
-                txt + '</span>`';
+                txt + '</span>';
         }
 
         if (this.due_date !== '9999-99-99') {
             markup +=
-                '`<span font-weight="bold" foreground="' +
+                '<span font-weight="bold" foreground="' +
                 this.custom_css['-timepp-due-date-color'][0] + '">' +
                 `${_('due')}:&#160;${this.due_date}&#160;(${G.date_delta_str(this.due_date)})   ` +
-                '</span>`';
+                '</span>';
         }
 
         if (this.is_deferred) {
             markup +=
-                '`<span font-weight="bold" foreground="' +
+                '<span font-weight="bold" foreground="' +
                 this.custom_css['-timepp-defer-date-color'][0] + '">' +
                 `${_('deferred')}:&#160;${this.defer_date}&#160;(${G.date_delta_str(this.defer_date)})   ` +
-                '</span>`';
+                '</span>';
         }
 
         if (markup) {
