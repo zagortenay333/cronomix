@@ -1,22 +1,21 @@
-# SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
+# OriginCode <origincoder@yahoo.com>, 2018.
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-02-28 21:24+0100\n"
-"PO-Revision-Date: 2017-11-24 21:58+0800\n"
-"Last-Translator: Jack Wu <origincoder@yahoo.com>\n"
-"Language-Team: \n"
-"Language: \n"
+"PO-Revision-Date: 2018-03-08 22:07+0800\n"
+"Last-Translator: OriginCode <origincoder@yahoo.com>\n"
+"Language-Team: Chinese <kde-i18n-doc@kde.org>\n"
+"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Lokalize 2.0\n"
 
 #: data/po_files/../../lib/misc_utils.js:44
 msgid "File or dir not found."
@@ -60,7 +59,7 @@ msgstr "完成文件（可选）"
 
 #: data/po_files/../../data/prefs.ui:183
 msgid "Time-tracker csv directory (optional)"
-msgstr "时间跟踪器CSV目录（可选）"
+msgstr "时间追溯器CSV目录（可选）"
 
 #: data/po_files/../../data/prefs.ui:331
 msgid "Show only 1 panel icon for joined menus"
@@ -113,7 +112,7 @@ msgstr "闹钟"
 
 #: data/po_files/../../data/prefs.ui:640
 msgid "Todo and Time Tracker"
-msgstr "TODO列表和时间追踪器"
+msgstr "TODO列表和时间追溯器"
 
 #: data/po_files/../../data/prefs.ui:690
 msgid "General"
@@ -186,7 +185,7 @@ msgstr "键盘快捷键"
 #: data/po_files/../../data/prefs.ui:2464
 #: data/po_files/../../data/prefs.ui:2934
 msgid "Open popup menu"
-msgstr ""
+msgstr "打开弹出菜单"
 
 #: data/po_files/../../data/prefs.ui:1050
 #: data/po_files/../../data/prefs.ui:1100
@@ -220,7 +219,7 @@ msgstr "在全屏下打开"
 
 #: data/po_files/../../data/prefs.ui:1138
 msgid "Open popup menu and search presets"
-msgstr ""
+msgstr "打开弹出菜单并搜索预设"
 
 #: data/po_files/../../data/prefs.ui:1298
 msgid "Format"
@@ -291,7 +290,7 @@ msgstr "打开状态视图"
 
 #: data/po_files/../../data/prefs.ui:3198
 msgid "Todo / Time Tracker"
-msgstr "TODO/时间跟踪器"
+msgstr "TODO/时间追溯器"
 
 #: data/po_files/../../sections/todo/task_item.js:595
 #: data/po_files/../../sections/todo/task_item.js:600
@@ -303,7 +302,6 @@ msgstr "循环"
 msgid "%d day after completion"
 msgid_plural "%d days after completion"
 msgstr[0] "完成后 %d 天"
-msgstr[1] "完成后 %d 天"
 
 #: data/po_files/../../sections/todo/task_item.js:613
 msgid "due"
@@ -465,7 +463,6 @@ msgstr "项目状态"
 msgid "%d day"
 msgid_plural "%d days"
 msgstr[0] "%d 天"
-msgstr[1] "%d 天"
 
 #: data/po_files/../../sections/todo/view__clear_tasks.js:53
 msgid "Delete all completed tasks"
@@ -484,14 +481,12 @@ msgstr "今天"
 msgid "%d day ago"
 msgid_plural "%d days ago"
 msgstr[0] "%d 天前"
-msgstr[1] "%d 天前"
 
 #: data/po_files/../../sections/todo/GLOBAL.js:65
 #, javascript-format
 msgid "in %d day"
 msgid_plural "in %d days"
 msgstr[0] "在 %d 天后"
-msgstr[1] "在 %d 天后"
 
 #: data/po_files/../../sections/todo/MAIN.js:288
 #: data/po_files/../../sections/todo/MAIN.js:1050
@@ -511,14 +506,12 @@ msgstr "新建任务……"
 msgid "%d task has recurred"
 msgid_plural "%d tasks have recurred"
 msgstr[0] "%d 个任务已经重新开始执行"
-msgstr[1] "%d 个任务已经重新开始执行"
 
 #: data/po_files/../../sections/todo/MAIN.js:630
 #, javascript-format
 msgid "%d deferred task has been opened"
 msgid_plural "%d deferred tasks have been opened"
 msgstr[0] "%d 个延时任务已经打开"
-msgstr[1] "%d 个延时任务已经打开"
 
 #: data/po_files/../../sections/todo/MAIN.js:1056
 msgid "Nothing found."
@@ -537,7 +530,6 @@ msgstr "仅显示隐藏的任务"
 msgid "%d hidden task"
 msgid_plural "%d hidden tasks"
 msgstr[0] "%d 个隐藏的任务"
-msgstr[1] "%d 个隐藏的任务"
 
 #: data/po_files/../../sections/todo/view__filters.js:139
 msgid "Show recurring tasks only"
@@ -548,7 +540,6 @@ msgstr "仅显示重新执行的任务"
 msgid "%d recurring task"
 msgid_plural "%d recurring tasks"
 msgstr[0] "%d 个重新执行的任务"
-msgstr[1] "%d 个重新执行的任务"
 
 #: data/po_files/../../sections/todo/view__filters.js:165
 msgid "Show deferred tasks only"
@@ -559,7 +550,6 @@ msgstr "仅显示延时任务"
 msgid "%d deferred task"
 msgid_plural "%d deferred tasks"
 msgstr[0] "%d 个延时任务"
-msgstr[1] "%d 个延时任务"
 
 #: data/po_files/../../sections/todo/view__filters.js:190
 msgid "Invert filters"
@@ -584,7 +574,6 @@ msgstr "无优先级"
 msgid "%d task"
 msgid_plural "%d tasks"
 msgstr[0] "%d 个任务"
-msgstr[1] "%d 个任务"
 
 #: data/po_files/../../sections/todo/view__file_switcher.js:65
 msgid "Search files..."
@@ -642,7 +631,7 @@ msgstr "直到长时休息前的番茄钟数"
 
 #: data/po_files/../../sections/pomodoro.js:769
 msgid "Control todo time tracker by task id..."
-msgstr ""
+msgstr "以任务ID控制TODO时间追溯器"
 
 #: data/po_files/../../sections/context_menu.js:36
 msgid "Open settings"
@@ -706,7 +695,6 @@ msgstr "延后"
 msgid "%d alarm went off!"
 msgid_plural "%d alarms went off!"
 msgstr[0] "%d 个闹钟已停止！"
-msgstr[1] "%d 个闹钟已停止！"
 
 #: data/po_files/../../sections/timer.js:48
 msgid "Timer Expired!"
@@ -719,4 +707,5 @@ msgstr "搜索文件……"
 
 #: data/po_files/../../sections/timer.js:654
 msgid "Default preset"
-msgstr ""
+msgstr "默认预设"
+
