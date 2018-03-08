@@ -531,7 +531,7 @@ const AlarmEditor = new Lang.Class({
             let label = new St.Label({ text: `${_('Snooze duration')} ${_('(min)')} `, x_expand: true, y_align: Clutter.ActorAlign.CENTER });
             box.add_child(label);
 
-            this.snooze_duration_picker = new NUM_PICKER.NumPicker(5, null);
+            this.snooze_duration_picker = new NUM_PICKER.NumPicker(1, null);
             box.add_child(this.snooze_duration_picker.actor);
 
             if (alarm)
