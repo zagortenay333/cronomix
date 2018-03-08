@@ -104,6 +104,7 @@ var SectionMain = new Lang.Class({
                         [G.SortType.COMPLETED       , G.SortOrder.ASCENDING],
                         [G.SortType.PRIORITY        , G.SortOrder.ASCENDING],
                         [G.SortType.DUE_DATE        , G.SortOrder.ASCENDING],
+                        [G.SortType.RECURRENCE      , G.SortOrder.ASCENDING],
                         [G.SortType.CONTEXT         , G.SortOrder.ASCENDING],
                         [G.SortType.PROJECT         , G.SortOrder.ASCENDING],
                         [G.SortType.CREATION_DATE   , G.SortOrder.ASCENDING],
@@ -1328,6 +1329,7 @@ var SectionMain = new Lang.Class({
             [G.SortType.COMPLETED]       : 'completed',
             [G.SortType.PRIORITY]        : 'priority',
             [G.SortType.DUE_DATE]        : 'due_date',
+            [G.SortType.RECURRENCE]      : 'rec_next',
             [G.SortType.CONTEXT]         : 'first_context',
             [G.SortType.PROJECT]         : 'first_project',
             [G.SortType.CREATION_DATE]   : 'creation_date',
@@ -1352,8 +1354,7 @@ var SectionMain = new Lang.Class({
                     if (this.cache.sort[i][1] === G.SortOrder.DESCENDING) {
                         return +(a[props[i]] > b[props[i]]) ||
                                +(a[props[i]] === b[props[i]]) - 1;
-                    }
-                    else {
+                    } else {
                         return +(a[props[i]] < b[props[i]]) ||
                                +(a[props[i]] === b[props[i]]) - 1;
                     }
@@ -1362,8 +1363,7 @@ var SectionMain = new Lang.Class({
                     if (this.cache.sort[i][1] === G.SortOrder.DESCENDING) {
                         return +(a[props[i]] < b[props[i]]) ||
                                +(a[props[i]] === b[props[i]]) - 1;
-                    }
-                    else {
+                    } else {
                         return +(a[props[i]] > b[props[i]]) ||
                                +(a[props[i]] === b[props[i]]) - 1;
                     }

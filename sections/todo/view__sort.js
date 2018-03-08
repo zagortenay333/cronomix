@@ -42,6 +42,7 @@ var TaskSortWindow = new Lang.Class({
             [G.SortType.PROJECT]         : _('Sort by Projects'),
             [G.SortType.PRIORITY]        : _('Sort by Priority'),
             [G.SortType.DUE_DATE]        : _('Sort by Due Date'),
+            [G.SortType.RECURRENCE]      : _('Sort by Recurrence Date'),
             [G.SortType.COMPLETED]       : _('Sort by Completed'),
             [G.SortType.CREATION_DATE]   : _('Sort by Creation Date'),
             [G.SortType.COMPLETION_DATE] : _('Sort by Completion Date'),
@@ -193,8 +194,7 @@ var TaskSortWindow = new Lang.Class({
             if (item.sort_order === G.SortOrder.ASCENDING) {
                 item.sort_order = G.SortOrder.DESCENDING;
                 item.sort_icon.icon_name = 'timepp-sort-descending-symbolic';
-            }
-            else {
+            } else {
                 item.sort_order = G.SortOrder.ASCENDING;
                 item.sort_icon.icon_name = 'timepp-sort-ascending-symbolic';
             }

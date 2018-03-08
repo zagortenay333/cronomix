@@ -16,6 +16,7 @@ var SortType = {
     PROJECT         : 'PROJECT',
     PRIORITY        : 'PRIORITY',
     DUE_DATE        : 'DUE_DATE',
+    RECURRENCE      : 'RECURRENCE',
     COMPLETED       : 'COMPLETED',
     CREATION_DATE   : 'CREATION_DATE',
     COMPLETION_DATE : 'COMPLETION_DATE',

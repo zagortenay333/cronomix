@@ -187,9 +187,13 @@ var TaskItem = new Lang.Class({
 
         // The recurrence type is one of: 1, 2, 3
         // The numbers just match the global regex TODO_REC_EXT_[123]
+        // rec_next is one of:
+        //     - '9999-99-99' when rec_str is ''
+        //     - '8999-99-99' when rec_str is given but next rec is unknown
+        //     - date of next recurrence
         this.rec_type = 1;
         this.rec_str  = '';
-        this.rec_next = '';
+        this.rec_next = '9999-99-99';
 
         // These vars are only used for sorting purposes. They hold the first
         // context/project keyword as they appear in the task_str. If there are
@@ -316,9 +320,9 @@ var TaskItem = new Lang.Class({
                     this.creation_date   = '0000-00-00';
                     this.completion_date = '0000-00-00';
                     this.due_date        = '9999-99-99';
-                    this.defer_date      = '';
-                    this.is_deferred     = false;
                     this.rec_str         = '';
+                    this.is_deferred     = false;
+                    this.defer_date      = '';
                     this.tracker_id      = '';
                     this.priority        = '(_)';
                     this.hidden          = true;
@@ -449,14 +453,15 @@ var TaskItem = new Lang.Class({
     //
     // returns array : [do_recur, next_recurrence]
     //
-    // @do_recur        : bool    (whether or not the task should recur today)
-    // @next_recurrence : string  (date of next recurrence in yyyy-mm-dd format)
+    // @do_recur        : bool   (whether or not the task should recur today)
+    // @next_recurrence : string (date of next recurrence in yyyy-mm-dd format
+    //                            or '0000-00-00' when unknown)
     //
     // @next_recurrence can be an empty string, which indicates that the next
     // recurrence couldn't be computed. E.g., the task recurs n days after
     // completion but isn't completed.
     _get_recurrence_date: function () {
-        let res   = [false, ''];
+        let res   = [false, '8999-99-99'];
         let today = G.date_yyyymmdd();
 
         if (this.rec_type === 3) {
@@ -598,8 +603,7 @@ var TaskItem = new Lang.Class({
                     _('recurrence') + ': ' +
                     ngettext('%d day after completion',
                              '%d days after completion', num).format(num);
-            }
-            else {
+            } else {
                 txt = `${_('recurrence')}:&#160;${this.rec_next}&#160;(${G.date_delta_str(this.rec_next)})   `;
             }
 
