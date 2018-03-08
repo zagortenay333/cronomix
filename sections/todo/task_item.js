@@ -56,7 +56,7 @@ var TaskItem = new Lang.Class({
 
 
         // @NOTE
-        // If a var needs to be resettable, add it to the reset() method
+        // If a var needs to be resettable, add it to the reset_props() method
         // instead of the _init() method.
 
 
@@ -142,14 +142,26 @@ var TaskItem = new Lang.Class({
 
     reset: function (self_update, task_str) {
         if (task_str) {
-            if (this.delegate.time_tracker) {
+            if (this.delegate.time_tracker)
                 this.delegate.time_tracker.update_record_name(this.task_str, task_str);
-            }
 
             this.task_str = task_str;
         }
 
+        this.reset_props();
+
+        this._parse_task_str();
+
+        if (self_update) {
+            this.check_recurrence();
+            this.check_deferred_tasks();
+            this.update_dates_markup();
+        }
+    },
+
+    reset_props: function () {
         this.actor.style_class = 'task-item';
+
         this.msg.text = '';
 
         this.tracker_id = '';
@@ -213,14 +225,6 @@ var TaskItem = new Lang.Class({
         this.context_indices    = [];
         this.project_indices    = [];
         this.link_indices       = [];
-
-        this._parse_task_str();
-
-        if (self_update) {
-            this.check_recurrence();
-            this.check_deferred_tasks();
-            this.update_dates_markup();
-        }
     },
 
     _parse_task_str: function () {
@@ -314,20 +318,12 @@ var TaskItem = new Lang.Class({
                     continue;
                 }
                 else if (REG.TODO_HIDE_EXT.test(word)) {
+                    this.reset_props();
+
+                    this.hidden = true;
+
                     this.completion_checkbox.hide();
                     this.prio_label.hide();
-
-                    this.creation_date   = '0000-00-00';
-                    this.completion_date = '0000-00-00';
-                    this.due_date        = '9999-99-99';
-                    this.rec_str         = '';
-                    this.is_deferred     = false;
-                    this.defer_date      = '';
-                    this.tracker_id      = '';
-                    this.priority        = '(_)';
-                    this.hidden          = true;
-                    this.completed       = false;
-
                     this.actor.add_style_class_name('hidden-task');
                     let icon_incognito_bin = new St.Button({ can_focus: true });
                     this.header.insert_child_at_index(icon_incognito_bin, 0);
