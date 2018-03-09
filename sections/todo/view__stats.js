@@ -1188,8 +1188,14 @@ var StatsView = new Lang.Class({
                 interval[1] % 60
             );
 
-            // txt += '  /  ' + start + '..' + end;
-            txt += '\n\n- ' + _('Interval')  + ': ' + start + '..' + end;
+            let delta = interval[1] - interval[0];
+            delta = '%dh %dmin %ds'.format(
+                Math.floor(delta / 3600),
+                Math.floor(delta % 3600 / 60),
+                delta % 60
+            );
+
+            txt += `\n\n- ${_('Interval')}: ${start}..${end} (${delta})`;
         } else {
             txt += '\n\n- ' + _('No intervals found.');
         }
