@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-28 21:24+0100\n"
+"POT-Creation-Date: 2018-03-09 19:05+0100\n"
 "PO-Revision-Date: 2018-03-08 22:07+0800\n"
 "Last-Translator: OriginCode <origincoder@yahoo.com>\n"
 "Language-Team: Chinese <kde-i18n-doc@kde.org>\n"
@@ -21,11 +21,11 @@ msgstr ""
 msgid "File or dir not found."
 msgstr "目录或文件无法找到。"
 
-#: data/po_files/../../lib/fullscreen.js:224
+#: data/po_files/../../lib/fullscreen.js:222
 msgid "Move to Primary Monitor"
 msgstr "移动到主显示器"
 
-#: data/po_files/../../lib/fullscreen.js:230
+#: data/po_files/../../lib/fullscreen.js:228
 msgid "Move to Secondary Monitor"
 msgstr "移动到子显示器"
 
@@ -33,19 +33,20 @@ msgstr "移动到子显示器"
 msgid "Unique name"
 msgstr "唯一名"
 
-#: data/po_files/../../data/prefs.ui:57 data/po_files/../../data/prefs.ui:1055
-#: data/po_files/../../data/prefs.ui:1105
-#: data/po_files/../../data/prefs.ui:1155
-#: data/po_files/../../data/prefs.ui:1454
-#: data/po_files/../../data/prefs.ui:1504
-#: data/po_files/../../data/prefs.ui:2120
-#: data/po_files/../../data/prefs.ui:2170
-#: data/po_files/../../data/prefs.ui:2481
-#: data/po_files/../../data/prefs.ui:2951
-#: data/po_files/../../data/prefs.ui:3001
-#: data/po_files/../../data/prefs.ui:3039
-#: data/po_files/../../data/prefs.ui:3095
-#: data/po_files/../../data/prefs.ui:3147
+#: data/po_files/../../data/prefs.ui:57 data/po_files/../../data/prefs.ui:1044
+#: data/po_files/../../data/prefs.ui:1094
+#: data/po_files/../../data/prefs.ui:1144
+#: data/po_files/../../data/prefs.ui:1443
+#: data/po_files/../../data/prefs.ui:1493
+#: data/po_files/../../data/prefs.ui:2109
+#: data/po_files/../../data/prefs.ui:2159
+#: data/po_files/../../data/prefs.ui:2470
+#: data/po_files/../../data/prefs.ui:2988
+#: data/po_files/../../data/prefs.ui:3038
+#: data/po_files/../../data/prefs.ui:3076
+#: data/po_files/../../data/prefs.ui:3134
+#: data/po_files/../../data/prefs.ui:3186
+#: data/po_files/../../data/prefs.ui:3248
 msgid "not set"
 msgstr "未设置"
 
@@ -61,44 +62,44 @@ msgstr "完成文件（可选）"
 msgid "Time-tracker csv directory (optional)"
 msgstr "时间追溯器CSV目录（可选）"
 
-#: data/po_files/../../data/prefs.ui:331
+#: data/po_files/../../data/prefs.ui:320
 msgid "Show only 1 panel icon for joined menus"
 msgstr "只显示1个已加入菜单的面板图标"
 
-#: data/po_files/../../data/prefs.ui:375
+#: data/po_files/../../data/prefs.ui:364
 msgid "Position in the panel"
 msgstr "面板中的位置"
 
-#: data/po_files/../../data/prefs.ui:389
+#: data/po_files/../../data/prefs.ui:378
 msgid "Left"
 msgstr "左侧"
 
-#: data/po_files/../../data/prefs.ui:390
+#: data/po_files/../../data/prefs.ui:379
 msgid "Center"
 msgstr "中间"
 
-#: data/po_files/../../data/prefs.ui:391
+#: data/po_files/../../data/prefs.ui:380
 msgid "Right"
 msgstr "右侧"
 
-#: data/po_files/../../data/prefs.ui:423
+#: data/po_files/../../data/prefs.ui:412
 msgid "Enabled Sections"
 msgstr "打开的分栏"
 
-#: data/po_files/../../data/prefs.ui:464 data/po_files/../../data/prefs.ui:1194
+#: data/po_files/../../data/prefs.ui:453 data/po_files/../../data/prefs.ui:1183
 #: data/po_files/../../sections/timer.js:174
 #: data/po_files/../../sections/timer.js:336
 msgid "Timer"
 msgstr "计时器"
 
-#: data/po_files/../../data/prefs.ui:508 data/po_files/../../data/prefs.ui:1543
+#: data/po_files/../../data/prefs.ui:497 data/po_files/../../data/prefs.ui:1532
 #: data/po_files/../../sections/stopwatch.js:158
 #: data/po_files/../../sections/stopwatch.js:350
 msgid "Stopwatch"
 msgstr "秒表"
 
-#: data/po_files/../../data/prefs.ui:552 data/po_files/../../data/prefs.ui:1876
-#: data/po_files/../../data/prefs.ui:2209
+#: data/po_files/../../data/prefs.ui:541 data/po_files/../../data/prefs.ui:1865
+#: data/po_files/../../data/prefs.ui:2198
 #: data/po_files/../../sections/pomodoro.js:41
 #: data/po_files/../../sections/pomodoro.js:160
 #: data/po_files/../../sections/pomodoro.js:247
@@ -106,100 +107,101 @@ msgstr "秒表"
 msgid "Pomodoro"
 msgstr "番茄计时器"
 
-#: data/po_files/../../data/prefs.ui:596 data/po_files/../../data/prefs.ui:2520
+#: data/po_files/../../data/prefs.ui:585 data/po_files/../../data/prefs.ui:2509
 msgid "Alarms"
 msgstr "闹钟"
 
-#: data/po_files/../../data/prefs.ui:640
+#: data/po_files/../../data/prefs.ui:629
 msgid "Todo and Time Tracker"
 msgstr "TODO列表和时间追溯器"
 
-#: data/po_files/../../data/prefs.ui:690
+#: data/po_files/../../data/prefs.ui:679
 msgid "General"
 msgstr "通用"
 
-#: data/po_files/../../data/prefs.ui:749 data/po_files/../../data/prefs.ui:1254
-#: data/po_files/../../data/prefs.ui:1603
-#: data/po_files/../../data/prefs.ui:2269
-#: data/po_files/../../data/prefs.ui:2580
+#: data/po_files/../../data/prefs.ui:738 data/po_files/../../data/prefs.ui:1243
+#: data/po_files/../../data/prefs.ui:1592
+#: data/po_files/../../data/prefs.ui:2258
+#: data/po_files/../../data/prefs.ui:2570
 msgid "Show in separate menu"
 msgstr "显示在分离菜单中"
 
-#: data/po_files/../../data/prefs.ui:793 data/po_files/../../data/prefs.ui:1647
+#: data/po_files/../../data/prefs.ui:782 data/po_files/../../data/prefs.ui:1636
 msgid "Show seconds"
 msgstr "显示秒"
 
-#: data/po_files/../../data/prefs.ui:837 data/po_files/../../data/prefs.ui:1348
-#: data/po_files/../../data/prefs.ui:1691
-#: data/po_files/../../data/prefs.ui:2624
+#: data/po_files/../../data/prefs.ui:826 data/po_files/../../data/prefs.ui:1337
+#: data/po_files/../../data/prefs.ui:1680
+#: data/po_files/../../data/prefs.ui:2614
 msgid "Panel Item Mode"
 msgstr "面板物品模式"
 
-#: data/po_files/../../data/prefs.ui:851 data/po_files/../../data/prefs.ui:1362
-#: data/po_files/../../data/prefs.ui:1705
-#: data/po_files/../../data/prefs.ui:2638
+#: data/po_files/../../data/prefs.ui:840 data/po_files/../../data/prefs.ui:1351
+#: data/po_files/../../data/prefs.ui:1694
+#: data/po_files/../../data/prefs.ui:2628
 msgid "Icon only"
 msgstr "仅图标"
 
-#: data/po_files/../../data/prefs.ui:852 data/po_files/../../data/prefs.ui:1363
-#: data/po_files/../../data/prefs.ui:1706
-#: data/po_files/../../data/prefs.ui:2639
+#: data/po_files/../../data/prefs.ui:841 data/po_files/../../data/prefs.ui:1352
+#: data/po_files/../../data/prefs.ui:1695
+#: data/po_files/../../data/prefs.ui:2629
 msgid "Text only"
 msgstr "仅文字"
 
-#: data/po_files/../../data/prefs.ui:853 data/po_files/../../data/prefs.ui:1364
-#: data/po_files/../../data/prefs.ui:1707
-#: data/po_files/../../data/prefs.ui:2640
+#: data/po_files/../../data/prefs.ui:842 data/po_files/../../data/prefs.ui:1353
+#: data/po_files/../../data/prefs.ui:1696
+#: data/po_files/../../data/prefs.ui:2630
 msgid "Icon and Text"
 msgstr "图标和文字"
 
-#: data/po_files/../../data/prefs.ui:888 data/po_files/../../data/prefs.ui:2314
+#: data/po_files/../../data/prefs.ui:877 data/po_files/../../data/prefs.ui:2303
 msgid "Notification sound"
 msgstr "提醒音"
 
-#: data/po_files/../../data/prefs.ui:950 data/po_files/../../data/prefs.ui:1741
-#: data/po_files/../../data/prefs.ui:2376
+#: data/po_files/../../data/prefs.ui:939 data/po_files/../../data/prefs.ui:1730
+#: data/po_files/../../data/prefs.ui:2365
 msgid "Notification style"
 msgstr "提醒风格"
 
-#: data/po_files/../../data/prefs.ui:964 data/po_files/../../data/prefs.ui:1755
-#: data/po_files/../../data/prefs.ui:2390
+#: data/po_files/../../data/prefs.ui:953 data/po_files/../../data/prefs.ui:1744
+#: data/po_files/../../data/prefs.ui:2379
 msgid "Standard"
 msgstr "标准"
 
-#: data/po_files/../../data/prefs.ui:965 data/po_files/../../data/prefs.ui:1756
-#: data/po_files/../../data/prefs.ui:2391
+#: data/po_files/../../data/prefs.ui:954 data/po_files/../../data/prefs.ui:1745
+#: data/po_files/../../data/prefs.ui:2380
 msgid "Fullscreen"
 msgstr "全屏"
 
-#: data/po_files/../../data/prefs.ui:997 data/po_files/../../data/prefs.ui:1396
-#: data/po_files/../../data/prefs.ui:2062
-#: data/po_files/../../data/prefs.ui:2423
-#: data/po_files/../../data/prefs.ui:2891
+#: data/po_files/../../data/prefs.ui:986 data/po_files/../../data/prefs.ui:1385
+#: data/po_files/../../data/prefs.ui:2051
+#: data/po_files/../../data/prefs.ui:2412
+#: data/po_files/../../data/prefs.ui:2927
 msgid "Keyboard shortcuts"
 msgstr "键盘快捷键"
 
-#: data/po_files/../../data/prefs.ui:1038
-#: data/po_files/../../data/prefs.ui:1437
-#: data/po_files/../../data/prefs.ui:2103
-#: data/po_files/../../data/prefs.ui:2464
-#: data/po_files/../../data/prefs.ui:2934
+#: data/po_files/../../data/prefs.ui:1027
+#: data/po_files/../../data/prefs.ui:1426
+#: data/po_files/../../data/prefs.ui:2092
+#: data/po_files/../../data/prefs.ui:2453
+#: data/po_files/../../data/prefs.ui:2971
 msgid "Open popup menu"
 msgstr "打开弹出菜单"
 
-#: data/po_files/../../data/prefs.ui:1050
-#: data/po_files/../../data/prefs.ui:1100
-#: data/po_files/../../data/prefs.ui:1150
-#: data/po_files/../../data/prefs.ui:1449
-#: data/po_files/../../data/prefs.ui:1499
-#: data/po_files/../../data/prefs.ui:2115
-#: data/po_files/../../data/prefs.ui:2165
-#: data/po_files/../../data/prefs.ui:2476
-#: data/po_files/../../data/prefs.ui:2946
-#: data/po_files/../../data/prefs.ui:2996
-#: data/po_files/../../data/prefs.ui:3034
-#: data/po_files/../../data/prefs.ui:3090
-#: data/po_files/../../data/prefs.ui:3142
+#: data/po_files/../../data/prefs.ui:1039
+#: data/po_files/../../data/prefs.ui:1089
+#: data/po_files/../../data/prefs.ui:1139
+#: data/po_files/../../data/prefs.ui:1438
+#: data/po_files/../../data/prefs.ui:1488
+#: data/po_files/../../data/prefs.ui:2104
+#: data/po_files/../../data/prefs.ui:2154
+#: data/po_files/../../data/prefs.ui:2465
+#: data/po_files/../../data/prefs.ui:2983
+#: data/po_files/../../data/prefs.ui:3033
+#: data/po_files/../../data/prefs.ui:3071
+#: data/po_files/../../data/prefs.ui:3129
+#: data/po_files/../../data/prefs.ui:3181
+#: data/po_files/../../data/prefs.ui:3243
 msgid ""
 "Examples:\n"
 "<super><ctrl><alt><shift>t\n"
@@ -211,111 +213,120 @@ msgstr ""
 "<shift>super\n"
 "F3"
 
-#: data/po_files/../../data/prefs.ui:1088
-#: data/po_files/../../data/prefs.ui:1487
-#: data/po_files/../../data/prefs.ui:2153
+#: data/po_files/../../data/prefs.ui:1077
+#: data/po_files/../../data/prefs.ui:1476
+#: data/po_files/../../data/prefs.ui:2142
 msgid "Open in fullscreen"
 msgstr "在全屏下打开"
 
-#: data/po_files/../../data/prefs.ui:1138
+#: data/po_files/../../data/prefs.ui:1127
 msgid "Open popup menu and search presets"
 msgstr "打开弹出菜单并搜索预设"
 
-#: data/po_files/../../data/prefs.ui:1298
+#: data/po_files/../../data/prefs.ui:1287
 msgid "Format"
 msgstr "格式"
 
-#: data/po_files/../../data/prefs.ui:1312
+#: data/po_files/../../data/prefs.ui:1301
 msgid "hours:min"
 msgstr "时:分"
 
-#: data/po_files/../../data/prefs.ui:1313
+#: data/po_files/../../data/prefs.ui:1302
 msgid "hours:min:sec"
 msgstr "时:分:秒"
 
-#: data/po_files/../../data/prefs.ui:1314
+#: data/po_files/../../data/prefs.ui:1303
 msgid "hours:min:sec:centisec"
 msgstr "时:分:秒:毫秒"
 
-#: data/po_files/../../data/prefs.ui:1788
+#: data/po_files/../../data/prefs.ui:1777
 #, fuzzy
 msgid "Notification Sounds"
 msgstr "提醒音"
 
-#: data/po_files/../../data/prefs.ui:1831
+#: data/po_files/../../data/prefs.ui:1820
 #: data/po_files/../../sections/alarms.js:549
 #, fuzzy
 msgid "Repeat notification sound?"
 msgstr "提醒音"
 
-#: data/po_files/../../data/prefs.ui:1939
+#: data/po_files/../../data/prefs.ui:1928
 #: data/po_files/../../sections/pomodoro.js:43
 #, fuzzy
 msgid "Short Break"
 msgstr "短时休息"
 
-#: data/po_files/../../data/prefs.ui:2002
+#: data/po_files/../../data/prefs.ui:1991
 #: data/po_files/../../sections/pomodoro.js:42
 #, fuzzy
 msgid "Long Break"
 msgstr "长时休息！"
 
-#: data/po_files/../../data/prefs.ui:2692
+#: data/po_files/../../data/prefs.ui:2682
 msgid "Task width (px)"
 msgstr "任务栏宽度（像素）"
 
-#: data/po_files/../../data/prefs.ui:2722
+#: data/po_files/../../data/prefs.ui:2714
+msgid "Resume tracking after abrupt restart?"
+msgstr ""
+
+#: data/po_files/../../data/prefs.ui:2757
 msgid "Todo files"
 msgstr "TODO文件"
 
-#: data/po_files/../../data/prefs.ui:2984
+#: data/po_files/../../data/prefs.ui:3021
 #, fuzzy
 msgid "Open popup menu and add task"
 msgstr "打开此分栏并添加任务"
 
-#: data/po_files/../../data/prefs.ui:3052
+#: data/po_files/../../data/prefs.ui:3089
 #, fuzzy
 msgid "Open popup menu and search tasks"
 msgstr "打开此分栏并搜索任务"
 
-#: data/po_files/../../data/prefs.ui:3108
+#: data/po_files/../../data/prefs.ui:3147
 #, fuzzy
 msgid "Open popup menu and switch todo files"
 msgstr "打开此分栏并切换TODO文件"
 
-#: data/po_files/../../data/prefs.ui:3160
+#: data/po_files/../../data/prefs.ui:3199
 #, fuzzy
 msgid "Open stats view"
 msgstr "打开状态视图"
 
-#: data/po_files/../../data/prefs.ui:3198
+#: data/po_files/../../data/prefs.ui:3231
+#, fuzzy
+msgid "Open current todo.txt file"
+msgstr "当前文件"
+
+#: data/po_files/../../data/prefs.ui:3287
 msgid "Todo / Time Tracker"
 msgstr "TODO/时间追溯器"
 
-#: data/po_files/../../sections/todo/task_item.js:595
-#: data/po_files/../../sections/todo/task_item.js:600
+#: data/po_files/../../sections/todo/task_item.js:599
+#: data/po_files/../../sections/todo/task_item.js:603
 msgid "recurrence"
 msgstr "循环"
 
-#: data/po_files/../../sections/todo/task_item.js:596
+#: data/po_files/../../sections/todo/task_item.js:600
 #, javascript-format
 msgid "%d day after completion"
 msgid_plural "%d days after completion"
 msgstr[0] "完成后 %d 天"
 
-#: data/po_files/../../sections/todo/task_item.js:613
+#: data/po_files/../../sections/todo/task_item.js:616
 msgid "due"
 msgstr "截止"
 
-#: data/po_files/../../sections/todo/task_item.js:621
+#: data/po_files/../../sections/todo/task_item.js:624
 msgid "deferred"
 msgstr "已延时"
 
-#: data/po_files/../../sections/todo/task_item.js:660
+#: data/po_files/../../sections/todo/task_item.js:663
 msgid "created"
 msgstr "已创建"
 
-#: data/po_files/../../sections/todo/task_item.js:663
+#: data/po_files/../../sections/todo/task_item.js:666
 msgid "completed"
 msgstr "已完成"
 
@@ -336,20 +347,25 @@ msgid "Sort by Due Date"
 msgstr "根据截止日期排序"
 
 #: data/po_files/../../sections/todo/view__sort.js:45
+#, fuzzy
+msgid "Sort by Recurrence Date"
+msgstr "根据截止日期排序"
+
+#: data/po_files/../../sections/todo/view__sort.js:46
 msgid "Sort by Completed"
 msgstr "根据完成情况排序"
 
-#: data/po_files/../../sections/todo/view__sort.js:46
+#: data/po_files/../../sections/todo/view__sort.js:47
 msgid "Sort by Creation Date"
 msgstr "根据创建日期排序"
 
-#: data/po_files/../../sections/todo/view__sort.js:47
+#: data/po_files/../../sections/todo/view__sort.js:48
 msgid "Sort by Completion Date"
 msgstr "根据完成日期排序"
 
-#: data/po_files/../../sections/todo/view__sort.js:78
+#: data/po_files/../../sections/todo/view__sort.js:79
 #: data/po_files/../../sections/todo/view__task_editor.js:140
-#: data/po_files/../../sections/todo/view__stats.js:212
+#: data/po_files/../../sections/todo/view__stats.js:248
 #: data/po_files/../../sections/todo/view__clear_tasks.js:96
 #: data/po_files/../../sections/todo/view__filters.js:206
 #: data/po_files/../../sections/pomodoro.js:782
@@ -375,94 +391,122 @@ msgid "Archive"
 msgstr "储存"
 
 #: data/po_files/../../sections/todo/view__task_editor.js:137
-#: data/po_files/../../sections/todo/view__stats.js:215
+#: data/po_files/../../sections/todo/view__stats.js:251
 #: data/po_files/../../sections/todo/view__clear_tasks.js:93
 #: data/po_files/../../sections/pomodoro.js:783
 #: data/po_files/../../sections/alarms.js:587 data/po_files/../../prefs.js:132
 msgid "Cancel"
 msgstr "取消"
 
-#: data/po_files/../../sections/todo/view__stats.js:92
+#: data/po_files/../../sections/todo/view__stats.js:94
 msgid "Today"
 msgstr "今天"
 
-#: data/po_files/../../sections/todo/view__stats.js:93
+#: data/po_files/../../sections/todo/view__stats.js:95
 msgid "This Week"
 msgstr "本周"
 
-#: data/po_files/../../sections/todo/view__stats.js:94
+#: data/po_files/../../sections/todo/view__stats.js:96
 msgid "This Month"
 msgstr "本月"
 
-#: data/po_files/../../sections/todo/view__stats.js:95
+#: data/po_files/../../sections/todo/view__stats.js:97
 msgid "Last 3 Months"
 msgstr "前3个月"
 
-#: data/po_files/../../sections/todo/view__stats.js:96
+#: data/po_files/../../sections/todo/view__stats.js:98
 msgid "Last 6 Months"
 msgstr "前6个月"
 
-#: data/po_files/../../sections/todo/view__stats.js:97
+#: data/po_files/../../sections/todo/view__stats.js:99
 msgid "All Time"
 msgstr "所有时间"
 
-#: data/po_files/../../sections/todo/view__stats.js:156
+#: data/po_files/../../sections/todo/view__stats.js:165
 msgid "Search..."
 msgstr "搜索……"
 
 #: data/po_files/../../sections/todo/view__stats.js:180
-msgid "Year:"
-msgstr "年："
-
-#: data/po_files/../../sections/todo/view__stats.js:180
-msgid "Month:"
-msgstr "月："
-
-#: data/po_files/../../sections/todo/view__stats.js:180
-msgid "Day:"
-msgstr "日："
-
-#: data/po_files/../../sections/todo/view__stats.js:202
-msgid "From: "
-msgstr "来自："
-
-#: data/po_files/../../sections/todo/view__stats.js:207
-msgid "To: "
-msgstr "至："
-
-#: data/po_files/../../sections/todo/view__stats.js:223
-msgid "Type: "
-msgstr "类型："
-
-#: data/po_files/../../sections/todo/view__stats.js:233
-msgid "Range: "
-msgstr "范围："
-
-#: data/po_files/../../sections/todo/view__stats.js:254
-msgid "Custom Range..."
-msgstr "自定义范围……"
-
-#: data/po_files/../../sections/todo/view__stats.js:260
-#: data/po_files/../../sections/todo/view__stats.js:675
-msgid "Projects"
-msgstr "项目"
-
-#: data/po_files/../../sections/todo/view__stats.js:266
-#: data/po_files/../../sections/todo/view__stats.js:675
+#: data/po_files/../../sections/todo/view__stats.js:294
+#: data/po_files/../../sections/todo/view__stats.js:682
 msgid "Tasks"
 msgstr "任务"
 
-#: data/po_files/../../sections/todo/view__stats.js:596
-msgid "Stats for project"
+#: data/po_files/../../sections/todo/view__stats.js:195
+#: data/po_files/../../sections/todo/view__stats.js:289
+#: data/po_files/../../sections/todo/view__stats.js:682
+msgid "Projects"
+msgstr "项目"
+
+#: data/po_files/../../sections/todo/view__stats.js:216
+msgid "Year:"
+msgstr "年："
+
+#: data/po_files/../../sections/todo/view__stats.js:216
+msgid "Month:"
+msgstr "月："
+
+#: data/po_files/../../sections/todo/view__stats.js:216
+msgid "Day:"
+msgstr "日："
+
+#: data/po_files/../../sections/todo/view__stats.js:238
+msgid "From: "
+msgstr "来自："
+
+#: data/po_files/../../sections/todo/view__stats.js:243
+msgid "To: "
+msgstr "至："
+
+#: data/po_files/../../sections/todo/view__stats.js:283
+msgid "Custom Range..."
+msgstr "自定义范围……"
+
+#: data/po_files/../../sections/todo/view__stats.js:591
+#, fuzzy
+msgid "Stats for task"
 msgstr "项目状态"
 
-#: data/po_files/../../sections/todo/view__stats.js:623
-#: data/po_files/../../sections/todo/view__stats.js:645
-#: data/po_files/../../sections/todo/view__stats.js:780
+#: data/po_files/../../sections/todo/view__stats.js:617
+#: data/po_files/../../sections/todo/view__stats.js:641
+#: data/po_files/../../sections/todo/view__stats.js:681
+#: data/po_files/../../sections/todo/view__stats.js:1145
+#: data/po_files/../../sections/todo/view__stats.js:1154
 #, javascript-format
 msgid "%d day"
 msgid_plural "%d days"
 msgstr[0] "%d 天"
+
+#: data/po_files/../../sections/todo/view__stats.js:1144
+msgid "Average per day (including off days)"
+msgstr ""
+
+#: data/po_files/../../sections/todo/view__stats.js:1153
+msgid "Average per day (excluding off days)"
+msgstr ""
+
+#: data/po_files/../../sections/todo/view__stats.js:1156
+#: data/po_files/../../sections/todo/view__stats.js:1166
+msgid "Total"
+msgstr ""
+
+#: data/po_files/../../sections/todo/view__stats.js:1198
+msgid "Interval"
+msgstr ""
+
+#: data/po_files/../../sections/todo/view__stats.js:1200
+#, fuzzy
+msgid "No intervals found."
+msgstr "无物可寻。"
+
+#: data/po_files/../../sections/todo/time_tracker.js:357
+#: data/po_files/../../sections/todo/time_tracker.js:748
+msgid "Error while parsing csv file. See logs."
+msgstr ""
+
+#: data/po_files/../../sections/todo/time_tracker.js:527
+msgid "To track time, select a dir for csv files in the settings."
+msgstr ""
 
 #: data/po_files/../../sections/todo/view__clear_tasks.js:53
 msgid "Delete all completed tasks"
@@ -472,48 +516,48 @@ msgstr "删除所有已完成的任务"
 msgid "Archive all completed tasks to done.txt and delete them"
 msgstr "将所有已完成的任务储存至 done.txt 并删除它们"
 
-#: data/po_files/../../sections/todo/GLOBAL.js:63
+#: data/po_files/../../sections/todo/GLOBAL.js:64
 msgid "today"
 msgstr "今天"
 
-#: data/po_files/../../sections/todo/GLOBAL.js:64
+#: data/po_files/../../sections/todo/GLOBAL.js:65
 #, javascript-format
 msgid "%d day ago"
 msgid_plural "%d days ago"
 msgstr[0] "%d 天前"
 
-#: data/po_files/../../sections/todo/GLOBAL.js:65
+#: data/po_files/../../sections/todo/GLOBAL.js:66
 #, javascript-format
 msgid "in %d day"
 msgid_plural "in %d days"
 msgstr[0] "在 %d 天后"
 
-#: data/po_files/../../sections/todo/MAIN.js:288
-#: data/po_files/../../sections/todo/MAIN.js:1050
+#: data/po_files/../../sections/todo/MAIN.js:299
+#: data/po_files/../../sections/todo/MAIN.js:1059
 msgid "Loading..."
 msgstr "加载..."
 
-#: data/po_files/../../sections/todo/MAIN.js:298
+#: data/po_files/../../sections/todo/MAIN.js:309
 msgid "Select todo file in settings..."
 msgstr "在设置中选择TODO文件……"
 
-#: data/po_files/../../sections/todo/MAIN.js:323
+#: data/po_files/../../sections/todo/MAIN.js:334
 msgid "Add New Task..."
 msgstr "新建任务……"
 
-#: data/po_files/../../sections/todo/MAIN.js:624
+#: data/po_files/../../sections/todo/MAIN.js:633
 #, javascript-format
 msgid "%d task has recurred"
 msgid_plural "%d tasks have recurred"
 msgstr[0] "%d 个任务已经重新开始执行"
 
-#: data/po_files/../../sections/todo/MAIN.js:630
+#: data/po_files/../../sections/todo/MAIN.js:639
 #, javascript-format
 msgid "%d deferred task has been opened"
 msgid_plural "%d deferred tasks have been opened"
 msgstr[0] "%d 个延时任务已经打开"
 
-#: data/po_files/../../sections/todo/MAIN.js:1056
+#: data/po_files/../../sections/todo/MAIN.js:1065
 msgid "Nothing found."
 msgstr "无物可寻。"
 
@@ -655,13 +699,13 @@ msgstr "新建闹钟……"
 
 #. TRANSLATORS: %s is a time string in the format HH:MM (e.g., 13:44)
 #: data/po_files/../../sections/alarms.js:396
-#: data/po_files/../../sections/alarms.js:929
+#: data/po_files/../../sections/alarms.js:928
 #, javascript-format
 msgid "Alarm at %s"
 msgstr "%s 的闹钟"
 
 #: data/po_files/../../sections/alarms.js:412
-#: data/po_files/../../sections/alarms.js:936
+#: data/po_files/../../sections/alarms.js:935
 msgid "Snooze"
 msgstr "延后"
 
@@ -690,7 +734,7 @@ msgstr "闹钟消息……"
 msgid "Snoozed"
 msgstr "延后"
 
-#: data/po_files/../../sections/alarms.js:953
+#: data/po_files/../../sections/alarms.js:952
 #, javascript-format
 msgid "%d alarm went off!"
 msgid_plural "%d alarms went off!"
@@ -708,4 +752,3 @@ msgstr "搜索文件……"
 #: data/po_files/../../sections/timer.js:654
 msgid "Default preset"
 msgstr "默认预设"
-
