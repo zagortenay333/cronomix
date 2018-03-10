@@ -91,9 +91,9 @@ const Timepp = new Lang.Class({
             ['~'   , null],
             ['~~'  , ['<s>', '</s>']],
 
-            ['$'   , ['<span size="xx-large">', '</span>']],
-            ['$$'  , ['<span size="x-large">', '</span>']],
-            ['$$$' , ['<span size="large">', '</span>']],
+            ['#'   , ['<span size="xx-large">', '</span>']],
+            ['##'  , ['<span size="x-large">', '</span>']],
+            ['###' , ['<span size="large">', '</span>']],
         ]);
 
 

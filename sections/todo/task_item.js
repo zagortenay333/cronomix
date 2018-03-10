@@ -385,6 +385,8 @@ var TaskItem = new Lang.Class({
 
         this.description_markup = words;
 
+        log(">>>>>>>>>>>>>>>>>>>>> " + words);
+
         words = MISC_UTILS.markup_to_pango(words.join(' '), this.ext.markup_map);
 
         words = words.replace(/&(?!amp;|quot;|apos;|lt;|gt;)/g, '&amp;')

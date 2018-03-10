@@ -199,9 +199,9 @@ support for some **markup** stuff:
 
         ~~    strikethrough
 
-        $     xx-large
-        $$    x-large
-        $$$   large
+        #     xx-large
+        ##    x-large
+        ###   large
 
         -------------------------------------
 
