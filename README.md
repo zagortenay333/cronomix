@@ -183,9 +183,7 @@ Some of the features of the todo.txt manager are:
 * In various places throughout this extension (todo.txt, alarms, timer) there is
 support for some **markup** stuff:
 
-    * There is support for [pango markup](https://developer.gnome.org/pango/stable/PangoMarkupFormat.html).
-
-    * In addition to that, a simple version of markdown is supported:
+    * A simple version of markdown is supported:
         ```
         `     escape other markdown
         ``    monospace and escape other markdown

@@ -594,7 +594,7 @@ var StatsView = new Lang.Class({
         markup += '\n\n' + label;
 
         this.stats_card_title.clutter_text.set_markup(
-            MISC_UTILS.markup_to_pango(markup, this.ext.markup_map));
+            MISC_UTILS.markdown_to_pango(markup, this.ext.markdown_map));
 
 
         //

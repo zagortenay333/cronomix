@@ -233,7 +233,8 @@ var TaskItem = new Lang.Class({
         // dates.
         // The 'description' is everything else.
 
-        let words    = MISC_UTILS.split_on_whitespace(this.task_str);
+        let words    = GLib.markup_escape_text(this.task_str, -1);
+        words        = MISC_UTILS.split_on_whitespace(words);
         let len      = words.length;
         let desc_pos = 0; // idx of first word of 'description' in words arr
 
@@ -385,10 +386,7 @@ var TaskItem = new Lang.Class({
 
         this.description_markup = words;
 
-        words = MISC_UTILS.markup_to_pango(words.join(' '), this.ext.markup_map);
-
-        words = words.replace(/&(?!amp;|quot;|apos;|lt;|gt;)/g, '&amp;')
-                     .replace(/<(?!\/?[^<]*>)/g, '&lt;')
+        words = MISC_UTILS.markdown_to_pango(words.join(' '), this.ext.markdown_map);
 
         this.msg.clutter_text.set_markup(words);
     },
@@ -575,9 +573,7 @@ var TaskItem = new Lang.Class({
                     this.description_markup[it].indexOf('>'));
         }
 
-        let markup = MISC_UTILS.markup_to_pango(this.description_markup.join(' '), this.ext.markup_map);
-        markup = markup.replace(/&(?!amp;|quot;|apos;|lt;|gt;)/g, '&amp;')
-                       .replace(/<(?!\/?[^<]*>)/g, '&lt;')
+        let markup = MISC_UTILS.markdown_to_pango(this.description_markup.join(' '), this.ext.markdown_map);
 
         this.msg.clutter_text.set_markup(markup);
     },

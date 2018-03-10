@@ -429,7 +429,7 @@ var SectionMain = new Lang.Class({
 
     highlight_tokens: function (text) {
         text = MISC_UTILS.split_on_whitespace(
-            MISC_UTILS.markup_to_pango(text, this.ext.markup_map));
+            MISC_UTILS.markdown_to_pango(text, this.ext.markdown_map));
 
         let token;
 
@@ -438,8 +438,8 @@ var SectionMain = new Lang.Class({
 
             if (REG.URL.test(token) || REG.FILE_PATH.test(token)) {
                 text[i] =
-                    '`<span foreground="' + this.css['-timepp-link-color'][0] +
-                    '"><u><b>' + token + '</b></u></span>`';
+                    '<span foreground="' + this.css['-timepp-link-color'][0] +
+                    '"><u><b>' + token + '</b></u></span>';
             }
         }
 
@@ -721,13 +721,9 @@ const AlarmItem = new Lang.Class({
 
     // @markup: string
     set_body_text: function (markup) {
-        markup = MISC_UTILS.markup_to_pango(markup, this.ext.markup_map);
-
-        this.msg.clutter_text.set_markup(
-            this.delegate.highlight_tokens(markup)
-                  .replace(/&(?!amp;|quot;|apos;|lt;|gt;)/g, '&amp;')
-                  .replace(/<(?!\/?[^<]*>)/g, '&lt;')
-        );
+        markup = GLib.markup_escape_text(markup, -1);
+        markup = MISC_UTILS.markdown_to_pango(markup, this.ext.markdown_map);
+        this.msg.clutter_text.set_markup(this.delegate.highlight_tokens(markup));
     },
 
     update_time_label: function () {
@@ -739,8 +735,7 @@ const AlarmItem = new Lang.Class({
             markup += `  <b>${_('inactive today')}</b>`;
 
             if (this.alarm.toggle) this.actor.remove_style_class_name('active');
-        }
-        else if (this.alarm.toggle) {
+        } else if (this.alarm.toggle) {
             let clock_then;
             let clock_now;
             let snoozed_string = '';
@@ -907,11 +902,8 @@ const AlarmFullscreen = new Lang.Class({
     },
 
     set_banner_text: function (markup) {
-        this.parent(
-            this.delegate.highlight_tokens(markup)
-                .replace(/&(?!amp;|quot;|apos;|lt;|gt;)/g, '&amp;')
-                .replace(/<(?!\/?[^<]*>)/g, '&lt;')
-        );
+        markup = GLib.markup_escape_text(markup, -1);
+        this.parent(this.delegate.highlight_tokens(markup));
     },
 
     close: function () {

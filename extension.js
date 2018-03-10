@@ -76,7 +76,7 @@ const Timepp = new Lang.Class({
         };
 
 
-        this.markup_map = new Map([
+        this.markdown_map = new Map([
             ['`'   , ['', '']],
             ['``'  , ['<tt>', '</tt>']],
 

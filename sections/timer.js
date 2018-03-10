@@ -134,8 +134,7 @@ var SectionMain = new Lang.Class({
                     custom_presets         : [],
                 };
             }
-        }
-        catch (e) {
+        } catch (e) {
             logError(e);
             return;
         }
@@ -558,8 +557,9 @@ var SectionMain = new Lang.Class({
     },
 
     highlight_tokens: function (text) {
-        text = MISC_UTILS.split_on_whitespace(
-            MISC_UTILS.markup_to_pango(text, this.ext.markup_map));
+        text = GLib.markup_escape_text(text, -1);
+        text = MISC_UTILS.markdown_to_pango(text, this.ext.markdown_map);
+        text = MISC_UTILS.split_on_whitespace(text);
 
         let token;
 
@@ -568,8 +568,8 @@ var SectionMain = new Lang.Class({
 
             if (REG.URL.test(token) || REG.FILE_PATH.test(token)) {
                 text[i] =
-                    '`<span foreground="' + this.ext.custom_css['-timepp-link-color'][0] +
-                    '"><u><b>' + token + '</b></u></span>`';
+                    '<span foreground="' + this.ext.custom_css['-timepp-link-color'][0] +
+                    '"><u><b>' + token + '</b></u></span>';
             }
         }
 
@@ -1176,12 +1176,8 @@ const TimerFullscreen = new Lang.Class({
     on_timer_expired: function () {
         if (this.delegate.current_preset.msg) {
             this.title.text = TIMER_EXPIRED_MSG;
-
-            this.set_banner_text(
-                this.delegate.highlight_tokens(this.delegate.current_preset.msg)
-                    .replace(/&(?!amp;|quot;|apos;|lt;|gt;)/g, '&amp;')
-                    .replace(/<(?!\/?[^<]*>)/g, '&lt;')
-            );
+            let txt = GLib.markup_escape_text(this.delegate.current_preset.msg, -1);
+            this.set_banner_text(this.delegate.highlight_tokens(txt));
         } else {
             this.set_banner_text(TIMER_EXPIRED_MSG);
         }
