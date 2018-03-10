@@ -181,7 +181,7 @@ Some of the features of the todo.txt manager are:
 * The todo.txt format is specified here: https://github.com/todotxt/todo.txt
 
 * In various places throughout this extension (todo.txt, alarms, timer) there is
-support for some **markup** stuff:
+support for some **markdown** stuff:
 
     * A simple version of markdown is supported:
         ```
