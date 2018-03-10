@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-09 19:05+0100\n"
+"POT-Creation-Date: 2018-03-10 20:14+0100\n"
 "PO-Revision-Date: 2018-01-09 19:02+0100\n"
 "Last-Translator: Luc Bournaud <luc.bournaud@hotmail.fr>\n"
 "Language-Team: français <>\n"
@@ -89,8 +89,8 @@ msgid "Enabled Sections"
 msgstr "Sections activées"
 
 #: data/po_files/../../data/prefs.ui:453 data/po_files/../../data/prefs.ui:1183
-#: data/po_files/../../sections/timer.js:174
-#: data/po_files/../../sections/timer.js:336
+#: data/po_files/../../sections/timer.js:173
+#: data/po_files/../../sections/timer.js:335
 msgid "Timer"
 msgstr "Minuteur"
 
@@ -305,31 +305,31 @@ msgstr "fichier actuel"
 msgid "Todo / Time Tracker"
 msgstr "Pense-bête / Traqueur d'activité"
 
+#: data/po_files/../../sections/todo/task_item.js:595
 #: data/po_files/../../sections/todo/task_item.js:599
-#: data/po_files/../../sections/todo/task_item.js:603
 msgid "recurrence"
 msgstr "récurrence"
 
-#: data/po_files/../../sections/todo/task_item.js:600
+#: data/po_files/../../sections/todo/task_item.js:596
 #, javascript-format
 msgid "%d day after completion"
 msgid_plural "%d days after completion"
 msgstr[0] "%d jour après complétition"
 msgstr[1] "%d jours après complétition"
 
-#: data/po_files/../../sections/todo/task_item.js:616
+#: data/po_files/../../sections/todo/task_item.js:612
 msgid "due"
 msgstr "échéance"
 
-#: data/po_files/../../sections/todo/task_item.js:624
+#: data/po_files/../../sections/todo/task_item.js:620
 msgid "deferred"
 msgstr "différée"
 
-#: data/po_files/../../sections/todo/task_item.js:663
+#: data/po_files/../../sections/todo/task_item.js:659
 msgid "created"
 msgstr "crée "
 
-#: data/po_files/../../sections/todo/task_item.js:666
+#: data/po_files/../../sections/todo/task_item.js:662
 msgid "completed"
 msgstr "terminé "
 
@@ -711,13 +711,13 @@ msgstr "Ajouter une nouvelle alarme"
 
 #. TRANSLATORS: %s is a time string in the format HH:MM (e.g., 13:44)
 #: data/po_files/../../sections/alarms.js:396
-#: data/po_files/../../sections/alarms.js:928
+#: data/po_files/../../sections/alarms.js:920
 #, javascript-format
 msgid "Alarm at %s"
 msgstr "Alarme à %s"
 
 #: data/po_files/../../sections/alarms.js:412
-#: data/po_files/../../sections/alarms.js:935
+#: data/po_files/../../sections/alarms.js:927
 msgid "Snooze"
 msgstr "Rappeler plus tard"
 
@@ -741,12 +741,12 @@ msgstr "(min)"
 msgid "Alarm Message..."
 msgstr "Message de l'alarme..."
 
-#: data/po_files/../../sections/alarms.js:750
+#: data/po_files/../../sections/alarms.js:745
 #, fuzzy
 msgid "Snoozed"
 msgstr "Rappeler plus tard"
 
-#: data/po_files/../../sections/alarms.js:952
+#: data/po_files/../../sections/alarms.js:944
 #, javascript-format
 msgid "%d alarm went off!"
 msgid_plural "%d alarms went off!"

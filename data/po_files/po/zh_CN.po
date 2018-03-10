@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-09 19:05+0100\n"
+"POT-Creation-Date: 2018-03-10 20:14+0100\n"
 "PO-Revision-Date: 2018-03-08 22:07+0800\n"
 "Last-Translator: OriginCode <origincoder@yahoo.com>\n"
 "Language-Team: Chinese <kde-i18n-doc@kde.org>\n"
@@ -87,8 +87,8 @@ msgid "Enabled Sections"
 msgstr "打开的分栏"
 
 #: data/po_files/../../data/prefs.ui:453 data/po_files/../../data/prefs.ui:1183
-#: data/po_files/../../sections/timer.js:174
-#: data/po_files/../../sections/timer.js:336
+#: data/po_files/../../sections/timer.js:173
+#: data/po_files/../../sections/timer.js:335
 msgid "Timer"
 msgstr "计时器"
 
@@ -303,30 +303,30 @@ msgstr "当前文件"
 msgid "Todo / Time Tracker"
 msgstr "TODO/时间追溯器"
 
+#: data/po_files/../../sections/todo/task_item.js:595
 #: data/po_files/../../sections/todo/task_item.js:599
-#: data/po_files/../../sections/todo/task_item.js:603
 msgid "recurrence"
 msgstr "循环"
 
-#: data/po_files/../../sections/todo/task_item.js:600
+#: data/po_files/../../sections/todo/task_item.js:596
 #, javascript-format
 msgid "%d day after completion"
 msgid_plural "%d days after completion"
 msgstr[0] "完成后 %d 天"
 
-#: data/po_files/../../sections/todo/task_item.js:616
+#: data/po_files/../../sections/todo/task_item.js:612
 msgid "due"
 msgstr "截止"
 
-#: data/po_files/../../sections/todo/task_item.js:624
+#: data/po_files/../../sections/todo/task_item.js:620
 msgid "deferred"
 msgstr "已延时"
 
-#: data/po_files/../../sections/todo/task_item.js:663
+#: data/po_files/../../sections/todo/task_item.js:659
 msgid "created"
 msgstr "已创建"
 
-#: data/po_files/../../sections/todo/task_item.js:666
+#: data/po_files/../../sections/todo/task_item.js:662
 msgid "completed"
 msgstr "已完成"
 
@@ -699,13 +699,13 @@ msgstr "新建闹钟……"
 
 #. TRANSLATORS: %s is a time string in the format HH:MM (e.g., 13:44)
 #: data/po_files/../../sections/alarms.js:396
-#: data/po_files/../../sections/alarms.js:928
+#: data/po_files/../../sections/alarms.js:920
 #, javascript-format
 msgid "Alarm at %s"
 msgstr "%s 的闹钟"
 
 #: data/po_files/../../sections/alarms.js:412
-#: data/po_files/../../sections/alarms.js:935
+#: data/po_files/../../sections/alarms.js:927
 msgid "Snooze"
 msgstr "延后"
 
@@ -729,12 +729,12 @@ msgstr "（分）"
 msgid "Alarm Message..."
 msgstr "闹钟消息……"
 
-#: data/po_files/../../sections/alarms.js:750
+#: data/po_files/../../sections/alarms.js:745
 #, fuzzy
 msgid "Snoozed"
 msgstr "延后"
 
-#: data/po_files/../../sections/alarms.js:952
+#: data/po_files/../../sections/alarms.js:944
 #, javascript-format
 msgid "%d alarm went off!"
 msgid_plural "%d alarms went off!"
