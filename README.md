@@ -205,7 +205,7 @@ support for some **markup** stuff:
 
         -------------------------------------
 
-        For example, *bold*, and $$extra large$$, and ``monospaced``, and
+        For example, *bold*, and ##extra large##, and ``monospaced``, and
         ***this __one__ is nested***, etc...
         ```
 
