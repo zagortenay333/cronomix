@@ -240,7 +240,7 @@ The following extensions are supported:
         <td valign="top"><code>pin:1</code></td>
         <td>
             Pins a task. A task that is pinned is always visible no matter what
-            filters are on. Also one can sort pinned tasks (for example, always
+            filters are on. Also, one can sort pinned tasks (for example, always
             on top.)
         </td>
     </tr>
