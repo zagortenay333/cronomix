@@ -38,6 +38,7 @@ var TaskSortWindow = new Lang.Class({
         this.dnd_placeholder    = null
 
         this.sort_text_map = {
+            [G.SortType.PIN]             : _('Sort by Pin'),
             [G.SortType.CONTEXT]         : _('Sort by Context'),
             [G.SortType.PROJECT]         : _('Sort by Projects'),
             [G.SortType.PRIORITY]        : _('Sort by Priority'),

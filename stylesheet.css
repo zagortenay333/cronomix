@@ -605,6 +605,7 @@
     font-weight: bold;
 }
 
+.timepp-menu .todo-section .pin-icon.active,
 .timepp-menu .todo-section .tracker-pause-icon,
 .timepp-menu .todo-section .filter-icon.active {
     color: #f47e00;

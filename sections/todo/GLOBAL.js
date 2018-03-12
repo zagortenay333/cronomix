@@ -12,6 +12,7 @@ var SortOrder = {
 
 
 var SortType = {
+    PIN             : 'PIN',
     CONTEXT         : 'CONTEXT',
     PROJECT         : 'PROJECT',
     PRIORITY        : 'PRIORITY',

@@ -17,7 +17,7 @@
    id="svg11300"
    sodipodi:version="0.32"
    inkscape:version="0.92.2 (5c3e80d, 2017-08-06)"
-   sodipodi:docname="timepp-edit-symbolic.svg"
+   sodipodi:docname="timepp-pin-symbolic.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
    version="1.0"
    style="display:inline;enable-background:new">
@@ -144,10 +144,10 @@
      id="layer1"
      transform="translate(0,-284)">
     <path
-       style="fill:#bebebe;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="m 12,285 -2.2929692,2.29297 3.0000002,3 L 15,288 c 0,0 -0.472954,-1.47295 -1,-2 -0.527047,-0.52705 -2,-1 -2,-1 z M 8.2929684,288.70703 1,296 v 3 h 3 l 7.292969,-7.29297 z"
-       id="path4508"
+       style="opacity:1;fill:#bebebe;fill-opacity:1;stroke:none;stroke-opacity:1"
+       d="M 10.34375,284 9,285.34375 v 1.41406 L 6.7578125,289 H 5.34375 l -1.3652344,1.36328 2.1289063,2.12891 L 1,297.58594 V 299 h 1.4140625 l 5.1074219,-5.09375 2.1152344,2.11523 L 11,294.65625 v -1.41406 L 13.242188,291 H 14.65625 L 16,289.65625 Z"
+       id="rect857"
        inkscape:connector-curvature="0"
-       sodipodi:nodetypes="ccccaccccccc" />
+       sodipodi:nodetypes="cccccccccccccccccc" />
   </g>
 </svg>

@@ -166,6 +166,8 @@ var TaskItem = new Lang.Class({
 
         this.tracker_id = '';
 
+        this.pinned = 0; // 0 or 1
+
         // We create these St.Label's on demand.
         if (this.base_date_labels) this.base_date_labels.destroy();
         if (this.ext_date_labels)  this.ext_date_labels.destroy();
@@ -225,6 +227,8 @@ var TaskItem = new Lang.Class({
         this.context_indices    = [];
         this.project_indices    = [];
         this.link_indices       = [];
+
+        this._hide_header_icons();
     },
 
     _parse_task_str: function () {
@@ -318,30 +322,20 @@ var TaskItem = new Lang.Class({
                     // Ignore all other extensions if task is hidden.
                     continue;
                 }
-                else if (REG.TODO_HIDE_EXT.test(word)) {
-                    this.reset_props();
-
-                    this.hidden = true;
-
-                    this.completion_checkbox.hide();
-                    this.prio_label.hide();
-                    this.actor.add_style_class_name('hidden-task');
-                    let icon_incognito_bin = new St.Button({ can_focus: true });
-                    this.header.insert_child_at_index(icon_incognito_bin, 0);
-                    icon_incognito_bin.add_actor(new St.Icon({ icon_name: 'timepp-hidden-symbolic' }));
-
-                    words.splice(i, 1); i--; len--;
-                }
-                else if (REG.TODO_DEFER_EXT.test(word)) {
-                    if (this.rec_str) continue;
-
-                    this.defer_date = word.slice(word.indexOf(':') + 1);
+                else if (REG.TODO_TRACKER_ID_EXT.test(word)) {
+                    this.tracker_id = word.slice(11);
                     words.splice(i, 1); i--; len--;
                 }
                 else if (REG.TODO_DUE_EXT.test(word)) {
                     if (this.rec_str) continue;
 
                     this.due_date = word.slice(4);
+                    words.splice(i, 1); i--; len--;
+                }
+                else if (REG.TODO_DEFER_EXT.test(word)) {
+                    if (this.rec_str) continue;
+
+                    this.defer_date = word.slice(word.indexOf(':') + 1);
                     words.splice(i, 1); i--; len--;
                 }
                 else if (REG.TODO_REC_EXT_1.test(word)) {
@@ -371,8 +365,25 @@ var TaskItem = new Lang.Class({
                     this.rec_type = 3;
                     words.splice(i, 1); i--; len--;
                 }
-                else if (REG.TODO_TRACKER_ID_EXT.test(word)) {
-                    this.tracker_id = word.slice(11);
+                else if (REG.TODO_PIN_EXT.test(word)) {
+                    this.pinned = 1;
+                    this._create_header_icons();
+                    this.pin_icon.add_style_class_name('active');
+                    this.pin_icon.show();
+                    words.splice(i, 1); i--; len--;
+                }
+                else if (REG.TODO_HIDE_EXT.test(word)) {
+                    this.reset_props();
+
+                    this.hidden = true;
+
+                    this.completion_checkbox.hide();
+                    this.prio_label.hide();
+                    this.actor.add_style_class_name('hidden-task');
+                    let icon_incognito_bin = new St.Button({ can_focus: true });
+                    this.header.insert_child_at_index(icon_incognito_bin, 0);
+                    icon_incognito_bin.add_actor(new St.Icon({ icon_name: 'timepp-hidden-symbolic' }));
+
                     words.splice(i, 1); i--; len--;
                 }
                 else if (REG.TODO_PRIO_EXT.test(word)) {
@@ -712,6 +723,9 @@ var TaskItem = new Lang.Class({
         this.stat_icon = new St.Icon({ visible:false, reactive: true, can_focus: true, track_hover: true, icon_name: 'timepp-graph-symbolic' });
         this.header_icon_box.add_actor(this.stat_icon);
 
+        this.pin_icon = new St.Icon({ visible:false, reactive: true, can_focus: true, track_hover: true, icon_name: 'timepp-pin-symbolic', style_class: 'pin-icon' });
+        this.header_icon_box.add_actor(this.pin_icon);
+
         this.edit_icon = new St.Icon({ visible:false, reactive: true, can_focus: true, track_hover: true, icon_name: 'timepp-edit-symbolic' });
         this.header_icon_box.add_actor(this.edit_icon);
 
@@ -721,6 +735,9 @@ var TaskItem = new Lang.Class({
         this.delegate.sigm.connect_press(this.stat_icon, Clutter.BUTTON_PRIMARY, true, () => {
             this.delegate.show_view__time_tracker_stats(this);
             this._hide_header_icons();
+        });
+        this.delegate.sigm.connect_press(this.pin_icon, Clutter.BUTTON_PRIMARY, true, () => {
+            this._on_pin_icon_clicked();
         });
         this.delegate.sigm.connect_press(this.edit_icon, Clutter.BUTTON_PRIMARY, true, () => {
             this.delegate.show_view__task_editor(this);
@@ -739,26 +756,57 @@ var TaskItem = new Lang.Class({
 
         if (this.actor.visible) {
             this.edit_icon.show();
-            if (!this.hidden) this.stat_icon.show();
+            if (!this.hidden) {
+                this.pin_icon.show();
+                this.stat_icon.show();
+            }
         }
     },
 
     _hide_header_icons: function () {
         if (! this.header_icon_box) return;
 
-        if (this.tracker_icon.style_class === 'tracker-start-icon') {
-            // If we are not tracking the task (no need to show the play/pause
-            // button), then we might as well destroy the icon box.
+        if (this.tracker_icon.style_class === 'tracker-start-icon' && !this.pinned) {
+            // We destroy the icon box when we don't have to show any icons.
             this.header_icon_box.destroy();
             this.header_icon_box = null;
-            this.edit_icon       = null;
             this.stat_icon       = null;
+            this.pin_icon        = null;
+            this.edit_icon       = null;
             this.tracker_icon    = null;
-        }
-        else {
+        } else {
             this.stat_icon.hide();
             this.edit_icon.hide();
+            this.pin_icon.visible = this.pinned;
+            this.tracker_icon.visible = this.tracker_icon.style_class !== 'tracker-start-icon';
         }
+    },
+
+    _on_pin_icon_clicked: function () {
+        this.pinned = (this.pinned === 1) ? 0 : 1;
+
+        if (this.pinned)  {
+            this.pin_icon.add_style_class_name('active');
+            this.task_str += ' pin:1';
+        } else {
+            this.pin_icon.remove_style_class_name('active');
+
+            let words = this.task_str.split(/ +/);
+            for (let i = 0, len = words.length; i < len; i++) {
+                if (REG.TODO_PIN_EXT.test(words[i])) {
+                    words.splice(i, 1);
+                    break;
+                }
+            }
+
+            this.task_str = words.join(' ');
+        }
+
+        if (this.delegate.view_manager.current_view !== G.View.SEARCH) {
+            this.delegate.on_tasks_changed();
+        }
+
+        this.delegate.write_tasks_to_file();
     },
 
     _toggle_tracker_icon: function () {

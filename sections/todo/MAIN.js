@@ -101,6 +101,7 @@ var SectionMain = new Lang.Class({
                     format_version: cache_format_version,
 
                     sort: [
+                        [G.SortType.PIN             , G.SortOrder.DESCENDING],
                         [G.SortType.COMPLETED       , G.SortOrder.ASCENDING],
                         [G.SortType.PRIORITY        , G.SortOrder.ASCENDING],
                         [G.SortType.DUE_DATE        , G.SortOrder.ASCENDING],
@@ -126,8 +127,7 @@ var SectionMain = new Lang.Class({
                     },
                 };
             }
-        }
-        catch (e) {
+        } catch (e) {
             logError(e);
             return;
         }
@@ -1225,6 +1225,7 @@ var SectionMain = new Lang.Class({
     // If invert_filters is false, return true if at least one filter is matched.
     // If invert_filters is true,  return false if at least one filter is matched.
     _filter_test: function (task) {
+        if (task.pinned)                    return true;
         if (this.cache.filters.hidden)      return task.hidden;
         if (task.hidden)                    return false;
         if (this.cache.filters.deferred)    return task.is_deferred;
@@ -1326,6 +1327,7 @@ var SectionMain = new Lang.Class({
     // rebuild this.tasks_viewport.
     sort_tasks: function () {
         let property_map = {
+            [G.SortType.PIN]             : 'pinned',
             [G.SortType.COMPLETED]       : 'completed',
             [G.SortType.PRIORITY]        : 'priority',
             [G.SortType.DUE_DATE]        : 'due_date',
