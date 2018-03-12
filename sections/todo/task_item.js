@@ -598,7 +598,7 @@ var TaskItem = new Lang.Class({
         if (this.rec_str) {
             let txt = '';
 
-            if (this.rec_type === 2) {
+            if (this.rec_type === 2 && !this.completed) {
                 let type = this.rec_str[this.rec_str.length - 1];
                 let num  = +(this.rec_str.slice(6, -1)) * (type === 'w' ? 7 : 1);
 
