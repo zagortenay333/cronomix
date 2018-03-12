@@ -784,6 +784,7 @@ var TaskItem = new Lang.Class({
 
     _on_pin_icon_clicked: function () {
         this.pinned = (this.pinned === 1) ? 0 : 1;
+        let old_task_str = this.task_str;
 
         if (this.pinned)  {
             this.pin_icon.add_style_class_name('active');
@@ -800,6 +801,10 @@ var TaskItem = new Lang.Class({
             }
 
             this.task_str = words.join(' ');
+        }
+
+        if (this.delegate.time_tracker) {
+            this.delegate.time_tracker.update_record_name(old_task_str, this.task_str);
         }
 
         if (this.delegate.view_manager.current_view !== G.View.SEARCH) {
