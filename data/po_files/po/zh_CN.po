@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-10 20:14+0100\n"
+"POT-Creation-Date: 2018-03-12 19:32+0100\n"
 "PO-Revision-Date: 2018-03-11 21:49+0800\n"
 "Last-Translator: OriginCode <origincoder@yahoo.com>\n"
 "Language-Team: Chinese <kde-i18n-doc@kde.org>\n"
@@ -303,67 +303,72 @@ msgstr "当前文件"
 msgid "Todo / Time Tracker"
 msgstr "TODO/时间追溯器"
 
-#: data/po_files/../../sections/todo/task_item.js:595
-#: data/po_files/../../sections/todo/task_item.js:599
+#: data/po_files/../../sections/todo/task_item.js:606
+#: data/po_files/../../sections/todo/task_item.js:610
 msgid "recurrence"
 msgstr "循环"
 
-#: data/po_files/../../sections/todo/task_item.js:596
+#: data/po_files/../../sections/todo/task_item.js:607
 #, javascript-format
 msgid "%d day after completion"
 msgid_plural "%d days after completion"
 msgstr[0] "完成后 %d 天"
 
-#: data/po_files/../../sections/todo/task_item.js:612
+#: data/po_files/../../sections/todo/task_item.js:623
 msgid "due"
 msgstr "截止"
 
-#: data/po_files/../../sections/todo/task_item.js:620
+#: data/po_files/../../sections/todo/task_item.js:631
 msgid "deferred"
 msgstr "已延时"
 
-#: data/po_files/../../sections/todo/task_item.js:659
+#: data/po_files/../../sections/todo/task_item.js:670
 msgid "created"
 msgstr "已创建"
 
-#: data/po_files/../../sections/todo/task_item.js:662
+#: data/po_files/../../sections/todo/task_item.js:673
 msgid "completed"
 msgstr "已完成"
 
 #: data/po_files/../../sections/todo/view__sort.js:41
+#, fuzzy
+msgid "Sort by Pin"
+msgstr "根据优先级排序"
+
+#: data/po_files/../../sections/todo/view__sort.js:42
 msgid "Sort by Context"
 msgstr "根据上下文排序"
 
-#: data/po_files/../../sections/todo/view__sort.js:42
+#: data/po_files/../../sections/todo/view__sort.js:43
 msgid "Sort by Projects"
 msgstr "根据项目排序"
 
-#: data/po_files/../../sections/todo/view__sort.js:43
+#: data/po_files/../../sections/todo/view__sort.js:44
 msgid "Sort by Priority"
 msgstr "根据优先级排序"
 
-#: data/po_files/../../sections/todo/view__sort.js:44
+#: data/po_files/../../sections/todo/view__sort.js:45
 msgid "Sort by Due Date"
 msgstr "根据截止日期排序"
 
-#: data/po_files/../../sections/todo/view__sort.js:45
+#: data/po_files/../../sections/todo/view__sort.js:46
 #, fuzzy
 msgid "Sort by Recurrence Date"
 msgstr "根据截止日期排序"
 
-#: data/po_files/../../sections/todo/view__sort.js:46
+#: data/po_files/../../sections/todo/view__sort.js:47
 msgid "Sort by Completed"
 msgstr "根据完成情况排序"
 
-#: data/po_files/../../sections/todo/view__sort.js:47
+#: data/po_files/../../sections/todo/view__sort.js:48
 msgid "Sort by Creation Date"
 msgstr "根据创建日期排序"
 
-#: data/po_files/../../sections/todo/view__sort.js:48
+#: data/po_files/../../sections/todo/view__sort.js:49
 msgid "Sort by Completion Date"
 msgstr "根据完成日期排序"
 
-#: data/po_files/../../sections/todo/view__sort.js:79
+#: data/po_files/../../sections/todo/view__sort.js:80
 #: data/po_files/../../sections/todo/view__task_editor.js:140
 #: data/po_files/../../sections/todo/view__stats.js:248
 #: data/po_files/../../sections/todo/view__clear_tasks.js:96
@@ -516,17 +521,17 @@ msgstr "删除所有已完成的任务"
 msgid "Archive all completed tasks to done.txt and delete them"
 msgstr "将所有已完成的任务储存至 done.txt 并删除它们"
 
-#: data/po_files/../../sections/todo/GLOBAL.js:64
+#: data/po_files/../../sections/todo/GLOBAL.js:65
 msgid "today"
 msgstr "今天"
 
-#: data/po_files/../../sections/todo/GLOBAL.js:65
+#: data/po_files/../../sections/todo/GLOBAL.js:66
 #, javascript-format
 msgid "%d day ago"
 msgid_plural "%d days ago"
 msgstr[0] "%d 天前"
 
-#: data/po_files/../../sections/todo/GLOBAL.js:66
+#: data/po_files/../../sections/todo/GLOBAL.js:67
 #, javascript-format
 msgid "in %d day"
 msgid_plural "in %d days"

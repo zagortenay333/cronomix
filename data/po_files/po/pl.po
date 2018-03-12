@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-10 20:14+0100\n"
+"POT-Creation-Date: 2018-03-12 19:32+0100\n"
 "PO-Revision-Date: 2018-01-10 10:35+0100\n"
 "Last-Translator: Piotr Komur <pkomur@gmail.com>\n"
 "Language-Team: \n"
@@ -305,12 +305,12 @@ msgstr "bieżący plik"
 msgid "Todo / Time Tracker"
 msgstr "Zadania / Śledzenie"
 
-#: data/po_files/../../sections/todo/task_item.js:595
-#: data/po_files/../../sections/todo/task_item.js:599
+#: data/po_files/../../sections/todo/task_item.js:606
+#: data/po_files/../../sections/todo/task_item.js:610
 msgid "recurrence"
 msgstr "rekurencyjnie"
 
-#: data/po_files/../../sections/todo/task_item.js:596
+#: data/po_files/../../sections/todo/task_item.js:607
 #, javascript-format
 msgid "%d day after completion"
 msgid_plural "%d days after completion"
@@ -318,56 +318,61 @@ msgstr[0] "%d dzień po zakończeniu"
 msgstr[1] "%d dni po zakończeniu"
 msgstr[2] "%d dni po zakończeniu"
 
-#: data/po_files/../../sections/todo/task_item.js:612
+#: data/po_files/../../sections/todo/task_item.js:623
 msgid "due"
 msgstr "termin:"
 
-#: data/po_files/../../sections/todo/task_item.js:620
+#: data/po_files/../../sections/todo/task_item.js:631
 msgid "deferred"
 msgstr "odroczono:"
 
-#: data/po_files/../../sections/todo/task_item.js:659
+#: data/po_files/../../sections/todo/task_item.js:670
 msgid "created"
 msgstr "utworzono:"
 
-#: data/po_files/../../sections/todo/task_item.js:662
+#: data/po_files/../../sections/todo/task_item.js:673
 msgid "completed"
 msgstr "ukończono:"
 
 #: data/po_files/../../sections/todo/view__sort.js:41
+#, fuzzy
+msgid "Sort by Pin"
+msgstr "Sortuj wg priorytetu"
+
+#: data/po_files/../../sections/todo/view__sort.js:42
 msgid "Sort by Context"
 msgstr "Sortuj wg daty utworzenia"
 
-#: data/po_files/../../sections/todo/view__sort.js:42
+#: data/po_files/../../sections/todo/view__sort.js:43
 msgid "Sort by Projects"
 msgstr "Sortuj wg priorytetu"
 
-#: data/po_files/../../sections/todo/view__sort.js:43
+#: data/po_files/../../sections/todo/view__sort.js:44
 msgid "Sort by Priority"
 msgstr "Sortuj wg priorytetu"
 
-#: data/po_files/../../sections/todo/view__sort.js:44
+#: data/po_files/../../sections/todo/view__sort.js:45
 msgid "Sort by Due Date"
 msgstr "Sortuj wg terminu"
 
-#: data/po_files/../../sections/todo/view__sort.js:45
+#: data/po_files/../../sections/todo/view__sort.js:46
 #, fuzzy
 msgid "Sort by Recurrence Date"
 msgstr "Sortuj wg terminu"
 
-#: data/po_files/../../sections/todo/view__sort.js:46
+#: data/po_files/../../sections/todo/view__sort.js:47
 msgid "Sort by Completed"
 msgstr "Sortuj wg daty zakończenia"
 
-#: data/po_files/../../sections/todo/view__sort.js:47
+#: data/po_files/../../sections/todo/view__sort.js:48
 msgid "Sort by Creation Date"
 msgstr "Sortuj wg daty utworzenia"
 
-#: data/po_files/../../sections/todo/view__sort.js:48
+#: data/po_files/../../sections/todo/view__sort.js:49
 msgid "Sort by Completion Date"
 msgstr "Sortuj wg daty zakończenia"
 
-#: data/po_files/../../sections/todo/view__sort.js:79
+#: data/po_files/../../sections/todo/view__sort.js:80
 #: data/po_files/../../sections/todo/view__task_editor.js:140
 #: data/po_files/../../sections/todo/view__stats.js:248
 #: data/po_files/../../sections/todo/view__clear_tasks.js:96
@@ -522,11 +527,11 @@ msgstr "Usuń wszystkie ukończone zadania"
 msgid "Archive all completed tasks to done.txt and delete them"
 msgstr "Zarchiwizuj ukończone zadania do pliku 'done.txt' przed ich usunięciem"
 
-#: data/po_files/../../sections/todo/GLOBAL.js:64
+#: data/po_files/../../sections/todo/GLOBAL.js:65
 msgid "today"
 msgstr "dziś"
 
-#: data/po_files/../../sections/todo/GLOBAL.js:65
+#: data/po_files/../../sections/todo/GLOBAL.js:66
 #, javascript-format
 msgid "%d day ago"
 msgid_plural "%d days ago"
@@ -534,7 +539,7 @@ msgstr[0] "%d dzień temu"
 msgstr[1] "%d dni temu"
 msgstr[2] "%d dni temu"
 
-#: data/po_files/../../sections/todo/GLOBAL.js:66
+#: data/po_files/../../sections/todo/GLOBAL.js:67
 #, javascript-format
 msgid "in %d day"
 msgid_plural "in %d days"

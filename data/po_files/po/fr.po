@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-10 20:14+0100\n"
+"POT-Creation-Date: 2018-03-12 19:32+0100\n"
 "PO-Revision-Date: 2018-01-09 19:02+0100\n"
 "Last-Translator: Luc Bournaud <luc.bournaud@hotmail.fr>\n"
 "Language-Team: français <>\n"
@@ -305,68 +305,73 @@ msgstr "fichier actuel"
 msgid "Todo / Time Tracker"
 msgstr "Pense-bête / Traqueur d'activité"
 
-#: data/po_files/../../sections/todo/task_item.js:595
-#: data/po_files/../../sections/todo/task_item.js:599
+#: data/po_files/../../sections/todo/task_item.js:606
+#: data/po_files/../../sections/todo/task_item.js:610
 msgid "recurrence"
 msgstr "récurrence"
 
-#: data/po_files/../../sections/todo/task_item.js:596
+#: data/po_files/../../sections/todo/task_item.js:607
 #, javascript-format
 msgid "%d day after completion"
 msgid_plural "%d days after completion"
 msgstr[0] "%d jour après complétition"
 msgstr[1] "%d jours après complétition"
 
-#: data/po_files/../../sections/todo/task_item.js:612
+#: data/po_files/../../sections/todo/task_item.js:623
 msgid "due"
 msgstr "échéance"
 
-#: data/po_files/../../sections/todo/task_item.js:620
+#: data/po_files/../../sections/todo/task_item.js:631
 msgid "deferred"
 msgstr "différée"
 
-#: data/po_files/../../sections/todo/task_item.js:659
+#: data/po_files/../../sections/todo/task_item.js:670
 msgid "created"
 msgstr "crée "
 
-#: data/po_files/../../sections/todo/task_item.js:662
+#: data/po_files/../../sections/todo/task_item.js:673
 msgid "completed"
 msgstr "terminé "
 
 #: data/po_files/../../sections/todo/view__sort.js:41
+#, fuzzy
+msgid "Sort by Pin"
+msgstr "Trier par priorité"
+
+#: data/po_files/../../sections/todo/view__sort.js:42
 msgid "Sort by Context"
 msgstr "Trier par contexte"
 
-#: data/po_files/../../sections/todo/view__sort.js:42
+#: data/po_files/../../sections/todo/view__sort.js:43
 msgid "Sort by Projects"
 msgstr "Trier par projet"
 
-#: data/po_files/../../sections/todo/view__sort.js:43
+#: data/po_files/../../sections/todo/view__sort.js:44
 msgid "Sort by Priority"
 msgstr "Trier par priorité"
 
-#: data/po_files/../../sections/todo/view__sort.js:44
+#: data/po_files/../../sections/todo/view__sort.js:45
 msgid "Sort by Due Date"
 msgstr "Trier par date d'échéance"
 
-#: data/po_files/../../sections/todo/view__sort.js:45
+#: data/po_files/../../sections/todo/view__sort.js:46
 #, fuzzy
 msgid "Sort by Recurrence Date"
 msgstr "Trier par date d'échéance"
 
-#: data/po_files/../../sections/todo/view__sort.js:46
+#: data/po_files/../../sections/todo/view__sort.js:47
 msgid "Sort by Completed"
 msgstr "Trier par complété"
 
-#: data/po_files/../../sections/todo/view__sort.js:47
+#: data/po_files/../../sections/todo/view__sort.js:48
 msgid "Sort by Creation Date"
 msgstr "Trier par date de création"
 
-#: data/po_files/../../sections/todo/view__sort.js:48
+#: data/po_files/../../sections/todo/view__sort.js:49
 msgid "Sort by Completion Date"
 msgstr "Trier par date de complétition"
 
-#: data/po_files/../../sections/todo/view__sort.js:79
+#: data/po_files/../../sections/todo/view__sort.js:80
 #: data/po_files/../../sections/todo/view__task_editor.js:140
 #: data/po_files/../../sections/todo/view__stats.js:248
 #: data/po_files/../../sections/todo/view__clear_tasks.js:96
@@ -520,18 +525,18 @@ msgstr "Supprimer toute les tâches terminées"
 msgid "Archive all completed tasks to done.txt and delete them"
 msgstr "Archiver toute les tâches terminées dans done.txt et les supprimer"
 
-#: data/po_files/../../sections/todo/GLOBAL.js:64
+#: data/po_files/../../sections/todo/GLOBAL.js:65
 msgid "today"
 msgstr "aujourd'hui"
 
-#: data/po_files/../../sections/todo/GLOBAL.js:65
+#: data/po_files/../../sections/todo/GLOBAL.js:66
 #, javascript-format
 msgid "%d day ago"
 msgid_plural "%d days ago"
 msgstr[0] "il y a %d jour"
 msgstr[1] "il y a %d jours"
 
-#: data/po_files/../../sections/todo/GLOBAL.js:66
+#: data/po_files/../../sections/todo/GLOBAL.js:67
 #, javascript-format
 msgid "in %d day"
 msgid_plural "in %d days"
