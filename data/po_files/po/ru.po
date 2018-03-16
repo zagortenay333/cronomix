@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-12 19:32+0100\n"
+"POT-Creation-Date: 2018-03-16 20:15+0100\n"
 "PO-Revision-Date: 2017-11-29 13:36+0200\n"
 "Last-Translator: Sergey Shlyapugin <shlyapugin@gmail.com>\n"
 "Language-Team: Russian\n"
@@ -511,11 +511,11 @@ msgid "No intervals found."
 msgstr "Ничего не найдено."
 
 #: data/po_files/../../sections/todo/time_tracker.js:357
-#: data/po_files/../../sections/todo/time_tracker.js:748
+#: data/po_files/../../sections/todo/time_tracker.js:756
 msgid "Error while parsing csv file. See logs."
 msgstr ""
 
-#: data/po_files/../../sections/todo/time_tracker.js:527
+#: data/po_files/../../sections/todo/time_tracker.js:535
 msgid "To track time, select a dir for csv files in the settings."
 msgstr ""
 
