@@ -503,12 +503,12 @@ var TimeTracker = new Lang.Class({
         else                     this.start_tracking(task);
     },
 
-    stop_all_tracking: function (do_write_daily_csv_file = true) {
+    stop_all_tracking: function (do_write_daily_csv_file = true, close_intervals = true) {
         if (! this.csv_dir) return;
 
         for (let [k, v] of this.daily_csv_map) {
             if (v.type === '()' && v.tracking)
-                this.stop_tracking(v.task_ref, false);
+                this.stop_tracking(v.task_ref, false, close_intervals);
         }
 
         if (do_write_daily_csv_file) this._write_daily_csv_file();
@@ -597,7 +597,7 @@ var TimeTracker = new Lang.Class({
         }
     },
 
-    stop_tracking: function (task, do_write_daily_csv_file = true) {
+    stop_tracking: function (task, do_write_daily_csv_file = true, close_intervals = true) {
         if (!this.csv_dir) return;
 
         let val = this.daily_csv_map.get(task.task_str);
@@ -607,8 +607,10 @@ var TimeTracker = new Lang.Class({
         val.tracking = false;
         this.number_of_tracked_tasks--;
 
-        if (val.intervals.endsWith('..'))
-            val.intervals = val.intervals.slice(0, -2);
+        if (close_intervals) {
+            if (val.intervals.endsWith('..'))
+                val.intervals = val.intervals.slice(0, -2);
+        }
 
         for (let project of task.projects) {
             let val = this.daily_csv_map.get(project);
@@ -616,8 +618,10 @@ var TimeTracker = new Lang.Class({
             if (--val.tracked_children === 0) {
                 val.tracking = false;
 
-                if (val.intervals.endsWith('..'))
-                    val.intervals = val.intervals.slice(0, -2);
+                if (close_intervals) {
+                    if (val.intervals.endsWith('..'))
+                        val.intervals = val.intervals.slice(0, -2);
+                }
             }
         }
 
@@ -786,10 +790,7 @@ var TimeTracker = new Lang.Class({
     },
 
     close: function () {
-        if (this.tic_mainloop_id > 0) {
-            Mainloop.source_remove(this.tic_mainloop_id);
-            this.tic_mainloop_id = 0;
-        }
+        this.stop_all_tracking(true, false);
 
         if (this.daily_csv_file_monitor) {
             this.daily_csv_file_monitor.cancel();
@@ -805,8 +806,6 @@ var TimeTracker = new Lang.Class({
             this.yearly_csv_dir_monitor.cancel();
             this.yearly_csv_dir_monitor = null;
         }
-
-        this._write_daily_csv_file();
 
         if (this.new_day_sig_id) this.delegate.disconnect(this.new_day_sig_id);
         if (this.todo_current_sig_id) this.delegate.settings.disconnect(this.todo_current_sig_id);
