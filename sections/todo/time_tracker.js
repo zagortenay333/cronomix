@@ -475,7 +475,15 @@ var TimeTracker = new Lang.Class({
             let tokens = intervals.split('||');
             let non_zero_intervals = [];
 
+            // Remove zero-length intervals.
             for (let token of tokens) {
+                // We don't remove zero-length intervals that are open (i.e.,
+                // the last interval.)
+                if (token.endsWith('..')) {
+                    non_zero_intervals.push(token);
+                    continue;
+                }
+
                 let [start, end] = token.split('..');
                 if (start !== end) non_zero_intervals.push(token);
             }
@@ -778,7 +786,10 @@ var TimeTracker = new Lang.Class({
     },
 
     close: function () {
-        this.stop_all_tracking();
+        if (this.tic_mainloop_id > 0) {
+            Mainloop.source_remove(this.tic_mainloop_id);
+            this.tic_mainloop_id = 0;
+        }
 
         if (this.daily_csv_file_monitor) {
             this.daily_csv_file_monitor.cancel();
@@ -794,6 +805,8 @@ var TimeTracker = new Lang.Class({
             this.yearly_csv_dir_monitor.cancel();
             this.yearly_csv_dir_monitor = null;
         }
+
+        this._write_daily_csv_file();
 
         if (this.new_day_sig_id) this.delegate.disconnect(this.new_day_sig_id);
         if (this.todo_current_sig_id) this.delegate.settings.disconnect(this.todo_current_sig_id);
