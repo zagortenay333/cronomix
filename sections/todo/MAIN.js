@@ -1372,11 +1372,10 @@ var SectionMain = new Lang.Class({
             }
         });
 
-        // Update sort icon.
-        //
         // @BUG
-        // Although everything works anyway, clutter has failed assertions
-        // without later_add.
+        // We seem to trigger a failed assertion when changing the icon_name
+        // while the actor is not visible.
+        // Similar bug happens in the task_item module.
         Meta.later_add(Meta.LaterType.BEFORE_REDRAW, () => {
             this.sort_icon.icon_name =
                 this.cache.sort[0][1] === G.SortOrder.ASCENDING ?
