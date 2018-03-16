@@ -180,6 +180,7 @@ const Timepp = new Lang.Class({
         //
         this.content_box = new St.BoxLayout({ style_class: 'timepp-content-box', vertical: true});
         this.menu.box.add_child(this.content_box);
+        this.content_box._delegate = this;
 
 
         //
@@ -565,6 +566,12 @@ const Timepp = new Lang.Class({
         this._unload_stylesheet();
         this.sigm.clear();
 
+        // We need to make sure that this one is set to the default actor or
+        // else the shell will try to destroy the wrong panel actor.
+        // In fact, the source actor (which is a section's panel item) will
+        // already be destroyed by this point.
+        this.menu.sourceActor = this.actor;
+
         this.parent();
     },
 });
@@ -609,6 +616,9 @@ function enable () {
 }
 
 function disable () {
+    timepp.destroy();
+    timepp = null;
+
     // remove the custom search path
     {
         let icon_theme  = imports.gi.Gtk.IconTheme.get_default();
@@ -617,7 +627,4 @@ function disable () {
         paths.splice(paths.indexOf(custom_path), 1);
         icon_theme.set_search_path(paths);
     }
-
-    timepp.destroy();
-    timepp = null;
 }
