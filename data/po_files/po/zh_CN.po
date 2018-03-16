@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-16 20:15+0100\n"
+"POT-Creation-Date: 2018-03-16 20:53+0100\n"
 "PO-Revision-Date: 2018-03-11 21:49+0800\n"
 "Last-Translator: OriginCode <origincoder@yahoo.com>\n"
 "Language-Team: Chinese <kde-i18n-doc@kde.org>\n"
@@ -505,7 +505,7 @@ msgid "No intervals found."
 msgstr "无物可寻。"
 
 #: data/po_files/../../sections/todo/time_tracker.js:357
-#: data/po_files/../../sections/todo/time_tracker.js:756
+#: data/po_files/../../sections/todo/time_tracker.js:760
 msgid "Error while parsing csv file. See logs."
 msgstr "当处理CSV文件时出现了错误。参见日志。"
 

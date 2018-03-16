@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-16 20:15+0100\n"
+"POT-Creation-Date: 2018-03-16 20:53+0100\n"
 "PO-Revision-Date: 2018-01-10 10:35+0100\n"
 "Last-Translator: Piotr Komur <pkomur@gmail.com>\n"
 "Language-Team: \n"
@@ -511,7 +511,7 @@ msgid "No intervals found."
 msgstr "Nic nie znaleziono..."
 
 #: data/po_files/../../sections/todo/time_tracker.js:357
-#: data/po_files/../../sections/todo/time_tracker.js:756
+#: data/po_files/../../sections/todo/time_tracker.js:760
 msgid "Error while parsing csv file. See logs."
 msgstr ""
 

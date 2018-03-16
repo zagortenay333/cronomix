@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: timepp@zagortenay 333\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-16 20:15+0100\n"
+"POT-Creation-Date: 2018-03-16 20:53+0100\n"
 "PO-Revision-Date: 2017-08-29 10:51+0200\n"
 "Last-Translator: Christian Mattes <mac@tasarion.de>\n"
 "Language-Team: German\n"
@@ -507,7 +507,7 @@ msgid "No intervals found."
 msgstr "Nichts gefunden."
 
 #: data/po_files/../../sections/todo/time_tracker.js:357
-#: data/po_files/../../sections/todo/time_tracker.js:756
+#: data/po_files/../../sections/todo/time_tracker.js:760
 msgid "Error while parsing csv file. See logs."
 msgstr ""
 
