@@ -432,7 +432,7 @@ var TaskItem = new Lang.Class({
                 else if (this.priority !== '(_)') idx = 1;
                 else                              idx = 0;
 
-                if (REG.TODO_DATE.test(words[idx]))
+                if (REG.ISO_DATE.test(words[idx]))
                     words[idx] = G.date_yyyymmdd();
                 else
                     words.splice(idx, 0, G.date_yyyymmdd());
