@@ -1372,16 +1372,10 @@ var SectionMain = new Lang.Class({
             }
         });
 
-        // @BUG
-        // We seem to trigger a failed assertion when changing the icon_name
-        // while the actor is not visible.
-        // Similar bug happens in the task_item module.
-        Meta.later_add(Meta.LaterType.BEFORE_REDRAW, () => {
-            this.sort_icon.icon_name =
-                this.cache.sort[0][1] === G.SortOrder.ASCENDING ?
-                'timepp-sort-ascending-symbolic' :
-                'timepp-sort-descending-symbolic';
-        });
+        this.sort_icon.icon_name =
+            this.cache.sort[0][1] === G.SortOrder.ASCENDING ?
+            'timepp-sort-ascending-symbolic' :
+            'timepp-sort-descending-symbolic';
     },
 
     // Each search query and the corresponding array of results (task objects)

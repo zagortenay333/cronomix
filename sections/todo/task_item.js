@@ -831,19 +831,7 @@ var TaskItem = new Lang.Class({
     _show_tracker_stopped_icon: function () {
         this.tracker_icon.visible     = this.edit_icon.visible;
         this.tracker_icon.style_class = 'tracker-start-icon';
-
-        // @BUG
-        // Same bug happens in the sort method of the MAIN obj.
-        // The issue seems to have something to do when changing the icon_name
-        // while the actor is not visible.
-        // We trigger this assertion when the time-tracker is running and we
-        // switch the todo.txt file:
-        //     st_theme_context_get_for_stage: assertion 'CLUTTER_IS_STAGE (stage)' failed
-        //     g_object_get: assertion 'G_IS_OBJECT (object)' failed
-        //     Could not load a pixbuf from icon theme.
-        //     This may indicate that pixbuf loaders or the mime database could not be found.
-        if (!this.actor.visible) return;
-        this.tracker_icon.icon_name = 'timepp-start-symbolic';
+        this.tracker_icon.icon_name   = 'timepp-start-symbolic';
     },
 
     on_tracker_started: function () {
