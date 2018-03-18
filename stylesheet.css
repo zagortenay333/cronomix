@@ -137,11 +137,6 @@
     background-image: url('data/img/radiobutton-checked.svg');
 }
 
-.timepp-menu StButton:focus .toggle-switch,
-.timepp-menu .radiobutton:focus StBin {
-    outline: 2px #aaa;
-}
-
 .timepp-separator {
     min-height: 2em;
 }
@@ -292,22 +287,8 @@
     background-color: rgba(255, 255, 255, .5);
 }
 
-.timepp-fullscreen .toggle-switch {
-    height: 20px;
-    width: 42px;
-    background-size: contain;
-}
-
-.timepp-fullscreen .toggle-switch-us, .toggle-switch-intl {
-    background-image: url("data/img/switch-off.svg");
-}
-
-.timepp-fullscreen .toggle-switch-us:checked, .toggle-switch-intl:checked {
-    background-image: url("data/img/switch-on.svg");
-}
-
 .timepp-fullscreen .btn-box {
-    spacing: 1em;
+    spacing: .7em;
 }
 
 .timepp-fullscreen .button {
@@ -334,7 +315,7 @@
 .timepp-fullscreen .date-picker {
     font-weight: bold;
     font-size: 14px;
-    spacing: 1em;
+    spacing: .7em;
 }
 
 .timepp-fullscreen .date-picker-item {
@@ -740,6 +721,11 @@
     text-decoration: underline;
 }
 
+.timepp-hot-mode-type-menu,
+.timepp-hot-mode-range-menu {
+    margin-top: .7em;
+}
+
 .timepp-fullscreen.stats .navbar {
     padding: 0;
 }
@@ -783,22 +769,28 @@
     font-weight: bold;
     font-size: 14px;
     min-height: 2.5em;
-}
-
-.timepp-fullscreen.stats .hot-mode-control-box StLabel {
-    margin-right: .5em;
+    spacing: 7em;
 }
 
 .timepp-fullscreen.stats .hot-mode-control-box .button {
     font-size: 14px;
     padding: .6em 2em;
-    margin-right: 1em;
     -natural-hpadding: 1em;
     -st-natural-width: 3em;
 }
 
-.timepp-fullscreen.stats .custom-date-range-box .date-picker {
-    margin-right: 4em;
+.timepp-fullscreen.stats .hot-mode-control-box .btn-box,
+.timepp-fullscreen.stats .custom-date-range-box {
+    spacing: .7em;
+}
+
+.timepp-fullscreen.stats .custom-date-range-box .btn-ok {
+    margin-left: 3em;
+}
+
+.timepp-fullscreen.stats .custom-date-range-box > StLabel { /* ellipses */
+    font-size: 20px;
+    font-weight: bold;
 }
 
 .timepp-fullscreen.stats .search-results-box {

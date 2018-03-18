@@ -233,27 +233,25 @@ var StatsView = new Lang.Class({
 
             // custom range view
             this.date_range_custom_view = new St.BoxLayout({ visible: false, style_class: 'custom-date-range-box' });
-            this.hot_mode_control_box.add_actor(this.date_range_custom_view);
-
-            this.date_range_custom_view.add_actor(new St.Label({ text: _('From: '), y_align: Clutter.ActorAlign.CENTER }));
+            this.hot_mode_control_box.add_child(this.date_range_custom_view);
 
             this.bound_date_1 = new DATE_PICKER.DatePicker('', today, ['', '', '']);
             this.date_range_custom_view.add_actor(this.bound_date_1.actor);
 
-            this.date_range_custom_view.add_actor(new St.Label({ text: _('To: '), y_align: Clutter.ActorAlign.CENTER }));
+            this.date_range_custom_view.add_actor(new St.Label({ text: '...', y_align: Clutter.ActorAlign.END }));
 
             this.bound_date_2 = new DATE_PICKER.DatePicker('', today, ['', '', '']);
             this.date_range_custom_view.add_actor(this.bound_date_2.actor);
 
-            this.custom_range_ok_btn = new St.Button({ can_focus: true, label: _('Ok'), style_class: 'button' });
+            this.custom_range_ok_btn = new St.Button({ can_focus: true, label: _('Ok'), style_class: 'button btn-ok' });
             this.date_range_custom_view.add_actor(this.custom_range_ok_btn);
 
-            this.custom_range_cancel_btn = new St.Button({ can_focus: true, label: _('Cancel'), style_class: 'button' });
+            this.custom_range_cancel_btn = new St.Button({ can_focus: true, label: _('Cancel'), style_class: 'button btn-cancel' });
             this.date_range_custom_view.add_actor(this.custom_range_cancel_btn);
 
 
             // the main view
-            this.date_range_main_view = new St.BoxLayout();
+            this.date_range_main_view = new St.BoxLayout({ style_class: 'btn-box' });
             this.hot_mode_control_box.add_actor(this.date_range_main_view);
 
             this.type_btn = new St.Button({ can_focus: true, label: '', style_class: 'button' });
@@ -263,6 +261,7 @@ var StatsView = new Lang.Class({
             this.menu_manager.addMenu(this.type_menu);
             Main.uiGroup.add_actor(this.type_menu.actor);
             this.type_menu.actor.hide();
+            this.type_menu.actor.add_style_class_name('timepp-hot-mode-type-menu');
 
             this.range_btn = new St.Button({ can_focus: true, label: '', style_class: 'button' });
             this.date_range_main_view.add_actor(this.range_btn);
@@ -271,6 +270,7 @@ var StatsView = new Lang.Class({
             this.menu_manager.addMenu(this.range_menu);
             Main.uiGroup.add_actor(this.range_menu.actor);
             this.range_menu.actor.hide();
+            this.range_menu.actor.add_style_class_name('timepp-hot-mode-range-menu');
 
             // fill up range menu
             for (let [key, val] of this.string_date_map) {
@@ -1463,6 +1463,9 @@ var StatsView = new Lang.Class({
 
     destroy: function () {
         if (this.new_day_sig_id) this.delegate.disconnect(this.new_day_sig_id);
+
+        this.type_menu.destroy();
+        this.range_menu.destroy();
 
         this.parent();
     },
