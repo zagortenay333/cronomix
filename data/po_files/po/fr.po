@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-16 20:53+0100\n"
+"POT-Creation-Date: 2018-03-18 22:57+0100\n"
 "PO-Revision-Date: 2018-01-09 19:02+0100\n"
 "Last-Translator: Luc Bournaud <luc.bournaud@hotmail.fr>\n"
 "Language-Team: français <>\n"
@@ -23,11 +23,11 @@ msgstr ""
 msgid "File or dir not found."
 msgstr "Fichier ou dossier non trouvée."
 
-#: data/po_files/../../lib/fullscreen.js:222
+#: data/po_files/../../lib/fullscreen.js:223
 msgid "Move to Primary Monitor"
 msgstr "Déplacer vers le moniteur principal"
 
-#: data/po_files/../../lib/fullscreen.js:228
+#: data/po_files/../../lib/fullscreen.js:229
 msgid "Move to Secondary Monitor"
 msgstr "Déplacer vers le moniteur secondaire"
 
@@ -373,7 +373,7 @@ msgstr "Trier par date de complétition"
 
 #: data/po_files/../../sections/todo/view__sort.js:80
 #: data/po_files/../../sections/todo/view__task_editor.js:140
-#: data/po_files/../../sections/todo/view__stats.js:248
+#: data/po_files/../../sections/todo/view__stats.js:246
 #: data/po_files/../../sections/todo/view__clear_tasks.js:96
 #: data/po_files/../../sections/todo/view__filters.js:206
 #: data/po_files/../../sections/pomodoro.js:782
@@ -399,7 +399,7 @@ msgid "Archive"
 msgstr "Archiver"
 
 #: data/po_files/../../sections/todo/view__task_editor.js:137
-#: data/po_files/../../sections/todo/view__stats.js:251
+#: data/po_files/../../sections/todo/view__stats.js:249
 #: data/po_files/../../sections/todo/view__clear_tasks.js:93
 #: data/po_files/../../sections/pomodoro.js:783
 #: data/po_files/../../sections/alarms.js:587 data/po_files/../../prefs.js:132
@@ -457,14 +457,6 @@ msgstr "Mois : "
 #: data/po_files/../../sections/todo/view__stats.js:216
 msgid "Day:"
 msgstr "Jour : "
-
-#: data/po_files/../../sections/todo/view__stats.js:238
-msgid "From: "
-msgstr "De : "
-
-#: data/po_files/../../sections/todo/view__stats.js:243
-msgid "To: "
-msgstr "Jusqu'à : "
 
 #: data/po_files/../../sections/todo/view__stats.js:283
 msgid "Custom Range..."
