@@ -708,7 +708,11 @@
 }
 
 .timepp-menu .todo-section .task-editor .entry-container {
+}
+
+.timepp-menu .todo-section .task-editor .entry-container {
     spacing: 0;
+    min-width: 30em;
 }
 
 .timepp-menu .todo-section .todo-syntax-link {
