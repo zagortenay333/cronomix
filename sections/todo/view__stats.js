@@ -859,7 +859,7 @@ var StatsView = new Lang.Class({
                 else if (time < 3600)  rgba = color_map[4];
                 else if (time < 10800) rgba = color_map[3];
                 else if (time < 21600) rgba = color_map[2];
-                else if (time < 28800) rgba = color_map[1];
+                else if (time < 25200) rgba = color_map[1];
                 else                   rgba = color_map[0];
             }
 
