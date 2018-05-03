@@ -600,9 +600,11 @@
 }
 
 .timepp-menu .todo-section .task-item {
-    padding: 6px 6px 6px 9px;
+    padding: .6em;
     background: rgba(125, 125, 125, .15);
     border-radius: 2px;
+    border-left-width: 3px;
+    border-color: rgba(125, 125, 125, .7);
 
     /*
      * .task-item will have a single capital letter A-Z selector based on
@@ -618,36 +620,26 @@
 
 .timepp-menu .todo-section .task-item.hidden-task {
     background: rgba(15, 15, 15, .25);
+    border-color: transparent;
 }
 
-.timepp-menu .todo-section .task-item.A {
-    border-color: #e74f4f;
-    border-left-width: 3px;
+.timepp-menu .todo-section .task-item.completed {
+    border-color: transparent;
 }
 
-.timepp-menu .todo-section .task-item.B {
-    border-color: #f47e00;
-    border-left-width: 3px;
-}
-
-.timepp-menu .todo-section .task-item.C {
-    border-color: #8b5bff;
-    border-left-width: 3px;
-}
-
-.timepp-menu .todo-section .task-item.D {
-    border-color: #38ae72;
-    border-left-width: 3px;
-}
-
-.timepp-menu .todo-section .task-item-content {
-    spacing: .3em;
-}
+.timepp-menu .todo-section .task-item.A { border-color: #e74f4f; }
+.timepp-menu .todo-section .task-item.B { border-color: #f47e00; }
+.timepp-menu .todo-section .task-item.C { border-color: #8b5bff; }
+.timepp-menu .todo-section .task-item.D { border-color: #38ae72; }
 
 .timepp-menu .todo-section .task-item.A .priority-label { color: #e74f4f; }
 .timepp-menu .todo-section .task-item.B .priority-label { color: #f47e00; }
 .timepp-menu .todo-section .task-item.C .priority-label { color: #8b5bff; }
 .timepp-menu .todo-section .task-item.D .priority-label { color: #38ae72; }
+
+.timepp-menu .todo-section .task-item-content {
+    spacing: .3em;
+}
 
 .timepp-menu .todo-section .description-label {}
 .timepp-menu .todo-section .date-label {}
