@@ -22,10 +22,8 @@ const ngettext = Gettext.ngettext;
 
 const SIG_MANAGER  = ME.imports.lib.signal_manager;
 const KEY_MANAGER  = ME.imports.lib.keybinding_manager;
-const FUZZ         = ME.imports.lib.fuzzy_search;
 const MISC_UTILS   = ME.imports.lib.misc_utils;
 const PANEL_ITEM   = ME.imports.lib.panel_item;
-const REG          = ME.imports.lib.regex;
 
 
 const G = ME.imports.sections.todo.GLOBAL;
@@ -37,6 +35,10 @@ const VIEW_MANAGER       = ME.imports.sections.todo.view_manager;
 const VIEW_STATS         = ME.imports.sections.todo.view__stats;
 const VIEW_CLEAR         = ME.imports.sections.todo.view__clear_tasks;
 const VIEW_SORT          = ME.imports.sections.todo.view__sort;
+const VIEW_DEFAULT       = ME.imports.sections.todo.view__default;
+const VIEW_SEARCH        = ME.imports.sections.todo.view__search;
+const VIEW_LOADING       = ME.imports.sections.todo.view__loading;
+const VIEW_NO_TODO_FILE  = ME.imports.sections.todo.view__no_todo_file;
 const VIEW_FILTERS       = ME.imports.sections.todo.view__filters;
 const VIEW_TASK_EDITOR   = ME.imports.sections.todo.view__task_editor;
 const VIEW_FILE_SWITCHER = ME.imports.sections.todo.view__file_switcher;
@@ -55,6 +57,7 @@ const CACHE_FILE = GLib.get_home_dir() +
 //
 // @signals:
 //   - 'new-day' (new day started) (returns string in yyyy-mm-dd iso format)
+//   - 'tasks-changed'
 // =====================================================================
 var SectionMain = new Lang.Class({
     Name    : 'Timepp.Todo',
@@ -71,13 +74,31 @@ var SectionMain = new Lang.Class({
         this.cache        = null;
         this.sigm         = new SIG_MANAGER.SignalManager();
         this.keym         = new KEY_MANAGER.KeybindingManager(this.settings);
-        this.view_manager = new VIEW_MANAGER.ViewManager(this.ext, this);
         this.time_tracker = null;
 
         // The view manager only allows one view to be visible at time; however,
         // since the stats view uses the fullscreen iface, it is orthogonal to
         // the other views, so we don't use the view manager for it.
         this.stats_view = new VIEW_STATS.StatsView(this.ext, this, 0);
+
+
+        // @HACK
+        // For styling purposes we want the view manager to put actors inside a
+        // PopupMenuItem, but using the PopupMenuItem as a wrapper won't work
+        // here if there is a large num of tasks. Various event listeners in
+        // PopupMenuItem will cause major lag when entering the wrapper with the
+        // mouse.
+        // We replicate the PopupMenuItem by adding an ornament to ensure
+        // proper horizontal padding.
+        let box = new St.BoxLayout({ x_expand: true, style_class: 'popup-menu-item' });
+        this.actor.add_child(box);
+        box.add_actor(new St.Label({style_class: 'popup-menu-ornament'}));
+
+        this.content_box = new St.BoxLayout({ x_expand: true });
+        box.add_child(this.content_box);
+
+
+        this.view_manager = new VIEW_MANAGER.ViewManager(this.ext, this);
 
 
         //
@@ -100,6 +121,8 @@ var SectionMain = new Lang.Class({
                 this.cache = {
                     format_version: cache_format_version,
 
+                    automatic_sort: true,
+
                     sort: [
                         [G.SortType.PIN             , G.SortOrder.DESCENDING],
                         [G.SortType.COMPLETED       , G.SortOrder.ASCENDING],
@@ -114,7 +137,7 @@ var SectionMain = new Lang.Class({
 
                     filters: {
                         invert_filters : false,
-                        defer          : false,
+                        deferred       : false,
                         recurring      : false,
                         hidden         : false,
                         completed      : false,
@@ -133,13 +156,14 @@ var SectionMain = new Lang.Class({
         }
 
 
+        this.create_tasks_mainloop_id = null;
+
+
         // We use this for tracking when a new day begins.
         this.wallclock = new GnomeDesktop.WallClock();
 
 
         // Track how many tasks have a particular proj/context/prio, a
-        // recurrence, etc...
-        // The func _reset_stats_obj defines the form of this object.
         this.stats = null;
         this._reset_stats_obj();
 
@@ -149,57 +173,8 @@ var SectionMain = new Lang.Class({
         this.todo_file_monitor = null;
 
 
-        // @NOTE
-        // this.tasks, this.tasks_viewport and the popup menu are the
-        // only places where refs to task objects can be held for longer periods
-        // of time.
-        // If a task has been removed from this.tasks, then it has to also be
-        // removed from this.tasks_viewport and it's actor has to be removed
-        // from the popup menu.
-        //
-        // - To ADD a task, create the object and add it to this.tasks and call
-        //   this.on_tasks_changed() soon after that.
-        //   When creating a large number of tasks all at once, it's best to use
-        //   the async func this.create_tasks().
-        //
-        // - To DELETE a task, remove the object from this.tasks and call
-        //   on_tasks_changed() soon after that.
-        //
-        // - To EDIT a task, create a new task_str and call the task objects'
-        //   reset method with the new string, and call on_tasks_changed()
-        //   soon after that.
-        //
-        // Note that on_tasks_changed() does not update the todo.txt file. Use
-        // write_tasks_to_file() for that.
-
-
         // All task objects.
         this.tasks = [];
-
-
-        // Array of all tasks that have been filtered. Only tasks in this array
-        // can be added to the popup menu.
-        this.tasks_viewport = [];
-
-
-        // @SPEED
-        // This is used by the _do_search func to store search queries and their
-        // results for the duration of the search.
-        //
-        // @key : string (a search query)
-        // @val : array  (of tasks that match the search query)
-        this.search_dictionary = new Map();
-
-
-        // The last string that was searched for.
-        this.last_search_pattern = '';
-
-
-        // @SPEED
-        // Mainloop source id's of the corresponding async funcs.
-        // If null, the corresponding func is not running.
-        this.create_tasks_mainloop_id      = null;
-        this.add_tasks_to_menu_mainloop_id = null;
 
 
         // @SPEED
@@ -220,43 +195,43 @@ var SectionMain = new Lang.Class({
         //
         this.keym.add('todo-keybinding-open', () => {
             this.ext.open_menu(this.section_name);
-            if (this.view_manager.current_view !== G.View.LOADING &&
-                this.view_manager.current_view !== G.View.NO_TODO_FILE &&
-                this.view_manager.current_view !== G.View.EDITOR) {
+            if (this.view_manager.current_view_name !== G.View.LOADING &&
+                this.view_manager.current_view_name !== G.View.NO_TODO_FILE &&
+                this.view_manager.current_view_name !== G.View.EDITOR) {
 
                 this.show_view__default();
             }
         });
         this.keym.add('todo-keybinding-open-to-add', () => {
             this.ext.open_menu(this.section_name);
-            if (this.view_manager.current_view !== G.View.LOADING &&
-                this.view_manager.current_view !== G.View.NO_TODO_FILE) {
+            if (this.view_manager.current_view_name !== G.View.LOADING &&
+                this.view_manager.current_view_name !== G.View.NO_TODO_FILE) {
 
                 this.show_view__task_editor();
             }
         });
         this.keym.add('todo-keybinding-open-to-search', () => {
             this.ext.open_menu(this.section_name);
-            if (this.view_manager.current_view !== G.View.LOADING &&
-                this.view_manager.current_view !== G.View.NO_TODO_FILE &&
-                this.view_manager.current_view !== G.View.EDITOR) {
+            if (this.view_manager.current_view_name !== G.View.LOADING &&
+                this.view_manager.current_view_name !== G.View.NO_TODO_FILE &&
+                this.view_manager.current_view_name !== G.View.EDITOR) {
 
                 this.show_view__search();
             }
         });
         this.keym.add('todo-keybinding-open-to-stats', () => {
-            if (this.view_manager.current_view !== G.View.LOADING &&
-                this.view_manager.current_view !== G.View.NO_TODO_FILE &&
-                this.view_manager.current_view !== G.View.EDITOR) {
+            if (this.view_manager.current_view_name !== G.View.LOADING &&
+                this.view_manager.current_view_name !== G.View.NO_TODO_FILE &&
+                this.view_manager.current_view_name !== G.View.EDITOR) {
 
                 this.show_view__time_tracker_stats();
             }
         });
         this.keym.add('todo-keybinding-open-to-switch-files', () => {
             this.ext.open_menu(this.section_name);
-            if (this.view_manager.current_view !== G.View.LOADING &&
-                this.view_manager.current_view !== G.View.NO_TODO_FILE &&
-                this.view_manager.current_view !== G.View.EDITOR &&
+            if (this.view_manager.current_view_name !== G.View.LOADING &&
+                this.view_manager.current_view_name !== G.View.NO_TODO_FILE &&
+                this.view_manager.current_view_name !== G.View.EDITOR &&
                 this.settings.get_value('todo-files').deep_unpack().length > 1) {
 
                 this.show_view__file_switcher();
@@ -278,116 +253,6 @@ var SectionMain = new Lang.Class({
 
 
         //
-        // search entry bin
-        //
-        this.search_entry_bin = new PopupMenu.PopupMenuItem('', { hover: false, activate: false });
-        this.actor.add_actor(this.search_entry_bin.actor);
-        this.search_entry_bin.label.hide();
-        this.search_entry_bin.actor.hide();
-        this.search_entry_bin.actor.can_focus = false;
-
-        this.search_entry = new St.Entry({ can_focus: true });
-        this.search_entry_bin.actor.add(this.search_entry, {expand: true});
-
-        this.close_icon = new St.Icon({ icon_name: 'timepp-close-symbolic' });
-        this.search_entry.set_secondary_icon(this.close_icon);
-
-
-        //
-        // loading message
-        //
-        this.loading_msg = new PopupMenu.PopupMenuItem(_('Loading...'), { hover: false, activate: false, style_class: 'loading-msg' });
-        this.actor.add_actor(this.loading_msg.actor);
-        this.loading_msg.actor.hide();
-        this.loading_msg.label.can_focus = true;
-        this.loading_msg.actor.can_focus = false;
-
-
-        //
-        // no todo file message
-        //
-        this.no_todo_file_msg = new PopupMenu.PopupMenuItem(_('Select todo file in settings...'), { hover: false, activate: false, style_class: 'no-todo-file-msg' });
-        this.actor.add_actor(this.no_todo_file_msg.actor);
-        this.no_todo_file_msg.actor.hide();
-        this.no_todo_file_msg.label.can_focus = true;
-        this.no_todo_file_msg.actor.can_focus = false;
-
-
-        //
-        // header
-        //
-        this.header = new PopupMenu.PopupMenuItem('', { hover: false, activate: false, style_class: 'header' });
-        this.actor.add_actor(this.header.actor);
-        this.header.label.hide();
-        this.header.actor.hide();
-        this.header.actor.can_focus = false;
-
-        this.add_task_button = new St.Button({ can_focus: true, x_align: St.Align.START, style_class: 'add-task' });
-        this.header.actor.add(this.add_task_button, { expand: true });
-
-        this.add_task_bin = new St.BoxLayout();
-        this.add_task_button.add_actor(this.add_task_bin);
-
-        this.add_task_icon = new St.Icon({ icon_name: 'timepp-plus-symbolic', y_align: Clutter.ActorAlign.CENTER });
-        this.add_task_bin.add_actor(this.add_task_icon);
-
-        this.add_task_label = new St.Label({ text: _('Add New Task...'), y_align: Clutter.ActorAlign.CENTER });
-        this.add_task_bin.add_actor(this.add_task_label);
-
-
-        //
-        // header icons
-        //
-        this.icon_box = new St.BoxLayout({ x_align: Clutter.ActorAlign.END, style_class: 'icon-box' });
-        this.header.actor.add(this.icon_box);
-
-        this.filter_icon = new St.Icon({ can_focus: true, reactive: true, track_hover: true, y_align: Clutter.ActorAlign.CENTER, style_class: 'filter-icon' });
-        this.icon_box.add_child(this.filter_icon);
-
-        this.sort_icon = new St.Icon({ can_focus: true, reactive: true, track_hover: true, y_align: Clutter.ActorAlign.CENTER, style_class: 'sort-icon' });
-        this.icon_box.add_child(this.sort_icon);
-
-        this.file_switcher_icon = new St.Icon({ icon_name: 'timepp-file-symbolic', can_focus: true, reactive: true, track_hover: true, y_align: Clutter.ActorAlign.CENTER, style_class: 'file-switcher-icon' });
-        this.icon_box.add_child(this.file_switcher_icon);
-        this.file_switcher_icon.visible = (this.settings.get_value('todo-files').deep_unpack().length > 1);
-
-        this.search_icon = new St.Icon({ icon_name: 'timepp-search-symbolic', can_focus: true, reactive: true, track_hover: true, y_align: Clutter.ActorAlign.CENTER, style_class: 'search-icon' });
-        this.icon_box.add_child(this.search_icon);
-
-        this.stats_icon = new St.Icon({ icon_name: 'timepp-graph-symbolic', can_focus: true, reactive: true, track_hover: true, y_align: Clutter.ActorAlign.CENTER, style_class: 'stats-icon' });
-        this.icon_box.add_child(this.stats_icon);
-
-        this.clear_icon = new St.Icon({ icon_name: 'timepp-clear-symbolic', can_focus: true, reactive: true, track_hover: true, y_align: Clutter.ActorAlign.CENTER, style_class: 'clear-icon' });
-        this.icon_box.add_child(this.clear_icon);
-
-
-        //
-        // task items box
-        //
-        this.tasks_scroll_wrapper = new St.BoxLayout({ style_class: 'popup-menu-item' });
-        this.actor.add(this.tasks_scroll_wrapper, {expand: true});
-
-        // @HACK
-        // Using the PopupMenuItem as a wrapper won't work here if there is
-        // a large num of tasks. Various event listeners in PopupMenuItem
-        // will cause major lag when entering the wrapper with the mouse.
-        // We replicate the PopupMenuItem by adding an ornament to ensure
-        // proper horizontal padding.
-        {
-            let ornament = new St.Label({style_class: 'popup-menu-ornament' });
-            this.tasks_scroll_wrapper.add_actor(ornament);
-        }
-
-        this.tasks_scroll = new St.ScrollView({ style_class: 'tasks-container vfade', x_fill: true, y_align: St.Align.START});
-        this.tasks_scroll_wrapper.add(this.tasks_scroll, {expand: true});
-
-        this.tasks_scroll.hscrollbar_policy = Gtk.PolicyType.NEVER;
-
-        this.tasks_scroll_content = new St.BoxLayout({ vertical: true, style_class: 'tasks-content-box'});
-        this.tasks_scroll.add_actor(this.tasks_scroll_content);
-
-
-        //
         // listen
         //
         this.sigm.connect(this.settings, 'changed::todo-files', () => {
@@ -402,16 +267,12 @@ var SectionMain = new Lang.Class({
             this.separate_menu = this.settings.get_boolean('todo-separate-menu');
             this.ext.update_panel_items();
         });
-        this.sigm.connect(this.settings, 'changed::todo-show-seconds', () => {
-            this._update_time_display();
-        });
         this.sigm.connect(this.settings, 'changed::todo-panel-mode', () => {
             this._toggle_panel_item_mode();
         });
         this.sigm.connect(this.settings, 'changed::todo-task-width', () => {
             let width = this.settings.get_int('todo-task-width');
-            for (let task of this.tasks)
-                task.actor.width = width;
+            for (let task of this.tasks) task.actor.width = width;
         });
         this.sigm.connect(this.wallclock, 'notify::clock', () => {
             let t = GLib.DateTime.new_now(this.wallclock.timezone);
@@ -420,17 +281,7 @@ var SectionMain = new Lang.Class({
             if (t === '00:00') this._on_new_day_started();
         });
         this.sigm.connect(this.panel_item, 'left-click', () => this.ext.toggle_menu(this.section_name));
-        this.sigm.connect_press(this.add_task_button, Clutter.BUTTON_PRIMARY, true, () => this.show_view__task_editor());
-        this.sigm.connect_press(this.filter_icon, Clutter.BUTTON_PRIMARY, true, () => this.show_view__filters());
-        this.sigm.connect_press(this.filter_icon, Clutter.BUTTON_MIDDLE, false, () => this.toggle_invert_filters());
-        this.sigm.connect_press(this.sort_icon, Clutter.BUTTON_PRIMARY, true, () => this.show_view__sort());
-        this.sigm.connect_press(this.file_switcher_icon, Clutter.BUTTON_PRIMARY, true, () => this.show_view__file_switcher());
-        this.sigm.connect_press(this.search_icon, Clutter.BUTTON_PRIMARY, true, () => this.show_view__search());
-        this.sigm.connect_press(this.stats_icon, Clutter.BUTTON_PRIMARY, true, () => this.show_view__time_tracker_stats());
-        this.sigm.connect_press(this.clear_icon, Clutter.BUTTON_PRIMARY, true, () => this.show_view__clear_completed());
-        this.sigm.connect(this.search_entry, 'secondary-icon-clicked', () => this.show_view__default());
         this.sigm.connect(this.ext, 'custom-css-changed', () => this._on_custom_css_changed());
-        this.sigm.connect(this.search_entry.clutter_text, 'text-changed', () => Mainloop.idle_add(() => this._search()));
 
 
         //
@@ -445,11 +296,6 @@ var SectionMain = new Lang.Class({
             this.create_tasks_mainloop_id = null;
         }
 
-        if (this.add_tasks_to_menu_mainloop_id) {
-            Mainloop.source_remove(this.add_tasks_to_menu_mainloop_id);
-            this.add_tasks_to_menu_mainloop_id = null;
-        }
-
         if (this.todo_file_monitor) {
             this.todo_file_monitor.cancel();
             this.todo_file_monitor = null;
@@ -460,10 +306,6 @@ var SectionMain = new Lang.Class({
             this.time_tracker = null;
         }
 
-        if (this.view_manager) {
-            this.view_manager = null;
-        }
-
         if (this.stats_view) {
             this.stats_view.destroy();
             this.stats_view = null;
@@ -472,15 +314,17 @@ var SectionMain = new Lang.Class({
         this.sigm.clear();
         this.keym.clear();
 
+        this.view_manager   = null;
         this.tasks          = [];
-        this.tasks_viewport = [];
 
-        this.tasks_scroll_content.destroy_all_children();
+        this.show_view__no_todo_file();
 
         this.parent();
     },
 
     _init_todo_file: function () {
+        this.show_view__loading();
+
         // reset
         {
             if (this.create_tasks_mainloop_id) {
@@ -501,20 +345,16 @@ var SectionMain = new Lang.Class({
             this.stats.priorities.clear();
             this.stats.contexts.clear();
             this.stats.projects.clear();
-
-            this.tasks_viewport = [];
-            this.tasks_scroll_content.remove_all_children();
-        }
-
-        let current = this.settings.get_value('todo-current').deep_unpack();
-
-        if (! current.todo_file) {
-            this.show_view__no_todo_file();
-            return;
         }
 
         try {
-            // todo file
+            let current = this.settings.get_value('todo-current').deep_unpack();
+
+            if (! current.todo_file) {
+                this.show_view__no_todo_file();
+                return;
+            }
+
             this.todo_txt_file = Gio.file_new_for_uri(current.todo_file);
 
             if (this.todo_file_monitor)
@@ -535,15 +375,12 @@ var SectionMain = new Lang.Class({
             return;
         }
 
-        this.show_view__loading();
-
         let [, lines] = this.todo_txt_file.load_contents(null);
         lines = String(lines).split(/\r?\n/).filter((l) => /\S/.test(l));
 
         this.create_tasks(lines, () => {
-            if (this._check_dates()) this.write_tasks_to_file();
-            this.on_tasks_changed();
-            this.show_view__default();
+            let needs_write = this._check_dates();
+            this.on_tasks_changed(needs_write);
             this.time_tracker = new TIME_TRACKER.TimeTracker(this.ext, this);
         });
     },
@@ -603,7 +440,6 @@ var SectionMain = new Lang.Class({
         this.emit('new-day', G.date_yyyymmdd());
 
         if (this._check_dates()) {
-            this.write_tasks_to_file();
             this.on_tasks_changed();
         }
     },
@@ -691,11 +527,6 @@ var SectionMain = new Lang.Class({
             this.create_tasks_mainloop_id = null;
         }
 
-        if (this.add_tasks_to_menu_mainloop_id) {
-            Mainloop.source_remove(this.add_tasks_to_menu_mainloop_id);
-            this.add_tasks_to_menu_mainloop_id = null;
-        }
-
         // Since we are reusing already instantiated objects, get rid of any
         // excess task object.
         //
@@ -729,17 +560,7 @@ var SectionMain = new Lang.Class({
         });
     },
 
-    // This func must be called soon after 1 or more tasks have been added, or
-    // removed from this.tasks array or when they have been edited.
-    //
-    // This func should not be called many times in a row. The idea is to add,
-    // delete, or edit all tasks first and then call this func once.
-    //
-    // It will handle various things like updating the stats obj, showing or
-    // hiding various icons, sorting tasks, etc...
-    //
-    // This func will not write tasks to the todo.txt file.
-    on_tasks_changed: function () {
+    on_tasks_changed: function (write_to_file = true) {
         //
         // Update stats obj
         //
@@ -777,8 +598,7 @@ var SectionMain = new Lang.Class({
 
                 if (task.priority === '(_)') {
                     this.stats.no_priority++;
-                }
-                else {
+                } else {
                     n = this.stats.priorities.get(task.priority);
                     this.stats.priorities.set(task.priority, n ? ++n : 1);
                 }
@@ -800,10 +620,8 @@ var SectionMain = new Lang.Class({
 
             this.panel_item.set_label('' + n_incompleted);
 
-            if (n_incompleted)
-                this.panel_item.actor.remove_style_class_name('done');
-            else
-                this.panel_item.actor.add_style_class_name('done');
+            if (n_incompleted) this.panel_item.actor.remove_style_class_name('done');
+            else               this.panel_item.actor.add_style_class_name('done');
         }
 
 
@@ -837,91 +655,61 @@ var SectionMain = new Lang.Class({
                     len--; i--;
                 }
             }
-
-            this._update_filter_icon();
         }
 
-
-        //
-        // rest
-        //
-        this.clear_icon.visible = this.stats.completed > 0;
         this.sort_tasks();
-        this.add_tasks_to_menu(true);
+        this.show_view__default();
+        if (write_to_file) this.write_tasks_to_file();
     },
 
-    // Add actors of task objects from this.tasks_viewport to the popup menu.
-    // Only this function should be used to add task actors to the popup menu.
-    //
-    // If @update_tasks_viewport is true, then the tasks viewport will be
-    // rebuilt (i.e., all tasks will be run through the filter test again.)
-    //
-    // @update_tasks_viewport : bool
-    // @ignore_filters        : bool (only makes sense if @update_tasks_viewport
-    //                                is true)
-    add_tasks_to_menu: function (update_tasks_viewport, ignore_filters) {
-        if (this.add_tasks_to_menu_mainloop_id) {
-            Mainloop.source_remove(this.add_tasks_to_menu_mainloop_id);
-            this.add_tasks_to_menu_mainloop_id = null;
+    sort_tasks: function () {
+        if (! this.cache.automatic_sort) return;
+
+        let property_map = {
+            [G.SortType.PIN]             : 'pinned',
+            [G.SortType.COMPLETED]       : 'completed',
+            [G.SortType.PRIORITY]        : 'priority',
+            [G.SortType.DUE_DATE]        : 'due_date',
+            [G.SortType.RECURRENCE]      : 'rec_next',
+            [G.SortType.CONTEXT]         : 'first_context',
+            [G.SortType.PROJECT]         : 'first_project',
+            [G.SortType.CREATION_DATE]   : 'creation_date',
+            [G.SortType.COMPLETION_DATE] : 'completion_date',
+        };
+
+        let cache = this.cache;
+        let i     = 0;
+        let len   = cache.sort.length;
+        let props = Array(len);
+
+        for (; i < len; i++) {
+            props[i] = property_map[ cache.sort[i][0] ];
         }
 
-        update_tasks_viewport = Boolean(update_tasks_viewport);
-        ignore_filters        = Boolean(ignore_filters);
+        this.tasks.sort((a, b) => {
+            for (i = 0; (i < len) && (a[props[i]] === b[props[i]]); i++);
 
-        this.tasks_scroll.vscrollbar_policy = Gtk.PolicyType.NEVER;
+            if (i === len) return 0;
 
-        this.tasks_scroll_content.remove_all_children();
-        if (update_tasks_viewport) this.tasks_viewport = [];
+            switch (cache.sort[i][0]) {
+                case G.SortType.PRIORITY:
+                    if (cache.sort[i][1] === G.SortOrder.DESCENDING) {
+                        return +(a[props[i]] > b[props[i]]) ||
+                               +(a[props[i]] === b[props[i]]) - 1;
+                    } else {
+                        return +(a[props[i]] < b[props[i]]) ||
+                               +(a[props[i]] === b[props[i]]) - 1;
+                    }
 
-        let arr = update_tasks_viewport ? this.tasks : this.tasks_viewport;
-        let n   = Math.min(arr.length, 21);
-
-        for (let i = 0; i < n; i++) {
-            if (update_tasks_viewport) {
-                if (ignore_filters || this._filter_test(arr[i])) {
-                    this.tasks_viewport.push(arr[i]);
-                    this.tasks_scroll_content.add_child(arr[i].actor);
-                }
+                default:
+                    if (cache.sort[i][1] === G.SortOrder.DESCENDING) {
+                        return +(a[props[i]] < b[props[i]]) ||
+                               +(a[props[i]] === b[props[i]]) - 1;
+                    } else {
+                        return +(a[props[i]] > b[props[i]]) ||
+                               +(a[props[i]] === b[props[i]]) - 1;
+                    }
             }
-            else this.tasks_scroll_content.add_child(arr[i].actor);
-
-            arr[i].actor.visible = this.ext.menu.isOpen &&
-                                   this.tasks_scroll_wrapper.visible;
-        }
-
-        this.add_tasks_to_menu_mainloop_id = Mainloop.idle_add(() => {
-           this._add_tasks_to_menu__finish(n, arr, update_tasks_viewport,
-                                           ignore_filters, false);
-        });
-    },
-
-    _add_tasks_to_menu__finish: function (i, arr, update_tasks_viewport,
-                                          ignore_filters, scrollbar_shown) {
-
-        if (!scrollbar_shown && this.ext.needs_scrollbar()) {
-            this.tasks_scroll.vscrollbar_policy = Gtk.PolicyType.ALWAYS;
-            scrollbar_shown = true;
-        }
-
-        if (i === arr.length) {
-            this.add_tasks_to_menu_mainloop_id = null;
-            return;
-        }
-
-        if (update_tasks_viewport) {
-            if (ignore_filters || this._filter_test(arr[i])) {
-                this.tasks_viewport.push(arr[i]);
-                this.tasks_scroll_content.add_child(arr[i].actor);
-            }
-        }
-        else this.tasks_scroll_content.add_child(arr[i].actor);
-
-        arr[i].actor.visible = this.ext.menu.isOpen &&
-                               this.tasks_scroll_wrapper.visible;
-
-        this.add_tasks_to_menu_mainloop_id = Mainloop.idle_add(() => {
-            this._add_tasks_to_menu__finish(++i, arr, update_tasks_viewport,
-                                            ignore_filters, scrollbar_shown);
         });
     },
 
@@ -959,96 +747,7 @@ var SectionMain = new Lang.Class({
             let append_stream = done_file.append_to(Gio.FileCreateFlags.NONE, null);
 
             append_stream.write_all(content, null);
-        }
-        catch (e) { logError(e); }
-    },
-
-    show_view__no_todo_file: function () {
-        this.panel_item.set_mode('icon');
-        this.panel_item.actor.remove_style_class_name('done');
-
-        this.view_manager.show_view({
-            view_name      : G.View.NO_TODO_FILE,
-            actors         : [this.no_todo_file_msg.actor],
-            focused_actor  : this.no_todo_file_msg.label,
-            close_callback : () => { this.no_todo_file_msg.actor.hide(); },
-        });
-    },
-
-    show_view__loading: function () {
-        this.panel_item.set_mode('icon');
-        this.panel_item.actor.remove_style_class_name('done');
-        this.panel_item.icon.icon_name = 'timepp-todo-loading-symbolic';
-
-        this.view_manager.show_view({
-            view_name      : G.View.LOADING,
-            actors         : [this.loading_msg.actor],
-            focused_actor  : this.loading_msg.label,
-            close_callback : () => {
-                this.loading_msg.actor.hide();
-                this.panel_item.icon.icon_name = 'timepp-todo-symbolic';
-                this._toggle_panel_item_mode();
-            },
-        });
-    },
-
-    show_view__default: function () {
-        this.view_manager.show_view({
-            view_name      : G.View.DEFAULT,
-            actors         : [this.header.actor, this.tasks_scroll_wrapper],
-            focused_actor  : this.add_task_button,
-            close_callback : () => {
-                this.header.actor.hide();
-                this.tasks_scroll_wrapper.hide();
-            },
-        });
-    },
-
-    show_view__clear_completed: function () {
-        let box = new VIEW_CLEAR.ClearCompletedTasks(this.ext, this);
-
-        this.view_manager.show_view({
-            view_name      : G.View.CLEAR,
-            actors         : [box.actor],
-            focused_actor  : box.button_cancel,
-            close_callback : () => { box.actor.destroy(); },
-        });
-
-        box.connect('delete-all', () => {
-            let incompleted_tasks = [];
-
-            for (let i = 0, len = this.tasks.length; i < len; i++) {
-                if (!this.tasks[i].completed || this.tasks[i].rec_str)
-                    incompleted_tasks.push(this.tasks[i]);
-            }
-
-            this.tasks = incompleted_tasks;
-            this.on_tasks_changed();
-            this.write_tasks_to_file();
-            this.show_view__default();
-        });
-
-        box.connect('archive-all', () => {
-            let completed_tasks   = [];
-            let incompleted_tasks = [];
-
-            for (let i = 0, len = this.tasks.length; i < len; i++) {
-                if (!this.tasks[i].completed || this.tasks[i].rec_str)
-                    incompleted_tasks.push(this.tasks[i]);
-                else
-                    completed_tasks.push(this.tasks[i]);
-            }
-
-            this.archive_tasks(completed_tasks);
-            this.tasks = incompleted_tasks;
-            this.on_tasks_changed();
-            this.write_tasks_to_file();
-            this.show_view__default();
-        });
-
-        box.connect('cancel', () => {
-            this.show_view__default();
-        });
+        } catch (e) { logError(e); }
     },
 
     show_view__time_tracker_stats: function (task) {
@@ -1074,45 +773,127 @@ var SectionMain = new Lang.Class({
         });
     },
 
-    show_view__search: function () {
-        if (this.add_tasks_to_menu_mainloop_id) {
-            Mainloop.source_remove(this.add_tasks_to_menu_mainloop_id);
-            this.add_tasks_to_menu_mainloop_id = null;
-        }
+    show_view__no_todo_file: function () {
+        this.panel_item.set_mode('icon');
+        this.panel_item.actor.remove_style_class_name('done');
+
+        let view = new VIEW_NO_TODO_FILE.ViewNoTodoFile(this.ext, this);
 
         this.view_manager.show_view({
-            view_name      : G.View.SEARCH,
-            focused_actor  : this.search_entry,
-            actors         : [
-                this.search_entry_bin.actor,
-                this.tasks_scroll_wrapper
-            ],
+            view           : view,
+            view_name      : G.View.NO_TODO_FILE,
+            actors         : [view.actor],
+            focused_actor  : view.no_todo_file_msg,
+            close_callback : () => view.close(),
+        });
+    },
+
+    show_view__loading: function () {
+        this.panel_item.set_mode('icon');
+        this.panel_item.actor.remove_style_class_name('done');
+        this.panel_item.icon.icon_name = 'timepp-todo-loading-symbolic';
+
+        let view = new VIEW_LOADING.ViewLoading(this.ext, this);
+
+        this.view_manager.show_view({
+            view           : view,
+            view_name      : G.View.LOADING,
+            actors         : [view.actor],
+            focused_actor  : view.loading_msg,
             close_callback : () => {
-                this.search_entry.set_text('');
-                this.search_dictionary.clear();
-                this.search_entry_bin.actor.hide();
-                this.tasks_scroll_wrapper.hide();
-                this.add_tasks_to_menu(true);
+                view.close();
+                this.panel_item.icon.icon_name = 'timepp-todo-symbolic';
+                this._toggle_panel_item_mode();
             },
         });
+    },
 
-        // We always search all tasks no matter what filters are active, so
-        // add all tasks to the popup menu.
-        this.add_tasks_to_menu(true, true);
+    show_view__search: function (search_str = false) {
+        this.view_manager.close_current_view();
+
+        let view = new VIEW_SEARCH.ViewSearch(this.ext, this);
+
+        this.view_manager.show_view({
+            view           : view,
+            view_name      : G.View.SEARCH,
+            focused_actor  : view.search_entry,
+            actors         : [view.actor],
+            close_callback : () => view.close(),
+        });
+
+        if (search_str) view.search_entry.text = search_str;
+    },
+
+    show_view__default: function (id) {
+        this.view_manager.close_current_view();
+
+        let view = new VIEW_DEFAULT.ViewDefault(this.ext, this);
+
+        this.view_manager.show_view({
+            view           : view,
+            view_name      : G.View.DEFAULT,
+            actors         : [view.actor],
+            focused_actor  : view.add_task_button,
+            close_callback : () => view.close(),
+        });
+    },
+
+    show_view__clear_completed: function () {
+        let view = new VIEW_CLEAR.ViewClearTasks(this.ext, this);
+
+        this.view_manager.show_view({
+            view           : view,
+            view_name      : G.View.CLEAR,
+            actors         : [view.actor],
+            focused_actor  : view.button_cancel,
+            close_callback : () => { view.actor.destroy(); },
+        });
+
+        view.connect('delete-all', () => {
+            let incompleted_tasks = [];
+
+            for (let i = 0, len = this.tasks.length; i < len; i++) {
+                if (!this.tasks[i].completed || this.tasks[i].rec_str)
+                    incompleted_tasks.push(this.tasks[i]);
+            }
+
+            this.tasks = incompleted_tasks;
+            this.on_tasks_changed();
+        });
+
+        view.connect('archive-all', () => {
+            let completed_tasks   = [];
+            let incompleted_tasks = [];
+
+            for (let i = 0, len = this.tasks.length; i < len; i++) {
+                if (!this.tasks[i].completed || this.tasks[i].rec_str)
+                    incompleted_tasks.push(this.tasks[i]);
+                else
+                    completed_tasks.push(this.tasks[i]);
+            }
+
+            this.archive_tasks(completed_tasks);
+            this.tasks = incompleted_tasks;
+            this.on_tasks_changed();
+        });
+
+        view.connect('cancel', () => {
+            this.show_view__default();
+        });
     },
 
     show_view__file_switcher: function () {
-        let filter_switcher =
-            new VIEW_FILE_SWITCHER.TodoFileSwitcher(this.ext, this);
+        let view = new VIEW_FILE_SWITCHER.ViewFileSwitcher(this.ext, this);
 
         this.view_manager.show_view({
+            view           : view,
             view_name      : G.View.FILE_SWITCH,
-            actors         : [filter_switcher.actor],
-            focused_actor  : filter_switcher.entry.entry,
-            close_callback : () => { filter_switcher.close(); },
+            actors         : [view.actor],
+            focused_actor  : view.entry.entry,
+            close_callback : () => { view.close(); },
         });
 
-        filter_switcher.connect('switch', (_, name) => {
+        view.connect('switch', (_, name) => {
             let todo_files = this.settings.get_value('todo-files').deep_unpack();
             let current;
 
@@ -1127,69 +908,68 @@ var SectionMain = new Lang.Class({
                                     GLib.Variant.new('a{ss}', current));
         });
 
-        filter_switcher.connect('close', () => {
+        view.connect('close', () => {
             this.show_view__default();
         });
     },
 
     show_view__sort: function () {
-        let sort_window = new VIEW_SORT.TaskSortWindow(this.ext, this);
+        let view = new VIEW_SORT.ViewSort(this.ext, this);
 
         this.view_manager.show_view({
+            view           : view,
             view_name      : G.View.SELECT_SORT,
-            actors         : [sort_window.actor],
-            focused_actor  : sort_window.button_ok,
-            close_callback : () => { sort_window.actor.destroy(); },
+            actors         : [view.actor],
+            focused_actor  : view.button_ok,
+            close_callback : () => { view.actor.destroy(); },
         });
 
-        sort_window.connect('update-sort', (_, new_sort_obj) => {
+        view.connect('update-sort', (_, new_sort_obj, automatic_sort) => {
             this.cache.sort = new_sort_obj;
+            this.cache.automatic_sort = automatic_sort;
             this.store_cache();
             this.sort_tasks();
-            this.add_tasks_to_menu(true);
             this.show_view__default();
         });
     },
 
     show_view__filters: function () {
-        let filters_window = new VIEW_FILTERS.TaskFiltersWindow(this.ext, this);
+        let view = new VIEW_FILTERS.ViewFilters(this.ext, this);
 
         this.view_manager.show_view({
+            view           : view,
             view_name      : G.View.SELECT_FILTER,
-            actors         : [filters_window.actor],
-            focused_actor  : filters_window.entry.entry,
-            close_callback : () => { filters_window.actor.destroy(); },
+            actors         : [view.actor],
+            focused_actor  : view.entry.entry,
+            close_callback : () => { view.actor.destroy(); },
         });
 
-        filters_window.connect('filters-updated', (_, filters) => {
+        view.connect('filters-updated', (_, filters) => {
             this.cache.filters = filters;
             this.store_cache();
-            this._update_filter_icon();
-            this.add_tasks_to_menu(true);
             this.show_view__default();
         });
     },
 
     show_view__task_editor: function (task) {
-        let editor = new VIEW_TASK_EDITOR.TaskEditor(this.ext, this, task);
+        let view = new VIEW_TASK_EDITOR.ViewTaskEditor(this.ext, this, task);
 
         this.view_manager.show_view({
+            view           : view,
             view_name      : G.View.EDITOR,
-            actors         : [editor.actor],
-            focused_actor  : editor.entry.entry,
-            close_callback : () => { editor.actor.destroy(); },
+            actors         : [view.actor],
+            focused_actor  : view.entry.entry,
+            close_callback : () => { view.actor.destroy(); },
         });
 
         if (task) this.time_tracker.stop_tracking(task);
 
-        editor.connect('add-task', (_, task_str) => {
+        view.connect('add-task', (_, task_str) => {
             this.tasks.unshift(new TASK.TaskItem(this.ext, this, task_str, true));
             this.on_tasks_changed();
-            this.write_tasks_to_file();
-            this.show_view__default();
         });
 
-        editor.connect('delete-task', (_, do_archive) => {
+        view.connect('delete-task', (_, do_archive) => {
             if (do_archive) this.archive_tasks([task]);
 
             for (let i = 0, len = this.tasks.length; i < len; i++) {
@@ -1200,255 +980,16 @@ var SectionMain = new Lang.Class({
             }
 
             this.on_tasks_changed();
-            this.write_tasks_to_file();
-            this.show_view__default();
         });
 
-        editor.connect('edit-task', (_, task_str) => {
+        view.connect('edit-task', (_, task_str) => {
             task.reset(true, task_str);
             this.on_tasks_changed();
-            this.write_tasks_to_file();
+        });
+
+        view.connect('cancel', () => {
             this.show_view__default();
         });
-
-        editor.connect('cancel', () => {
-            this.show_view__default();
-        });
-    },
-
-    // @task: obj (a task object)
-    //
-    // A predicate used to determine whether a task inside the this.tasks array
-    // will be added to this.tasks_viewport array (i.e., whether it can be
-    // visible to the user).
-    //
-    // If invert_filters is false, return true if at least one filter is matched.
-    // If invert_filters is true,  return false if at least one filter is matched.
-    _filter_test: function (task) {
-        if (task.pinned)                    return true;
-        if (this.cache.filters.hidden)      return task.hidden;
-        if (task.hidden)                    return false;
-        if (this.cache.filters.deferred)    return task.is_deferred;
-        if (this.cache.filters.recurring)   return Boolean(task.rec_str);
-        if (task.rec_str && task.completed) return false;
-        if (task.is_deferred)               return false;
-        if (! this.has_active_filters())    return true;
-
-        if (task.completed) {
-            if (this.cache.filters.completed)
-                return !this.cache.filters.invert_filters;
-        }
-        else if (task.priority === '(_)') {
-            if (this.cache.filters.no_priority)
-                return !this.cache.filters.invert_filters;
-        }
-
-        for (let it of this.cache.filters.priorities) {
-            if (it === task.priority)
-                return !this.cache.filters.invert_filters;
-        }
-
-        for (let it of this.cache.filters.contexts) {
-            if (task.contexts.indexOf(it) !== -1)
-                return !this.cache.filters.invert_filters;
-        }
-
-        for (let it of this.cache.filters.projects) {
-            if (task.projects.indexOf(it) !== -1)
-                return !this.cache.filters.invert_filters;
-        }
-
-        for (let it of this.cache.filters.custom_active) {
-            if (FUZZ.fuzzy_search_v1(it, task.task_str) !== null)
-                return !this.cache.filters.invert_filters;
-        }
-
-        return this.cache.filters.invert_filters;
-    },
-
-    // Returns true if there are any active filters, else false.
-    has_active_filters: function () {
-        if (this.cache.filters.deferred          ||
-            this.cache.filters.recurring         ||
-            this.cache.filters.hidden            ||
-            this.cache.filters.completed         ||
-            this.cache.filters.no_priority       ||
-            this.cache.filters.priorities.length ||
-            this.cache.filters.contexts.length   ||
-            this.cache.filters.projects.length   ||
-            this.cache.filters.custom_active.length) {
-
-            return true;
-        }
-
-        return false;
-    },
-
-    // @keyword: string (priority, context, or project)
-    toggle_filter: function (keyword) {
-        let arr;
-
-        if      (REG.TODO_PRIO.test(keyword))    arr = this.cache.filters.priorities;
-        else if (REG.TODO_CONTEXT.test(keyword)) arr = this.cache.filters.contexts;
-        else if (REG.TODO_PROJ.test(keyword))    arr = this.cache.filters.projects;
-
-        let idx = arr.indexOf(keyword);
-
-        if (idx === -1) arr.push(keyword);
-        else            arr.splice(idx, 1);
-
-        this.store_cache();
-        this._update_filter_icon();
-        if (this.view_manager.current_view === G.View.DEFAULT)
-            this.add_tasks_to_menu(true);
-    },
-
-    toggle_invert_filters: function () {
-        this.cache.filters.invert_filters = !this.cache.filters.invert_filters;
-        this.store_cache();
-        this.on_tasks_changed();
-    },
-
-    _update_filter_icon: function () {
-        if (this.cache.filters.invert_filters) {
-            this.filter_icon.icon_name = 'timepp-filter-inverted-symbolic';
-        } else {
-            this.filter_icon.icon_name = 'timepp-filter-symbolic';
-        }
-
-        if (this.has_active_filters()) {
-            this.filter_icon.add_style_class_name('active');
-        } else {
-            this.filter_icon.remove_style_class_name('active');
-        }
-    },
-
-    // This func will sort this.tasks array as well as call add_tasks_to_menu to
-    // rebuild this.tasks_viewport.
-    sort_tasks: function () {
-        let property_map = {
-            [G.SortType.PIN]             : 'pinned',
-            [G.SortType.COMPLETED]       : 'completed',
-            [G.SortType.PRIORITY]        : 'priority',
-            [G.SortType.DUE_DATE]        : 'due_date',
-            [G.SortType.RECURRENCE]      : 'rec_next',
-            [G.SortType.CONTEXT]         : 'first_context',
-            [G.SortType.PROJECT]         : 'first_project',
-            [G.SortType.CREATION_DATE]   : 'creation_date',
-            [G.SortType.COMPLETION_DATE] : 'completion_date',
-        };
-
-        let i     = 0;
-        let len   = this.cache.sort.length;
-        let props = Array(len);
-
-        for (; i < len; i++) {
-            props[i] = property_map[ this.cache.sort[i][0] ];
-        }
-
-        this.tasks.sort((a, b) => {
-            for (i = 0; (i < len) && (a[props[i]] === b[props[i]]); i++);
-
-            if (i === len) return 0;
-
-            switch (this.cache.sort[i][0]) {
-                case G.SortType.PRIORITY:
-                    if (this.cache.sort[i][1] === G.SortOrder.DESCENDING) {
-                        return +(a[props[i]] > b[props[i]]) ||
-                               +(a[props[i]] === b[props[i]]) - 1;
-                    } else {
-                        return +(a[props[i]] < b[props[i]]) ||
-                               +(a[props[i]] === b[props[i]]) - 1;
-                    }
-
-                default:
-                    if (this.cache.sort[i][1] === G.SortOrder.DESCENDING) {
-                        return +(a[props[i]] < b[props[i]]) ||
-                               +(a[props[i]] === b[props[i]]) - 1;
-                    } else {
-                        return +(a[props[i]] > b[props[i]]) ||
-                               +(a[props[i]] === b[props[i]]) - 1;
-                    }
-            }
-        });
-
-        this.sort_icon.icon_name =
-            this.cache.sort[0][1] === G.SortOrder.ASCENDING ?
-            'timepp-sort-ascending-symbolic' :
-            'timepp-sort-descending-symbolic';
-    },
-
-    // Each search query and the corresponding array of results (task objects)
-    // is stored in a dictionary. If the current search query is in the dict, we
-    // just use the corresponding results. If a search query in the dict is a
-    // prefix of the current search query, we execute a search on the results
-    // of the prefix query (search space reduced.)
-    //
-    // The dictionary is only maintained for the duration of the search.
-    _search: function () {
-        if (this.view_manager.current_view !== G.View.SEARCH)
-            return;
-
-        if (this.add_tasks_to_menu_mainloop_id) {
-            Mainloop.source_remove(this.add_tasks_to_menu_mainloop_id);
-            this.add_tasks_to_menu_mainloop_id = null;
-        }
-
-        let pattern = this.search_entry.get_text().trim().toLowerCase();
-
-        if (pattern === '') {
-            this.last_search_pattern = '';
-            this.tasks_viewport = this.tasks;
-            this.add_tasks_to_menu();
-            return;
-        }
-
-        this.last_search_pattern = pattern;
-        let [search_needed, search_space] = this._find_prev_search_results(pattern);
-
-        if (! search_needed) {
-            this.tasks_viewport = search_space;
-            this.add_tasks_to_menu();
-            return;
-        }
-
-        this._do_search(pattern, search_space);
-    },
-
-    _do_search: function (pattern, search_space) {
-        let reduced_results = [];
-        let i, len, score;
-
-        for (i = 0, len = search_space.length; i < len; i++) {
-            score = FUZZ.fuzzy_search_v1(pattern, search_space[i].task_str.toLowerCase());
-            if (score !== null) reduced_results.push([i, score]);
-        }
-
-        reduced_results.sort((a, b) => b[1] - a[1]);
-
-        len = reduced_results.length;
-
-        this.tasks_viewport = new Array(len);
-
-        for (i = 0; i < len; i++) {
-            this.tasks_viewport[i] = search_space[ reduced_results[i][0] ];
-        }
-
-        this.search_dictionary.set(pattern, this.tasks_viewport);
-        this.add_tasks_to_menu();
-    },
-
-    _find_prev_search_results: function (pattern) {
-        let res = '';
-
-        for (let [old_patt,] of this.search_dictionary) {
-            if (pattern.startsWith(old_patt) && old_patt.length > res.length)
-                res = old_patt;
-        }
-
-        if (pattern === res) return [false, this.search_dictionary.get(res)];
-        else if (res)        return [true,  this.search_dictionary.get(res)];
-        else                 return [true,  this.tasks];
     },
 });
 Signals.addSignalMethods(SectionMain.prototype);

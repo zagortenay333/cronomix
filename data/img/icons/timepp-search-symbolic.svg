@@ -15,8 +15,8 @@
    height="16"
    id="svg11300"
    sodipodi:version="0.32"
-   inkscape:version="0.92.1 r15371"
-   sodipodi:docname="search-symbolic.svg"
+   inkscape:version="0.92.2 (5c3e80d, 2017-08-06)"
+   sodipodi:docname="timepp-search-symbolic.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
    version="1.0"
    style="display:inline;enable-background:new">
@@ -30,17 +30,17 @@
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
      inkscape:zoom="16"
-     inkscape:cx="6.7666157"
-     inkscape:cy="2.8457751"
+     inkscape:cx="-3.7958843"
+     inkscape:cy="2.7207751"
      inkscape:current-layer="layer1"
      showgrid="true"
      inkscape:grid-bbox="true"
      inkscape:document-units="px"
      inkscape:showpageshadow="false"
      inkscape:window-width="1600"
-     inkscape:window-height="845"
+     inkscape:window-height="846"
      inkscape:window-x="0"
-     inkscape:window-y="27"
+     inkscape:window-y="26"
      width="400px"
      height="300px"
      inkscape:snap-nodes="true"
@@ -134,24 +134,8 @@
      transform="translate(0,-284)">
     <path
        style="opacity:1;fill:#bebebe;fill-opacity:1;stroke:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="M 6.5,285 A 5.5,5.5 0 0 0 1,290.5 5.5,5.5 0 0 0 6.5,296 5.5,5.5 0 0 0 12,290.5 5.5,5.5 0 0 0 6.5,285 Z m 0,2 A 3.5,3.5 0 0 1 10,290.5 3.5,3.5 0 0 1 6.5,294 3.5,3.5 0 0 1 3,290.5 3.5,3.5 0 0 1 6.5,287 Z"
-       id="path4578"
-       inkscape:connector-curvature="0" />
-    <g
-       style="display:inline;enable-background:new"
-       id="g4592"
-       transform="matrix(-0.70710678,-0.70710679,-0.70710679,0.70710678,29.313922,291.51451)">
-      <g
-         transform="translate(0,-284)"
-         id="layer1-6"
-         inkscape:label="Base"
-         style="display:inline" />
-    </g>
-    <path
-       style="opacity:1;fill:#bebebe;fill-opacity:1;stroke:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="M 9.0000048,294.41422 10.414218,293 15,297.58579 V 299 h -1.414213 z"
-       id="rect4594"
-       inkscape:connector-curvature="0"
-       sodipodi:nodetypes="cccccc" />
+       d="M 6 0 A 6 6 0 0 0 0 6 A 6 6 0 0 0 6 12 A 6 6 0 0 0 9.4726562 10.886719 L 13.585938 15 L 15 15 L 15 13.585938 L 10.884766 9.4707031 A 6 6 0 0 0 12 6 A 6 6 0 0 0 6 0 z M 6 2 A 4 4 0 0 1 10 6 A 4 4 0 0 1 6 10 A 4 4 0 0 1 2 6 A 4 4 0 0 1 6 2 z "
+       transform="translate(0,284)"
+       id="rect4594" />
   </g>
 </svg>

@@ -93,7 +93,6 @@
 }
 
 .timepp-menu .view-box {
-    padding: 1em 1.5em;
 }
 
 .timepp-menu StEntry {
@@ -166,6 +165,10 @@
 }
 
 .numpicker-arrow {}
+
+.timepp-menu StButton:focus .toggle-switch {
+    outline: 2px rgba(255, 255, 255, .5);
+}
 
 .numpicker-arrow:focus StIcon,
 .numpicker-arrow:hover StIcon,
@@ -588,6 +591,7 @@
 
 .timepp-menu .todo-section .pin-icon.active,
 .timepp-menu .todo-section .tracker-pause-icon,
+.timepp-menu .todo-section .sort-icon.active,
 .timepp-menu .todo-section .filter-icon.active {
     color: #f47e00;
 }
@@ -675,6 +679,11 @@
     max-width: 600px;
 }
 
+.timepp-menu .todo-section .view-default .tasks-container,
+.timepp-menu .todo-section .view-search .search-results {
+    margin-top: .8em;
+}
+
 .timepp-menu .todo-section .stats-item-title {}
 .timepp-menu .todo-section .stats-item-body {
     padding-left: 3em;
@@ -691,7 +700,7 @@
 }
 
 .timepp-menu .todo-section .sort-items-box {
-    padding: .5em 1em;
+    padding: .5em 0;
     spacing: .7em;
 }
 

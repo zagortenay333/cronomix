@@ -24,7 +24,7 @@ const G = ME.imports.sections.todo.GLOBAL;
 
 
 // =====================================================================
-// @@@ Filter UI
+// @@@ ViewFilters
 //
 // @ext      : obj (main extension object)
 // @delegate : obj (main section object)
@@ -32,8 +32,8 @@ const G = ME.imports.sections.todo.GLOBAL;
 // @signals:
 //  - 'filters-updated' returns obj with which to replace the cache.filters obj
 // =====================================================================
-var TaskFiltersWindow = new Lang.Class({
-    Name: 'Timepp.TaskFiltersWindow',
+var ViewFilters = new Lang.Class({
+    Name: 'Timepp.ViewFilters',
 
     _init: function (ext, delegate) {
         this.ext      = ext;
@@ -413,8 +413,7 @@ var TaskFiltersWindow = new Lang.Class({
     _on_nand_toggle_clicked: function (toggle_actor) {
         if (toggle_actor.state) {
             toggle_actor.setToggleState(false);
-        }
-        else {
+        } else {
             for (let toggle of this.nand_toggles) toggle.setToggleState(false);
             toggle_actor.setToggleState(true);
         }
@@ -461,5 +460,5 @@ var TaskFiltersWindow = new Lang.Class({
         this.emit('filters-updated', filters);
     },
 });
-Signals.addSignalMethods(TaskFiltersWindow.prototype);
+Signals.addSignalMethods(ViewFilters.prototype);
 

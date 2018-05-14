@@ -21,6 +21,7 @@ const ngettext = Gettext.ngettext;
 
 const MISC_UTILS = ME.imports.lib.misc_utils;
 const REG        = ME.imports.lib.regex;
+const DND        = ME.imports.lib.dnd;
 
 
 const G = ME.imports.sections.todo.GLOBAL;
@@ -64,12 +65,25 @@ var TaskItem = new Lang.Class({
         this.current_keyword = null;
 
 
+        // Each time the task is added somewhere, these three props must be
+        // updated.
+        this.owner            = null; // js obj
+        this.actor_parent     = null; // clutter actor containing this.actor
+        this.actor_scrollview = null; // StScrollView (optional)
+
+
         //
         // container
         //
         this.actor = new St.Bin({ reactive: true, style: `width: ${this.delegate.settings.get_int('todo-task-width')}px;`, x_fill: true, style_class: 'task-item' });
         this.task_item_content = new St.BoxLayout({ vertical: true, style_class: 'task-item-content' });
         this.actor.add_actor(this.task_item_content);
+
+
+        //
+        // DND
+        //
+        this.dnd = new DND.Draggable(this);
 
 
         //
@@ -91,7 +105,7 @@ var TaskItem = new Lang.Class({
         //
         // priority label
         //
-        this.prio_label = new St.Label({ visible: false, reactive: true, y_align: Clutter.ActorAlign.CENTER, style_class: 'priority-label' });
+        this.prio_label = new St.Label({ reactive: true, y_align: Clutter.ActorAlign.CENTER, style_class: 'priority-label' });
         this.header.add_child(this.prio_label);
 
 
@@ -114,30 +128,14 @@ var TaskItem = new Lang.Class({
         //
         // listen
         //
-        this.actor.connect('queue-redraw', () => {
-            if (this.delegate.tasks_scroll.vscrollbar_visible ||
-                !this.delegate.tasks_scroll_wrapper.visible) {
-
-                return;
-            }
-            MISC_UTILS.resize_label(this.msg);
-        });
         this.msg.connect('motion-event', (_, event) => {
             this.current_keyword = this._find_keyword(event);
-
             if (this.current_keyword) global.screen.set_cursor(Meta.Cursor.POINTING_HAND);
             else                      global.screen.set_cursor(Meta.Cursor.DEFAULT);
         });
-        this.completion_checkbox.connect('clicked', () => {
-            this.toggle_task();
-            this.delegate.add_task_button.grab_key_focus();
-            this.delegate.on_tasks_changed();
-            this.delegate.write_tasks_to_file();
-        });
-        this.actor.connect('event', (actor, event) => this._on_event(actor, event));
         this.msg.connect('leave-event', () => global.screen.set_cursor(Meta.Cursor.DEFAULT));
-        this.prio_label.connect('enter-event', () => global.screen.set_cursor(Meta.Cursor.POINTING_HAND));
-        this.prio_label.connect('leave-event', () => global.screen.set_cursor(Meta.Cursor.DEFAULT));
+        this.actor.connect('event', (actor, event) => this._on_event(actor, event));
+        this.completion_checkbox.connect('clicked', () => this.toggle_task());
     },
 
     reset: function (self_update, task_str) {
@@ -176,8 +174,8 @@ var TaskItem = new Lang.Class({
 
         // For sorting purposes, we set the prio to '(_)' when there is no prio.
         this.priority           = '(_)';
-        this.prio_label.visible = false;
         this.prio_label.text    = '';
+        this.finish_scrolling_priority = false;
 
         this.projects = [];
         this.contexts = [];
@@ -191,9 +189,7 @@ var TaskItem = new Lang.Class({
         this.completion_checkbox.checked = false;
         this.completion_checkbox.visible = true;
 
-        if (this.hidden) {
-            this.header.remove_child(this.header.get_child_at_index(0));
-        }
+        if (this.hidden) this.header.remove_child(this.header.get_child_at_index(0));
         this.hidden = false;
 
         this.defer_date  = '';
@@ -228,7 +224,7 @@ var TaskItem = new Lang.Class({
         this.project_indices    = [];
         this.link_indices       = [];
 
-        this._hide_header_icons();
+        this.hide_header_icons();
     },
 
     _parse_task_str: function () {
@@ -707,10 +703,12 @@ var TaskItem = new Lang.Class({
             if (this.priority === '(_)')
                 task_str = `x ${G.date_yyyymmdd()} ${task_str}`;
             else
-                task_str = `x ${G.date_yyyymmdd()} ${task_str.slice(3)} pri:${this.priority[1]}`;
+                task_str = `x ${G.date_yyyymmdd()} ${task_str.slice(4)} pri:${this.priority[1]}`;
 
             this.reset(true, task_str);
         }
+
+        this.delegate.on_tasks_changed();
     },
 
      // @SPEED Lazy load the icons.
@@ -734,21 +732,21 @@ var TaskItem = new Lang.Class({
 
         this.delegate.sigm.connect_press(this.stat_icon, Clutter.BUTTON_PRIMARY, true, () => {
             this.delegate.show_view__time_tracker_stats(this);
-            this._hide_header_icons();
+            this.hide_header_icons();
         });
         this.delegate.sigm.connect_press(this.pin_icon, Clutter.BUTTON_PRIMARY, true, () => {
             this._on_pin_icon_clicked();
         });
         this.delegate.sigm.connect_press(this.edit_icon, Clutter.BUTTON_PRIMARY, true, () => {
             this.delegate.show_view__task_editor(this);
-            this._hide_header_icons();
+            this.hide_header_icons();
         });
         this.delegate.sigm.connect_press(this.tracker_icon, Clutter.BUTTON_PRIMARY, true, () => {
             this.delegate.time_tracker.toggle_tracking(this);
         });
     },
 
-    _show_header_icons: function () {
+    show_header_icons: function () {
         this._create_header_icons();
 
         if (!this.hidden && !this.completed)
@@ -763,7 +761,7 @@ var TaskItem = new Lang.Class({
         }
     },
 
-    _hide_header_icons: function () {
+    hide_header_icons: function () {
         if (! this.header_icon_box) return;
 
         if (this.tracker_icon.style_class === 'tracker-start-icon' && !this.pinned) {
@@ -807,11 +805,10 @@ var TaskItem = new Lang.Class({
             this.delegate.time_tracker.update_record_name(old_task_str, this.task_str);
         }
 
-        if (this.delegate.view_manager.current_view !== G.View.SEARCH) {
+
+        if (this.delegate.view_manager.current_view_name !== G.View.SEARCH) {
             this.delegate.on_tasks_changed();
         }
-
-        this.delegate.write_tasks_to_file();
     },
 
     _toggle_tracker_icon: function () {
@@ -881,14 +878,62 @@ var TaskItem = new Lang.Class({
             return null;
     },
 
+    _scroll_task_priority: function (direction) {
+        let prio = this.prio_label.text;
+
+        if (prio) this.actor.remove_style_class_name(prio[1]);
+
+        let prios = ["(A)", "(B)", "(C)", "(D)", "(E)", "(F)", "(G)", "(H)",
+                     "(I)", "(J)", "(K)", "(L)", "(M)", "(N)", "(O)", "(P)",
+                     "(Q)", "(R)", "(S)", "(T)", "(U)", "(V)", "(W)", "(X)",
+                     "(Y)", "(Z)", "(_)"];
+
+        let i;
+
+        if      (direction === Clutter.ScrollDirection.UP)   i = 1;
+        else if (direction === Clutter.ScrollDirection.DOWN) i = -1;
+        else                                                 return;
+
+        i = prios.indexOf(prio) + i;
+        i = i < 0 ? i + 27 : i;
+
+        let new_prio = prios[i % 27];
+
+        if (new_prio === "(_)") {
+            this.prio_label.text = "";
+        } else {
+            this.prio_label.text = new_prio;
+            this.actor.add_style_class_name(new_prio[1]);
+        }
+
+        this.finish_scrolling_priority = true;
+    },
+
+    _finish_scrolling_priority: function () {
+        if (this.priority === "(_)") {
+            this.reset(true, this.prio_label.text + " " + this.task_str);
+        } else {
+            let temp = this.task_str.slice(4);
+            if (this.prio_label.text)
+                this.reset(true, this.prio_label.text + " " + temp);
+            else
+                this.reset(true, temp);
+        }
+
+        this.delegate.on_tasks_changed();
+    },
+
     _on_event: function (actor, event) {
         switch (event.type()) {
             case Clutter.EventType.ENTER: {
                 let related = event.get_related();
 
                 if (related && !this.actor.contains(related)) {
-                    this._show_header_icons();
+                    this.show_header_icons();
                 }
+
+                if (this.prio_label.has_pointer)
+                    global.screen.set_cursor(Meta.Cursor.POINTING_HAND);
 
                 break;
             }
@@ -901,49 +946,54 @@ var TaskItem = new Lang.Class({
                     related &&
                     !this.actor.contains(related)) {
 
-                    this._hide_header_icons();
+                    this.hide_header_icons();
                 }
+
+                if (this.finish_scrolling_priority)
+                    this._finish_scrolling_priority();
+
+                global.screen.set_cursor(Meta.Cursor.DEFAULT);
 
                 break;
             }
 
             case Clutter.EventType.KEY_RELEASE: {
-                this._show_header_icons();
-                MISC_UTILS.scroll_to_item(this.delegate.tasks_scroll,
-                                          this.delegate.tasks_scroll_content,
-                                          actor);
-
+                this.show_header_icons();
+                if (this.actor_scrollview)
+                    MISC_UTILS.scroll_to_item(this.actor_scrollview, this.actor_parent, actor);
                 break;
             }
 
             case Clutter.EventType.KEY_PRESS: {
                 Mainloop.idle_add(() => {
                     if (! this.header.contains(global.stage.get_key_focus()))
-                        this._hide_header_icons();
+                        this.hide_header_icons();
                 });
-
                 break;
             }
 
             case Clutter.EventType.BUTTON_RELEASE: {
                 if (this.prio_label.has_pointer) {
-                    this.delegate.add_task_button.grab_key_focus();
-                    this.delegate.toggle_filter(this.priority);
-                }
-                else if (this.msg.has_pointer) {
+                    this.delegate.show_view__search(this.prio_label.text);
+                } else if (this.msg.has_pointer) {
                     if (! this.current_keyword) break;
-
-                    this.delegate.add_task_button.grab_key_focus();
 
                     if (REG.URL.test(this.current_keyword)) {
                         MISC_UTILS.open_web_uri(this.current_keyword);
-                    }
-                    else if (REG.FILE_PATH.test(this.current_keyword)) {
+                    } else if (REG.FILE_PATH.test(this.current_keyword)) {
                         MISC_UTILS.open_file_path(this.current_keyword);
+                    } else {
+                        this.delegate.show_view__search(this.current_keyword);
                     }
-                    else this.delegate.toggle_filter(this.current_keyword);
                 }
+                break;
+            }
 
+            case Clutter.EventType.SCROLL: {
+                if (this.completion_checkbox.has_pointer && !this.completed) {
+                    this._scroll_task_priority(event.get_scroll_direction());
+                    return Clutter.EVENT_STOP;
+                }
                 break;
             }
         }

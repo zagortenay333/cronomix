@@ -17,7 +17,7 @@
    id="svg11300"
    sodipodi:version="0.32"
    inkscape:version="0.92.2 (5c3e80d, 2017-08-06)"
-   sodipodi:docname="timepp-wrench-symbolic.svg"
+   sodipodi:docname="kanban-symbolic.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
    version="1.0"
    style="display:inline;enable-background:new">
@@ -30,9 +30,9 @@
      borderopacity="1"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:zoom="32"
-     inkscape:cx="0.6350672"
-     inkscape:cy="8.560643"
+     inkscape:zoom="22.627417"
+     inkscape:cx="2.7655381"
+     inkscape:cy="8.0454596"
      inkscape:current-layer="layer1"
      showgrid="true"
      inkscape:grid-bbox="true"
@@ -146,10 +146,69 @@
      inkscape:label="Base"
      id="layer1"
      transform="translate(0,-284)">
+    <g
+       style="display:inline;enable-background:new"
+       id="g4589"
+       transform="translate(8.505859,287.23632)">
+      <g
+         transform="translate(0,-284)"
+         id="layer1-3"
+         inkscape:label="Base"
+         style="display:inline" />
+    </g>
     <path
-       style="fill:#bebebe;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="M 6 1 C 5.4204423 1.001023 4.8454748 1.1027988 4.3007812 1.3007812 L 8 5 L 8 6 L 6 8 L 5.03125 8.03125 L 1.3027344 4.3027344 C 1.1043092 4.846693 1.0018753 5.4209836 1 6 C 1 8.7614237 3.2385763 11 6 11 C 6.8648102 11 7.6654506 10.761414 8.375 10.375 L 13 15 L 15 15 L 15 13 L 10.375 8.375 C 10.761414 7.6654506 11 6.8648102 11 6 C 11 3.2385763 8.7614237 1 6 1 z "
-       transform="translate(0,284)"
-       id="path4728" />
+       style="display:inline;opacity:1;fill:#bebebe;fill-opacity:1;stroke:none;stroke-opacity:1;enable-background:new"
+       d="m 17,285 v 14 h 12 v -14 0 z m 1,1 h 10 v 12 H 18 Z"
+       id="rect823"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccccccccccc" />
+    <rect
+       style="display:inline;opacity:1;fill:#bebebe;fill-opacity:1;stroke:none;stroke-width:1;stroke-opacity:1;enable-background:new"
+       id="rect838"
+       width="2"
+       height="10"
+       x="19"
+       y="287" />
+    <rect
+       y="287"
+       x="25"
+       height="8"
+       width="2"
+       id="rect840"
+       style="display:inline;opacity:1;fill:#bebebe;fill-opacity:1;stroke:none;stroke-width:0.99999994;stroke-opacity:1;enable-background:new" />
+    <rect
+       style="display:inline;opacity:1;fill:#bebebe;fill-opacity:1;stroke:none;stroke-width:1;stroke-opacity:1;enable-background:new"
+       id="rect855"
+       width="2"
+       height="6"
+       x="22"
+       y="287" />
+    <path
+       sodipodi:nodetypes="ccccccccccc"
+       inkscape:connector-curvature="0"
+       id="path944"
+       d="m 0,284 v 16 h 15 v -16 0 z m 1,1 h 13 v 14 H 1 Z"
+       style="display:inline;opacity:1;fill:#bebebe;fill-opacity:1;stroke:none;stroke-opacity:1;enable-background:new" />
+    <rect
+       y="286"
+       x="2"
+       height="12"
+       width="3"
+       id="rect946"
+       style="display:inline;opacity:1;fill:#bebebe;fill-opacity:1;stroke:none;stroke-width:1;stroke-opacity:1;enable-background:new" />
+    <rect
+       style="display:inline;opacity:1;fill:#bebebe;fill-opacity:1;stroke:none;stroke-width:0.99999994;stroke-opacity:1;enable-background:new"
+       id="rect948"
+       width="3"
+       height="10"
+       x="10"
+       y="286" />
+    <rect
+       y="286"
+       x="6"
+       height="7"
+       width="3"
+       id="rect950"
+       style="display:inline;opacity:1;fill:#bebebe;fill-opacity:1;stroke:none;stroke-width:1;stroke-opacity:1;enable-background:new" />
   </g>
 </svg>

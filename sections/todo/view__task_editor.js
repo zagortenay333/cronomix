@@ -30,7 +30,7 @@ const G = ME.imports.sections.todo.GLOBAL;
 
 
 // =====================================================================
-// @@@ Task Editor UI
+// @@@ ViewTaskEditor
 //
 // @ext      : obj (main extension object)
 // @delegate : obj (main section object)
@@ -46,8 +46,8 @@ const G = ME.imports.sections.todo.GLOBAL;
 // of that task object and the signals 'delete-task' and 'edit-task' will be
 // used instead of 'add-task'.
 // =====================================================================
-var TaskEditor = new Lang.Class({
-    Name: 'Timepp.TaskEditor',
+var ViewTaskEditor = new Lang.Class({
+    Name: 'Timepp.ViewTaskEditor',
 
     _init: function (ext, delegate, task) {
         this.ext      = ext;
@@ -375,5 +375,5 @@ var TaskEditor = new Lang.Class({
         return words.join(' ');
     },
 });
-Signals.addSignalMethods(TaskEditor.prototype);
+Signals.addSignalMethods(ViewTaskEditor.prototype);
 

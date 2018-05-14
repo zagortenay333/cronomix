@@ -22,7 +22,7 @@ const G = ME.imports.sections.todo.GLOBAL;
 
 
 // =====================================================================
-// @@@ File Switcher
+// @@@ ViewFileSwitcher
 //
 // @ext      : obj (main extension object)
 // @delegate : obj (main section object)
@@ -31,8 +31,8 @@ const G = ME.imports.sections.todo.GLOBAL;
 //   - 'switch' (returns the unique name of the new todo file)
 //   - 'close'
 // =====================================================================
-var TodoFileSwitcher = new Lang.Class({
-    Name: 'Timepp.TodoFileSwitcher',
+var ViewFileSwitcher = new Lang.Class({
+    Name: 'Timepp.ViewFileSwitcher',
 
     _init: function (ext, delegate) {
         this.ext      = ext;
@@ -216,4 +216,4 @@ var TodoFileSwitcher = new Lang.Class({
         this.actor.destroy();
     },
 });
-Signals.addSignalMethods(TodoFileSwitcher.prototype);
+Signals.addSignalMethods(ViewFileSwitcher.prototype);

@@ -8,6 +8,7 @@ const Mainloop = imports.mainloop;
 
 const ME = imports.misc.extensionUtils.getCurrentExtension();
 
+const MISC_UTILS = ME.imports.lib.misc_utils;
 
 const G = ME.imports.sections.todo.GLOBAL;
 
@@ -30,37 +31,35 @@ var ViewManager = new Lang.Class({
         this.ext      = ext;
         this.delegate = delegate;
 
-        this.current_view           = G.View.DEFAULT;
+        this.container = this.delegate.content_box;
+
+        this.reset();
+    },
+
+    reset: function () {
+        this.current_view           = null;
+        this.current_view_name      = "";
         this.actors                 = [];
         this.open_callback          = null;
         this.close_callback         = null;
         this.show_tasks_mainloop_id = null;
-
-        // @SPEED
-        this.delegate.connect('section-open-state-changed', (_, state) => {
-            if (this.current_view === G.View.LOADING ||
-                this.current_view === G.View.NO_TODO_FILE) {
-
-                return Clutter.EVENT_PROPAGATE;
-            }
-
-            if (state) {
-                if (this.delegate.tasks_scroll_wrapper.visible)
-                    this._show_tasks();
-            }
-            else if (this.delegate.tasks_scroll_wrapper.visible) {
-                this._hide_tasks();
-            }
-
-            return Clutter.EVENT_PROPAGATE;
-        });
     },
 
-    // @view: object of the form: { view_name      : View,
-    //                              actors         : array,
-    //                              focused_actors : object,
-    //                              close_callback : func,
-    //                              open_callback  : func, }
+    close_current_view: function () {
+        if (typeof this.close_callback === 'function') this.close_callback();
+        this.reset();
+    },
+
+    // @view_params: object of the form: { view           : object
+    //                                     view_name      : View
+    //                                     actors         : array
+    //                                     focused_actors : object
+    //                                     close_callback : func
+    //                                     open_callback  : func }
+    //
+    // @view:
+    //   The main object of the view. Can be used by the main view to call some
+    //   methods on it.
     //
     // @view_name:
     //   Name of the new view. Only use the View enum here.
@@ -79,100 +78,33 @@ var ViewManager = new Lang.Class({
     // @open_callback (optional):
     //   Function that is used to open the view. If it is not given, then
     //   opening the view means that the actors will be added to the popup menu.
-    show_view: function (view) {
-        Main.panel.menuManager.ignoreRelease();
-
-        if (this.delegate.tasks_scroll_wrapper.visible)
-            this._hide_tasks();
-
+    show_view: function (view_params) {
         if (typeof this.close_callback === 'function')
             this.close_callback();
 
-        this.current_view   = view.view_name;
-        this.actors         = view.actors;
-        this.close_callback = view.close_callback;
-        this.open_callback  = view.open_callback || null;
-
-        let show_tasks = false;
+        this.current_view      = view_params.view || null;
+        this.current_view_name = view_params.view_name;
+        this.actors            = view_params.actors;
+        this.close_callback    = view_params.close_callback;
+        this.open_callback     = view_params.open_callback || null;
 
         if (typeof this.open_callback === 'function') {
             this.open_callback();
         } else {
-            this.delegate.actor.remove_all_children();
+            this.container.remove_all_children();
 
             for (let actor of this.actors) {
-                this.delegate.actor.add_actor(actor);
+                this.container.add_actor(actor);
                 actor.show();
-
-                if (actor === this.delegate.tasks_scroll_wrapper)
-                    show_tasks = true;
             }
         }
 
-        if (show_tasks) {
-            if (this.delegate.tasks.length === 0)
-                this.delegate.tasks_scroll_wrapper.hide();
-            else
-                this._show_tasks();
-        }
+        MISC_UTILS.maybe_ignore_release(this.ext.menu.actor);
 
+        // Because we are tweaking the menu.open func, we must grab the focus
+        // with a timeout call..
         if (this.ext.menu.isOpen)
-            Mainloop.timeout_add(0, () => view.focused_actor.grab_key_focus());
-    },
-
-    // @SPEED
-    // Showing/adding actors to the popup menu can be somewhat laggy if there
-    // are a lot of tasks. To speed things up a bit, each time we need to add,
-    // show, hide, or remove actors from the popup menu, we first hide all
-    // tasks, do the operation and then show the tasks again.
-    //
-    // Also, each time the popup menu closes, we hide the tasks, and show them
-    // using this func after the menu opens.
-    _show_tasks: function () {
-        if (! this.ext.menu.isOpen) return;
-
-        this.delegate.tasks_scroll.vscrollbar_policy = Gtk.PolicyType.NEVER;
-        this.delegate.tasks_scroll.get_vscroll_bar().get_adjustment().set_value(0);
-
-        let n = Math.min(this.delegate.tasks_viewport.length, 21);
-
-        for (let i = 0; i < n; i++)
-            this.delegate.tasks_viewport[i].actor.visible = true;
-
-        this.show_tasks_mainloop_id = Mainloop.idle_add(() => {
-           this._show_tasks__finish(n);
-        });
-    },
-
-    _show_tasks__finish: function (i, scroll_bar_shown) {
-        if (!scroll_bar_shown && this.ext.needs_scrollbar()) {
-            this.delegate.tasks_scroll.vscrollbar_policy = Gtk.PolicyType.ALWAYS;
-            scroll_bar_shown = true;
-        }
-
-        if (! this.ext.menu.isOpen ||
-            i === this.delegate.tasks_viewport.length ||
-            this.delegate.add_tasks_to_menu_mainloop_id) {
-
-            this.show_tasks_mainloop_id = null;
-            return;
-        }
-
-        this.delegate.tasks_viewport[i].actor.visible = true;
-
-        this.show_tasks_mainloop_id = Mainloop.idle_add(() => {
-            this._show_tasks__finish(++i, scroll_bar_shown);
-        });
-    },
-
-    _hide_tasks: function () {
-        if (this.show_tasks_mainloop_id) {
-            Mainloop.source_remove(this.show_tasks_mainloop_id);
-            this.show_tasks_mainloop_id = null;
-        }
-
-        for (let i = 0, len = this.delegate.tasks_viewport.length; i < len; i++)
-            this.delegate.tasks_viewport[i].actor.visible = false;
+            Mainloop.timeout_add(0, () => view_params.focused_actor.grab_key_focus());
     },
 });
 Signals.addSignalMethods(ViewManager.prototype);

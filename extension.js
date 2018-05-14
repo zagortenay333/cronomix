@@ -1,6 +1,7 @@
 const St        = imports.gi.St;
 const Gio       = imports.gi.Gio;
 const GLib      = imports.gi.GLib;
+const Shell     = imports.gi.Shell;
 const Clutter   = imports.gi.Clutter;
 const Main      = imports.ui.main;
 const PopupMenu = imports.ui.popupMenu;
@@ -243,8 +244,7 @@ const Timepp = new Lang.Class({
                     this.content_box.add_child(sep.actor);
                     this.separators.set(key, sep.actor);
                 }
-            }
-            else if (this.sections.has(key)) {
+            } else if (this.sections.has(key)) {
                 let s = this.sections.get(key);
                 s.disable_section();
                 this.sections.delete(key);
@@ -290,8 +290,7 @@ const Timepp = new Lang.Class({
                 this._update_menu_arrow(this.unicon_panel_item.actor);
                 this.unicon_panel_item.actor.add_style_pseudo_class('checked');
                 this.unicon_panel_item.actor.can_focus = false;
-            }
-            else {
+            } else {
                 this._update_menu_arrow(section.panel_item.actor);
             }
 
@@ -301,14 +300,12 @@ const Timepp = new Lang.Class({
                         hidden_sections.push(section);
                         section.actor.hide();
                     }
-                }
-                else if (! section.actor.visible) {
+                } else if (! section.actor.visible) {
                     shown_sections.push(section);
                     section.actor.visible = true;
                 }
             }
-        }
-        else if (section.separate_menu) {
+        } else if (section.separate_menu) {
             this._update_menu_arrow(section.panel_item.actor);
 
             if (! section.actor.visible) {
@@ -328,11 +325,8 @@ const Timepp = new Lang.Class({
         this._update_separators();
         this.menu.open();
 
-        for (let i = 0; i < shown_sections.length; i++)
-            shown_sections[i].on_section_open_state_changed(true);
-
-        for (let i = 0; i < hidden_sections.length; i++)
-            hidden_sections[i].on_section_open_state_changed(false);
+        for (let s of shown_sections)  s.on_section_open_state_changed(true);
+        for (let s of hidden_sections) s.on_section_open_state_changed(false);
     },
 
     toggle_context_menu: function (section_name) {
@@ -341,7 +335,7 @@ const Timepp = new Lang.Class({
             return;
         }
 
-        let section  = this.sections.get(section_name);
+        let section = this.sections.get(section_name);
 
         if (section) this._update_menu_arrow(section.panel_item.actor);
         else         this._update_menu_arrow(this.unicon_panel_item.actor);
@@ -358,7 +352,7 @@ const Timepp = new Lang.Class({
         }
 
         this._update_separators();
-        this.menu.open(false);
+        this.menu.open();
     },
 
     _update_menu_arrow: function (source_actor) {
@@ -375,8 +369,7 @@ const Timepp = new Lang.Class({
             if (this.sections.get(k).actor.visible) {
                 last_visible = sep;
                 sep.show();
-            }
-            else {
+            } else {
                 sep.hide();
             }
         }
@@ -416,16 +409,14 @@ const Timepp = new Lang.Class({
             for (let [, section] of this.sections) {
                 if (section.separate_menu) {
                     section.panel_item.actor.show();
-                }
-                else {
+                } else {
                     section.panel_item.actor.hide();
                     show_unicon = true;
                 }
             }
 
             this.unicon_panel_item.actor.visible = show_unicon;
-        }
-        else {
+        } else {
             this.unicon_panel_item.actor.hide();
 
             for (let [, section] of this.sections) {
@@ -539,26 +530,18 @@ const Timepp = new Lang.Class({
         this.emit(sig, {section_name, data});
     },
 
-    // @HACK
     // ScrollView always allocates horizontal space for the scrollbar when the
     // policy is set to AUTOMATIC. The result is an ugly padding on the right
     // when the scrollbar is invisible.
-    // To work around this, we can use this function to figure out whether or
-    // not we need a scrollbar and then show it manually.
-    // This works because we only need to show the scrollbar of a scrollview
-    // in the popup when the popup menu exceeds it's max height which is roughly
-    // the height of the monitor.
     needs_scrollbar: function () {
-        let [min_h,] = this.menu.actor.get_preferred_height(-1);
-        let max_h    = this.menu.actor.get_theme_node().get_max_height();
+        let max_h = this.menu.actor.get_theme_node().get_max_height();
+        let a     = Shell.util_get_transformed_allocation(this.menu.actor);
 
-        return max_h >= 0 && min_h >= max_h;
+        return (a.y2 - a.y1) > max_h;
     },
 
     destroy: function () {
-        for (let [, section] of this.sections) {
-            section.disable_section();
-        }
+        for (let [, section] of this.sections) section.disable_section();
 
         this.sections.clear();
         this.separators.clear();

@@ -17,7 +17,7 @@ const G = ME.imports.sections.todo.GLOBAL;
 
 
 // =====================================================================
-// @@@ Clear window.
+// @@@ ViewClearTasks
 //
 // @ext      : obj (main extension object)
 // @delegate : obj (main section object)
@@ -27,8 +27,8 @@ const G = ME.imports.sections.todo.GLOBAL;
 //   - 'archive-all' (delete and write to done.txt all completed tasks)
 //   - 'cancel'
 // =====================================================================
-var ClearCompletedTasks = new Lang.Class({
-    Name: 'Timepp.ClearCompletedTasks',
+var ViewClearTasks = new Lang.Class({
+    Name: 'Timepp.ViewClearTasks',
 
     _init: function (ext, delegate) {
         this.ext      = ext;
@@ -123,4 +123,4 @@ var ClearCompletedTasks = new Lang.Class({
         this.button_cancel.connect('clicked', () => { this.emit('cancel'); });
     },
 });
-Signals.addSignalMethods(ClearCompletedTasks.prototype);
+Signals.addSignalMethods(ViewClearTasks.prototype);

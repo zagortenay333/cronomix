@@ -1,0 +1,220 @@
+const St        = imports.gi.St;
+const Gtk       = imports.gi.Gtk;
+const Clutter   = imports.gi.Clutter;
+const Main      = imports.ui.main;
+const PopupMenu = imports.ui.popupMenu;
+const Lang      = imports.lang;
+const Signals   = imports.signals;
+const Mainloop  = imports.mainloop;
+
+
+const ME = imports.misc.extensionUtils.getCurrentExtension();
+
+
+const Gettext  = imports.gettext.domain(ME.metadata['gettext-domain']);
+const _        = Gettext.gettext;
+const ngettext = Gettext.ngettext;
+
+
+const MISC_UTILS = ME.imports.lib.misc_utils;
+const FUZZ       = ME.imports.lib.fuzzy_search;
+
+
+const G = ME.imports.sections.todo.GLOBAL;
+
+
+// =====================================================================
+// @@@ ViewSearch
+//
+// @ext      : obj (main extension object)
+// @delegate : obj (main section object)
+//
+// @signals:
+// =====================================================================
+var ViewSearch = new Lang.Class({
+    Name: 'Timepp.ViewSearch',
+
+    _init: function (ext, delegate) {
+        this.ext      = ext;
+        this.delegate = delegate;
+
+        this.add_tasks_to_menu_mainloop_id = null;
+
+        this.tasks_viewport = [];
+
+        // @key : string (a search query)
+        // @val : array  (of tasks that match the search query)
+        this.search_dict = new Map();
+
+
+        //
+        // draw
+        //
+        this.actor = new St.Bin({ x_fill: true, style_class: 'view-search' });
+
+        this.content_box = new St.BoxLayout({ x_expand: true, vertical: true, });
+        this.actor.add_actor(this.content_box);
+
+
+        //
+        // search entry
+        //
+        this.search_entry = new St.Entry({ can_focus: true });
+        this.content_box.add_child(this.search_entry);
+        this.search_close_icon = new St.Icon({ track_hover: true, reactive: true, style_class: 'close-icon', icon_name: 'timepp-close-symbolic' });
+        this.search_entry.set_secondary_icon(this.search_close_icon);
+
+
+        //
+        // task items box
+        //
+        this.tasks_scroll = new St.ScrollView({ style_class: 'tasks-container vfade search-results', x_fill: true, y_align: St.Align.START});
+        this.content_box.add(this.tasks_scroll, {expand: true});
+        this.tasks_scroll.hscrollbar_policy = Gtk.PolicyType.NEVER;
+
+        this.tasks_scroll_content = new St.BoxLayout({ vertical: true, style_class: 'tasks-content-box'});
+        this.tasks_scroll.add_actor(this.tasks_scroll_content);
+
+
+        //
+        // listen
+        //
+        this.search_entry.clutter_text.connect('text-changed', () => this._search());
+        this.search_close_icon.connect('button-release-event', () => this.delegate.show_view__default());
+
+
+        //
+        // finally
+        //
+        this._search();
+    },
+
+    _search: function () {
+        if (this.add_tasks_to_menu_mainloop_id) {
+            Mainloop.source_remove(this.add_tasks_to_menu_mainloop_id);
+            this.add_tasks_to_menu_mainloop_id = null;
+        }
+
+        this._remove_tasks_from_menu();
+
+        let needle = this.search_entry.get_text().trim().toLowerCase();
+
+        if (needle === '') {
+            this.tasks_viewport = this.delegate.tasks;
+            this._add_tasks_to_menu();
+            return;
+        }
+
+        let [search_needed, search_space] = this._find_prev_search_results(needle);
+
+        if (! search_needed) {
+            this.tasks_viewport = search_space;
+            this._add_tasks_to_menu();
+            return;
+        }
+
+        let reduced_results = [];
+
+        for (let i = 0, len = search_space.length; i < len; i++) {
+            let score = FUZZ.fuzzy_search_v1(needle, search_space[i].task_str.toLowerCase());
+            if (score !== null) reduced_results.push([i, score]);
+        }
+
+        reduced_results.sort((a, b) => b[1] - a[1]);
+
+        this.tasks_viewport = new Array(reduced_results.length);
+
+        for (let i = 0; i < reduced_results.length; i++) {
+            this.tasks_viewport[i] = search_space[ reduced_results[i][0] ];
+        }
+
+        this.search_dict.set(needle, this.tasks_viewport);
+        this._add_tasks_to_menu();
+    },
+
+    _find_prev_search_results: function (pattern) {
+        let res = '';
+
+        for (let [old_patt,] of this.search_dict) {
+            if (pattern.startsWith(old_patt) && old_patt.length > res.length)
+                res = old_patt;
+        }
+
+        if (pattern === res) return [false, this.search_dict.get(res)];
+        else if (res)        return [true,  this.search_dict.get(res)];
+        else                 return [true,  this.delegate.tasks];
+    },
+
+    _add_tasks_to_menu: function () {
+        if (this.add_tasks_to_menu_mainloop_id) {
+            Mainloop.source_remove(this.add_tasks_to_menu_mainloop_id);
+            this.add_tasks_to_menu_mainloop_id = null;
+        }
+
+        this.tasks_scroll.vscrollbar_policy = Gtk.PolicyType.NEVER;
+
+        let n = Math.min(this.tasks_viewport.length, 30);
+
+        for (let i = 0; i < n; i++) {
+            let it = this.tasks_viewport[i];
+
+            this.tasks_scroll_content.add_child(it.actor);
+            it.dnd.drag_enabled = false;
+            it.actor_parent     = this.tasks_scroll_content;
+            it.actor_scrollview = this.tasks_scroll;
+        }
+
+        this.add_tasks_to_menu_mainloop_id = Mainloop.idle_add(() => {
+           this._add_tasks_to_menu__finish(n, false);
+        });
+    },
+
+    _add_tasks_to_menu__finish: function (i, scrollbar_shown) {
+        if (!scrollbar_shown && this.ext.needs_scrollbar()) {
+            this.tasks_scroll.vscrollbar_policy = Gtk.PolicyType.ALWAYS;
+            scrollbar_shown = true;
+        }
+
+        if (i === this.tasks_viewport.length) {
+            this.add_tasks_to_menu_mainloop_id = null;
+            return;
+        }
+
+        for (let j = 0; j < 50; j++, i++) {
+            if (i === this.tasks_viewport.length) break;
+
+            let it = this.tasks_viewport[i];
+
+            this.tasks_scroll_content.add_child(it.actor);
+            it.dnd.drag_enabled = false;
+            it.actor_parent     = this.tasks_scroll_content;
+            it.actor_scrollview = this.tasks_scroll;
+        }
+
+        this.add_tasks_to_menu_mainloop_id = Mainloop.idle_add(() => {
+            this._add_tasks_to_menu__finish(i, scrollbar_shown);
+        });
+    },
+
+    _remove_tasks_from_menu: function () {
+        if (this.add_tasks_to_menu_mainloop_id) {
+            Mainloop.source_remove(this.add_tasks_to_menu_mainloop_id);
+            this.add_tasks_to_menu_mainloop_id = null;
+        }
+
+        for (let it of this.tasks_viewport) {
+            it.actor_parent     = null;
+            it.actor_scrollview = null;
+        }
+
+        this.tasks_scroll_content.remove_all_children();
+        this.tasks_viewport = [];
+    },
+
+    close: function () {
+        this.search_dict.clear();
+        this._remove_tasks_from_menu();
+        this.actor.destroy();
+    },
+});
+Signals.addSignalMethods(ViewSearch.prototype);

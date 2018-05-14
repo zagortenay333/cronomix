@@ -30,7 +30,7 @@ var SectionBase = new Lang.Class({
         this.separate_menu = false;
 
         this.panel_item = new PANEL_ITEM.PanelItem(ext.menu);
-        this.actor      = new St.BoxLayout({ vertical: true, style_class: 'section' });
+        this.actor      = new St.BoxLayout({ x_expand: true, y_expand: true, vertical: true, style_class: 'section' });
 
 
         //
@@ -50,8 +50,7 @@ var SectionBase = new Lang.Class({
         if (state) {
             this.panel_item.actor.add_style_pseudo_class('checked');
             this.panel_item.actor.can_focus = false;
-        }
-        else {
+        } else {
             this.panel_item.actor.remove_style_pseudo_class('checked');
             this.panel_item.actor.can_focus = true;
             this.panel_item.actor.remove_style_pseudo_class('focus');
