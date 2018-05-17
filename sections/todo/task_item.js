@@ -965,7 +965,7 @@ var TaskItem = new Lang.Class({
             }
 
             case Clutter.EventType.KEY_PRESS: {
-                Mainloop.idle_add(() => {
+                Mainloop.timeout_add(0, () => {
                     if (! this.header.contains(global.stage.get_key_focus()))
                         this.hide_header_icons();
                 });

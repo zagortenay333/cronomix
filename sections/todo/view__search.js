@@ -2,7 +2,6 @@ const St        = imports.gi.St;
 const Gtk       = imports.gi.Gtk;
 const Clutter   = imports.gi.Clutter;
 const Main      = imports.ui.main;
-const PopupMenu = imports.ui.popupMenu;
 const Lang      = imports.lang;
 const Signals   = imports.signals;
 const Mainloop  = imports.mainloop;
@@ -59,16 +58,22 @@ var ViewSearch = new Lang.Class({
         //
         // search entry
         //
-        this.search_entry = new St.Entry({ can_focus: true });
-        this.content_box.add_child(this.search_entry);
-        this.search_close_icon = new St.Icon({ track_hover: true, reactive: true, style_class: 'close-icon', icon_name: 'timepp-close-symbolic' });
-        this.search_entry.set_secondary_icon(this.search_close_icon);
+        {
+            let box = new St.BoxLayout({ style_class: 'timepp-menu-item' });
+            this.content_box.add_child(box);
+
+            this.search_entry = new St.Entry({ x_expand: true, can_focus: true });
+            box.add_child(this.search_entry);
+
+            this.search_close_icon = new St.Icon({ track_hover: true, reactive: true, style_class: 'close-icon', icon_name: 'timepp-close-symbolic' });
+            this.search_entry.set_secondary_icon(this.search_close_icon);
+        }
 
 
         //
         // task items box
         //
-        this.tasks_scroll = new St.ScrollView({ style_class: 'tasks-container vfade search-results', x_fill: true, y_align: St.Align.START});
+        this.tasks_scroll = new St.ScrollView({ style_class: 'timepp-menu-item tasks-container vfade search-results', x_fill: true, y_align: St.Align.START});
         this.content_box.add(this.tasks_scroll, {expand: true});
         this.tasks_scroll.hscrollbar_policy = Gtk.PolicyType.NEVER;
 

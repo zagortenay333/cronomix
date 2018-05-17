@@ -1,12 +1,10 @@
 const St           = imports.gi.St;
 const Gio          = imports.gi.Gio
 const Gtk          = imports.gi.Gtk;
-const Meta         = imports.gi.Meta;
 const GLib         = imports.gi.GLib;
 const Clutter      = imports.gi.Clutter;
 const GnomeDesktop = imports.gi.GnomeDesktop;
 const Main         = imports.ui.main;
-const PopupMenu    = imports.ui.popupMenu;
 const Lang         = imports.lang;
 const Signals      = imports.signals;
 const Mainloop     = imports.mainloop;
@@ -38,7 +36,6 @@ const VIEW_SORT          = ME.imports.sections.todo.view__sort;
 const VIEW_DEFAULT       = ME.imports.sections.todo.view__default;
 const VIEW_SEARCH        = ME.imports.sections.todo.view__search;
 const VIEW_LOADING       = ME.imports.sections.todo.view__loading;
-const VIEW_NO_TODO_FILE  = ME.imports.sections.todo.view__no_todo_file;
 const VIEW_FILTERS       = ME.imports.sections.todo.view__filters;
 const VIEW_TASK_EDITOR   = ME.imports.sections.todo.view__task_editor;
 const VIEW_FILE_SWITCHER = ME.imports.sections.todo.view__file_switcher;
@@ -76,29 +73,12 @@ var SectionMain = new Lang.Class({
         this.keym         = new KEY_MANAGER.KeybindingManager(this.settings);
         this.time_tracker = null;
 
-        // The view manager only allows one view to be visible at time; however,
+        this.view_manager = new VIEW_MANAGER.ViewManager(this.ext, this);
+
+        // The view manager only allows one view to be visible at a time; however,
         // since the stats view uses the fullscreen iface, it is orthogonal to
         // the other views, so we don't use the view manager for it.
         this.stats_view = new VIEW_STATS.StatsView(this.ext, this, 0);
-
-
-        // @HACK
-        // For styling purposes we want the view manager to put actors inside a
-        // PopupMenuItem, but using the PopupMenuItem as a wrapper won't work
-        // here if there is a large num of tasks. Various event listeners in
-        // PopupMenuItem will cause major lag when entering the wrapper with the
-        // mouse.
-        // We replicate the PopupMenuItem by adding an ornament to ensure
-        // proper horizontal padding.
-        let box = new St.BoxLayout({ x_expand: true, style_class: 'popup-menu-item' });
-        this.actor.add_child(box);
-        box.add_actor(new St.Label({style_class: 'popup-menu-ornament'}));
-
-        this.content_box = new St.BoxLayout({ x_expand: true });
-        box.add_child(this.content_box);
-
-
-        this.view_manager = new VIEW_MANAGER.ViewManager(this.ext, this);
 
 
         //
@@ -121,7 +101,17 @@ var SectionMain = new Lang.Class({
                 this.cache = {
                     format_version: cache_format_version,
 
-                    automatic_sort: true,
+                    // @todo_files: array [of todo_struct]
+                    //    @todo_struct: obj {
+                    //        name             : string,
+                    //        todo_file        : string, (file path)
+                    //        done_file        : string, (file path or "")
+                    //        time_tracker_dir : string, (file path or "")
+                    //        automatic_sort   : bool
+                    //    }
+                    todo_files: [],
+
+                    active_file: "unique", // @todo_struct.name
 
                     sort: [
                         [G.SortType.PIN             , G.SortOrder.DESCENDING],
@@ -195,47 +185,22 @@ var SectionMain = new Lang.Class({
         //
         this.keym.add('todo-keybinding-open', () => {
             this.ext.open_menu(this.section_name);
-            if (this.view_manager.current_view_name !== G.View.LOADING &&
-                this.view_manager.current_view_name !== G.View.NO_TODO_FILE &&
-                this.view_manager.current_view_name !== G.View.EDITOR) {
-
                 this.show_view__default();
-            }
         });
         this.keym.add('todo-keybinding-open-to-add', () => {
             this.ext.open_menu(this.section_name);
-            if (this.view_manager.current_view_name !== G.View.LOADING &&
-                this.view_manager.current_view_name !== G.View.NO_TODO_FILE) {
-
-                this.show_view__task_editor();
-            }
+            this.show_view__task_editor();
         });
         this.keym.add('todo-keybinding-open-to-search', () => {
             this.ext.open_menu(this.section_name);
-            if (this.view_manager.current_view_name !== G.View.LOADING &&
-                this.view_manager.current_view_name !== G.View.NO_TODO_FILE &&
-                this.view_manager.current_view_name !== G.View.EDITOR) {
-
-                this.show_view__search();
-            }
+            this.show_view__search();
         });
         this.keym.add('todo-keybinding-open-to-stats', () => {
-            if (this.view_manager.current_view_name !== G.View.LOADING &&
-                this.view_manager.current_view_name !== G.View.NO_TODO_FILE &&
-                this.view_manager.current_view_name !== G.View.EDITOR) {
-
-                this.show_view__time_tracker_stats();
-            }
+            this.show_view__time_tracker_stats();
         });
         this.keym.add('todo-keybinding-open-to-switch-files', () => {
             this.ext.open_menu(this.section_name);
-            if (this.view_manager.current_view_name !== G.View.LOADING &&
-                this.view_manager.current_view_name !== G.View.NO_TODO_FILE &&
-                this.view_manager.current_view_name !== G.View.EDITOR &&
-                this.settings.get_value('todo-files').deep_unpack().length > 1) {
-
-                this.show_view__file_switcher();
-            }
+            this.show_view__file_switcher();
         });
         this.keym.add('todo-keybinding-open-todotxt-file', () => {
             if (! this.todo_txt_file) return;
@@ -255,20 +220,9 @@ var SectionMain = new Lang.Class({
         //
         // listen
         //
-        this.sigm.connect(this.settings, 'changed::todo-files', () => {
-            let todo_files = this.settings.get_value('todo-files').deep_unpack();
-            if (todo_files.length > 1) this.file_switcher_icon.show();
-            else                       this.file_switcher_icon.hide();
-        });
-        this.sigm.connect(this.settings, 'changed::todo-current', () => {
-            this._init_todo_file();
-        });
         this.sigm.connect(this.settings, 'changed::todo-separate-menu', () => {
             this.separate_menu = this.settings.get_boolean('todo-separate-menu');
             this.ext.update_panel_items();
-        });
-        this.sigm.connect(this.settings, 'changed::todo-panel-mode', () => {
-            this._toggle_panel_item_mode();
         });
         this.sigm.connect(this.settings, 'changed::todo-task-width', () => {
             let width = this.settings.get_int('todo-task-width');
@@ -277,9 +231,9 @@ var SectionMain = new Lang.Class({
         this.sigm.connect(this.wallclock, 'notify::clock', () => {
             let t = GLib.DateTime.new_now(this.wallclock.timezone);
             t     = t.format('%H:%M');
-
             if (t === '00:00') this._on_new_day_started();
         });
+        this.sigm.connect(this.settings, 'changed::todo-panel-mode', () => this._toggle_panel_item_mode());
         this.sigm.connect(this.panel_item, 'left-click', () => this.ext.toggle_menu(this.section_name));
         this.sigm.connect(this.ext, 'custom-css-changed', () => this._on_custom_css_changed());
 
@@ -314,16 +268,16 @@ var SectionMain = new Lang.Class({
         this.sigm.clear();
         this.keym.clear();
 
+        this.view_manager.close_current_view();
         this.view_manager   = null;
         this.tasks          = [];
-
-        this.show_view__no_todo_file();
 
         this.parent();
     },
 
     _init_todo_file: function () {
         this.show_view__loading();
+        this.view_manager.lock = true;
 
         // reset
         {
@@ -348,29 +302,30 @@ var SectionMain = new Lang.Class({
         }
 
         try {
-            let current = this.settings.get_value('todo-current').deep_unpack();
-
-            if (! current.todo_file) {
-                this.show_view__no_todo_file();
+            if (this.cache.todo_files.length === 0) {
+                this.show_view__file_switcher(true);
+                this.view_manager.lock = true;
                 return;
             }
 
-            this.todo_txt_file = Gio.file_new_for_uri(current.todo_file);
+            let current = this.get_current_todo_file();
 
-            if (this.todo_file_monitor)
-                this.todo_file_monitor.cancel();
-
-            this.todo_file_monitor =
-                this.todo_txt_file.monitor_file(Gio.FileMonitorFlags.NONE, null);
-
-            this.todo_file_monitor.connect(
-                'changed', (...args) => this._on_todo_file_changed(args[3]));
-
-            if (!this.todo_txt_file || !this.todo_txt_file.query_exists(null)) {
-                this.show_view__no_todo_file();
+            if (!current) {
+                this.show_view__file_switcher(true);
+                this.view_manager.lock = true;
                 return;
             }
+
+            this.todo_txt_file = MISC_UTILS.file_new_for_path(current.todo_file);
+
+            this.todo_file_monitor = this.todo_txt_file.monitor_file(Gio.FileMonitorFlags.NONE, null);
+            this.todo_file_monitor.connect('changed', (...args) => this._on_todo_file_changed(args[3]));
+
+            if (!this.todo_txt_file.query_exists(null))
+                this.todo_txt_file.create(Gio.FileCreateFlags.NONE, null);
         } catch (e) {
+            this.show_view__file_switcher(true);
+            this.view_manager.lock = true;
             logError(e);
             return;
         }
@@ -379,6 +334,7 @@ var SectionMain = new Lang.Class({
         lines = String(lines).split(/\r?\n/).filter((l) => /\S/.test(l));
 
         this.create_tasks(lines, () => {
+            this.view_manager.lock = false;
             let needs_write = this._check_dates();
             this.on_tasks_changed(needs_write);
             this.time_tracker = new TIME_TRACKER.TimeTracker(this.ext, this);
@@ -391,6 +347,19 @@ var SectionMain = new Lang.Class({
 
         this.cache_file.replace_contents(JSON.stringify(this.cache, null, 2),
             null, false, Gio.FileCreateFlags.REPLACE_DESTINATION, null);
+    },
+
+    get_current_todo_file: function () {
+        let current = null;
+
+        for (let it of this.cache.todo_files) {
+            if (it.name === this.cache.active_file) {
+                current = it;
+                break;
+            }
+        }
+
+        return current;
     },
 
     write_tasks_to_file: function () {
@@ -619,6 +588,7 @@ var SectionMain = new Lang.Class({
                                 this.stats.deferred_tasks;
 
             this.panel_item.set_label('' + n_incompleted);
+            this.panel_item.set_mode('icon_text');
 
             if (n_incompleted) this.panel_item.actor.remove_style_class_name('done');
             else               this.panel_item.actor.add_style_class_name('done');
@@ -663,7 +633,7 @@ var SectionMain = new Lang.Class({
     },
 
     sort_tasks: function () {
-        if (! this.cache.automatic_sort) return;
+        if (! this.get_current_todo_file().automatic_sort) return;
 
         let property_map = {
             [G.SortType.PIN]             : 'pinned',
@@ -724,26 +694,23 @@ var SectionMain = new Lang.Class({
     archive_tasks: function (tasks) {
         let content = '';
         let today   = G.date_yyyymmdd();
-        let task;
 
-        for (let i = 0, len = tasks.length; i < len; i++) {
-            task = tasks[i];
-
+        for (let task of tasks) {
             if (task.completed) {
                 content += task.task_str + '\n';
-            }
-            else {
-                if (task.priority === '(_)')
-                    content += `x ${today} ${task.task_str}\n`;
-                else
-                    content += `x ${today} ${task.task_str.slice(3)} \
-                                pri:${task.priority[1]}\n`;
+            } else if (task.priority === '(_)') {
+                content += `x ${today} ${task.task_str}\n`;
+            } else {
+                content += `x ${today} ${task.task_str.slice(3)} pri:${task.priority[1]}\n`;
             }
         }
 
         try {
-            let current = this.settings.get_value('todo-current').deep_unpack();
-            let done_file = Gio.file_new_for_uri(current.done_file);
+            let current = this.get_current_todo_file();
+
+            if (!current || !current.done_file) return;
+
+            let done_file     = MISC_UTILS.file_new_for_path(current.done_file);
             let append_stream = done_file.append_to(Gio.FileCreateFlags.NONE, null);
 
             append_stream.write_all(content, null);
@@ -751,6 +718,8 @@ var SectionMain = new Lang.Class({
     },
 
     show_view__time_tracker_stats: function (task) {
+        if (! this.time_tracker) return;
+
         this.ext.menu.close();
         this.stats_view.open();
 
@@ -773,22 +742,10 @@ var SectionMain = new Lang.Class({
         });
     },
 
-    show_view__no_todo_file: function () {
-        this.panel_item.set_mode('icon');
-        this.panel_item.actor.remove_style_class_name('done');
+    show_view__loading: function (unlock = false) {
+        if (unlock) this.view_manager.lock = false;
+        else if (this.view_manager.lock) return;
 
-        let view = new VIEW_NO_TODO_FILE.ViewNoTodoFile(this.ext, this);
-
-        this.view_manager.show_view({
-            view           : view,
-            view_name      : G.View.NO_TODO_FILE,
-            actors         : [view.actor],
-            focused_actor  : view.no_todo_file_msg,
-            close_callback : () => view.close(),
-        });
-    },
-
-    show_view__loading: function () {
         this.panel_item.set_mode('icon');
         this.panel_item.actor.remove_style_class_name('done');
         this.panel_item.icon.icon_name = 'timepp-todo-loading-symbolic';
@@ -808,7 +765,10 @@ var SectionMain = new Lang.Class({
         });
     },
 
-    show_view__search: function (search_str = false) {
+    show_view__search: function (search_str = false, unlock = false) {
+        if (unlock) this.view_manager.lock = false;
+        else if (this.view_manager.lock) return;
+
         this.view_manager.close_current_view();
 
         let view = new VIEW_SEARCH.ViewSearch(this.ext, this);
@@ -824,7 +784,10 @@ var SectionMain = new Lang.Class({
         if (search_str) view.search_entry.text = search_str;
     },
 
-    show_view__default: function (id) {
+    show_view__default: function (unlock = false) {
+        if (unlock) this.view_manager.lock = false;
+        else if (this.view_manager.lock) return;
+
         this.view_manager.close_current_view();
 
         let view = new VIEW_DEFAULT.ViewDefault(this.ext, this);
@@ -838,7 +801,10 @@ var SectionMain = new Lang.Class({
         });
     },
 
-    show_view__clear_completed: function () {
+    show_view__clear_completed: function (unlock = false) {
+        if (unlock) this.view_manager.lock = false;
+        else if (this.view_manager.lock) return;
+
         let view = new VIEW_CLEAR.ViewClearTasks(this.ext, this);
 
         this.view_manager.show_view({
@@ -865,11 +831,9 @@ var SectionMain = new Lang.Class({
             let completed_tasks   = [];
             let incompleted_tasks = [];
 
-            for (let i = 0, len = this.tasks.length; i < len; i++) {
-                if (!this.tasks[i].completed || this.tasks[i].rec_str)
-                    incompleted_tasks.push(this.tasks[i]);
-                else
-                    completed_tasks.push(this.tasks[i]);
+            for (let task of this.tasks) {
+                if (!task.completed || task.rec_str) incompleted_tasks.push(task);
+                else                                 completed_tasks.push(task);
             }
 
             this.archive_tasks(completed_tasks);
@@ -882,38 +846,39 @@ var SectionMain = new Lang.Class({
         });
     },
 
-    show_view__file_switcher: function () {
+    show_view__file_switcher: function (unlock = false) {
+        if (unlock) this.view_manager.lock = false;
+        else if (this.view_manager.lock) return;
+
         let view = new VIEW_FILE_SWITCHER.ViewFileSwitcher(this.ext, this);
 
         this.view_manager.show_view({
             view           : view,
             view_name      : G.View.FILE_SWITCH,
             actors         : [view.actor],
-            focused_actor  : view.entry.entry,
+            focused_actor  : view.button_add_file,
             close_callback : () => { view.close(); },
         });
 
-        view.connect('switch', (_, name) => {
-            let todo_files = this.settings.get_value('todo-files').deep_unpack();
-            let current;
+        if (this.cache.todo_files.length === 0) this.panel_item.set_mode('icon');
 
-            for (let i = 0, len = todo_files.length; i < len; i++) {
-                if (todo_files[i].name === name) {
-                    current = todo_files[i];
-                    break;
-                }
-            }
-
-            this.settings.set_value('todo-current',
-                                    GLib.Variant.new('a{ss}', current));
+        view.connect('update', (_, active, files) => {
+            this.cache.active_file = active;
+            this.cache.todo_files  = files;
+            this.store_cache();
+            Main.panel.menuManager.ignoreRelease();
+            this._init_todo_file();
         });
 
-        view.connect('close', () => {
+        view.connect('cancel', () => {
             this.show_view__default();
         });
     },
 
-    show_view__sort: function () {
+    show_view__sort: function (unlock = false) {
+        if (unlock) this.view_manager.lock = false;
+        else if (this.view_manager.lock) return;
+
         let view = new VIEW_SORT.ViewSort(this.ext, this);
 
         this.view_manager.show_view({
@@ -926,14 +891,20 @@ var SectionMain = new Lang.Class({
 
         view.connect('update-sort', (_, new_sort_obj, automatic_sort) => {
             this.cache.sort = new_sort_obj;
-            this.cache.automatic_sort = automatic_sort;
+
+            let current = this.get_current_todo_file();
+            current.automatic_sort = automatic_sort;
+
             this.store_cache();
             this.sort_tasks();
             this.show_view__default();
         });
     },
 
-    show_view__filters: function () {
+    show_view__filters: function (unlock = false) {
+        if (unlock) this.view_manager.lock = false;
+        else if (this.view_manager.lock) return;
+
         let view = new VIEW_FILTERS.ViewFilters(this.ext, this);
 
         this.view_manager.show_view({
@@ -951,7 +922,10 @@ var SectionMain = new Lang.Class({
         });
     },
 
-    show_view__task_editor: function (task) {
+    show_view__task_editor: function (task, unlock = false) {
+        if (unlock) this.view_manager.lock = false;
+        else if (this.view_manager.lock) return;
+
         let view = new VIEW_TASK_EDITOR.ViewTaskEditor(this.ext, this, task);
 
         this.view_manager.show_view({

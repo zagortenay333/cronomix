@@ -42,7 +42,7 @@
 /* These custom css properties only work on this selector */
 .timepp-custom-css-root {
     /* global */
-    -timepp-link-color: #5a94dc;
+    -timepp-link-color: #0f79ff;
 
     /* todo section */
     -timepp-context-color:    #f47e00;
@@ -84,6 +84,10 @@
 
 .timepp-menu .section {}
 
+.timepp-menu .timepp-menu-item {
+    padding: .7em 2em;
+}
+
 .timepp-menu .section .header {
     font-weight: bold;
 }
@@ -93,6 +97,7 @@
 }
 
 .timepp-menu .view-box {
+    padding: .4em 1.2em;
 }
 
 .timepp-menu StEntry {
@@ -102,13 +107,13 @@
 .timepp-menu .view-box-content {
     background: rgba(125, 125, 125, .15);
     border-radius: 2px;
-    padding: .5em 1em;
+    padding: .7em;
     spacing: .7em;
 }
 
 /* Used in view-boxes */
 .timepp-menu .row {
-    padding: .5em 1.3em;
+    padding: .7em 1.4em;
     spacing: 1em;
 }
 
@@ -166,14 +171,15 @@
 
 .numpicker-arrow {}
 
+.timepp-menu .slider:focus,
 .timepp-menu StButton:focus .toggle-switch {
     outline: 2px rgba(255, 255, 255, .5);
 }
 
 .numpicker-arrow:focus StIcon,
 .numpicker-arrow:hover StIcon,
-.timepp-menu .icon-box StIcon:focus,
-.timepp-menu .icon-box StIcon:hover {
+.timepp-menu StIcon:focus,
+.timepp-menu StIcon:hover {
     color: #5a94dc;
 }
 
@@ -674,14 +680,27 @@
     spacing: .4em;
 }
 
+.timepp-menu .todo-section .file-switcher-item {
+    background: rgba(125, 125, 125, .15);
+    border-radius: 2px;
+    border-left-width: 3px;
+    padding: 9px 9px 9px 6px;
+    min-width: 240px;
+    max-width: 600px;
+    spacing: .4em;
+}
+
+.timepp-menu .todo-section .file-switcher-item-title {
+    font-weight: bold;
+}
+
+.timepp-menu .todo-section .file-switcher-item-check-icon.active {
+    color: #38ae72;
+}
+
 .timepp-menu .todo-section .archive-completed-tasks-label {}
 .timepp-menu .todo-section .stats-window {
     max-width: 600px;
-}
-
-.timepp-menu .todo-section .view-default .tasks-container,
-.timepp-menu .todo-section .view-search .search-results {
-    margin-top: .8em;
 }
 
 .timepp-menu .todo-section .stats-item-title {}
@@ -706,14 +725,6 @@
 
 .timepp-menu .todo-section .completion-box {
     spacing: .2em;
-}
-
-.timepp-menu .todo-section .task-editor .entry-container {
-}
-
-.timepp-menu .todo-section .task-editor .entry-container {
-    spacing: 0;
-    min-width: 30em;
 }
 
 .timepp-menu .todo-section .todo-syntax-link {

@@ -154,10 +154,6 @@ var StatsView = new Lang.Class({
         this.nav_bar.add_actor(this.hot_mode_icon);
         this.hot_mode_icon.add_actor(new St.Icon({ icon_name: 'timepp-fire-symbolic' }));
 
-        this.csv_dir_icon = new St.Button({ y_align: St.Align.MIDDLE, can_focus: true });
-        this.nav_bar.add_actor(this.csv_dir_icon);
-        this.csv_dir_icon.add_actor(new St.Icon({ icon_name: 'timepp-file-symbolic' }));
-
 
         //
         // search entry and results container
@@ -429,10 +425,6 @@ var StatsView = new Lang.Class({
             }
 
             return Clutter.EVENT_STOP;
-        });
-        this.csv_dir_icon.connect('clicked', () => {
-            this.close();
-            MISC_UTILS.open_file_path(this.delegate.time_tracker.get_csv_dir_path());
         });
         this.single_mode_icon.connect('clicked', () => this.show_mode__search());
         this.heatmap_icon.connect('clicked', () => this._toggle_heatmap());
@@ -1343,7 +1335,7 @@ var StatsView = new Lang.Class({
                 item.label_actor = label;
                 label._delegate  = item;
 
-                label.connect('queue-redraw', () => {
+                label.connect('allocation-changed', () => {
                     if (type === '()')  {
                         if (!this.task_results.scrollview.vscrollbar_visible)
                             MISC_UTILS.resize_label(label);

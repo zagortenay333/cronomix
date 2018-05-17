@@ -1,4 +1,5 @@
 const St        = imports.gi.St;
+const Gtk       = imports.gi.Gtk;
 const Meta      = imports.gi.Meta;
 const Clutter   = imports.gi.Clutter;
 const Main      = imports.ui.main;
@@ -44,8 +45,11 @@ var ViewSort = new Lang.Class({
         this.content_box = new St.BoxLayout({ y_expand: true, x_expand: true, vertical: true, style_class: 'view-box-content' });
         this.actor.add_actor(this.content_box);
 
+        this.scrollview = new St.ScrollView({ style_class: 'vfade' });
+        this.content_box.add_actor(this.scrollview);
+
         this.sort_items_box = new St.BoxLayout({ y_expand: true, x_expand: true, vertical: true, style_class: 'sort-items-box' });
-        this.content_box.add_child(this.sort_items_box);
+        this.scrollview.add_actor(this.sort_items_box);
 
 
         //
@@ -66,7 +70,7 @@ var ViewSort = new Lang.Class({
 
             for (let it of this.delegate.cache.sort) {
                 let [sort_type, sort_order] = [it[0], it[1]];
-                let item = new SortItem(delegate, this.sort_items_box, sort_text_map[sort_type], sort_type, sort_order);
+                let item = new SortItem(delegate, this.scrollview, this.sort_items_box, sort_text_map[sort_type], sort_type, sort_order);
                 this.sort_items_box.add_child(item.actor);
             }
         }
@@ -91,7 +95,7 @@ var ViewSort = new Lang.Class({
         this.toggle_automatic_sort.add_actor(this.toggle_automatic_sort_btn);
         this.toggle = new PopupMenu.Switch();
         this.toggle_automatic_sort_btn.add_actor(this.toggle.actor);
-        this.toggle.setToggleState(this.delegate.cache.automatic_sort);
+        this.toggle.setToggleState(this.delegate.get_current_todo_file().automatic_sort);
 
 
         //
@@ -106,6 +110,12 @@ var ViewSort = new Lang.Class({
         //
         // listen
         //
+        this.sort_items_box.connect('allocation-changed', () => {
+            this.scrollview.vscrollbar_policy = Gtk.PolicyType.NEVER;
+            if (this.ext.needs_scrollbar()) {
+                this.scrollview.vscrollbar_policy = Gtk.PolicyType.ALWAYS;
+            }
+        });
         this.button_ok.connect('clicked', () => this._on_ok_clicked());
         this.toggle_automatic_sort_btn.connect('clicked', () => this._on_toggle_clicked());
         this.toggle_automatic_sort.connect('button-press-event', () => this._on_toggle_clicked());
@@ -137,12 +147,13 @@ Signals.addSignalMethods(ViewSort.prototype);
 let SortItem = new Lang.Class({
     Name: 'Timepp.SortItem',
 
-    _init: function (delegate, actor_parent, label, sort_type, sort_order) {
-        this.delegate     = delegate;
-        this.actor_parent = actor_parent;
-        this.label        = label;
-        this.sort_type    = sort_type;
-        this.sort_order   = sort_order;
+    _init: function (delegate, actor_scrollview, actor_parent, label, sort_type, sort_order) {
+        this.delegate         = delegate;
+        this.actor_scrollview = actor_scrollview;
+        this.actor_parent     = actor_parent;
+        this.label            = label;
+        this.sort_type        = sort_type;
+        this.sort_order       = sort_order;
 
 
         //

@@ -1,6 +1,4 @@
 const St      = imports.gi.St;
-const Meta    = imports.gi.Meta;
-const Clutter = imports.gi.Clutter;
 const Main    = imports.ui.main;
 const Lang    = imports.lang;
 const Signals = imports.signals;
@@ -12,9 +10,6 @@ const ME = imports.misc.extensionUtils.getCurrentExtension();
 const Gettext  = imports.gettext.domain(ME.metadata['gettext-domain']);
 const _        = Gettext.gettext;
 const ngettext = Gettext.ngettext;
-
-
-const G = ME.imports.sections.todo.GLOBAL;
 
 
 // =====================================================================
@@ -32,12 +27,14 @@ var ViewLoading = new Lang.Class({
         this.ext      = ext;
         this.delegate = delegate;
 
+        this.view_lock = true;
+
         //
         // draw
         //
-        this.actor = new St.BoxLayout({ x_expand: true, style_class: 'view-loading' });
+        this.actor = new St.BoxLayout({ x_expand: true, style_class: 'timepp-menu-item view-loading' });
 
-        this.loading_msg = new St.Label({ text: _('Loading...')});
+        this.loading_msg = new St.Label({ text: _('Loading...'), style_class: 'loading-msg' });
         this.actor.add_child(this.loading_msg);
     },
 

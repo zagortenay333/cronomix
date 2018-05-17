@@ -72,15 +72,12 @@ var ViewClearTasks = new Lang.Class({
         let archive_all_checkmark = new St.Bin();
         this.archive_all_radiobutton.add_actor(archive_all_checkmark);
 
-        let done_file = this.delegate.settings.get_value('todo-current')
-                            .deep_unpack().done_file;
-
-        if (!done_file) {
+        let current = this.delegate.get_current_todo_file();
+        if (current && current.done_file) {
+            this.archive_all_radiobutton.checked = true;
+        } else {
             this.archive_all_item.hide();
             this.delete_all_radiobutton.checked = true;
-        }
-        else {
-            this.archive_all_radiobutton.checked = true;
         }
 
 
@@ -100,27 +97,15 @@ var ViewClearTasks = new Lang.Class({
         //
         // listen
         //
-        this.archive_all_radiobutton.connect('clicked', () => {
-            this.delete_all_radiobutton.checked = false;
-        });
-        this.delete_all_radiobutton.connect('clicked', () => {
-            let done_file = this.delegate.settings.get_value('todo-current')
-                                .deep_unpack().done_file;
-
-            if (!done_file) {
-                this.delete_all_radiobutton.checked = true;
-                return;
-            }
-
-            this.archive_all_radiobutton.checked = false;
-        });
+        this.archive_all_radiobutton.connect('clicked', () => { this.delete_all_radiobutton.checked = false; });
+        this.delete_all_radiobutton.connect('clicked', () => { this.archive_all_radiobutton.checked = false; });
+        this.button_cancel.connect('clicked', () => { this.emit('cancel'); });
         this.button_ok.connect('clicked',  () => {
             if (this.delete_all_radiobutton.checked)
                 this.emit('delete-all');
             else
                 this.emit('archive-all');
         });
-        this.button_cancel.connect('clicked', () => { this.emit('cancel'); });
     },
 });
 Signals.addSignalMethods(ViewClearTasks.prototype);

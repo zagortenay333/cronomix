@@ -18,16 +18,19 @@ const ngettext = Gettext.ngettext;
 
 const IFACE = `${ME.path}/dbus/time_tracker_iface.xml`;
 
-const REG = ME.imports.lib.regex;
-const G   = ME.imports.sections.todo.GLOBAL;
 
+const MISC_UTILS = ME.imports.lib.misc_utils;
+const REG        = ME.imports.lib.regex;
+
+
+const G = ME.imports.sections.todo.GLOBAL;
 
 
 // =====================================================================
-// @@@ Time tracker
+// @@@ TimeTracker
 //
-// @ext      : obj    (main extension object)
-// @delegate : obj    (main section object)
+// @ext      : obj (main extension object)
+// @delegate : obj (main section object)
 // =====================================================================
 var TimeTracker = new Lang.Class({
     Name: 'Timepp.TimeTracker',
@@ -51,7 +54,7 @@ var TimeTracker = new Lang.Class({
 
         // Holds the path of the current csv directory.
         // We also use this as a flag to check whether the tracker is active.
-        this.csv_dir = null;
+        this.csv_dir = this.get_csv_dir_path();
 
 
         // GFiles
@@ -65,7 +68,7 @@ var TimeTracker = new Lang.Class({
         this.yearly_csv_file_monitor = null;
         this.daily_csv_file_monitor  = null;
 
-        this.monitors_block = false;
+        this.monitors_block          = false;
 
 
         // @stats_data: Map
@@ -116,30 +119,24 @@ var TimeTracker = new Lang.Class({
 
 
         //
-        // init
-        //
-        this.csv_dir = this.get_csv_dir_path();
-        this._init_tracker_dir();
-        this._init_daily_csv_map();
-        this._archive_yearly_csv_file();
-
-
-        //
         // listen
         //
         this.new_day_sig_id =
             this.delegate.connect('new-day', () => this._on_new_day_started());
-        this.todo_current_sig_id =
-            this.delegate.settings.connect('changed::todo-current', () => {
-                this.csv_dir = this.get_csv_dir_path();
-                this._init_tracker_dir();
-            });
         this.ext.connect('start-time-tracking-by-id', (_, info) => {
             this.start_tracking_by_id(info.data);
         });
         this.ext.connect('stop-time-tracking-by-id', (_, info) => {
             this.stop_tracking_by_id(info.data);
         });
+
+
+        //
+        // finally
+        //
+        this._init_tracker_dir();
+        this._init_daily_csv_map();
+        this._archive_yearly_csv_file();
     },
 
     _tracker_tic: function (...args) {
@@ -289,7 +286,7 @@ var TimeTracker = new Lang.Class({
 
         try {
             // yearly dir
-            this.yearly_csv_dir = Gio.file_new_for_path(
+            this.yearly_csv_dir = MISC_UTILS.file_new_for_path(
                 `${this.csv_dir}/YEARS__time_tracker`);
 
             if (! this.yearly_csv_dir.query_exists(null))
@@ -304,7 +301,7 @@ var TimeTracker = new Lang.Class({
 
 
             // yearly file
-            this.yearly_csv_file = Gio.file_new_for_path(
+            this.yearly_csv_file = MISC_UTILS.file_new_for_path(
                 `${this.csv_dir}/${d.getFullYear()}__time_tracker.csv`);
 
             if (! this.yearly_csv_file.query_exists(null))
@@ -319,7 +316,7 @@ var TimeTracker = new Lang.Class({
 
 
             // daily file
-            this.daily_csv_file = Gio.file_new_for_path(
+            this.daily_csv_file = MISC_UTILS.file_new_for_path(
                 `${this.csv_dir}/TODAY__time_tracker.csv`);
 
             if (! this.daily_csv_file.query_exists(null))
@@ -331,7 +328,10 @@ var TimeTracker = new Lang.Class({
             this.daily_csv_file_monitor.connect('changed', () => {
                 this._on_tracker_files_modified();
             });
-        } catch (e) { logError(e); }
+        } catch (e) {
+            logError(e);
+            this.csv_dir = "";
+        }
     },
 
     _init_daily_csv_map: function () {
@@ -665,15 +665,9 @@ var TimeTracker = new Lang.Class({
     },
 
     get_csv_dir_path: function () {
-        try {
-            let d = this.delegate.settings.get_value('todo-current').deep_unpack().csv_dir;
-            let error;
-
-            if (d) [d, error] = GLib.filename_from_uri(d);
-
-            if (error) return null;
-            else       return d;
-        } catch (e) { logError(e); }
+        let d = this.delegate.get_current_todo_file();
+        if (!d) return "";
+        return d.time_tracker_dir;
     },
 
     // NOTE: The returned values are cached, use for READ-ONLY!

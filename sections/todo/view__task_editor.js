@@ -75,7 +75,7 @@ var ViewTaskEditor = new Lang.Class({
         //
         // entry
         //
-        this.entry_container = new St.BoxLayout({ vertical: true, style_class: 'row entry-container' });
+        this.entry_container = new St.BoxLayout({ vertical: true, style_class: 'row' });
         this.content_box.add_child(this.entry_container);
 
         this.entry = new MULTIL_ENTRY.MultiLineEntry(_('Task...'), true, true);
@@ -110,7 +110,7 @@ var ViewTaskEditor = new Lang.Class({
 
         this.entry_container.add_child(this.completion_menu);
 
-        this.completion_menu_content = new St.BoxLayout({ vertical: true, reactive: true, style_class: 'view-box-content completion-box' });
+        this.completion_menu_content = new St.BoxLayout({ vertical: true, reactive: true, style_class: 'completion-box' });
         this.completion_menu.add_actor(this.completion_menu_content);
 
 
@@ -126,9 +126,9 @@ var ViewTaskEditor = new Lang.Class({
             this.button_delete.connect('clicked', () => this.emit('delete-task'));
         }
 
-        let current = this.delegate.settings.get_value('todo-current').deep_unpack();
+        let current = this.delegate.get_current_todo_file();
 
-        if (this.mode === 'edit-task' && current.done_file && !task.hidden) {
+        if (this.mode === 'edit-task' && current && current.done_file && !task.hidden) {
             this.button_archive = new St.Button({ can_focus: true, label: _('Archive'), style_class: 'btn-delete button', x_expand: true });
             this.btn_box.add(this.button_archive, {expand: true});
             this.button_archive.connect('clicked', () => this.emit('delete-task', true));
@@ -165,15 +165,14 @@ var ViewTaskEditor = new Lang.Class({
         this.entry.entry.clutter_text.connect('activate', () => {
             if (this.completion_menu.visible) this._on_completion_selected();
         });
-        this.entry.entry.connect('queue-redraw', () => {
+        this.entry.entry.connect('allocation-changed', () => {
             this.entry.scroll_box.vscrollbar_policy = Gtk.PolicyType.NEVER;
 
             if (ext.needs_scrollbar())
                 this.entry.scroll_box.vscrollbar_policy = Gtk.PolicyType.ALWAYS;
         });
-        this.completion_menu_content.connect('queue-redraw', () => {
+        this.completion_menu_content.connect('allocation-changed', () => {
             this.completion_menu.vscrollbar_policy = Gtk.PolicyType.NEVER;
-
             if (this.ext.needs_scrollbar())
                 this.completion_menu.vscrollbar_policy = Gtk.PolicyType.ALWAYS;
         });

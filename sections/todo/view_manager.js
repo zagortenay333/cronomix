@@ -31,7 +31,9 @@ var ViewManager = new Lang.Class({
         this.ext      = ext;
         this.delegate = delegate;
 
-        this.container = this.delegate.content_box;
+        this.lock = false;
+
+        this.container = this.delegate.actor;
 
         this.reset();
     },
@@ -79,8 +81,9 @@ var ViewManager = new Lang.Class({
     //   Function that is used to open the view. If it is not given, then
     //   opening the view means that the actors will be added to the popup menu.
     show_view: function (view_params) {
-        if (typeof this.close_callback === 'function')
-            this.close_callback();
+        if (typeof this.close_callback === 'function') this.close_callback();
+
+        MISC_UTILS.maybe_ignore_release(this.ext.menu.actor);
 
         this.current_view      = view_params.view || null;
         this.current_view_name = view_params.view_name;
@@ -99,11 +102,9 @@ var ViewManager = new Lang.Class({
             }
         }
 
-        MISC_UTILS.maybe_ignore_release(this.ext.menu.actor);
-
         // Because we are tweaking the menu.open func, we must grab the focus
         // with a timeout call..
-        if (this.ext.menu.isOpen)
+        if (view_params.focused_actor && this.ext.menu.isOpen)
             Mainloop.timeout_add(0, () => view_params.focused_actor.grab_key_focus());
     },
 });

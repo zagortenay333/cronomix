@@ -1,7 +1,6 @@
 const St        = imports.gi.St;
 const Gio       = imports.gi.Gio;
 const GLib      = imports.gi.GLib;
-const Shell     = imports.gi.Shell;
 const Clutter   = imports.gi.Clutter;
 const Main      = imports.ui.main;
 const PopupMenu = imports.ui.popupMenu;
@@ -73,7 +72,11 @@ const Timepp = new Lang.Class({
             this._boxPointer.setPosition(this.sourceActor, this._arrowAlignment);
             this._boxPointer.show(false);
             this.actor.raise_top();
-            Mainloop.timeout_add(0, () => that.emit('open-state-changed', true));
+
+            if (Main.panel.menuManager.activeMenu)
+                that.emit('open-state-changed', true);
+            else
+                Mainloop.timeout_add(0, () => that.emit('open-state-changed', true));
         };
 
 
@@ -534,10 +537,9 @@ const Timepp = new Lang.Class({
     // policy is set to AUTOMATIC. The result is an ugly padding on the right
     // when the scrollbar is invisible.
     needs_scrollbar: function () {
-        let max_h = this.menu.actor.get_theme_node().get_max_height();
-        let a     = Shell.util_get_transformed_allocation(this.menu.actor);
-
-        return (a.y2 - a.y1) > max_h;
+        let [min_h,] = this.menu.actor.get_preferred_height(-1);
+        let max_h    = this.menu.actor.get_theme_node().get_max_height();
+        return max_h >= 0 && min_h >= max_h;
     },
 
     destroy: function () {

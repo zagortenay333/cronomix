@@ -2,7 +2,6 @@ const St        = imports.gi.St;
 const Gtk       = imports.gi.Gtk;
 const Clutter   = imports.gi.Clutter;
 const Main      = imports.ui.main;
-const PopupMenu = imports.ui.popupMenu;
 const Lang      = imports.lang;
 const Signals   = imports.signals;
 const Mainloop  = imports.mainloop;
@@ -46,6 +45,7 @@ var ViewDefault = new Lang.Class({
         this.tasks_viewport = [];
 
         this.needs_filtering = true;
+        this.automatic_sort  = this.delegate.get_current_todo_file().automatic_sort;
 
 
         //
@@ -60,7 +60,7 @@ var ViewDefault = new Lang.Class({
         //
         // header
         //
-        this.header = new St.BoxLayout({ x_expand: true, style_class: 'header' });
+        this.header = new St.BoxLayout({ x_expand: true, style_class: 'timepp-menu-item header' });
         this.content_box.add_child(this.header);
 
         this.add_task_button = new St.Button({ can_focus: true, x_align: St.Align.START, style_class: 'add-task' });
@@ -82,8 +82,13 @@ var ViewDefault = new Lang.Class({
         this.icon_box = new St.BoxLayout({ x_align: Clutter.ActorAlign.END, style_class: 'icon-box' });
         this.header.add_child(this.icon_box);
 
+        this.clear_icon = new St.Icon({ icon_name: 'timepp-clear-symbolic', can_focus: true, reactive: true, track_hover: true, y_align: Clutter.ActorAlign.CENTER, style_class: 'clear-icon' });
+        this.icon_box.add_child(this.clear_icon);
+        this.clear_icon.visible = this.delegate.stats.completed > 0;
+
         this.filter_icon = new St.Icon({ can_focus: true, reactive: true, track_hover: true, y_align: Clutter.ActorAlign.CENTER, style_class: 'filter-icon' });
         this.icon_box.add_child(this.filter_icon);
+
         if (this._has_active_filters()) this.filter_icon.add_style_class_name('active');
         else                            this.filter_icon.remove_style_class_name('active');
 
@@ -92,28 +97,23 @@ var ViewDefault = new Lang.Class({
 
         this.sort_icon = new St.Icon({ icon_name: 'timepp-sort-ascending-symbolic', can_focus: true, reactive: true, track_hover: true, y_align: Clutter.ActorAlign.CENTER, style_class: 'sort-icon' });
         this.icon_box.add_child(this.sort_icon);
-        if (this.delegate.cache.automatic_sort) this.sort_icon.add_style_class_name('active');
-        else                                    this.sort_icon.remove_style_class_name('active');
-
-        this.file_switcher_icon = new St.Icon({ icon_name: 'timepp-file-symbolic', can_focus: true, reactive: true, track_hover: true, y_align: Clutter.ActorAlign.CENTER, style_class: 'file-switcher-icon' });
-        this.icon_box.add_child(this.file_switcher_icon);
-        this.file_switcher_icon.visible = (this.delegate.settings.get_value('todo-files').deep_unpack().length > 1);
+        if (this.automatic_sort) this.sort_icon.add_style_class_name('active');
+        else                     this.sort_icon.remove_style_class_name('active');
 
         this.search_icon = new St.Icon({ icon_name: 'timepp-search-symbolic', can_focus: true, reactive: true, track_hover: true, y_align: Clutter.ActorAlign.CENTER, style_class: 'search-icon' });
         this.icon_box.add_child(this.search_icon);
 
+        this.file_switcher_icon = new St.Icon({ icon_name: 'timepp-file-symbolic', can_focus: true, reactive: true, track_hover: true, y_align: Clutter.ActorAlign.CENTER, style_class: 'file-switcher-icon' });
+        this.icon_box.add_child(this.file_switcher_icon);
+
         this.stats_icon = new St.Icon({ icon_name: 'timepp-graph-symbolic', can_focus: true, reactive: true, track_hover: true, y_align: Clutter.ActorAlign.CENTER, style_class: 'stats-icon' });
         this.icon_box.add_child(this.stats_icon);
-
-        this.clear_icon = new St.Icon({ icon_name: 'timepp-clear-symbolic', can_focus: true, reactive: true, track_hover: true, y_align: Clutter.ActorAlign.CENTER, style_class: 'clear-icon' });
-        this.icon_box.add_child(this.clear_icon);
-        this.clear_icon.visible = this.delegate.stats.completed > 0;
 
 
         //
         // task items box
         //
-        this.tasks_scroll = new St.ScrollView({ style_class: 'tasks-container vfade', x_fill: true, y_align: St.Align.START});
+        this.tasks_scroll = new St.ScrollView({ style_class: 'timepp-menu-item tasks-container vfade', x_fill: true, y_align: St.Align.START});
         this.content_box.add(this.tasks_scroll, {expand: true});
 
         this.tasks_scroll.hscrollbar_policy = Gtk.PolicyType.NEVER;
@@ -132,12 +132,13 @@ var ViewDefault = new Lang.Class({
             });
         this.sigm.connect_press(this.add_task_button, Clutter.BUTTON_PRIMARY, true, () => this.delegate.show_view__task_editor());
         this.sigm.connect_press(this.filter_icon, Clutter.BUTTON_PRIMARY, true, () => this.delegate.show_view__filters());
+        this.sigm.connect_on_button(this.filter_icon, Clutter.BUTTON_MIDDLE, () => this._toggle_filters());
         this.sigm.connect_press(this.file_switcher_icon, Clutter.BUTTON_PRIMARY, true, () => this.delegate.show_view__file_switcher());
         this.sigm.connect_press(this.search_icon, Clutter.BUTTON_PRIMARY, true, () => this.delegate.show_view__search());
         this.sigm.connect_press(this.stats_icon, Clutter.BUTTON_PRIMARY, true, () => this.delegate.show_view__time_tracker_stats());
         this.sigm.connect_press(this.clear_icon, Clutter.BUTTON_PRIMARY, true, () => this.delegate.show_view__clear_completed());
         this.sigm.connect_press(this.sort_icon, Clutter.BUTTON_PRIMARY, true, () => this.delegate.show_view__sort());
-        this.sigm.connect_press(this.sort_icon, Clutter.BUTTON_MIDDLE, true, () => this._on_toggle_automatic_sort());
+        this.sigm.connect_on_button(this.sort_icon, Clutter.BUTTON_MIDDLE, () => this._toggle_automatic_sort());
         this.actor.connect('key-press-event', (_, event) => {
             switch (event.get_key_symbol()) {
                 case Clutter.KEY_slash:
@@ -188,14 +189,14 @@ var ViewDefault = new Lang.Class({
 
             if (! this.needs_filtering) {
                 this.tasks_scroll_content.add_child(it.actor);
-                it.dnd.drag_enabled = !this.delegate.cache.automatic_sort;
+                it.dnd.drag_enabled = !this.automatic_sort;
                 it.actor_parent     = this.tasks_scroll_content;
                 it.actor_scrollview = this.tasks_scroll;
                 it.owner            = this;
             } else if (this._filter_test(it, has_active_filters)) {
                 this.tasks_viewport.push(it);
                 this.tasks_scroll_content.add_child(it.actor);
-                it.dnd.drag_enabled = !this.delegate.cache.automatic_sort;
+                it.dnd.drag_enabled = !this.automatic_sort;
                 it.actor_parent     = this.tasks_scroll_content;
                 it.actor_scrollview = this.tasks_scroll;
                 it.owner            = this;
@@ -229,14 +230,14 @@ var ViewDefault = new Lang.Class({
                 it.actor_parent     = this.tasks_scroll_content;
                 it.actor_scrollview = this.tasks_scroll;
                 it.owner            = this;
-                it.dnd.drag_enabled = !this.delegate.cache.automatic_sort;
+                it.dnd.drag_enabled = !this.automatic_sort;
             } else if (this._filter_test(it, has_active_filters)) {
                 this.tasks_viewport.push(it);
                 this.tasks_scroll_content.add_child(it.actor);
                 it.actor_parent     = this.tasks_scroll_content;
                 it.actor_scrollview = this.tasks_scroll;
                 it.owner            = this;
-                it.dnd.drag_enabled = !this.delegate.cache.automatic_sort;
+                it.dnd.drag_enabled = !this.automatic_sort;
             }
         }
 
@@ -356,8 +357,22 @@ var ViewDefault = new Lang.Class({
         this.delegate.write_tasks_to_file();
     },
 
-    _on_toggle_automatic_sort: function () {
-        let state = !this.delegate.cache.automatic_sort;
+    _toggle_filters: function () {
+        let filters = this.delegate.cache.filters;
+
+        filters.invert_filters = !filters.invert_filters;
+        this.filter_icon.icon_name = filters.invert_filters ?
+                                     'timepp-filter-inverted-symbolic' :
+                                     'timepp-filter-symbolic';
+
+        this.needs_filtering = true;
+        this._add_tasks_to_menu();
+
+        this.delegate.store_cache();
+    },
+
+    _toggle_automatic_sort: function () {
+        let state = !this.automatic_sort;
 
         for (let task of this.tasks_viewport) {
             task.dnd.drag_enabled = !state;
@@ -366,7 +381,9 @@ var ViewDefault = new Lang.Class({
         if (state) this.sort_icon.add_style_class_name('active');
         else       this.sort_icon.remove_style_class_name('active');
 
-        this.delegate.cache.automatic_sort = state;
+        this.delegate.get_current_todo_file().automatic_sort = state;
+        this.automatic_sort = state;
+
         this.delegate.store_cache();
         if (state) this.delegate.on_tasks_changed();
     },

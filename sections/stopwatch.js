@@ -2,11 +2,8 @@ const St        = imports.gi.St;
 const Gio       = imports.gi.Gio
 const Gtk       = imports.gi.Gtk;
 const GLib      = imports.gi.GLib;
-const Meta      = imports.gi.Meta;
-const Shell     = imports.gi.Shell;
 const Clutter   = imports.gi.Clutter;
 const Main      = imports.ui.main;
-const PopupMenu = imports.ui.popupMenu;
 const Lang      = imports.lang;
 const Signals   = imports.signals;
 const Mainloop  = imports.mainloop;
@@ -155,13 +152,14 @@ var SectionMain = new Lang.Class({
         //
         // header
         //
-        this.header = new PopupMenu.PopupMenuItem(_('Stopwatch'), { hover: false, activate: false, style_class: 'header' });
-        this.header.actor.can_focus = false;
-        this.header.label.add_style_class_name('clock');
-        this.actor.add_child(this.header.actor);
+        this.header = new St.BoxLayout({ style_class: 'timepp-menu-item header' });
+        this.actor.add_actor(this.header);
+
+        this.header_label = new St.Label({ x_expand: true, text: _('Stopwatch'), style_class: 'clock' });
+        this.header.add_child(this.header_label);
 
         this.icon_box = new St.BoxLayout({ y_align: Clutter.ActorAlign.CENTER, x_align: Clutter.ActorAlign.END, style_class: 'icon-box' });
-        this.header.actor.add(this.icon_box, {expand: true});
+        this.header.add_child(this.icon_box);
 
         this.fullscreen_icon = new St.Icon({ reactive: true, can_focus: true, track_hover: true, icon_name: 'timepp-fullscreen-symbolic', style_class: 'fullscreen-icon' });
         this.icon_box.add_actor(this.fullscreen_icon);
@@ -170,36 +168,24 @@ var SectionMain = new Lang.Class({
         //
         // buttons
         //
-        let btn_box_wrapper = new PopupMenu.PopupMenuItem('', { hover: false, activate: false });
-        this.actor.add_actor(btn_box_wrapper.actor);
-        btn_box_wrapper.label.hide();
-        btn_box_wrapper.actor.can_focus = false;
-
-        this.stopwatch_button_box = new St.BoxLayout({ style_class: 'btn-box' });
-        btn_box_wrapper.actor.add(this.stopwatch_button_box, {expand: true});
-
+        this.stopwatch_button_box = new St.BoxLayout({ x_expand: true, style_class: 'timepp-menu-item btn-box' });
+        this.actor.add_child(this.stopwatch_button_box);
 
         this.button_reset = new St.Button({ can_focus: true, label: _('Reset'), style_class: 'btn-reset button', x_expand: true, visible: false });
         this.button_lap   = new St.Button({ can_focus: true, label: _('Lap'),   style_class: 'btn-lap button',   x_expand: true, visible: false });
         this.button_start = new St.Button({ can_focus: true, label: _('Start'), style_class: 'btn-start button', x_expand: true });
         this.button_stop  = new St.Button({ can_focus: true, label: _('Stop'), style_class: 'btn-stop button',  x_expand: true, visible: false });
-        this.stopwatch_button_box.add(this.button_reset, {expand: true});
-        this.stopwatch_button_box.add(this.button_lap, {expand: true});
-        this.stopwatch_button_box.add(this.button_start, {expand: true});
-        this.stopwatch_button_box.add(this.button_stop, {expand: true});
+        this.stopwatch_button_box.add_child(this.button_reset);
+        this.stopwatch_button_box.add_child(this.button_lap);
+        this.stopwatch_button_box.add_child(this.button_start);
+        this.stopwatch_button_box.add_child(this.button_stop);
 
 
         //
         // laps box
         //
-        this.laps_wrapper = new PopupMenu.PopupMenuItem('', { hover: false, activate: false });
-        this.actor.add(this.laps_wrapper.actor, {expand: true});
-        this.laps_wrapper.actor.can_focus = false;
-        this.laps_wrapper.label.hide();
-        this.laps_wrapper.actor.hide();
-
-        this.laps_scroll = new St.ScrollView({ style_class: 'laps-scrollview vfade', x_fill: true, y_fill: false, y_align: St.Align.START});
-        this.laps_wrapper.actor.add(this.laps_scroll, {expand: true});
+        this.laps_scroll = new St.ScrollView({ visible: false, style_class: 'timepp-menu-item laps-scrollview vfade', x_fill: true, y_fill: false, y_align: St.Align.START});
+        this.actor.add_actor(this.laps_scroll);
 
         this.laps_scroll.vscrollbar_policy = Gtk.PolicyType.NEVER;
         this.laps_scroll.hscrollbar_policy = Gtk.PolicyType.NEVER;
@@ -227,7 +213,7 @@ var SectionMain = new Lang.Class({
             this.panel_item.set_label(txt);
             this.fullscreen.set_banner_text(txt);
         });
-        this.sigm.connect(this.laps_string, 'queue-redraw', () => {
+        this.sigm.connect(this.laps_string, 'allocation-changed', () => {
             this.laps_scroll.vscrollbar_policy = Gtk.PolicyType.NEVER;
             if (ext.needs_scrollbar())
                 this.laps_scroll.vscrollbar_policy = Gtk.PolicyType.ALWAYS;
@@ -347,7 +333,7 @@ var SectionMain = new Lang.Class({
         this._toggle_buttons();
         this._panel_item_UI_update();
         this._destroy_laps();
-        this.header.label.text = _('Stopwatch');
+        this.header_label.text = _('Stopwatch');
     },
 
     stopwatch_toggle: function () {
@@ -377,7 +363,7 @@ var SectionMain = new Lang.Class({
     _update_time_display: function () {
         let txt = this._time_format_str();
 
-        this.header.label.text = txt;
+        this.header_label.text = txt;
         this.panel_item.set_label(txt);
         this.fullscreen.set_banner_text(txt);
     },
@@ -435,12 +421,12 @@ var SectionMain = new Lang.Class({
 
         this.laps_string.clutter_text.set_markup(markup);
         this.fullscreen.laps_string.clutter_text.set_markup(markup);
-        this.laps_wrapper.actor.show();
+        this.laps_scroll.show();
         this.fullscreen.laps_scroll.show();
     },
 
     _destroy_laps: function () {
-        this.laps_wrapper.actor.hide();
+        this.laps_scroll.hide();
         this.laps_string.text = '';
     },
 

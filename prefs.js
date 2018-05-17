@@ -27,243 +27,13 @@ const Settings = new Lang.Class({
         }
 
         this.builder = new Gtk.Builder();
-
         this.builder.set_translation_domain(ME.metadata['gettext-domain']);
         this.builder.add_from_file(ME.path + '/data/prefs.ui');
 
-        this.selected_row = null;
-
-
-        this.widget             = this.builder.get_object('settings_widget');
-        this.add_dialog_content = this.builder.get_object('add-dialog-content');
-        this.list_store         = this.builder.get_object('list-store');
-        this.todo_name_entry    = this.builder.get_object('todo-name-entry');
-        this.todo_file_chooser  = this.builder.get_object('todo-file-chooser');
-        this.done_file_chooser  = this.builder.get_object('done-file-chooser');
-        this.csv_dir_chooser    = this.builder.get_object('csv-dir-chooser');
-        this.tree_add_button    = this.builder.get_object('tree-add-button');
-        this.tree_remove_button = this.builder.get_object('tree-remove-button');
-        this.tree_edit_button   = this.builder.get_object('tree-edit-button');
+        this.widget = this.builder.get_object('settings_widget');
         this.switcher = new Gtk.StackSwitcher({ visible: true, stack: this.builder.get_object('settings_stack'), halign: Gtk.Align.CENTER, });
 
         this._bind_settings();
-
-
-        //
-        // listen
-        //
-        this.builder.get_object('treeview-selection')
-        .connect('changed', (selection) => {
-            this.selected_row = selection.get_selected_rows()[0][0];
-            this.tree_remove_button.sensitive = Boolean(this.selected_row);
-            this.tree_edit_button.sensitive   = Boolean(this.selected_row);
-        });
-
-        this.tree_add_button.connect('clicked', () => {
-            this._show_dialog();
-        });
-
-        this.tree_edit_button.connect('clicked', () => {
-            let [success, iter] = this.list_store.get_iter(this.selected_row);
-
-            this._show_dialog({
-                iter      : iter,
-                name      : this.list_store.get_value(iter, 0),
-                todo_file : this.list_store.get_value(iter, 1),
-                done_file : this.list_store.get_value(iter, 2),
-                csv_dir   : this.list_store.get_value(iter, 3),
-            });
-        });
-
-        this.tree_remove_button.connect('clicked', () => {
-            let todo_files = this.settings.get_value('todo-files').deep_unpack();
-            let [success, iter] = this.list_store.get_iter(this.selected_row);
-            let name = this.list_store.get_value(iter, 0);
-            let current = this.settings.get_value('todo-current').deep_unpack();
-
-            for (let i = 0; i < todo_files.length; i++) {
-                if (todo_files[i].name === name)
-                    todo_files.splice(i, 1);
-            }
-
-            this.list_store.remove(iter);
-            this.settings.set_value('todo-files',
-                                    GLib.Variant.new('aa{ss}', todo_files));
-
-            if (current.name === name) {
-                if (todo_files.length > 0) {
-                    this.settings.set_value('todo-current',
-                                             GLib.Variant.new('a{ss}', todo_files[0]));
-                }
-                else {
-                    this.settings.set_value('todo-current',
-                                            GLib.Variant.new('a{ss}', {}));
-                }
-            }
-        });
-    },
-
-    _show_dialog: function (todo_entry) {
-        let dialog = new Gtk.Dialog({
-            title: '',
-            transient_for: this.widget.get_toplevel(),
-            use_header_bar: true,
-            modal: true,
-        });
-
-        if (todo_entry) {
-            this.todo_name_entry.set_text(todo_entry.name);
-            this.todo_file_chooser.set_uri(todo_entry.todo_file);
-            this.done_file_chooser.set_uri(todo_entry.done_file);
-            this.csv_dir_chooser.set_uri(todo_entry.csv_dir);
-        }
-
-
-        let todo_files = this.settings.get_value('todo-files').deep_unpack();
-
-
-        //
-        // headerbar buttons
-        //
-        let header_bar = dialog.get_header_bar();
-
-        header_bar.show_close_button = false;
-
-        let cancel_button = new Gtk.Button({ label: _('Cancel') });
-        let ok_button    = new Gtk.Button({ label: _('Ok'), sensitive: false });
-
-        header_bar.pack_start(cancel_button);
-        header_bar.pack_end(ok_button);
-
-        dialog.get_content_area().add(this.add_dialog_content);
-
-
-        //
-        // listen
-        //
-        let file_chooser_signal_id =
-        this.todo_file_chooser.connect('selection-changed', () => {
-            if (this.todo_name_entry.get_text() &&
-                this.todo_file_chooser.get_uri()) {
-
-                ok_button.sensitive = true;
-                ok_button.get_style_context().add_class('suggested-action');
-            }
-            else {
-                ok_button.sensitive = false;
-                ok_button.get_style_context().remove_class('suggested-action');
-            }
-        });
-
-        let name_entry_signal_id =
-        this.todo_name_entry.connect('changed', () => {
-            let text = this.todo_name_entry.get_text();
-
-            if (text && this.todo_file_chooser.get_uri()) {
-                ok_button.sensitive = true;
-                ok_button.get_style_context().add_class('suggested-action');
-            }
-            else {
-                ok_button.sensitive = false;
-                ok_button.get_style_context().remove_class('suggested-action');
-            }
-
-            this.todo_name_entry['secondary-icon-name'] = null;
-
-            for (let i = 0; i < todo_files.length; i++) {
-                if (todo_files[i].name === text) {
-                    if (todo_entry && todo_entry.name === text) break;
-
-                    ok_button.sensitive = false;
-                    this.todo_name_entry['secondary-icon-name'] =
-                        'dialog-warning-symbolic';
-                }
-            }
-        });
-
-        ok_button.connect('clicked', () => {
-            let result = {
-                'name'      : this.todo_name_entry.get_text(),
-                'todo_file' : this.todo_file_chooser.get_uri(),
-                'done_file' : (this.done_file_chooser.get_uri() || ''),
-                'csv_dir'   : (this.csv_dir_chooser.get_uri()   || ''),
-            };
-
-            let current_todo = this.settings.get_value('todo-current')
-                               .deep_unpack();
-
-            if (todo_entry) {
-                this.list_store.set_value(todo_entry.iter, 0, result.name);
-                this.list_store.set_value(todo_entry.iter, 1, result.todo_file);
-                this.list_store.set_value(todo_entry.iter, 2, result.done_file);
-                this.list_store.set_value(todo_entry.iter, 3, result.csv_dir);
-
-                for (let i = 0; i < todo_files.length; i++) {
-                    if (todo_files[i].name === todo_entry.name)
-                        todo_files[i] = result;
-                }
-
-                if (todo_entry.name === current_todo.name) {
-                    this.settings.set_value('todo-current',
-                                            GLib.Variant.new('a{ss}', result));
-                }
-            }
-            else {
-                let iter = this.list_store.append();
-
-                this.list_store.set_value(iter, 0, result.name);
-                this.list_store.set_value(iter, 1, result.todo_file);
-                this.list_store.set_value(iter, 2, result.done_file);
-                this.list_store.set_value(iter, 3, result.csv_dir);
-
-                todo_files.push(result);
-
-                if (!current_todo.name) {
-                    this.settings.set_value('todo-current',
-                                            GLib.Variant.new('a{ss}', result));
-                }
-            }
-
-            this.settings.set_value('todo-files', GLib.Variant.new('aa{ss}', todo_files));
-
-            dialog.get_content_area().remove(this.add_dialog_content);
-            this.todo_name_entry.disconnect(name_entry_signal_id);
-            this.todo_file_chooser.disconnect(file_chooser_signal_id);
-            this._reset_add_dialog();
-            dialog.destroy();
-        });
-
-        cancel_button.connect('clicked', () => {
-            dialog.get_content_area().remove(this.add_dialog_content);
-            this.todo_name_entry.disconnect(name_entry_signal_id);
-            this.todo_file_chooser.disconnect(file_chooser_signal_id);
-            this._reset_add_dialog();
-            dialog.destroy();
-        });
-
-        dialog.connect('response', () => {
-            dialog.get_content_area().remove(this.add_dialog_content);
-            this.todo_name_entry.disconnect(name_entry_signal_id);
-            this.todo_file_chooser.disconnect(file_chooser_signal_id);
-            this._reset_add_dialog();
-        });
-
-
-        //
-        // show
-        //
-        dialog.show_all();
-    },
-
-    _reset_add_dialog: function () {
-        this.todo_name_entry.set_text('');
-        this.todo_file_chooser.unselect_all();
-        this.done_file_chooser.unselect_all();
-
-        // @HACK
-        // There appears to be no other way to reset a gtk_file_chooser that is
-        // used for folder selecting.
-        this.csv_dir_chooser.set_uri('');
     },
 
     // Bind the gtk window to the schema settings
@@ -271,7 +41,7 @@ const Settings = new Lang.Class({
         let widget;
 
         //
-        // General
+        // @@@ General
         //
         this.settings.bind(
             'unicon-mode',
@@ -802,17 +572,6 @@ const Settings = new Lang.Class({
                 this.settings.set_strv('todo-keybinding-open-todotxt-file', ['']);
             }
         });
-
-        let todo_files = this.settings.get_value('todo-files').deep_unpack();
-        for (let i = 0; i < todo_files.length; i++) {
-            let row = this.list_store.append();
-            let it  = todo_files[i];
-
-            this.list_store.set_value(row, 0, it.name);
-            this.list_store.set_value(row, 1, it.todo_file);
-            this.list_store.set_value(row, 2, it.done_file);
-            this.list_store.set_value(row, 3, it.csv_dir);
-        }
     },
 });
 

@@ -234,14 +234,6 @@
             <default>true</default>
         </key>
 
-        <key name="todo-current" type="a{ss}">
-            <default>{}</default>
-        </key>
-
-        <key name="todo-files" type="aa{ss}">
-            <default>[]</default>
-        </key>
-
         <key name="todo-stats-heatmap-visible" type="b">
             <default>true</default>
         </key>

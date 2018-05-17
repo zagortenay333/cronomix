@@ -2,8 +2,6 @@ const St           = imports.gi.St;
 const Gio          = imports.gi.Gio
 const Gtk          = imports.gi.Gtk;
 const GLib         = imports.gi.GLib;
-const Meta         = imports.gi.Meta;
-const Shell        = imports.gi.Shell;
 const Pango        = imports.gi.Pango;
 const GnomeDesktop = imports.gi.GnomeDesktop;
 const Clutter      = imports.gi.Clutter;
@@ -147,21 +145,19 @@ var SectionMain = new Lang.Class({
         // add new alarm item
         //
         {
-            this.header = new PopupMenu.PopupMenuItem('', { hover: false, activate: false, style_class: 'header' });
-            this.actor.add_actor(this.header.actor);
-            this.header.label.hide();
-            this.header.actor.can_focus = false;
+            this.header = new St.BoxLayout({ x_expand: true, style_class: 'timepp-menu-item header' });
+            this.actor.add_actor(this.header);
 
-            this.add_alarm_button = new St.Button({ can_focus: true, x_align: St.Align.START, style_class: 'add-alarm' });
-            this.header.actor.add(this.add_alarm_button, { expand: true });
+            this.add_alarm_button = new St.Button({ x_expand: true, can_focus: true, x_align: St.Align.START, style_class: 'add-alarm' });
+            this.header.add_actor(this.add_alarm_button);
 
-            let box = new St.BoxLayout();
+            let box = new St.BoxLayout({ x_expand: true });
             this.add_alarm_button.add_actor(box);
 
             let icon = new St.Icon({ icon_name: 'timepp-plus-symbolic' });
             box.add_child(icon);
 
-            let label = new St.Label({ text: _('Add New Alarm...'), y_align: Clutter.ActorAlign.CENTER });
+            let label = new St.Label({ x_expand: true, text: _('Add New Alarm...'), y_align: Clutter.ActorAlign.CENTER });
             box.add_actor(label);
         }
 
@@ -192,7 +188,7 @@ var SectionMain = new Lang.Class({
             this.separate_menu = this.settings.get_boolean('alarms-separate-menu');
             this.ext.update_panel_items();
         });
-        this.sigm.connect(this.alarms_scroll_content, 'queue-redraw', () => {
+        this.sigm.connect(this.alarms_scroll_content, 'allocation-changed', () => {
             this.alarms_scroll.vscrollbar_policy = Gtk.PolicyType.NEVER;
             if (ext.needs_scrollbar())
                 this.alarms_scroll.vscrollbar_policy = Gtk.PolicyType.ALWAYS;
@@ -273,7 +269,7 @@ var SectionMain = new Lang.Class({
 
         this.actor.insert_child_at_index(editor.actor, 0);
         editor.button_cancel.grab_key_focus();
-        this.header.actor.hide();
+        this.header.hide();
         this.alarms_scroll_wrapper.actor.hide();
 
         if (! alarm_item) {
@@ -282,7 +278,7 @@ var SectionMain = new Lang.Class({
                 this._store_cache();
                 this._add_alarm(alarm);
 
-                this.header.actor.show();
+                this.header.show();
                 this.alarms_scroll_wrapper.actor.show();
                 this.add_alarm_button.grab_key_focus();
                 editor.actor.destroy();
@@ -305,7 +301,7 @@ var SectionMain = new Lang.Class({
                 }
 
                 this._update_panel_item_UI();
-                this.header.actor.show();
+                this.header.show();
                 this.alarms_scroll_wrapper.actor.show();
                 this.add_alarm_button.grab_key_focus();
                 editor.actor.destroy();
@@ -314,7 +310,7 @@ var SectionMain = new Lang.Class({
             });
 
             editor.connect('delete-alarm', () => {
-                this.header.actor.show();
+                this.header.show();
                 this.alarms_scroll_wrapper.actor.show();
                 this.add_alarm_button.grab_key_focus();
                 editor.actor.destroy();
@@ -325,7 +321,7 @@ var SectionMain = new Lang.Class({
         }
 
         editor.connect('cancel', () => {
-            this.header.actor.show();
+            this.header.show();
             this.add_alarm_button.grab_key_focus();
             editor.actor.destroy();
 
@@ -620,7 +616,7 @@ const AlarmEditor = new Lang.Class({
         this.checkbox_item.connect('button-press-event', () => {
             this.sound_checkbox.actor.checked = !this.sound_checkbox.actor.checked;
         });
-        this.entry.entry.connect('queue-redraw', () => {
+        this.entry.entry.connect('allocation-changed', () => {
             this.entry.scroll_box.vscrollbar_policy = Gtk.PolicyType.NEVER;
 
             if (this.ext.needs_scrollbar())
@@ -669,7 +665,7 @@ const AlarmItem = new Lang.Class({
         //
         // header
         //
-        this.header = new St.BoxLayout({style_class: 'alarm-item-header'});
+        this.header = new St.BoxLayout({ style_class: 'alarm-item-header' });
         this.alarm_item_content.add_actor(this.header);
 
         this.time = new St.Label({ y_align: St.Align.END, x_align: St.Align.START, style_class: 'alarm-item-time' });
@@ -714,7 +710,7 @@ const AlarmItem = new Lang.Class({
         this.toggle_bin.connect('clicked', () => this._on_toggle());
         this.delegate.sigm.connect_press(this.edit_icon, Clutter.BUTTON_PRIMARY, true, () => this._on_edit());
         this.ext.connect('custom-css-changed', () => this._on_custom_css_updated());
-        this.actor.connect('queue-redraw', () => MISC_UTILS.resize_label(this.msg));
+        this.actor.connect('allocation-changed', () => MISC_UTILS.resize_label(this.msg));
         this.actor.connect('enter-event',  () => this.edit_icon.show());
         this.actor.connect('event', (actor, event) => this._on_event(actor, event));
     },
@@ -971,7 +967,7 @@ const AlarmFullscreen = new Lang.Class({
                 [REG.FILE_PATH , MISC_UTILS.open_file_path],
             ]));
 
-            alarm_card.connect('queue-redraw', () => MISC_UTILS.resize_label(body));
+            alarm_card.connect('allocation-changed', () => MISC_UTILS.resize_label(body));
         }
     },
 });

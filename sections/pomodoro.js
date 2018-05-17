@@ -1,14 +1,10 @@
 const St          = imports.gi.St;
 const Gio         = imports.gi.Gio
 const GLib        = imports.gi.GLib;
-const Meta        = imports.gi.Meta;
-const Shell       = imports.gi.Shell;
 const Clutter     = imports.gi.Clutter;
 const MessageTray = imports.ui.messageTray;
 const Main        = imports.ui.main;
 const CheckBox    = imports.ui.checkBox;
-const PopupMenu   = imports.ui.popupMenu;
-const Util        = imports.misc.util;
 const Lang        = imports.lang;
 const Signals     = imports.signals;
 const Mainloop    = imports.mainloop;
@@ -157,26 +153,26 @@ var SectionMain = new Lang.Class({
         //
         // header
         //
-        this.header = new PopupMenu.PopupMenuItem(_('Pomodoro'), { hover: false, activate: false, style_class: 'header' });
-        this.header.actor.can_focus = false;
-        this.header.label.x_expand = true;
-        this.header.label.add_style_class_name('clock');
-        this.actor.add_actor(this.header.actor);
+        this.header = new St.BoxLayout({ style_class: 'timepp-menu-item header' });
+        this.actor.add_actor(this.header);
+
+        this.header_label = new St.Label({ x_expand: true, text: _('Timer'), style_class: 'clock' });
+        this.header.add_child(this.header_label);
 
 
         // pomo phase label
         this.phase_label = new St.Label({ y_align: Clutter.ActorAlign.CENTER, style_class: 'pomo-phase-label popup-inactive-menu-item', pseudo_class: 'insensitive' });
-        this.header.actor.add_child(this.phase_label);
+        this.header.add_child(this.phase_label);
 
 
         // clock
         this.clock_label = new St.Label({ y_align: Clutter.ActorAlign.CENTER, style_class: 'pomo-counter' });
-        this.header.actor.add_child(this.clock_label);
+        this.header.add_child(this.clock_label);
 
 
         // icons
         this.icon_box = new St.BoxLayout({ y_align: Clutter.ActorAlign.CENTER, x_align: Clutter.ActorAlign.END, style_class: 'icon-box' });
-        this.header.actor.add_actor(this.icon_box);
+        this.header.add_actor(this.icon_box);
 
         this.fullscreen_icon = new St.Icon({ reactive: true, can_focus: true, track_hover: true, icon_name: 'timepp-fullscreen-symbolic', style_class: 'fullscreen-icon' });
         this.icon_box.add_actor(this.fullscreen_icon);
@@ -188,23 +184,18 @@ var SectionMain = new Lang.Class({
         //
         // buttons
         //
-        this.btn_box_wrapper = new PopupMenu.PopupMenuItem('', { hover: false, activate: false });
-        this.actor.add_actor(this.btn_box_wrapper.actor);
-        this.btn_box_wrapper.label.hide();
-        this.btn_box_wrapper.actor.can_focus = false;
-
-        this.button_box = new St.BoxLayout({ style_class: 'btn-box' });
-        this.btn_box_wrapper.actor.add(this.button_box, {expand: true});
+        this.button_box = new St.BoxLayout({ x_expand: true, style_class: 'timepp-menu-item btn-box' });
+        this.actor.add(this.button_box);
 
         this.button_new_pomo   = new St.Button({can_focus:  true, label: _('New Pomo'), x_expand: true, style_class: 'button'});
         this.button_take_break = new St.Button({can_focus: true, label: _('Take Break'), x_expand: true, visible: false, style_class: 'button'});
         this.button_continue   = new St.Button({can_focus: true, label: _('Continue'), x_expand: true, visible: false, style_class: 'button'});
         this.button_stop       = new St.Button({can_focus: true, label: _('Stop'), x_expand: true, visible: false, style_class: 'button'});
 
-        this.button_box.add(this.button_new_pomo, {expand: true});
-        this.button_box.add(this.button_take_break, {expand: true});
-        this.button_box.add(this.button_continue, {expand: true});
-        this.button_box.add(this.button_stop, {expand: true});
+        this.button_box.add_actor(this.button_new_pomo);
+        this.button_box.add_actor(this.button_take_break);
+        this.button_box.add_actor(this.button_continue);
+        this.button_box.add_actor(this.button_stop);
 
 
         //
@@ -244,7 +235,7 @@ var SectionMain = new Lang.Class({
         this.clock            = this.cache.pomo_duration * 1000000;
 
         this._update_time_display();
-        this.header.label.text = _('Pomodoro');
+        this.header_label.text = _('Pomodoro');
     },
 
     disable_section: function () {
@@ -275,8 +266,8 @@ var SectionMain = new Lang.Class({
         this.settings_container.add_actor(settings.actor);
         settings.button_cancel.grab_key_focus();
 
-        this.header.actor.hide();
-        this.btn_box_wrapper.actor.hide();
+        this.header.hide();
+        this.button_box.hide();
 
         settings.connect('ok', (_, res) => {
             this.cache.todo_task_id = res.todo_task_id;
@@ -290,19 +281,19 @@ var SectionMain = new Lang.Class({
             if (res.clear_counter)
                 this.clear_pomo_counter();
 
-            this.btn_box_wrapper.actor.show();
+            this.button_box.show();
             this.button_box.grab_key_focus();
             settings.actor.destroy();
-            this.header.actor.show();
+            this.header.show();
 
             this._update_time_display();
         });
 
         settings.connect('cancel', () => {
-            this.btn_box_wrapper.actor.show();
+            this.button_box.show();
             this.actor.grab_key_focus();
             settings.actor.destroy();
-            this.header.actor.show();
+            this.header.show();
         });
     },
 
@@ -350,7 +341,7 @@ var SectionMain = new Lang.Class({
 
         if (this.pomo_state !== PomoState.POMO) {
             this.clock             = this.cache.pomo_duration;
-            this.header.label.text = _('Pomodoro');
+            this.header_label.text = _('Pomodoro');
         }
 
         this.sound_player.stop();
@@ -514,7 +505,7 @@ var SectionMain = new Lang.Class({
             );
         }
 
-        this.header.label.text = txt;
+        this.header_label.text = txt;
         this.panel_item.set_label(txt);
         this.fullscreen.set_banner_text(txt);
     },

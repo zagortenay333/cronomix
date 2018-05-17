@@ -233,7 +233,7 @@ var ViewFilters = new Lang.Class({
             this.filter_register.custom.push(item);
             this.entry.entry.text = '';
         });
-        this.filter_sectors_scroll_box.connect('queue-redraw', () => {
+        this.filter_sectors_scroll_box.connect('allocation-changed', () => {
             this.filter_sectors_scroll.vscrollbar_policy = Gtk.PolicyType.NEVER;
 
             if (this.ext.needs_scrollbar())

@@ -2,13 +2,9 @@ const St          = imports.gi.St;
 const Gio         = imports.gi.Gio
 const Gtk         = imports.gi.Gtk;
 const GLib        = imports.gi.GLib;
-const Meta        = imports.gi.Meta;
-const Shell       = imports.gi.Shell;
-const Pango       = imports.gi.Pango;
 const Clutter     = imports.gi.Clutter;
 const Main        = imports.ui.main;
 const CheckBox    = imports.ui.checkBox;
-const PopupMenu   = imports.ui.popupMenu;
 const MessageTray = imports.ui.messageTray;
 const Slider      = imports.ui.slider;
 const Lang        = imports.lang;
@@ -168,16 +164,16 @@ var SectionMain = new Lang.Class({
 
 
         //
-        // item with the time display, switcher and settings icon
+        // header
         //
-        this.header = new PopupMenu.PopupMenuItem(_('Timer'), { hover: false, activate: false, style_class: 'header' });
-        this.header.actor.can_focus = false;
-        this.header.label.x_expand = true;
-        this.header.label.add_style_class_name('clock');
-        this.actor.add_actor(this.header.actor);
+        this.header = new St.BoxLayout({ style_class: 'timepp-menu-item header' });
+        this.actor.add_actor(this.header);
+
+        this.header_label = new St.Label({ x_expand: true, text: _('Timer'), style_class: 'clock' });
+        this.header.add_child(this.header_label);
 
         this.icon_box = new St.BoxLayout({ y_align: Clutter.ActorAlign.CENTER, style_class: 'icon-box' });
-        this.header.actor.add(this.icon_box);
+        this.header.add(this.icon_box);
 
         this.start_pause_icon = new St.Icon({ visible: false, reactive: true, can_focus: true, track_hover: true, icon_name: 'timepp-pause-symbolic', style_class: 'pause-icon' });
         this.icon_box.add_actor(this.start_pause_icon);
@@ -192,10 +188,12 @@ var SectionMain = new Lang.Class({
         //
         // timer slider
         //
-        this.slider_item = new PopupMenu.PopupBaseMenuItem({ activate: false });
-        this.actor.add_actor(this.slider_item.actor);
-        this.slider = new Slider.Slider(0);
-        this.slider_item.actor.add(this.slider.actor, { expand: true });
+        {
+            this.slider_item = new St.BoxLayout({ vertical: true, style_class: 'timepp-menu-item' });
+            this.actor.add_child(this.slider_item);
+            this.slider = new Slider.Slider(0);
+            this.slider_item.add_actor(this.slider.actor);
+        }
 
 
         //
@@ -225,7 +223,6 @@ var SectionMain = new Lang.Class({
         this.sigm.connect(this.slider, 'value-changed', (slider, value) => this.slider_changed(slider, value));
         this.sigm.connect(this.slider, 'drag-end', () => this.slider_released());
         this.sigm.connect(this.slider.actor, 'scroll-event', () => this.slider_released());
-        this.sigm.connect(this.slider_item.actor, 'button-press-event', (_, event) => this.slider.startDragging(event));
     },
 
     disable_section: function () {
@@ -332,7 +329,7 @@ var SectionMain = new Lang.Class({
         this.slider.setValue(0);
         this.fullscreen.on_timer_off();
         this.timer_state = TimerState.OFF;
-        this.header.label.text = _('Timer');
+        this.header_label.text = _('Timer');
         this.start_pause_icon.hide();
         this.panel_item.actor.remove_style_class_name('on');
     },
@@ -382,7 +379,7 @@ var SectionMain = new Lang.Class({
             );
         }
 
-        this.header.label.text = txt;
+        this.header_label.text = txt;
         this.panel_item.set_label(txt);
         this.fullscreen.set_banner_text(txt);
     },
@@ -494,14 +491,14 @@ var SectionMain = new Lang.Class({
         this.timepicker_container.add_actor(presets_view.actor);
 
         Mainloop.timeout_add(0, () => presets_view.entry.entry.grab_key_focus());
-        this.header.actor.hide();
-        this.slider_item.actor.hide();
+        this.header.hide();
+        this.slider_item.hide();
 
         presets_view.connect('start-timer', (_, preset) => {
             this.actor.grab_key_focus();
             presets_view.actor.destroy();
-            this.header.actor.show();
-            this.slider_item.actor.show();
+            this.header.show();
+            this.slider_item.show();
             this.start_from_preset(preset);
             this.ext.menu.close(false);
         });
@@ -531,8 +528,8 @@ var SectionMain = new Lang.Class({
         presets_view.connect('ok', () => {
             this.actor.grab_key_focus();
             presets_view.actor.destroy();
-            this.header.actor.show();
-            this.slider_item.actor.show();
+            this.header.show();
+            this.slider_item.show();
         });
     },
 
@@ -612,18 +609,14 @@ const TimerPresetsView = new Lang.Class({
         //
         this.actor = new St.BoxLayout({ x_expand: true, vertical: true, style_class: 'view-box' });
 
-        this.inner_box = new St.BoxLayout({ x_expand: true, vertical: true, style_class: 'view-box-content' });
-        this.actor.add_actor(this.inner_box);
-
-        // We add an extra inner box because we nest the presets editor.
-        this.content_box = new St.BoxLayout({ x_expand: true, vertical: true });
-        this.inner_box.add_child(this.content_box);
+        this.content_box = new St.BoxLayout({ x_expand: true, vertical: true, style_class: 'view-box-content' });
+        this.actor.add_actor(this.content_box);
 
 
         //
         // search presets entry
         //
-        this.entry = new MULTIL_ENTRY.MultiLineEntry(_('Search presets...'), true);
+        this.entry = new MULTIL_ENTRY.MultiLineEntry(_('Search...'), true);
         this.content_box.add(this.entry.actor);
         this.entry.actor.add_style_class_name('row');
         this.entry.scroll_box.vscrollbar_policy = Gtk.PolicyType.NEVER;
@@ -674,11 +667,11 @@ const TimerPresetsView = new Lang.Class({
         //
         // listen
         //
-        this.preset_items_scrollbox.connect('queue-redraw', () => {
+        this.preset_items_scrollbox.connect('allocation-changed', () => {
             this.preset_items_scrollview.vscrollbar_policy = Gtk.PolicyType.NEVER;
             if (ext.needs_scrollbar()) this.preset_items_scrollview.vscrollbar_policy = Gtk.PolicyType.ALWAYS;
         });
-        this.entry.entry.connect('queue-redraw', () => {
+        this.entry.entry.connect('allocation-changed', () => {
             this.entry.scroll_box.vscrollbar_policy = Gtk.PolicyType.NEVER;
             if (ext.needs_scrollbar()) this.entry.scroll_box.vscrollbar_policy = Gtk.PolicyType.ALWAYS;
         });
@@ -715,7 +708,7 @@ const TimerPresetsView = new Lang.Class({
 
         let editor = new TimerPresetEditor(this.ext, this.delegate, preset, is_deletable);
 
-        this.inner_box.add_child(editor.actor);
+        this.actor.add_child(editor.actor);
         editor.entry.entry.grab_key_focus();
         this.content_box.hide();
 
@@ -997,7 +990,7 @@ const TimerPresetEditor = new Lang.Class({
         //
         // listen
         //
-        this.entry.entry.connect('queue-redraw', () => {
+        this.entry.entry.connect('allocation-changed', () => {
             this.entry.scroll_box.vscrollbar_policy = Gtk.PolicyType.NEVER;
             if (ext.needs_scrollbar()) this.entry.scroll_box.vscrollbar_policy = Gtk.PolicyType.ALWAYS;
         });

@@ -17,7 +17,7 @@ const PANEL_ITEM = ME.imports.lib.panel_item;
 // @settings : obj (extension settings)
 //
 // @signals:
-//     - 'section-open-state-changed' (return bool (state))
+//     - 'section-open-state-changed' returns bool
 // =====================================================================
 var SectionBase = new Lang.Class({
     Name: 'Timepp.SectionBase',
@@ -30,7 +30,7 @@ var SectionBase = new Lang.Class({
         this.separate_menu = false;
 
         this.panel_item = new PANEL_ITEM.PanelItem(ext.menu);
-        this.actor      = new St.BoxLayout({ x_expand: true, y_expand: true, vertical: true, style_class: 'section' });
+        this.actor      = new St.BoxLayout({ vertical: true, style_class: 'section' });
 
 
         //

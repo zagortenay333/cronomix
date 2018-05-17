@@ -1,6 +1,5 @@
 const St        = imports.gi.St;
 const Gio       = imports.gi.Gio
-const Shell     = imports.gi.Shell;
 const PopupMenu = imports.ui.popupMenu;
 const Util      = imports.misc.util;
 const Lang      = imports.lang;
@@ -19,7 +18,7 @@ const MISC_UTILS = ME.imports.lib.misc_utils;
 
 
 // =====================================================================
-// @@@ Context Menu
+// @@@ ContextMenu
 //
 // @ext: obj (main extension object)
 // =====================================================================
@@ -33,16 +32,16 @@ var ContextMenu = new Lang.Class({
         //
         // items
         //
-        this.settings_link = new MenuItem('timepp-wrench-symbolic', _('Open settings'));
+        this.settings_link = new PopupMenuIconItem('timepp-wrench-symbolic', _('Open settings'));
         this.actor.add_actor(this.settings_link.actor);
 
-        this.website_link = new MenuItem('timepp-link-symbolic', _('Go to extension website'));
+        this.website_link = new PopupMenuIconItem('timepp-link-symbolic', _('Go to extension website'));
         this.actor.add_actor(this.website_link.actor);
 
-        this.report_bug_link = new MenuItem('timepp-issue-symbolic', _('Report bug'));
+        this.report_bug_link = new PopupMenuIconItem('timepp-issue-symbolic', _('Report bug'));
         this.actor.add_actor(this.report_bug_link.actor);
 
-        this.translations_link = new MenuItem('timepp-translate-symbolic', _('Help with translations'));
+        this.translations_link = new PopupMenuIconItem('timepp-translate-symbolic', _('Help with translations'));
         this.actor.add_actor(this.translations_link.actor);
 
 
@@ -70,12 +69,12 @@ var ContextMenu = new Lang.Class({
 
 
 // =====================================================================
-// @@@ The popupmenuitem with icons on the left side
+// @@@ PopupMenuIconItem
 //
 // @icon_name : string
 // @label     : string
 // =====================================================================
-const MenuItem = new Lang.Class({
+const PopupMenuIconItem = new Lang.Class({
     Name    : 'Timepp.PopupMenuIconItem',
     Extends : PopupMenu.PopupBaseMenuItem,
 
