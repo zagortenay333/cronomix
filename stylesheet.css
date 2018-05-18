@@ -422,21 +422,25 @@
  * ===================================================================== */
 .timepp-menu .pomo-section {}
 
+.timepp-menu .pomo-section .header {
+    spacing: .7em;
+}
+
 .timepp-menu .pomo-section .btn-new {}
 .timepp-menu .pomo-section .btn-break {}
 .timepp-menu .pomo-section .btn-start {}
 .timepp-menu .pomo-section .btn-stop {}
 
 
-.timepp-menu .pomo-section .pomo-counter {
-    color: #38ae72;
-    font-weight: bold;
-}
-
 .timepp-fullscreen.pomo-running .close-icon:hover StIcon,
 .timepp-fullscreen.pomo-short-break .close-icon:hover StIcon,
 .timepp-fullscreen.pomo-long-break .close-icon:hover StIcon {
     color: rgba(0, 0, 0, .5);
+}
+
+.timepp-menu .pomo-section .pomo-counter {
+    color: #38ae72;
+    font-weight: bold;
 }
 
 .timepp-menu .pomo-section .pomo-phase-label {
