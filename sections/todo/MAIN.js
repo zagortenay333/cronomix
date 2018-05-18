@@ -276,7 +276,7 @@ var SectionMain = new Lang.Class({
     },
 
     _init_todo_file: function () {
-        this.show_view__loading();
+        this.show_view__loading(true);
         this.view_manager.lock = true;
 
         // reset
@@ -628,7 +628,7 @@ var SectionMain = new Lang.Class({
         }
 
         this.sort_tasks();
-        this.show_view__default();
+        this.show_view__default(true);
         if (write_to_file) this.write_tasks_to_file();
     },
 
@@ -926,6 +926,8 @@ var SectionMain = new Lang.Class({
         if (unlock) this.view_manager.lock = false;
         else if (this.view_manager.lock) return;
 
+        this.view_manager.lock = true;
+
         let view = new VIEW_TASK_EDITOR.ViewTaskEditor(this.ext, this, task);
 
         this.view_manager.show_view({
@@ -962,7 +964,7 @@ var SectionMain = new Lang.Class({
         });
 
         view.connect('cancel', () => {
-            this.show_view__default();
+            this.show_view__default(true);
         });
     },
 });
