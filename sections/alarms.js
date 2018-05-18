@@ -165,14 +165,8 @@ var SectionMain = new Lang.Class({
         //
         // alarm items box
         //
-        this.alarms_scroll_wrapper = new PopupMenu.PopupMenuItem('', { hover: false, activate: false });
-        this.actor.add(this.alarms_scroll_wrapper.actor, {expand: true});
-        this.alarms_scroll_wrapper.actor.hide();
-        this.alarms_scroll_wrapper.label.hide();
-        this.alarms_scroll_wrapper.actor.can_focus = false;
-
-        this.alarms_scroll = new St.ScrollView({ style_class: 'alarms-container vfade', y_align: St.Align.START});
-        this.alarms_scroll_wrapper.actor.add(this.alarms_scroll, {expand: true});
+        this.alarms_scroll = new St.ScrollView({ style_class: 'timepp-menu-item alarms-container vfade', y_align: St.Align.START});
+        this.actor.add_actor(this.alarms_scroll);
 
         this.alarms_scroll.vscrollbar_policy = Gtk.PolicyType.NEVER;
         this.alarms_scroll.hscrollbar_policy = Gtk.PolicyType.NEVER;
@@ -270,7 +264,7 @@ var SectionMain = new Lang.Class({
         this.actor.insert_child_at_index(editor.actor, 0);
         editor.button_cancel.grab_key_focus();
         this.header.hide();
-        this.alarms_scroll_wrapper.actor.hide();
+        this.alarms_scroll.hide();
 
         if (! alarm_item) {
             editor.connect('add-alarm', (_, alarm) => {
@@ -279,7 +273,7 @@ var SectionMain = new Lang.Class({
                 this._add_alarm(alarm);
 
                 this.header.show();
-                this.alarms_scroll_wrapper.actor.show();
+                this.alarms_scroll.show();
                 this.add_alarm_button.grab_key_focus();
                 editor.actor.destroy();
             });
@@ -302,7 +296,7 @@ var SectionMain = new Lang.Class({
 
                 this._update_panel_item_UI();
                 this.header.show();
-                this.alarms_scroll_wrapper.actor.show();
+                this.alarms_scroll.show();
                 this.add_alarm_button.grab_key_focus();
                 editor.actor.destroy();
 
@@ -311,7 +305,7 @@ var SectionMain = new Lang.Class({
 
             editor.connect('delete-alarm', () => {
                 this.header.show();
-                this.alarms_scroll_wrapper.actor.show();
+                this.alarms_scroll.show();
                 this.add_alarm_button.grab_key_focus();
                 editor.actor.destroy();
                 this.alarm_items.delete(alarm_item);
@@ -326,7 +320,7 @@ var SectionMain = new Lang.Class({
             editor.actor.destroy();
 
             if (this.alarms_scroll_content.get_n_children() > 0)
-                this.alarms_scroll_wrapper.actor.show();
+                this.alarms_scroll.show();
         });
     },
 
@@ -338,7 +332,7 @@ var SectionMain = new Lang.Class({
         let alarm_item = new AlarmItem(this.ext, this, alarm);
         this.alarm_items.add(alarm_item);
         this.alarms_scroll_content.add_actor(alarm_item.actor);
-        this.alarms_scroll_wrapper.actor.show();
+        this.alarms_scroll.show();
 
         alarm_item.connect('alarm-toggled', () => {
             this.snoozed_alarms.delete(alarm);
@@ -354,7 +348,7 @@ var SectionMain = new Lang.Class({
         this._update_panel_item_UI();
 
         if (this.alarms_scroll_content.get_n_children() === 0)
-            this.alarms_scroll_wrapper.actor.hide();
+            this.alarms_scroll.hide();
     },
 
     snooze_alarm: function (alarm) {
