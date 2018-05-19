@@ -165,7 +165,7 @@ var SectionMain = new Lang.Class({
         //
         // alarm items box
         //
-        this.alarms_scroll = new St.ScrollView({ style_class: 'timepp-menu-item alarms-container vfade', y_align: St.Align.START});
+        this.alarms_scroll = new St.ScrollView({ visible: false, style_class: 'timepp-menu-item alarms-container vfade', y_align: St.Align.START});
         this.actor.add_actor(this.alarms_scroll);
 
         this.alarms_scroll.vscrollbar_policy = Gtk.PolicyType.NEVER;
