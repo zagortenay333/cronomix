@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-05-18 18:41+0200\n"
+"POT-Creation-Date: 2018-05-19 20:29+0200\n"
 "PO-Revision-Date: 2017-11-29 13:36+0200\n"
 "Last-Translator: Sergey Shlyapugin <shlyapugin@gmail.com>\n"
 "Language-Team: Russian\n"
@@ -353,7 +353,6 @@ msgstr ""
 #: data/po_files/../../sections/todo/view__sort.js:106
 #: data/po_files/../../sections/todo/view__task_editor.js:140
 #: data/po_files/../../sections/todo/view__stats.js:242
-#: data/po_files/../../sections/todo/view__clear_tasks.js:93
 #: data/po_files/../../sections/todo/view__filters.js:206
 #: data/po_files/../../sections/todo/view__file_switcher.js:103
 #: data/po_files/../../sections/todo/view__file_switcher.js:445
@@ -371,6 +370,7 @@ msgid "syntax help"
 msgstr ""
 
 #: data/po_files/../../sections/todo/view__task_editor.js:124
+#: data/po_files/../../sections/todo/view__clear_tasks.js:92
 #: data/po_files/../../sections/todo/view__file_switcher.js:439
 #: data/po_files/../../sections/alarms.js:569
 msgid "Delete"
@@ -382,7 +382,7 @@ msgstr "Архивировать"
 
 #: data/po_files/../../sections/todo/view__task_editor.js:137
 #: data/po_files/../../sections/todo/view__stats.js:245
-#: data/po_files/../../sections/todo/view__clear_tasks.js:90
+#: data/po_files/../../sections/todo/view__clear_tasks.js:95
 #: data/po_files/../../sections/todo/view__file_switcher.js:99
 #: data/po_files/../../sections/todo/view__file_switcher.js:444
 #: data/po_files/../../sections/pomodoro.js:774
@@ -496,11 +496,11 @@ msgstr ""
 msgid "To track time, select a dir for csv files in the settings."
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__clear_tasks.js:53
+#: data/po_files/../../sections/todo/view__clear_tasks.js:55
 msgid "Delete all completed tasks"
 msgstr "Удалить все выполненные задачи"
 
-#: data/po_files/../../sections/todo/view__clear_tasks.js:66
+#: data/po_files/../../sections/todo/view__clear_tasks.js:68
 msgid "Archive all completed tasks to done.txt and delete them"
 msgstr "Архивировать все выполненные задачи в done.txt, а затем удалить"
 

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-05-18 18:41+0200\n"
+"POT-Creation-Date: 2018-05-19 20:29+0200\n"
 "PO-Revision-Date: 2018-03-11 21:49+0800\n"
 "Last-Translator: OriginCode <origincoder@yahoo.com>\n"
 "Language-Team: Chinese <kde-i18n-doc@kde.org>\n"
@@ -349,7 +349,6 @@ msgstr ""
 #: data/po_files/../../sections/todo/view__sort.js:106
 #: data/po_files/../../sections/todo/view__task_editor.js:140
 #: data/po_files/../../sections/todo/view__stats.js:242
-#: data/po_files/../../sections/todo/view__clear_tasks.js:93
 #: data/po_files/../../sections/todo/view__filters.js:206
 #: data/po_files/../../sections/todo/view__file_switcher.js:103
 #: data/po_files/../../sections/todo/view__file_switcher.js:445
@@ -367,6 +366,7 @@ msgid "syntax help"
 msgstr "语法帮助"
 
 #: data/po_files/../../sections/todo/view__task_editor.js:124
+#: data/po_files/../../sections/todo/view__clear_tasks.js:92
 #: data/po_files/../../sections/todo/view__file_switcher.js:439
 #: data/po_files/../../sections/alarms.js:569
 msgid "Delete"
@@ -378,7 +378,7 @@ msgstr "储存"
 
 #: data/po_files/../../sections/todo/view__task_editor.js:137
 #: data/po_files/../../sections/todo/view__stats.js:245
-#: data/po_files/../../sections/todo/view__clear_tasks.js:90
+#: data/po_files/../../sections/todo/view__clear_tasks.js:95
 #: data/po_files/../../sections/todo/view__file_switcher.js:99
 #: data/po_files/../../sections/todo/view__file_switcher.js:444
 #: data/po_files/../../sections/pomodoro.js:774
@@ -490,11 +490,11 @@ msgstr "当处理CSV文件时出现了错误。参见日志。"
 msgid "To track time, select a dir for csv files in the settings."
 msgstr "在设置中选择一个目录或CSV文件用于时间追溯。"
 
-#: data/po_files/../../sections/todo/view__clear_tasks.js:53
+#: data/po_files/../../sections/todo/view__clear_tasks.js:55
 msgid "Delete all completed tasks"
 msgstr "删除所有已完成的任务"
 
-#: data/po_files/../../sections/todo/view__clear_tasks.js:66
+#: data/po_files/../../sections/todo/view__clear_tasks.js:68
 msgid "Archive all completed tasks to done.txt and delete them"
 msgstr "将所有已完成的任务储存至 done.txt 并删除它们"
 
