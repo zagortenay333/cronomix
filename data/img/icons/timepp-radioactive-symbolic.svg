@@ -17,7 +17,7 @@
    id="svg11300"
    sodipodi:version="0.32"
    inkscape:version="0.92.2 (5c3e80d, 2017-08-06)"
-   sodipodi:docname="timepp-wrench-symbolic.svg"
+   sodipodi:docname="timepp-radioactive-symbolic.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
    version="1.0"
    style="display:inline;enable-background:new">
@@ -31,8 +31,8 @@
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
      inkscape:zoom="22.627417"
-     inkscape:cx="2.4941662"
-     inkscape:cy="4.6804096"
+     inkscape:cx="5.0133521"
+     inkscape:cy="8.4985215"
      inkscape:current-layer="layer1"
      showgrid="true"
      inkscape:grid-bbox="true"
@@ -44,7 +44,7 @@
      inkscape:window-y="27"
      width="400px"
      height="300px"
-     inkscape:snap-nodes="false"
+     inkscape:snap-nodes="true"
      inkscape:snap-bbox="true"
      gridtolerance="10000"
      inkscape:object-nodes="true"
@@ -53,9 +53,9 @@
      inkscape:guide-bbox="true"
      inkscape:window-maximized="1"
      inkscape:bbox-nodes="true"
-     inkscape:bbox-paths="false"
-     inkscape:snap-bbox-edge-midpoints="false"
-     inkscape:snap-bbox-midpoints="false"
+     inkscape:bbox-paths="true"
+     inkscape:snap-bbox-edge-midpoints="true"
+     inkscape:snap-bbox-midpoints="true"
      objecttolerance="10000"
      guidetolerance="10000"
      borderlayer="true"
@@ -65,12 +65,15 @@
      guidehicolor="#001aff"
      guidehiopacity="0.49803922"
      inkscape:snap-smooth-nodes="true"
-     inkscape:object-paths="false"
+     inkscape:object-paths="true"
      inkscape:snap-global="true"
      inkscape:snap-center="true"
-     inkscape:snap-others="false"
+     inkscape:snap-others="true"
      inkscape:measure-start="0,0"
-     inkscape:measure-end="0,0">
+     inkscape:measure-end="0,0"
+     inkscape:snap-midpoints="true"
+     inkscape:snap-object-midpoints="true"
+     inkscape:snap-intersection-paths="true">
     <inkscape:grid
        type="xygrid"
        id="grid3123"
@@ -147,21 +150,25 @@
      id="layer1"
      transform="translate(0,-284)">
     <path
-       style="color:#000000;text-indent:0;text-decoration:none;text-decoration-line:none;text-decoration-style:solid;text-decoration-color:#000000;text-transform:none;white-space:normal;isolation:auto;mix-blend-mode:normal;solid-color:#000000;fill:#bebebe;fill-opacity:1"
-       d="m -14,283 a 8,8 0 0 0 -4,6.92774 h 5 c 7.18e-4,-1.11003 0.611178,-2.06764 1.507812,-2.58594 z m 8,0 -2.507812,4.3418 c 0.896633,0.5183 1.507094,1.47591 1.507812,2.58594 h 5 A 8,8 0 0 0 -6,283 Z m -4,4.92969 c -1.104476,0 -2,0.89542 -2,2 0,1.10458 0.895524,2 2,2 1.104476,0 2,-0.8954 2,-2 0,-1.10458 -0.895524,-2 -2,-2 z m -1.494141,4.58789 L -14,296.85547 a 8,8 0 0 0 8,0 l -2.505859,-4.33789 c -0.44136,0.25546 -0.947514,0.41211 -1.494141,0.41211 -0.546627,0 -1.052781,-0.15664 -1.494141,-0.41211 z"
-       id="path4495"
-       inkscape:connector-curvature="0" />
-    <path
        style="opacity:1;fill:#bebebe;fill-opacity:1;stroke:none;stroke-width:2;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="path851"
        r="8"
        cy="292"
        cx="8" />
-    <circle
+    <path
        style="opacity:1;fill:#bebebe;fill-opacity:1;stroke:none;stroke-width:2;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 10,292 a 2,2 0 0 1 -2,2 2,2 0 0 1 -2,-2 2,2 0 0 1 2,-2 2,2 0 0 1 2,2 z"
        id="path853"
-       cx="-5"
-       cy="302"
-       r="3" />
+       inkscape:connector-curvature="0" />
+    <path
+       style="opacity:1;fill:#bebebe;fill-opacity:1;stroke:none;stroke-width:2;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 4 1.0722656 A 8 8 0 0 0 0 8 L 5 8 A 3 3 0 0 1 6.5019531 5.40625 L 4 1.0722656 z M 12 1.0722656 L 9.4980469 5.4042969 A 3 3 0 0 1 11 8 L 16 8 A 8 8 0 0 0 12 1.0722656 z M 9.4980469 10.59375 A 3 3 0 0 1 8 11 A 3 3 0 0 1 6.5019531 10.595703 L 4 14.927734 A 8 8 0 0 0 12 14.927734 L 9.4980469 10.59375 z "
+       transform="translate(0,284)"
+       id="circle856" />
+    <path
+       inkscape:connector-curvature="0"
+       id="path879"
+       d="m 10,292 a 2,2 0 0 1 -2,2 2,2 0 0 1 -2,-2 2,2 0 0 1 2,-2 2,2 0 0 1 2,2 z"
+       style="opacity:1;fill:#bebebe;fill-opacity:1;stroke:none;stroke-width:2;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
   </g>
 </svg>

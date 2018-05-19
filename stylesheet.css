@@ -98,6 +98,11 @@
 
 .timepp-menu .view-box {
     padding: .4em 1.2em;
+    min-width: 22em;
+}
+
+.timepp-menu .clear-view .view-box-content {
+    border: 1px #e74f4f;
 }
 
 .timepp-menu StEntry {
@@ -668,7 +673,7 @@
     color: #000;
 }
 
-.timepp-menu .todo-section .delete-completed-tasks-label {
+.timepp-menu .todo-section .delete-completed-tasks {
     font-weight: bold;
     color: #e74f4f;
 }
