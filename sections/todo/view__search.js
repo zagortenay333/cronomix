@@ -65,8 +65,14 @@ var ViewSearch = new Lang.Class({
             this.search_entry = new St.Entry({ x_expand: true, can_focus: true });
             box.add_child(this.search_entry);
 
+            box = new St.BoxLayout({ style_class: 'icon-box' });
+            this.search_entry.set_secondary_icon(box);
+
+            this.add_filter_icon = new St.Icon({ visible: false, track_hover: true, reactive: true, icon_name: 'timepp-filter-add-symbolic' });
+            box.add_child(this.add_filter_icon);
+
             this.search_close_icon = new St.Icon({ track_hover: true, reactive: true, style_class: 'close-icon', icon_name: 'timepp-close-symbolic' });
-            this.search_entry.set_secondary_icon(this.search_close_icon);
+            box.add_child(this.search_close_icon);
         }
 
 
@@ -86,6 +92,7 @@ var ViewSearch = new Lang.Class({
         //
         this.search_entry.clutter_text.connect('text-changed', () => this._search());
         this.search_close_icon.connect('button-release-event', () => this.delegate.show_view__default());
+        this.add_filter_icon.connect('button-release-event', () => this._add_custom_filter());
 
 
         //
@@ -106,9 +113,12 @@ var ViewSearch = new Lang.Class({
 
         if (needle === '') {
             this.tasks_viewport = this.delegate.tasks;
+            this.add_filter_icon.visible = false;
             this._add_tasks_to_menu();
             return;
         }
+
+        this.add_filter_icon.visible = this.delegate.cache.filters.custom.indexOf(this.search_entry.get_text()) === -1;
 
         let [search_needed, search_space] = this._find_prev_search_results(needle);
 
@@ -214,6 +224,18 @@ var ViewSearch = new Lang.Class({
 
         this.tasks_scroll_content.remove_all_children();
         this.tasks_viewport = [];
+    },
+
+    _add_custom_filter: function () {
+        let needle  = this.search_entry.get_text();
+        let filters = this.delegate.cache.filters;
+
+        if (filters.custom.indexOf(needle) !== -1) return;
+
+        filters.custom.push(needle);
+        filters.custom_active.push(needle);
+        this.delegate.store_cache();
+        this.delegate.show_view__default();
     },
 
     close: function () {
