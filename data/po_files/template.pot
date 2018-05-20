@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-05-19 20:29+0200\n"
+"POT-Creation-Date: 2018-05-20 11:23+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -506,26 +506,26 @@ msgstr[1] ""
 msgid "Add New Task..."
 msgstr ""
 
-#: data/po_files/../../sections/todo/MAIN.js:438
+#: data/po_files/../../sections/todo/MAIN.js:437
 #, javascript-format
 msgid "%d task has recurred"
 msgid_plural "%d tasks have recurred"
 msgstr[0] ""
 msgstr[1] ""
 
-#: data/po_files/../../sections/todo/MAIN.js:444
+#: data/po_files/../../sections/todo/MAIN.js:443
 #, javascript-format
 msgid "%d deferred task has been opened"
 msgid_plural "%d deferred tasks have been opened"
 msgstr[0] ""
 msgstr[1] ""
 
-#: data/po_files/../../sections/todo/MAIN.js:727
+#: data/po_files/../../sections/todo/MAIN.js:726
 #: data/po_files/../../sections/todo/view__loading.js:37
 msgid "Loading..."
 msgstr ""
 
-#: data/po_files/../../sections/todo/MAIN.js:733
+#: data/po_files/../../sections/todo/MAIN.js:732
 msgid "Nothing found."
 msgstr ""
 

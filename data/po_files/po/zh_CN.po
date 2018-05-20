@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-05-19 20:29+0200\n"
+"POT-Creation-Date: 2018-05-20 11:23+0200\n"
 "PO-Revision-Date: 2018-03-11 21:49+0800\n"
 "Last-Translator: OriginCode <origincoder@yahoo.com>\n"
 "Language-Team: Chinese <kde-i18n-doc@kde.org>\n"
@@ -518,24 +518,24 @@ msgstr[0] "在 %d 天后"
 msgid "Add New Task..."
 msgstr "新建任务……"
 
-#: data/po_files/../../sections/todo/MAIN.js:438
+#: data/po_files/../../sections/todo/MAIN.js:437
 #, javascript-format
 msgid "%d task has recurred"
 msgid_plural "%d tasks have recurred"
 msgstr[0] "%d 个任务已经重新开始执行"
 
-#: data/po_files/../../sections/todo/MAIN.js:444
+#: data/po_files/../../sections/todo/MAIN.js:443
 #, javascript-format
 msgid "%d deferred task has been opened"
 msgid_plural "%d deferred tasks have been opened"
 msgstr[0] "%d 个延时任务已经打开"
 
-#: data/po_files/../../sections/todo/MAIN.js:727
+#: data/po_files/../../sections/todo/MAIN.js:726
 #: data/po_files/../../sections/todo/view__loading.js:37
 msgid "Loading..."
 msgstr "加载..."
 
-#: data/po_files/../../sections/todo/MAIN.js:733
+#: data/po_files/../../sections/todo/MAIN.js:732
 msgid "Nothing found."
 msgstr "无物可寻。"
 

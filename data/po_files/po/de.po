@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: timepp@zagortenay 333\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-05-19 20:29+0200\n"
+"POT-Creation-Date: 2018-05-20 11:23+0200\n"
 "PO-Revision-Date: 2017-08-29 10:51+0200\n"
 "Last-Translator: Christian Mattes <mac@tasarion.de>\n"
 "Language-Team: German\n"
@@ -522,26 +522,26 @@ msgstr[1] "in %d Tagen"
 msgid "Add New Task..."
 msgstr "Neue Aufgabe..."
 
-#: data/po_files/../../sections/todo/MAIN.js:438
+#: data/po_files/../../sections/todo/MAIN.js:437
 #, javascript-format
 msgid "%d task has recurred"
 msgid_plural "%d tasks have recurred"
 msgstr[0] "%d Aufgabe wurde wiederholt"
 msgstr[1] "%d Aufgaben wurden wiederholt"
 
-#: data/po_files/../../sections/todo/MAIN.js:444
+#: data/po_files/../../sections/todo/MAIN.js:443
 #, javascript-format
 msgid "%d deferred task has been opened"
 msgid_plural "%d deferred tasks have been opened"
 msgstr[0] "%d zurückgestellte Aufgabe wurden geöffnet"
 msgstr[1] "%d zurückgestellte Aufgaben wurden geöffnet"
 
-#: data/po_files/../../sections/todo/MAIN.js:727
+#: data/po_files/../../sections/todo/MAIN.js:726
 #: data/po_files/../../sections/todo/view__loading.js:37
 msgid "Loading..."
 msgstr "Lade..."
 
-#: data/po_files/../../sections/todo/MAIN.js:733
+#: data/po_files/../../sections/todo/MAIN.js:732
 msgid "Nothing found."
 msgstr "Nichts gefunden."
 

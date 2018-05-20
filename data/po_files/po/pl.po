@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-05-19 20:29+0200\n"
+"POT-Creation-Date: 2018-05-20 11:23+0200\n"
 "PO-Revision-Date: 2018-01-10 10:35+0100\n"
 "Last-Translator: Piotr Komur <pkomur@gmail.com>\n"
 "Language-Team: \n"
@@ -528,7 +528,7 @@ msgstr[2] "w ciagu %d dni"
 msgid "Add New Task..."
 msgstr "Dodaj nowe zadanie..."
 
-#: data/po_files/../../sections/todo/MAIN.js:438
+#: data/po_files/../../sections/todo/MAIN.js:437
 #, javascript-format
 msgid "%d task has recurred"
 msgid_plural "%d tasks have recurred"
@@ -536,7 +536,7 @@ msgstr[0] "%d powtórzyło się"
 msgstr[1] "%d powtórzyły się"
 msgstr[2] "%d powtórzyło się"
 
-#: data/po_files/../../sections/todo/MAIN.js:444
+#: data/po_files/../../sections/todo/MAIN.js:443
 #, javascript-format
 msgid "%d deferred task has been opened"
 msgid_plural "%d deferred tasks have been opened"
@@ -544,12 +544,12 @@ msgstr[0] "%d odroczone zadanie zostało otwarte"
 msgstr[1] "%d odroczone zadania zostały otwarte"
 msgstr[2] "%d odroczonych zadań zostało otwartych"
 
-#: data/po_files/../../sections/todo/MAIN.js:727
+#: data/po_files/../../sections/todo/MAIN.js:726
 #: data/po_files/../../sections/todo/view__loading.js:37
 msgid "Loading..."
 msgstr "Wczytuję..."
 
-#: data/po_files/../../sections/todo/MAIN.js:733
+#: data/po_files/../../sections/todo/MAIN.js:732
 msgid "Nothing found."
 msgstr "Nic nie znaleziono..."
 
