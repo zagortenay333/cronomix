@@ -33,7 +33,6 @@ var View = {
     LOADING       : 'LOADING',
     SELECT_SORT   : 'SELECT_SORT',
     FILE_SWITCH   : 'FILE_SWITCH',
-    NO_TODO_FILE  : 'NO_TODO_FILE',
     SELECT_FILTER : 'SELECT_FILTER',
 };
 
