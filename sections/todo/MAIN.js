@@ -334,7 +334,6 @@ var SectionMain = new Lang.Class({
         lines = String(lines).split(/\r?\n/).filter((l) => /\S/.test(l));
 
         this.create_tasks(lines, () => {
-            this.view_manager.lock = false;
             let needs_write = this._check_dates();
             this.on_tasks_changed(needs_write);
             this.time_tracker = new TIME_TRACKER.TimeTracker(this.ext, this);
