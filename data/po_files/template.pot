@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-05-20 11:23+0200\n"
+"POT-Creation-Date: 2018-05-20 11:31+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -484,18 +484,18 @@ msgstr ""
 msgid "Archive all completed tasks to done.txt and delete them"
 msgstr ""
 
-#: data/po_files/../../sections/todo/GLOBAL.js:65
+#: data/po_files/../../sections/todo/GLOBAL.js:64
 msgid "today"
 msgstr ""
 
-#: data/po_files/../../sections/todo/GLOBAL.js:66
+#: data/po_files/../../sections/todo/GLOBAL.js:65
 #, javascript-format
 msgid "%d day ago"
 msgid_plural "%d days ago"
 msgstr[0] ""
 msgstr[1] ""
 
-#: data/po_files/../../sections/todo/GLOBAL.js:67
+#: data/po_files/../../sections/todo/GLOBAL.js:66
 #, javascript-format
 msgid "in %d day"
 msgid_plural "in %d days"
