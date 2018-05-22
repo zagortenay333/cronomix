@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-05-20 11:31+0200\n"
+"POT-Creation-Date: 2018-05-22 22:51+0200\n"
 "PO-Revision-Date: 2018-03-11 21:49+0800\n"
 "Last-Translator: OriginCode <origincoder@yahoo.com>\n"
 "Language-Team: Chinese <kde-i18n-doc@kde.org>\n"
@@ -418,13 +418,13 @@ msgstr "搜索……"
 
 #: data/po_files/../../sections/todo/view__stats.js:176
 #: data/po_files/../../sections/todo/view__stats.js:290
-#: data/po_files/../../sections/todo/view__stats.js:674
+#: data/po_files/../../sections/todo/view__stats.js:676
 msgid "Tasks"
 msgstr "任务"
 
 #: data/po_files/../../sections/todo/view__stats.js:191
 #: data/po_files/../../sections/todo/view__stats.js:285
-#: data/po_files/../../sections/todo/view__stats.js:674
+#: data/po_files/../../sections/todo/view__stats.js:676
 msgid "Projects"
 msgstr "项目"
 
@@ -449,34 +449,34 @@ msgstr "自定义范围……"
 msgid "Stats for task"
 msgstr "项目状态"
 
-#: data/po_files/../../sections/todo/view__stats.js:609
-#: data/po_files/../../sections/todo/view__stats.js:633
-#: data/po_files/../../sections/todo/view__stats.js:673
-#: data/po_files/../../sections/todo/view__stats.js:1137
-#: data/po_files/../../sections/todo/view__stats.js:1146
+#: data/po_files/../../sections/todo/view__stats.js:611
+#: data/po_files/../../sections/todo/view__stats.js:635
+#: data/po_files/../../sections/todo/view__stats.js:675
+#: data/po_files/../../sections/todo/view__stats.js:1139
+#: data/po_files/../../sections/todo/view__stats.js:1148
 #, javascript-format
 msgid "%d day"
 msgid_plural "%d days"
 msgstr[0] "%d 天"
 
-#: data/po_files/../../sections/todo/view__stats.js:1136
+#: data/po_files/../../sections/todo/view__stats.js:1138
 msgid "Average per day (including off days)"
 msgstr "平均每天（包括休息日）"
 
-#: data/po_files/../../sections/todo/view__stats.js:1145
+#: data/po_files/../../sections/todo/view__stats.js:1147
 msgid "Average per day (excluding off days)"
 msgstr "平均每天（不包括休息日）"
 
-#: data/po_files/../../sections/todo/view__stats.js:1148
-#: data/po_files/../../sections/todo/view__stats.js:1158
+#: data/po_files/../../sections/todo/view__stats.js:1150
+#: data/po_files/../../sections/todo/view__stats.js:1160
 msgid "Total"
 msgstr "总共"
 
-#: data/po_files/../../sections/todo/view__stats.js:1190
+#: data/po_files/../../sections/todo/view__stats.js:1192
 msgid "Interval"
 msgstr "间隔"
 
-#: data/po_files/../../sections/todo/view__stats.js:1192
+#: data/po_files/../../sections/todo/view__stats.js:1194
 #, fuzzy
 msgid "No intervals found."
 msgstr "无物可寻。"
@@ -498,17 +498,17 @@ msgstr "删除所有已完成的任务"
 msgid "Archive all completed tasks to done.txt and delete them"
 msgstr "将所有已完成的任务储存至 done.txt 并删除它们"
 
-#: data/po_files/../../sections/todo/GLOBAL.js:64
+#: data/po_files/../../sections/todo/GLOBAL.js:67
 msgid "today"
 msgstr "今天"
 
-#: data/po_files/../../sections/todo/GLOBAL.js:65
+#: data/po_files/../../sections/todo/GLOBAL.js:68
 #, javascript-format
 msgid "%d day ago"
 msgid_plural "%d days ago"
 msgstr[0] "%d 天前"
 
-#: data/po_files/../../sections/todo/GLOBAL.js:66
+#: data/po_files/../../sections/todo/GLOBAL.js:69
 #, javascript-format
 msgid "in %d day"
 msgid_plural "in %d days"

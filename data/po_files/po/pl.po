@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-05-20 11:31+0200\n"
+"POT-Creation-Date: 2018-05-22 22:51+0200\n"
 "PO-Revision-Date: 2018-01-10 10:35+0100\n"
 "Last-Translator: Piotr Komur <pkomur@gmail.com>\n"
 "Language-Team: \n"
@@ -422,13 +422,13 @@ msgstr "Szukaj..."
 
 #: data/po_files/../../sections/todo/view__stats.js:176
 #: data/po_files/../../sections/todo/view__stats.js:290
-#: data/po_files/../../sections/todo/view__stats.js:674
+#: data/po_files/../../sections/todo/view__stats.js:676
 msgid "Tasks"
 msgstr "Zadanie..."
 
 #: data/po_files/../../sections/todo/view__stats.js:191
 #: data/po_files/../../sections/todo/view__stats.js:285
-#: data/po_files/../../sections/todo/view__stats.js:674
+#: data/po_files/../../sections/todo/view__stats.js:676
 msgid "Projects"
 msgstr "Projekty"
 
@@ -453,11 +453,11 @@ msgstr "Własny zakres..."
 msgid "Stats for task"
 msgstr "Statystyka dla projektu"
 
-#: data/po_files/../../sections/todo/view__stats.js:609
-#: data/po_files/../../sections/todo/view__stats.js:633
-#: data/po_files/../../sections/todo/view__stats.js:673
-#: data/po_files/../../sections/todo/view__stats.js:1137
-#: data/po_files/../../sections/todo/view__stats.js:1146
+#: data/po_files/../../sections/todo/view__stats.js:611
+#: data/po_files/../../sections/todo/view__stats.js:635
+#: data/po_files/../../sections/todo/view__stats.js:675
+#: data/po_files/../../sections/todo/view__stats.js:1139
+#: data/po_files/../../sections/todo/view__stats.js:1148
 #, javascript-format
 msgid "%d day"
 msgid_plural "%d days"
@@ -465,24 +465,24 @@ msgstr[0] "w ciągu %d dnia"
 msgstr[1] "w ciągu %d dni"
 msgstr[2] "w ciągu %d dni"
 
-#: data/po_files/../../sections/todo/view__stats.js:1136
+#: data/po_files/../../sections/todo/view__stats.js:1138
 msgid "Average per day (including off days)"
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__stats.js:1145
+#: data/po_files/../../sections/todo/view__stats.js:1147
 msgid "Average per day (excluding off days)"
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__stats.js:1148
-#: data/po_files/../../sections/todo/view__stats.js:1158
+#: data/po_files/../../sections/todo/view__stats.js:1150
+#: data/po_files/../../sections/todo/view__stats.js:1160
 msgid "Total"
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__stats.js:1190
+#: data/po_files/../../sections/todo/view__stats.js:1192
 msgid "Interval"
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__stats.js:1192
+#: data/po_files/../../sections/todo/view__stats.js:1194
 #, fuzzy
 msgid "No intervals found."
 msgstr "Nic nie znaleziono..."
@@ -504,11 +504,11 @@ msgstr "Usuń wszystkie ukończone zadania"
 msgid "Archive all completed tasks to done.txt and delete them"
 msgstr "Zarchiwizuj ukończone zadania do pliku 'done.txt' przed ich usunięciem"
 
-#: data/po_files/../../sections/todo/GLOBAL.js:64
+#: data/po_files/../../sections/todo/GLOBAL.js:67
 msgid "today"
 msgstr "dziś"
 
-#: data/po_files/../../sections/todo/GLOBAL.js:65
+#: data/po_files/../../sections/todo/GLOBAL.js:68
 #, javascript-format
 msgid "%d day ago"
 msgid_plural "%d days ago"
@@ -516,7 +516,7 @@ msgstr[0] "%d dzień temu"
 msgstr[1] "%d dni temu"
 msgstr[2] "%d dni temu"
 
-#: data/po_files/../../sections/todo/GLOBAL.js:66
+#: data/po_files/../../sections/todo/GLOBAL.js:69
 #, javascript-format
 msgid "in %d day"
 msgid_plural "in %d days"
