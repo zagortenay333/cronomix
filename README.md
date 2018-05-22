@@ -265,7 +265,7 @@ The following extensions are supported:
         <td valign="top"><code>h:1</code></td>
         <td>
             Hides a task.<br><br>
-            <b>This extension disables all other extensions.</b><br><br>
+            <b>This extension disables all other extensions, except <code>n:num</code>.</b><br><br>
             <i>Among other things, can be used to populate the todo manager<br>
             with context/project keywords for autocompletion.<br>
             </i>
