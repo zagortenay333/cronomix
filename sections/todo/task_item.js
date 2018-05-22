@@ -423,7 +423,7 @@ var TaskItem = new Lang.Class({
         if (do_recur) {
             // update/insert creation date
             {
-                let words = this.task_str.split(/ +/);
+                let words = this.task_str.split(' ');
                 let idx;
 
                 if      (this.completed)          idx = 2;
@@ -678,7 +678,7 @@ var TaskItem = new Lang.Class({
 
     toggle_task: function () {
         if (this.completed) {
-            let words = this.task_str.split(/ +/);
+            let words = this.task_str.split(' ');
 
             // See if there's an old priority stored in an ext (e.g., pri:A).
             let prio  = '';
@@ -790,7 +790,7 @@ var TaskItem = new Lang.Class({
         } else {
             this.pin_icon.remove_style_class_name('active');
 
-            let words = this.task_str.split(/ +/);
+            let words = this.task_str.split(' ');
             for (let i = 0, len = words.length; i < len; i++) {
                 if (REG.TODO_PIN_EXT.test(words[i])) {
                     words.splice(i, 1);

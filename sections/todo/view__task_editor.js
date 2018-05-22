@@ -352,7 +352,7 @@ var ViewTaskEditor = new Lang.Class({
             return G.multiline_to_single(this.entry.entry.get_text());
 
         // If in add mode, we insert a creation date if the user didn't do it.
-        let words = G.multiline_to_single(this.entry.entry.get_text()).split(/ +/);
+        let words = G.multiline_to_single(this.entry.entry.get_text()).split(' ');
 
         if (words[0] === 'x') {
             if (!Date.parse(words[1]))
