@@ -78,14 +78,14 @@ var ViewTaskEditor = new Lang.Class({
         this.entry_container = new St.BoxLayout({ vertical: true, style_class: 'row' });
         this.content_box.add_child(this.entry_container);
 
-        this.entry = new MULTIL_ENTRY.MultiLineEntry(_('Task...'), true, true);
+        this.entry = new MULTIL_ENTRY.MultiLineEntry(_('Task...'), true);
         this.entry_container.add_actor(this.entry.actor);
 
         this.entry.scroll_box.vscrollbar_policy = Gtk.PolicyType.NEVER;
         this.entry.scroll_box.hscrollbar_policy = Gtk.PolicyType.NEVER;
 
         if (this.mode === 'edit-task') {
-            this.entry.set_text(task.task_str);
+            this.entry.set_text(G.single_to_multiline(task.task_str));
         }
 
 
@@ -167,7 +167,6 @@ var ViewTaskEditor = new Lang.Class({
         });
         this.entry.entry.connect('allocation-changed', () => {
             this.entry.scroll_box.vscrollbar_policy = Gtk.PolicyType.NEVER;
-
             if (ext.needs_scrollbar())
                 this.entry.scroll_box.vscrollbar_policy = Gtk.PolicyType.ALWAYS;
         });
@@ -269,13 +268,13 @@ var ViewTaskEditor = new Lang.Class({
         if (pos === len || /\s/.test(text[pos])) pos--;
 
         let start = pos;
-        while (start > 0 && text[start] !== ' ') start--;
+        while (start > 0 && !/\s/.test(text[start])) start--;
 
         let end = pos;
-        while (end < len && text[end] !== ' ') end++;
+        while (end < len && !/\s/.test(text[end])) end++;
 
-        if (text[start] === ' ') start++;
-        if (end !== len && text[end] === ' ') end--;
+        if (/\s/.test(text[start])) start++;
+        if (end !== len && /\s/.test(text[end])) end--;
 
         let word = text.substring(start, end + 1);
 
@@ -288,8 +287,7 @@ var ViewTaskEditor = new Lang.Class({
             this.current_word_end   = end;
 
             return word;
-        }
-        else {
+        } else {
             return null;
         }
     },
@@ -314,22 +312,20 @@ var ViewTaskEditor = new Lang.Class({
     },
 
     _on_completion_selected: function () {
-        if (!this.curr_selected_completion) return;
+        if (! this.curr_selected_completion) return;
 
         this.text_changed_handler_block = true;
 
         let completion = this.curr_selected_completion.label;
 
-        let text =
+        this.entry.entry.text =
             this.entry.entry.get_text().slice(0, this.current_word_start) +
             completion + ' ' +
-            this.entry.entry.get_text().slice(this.current_word_end + 1);
-
-        this.entry.entry.text = text;
+            this.entry.entry.get_text().slice(this.current_word_end + 2);
 
         // @BUG or feature?
         // Setting the cursor pos directly seeems to also select the text, so
-        // use this func instead.
+        // use set_selection instead.
         let p = this.current_word_start + completion.length + 1;
         this.entry.entry.clutter_text.set_selection(p, p);
 
@@ -352,7 +348,8 @@ var ViewTaskEditor = new Lang.Class({
     },
 
     _create_task_str: function () {
-        if (this.mode === 'edit-task') return this.entry.entry.get_text();
+        if (this.mode === 'edit-task')
+            return G.multiline_to_single(this.entry.entry.get_text());
 
         // If in add mode, we insert a creation date if the user didn't do it.
         let words = this.entry.entry.get_text().split(/ +/);
@@ -371,7 +368,7 @@ var ViewTaskEditor = new Lang.Class({
             words.splice(0, 0, G.date_yyyymmdd());
         }
 
-        return words.join(' ');
+        return G.multiline_to_single(words.join(' '));
     },
 });
 Signals.addSignalMethods(ViewTaskEditor.prototype);

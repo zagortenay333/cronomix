@@ -229,6 +229,17 @@ The following extensions are supported:
 
 <table>
     <tr>
+        <td valign="top"><code>n:num</code></td>
+        <td>
+            The todo.txt format has no multiline support.<br>
+            This extension allows you to encode a newline characters
+            inside the todo.txt file so that multiline exists at least
+            inside the timepp extension even if it doesn't exist inside
+            the todo.txt file.<br>
+            Examples: n:1 means one newline char, n:5 means 5 newlines chars, etc.
+        </td>
+    </tr>
+    <tr>
         <td valign="top"><code>tracker_id:string</code></td>
         <td>
             Used to identify a task when starting/stopping

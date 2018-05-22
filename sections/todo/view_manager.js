@@ -83,8 +83,6 @@ var ViewManager = new Lang.Class({
     show_view: function (view_params) {
         if (typeof this.close_callback === 'function') this.close_callback();
 
-        MISC_UTILS.maybe_ignore_release(this.ext.menu.actor);
-
         this.current_view      = view_params.view || null;
         this.current_view_name = view_params.view_name;
         this.actors            = view_params.actors;
@@ -101,6 +99,8 @@ var ViewManager = new Lang.Class({
                 actor.show();
             }
         }
+
+        MISC_UTILS.maybe_ignore_release(this.ext.menu.actor);
 
         // Because we are tweaking the menu.open func, we must grab the focus
         // with a timeout call..

@@ -114,9 +114,10 @@ var TaskItem = new Lang.Class({
         //
         this.msg = new St.Label({ reactive: true, y_align: Clutter.ActorAlign.CENTER, x_align: St.Align.START, style_class: 'description-label'});
         this.task_item_content.add_child(this.msg);
-        this.msg.clutter_text.line_wrap      = true;
-        this.msg.clutter_text.ellipsize      = Pango.EllipsizeMode.NONE;
-        this.msg.clutter_text.line_wrap_mode = Pango.WrapMode.WORD_CHAR;
+        this.msg.clutter_text.line_wrap        = true;
+        this.msg.clutter_text.single_line_mode = false;
+        this.msg.clutter_text.ellipsize        = Pango.EllipsizeMode.NONE;
+        this.msg.clutter_text.line_wrap_mode   = Pango.WrapMode.WORD_CHAR;
 
 
         //
@@ -280,7 +281,8 @@ var TaskItem = new Lang.Class({
         // Parse 'description'
         //
         words = words.slice(desc_pos, len);
-        len = words.length;
+        len   = words.length;
+
         let word;
 
         for (let i = 0; i < len; i++) {
@@ -395,7 +397,7 @@ var TaskItem = new Lang.Class({
 
         words = MISC_UTILS.markdown_to_pango(words.join(' '), this.ext.markdown_map);
 
-        this.msg.clutter_text.set_markup(words);
+        this.msg.clutter_text.set_markup(G.single_to_multiline(words));
     },
 
     check_deferred_tasks: function (today = G.date_yyyymmdd()) {
@@ -519,8 +521,7 @@ var TaskItem = new Lang.Class({
             }
 
             res[1] = iter;
-        }
-        else {
+        } else {
             let reference_date, rec_str_offset;
 
             if (this.rec_type === 2) {
@@ -528,8 +529,7 @@ var TaskItem = new Lang.Class({
 
                 reference_date = this.completion_date;
                 rec_str_offset = 6;
-            }
-            else {
+            } else {
                 reference_date = this.creation_date;
                 rec_str_offset = 4;
             }
@@ -582,7 +582,7 @@ var TaskItem = new Lang.Class({
 
         let markup = MISC_UTILS.markdown_to_pango(this.description_markup.join(' '), this.ext.markdown_map);
 
-        this.msg.clutter_text.set_markup(markup);
+        this.msg.clutter_text.set_markup(G.single_to_multiline(markup));
     },
 
     update_dates_markup: function () {
@@ -841,22 +841,13 @@ var TaskItem = new Lang.Class({
 
     // Return word under mouse cursor if it's a context or project, else null.
     _find_keyword: function (event) {
-        let len = this.msg.clutter_text.text.length;
-
-        // get screen coord of mouse
+        let len    = this.msg.clutter_text.text.length;
         let [x, y] = event.get_coords();
-
-        // make coords relative to the msg actor
-        [, x, y] = this.msg.transform_stage_point(x, y);
-
-        // find pos of char that was clicked
-        let pos = this.msg.clutter_text.coords_to_position(x, y);
+        [, x, y]   = this.msg.transform_stage_point(x, y);
+        let pos    = this.msg.clutter_text.coords_to_position(x, y);
 
 
-        //
-        // get word that contains the clicked char
-        //
-        let words   = MISC_UTILS.split_on_whitespace(this.msg.text);
+        let words   = MISC_UTILS.split_on_whitespace(this.msg.get_text());
         let i       = 0;
         let abs_idx = 0;
 
@@ -866,13 +857,17 @@ var TaskItem = new Lang.Class({
                 abs_idx++;
             }
 
-            abs_idx++;
+            if (!words[i].endsWith('\n') && !(i+1 < words.length && words[i+1].startsWith('\n'))) {
+                abs_idx++;
+            }
         }
 
         if (i > words.length - 1) return null;
 
-        if (REG.TODO_CONTEXT.test(words[i]) || REG.TODO_PROJ.test(words[i]) ||
-            REG.URL.test(words[i]) || REG.FILE_PATH.test(words[i]))
+        if (REG.TODO_CONTEXT.test(words[i]) ||
+            REG.TODO_PROJ.test(words[i]) ||
+            REG.URL.test(words[i]) ||
+            REG.FILE_PATH.test(words[i]))
             return words[i];
         else
             return null;
