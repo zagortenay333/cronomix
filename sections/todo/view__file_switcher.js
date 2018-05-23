@@ -144,7 +144,7 @@ var ViewFileSwitcher = new Lang.Class({
     _show_file_editor: function (item) {
         if (this.file_info_editor) this.file_info_editor.close();
 
-        this.file_info_editor = new FileInfoEditor(this.ext, item ? item.file : null);
+        this.file_info_editor = new FileInfoEditor(this.ext, this.delegate, item ? item.file : null);
         this.actor.add_child(this.file_info_editor.actor);
 
         let is_active = item && item.file.name === this.active_file;
@@ -350,17 +350,19 @@ Signals.addSignalMethods(ViewFileSwitcher.prototype);
 // =====================================================================
 // @@@ FileInfoEditor
 //
-// @ext  : obj (main extension object)
-// @file : obj
+// @ext      : obj (main extension object)
+// @delegate : obj (main section object)
+// @file     : obj
 //
 // @signals: 'ok', 'cancel', 'delete'
 // =====================================================================
 const FileInfoEditor = new Lang.Class({
     Name: 'Timepp.FileInfoEditor',
 
-    _init: function(ext, file) {
-        this.ext  = ext;
-        this.file = file;
+    _init: function(ext, delegate, file) {
+        this.ext      = ext;
+        this.delegate = delegate;
+        this.file     = file;
 
 
         this.todo_file_chooser_proc    = null;
@@ -493,7 +495,16 @@ const FileInfoEditor = new Lang.Class({
     },
 
     _update_ok_btn: function () {
-        this.button_ok.visible = !!this.name_entry.text && !!this.todo_entry.text;
+        let visible = !!this.name_entry.text && !!this.todo_entry.text;
+
+        for (let file of this.delegate.cache.todo_files) {
+            if (file.name === this.name_entry.text) {
+                visible = false;
+                break;
+            }
+        }
+
+        this.button_ok.visible = visible;
     },
 
     close: function () {
