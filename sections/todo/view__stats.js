@@ -61,6 +61,10 @@ var StatsView = new Lang.Class({
         this.set_banner_size(0);
         this.bottom_box.hide();
 
+        // so we can have a side menu in the middle next to a vertical box layout
+        this.inner_middle_box = new St.BoxLayout({ vertical: true, x_expand: true, y_expand: true });
+        this.middle_box.add_child(this.inner_middle_box);
+
         {
             let visible = this.monitor_button.visible;
             this.top_box_left.remove_child(this.monitor_button);
@@ -298,11 +302,11 @@ var StatsView = new Lang.Class({
         // heatmap graph
         //
         this.heatmap_graph = new GRAPHS.HeatMap();
-        this.middle_box.add_child(this.heatmap_graph.actor);
+        this.inner_middle_box.add_child(this.heatmap_graph.actor);
         this.heatmap_graph.actor.hide();
 
         this.heatmap_graph.params.tooltip_callback = (label) => {
-            let [date, time] = label.split(/ /);
+            let [date, time] = label.split(' ');
 
             if (time === '0') return date;
 
@@ -320,7 +324,7 @@ var StatsView = new Lang.Class({
         // vbars graph
         //
         this.vbars_graph = new GRAPHS.VBars();
-        this.middle_box.add_child(this.vbars_graph.actor);
+        this.inner_middle_box.add_child(this.vbars_graph.actor);
         this.vbars_graph.actor.hide();
 
 
@@ -359,10 +363,6 @@ var StatsView = new Lang.Class({
             let d = new Date();
             this.show_mode__single(d.getFullYear(), d.getMonth(), vbar.info.label, vbar.info.type);
         });
-        this.heatmap_graph.connect('square-clicked', (_, square_label) => {
-            let [date, time] = square_label.split(/ /);
-            this.show_mode__global(date);
-        });
         this.custom_range_ok_btn.connect('clicked', () => {
             let [, date_str_1] = this.bound_date_1.get_date();
             let [, date_str_2] = this.bound_date_2.get_date();
@@ -378,20 +378,6 @@ var StatsView = new Lang.Class({
             this.date_range_main_view.show();
             this.date_range_custom_view.hide();
             Mainloop.idle_add(() => { this.actor.grab_key_focus(); });
-        });
-        this.entry.clutter_text.connect('text-changed', () => {
-            this._search();
-        });
-        this.entry.clutter_text.connect('key-press-event', (_, event) => {
-            this._maybe_navigate_search_results(event.get_key_symbol());
-        });
-        this.entry.clutter_text.connect('activate', () => {
-            if (this.selected_search_result) {
-                let d     = new Date();
-                let label = this.selected_search_result.label_actor.get_text();
-                let type  = this.selected_search_result.type;
-                this.show_mode__single(d.getFullYear(), d.getMonth(), label, type);
-            }
         });
         this.actor.connect('key-press-event', (_, event) => {
             switch (event.get_key_symbol()) {
@@ -426,6 +412,17 @@ var StatsView = new Lang.Class({
 
             return Clutter.EVENT_STOP;
         });
+        this.entry.clutter_text.connect('activate', () => {
+            if (this.selected_search_result) {
+                let d     = new Date();
+                let label = this.selected_search_result.label_actor.get_text();
+                let type  = this.selected_search_result.type;
+                this.show_mode__single(d.getFullYear(), d.getMonth(), label, type);
+            }
+        });
+        this.entry.clutter_text.connect('text-changed', () => this._search());
+        this.entry.clutter_text.connect('key-press-event', (_, event) => this._maybe_navigate_search_results(event.get_key_symbol()));
+        this.heatmap_graph.connect('square-clicked', (_, square_label) => this._on_heatmap_clicked(square_label));
         this.single_mode_icon.connect('clicked', () => this.show_mode__search());
         this.heatmap_icon.connect('clicked', () => this._toggle_heatmap());
         this.graph_interval_icon.connect('clicked', () => this._toggle_show_intervals());
@@ -462,6 +459,7 @@ var StatsView = new Lang.Class({
     // @date: string
     show_mode__global: function (date) {
         let actors = [
+            this.inner_middle_box,
             this.vbars_graph.actor,
             this.date_picker.actor,
             this.heatmap_icon,
@@ -484,9 +482,7 @@ var StatsView = new Lang.Class({
         this.global_mode_icon.checked = true;
         this.date_picker.set_date_from_string(date);
 
-        this.heatmap_graph.params.selected_square_rgba =
-            this.custom_css['-timepp-heatmap-selected-color'][1];
-
+        this.heatmap_graph.params.selected_square_rgba = this.custom_css['-timepp-heatmap-selected-color'][1];
         this.heatmap_graph.actor.visible = this.heatmap_icon.checked;
 
         if (this.heatmap_icon.checked) {
@@ -527,8 +523,11 @@ var StatsView = new Lang.Class({
     // @type  : string ('()' or '++');
     show_mode__single: function (year, month, label, type) {
         let actors = [
+            this.inner_middle_box,
             this.stats_card,
             this.date_picker.actor,
+            this.heatmap_icon,
+            this.heatmap_graph.actor,
             this.vbars_graph.actor,
             this.graph_interval_icon,
         ];
@@ -548,6 +547,22 @@ var StatsView = new Lang.Class({
         actors.forEach((it) => it.show());
         this.nav_bar.get_children().forEach((it) => it.checked = false);
         this.single_mode_icon.checked = true;
+
+        this.heatmap_graph.params.selected_square_rgba = this.custom_css['-timepp-heatmap-selected-color'][1];
+        this.heatmap_graph.actor.visible = this.heatmap_icon.checked;
+
+        if (this.heatmap_icon.checked) {
+            if (this.prev_mode.name !== this.current_mode.name ||
+                this.prev_mode.args[0] !== year ||
+                this.prev_mode.args[2] !== label) {
+
+                this.heatmap_graph.update_params(this._get_stats__heatmap(label));
+            }
+
+            let date = G.date_yyyymmdd(new Date(year, month));
+            this._update_heatmap_selected_square(date);
+            this.heatmap_graph.draw_heatmap();
+        }
 
         this.date_picker.set_date(year, month, 1);
 
@@ -793,7 +808,7 @@ var StatsView = new Lang.Class({
         }
     },
 
-    _get_stats__heatmap: function () {
+    _get_stats__heatmap: function (label) {
         let res = {
             matrix      : [[], [], [], [], [], [], []],
             matrix_size : [7, 0],
@@ -805,15 +820,13 @@ var StatsView = new Lang.Class({
         let date = new Date(selected_year, 0, 1, 12, 0, 0);
 
         // row labels
-        {
-            date.setDate(2);
-            res.row_labels.push([1, date.toLocaleFormat('%a')]);
-            date.setDate(4);
-            res.row_labels.push([3, date.toLocaleFormat('%a')]);
-            date.setDate(6);
-            res.row_labels.push([5, date.toLocaleFormat('%a')]);
-            date.setDate(1);
-        }
+        date.setDate(2);
+        res.row_labels.push([1, date.toLocaleFormat('%a')]);
+        date.setDate(4);
+        res.row_labels.push([3, date.toLocaleFormat('%a')]);
+        date.setDate(6);
+        res.row_labels.push([5, date.toLocaleFormat('%a')]);
+        date.setDate(1);
 
         let row = 0;
         let col = 0;
@@ -844,8 +857,12 @@ var StatsView = new Lang.Class({
             let records = this.stats_data.get(yyyymmdd);
 
             if (records) {
-                for (let record of records) {
-                    if (record.type === '()') time += record.total_time;
+                if (label) {
+                    for (let record of records)
+                        if (record.label === label) time += record.total_time;
+                } else {
+                    for (let record of records)
+                        if (record.type === '()') time += record.total_time;
                 }
 
                 // in seconds
@@ -861,7 +878,6 @@ var StatsView = new Lang.Class({
                 label : yyyymmdd + ' ' + time,
                 rgba  : rgba,
             });
-
 
             row++;
 
@@ -1215,7 +1231,9 @@ var StatsView = new Lang.Class({
     },
 
     _toggle_heatmap: function () {
-        if (this.current_mode.name !== StatsMode.GLOBAL) return;
+        if (this.current_mode.name !== StatsMode.GLOBAL &&
+            this.current_mode.name !== StatsMode.SINGLE)
+            return;
 
         if (this.heatmap_graph.actor.visible) {
             this.heatmap_icon.checked = false;
@@ -1226,7 +1244,13 @@ var StatsView = new Lang.Class({
             this.heatmap_graph.actor.visible = true;
             this.delegate.settings.set_boolean('todo-stats-heatmap-visible', true);
 
-            let params = this._get_stats__heatmap();
+            let params;
+
+            if (this.current_mode.name === StatsMode.SINGLE) {
+                params = this._get_stats__heatmap(this.current_mode.args[2]);
+            } else {
+                params = this._get_stats__heatmap();
+            }
 
             this.heatmap_graph.draw_heatmap(params);
         }
@@ -1398,7 +1422,7 @@ var StatsView = new Lang.Class({
 
                 if (! square) continue;
 
-                [d, ] = square.label.split(/ /);
+                [d, ] = square.label.split(' ');
 
                 if (d === date) {
                     this.heatmap_graph.selected_square     = square;
@@ -1430,6 +1454,22 @@ var StatsView = new Lang.Class({
 
         date_o.setMonth(date_o.getMonth() - 3);
         this.string_date_map.get('six_months')[1] = [G.date_yyyymmdd(date_o), today];
+    },
+
+    _on_heatmap_clicked: function (square_label) {
+        let [date, time] = square_label.split(' ');
+
+        if (this.current_mode.name === StatsMode.GLOBAL) {
+            this.show_mode__global(date);
+        }
+        else if (this.current_mode.name === StatsMode.SINGLE) {
+            let [year, month, day] = date.split('-');
+
+            this.current_mode.args[0] = +(year);
+            this.current_mode.args[1] = +(month) - 1;
+
+            this.show_mode__single(...this.current_mode.args);
+        }
     },
 
     _on_custom_css_updated: function () {
