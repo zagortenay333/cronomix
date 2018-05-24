@@ -235,7 +235,7 @@ var TaskItem = new Lang.Class({
         // The 'description' is everything else.
 
         let words    = GLib.markup_escape_text(this.task_str, -1);
-        words        = G.single_to_multiline(words);
+        words        = words.replace(/\\n/g, '\n');
         words        = MISC_UTILS.split_on_whitespace(words);
         let len      = words.length;
         let desc_pos = 0; // idx of first word of 'description' in words arr

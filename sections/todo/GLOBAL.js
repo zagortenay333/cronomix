@@ -70,14 +70,3 @@ function date_delta_str (date) {
 
     return res.replace(/ /g, '&#160;'); // non-breaking-space
 }
-
-
-function single_to_multiline (text) {
-    text = text.replace(/\\n/g, '\n');
-    return text;
-}
-
-function multiline_to_single (text) {
-    text = text.replace(/\n/g, '\\n');
-    return text;
-}

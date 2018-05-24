@@ -598,9 +598,7 @@ var StatsView = new Lang.Class({
         if (type === '()') markup = `<b>${_('Stats for task')}:</b>`;
         else               markup = `<b>${_('Stats for project')}:</b>`;
 
-        markup += '\n\n' + label;
-
-        markup = G.single_to_multiline(markup);
+        markup += '\n\n' + label.replace(/\\n/g, '\n');
 
         this.stats_card_title.clutter_text.set_markup(
             MISC_UTILS.markdown_to_pango(markup, this.ext.markdown_map));
@@ -1166,7 +1164,7 @@ var StatsView = new Lang.Class({
         return `- ${_('Total')}: ${total_time_str}\n\n` +
                `- ${avg_excluding_off_days}\n\n` +
                `- ${avg_including_off_days}\n\n` +
-               `${G.single_to_multiline(vbar.info.label)}`;
+               `${vbar.info.label.replace(/\\n/g, '\n')}`;
     },
 
     // used in single and global modes
@@ -1210,7 +1208,7 @@ var StatsView = new Lang.Class({
             txt += '\n\n- ' + _('No intervals found.');
         }
 
-        txt += '\n\n' + G.single_to_multiline(vbar.info.label);
+        txt += '\n\n' + vbar.info.label.replace(/\\n/g, '\n');
 
         return txt;
     },

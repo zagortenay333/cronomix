@@ -418,22 +418,21 @@ var SectionMain = new Lang.Class({
     },
 
     highlight_tokens: function (text) {
-        text = MISC_UTILS.split_on_whitespace(
-            MISC_UTILS.markdown_to_pango(text, this.ext.markdown_map));
-
-        let token;
+        text = GLib.markup_escape_text(text, -1);
+        text = MISC_UTILS.split_on_whitespace(text);
 
         for (let i = 0; i < text.length; i++) {
-            token = text[i];
+            let token = text[i];
 
             if (REG.URL.test(token) || REG.FILE_PATH.test(token)) {
                 text[i] =
-                    '<span foreground="' + this.css['-timepp-link-color'][0] +
-                    '"><u><b>' + token + '</b></u></span>';
+                    '`<span foreground="' + this.css['-timepp-link-color'][0] +
+                    '"><u><b>' + token + '</b></u></span>`';
             }
         }
 
-        return text.join(' ').replace(/ *\r?\n */g, '\n');
+        text = text.join(' ').replace(/ ?\n ?/g, '\n');
+        return MISC_UTILS.markdown_to_pango(text, this.ext.markdown_map);
     },
 });
 Signals.addSignalMethods(SectionMain.prototype);

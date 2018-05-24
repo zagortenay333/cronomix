@@ -85,7 +85,7 @@ var ViewTaskEditor = new Lang.Class({
         this.entry.scroll_box.hscrollbar_policy = Gtk.PolicyType.NEVER;
 
         if (this.mode === 'edit-task') {
-            this.entry.set_text(G.single_to_multiline(task.task_str));
+            this.entry.set_text(task.task_str.replace(/\\n/g, '\n'));
         }
 
 
@@ -349,10 +349,10 @@ var ViewTaskEditor = new Lang.Class({
 
     _create_task_str: function () {
         if (this.mode === 'edit-task')
-            return G.multiline_to_single(this.entry.entry.get_text());
+            return this.entry.entry.get_text().replace(/\n/g, '\\n');
 
         // If in add mode, we insert a creation date if the user didn't do it.
-        let words = G.multiline_to_single(this.entry.entry.get_text()).split(' ');
+        let words = this.entry.entry.get_text().split(' ');
 
         if (words[0] === 'x') {
             if (!Date.parse(words[1]))
@@ -368,7 +368,7 @@ var ViewTaskEditor = new Lang.Class({
             words.splice(0, 0, G.date_yyyymmdd());
         }
 
-        return words.join(' ');
+        return words.join(' ').replace(/\n/g, '\\n');
     },
 });
 Signals.addSignalMethods(ViewTaskEditor.prototype);
