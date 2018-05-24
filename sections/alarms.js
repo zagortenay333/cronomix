@@ -710,8 +710,6 @@ const AlarmItem = new Lang.Class({
 
     // @markup: string
     set_body_text: function (markup) {
-        markup = GLib.markup_escape_text(markup, -1);
-        markup = MISC_UTILS.markdown_to_pango(markup, this.ext.markdown_map);
         this.msg.clutter_text.set_markup(this.delegate.highlight_tokens(markup));
     },
 
@@ -891,7 +889,6 @@ const AlarmFullscreen = new Lang.Class({
     },
 
     set_banner_text: function (markup) {
-        markup = GLib.markup_escape_text(markup, -1);
         this.parent(this.delegate.highlight_tokens(markup));
     },
 
