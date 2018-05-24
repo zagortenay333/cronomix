@@ -218,6 +218,10 @@ support for some **markdown** stuff:
         ~/Documents/file\ with\ spaces.png
         ```
 
+    * Newline chars in the todo.txt file can be used to have multiline support:
+        ```
+        (A) A task with\nmultiline\n@support \n +asdf
+        ```
 ---
 
 ### Todo.txt Extensions
@@ -228,17 +232,6 @@ file.
 The following extensions are supported:
 
 <table>
-    <tr>
-        <td valign="top"><code>n:num</code></td>
-        <td>
-            The todo.txt format has no multiline support.<br>
-            This extension allows you to encode a newline characters
-            inside the todo.txt file so that multiline exists at least
-            inside the timepp extension even if it doesn't exist inside
-            the todo.txt file.<br>
-            Examples: n:1 means one newline char, n:5 means 5 newlines chars, etc.
-        </td>
-    </tr>
     <tr>
         <td valign="top"><code>tracker_id:string</code></td>
         <td>
@@ -265,7 +258,7 @@ The following extensions are supported:
         <td valign="top"><code>h:1</code></td>
         <td>
             Hides a task.<br><br>
-            <b>This extension disables all other extensions, except <code>n:num</code>.</b><br><br>
+            <b>This extension disables all other extensions.</b><br><br>
             <i>Among other things, can be used to populate the todo manager<br>
             with context/project keywords for autocompletion.<br>
             </i>

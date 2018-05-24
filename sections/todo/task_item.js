@@ -235,6 +235,7 @@ var TaskItem = new Lang.Class({
         // The 'description' is everything else.
 
         let words    = GLib.markup_escape_text(this.task_str, -1);
+        words        = G.single_to_multiline(words);
         words        = MISC_UTILS.split_on_whitespace(words);
         let len      = words.length;
         let desc_pos = 0; // idx of first word of 'description' in words arr
@@ -286,7 +287,7 @@ var TaskItem = new Lang.Class({
         let word;
 
         for (let i = 0; i < len; i++) {
-            word = words[i];
+            word = words[i].trim();
 
             if (REG.TODO_CONTEXT.test(word)) {
                 this.context_indices.push(i);
@@ -395,9 +396,10 @@ var TaskItem = new Lang.Class({
 
         this.description_markup = words;
 
-        words = MISC_UTILS.markdown_to_pango(words.join(' '), this.ext.markdown_map);
+        words = words.join(' ').replace(/ ?\n ?/g, '\n');
+        words = MISC_UTILS.markdown_to_pango(words, this.ext.markdown_map);
 
-        this.msg.clutter_text.set_markup(G.single_to_multiline(words));
+        this.msg.clutter_text.set_markup(words);
     },
 
     check_deferred_tasks: function (today = G.date_yyyymmdd()) {
@@ -560,29 +562,27 @@ var TaskItem = new Lang.Class({
             this.description_markup[it] =
                 '`<span foreground="' +
                 this.custom_css['-timepp-context-color'][0] + '"' +
-                this.description_markup[it].slice(
-                    this.description_markup[it].indexOf('>'));
+                this.description_markup[it].slice(this.description_markup[it].indexOf('>'));
         }
 
         for (let it of this.project_indices) {
             this.description_markup[it] =
                 '`<span foreground="' +
                 this.custom_css['-timepp-project-color'][0] + '"' +
-                this.description_markup[it].slice(
-                    this.description_markup[it].indexOf('>'));
+                this.description_markup[it].slice(this.description_markup[it].indexOf('>'));
         }
 
         for (let it of this.link_indices) {
             this.description_markup[it] =
                 '`<span foreground="' +
                 this.custom_css['-timepp-link-color'][0] + '"' +
-                this.description_markup[it].slice(
-                    this.description_markup[it].indexOf('>'));
+                this.description_markup[it].slice(this.description_markup[it].indexOf('>'));
         }
 
-        let markup = MISC_UTILS.markdown_to_pango(this.description_markup.join(' '), this.ext.markdown_map);
+        let markup = this.description_markup.join(' ').replace(/ ?\n ?/g, '\n');
+        markup     = MISC_UTILS.markdown_to_pango(markup, this.ext.markdown_map);
 
-        this.msg.clutter_text.set_markup(G.single_to_multiline(markup));
+        this.msg.clutter_text.set_markup(markup);
     },
 
     update_dates_markup: function () {
