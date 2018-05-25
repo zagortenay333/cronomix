@@ -284,10 +284,15 @@ var TaskItem = new Lang.Class({
         words = words.slice(desc_pos, len);
         len   = words.length;
 
+        let inside_backticks = false;
+
         let word;
 
         for (let i = 0; i < len; i++) {
             word = words[i].trim();
+
+            if (word.startsWith('`') || word.endsWith('`')) inside_backticks = !inside_backticks;
+            if (inside_backticks) continue;
 
             if (REG.TODO_CONTEXT.test(word)) {
                 this.context_indices.push(i);

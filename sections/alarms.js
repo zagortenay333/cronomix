@@ -421,8 +421,13 @@ var SectionMain = new Lang.Class({
         text = GLib.markup_escape_text(text, -1);
         text = MISC_UTILS.split_on_whitespace(text);
 
+        let inside_backticks = false;
+
         for (let i = 0; i < text.length; i++) {
             let token = text[i];
+
+            if (token.startsWith('`') || token.endsWith('`')) inside_backticks = !inside_backticks;
+            if (inside_backticks) continue;
 
             if (REG.URL.test(token) || REG.FILE_PATH.test(token)) {
                 text[i] =

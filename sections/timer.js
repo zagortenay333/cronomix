@@ -557,8 +557,13 @@ var SectionMain = new Lang.Class({
         text = GLib.markup_escape_text(text, -1);
         text = MISC_UTILS.split_on_whitespace(text);
 
+        let inside_backticks = false;
+
         for (let i = 0; i < text.length; i++) {
             let token = text[i];
+
+            if (token.startsWith('`') || token.endsWith('`')) inside_backticks = !inside_backticks;
+            if (inside_backticks) continue;
 
             if (REG.URL.test(token) || REG.FILE_PATH.test(token)) {
                 text[i] =
@@ -1167,8 +1172,7 @@ const TimerFullscreen = new Lang.Class({
     on_timer_expired: function () {
         if (this.delegate.current_preset.msg) {
             this.title.text = TIMER_EXPIRED_MSG;
-            let txt = GLib.markup_escape_text(this.delegate.current_preset.msg, -1);
-            this.set_banner_text(this.delegate.highlight_tokens(txt));
+            this.set_banner_text(this.delegate.highlight_tokens(this.delegate.current_preset.msg));
         } else {
             this.set_banner_text(TIMER_EXPIRED_MSG);
         }
