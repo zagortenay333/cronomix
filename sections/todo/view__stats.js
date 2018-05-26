@@ -657,7 +657,11 @@ var StatsView = new Lang.Class({
     // @label : string (description of range)
     // @range : array  (of the form [date_str_1, date_str_2])
     show_mode__hot: function (label, range) {
-        let actors = [this.vbars_graph.actor, this.hot_mode_control_box]
+        let actors = [
+            this.inner_middle_box,
+            this.vbars_graph.actor,
+            this.hot_mode_control_box,
+        ];
 
         this._set_mode(
             StatsMode.HOT,
