@@ -184,8 +184,10 @@ var SectionMain = new Lang.Class({
         });
         this.sigm.connect(this.alarms_scroll_content, 'allocation-changed', () => {
             this.alarms_scroll.vscrollbar_policy = Gtk.PolicyType.NEVER;
-            if (ext.needs_scrollbar())
-                this.alarms_scroll.vscrollbar_policy = Gtk.PolicyType.ALWAYS;
+            Mainloop.idle_add(() => {
+                if (ext.needs_scrollbar())
+                    this.alarms_scroll.vscrollbar_policy = Gtk.PolicyType.ALWAYS;
+            });
         });
         this.sigm.connect(this.wallclock, 'notify::clock', () => this._tic());
         this.sigm.connect(this.fullscreen, 'monitor-changed', () => this.settings.set_int('alarms-fullscreen-monitor-pos', this.fullscreen.monitor));
@@ -708,7 +710,6 @@ const AlarmItem = new Lang.Class({
         this.toggle_bin.connect('clicked', () => this._on_toggle());
         this.delegate.sigm.connect_press(this.edit_icon, Clutter.BUTTON_PRIMARY, true, () => this._on_edit());
         this.ext.connect('custom-css-changed', () => this._on_custom_css_updated());
-        this.actor.connect('allocation-changed', () => MISC_UTILS.resize_label(this.msg));
         this.actor.connect('enter-event',  () => this.edit_icon.show());
         this.actor.connect('event', (actor, event) => this._on_event(actor, event));
     },
