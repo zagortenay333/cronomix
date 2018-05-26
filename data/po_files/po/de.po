@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: timepp@zagortenay 333\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-05-25 23:53+0200\n"
+"POT-Creation-Date: 2018-05-26 19:09+0200\n"
 "PO-Revision-Date: 2017-08-29 10:51+0200\n"
 "Last-Translator: Christian Mattes <mac@tasarion.de>\n"
 "Language-Team: German\n"
@@ -419,13 +419,13 @@ msgstr "Suchen..."
 
 #: data/po_files/../../sections/todo/view__stats.js:180
 #: data/po_files/../../sections/todo/view__stats.js:294
-#: data/po_files/../../sections/todo/view__stats.js:689
+#: data/po_files/../../sections/todo/view__stats.js:693
 msgid "Tasks"
 msgstr "Aufgaben"
 
 #: data/po_files/../../sections/todo/view__stats.js:195
 #: data/po_files/../../sections/todo/view__stats.js:289
-#: data/po_files/../../sections/todo/view__stats.js:689
+#: data/po_files/../../sections/todo/view__stats.js:693
 msgid "Projects"
 msgstr "Projekte"
 
@@ -452,33 +452,33 @@ msgstr "<b>Statistik für <i>Projekt</i>: </b>"
 
 #: data/po_files/../../sections/todo/view__stats.js:624
 #: data/po_files/../../sections/todo/view__stats.js:648
-#: data/po_files/../../sections/todo/view__stats.js:688
-#: data/po_files/../../sections/todo/view__stats.js:1153
-#: data/po_files/../../sections/todo/view__stats.js:1162
+#: data/po_files/../../sections/todo/view__stats.js:692
+#: data/po_files/../../sections/todo/view__stats.js:1157
+#: data/po_files/../../sections/todo/view__stats.js:1166
 #, fuzzy, javascript-format
 msgid "%d day"
 msgid_plural "%d days"
 msgstr[0] "in %d Tag"
 msgstr[1] "in %d Tagen"
 
-#: data/po_files/../../sections/todo/view__stats.js:1152
+#: data/po_files/../../sections/todo/view__stats.js:1156
 msgid "Average per day (including off days)"
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__stats.js:1161
+#: data/po_files/../../sections/todo/view__stats.js:1165
 msgid "Average per day (excluding off days)"
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__stats.js:1164
-#: data/po_files/../../sections/todo/view__stats.js:1174
+#: data/po_files/../../sections/todo/view__stats.js:1168
+#: data/po_files/../../sections/todo/view__stats.js:1178
 msgid "Total"
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__stats.js:1206
+#: data/po_files/../../sections/todo/view__stats.js:1210
 msgid "Interval"
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__stats.js:1208
+#: data/po_files/../../sections/todo/view__stats.js:1212
 #, fuzzy
 msgid "No intervals found."
 msgstr "Nichts gefunden."
