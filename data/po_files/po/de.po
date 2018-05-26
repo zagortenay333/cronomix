@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: timepp@zagortenay 333\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-05-26 19:09+0200\n"
+"POT-Creation-Date: 2018-05-26 22:24+0200\n"
 "PO-Revision-Date: 2017-08-29 10:51+0200\n"
 "Last-Translator: Christian Mattes <mac@tasarion.de>\n"
 "Language-Team: German\n"
@@ -223,7 +223,7 @@ msgid "Notification Sounds"
 msgstr "Benachrichtigungston"
 
 #: data/po_files/../../data/prefs.ui:1579
-#: data/po_files/../../sections/alarms.js:543
+#: data/po_files/../../sections/alarms.js:545
 #, fuzzy
 msgid "Repeat notification sound?"
 msgstr "Benachrichtigungston"
@@ -354,7 +354,7 @@ msgstr ""
 #: data/po_files/../../sections/todo/view__file_switcher.js:103
 #: data/po_files/../../sections/todo/view__file_switcher.js:447
 #: data/po_files/../../sections/pomodoro.js:773
-#: data/po_files/../../sections/alarms.js:582
+#: data/po_files/../../sections/alarms.js:584
 msgid "Ok"
 msgstr "Ok"
 
@@ -369,7 +369,7 @@ msgstr ""
 #: data/po_files/../../sections/todo/view__task_editor.js:124
 #: data/po_files/../../sections/todo/view__clear_tasks.js:92
 #: data/po_files/../../sections/todo/view__file_switcher.js:441
-#: data/po_files/../../sections/alarms.js:573
+#: data/po_files/../../sections/alarms.js:575
 msgid "Delete"
 msgstr "Löschen"
 
@@ -383,7 +383,7 @@ msgstr "Archiv"
 #: data/po_files/../../sections/todo/view__file_switcher.js:99
 #: data/po_files/../../sections/todo/view__file_switcher.js:446
 #: data/po_files/../../sections/pomodoro.js:774
-#: data/po_files/../../sections/alarms.js:581
+#: data/po_files/../../sections/alarms.js:583
 msgid "Cancel"
 msgstr "Abbrechen"
 
@@ -707,43 +707,43 @@ msgid "Add New Alarm..."
 msgstr "Neuer Wecker..."
 
 #. TRANSLATORS: %s is a time string in the format HH:MM (e.g., 13:44)
-#: data/po_files/../../sections/alarms.js:386
-#: data/po_files/../../sections/alarms.js:911
+#: data/po_files/../../sections/alarms.js:388
+#: data/po_files/../../sections/alarms.js:912
 #, javascript-format
 msgid "Alarm at %s"
 msgstr "Wecker für %s"
 
-#: data/po_files/../../sections/alarms.js:402
-#: data/po_files/../../sections/alarms.js:918
+#: data/po_files/../../sections/alarms.js:404
+#: data/po_files/../../sections/alarms.js:919
 msgid "Snooze"
 msgstr "Schlummern"
 
-#: data/po_files/../../sections/alarms.js:486
+#: data/po_files/../../sections/alarms.js:488
 msgid "Alarm time"
 msgstr "Weckzeit"
 
-#: data/po_files/../../sections/alarms.js:486
+#: data/po_files/../../sections/alarms.js:488
 msgid "(h:min)"
 msgstr "(h:min)"
 
-#: data/po_files/../../sections/alarms.js:525
+#: data/po_files/../../sections/alarms.js:527
 msgid "Snooze duration"
 msgstr "Schlummerdauer"
 
-#: data/po_files/../../sections/alarms.js:525
+#: data/po_files/../../sections/alarms.js:527
 msgid "(min)"
 msgstr "(min)"
 
-#: data/po_files/../../sections/alarms.js:555
+#: data/po_files/../../sections/alarms.js:557
 msgid "Alarm Message..."
 msgstr "Weckmeldung..."
 
-#: data/po_files/../../sections/alarms.js:737
+#: data/po_files/../../sections/alarms.js:738
 #, fuzzy
 msgid "Snoozed"
 msgstr "Schlummern"
 
-#: data/po_files/../../sections/alarms.js:935
+#: data/po_files/../../sections/alarms.js:936
 #, javascript-format
 msgid "%d alarm went off!"
 msgid_plural "%d alarms went off!"
