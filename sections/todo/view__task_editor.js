@@ -182,6 +182,14 @@ var ViewTaskEditor = new Lang.Class({
             if (event.get_key_symbol() === Clutter.Return)
                 MISC_UTILS.open_web_uri(TODO_TXT_SYNTAX_URL)
         });
+        this.actor.connect('key-release-event', (_, event) => {
+            switch (event.get_key_symbol()) {
+                case Clutter.KEY_KP_Enter:
+                case Clutter.Return:
+                    if (event.get_state() === Clutter.ModifierType.CONTROL_MASK)
+                        this.emit(this.mode, this._create_task_str());
+            }
+        });
     },
 
     // @word: string (a context or project)
