@@ -359,18 +359,24 @@ var ViewTaskEditor = new Lang.Class({
     _emit_ok: function () {
         if (this.done) return;
 
-        let text = this.entry.entry.get_text();
+        let text = this._create_task_str();
 
         if (! text) return;
 
         this.done = true;
+        this.emit(this.mode, text);
+    },
 
-        if (this.mode === 'edit-task')
-            this.emit(this.mode, text.replace(/\n/g, '\\n'));
+    _create_task_str: function () {
+        let text = this.entry.entry.get_text();
 
-        // If in add mode, we insert a creation date if the user didn't do it.
+        if (! text) return "";
+
         let words = text.split(' ');
 
+        if (this.mode === 'edit-task') return text.replace(/\n/g, '\\n');
+
+        // If in add mode, we insert a creation date if the user didn't do it.
         if (words[0] === 'x') {
             if (!Date.parse(words[1]))
                 words.splice(1, 0, G.date_yyyymmdd(), G.date_yyyymmdd());
@@ -385,7 +391,7 @@ var ViewTaskEditor = new Lang.Class({
             words.splice(0, 0, G.date_yyyymmdd());
         }
 
-        this.emit(this.mode, words.join(' ').replace(/\n/g, '\\n'));
+        return words.join(' ').replace(/\n/g, '\\n');
     },
 });
 Signals.addSignalMethods(ViewTaskEditor.prototype);
