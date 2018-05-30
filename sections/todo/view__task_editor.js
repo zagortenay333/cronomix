@@ -175,7 +175,7 @@ var ViewTaskEditor = new Lang.Class({
             if (this.ext.needs_scrollbar())
                 this.completion_menu.vscrollbar_policy = Gtk.PolicyType.ALWAYS;
         });
-        this.button_ok.connect('clicked', () => this.emit(this.mode, this._create_task_str()));
+        this.button_ok.connect('clicked', () => this._emit_ok());
         this.button_cancel.connect('clicked', () => this.emit('cancel'));
         this.help_label.connect('button-press-event', () => MISC_UTILS.open_web_uri(TODO_TXT_SYNTAX_URL));
         this.help_label.connect('key-press-event', (_, event) => {
@@ -186,8 +186,9 @@ var ViewTaskEditor = new Lang.Class({
             switch (event.get_key_symbol()) {
                 case Clutter.KEY_KP_Enter:
                 case Clutter.Return:
-                    if (event.get_state() === Clutter.ModifierType.CONTROL_MASK)
-                        this.emit(this.mode, this._create_task_str());
+                    if (event.get_state() === Clutter.ModifierType.CONTROL_MASK) {
+                        this._emit_ok();
+                    }
             }
         });
     },
@@ -355,12 +356,20 @@ var ViewTaskEditor = new Lang.Class({
         item.pseudo_class = 'active';
     },
 
-    _create_task_str: function () {
+    _emit_ok: function () {
+        if (this.done) return;
+
+        let text = this.entry.entry.get_text();
+
+        if (! text) return;
+
+        this.done = true;
+
         if (this.mode === 'edit-task')
-            return this.entry.entry.get_text().replace(/\n/g, '\\n');
+            this.emit(this.mode, text.replace(/\n/g, '\\n'));
 
         // If in add mode, we insert a creation date if the user didn't do it.
-        let words = this.entry.entry.get_text().split(' ');
+        let words = text.split(' ');
 
         if (words[0] === 'x') {
             if (!Date.parse(words[1]))
@@ -376,7 +385,7 @@ var ViewTaskEditor = new Lang.Class({
             words.splice(0, 0, G.date_yyyymmdd());
         }
 
-        return words.join(' ').replace(/\n/g, '\\n');
+        this.emit(this.mode, words.join(' ').replace(/\n/g, '\\n'));
     },
 });
 Signals.addSignalMethods(ViewTaskEditor.prototype);
