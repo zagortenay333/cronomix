@@ -333,9 +333,7 @@ var SectionMain = new Lang.Class({
         let [, lines] = this.todo_txt_file.load_contents(null);
         lines = String(lines).split(/\r?\n/).filter((l) => /\S/.test(l));
 
-        let s = Date.now();
         this.create_tasks(lines, () => {
-            log(">>>>>>>>>>>>>>>>>>>>> time: " + (Date.now() - s));
             let needs_write = this._check_dates();
             this.on_tasks_changed(needs_write);
             this.time_tracker = new TIME_TRACKER.TimeTracker(this.ext, this);

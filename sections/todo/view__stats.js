@@ -62,7 +62,7 @@ var StatsView = new Lang.Class({
         this.bottom_box.hide();
 
         // so we can have a side menu in the middle next to a vertical box layout
-        this.inner_middle_box = new St.BoxLayout({ vertical: true, x_expand: true, y_expand: true });
+        this.inner_middle_box = new St.BoxLayout({ visible: false, vertical: true, x_expand: true, y_expand: true });
         this.middle_box.add_child(this.inner_middle_box);
 
         {
