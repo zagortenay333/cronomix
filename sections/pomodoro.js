@@ -593,39 +593,32 @@ var SectionMain = new Lang.Class({
                 return;
         }
 
-        if (do_play_sound) {
-            this.sound_player.play(this.settings.get_boolean('pomodoro-do-repeat-notif-sound'));
-        }
-
-        if (this.settings.get_enum('pomodoro-notif-style') === NotifStyle.FULLSCREEN) {
-            this.fullscreen.open();
-            return;
-        }
-
         if (this.fullscreen.is_open) {
-            return;
+        } else if (this.settings.get_enum('pomodoro-notif-style') === NotifStyle.FULLSCREEN) {
+            this.fullscreen.open();
+        } else {
+            if (this.notif_source) {
+                this.notif_source.destroyNonResidentNotifications();
+            }
+
+            this.notif_source = new MessageTray.Source();
+            Main.messageTray.add(this.notif_source);
+            this.notif_source.connect('destroy', () => this.sound_player.stop());
+
+            let icon   = new St.Icon({ icon_name: 'timepp-pomodoro-symbolic' });
+            let params = {
+                bannerMarkup : true,
+                gicon        : icon.gicon,
+            };
+
+            let notif = new MessageTray.Notification(this.notif_source, msg, '', params);
+            notif.setUrgency(MessageTray.Urgency.CRITICAL);
+
+            this.notif_source.notify(notif);
         }
 
-        if (this.notif_source) {
-            this.notif_source.destroyNonResidentNotifications();
-        }
-
-        this.notif_source = new MessageTray.Source();
-        Main.messageTray.add(this.notif_source);
-        this.notif_source.connect('destroy', () => this.sound_player.stop());
-
-        let icon = new St.Icon({ icon_name: 'timepp-pomodoro-symbolic' });
-
-        let params = {
-            bannerMarkup : true,
-            gicon        : icon.gicon,
-        };
-
-        let notif = new MessageTray.Notification(this.notif_source, msg, '', params);
-
-        notif.setUrgency(MessageTray.Urgency.CRITICAL);
-
-        this.notif_source.notify(notif);
+        if (do_play_sound)
+            this.sound_player.play(this.settings.get_boolean('pomodoro-do-repeat-notif-sound'));
     },
 
     _toggle_panel_mode: function () {

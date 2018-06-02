@@ -442,47 +442,39 @@ var SectionMain = new Lang.Class({
     },
 
     _send_notif: function () {
+        if (this.fullscreen.is_open || this.settings.get_enum('timer-notif-style') === NotifStyle.FULLSCREEN) {
+            this.fullscreen.open();
+            this.fullscreen.on_timer_expired();
+        } else {
+            if (this.notif_source) {
+                this.notif_source.destroyNonResidentNotifications();
+            }
+
+            this.notif_source = new MessageTray.Source();
+            Main.messageTray.add(this.notif_source);
+            this.notif_source.connect('destroy', () => this.sound_player.stop());
+
+            let icon = new St.Icon({ icon_name: 'timepp-timer-symbolic' });
+            let params = {
+                bannerMarkup : true,
+                gicon        : icon.gicon,
+            };
+
+            let notif = new MessageTray.Notification(
+                this.notif_source,
+                TIMER_EXPIRED_MSG,
+                this.current_preset.msg || '',
+                params
+            );
+
+            notif.setUrgency(MessageTray.Urgency.CRITICAL);
+            this.notif_source.notify(notif);
+        }
+
         if (this.settings.get_boolean('timer-play-sound')) {
             this.sound_player.set_sound_uri(this.settings.get_string('timer-sound-file-path'));
             this.sound_player.play(this.current_preset.repeat_sound);
         }
-
-        if (this.fullscreen.is_open) {
-            this.fullscreen.on_timer_expired();
-            return;
-        }
-
-        if (this.settings.get_enum('timer-notif-style') === NotifStyle.FULLSCREEN) {
-            this.fullscreen.open();
-            this.fullscreen.on_timer_expired();
-            return;
-        }
-
-        if (this.notif_source) {
-            this.notif_source.destroyNonResidentNotifications();
-        }
-
-        this.notif_source = new MessageTray.Source();
-        Main.messageTray.add(this.notif_source);
-        this.notif_source.connect('destroy', () => this.sound_player.stop());
-
-        let icon = new St.Icon({ icon_name: 'timepp-timer-symbolic' });
-
-        let params = {
-            bannerMarkup : true,
-            gicon        : icon.gicon,
-        };
-
-        let notif = new MessageTray.Notification(
-            this.notif_source,
-            TIMER_EXPIRED_MSG,
-            this.current_preset.msg || '',
-            params
-        );
-
-        notif.setUrgency(MessageTray.Urgency.CRITICAL);
-
-        this.notif_source.notify(notif);
     },
 
     _show_presets: function () {

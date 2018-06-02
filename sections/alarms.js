@@ -368,44 +368,40 @@ var SectionMain = new Lang.Class({
     },
 
     _send_notif: function (alarm) {
+        if (this.settings.get_enum('alarms-notif-style') === NotifStyle.FULLSCREEN) {
+            this.fullscreen.fire_alarm(alarm);
+        } else {
+            let source = new MessageTray.Source();
+            Main.messageTray.add(source);
+            source.connect('destroy', () => this.sound_player.stop());
+
+            // TRANSLATORS: %s is a time string in the format HH:MM (e.g., 13:44)
+            let title  = _('Alarm at %s').format(alarm.time_str);
+            let icon   = new St.Icon({ icon_name: 'timepp-alarms-symbolic' });
+            let params = {
+                bannerMarkup : true,
+                gicon        : icon.gicon,
+            };
+
+            let notif = new MessageTray.Notification(
+                source,
+                title,
+                alarm.msg,
+                params
+            );
+
+            notif.setUrgency(MessageTray.Urgency.CRITICAL);
+            notif.addAction(`${_('Snooze')} (${alarm.snooze_dur} min)`, () => {
+                this.snooze_alarm(alarm);
+            });
+
+            source.notify(notif);
+        }
+
         if (this.settings.get_boolean('alarms-play-sound')) {
             this.sound_player.set_sound_uri(this.settings.get_string('alarms-sound-file-path'));
             this.sound_player.play(alarm.repeat_sound);
         }
-
-        if (this.settings.get_enum('alarms-notif-style') === NotifStyle.FULLSCREEN) {
-            this.fullscreen.fire_alarm(alarm);
-            return;
-        }
-
-        let source = new MessageTray.Source();
-        Main.messageTray.add(source);
-        source.connect('destroy', () => this.sound_player.stop());
-
-        let icon = new St.Icon({ icon_name: 'timepp-alarms-symbolic' });
-
-        // TRANSLATORS: %s is a time string in the format HH:MM (e.g., 13:44)
-        let title = _('Alarm at %s').format(alarm.time_str);
-
-        let params = {
-            bannerMarkup : true,
-            gicon        : icon.gicon,
-        };
-
-        let notif = new MessageTray.Notification(
-            source,
-            title,
-            alarm.msg,
-            params
-        );
-
-        notif.setUrgency(MessageTray.Urgency.CRITICAL);
-
-        notif.addAction(`${_('Snooze')} (${alarm.snooze_dur} min)`, () => {
-            this.snooze_alarm(alarm);
-        });
-
-        source.notify(notif);
     },
 
     _update_panel_item_UI: function (today = new Date().getDay()) {
