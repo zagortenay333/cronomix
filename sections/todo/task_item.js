@@ -244,19 +244,35 @@ var TaskItem = new Lang.Class({
         //
         // Parse 'header'
         //
+        // The header consists of the first few tokens separated by a single
+        // space. The possibilities are:
+        //
+        // - ["x"]
+        // - ["x", " ", "completion-date"]
+        // - ["x", " ", "completion-date", " ", "creation-date"]
+        //
+        // - ["(A)"]
+        // - ["(A)", " ", "creation-date"]
+        //
+        // - ["creation-date"]
+        // - []
+        //
+        // NOTE: split_on_whitespace() keeps the whitespace between tokens as
+        // separate items in the words array.
+        //
         if (words[0] === 'x') {
             this.completed                   = true;
             this.completion_checkbox.checked = true;
             this.actor.add_style_class_name('completed');
 
-            if (len >= 1 & REG.ISO_DATE.test(words[1]) && Date.parse(words[1])) {
-                this.completion_date     = words[1];
+            if (len > 2 && REG.ISO_DATE.test(words[2]) && Date.parse(words[2])) {
+                this.completion_date = words[2];
 
-                if (len >= 2 && REG.ISO_DATE.test(words[2]) && Date.parse(words[2])) {
-                    this.creation_date       = words[2];
-                    desc_pos                 = 3;
+                if (len > 4 && REG.ISO_DATE.test(words[4]) && Date.parse(words[4])) {
+                    this.creation_date = words[4];
+                    desc_pos           = 5;
                 }
-                else desc_pos = 2;
+                else desc_pos = 3;
             }
             else desc_pos = 1;
         }
@@ -266,30 +282,31 @@ var TaskItem = new Lang.Class({
             this.prio_label.text    = words[0];
             this.priority           = words[0];
 
-            if (len >= 1 && REG.ISO_DATE.test(words[1]) && Date.parse(words[1])) {
-                this.creation_date       = words[1];
-                desc_pos                 = 2;
+            if (len > 2 && REG.ISO_DATE.test(words[2]) && Date.parse(words[2])) {
+                this.creation_date = words[2];
+                desc_pos           = 3;
             }
             else desc_pos = 1;
         }
         else if (REG.ISO_DATE.test(words[0]) && Date.parse(words[0])) {
-            this.creation_date       = words[0];
-            desc_pos                 = 1;
+            this.creation_date = words[0];
+            desc_pos           = 1;
         }
 
 
         //
         // Parse 'description'
         //
+        // The description is the rest of the task string.
+        //
+        if (words.length && !/\S/.test(words[desc_pos])) desc_pos++;
         words = words.slice(desc_pos, len);
         len   = words.length;
 
         let inside_backticks = false;
 
-        let word;
-
         for (let i = 0; i < len; i++) {
-            word = words[i].trim();
+            let word = words[i];
 
             if (word.startsWith('`') || word.endsWith('`')) inside_backticks = !inside_backticks;
             if (inside_backticks) continue;
@@ -401,7 +418,7 @@ var TaskItem = new Lang.Class({
 
         this.description_markup = words;
 
-        words = words.join(' ').replace(/ ?\n ?/g, '\n');
+        words = words.join('');
         words = MISC_UTILS.markdown_to_pango(words, this.ext.markdown_map);
 
         this.msg.clutter_text.set_markup(words);
@@ -430,7 +447,7 @@ var TaskItem = new Lang.Class({
         if (do_recur) {
             // update/insert creation date
             {
-                let words = this.task_str.split(' ');
+                let words = MISC_UTILS.split_on_whitespace(this.task_str);
                 let idx;
 
                 if      (this.completed)          idx = 2;
@@ -442,7 +459,7 @@ var TaskItem = new Lang.Class({
                 else
                     words.splice(idx, 0, G.date_yyyymmdd());
 
-                this.task_str = words.join(' ');
+                this.task_str = words.join('');
             }
 
             if (this.completed) this.toggle_task();
@@ -584,7 +601,7 @@ var TaskItem = new Lang.Class({
                 this.description_markup[it].slice(this.description_markup[it].indexOf('>'));
         }
 
-        let markup = this.description_markup.join(' ').replace(/ ?\n ?/g, '\n');
+        let markup = this.description_markup.join('');
         markup     = MISC_UTILS.markdown_to_pango(markup, this.ext.markdown_map);
 
         this.msg.clutter_text.set_markup(markup);
@@ -683,7 +700,7 @@ var TaskItem = new Lang.Class({
 
     toggle_task: function () {
         if (this.completed) {
-            let words = this.task_str.split(' ');
+            let words = MISC_UTILS.split_on_whitespace(this.task_str);
 
             // See if there's an old priority stored in an ext (e.g., pri:A).
             let prio  = '';
@@ -699,7 +716,7 @@ var TaskItem = new Lang.Class({
             if (Date.parse(words[1])) words.splice(0, 2);
             else                      words.splice(0, 1);
 
-            this.reset(true, prio + words.join(' '));
+            this.reset(true, prio + words.join(''));
         } else {
             this.delegate.time_tracker.stop_tracking(this);
 
@@ -795,7 +812,7 @@ var TaskItem = new Lang.Class({
         } else {
             this.pin_icon.remove_style_class_name('active');
 
-            let words = this.task_str.split(' ');
+            let words = MISC_UTILS.split_on_whitespace(this.task_str);
             for (let i = 0, len = words.length; i < len; i++) {
                 if (REG.TODO_PIN_EXT.test(words[i])) {
                     words.splice(i, 1);
@@ -803,7 +820,7 @@ var TaskItem = new Lang.Class({
                 }
             }
 
-            this.task_str = words.join(' ');
+            this.task_str = words.join('');
         }
 
         if (this.delegate.time_tracker) {
@@ -846,28 +863,23 @@ var TaskItem = new Lang.Class({
 
     // Return word under mouse cursor if it's a context or project, else null.
     _find_keyword: function (event) {
-        let len    = this.msg.clutter_text.text.length;
         let [x, y] = event.get_coords();
         [, x, y]   = this.msg.transform_stage_point(x, y);
         let pos    = this.msg.clutter_text.coords_to_position(x, y);
 
+        if (pos === this.msg.text.length) return;
 
-        let words   = MISC_UTILS.split_on_whitespace(this.msg.get_text());
+        let words = MISC_UTILS.split_on_whitespace(this.msg.get_text());
+
         let i       = 0;
         let abs_idx = 0;
 
-        outer: for (; i < words.length; i++) {
-            for (let j = 0; j < words[i].length; j++) {
-                if (abs_idx === pos) break outer;
-                abs_idx++;
-            }
-
-            if (!words[i].endsWith('\n') && !(i+1 < words.length && words[i+1].startsWith('\n'))) {
-                abs_idx++;
-            }
+        for (; i < words.length; i++) {
+            abs_idx += words[i].length;
+            if (pos < abs_idx) break;
         }
 
-        if (i > words.length - 1) return null;
+        if (i >= words.length) return null;
 
         if (REG.TODO_CONTEXT.test(words[i]) ||
             REG.TODO_PROJ.test(words[i]) ||

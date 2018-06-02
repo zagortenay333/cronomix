@@ -44,7 +44,7 @@ var ViewFileSwitcher = new Lang.Class({
         this.delegate = delegate;
 
 
-        this.linkm            = new TEXT_LINKS_MNGR.TextLinksManager(MISC_UTILS.split_on_whitespace);
+        this.linkm            = new TEXT_LINKS_MNGR.TextLinksManager();
         this.file_items       = new Set();
         this.active_file      = this.delegate.cache.active_file;
         this.file_info_editor = null;
@@ -287,7 +287,7 @@ var ViewFileSwitcher = new Lang.Class({
                 '"><u><b>' + token + '</b></u></span>';
         }
 
-        return text.join(' ').replace(/ *\r?\n */g, '\n');
+        return text.join('');
     },
 
     _on_file_item_event: function (item, event) {

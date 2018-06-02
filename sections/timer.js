@@ -92,7 +92,7 @@ var SectionMain = new Lang.Class({
         }
 
 
-        this.linkm = new TEXT_LINKS_MNGR.TextLinksManager(MISC_UTILS.split_on_whitespace);
+        this.linkm = new TEXT_LINKS_MNGR.TextLinksManager();
         this.sigm  = new SIG_MANAGER.SignalManager();
         this.keym  = new KEY_MANAGER.KeybindingManager(this.settings);
         this.sound_player = new SOUND_PLAYER.SoundPlayer();
@@ -572,7 +572,7 @@ var SectionMain = new Lang.Class({
             }
         }
 
-        text = text.join(' ').replace(/ ?\n ?/g, '\n');
+        text = text.join('');
         return MISC_UTILS.markdown_to_pango(text, this.ext.markdown_map);
     },
 });
