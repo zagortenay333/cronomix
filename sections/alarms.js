@@ -950,11 +950,12 @@ const AlarmFullscreen = new Lang.Class({
             body = new St.Label({ y_align: St.Align.END, x_align: St.Align.START, style_class: 'body'});
             alarm_card.add_child(body);
 
-            body.clutter_text.set_markup(this.delegate.highlight_tokens(msg));
             body.clutter_text.ellipsize        = Pango.EllipsizeMode.NONE;
             body.clutter_text.single_line_mode = false;
             body.clutter_text.line_wrap        = true;
             body.clutter_text.line_wrap_mode   = Pango.WrapMode.WORD_CHAR;
+
+            body.clutter_text.set_markup(this.delegate.highlight_tokens(msg));
 
             this.delegate.linkm.add_label_actor(body, new Map([
                 [REG.URL       , MISC_UTILS.open_web_uri],
