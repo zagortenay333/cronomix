@@ -20,6 +20,7 @@ const ngettext = Gettext.ngettext;
 const FUZZ         = ME.imports.lib.fuzzy_search;
 const MULTIL_ENTRY = ME.imports.lib.multiline_entry;
 const MISC_UTILS   = ME.imports.lib.misc_utils;
+const RESIZE       = ME.imports.lib.resize;
 const REG          = ME.imports.lib.regex;
 
 
@@ -78,8 +79,10 @@ var ViewTaskEditor = new Lang.Class({
         this.entry_container = new St.BoxLayout({ vertical: true, style_class: 'row' });
         this.content_box.add_child(this.entry_container);
 
-        this.entry = new MULTIL_ENTRY.MultiLineEntry(_('Task...'), true);
+        this.entry = new MULTIL_ENTRY.MultiLineEntry('', true);
         this.entry_container.add_actor(this.entry.actor);
+        this.entry.automatic_newline_insert = false;
+        this.entry.keep_min_height          = false;
 
         this.entry.scroll_box.vscrollbar_policy = Gtk.PolicyType.NEVER;
         this.entry.scroll_box.hscrollbar_policy = Gtk.PolicyType.NEVER;
@@ -87,6 +90,8 @@ var ViewTaskEditor = new Lang.Class({
         if (this.mode === 'edit-task') {
             this.entry.set_text(task.task_str.replace(/\\n/g, '\n'));
         }
+
+        this.entry_resize = new RESIZE.MakeResizable(this.entry.entry);
 
 
         //
@@ -162,9 +167,7 @@ var ViewTaskEditor = new Lang.Class({
                 return Clutter.EVENT_STOP;
             }
         });
-        this.entry.entry.clutter_text.connect('activate', () => {
-            if (this.completion_menu.visible) this._on_completion_selected();
-        });
+        this.entry.entry.clutter_text.connect('activate', () => this._on_activate());
         this.entry.entry.connect('allocation-changed', () => {
             this.entry.scroll_box.vscrollbar_policy = Gtk.PolicyType.NEVER;
             if (ext.needs_scrollbar())
@@ -320,8 +323,11 @@ var ViewTaskEditor = new Lang.Class({
                                   this.curr_selected_completion);
     },
 
-    _on_completion_selected: function () {
-        if (! this.curr_selected_completion) return;
+    _on_activate: function () {
+        if (!this.completion_menu.visible || !this.curr_selected_completion) {
+            this.entry.insert_newline();
+            return;
+        }
 
         this.text_changed_handler_block = true;
 

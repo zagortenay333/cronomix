@@ -416,6 +416,8 @@ var SectionMain = new Lang.Class({
     },
 
     highlight_tokens: function (text) {
+        if (! text) return "";
+
         text = GLib.markup_escape_text(text, -1);
         text = MISC_UTILS.split_on_whitespace(text);
 
