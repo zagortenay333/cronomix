@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: timepp@zagortenay 333\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-04 14:33+0200\n"
+"POT-Creation-Date: 2018-06-05 20:08+0200\n"
 "PO-Revision-Date: 2017-08-29 10:51+0200\n"
 "Last-Translator: Christian Mattes <mac@tasarion.de>\n"
 "Language-Team: German\n"
@@ -352,7 +352,7 @@ msgstr ""
 #: data/po_files/../../sections/todo/view__stats.js:246
 #: data/po_files/../../sections/todo/view__filters.js:206
 #: data/po_files/../../sections/todo/view__file_switcher.js:103
-#: data/po_files/../../sections/todo/view__file_switcher.js:447
+#: data/po_files/../../sections/todo/view__file_switcher.js:457
 #: data/po_files/../../sections/pomodoro.js:766
 #: data/po_files/../../sections/alarms.js:582
 msgid "Ok"
@@ -364,7 +364,7 @@ msgstr ""
 
 #: data/po_files/../../sections/todo/view__task_editor.js:129
 #: data/po_files/../../sections/todo/view__clear_tasks.js:92
-#: data/po_files/../../sections/todo/view__file_switcher.js:441
+#: data/po_files/../../sections/todo/view__file_switcher.js:451
 #: data/po_files/../../sections/alarms.js:573
 msgid "Delete"
 msgstr "Löschen"
@@ -377,7 +377,7 @@ msgstr "Archiv"
 #: data/po_files/../../sections/todo/view__stats.js:249
 #: data/po_files/../../sections/todo/view__clear_tasks.js:95
 #: data/po_files/../../sections/todo/view__file_switcher.js:99
-#: data/po_files/../../sections/todo/view__file_switcher.js:446
+#: data/po_files/../../sections/todo/view__file_switcher.js:456
 #: data/po_files/../../sections/pomodoro.js:767
 #: data/po_files/../../sections/alarms.js:581
 msgid "Cancel"
@@ -609,25 +609,25 @@ msgstr[1] "%d Aufgaben"
 msgid "Add File"
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__file_switcher.js:383
+#: data/po_files/../../sections/todo/view__file_switcher.js:393
 msgid "Unique name"
 msgstr "Eindeutiger Name"
 
-#: data/po_files/../../sections/todo/view__file_switcher.js:394
+#: data/po_files/../../sections/todo/view__file_switcher.js:404
 msgid "Todo file"
 msgstr "Aufgaben-Datei"
 
-#: data/po_files/../../sections/todo/view__file_switcher.js:408
+#: data/po_files/../../sections/todo/view__file_switcher.js:418
 #, fuzzy
 msgid "Done file"
 msgstr "Aufgaben-Datei"
 
-#: data/po_files/../../sections/todo/view__file_switcher.js:408
-#: data/po_files/../../sections/todo/view__file_switcher.js:423
+#: data/po_files/../../sections/todo/view__file_switcher.js:418
+#: data/po_files/../../sections/todo/view__file_switcher.js:433
 msgid "optional"
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__file_switcher.js:423
+#: data/po_files/../../sections/todo/view__file_switcher.js:433
 #, fuzzy
 msgid "Time-tracker directory"
 msgstr "csv-Verzeichnis für Zeiterfassung (optional)"
