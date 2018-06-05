@@ -116,6 +116,7 @@ var ViewFileSwitcher = new Lang.Class({
         this.button_add_file.connect('clicked', () => this._show_file_editor());
         this.button_cancel.connect('clicked', () => this.emit('cancel'));
         this.button_ok.connect('clicked', () => this._on_file_selected(this.active_file));
+        this.entry.clutter_text.connect('activate', () => this._select_first());
     },
 
     _search: function () {
@@ -202,11 +203,12 @@ var ViewFileSwitcher = new Lang.Class({
 
     _add_new_file_item: function (file) {
         let item = {};
-
         this.file_items.add(item);
+
         item.file = file;
 
         item.actor = new St.BoxLayout({ can_focus: true, reactive: true, vertical: true, style_class: 'file-switcher-item' });
+        item.actor._delegate = item;
 
         item.header = new St.BoxLayout();
         item.actor.add_child(item.header);
@@ -223,6 +225,7 @@ var ViewFileSwitcher = new Lang.Class({
         {
             item.msg = new St.Label({ y_align: Clutter.ActorAlign.CENTER });
             item.actor.add_child(item.msg);
+
             item.msg.clutter_text.line_wrap      = true;
             item.msg.clutter_text.ellipsize      = Pango.EllipsizeMode.NONE;
             item.msg.clutter_text.line_wrap_mode = Pango.WrapMode.WORD_CHAR;
@@ -258,6 +261,13 @@ var ViewFileSwitcher = new Lang.Class({
 
 
         return item;
+    },
+
+    _select_first: function () {
+        let c = this.file_items_scrollbox.get_first_child();
+        if (!c) return;
+
+        this._on_file_selected(c._delegate.file.name);
     },
 
     _on_file_selected: function (active_name) {

@@ -855,7 +855,7 @@ var SectionMain = new Lang.Class({
             view           : view,
             view_name      : G.View.FILE_SWITCH,
             actors         : [view.actor],
-            focused_actor  : view.button_add_file,
+            focused_actor  : this.cache.todo_files.length ? view.entry : view.button_add_file,
             close_callback : () => { view.close(); },
         });
 
