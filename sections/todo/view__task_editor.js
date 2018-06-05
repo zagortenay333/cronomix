@@ -79,7 +79,7 @@ var ViewTaskEditor = new Lang.Class({
         this.entry_container = new St.BoxLayout({ vertical: true, style_class: 'row' });
         this.content_box.add_child(this.entry_container);
 
-        this.entry = new MULTIL_ENTRY.MultiLineEntry('', true);
+        this.entry = new MULTIL_ENTRY.MultiLineEntry(_('Task...'), true);
         this.entry_container.add_actor(this.entry.actor);
         this.entry.automatic_newline_insert = false;
         this.entry.keep_min_height          = false;
