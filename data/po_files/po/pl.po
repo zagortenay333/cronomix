@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-05 20:08+0200\n"
+"POT-Creation-Date: 2018-06-06 00:57+0200\n"
 "PO-Revision-Date: 2018-01-10 10:35+0100\n"
 "Last-Translator: Piotr Komur <pkomur@gmail.com>\n"
 "Language-Team: \n"
@@ -360,6 +360,11 @@ msgstr ""
 #: data/po_files/../../sections/alarms.js:582
 msgid "Ok"
 msgstr "OK"
+
+#: data/po_files/../../sections/todo/view__task_editor.js:82
+#, fuzzy
+msgid "Task..."
+msgstr "Zadanie..."
 
 #: data/po_files/../../sections/todo/view__task_editor.js:103
 msgid "syntax help"

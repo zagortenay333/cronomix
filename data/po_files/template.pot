@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-05 20:08+0200\n"
+"POT-Creation-Date: 2018-06-06 00:57+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -342,6 +342,10 @@ msgstr ""
 #: data/po_files/../../sections/pomodoro.js:766
 #: data/po_files/../../sections/alarms.js:582
 msgid "Ok"
+msgstr ""
+
+#: data/po_files/../../sections/todo/view__task_editor.js:82
+msgid "Task..."
 msgstr ""
 
 #: data/po_files/../../sections/todo/view__task_editor.js:103

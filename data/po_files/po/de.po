@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: timepp@zagortenay 333\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-05 20:08+0200\n"
+"POT-Creation-Date: 2018-06-06 00:57+0200\n"
 "PO-Revision-Date: 2017-08-29 10:51+0200\n"
 "Last-Translator: Christian Mattes <mac@tasarion.de>\n"
 "Language-Team: German\n"
@@ -357,6 +357,11 @@ msgstr ""
 #: data/po_files/../../sections/alarms.js:582
 msgid "Ok"
 msgstr "Ok"
+
+#: data/po_files/../../sections/todo/view__task_editor.js:82
+#, fuzzy
+msgid "Task..."
+msgstr "Aufgaben"
 
 #: data/po_files/../../sections/todo/view__task_editor.js:103
 msgid "syntax help"
