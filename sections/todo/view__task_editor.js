@@ -83,6 +83,7 @@ var ViewTaskEditor = new Lang.Class({
         this.entry_container.add_actor(this.entry.actor);
         this.entry.automatic_newline_insert = false;
         this.entry.keep_min_height          = false;
+        this.entry.resize_with_keyboard     = true;
 
         this.entry.scroll_box.vscrollbar_policy = Gtk.PolicyType.NEVER;
         this.entry.scroll_box.hscrollbar_policy = Gtk.PolicyType.NEVER;
@@ -192,6 +193,7 @@ var ViewTaskEditor = new Lang.Class({
                     if (event.get_state() === Clutter.ModifierType.CONTROL_MASK) {
                         this._emit_ok();
                     }
+                    break;
             }
         });
     },

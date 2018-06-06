@@ -595,7 +595,6 @@ const StopwatchFullscreen = new Lang.Class({
                     return Clutter.EVENT_STOP;
                 case Clutter.KEY_l:
                 case Clutter.KEY_KP_Enter:
-                case Clutter.KEY_ISO_Enter:
                 case Clutter.Return:
                     this.delegate.lap();
                     return Clutter.EVENT_STOP;
