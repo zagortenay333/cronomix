@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-06 00:57+0200\n"
+"POT-Creation-Date: 2018-06-06 20:20+0200\n"
 "PO-Revision-Date: 2018-03-11 21:49+0800\n"
 "Last-Translator: OriginCode <origincoder@yahoo.com>\n"
 "Language-Team: Chinese <kde-i18n-doc@kde.org>\n"
@@ -347,7 +347,7 @@ msgid "Automatic sorting"
 msgstr ""
 
 #: data/po_files/../../sections/todo/view__sort.js:106
-#: data/po_files/../../sections/todo/view__task_editor.js:145
+#: data/po_files/../../sections/todo/view__task_editor.js:146
 #: data/po_files/../../sections/todo/view__stats.js:246
 #: data/po_files/../../sections/todo/view__filters.js:206
 #: data/po_files/../../sections/todo/view__file_switcher.js:103
@@ -362,22 +362,22 @@ msgstr "好"
 msgid "Task..."
 msgstr "任务"
 
-#: data/po_files/../../sections/todo/view__task_editor.js:103
+#: data/po_files/../../sections/todo/view__task_editor.js:104
 msgid "syntax help"
 msgstr "语法帮助"
 
-#: data/po_files/../../sections/todo/view__task_editor.js:129
+#: data/po_files/../../sections/todo/view__task_editor.js:130
 #: data/po_files/../../sections/todo/view__clear_tasks.js:92
 #: data/po_files/../../sections/todo/view__file_switcher.js:451
 #: data/po_files/../../sections/alarms.js:573
 msgid "Delete"
 msgstr "删除"
 
-#: data/po_files/../../sections/todo/view__task_editor.js:137
+#: data/po_files/../../sections/todo/view__task_editor.js:138
 msgid "Archive"
 msgstr "储存"
 
-#: data/po_files/../../sections/todo/view__task_editor.js:142
+#: data/po_files/../../sections/todo/view__task_editor.js:143
 #: data/po_files/../../sections/todo/view__stats.js:249
 #: data/po_files/../../sections/todo/view__clear_tasks.js:95
 #: data/po_files/../../sections/todo/view__file_switcher.js:99

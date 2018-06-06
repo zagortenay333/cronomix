@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-06 00:57+0200\n"
+"POT-Creation-Date: 2018-06-06 20:20+0200\n"
 "PO-Revision-Date: 2018-01-10 10:35+0100\n"
 "Last-Translator: Piotr Komur <pkomur@gmail.com>\n"
 "Language-Team: \n"
@@ -351,7 +351,7 @@ msgid "Automatic sorting"
 msgstr ""
 
 #: data/po_files/../../sections/todo/view__sort.js:106
-#: data/po_files/../../sections/todo/view__task_editor.js:145
+#: data/po_files/../../sections/todo/view__task_editor.js:146
 #: data/po_files/../../sections/todo/view__stats.js:246
 #: data/po_files/../../sections/todo/view__filters.js:206
 #: data/po_files/../../sections/todo/view__file_switcher.js:103
@@ -366,22 +366,22 @@ msgstr "OK"
 msgid "Task..."
 msgstr "Zadanie..."
 
-#: data/po_files/../../sections/todo/view__task_editor.js:103
+#: data/po_files/../../sections/todo/view__task_editor.js:104
 msgid "syntax help"
 msgstr "podpowiedź składni"
 
-#: data/po_files/../../sections/todo/view__task_editor.js:129
+#: data/po_files/../../sections/todo/view__task_editor.js:130
 #: data/po_files/../../sections/todo/view__clear_tasks.js:92
 #: data/po_files/../../sections/todo/view__file_switcher.js:451
 #: data/po_files/../../sections/alarms.js:573
 msgid "Delete"
 msgstr "Usuń"
 
-#: data/po_files/../../sections/todo/view__task_editor.js:137
+#: data/po_files/../../sections/todo/view__task_editor.js:138
 msgid "Archive"
 msgstr "Archiwum"
 
-#: data/po_files/../../sections/todo/view__task_editor.js:142
+#: data/po_files/../../sections/todo/view__task_editor.js:143
 #: data/po_files/../../sections/todo/view__stats.js:249
 #: data/po_files/../../sections/todo/view__clear_tasks.js:95
 #: data/po_files/../../sections/todo/view__file_switcher.js:99
