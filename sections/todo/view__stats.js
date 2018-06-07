@@ -207,7 +207,7 @@ var StatsView = new Lang.Class({
         // date picker
         //
         {
-            let today      = G.date_yyyymmdd();
+            let today      = MISC_UTILS.date_yyyymmdd();
             let year_start = today.substr(0, 4) + '-01-01';
 
             this.date_picker = new DATE_PICKER.DatePicker(
@@ -225,7 +225,7 @@ var StatsView = new Lang.Class({
         // hot mode controls
         //
         {
-            let today = G.date_yyyymmdd();
+            let today = MISC_UTILS.date_yyyymmdd();
 
             this.hot_mode_control_box = new St.BoxLayout({ y_align: Clutter.ActorAlign.CENTER, visible: false, style_class: 'hot-mode-control-box' });
             this.top_box_left.insert_child_at_index(this.hot_mode_control_box, 0);
@@ -395,7 +395,7 @@ var StatsView = new Lang.Class({
             } else if (this.prev_mode.name === StatsMode.GLOBAL) {
                 this.show_mode__global(...this.prev_mode.args);
             } else {
-                this.show_mode__global(G.date_yyyymmdd());
+                this.show_mode__global(MISC_UTILS.date_yyyymmdd());
             }
 
             return Clutter.EVENT_STOP;
@@ -447,7 +447,7 @@ var StatsView = new Lang.Class({
         this.stats_unique_tasks    = Array.from(stats_unique_tasks);
         this.stats_unique_projects = Array.from(stats_unique_projects);
 
-        let today = G.date_yyyymmdd();
+        let today = MISC_UTILS.date_yyyymmdd();
 
         this.date_picker.set_range(oldest_date,  today);
         this.bound_date_1.set_range(oldest_date, today);
@@ -559,7 +559,7 @@ var StatsView = new Lang.Class({
                 this.heatmap_graph.update_params(this._get_stats__heatmap(label));
             }
 
-            let date = G.date_yyyymmdd(new Date(year, month));
+            let date = MISC_UTILS.date_yyyymmdd(new Date(year, month));
             this._update_heatmap_selected_square(date);
             this.heatmap_graph.draw_heatmap();
         }
@@ -846,7 +846,7 @@ var StatsView = new Lang.Class({
 
         while (date.getFullYear() === selected_year) {
             let day      = date.getDate();
-            let yyyymmdd = G.date_yyyymmdd(date);
+            let yyyymmdd = MISC_UTILS.date_yyyymmdd(date);
             let rgba     = color_map[5];
             let time     = 0;
 
@@ -1436,7 +1436,7 @@ var StatsView = new Lang.Class({
     },
 
     _update_string_date_map: function () {
-        let today  = G.date_yyyymmdd();
+        let today  = MISC_UTILS.date_yyyymmdd();
         let [oldest, ] = this.date_picker.get_range();
         let date_o = new Date(today + 'T00:00:00');
 
@@ -1446,16 +1446,16 @@ var StatsView = new Lang.Class({
 
         let day_pos = (7 - Shell.util_get_week_start() + date_o.getDay()) % 7;
         date_o.setDate(date_o.getDate() - day_pos);
-        this.string_date_map.get('week')[1] = [G.date_yyyymmdd(date_o), today];
+        this.string_date_map.get('week')[1] = [MISC_UTILS.date_yyyymmdd(date_o), today];
 
         date_o.setDate(1);
         this.string_date_map.get('month')[1] = [today.substr(0, 7) + '-01', today];
 
         date_o.setMonth(date_o.getMonth() - 2);
-        this.string_date_map.get('three_months')[1] = [G.date_yyyymmdd(date_o), today];
+        this.string_date_map.get('three_months')[1] = [MISC_UTILS.date_yyyymmdd(date_o), today];
 
         date_o.setMonth(date_o.getMonth() - 3);
-        this.string_date_map.get('six_months')[1] = [G.date_yyyymmdd(date_o), today];
+        this.string_date_map.get('six_months')[1] = [MISC_UTILS.date_yyyymmdd(date_o), today];
     },
 
     _on_heatmap_clicked: function (square_label) {

@@ -1,8 +1,9 @@
-const St      = imports.gi.St;
-const Clutter = imports.gi.Clutter;
-const Main    = imports.ui.main;
-const Lang    = imports.lang;
-const Signals = imports.signals;
+const St       = imports.gi.St;
+const Clutter  = imports.gi.Clutter;
+const Main     = imports.ui.main;
+const Lang     = imports.lang;
+const Signals  = imports.signals;
+const Mainloop = imports.mainloop;
 
 
 const ME = imports.misc.extensionUtils.getCurrentExtension();
@@ -34,11 +35,13 @@ var ViewClearTasks = new Lang.Class({
         this.ext      = ext;
         this.delegate = delegate;
 
+        Mainloop.idle_add(() => this.delegate.actor.add_style_class_name('view-clear-tasks'));
+
 
         //
         // draw
         //
-        this.actor = new St.Bin({ x_fill: true, style_class: 'view-box clear-view' });
+        this.actor = new St.Bin({ x_fill: true, style_class: 'view-box' });
 
         this.content_box = new St.BoxLayout({ x_expand: true, vertical: true, style_class: 'view-box-content' });
         this.actor.add_actor(this.content_box);
@@ -108,6 +111,11 @@ var ViewClearTasks = new Lang.Class({
             else
                 this.emit('archive-all');
         });
+    },
+
+    close: function () {
+        Mainloop.idle_add(() => this.delegate.actor.remove_style_class_name('view-clear-tasks'));
+        this.actor.destroy();
     },
 });
 Signals.addSignalMethods(ViewClearTasks.prototype);

@@ -598,11 +598,7 @@
 /* =====================================================================
  * @@@ Todo
  * ===================================================================== */
-.timepp-menu .todo-section .loading-msg,
-.timepp-menu .todo-section .no-todo-file-msg,
-.timepp-menu .todo-section .add-task {
-    font-weight: bold;
-}
+.timepp-menu .todo-section .add-task { font-weight: bold; }
 
 .timepp-menu .todo-section .pin-icon.active,
 .timepp-menu .todo-section .tracker-pause-icon,
@@ -612,11 +608,9 @@
 }
 
 .timepp-menu .todo-section .settings-content-box {}
-
 .timepp-menu .todo-section .tasks-container {}
-.timepp-menu .todo-section .tasks-content-box {
-    spacing: .5em;
-}
+
+.timepp-menu .todo-section .tasks-content-box { spacing: .5em; }
 
 .timepp-menu .todo-section .task-item {
     padding: .6em;
@@ -663,15 +657,8 @@
 .timepp-menu .todo-section .description-label {}
 .timepp-menu .todo-section .date-label {}
 
-.timepp-menu .todo-section .priority-label {
-    font-weight: bold;
-}
-
-.timepp-menu .todo-section .icon-bin {}
-
-.timepp-menu .todo-section .todotxt-extension-dates {
-    color: #000;
-}
+.timepp-menu .todo-section .priority-label { font-weight: bold; }
+.timepp-menu .todo-section .todotxt-extension-dates { color: #000; }
 
 .timepp-menu .todo-section .delete-completed-tasks {
     font-weight: bold;
@@ -685,10 +672,35 @@
     color: #5a94dc;
 }
 
-.timepp-menu .todo-section .task-item-header {
-    spacing: .4em;
+.timepp-menu .todo-section .task-item-header { spacing: .4em; }
+
+.timepp-menu .todo-section.view-default .view-box {
 }
 
+.timepp-menu .todo-section.view-default .view-box-content {
+    background: transparent;
+    padding: 0;
+    spacing: 1em;
+}
+
+.timepp-menu .todo-section.view-default.one-column .view-box {
+    padding: 0;
+}
+
+.timepp-menu .todo-section.view-default.one-column .kanban-column {
+    background: transparent;
+    border: 0;
+    padding: 0;
+}
+
+.timepp-menu .todo-section .kanban-column {
+    background: rgba(125, 125, 125, .15);
+    border: 1px rgba(125, 125, 125, .15);
+    padding: .5em;
+    border-radius: 2px;
+}
+
+.timepp-menu .todo-section .kanban-switcher-item,
 .timepp-menu .todo-section .file-switcher-item {
     background: rgba(125, 125, 125, .15);
     border-radius: 2px;
@@ -699,6 +711,7 @@
     spacing: .4em;
 }
 
+.timepp-menu .todo-section .kanban-switcher-item-title,
 .timepp-menu .todo-section .file-switcher-item-title {
     font-weight: bold;
 }
@@ -715,6 +728,10 @@
 .timepp-menu .todo-section .stats-item-title {}
 .timepp-menu .todo-section .stats-item-body {
     padding-left: 3em;
+}
+
+.timepp-menu .todo-section .loading-msg {
+    font-weight: bold;
 }
 
 .timepp-menu .todo-section .filter-settings-sector {
@@ -736,12 +753,8 @@
     spacing: .2em;
 }
 
-.timepp-menu .todo-section .todo-syntax-link {
-    padding: 0 .3em .3em 0;
-}
-
-.timepp-menu .todo-section .todo-syntax-link:focus StLabel,
-.timepp-menu .todo-section .todo-syntax-link:hover StLabel {
+.timepp-menu .todo-section .link:focus StLabel,
+.timepp-menu .todo-section .link:hover StLabel {
     color: #5a94dc;
     text-decoration: underline;
 }

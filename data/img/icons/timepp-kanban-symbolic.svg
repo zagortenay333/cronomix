@@ -17,7 +17,7 @@
    id="svg11300"
    sodipodi:version="0.32"
    inkscape:version="0.92.2 (5c3e80d, 2017-08-06)"
-   sodipodi:docname="kanban-symbolic.svg"
+   sodipodi:docname="timepp-kanban-symbolic.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
    version="1.0"
    style="display:inline;enable-background:new">
@@ -31,8 +31,8 @@
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
      inkscape:zoom="22.627417"
-     inkscape:cx="2.7655381"
-     inkscape:cy="8.0454596"
+     inkscape:cx="6.035907"
+     inkscape:cy="6.9406053"
      inkscape:current-layer="layer1"
      showgrid="true"
      inkscape:grid-bbox="true"
@@ -149,7 +149,7 @@
     <g
        style="display:inline;enable-background:new"
        id="g4589"
-       transform="translate(8.505859,287.23632)">
+       transform="translate(-6.494141,287.23632)">
       <g
          transform="translate(0,-284)"
          id="layer1-3"
@@ -158,7 +158,7 @@
     </g>
     <path
        style="display:inline;opacity:1;fill:#bebebe;fill-opacity:1;stroke:none;stroke-opacity:1;enable-background:new"
-       d="m 17,285 v 14 h 12 v -14 0 z m 1,1 h 10 v 12 H 18 Z"
+       d="m 2,285 v 14 h 12 v -14 0 z m 1,1 h 10 v 12 H 3 Z"
        id="rect823"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="ccccccccccc" />
@@ -167,11 +167,11 @@
        id="rect838"
        width="2"
        height="10"
-       x="19"
+       x="4"
        y="287" />
     <rect
        y="287"
-       x="25"
+       x="10"
        height="8"
        width="2"
        id="rect840"
@@ -180,35 +180,8 @@
        style="display:inline;opacity:1;fill:#bebebe;fill-opacity:1;stroke:none;stroke-width:1;stroke-opacity:1;enable-background:new"
        id="rect855"
        width="2"
-       height="6"
-       x="22"
+       height="5"
+       x="7"
        y="287" />
-    <path
-       sodipodi:nodetypes="ccccccccccc"
-       inkscape:connector-curvature="0"
-       id="path944"
-       d="m 0,284 v 16 h 15 v -16 0 z m 1,1 h 13 v 14 H 1 Z"
-       style="display:inline;opacity:1;fill:#bebebe;fill-opacity:1;stroke:none;stroke-opacity:1;enable-background:new" />
-    <rect
-       y="286"
-       x="2"
-       height="12"
-       width="3"
-       id="rect946"
-       style="display:inline;opacity:1;fill:#bebebe;fill-opacity:1;stroke:none;stroke-width:1;stroke-opacity:1;enable-background:new" />
-    <rect
-       style="display:inline;opacity:1;fill:#bebebe;fill-opacity:1;stroke:none;stroke-width:0.99999994;stroke-opacity:1;enable-background:new"
-       id="rect948"
-       width="3"
-       height="10"
-       x="10"
-       y="286" />
-    <rect
-       y="286"
-       x="6"
-       height="7"
-       width="3"
-       id="rect950"
-       style="display:inline;opacity:1;fill:#bebebe;fill-opacity:1;stroke:none;stroke-width:1;stroke-opacity:1;enable-background:new" />
   </g>
 </svg>

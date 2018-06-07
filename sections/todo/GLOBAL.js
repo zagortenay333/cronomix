@@ -1,11 +1,7 @@
-const ME = imports.misc.extensionUtils.getCurrentExtension();
-
-const Gettext  = imports.gettext.domain(ME.metadata['gettext-domain']);
-const _        = Gettext.gettext;
-const ngettext = Gettext.ngettext;
-
-
-const REG = ME.imports.lib.regex;
+var DNDGroup = {
+    TASK          : 'TASK',
+    KANBAN_COLUMN : 'KANBAN_COLUMN',
+};
 
 
 var SortOrder = {
@@ -28,45 +24,54 @@ var SortType = {
 
 
 var View = {
-    CLEAR         : 'CLEAR',
-    STATS         : 'STATS',
-    SEARCH        : 'SEARCH',
-    EDITOR        : 'EDITOR',
-    DEFAULT       : 'DEFAULT',
-    LOADING       : 'LOADING',
-    SELECT_SORT   : 'SELECT_SORT',
-    FILE_SWITCH   : 'FILE_SWITCH',
-    SELECT_FILTER : 'SELECT_FILTER',
+    CLEAR           : 'CLEAR',
+    STATS           : 'STATS',
+    SEARCH          : 'SEARCH',
+    EDITOR          : 'EDITOR',
+    DEFAULT         : 'DEFAULT',
+    LOADING         : 'LOADING',
+    SELECT_SORT     : 'SELECT_SORT',
+    FILE_SWITCH     : 'FILE_SWITCH',
+    SELECT_FILTER   : 'SELECT_FILTER',
+    KANBAN_SWITCHER : 'KANBAN_SWITCHER',
 };
 
 
-// return date string in yyyy-mm-dd format adhering to locale
-function date_yyyymmdd (date_obj) {
-    let now = date_obj || new Date();
+var SORT_RECORD = () => [
+    [SortType.PIN             , SortOrder.DESCENDING],
+    [SortType.COMPLETED       , SortOrder.ASCENDING],
+    [SortType.PRIORITY        , SortOrder.ASCENDING],
+    [SortType.DUE_DATE        , SortOrder.ASCENDING],
+    [SortType.RECURRENCE      , SortOrder.ASCENDING],
+    [SortType.CONTEXT         , SortOrder.ASCENDING],
+    [SortType.PROJECT         , SortOrder.ASCENDING],
+    [SortType.CREATION_DATE   , SortOrder.ASCENDING],
+    [SortType.COMPLETION_DATE , SortOrder.ASCENDING],
+];
 
-    let month = now.getMonth() + 1;
-    let day   = now.getDate();
 
-    month = (month < 10) ? ('-' + 0 + month) : ('-' + month);
-    day   = (day   < 10) ? ('-' + 0 + day)   : ('-' + day);
+var FILTER_RECORD = () => ({
+    invert_filters : false,
+    deferred       : false,
+    recurring      : false,
+    hidden         : false,
+    completed      : false,
+    no_priority    : false,
+    priorities     : [],
+    contexts       : [],
+    projects       : [],
+    custom         : [],
+    custom_active  : [],
+});
 
-    return now.getFullYear() + month + day;
-}
 
-
-function date_delta_str (date) {
-    let diff = Math.round(
-        (Date.parse(date + 'T00:00:00') -
-         Date.parse(date_yyyymmdd() + 'T00:00:00'))
-        / 86400000);
-
-    let abs = Math.abs(diff);
-
-    let res;
-
-    if (diff === 0)    res = _('today');
-    else if (diff < 0) res = ngettext('%d day ago', '%d days ago', abs).format(abs);
-    else               res = ngettext('in %d day', 'in %d days', abs).format(abs);
-
-    return res.replace(/ /g, '&#160;'); // non-breaking-space
-}
+var TODO_RECORD = () => ({
+    name             : "",
+    active           : false,
+    todo_file        : "", // (file path)
+    done_file        : "", // (file path or "")
+    time_tracker_dir : "", // (file path or "")
+    automatic_sort   : false,
+    filters          : FILTER_RECORD(),
+    sorts            : SORT_RECORD(),
+});

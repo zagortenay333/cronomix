@@ -1,9 +1,9 @@
 const St       = imports.gi.St;
 const Gtk      = imports.gi.Gtk;
 const GLib     = imports.gi.GLib;
-const Main     = imports.ui.main;
 const Pango    = imports.gi.Pango;
 const Clutter  = imports.gi.Clutter;
+const Main     = imports.ui.main;
 const Lang     = imports.lang;
 const Signals  = imports.signals;
 const Mainloop = imports.mainloop;
@@ -43,17 +43,18 @@ var ViewFileSwitcher = new Lang.Class({
         this.ext      = ext;
         this.delegate = delegate;
 
+        Mainloop.idle_add(() => this.delegate.actor.add_style_class_name('view-file-switcher'));
+
 
         this.linkm            = new TEXT_LINKS_MNGR.TextLinksManager();
         this.file_items       = new Set();
-        this.active_file      = this.delegate.cache.active_file;
         this.file_info_editor = null;
 
 
         //
         // container
         //
-        this.actor = new St.BoxLayout({ x_expand: true, vertical: true, style_class: 'view-box file-switcher' });
+        this.actor = new St.BoxLayout({ x_expand: true, vertical: true, style_class: 'view-box' });
 
         this.content_box = new St.BoxLayout({ x_expand: true, vertical: true, style_class: 'view-box-content' });
         this.actor.add_child(this.content_box);
@@ -115,7 +116,7 @@ var ViewFileSwitcher = new Lang.Class({
         this.entry.clutter_text.connect('text-changed', () => this._search());
         this.button_add_file.connect('clicked', () => this._show_file_editor());
         this.button_cancel.connect('clicked', () => this.emit('cancel'));
-        this.button_ok.connect('clicked', () => this._on_file_selected(this.active_file));
+        this.button_ok.connect('clicked', () => this._on_file_selected());
         this.entry.clutter_text.connect('activate', () => this._select_first());
     },
 
@@ -148,18 +149,27 @@ var ViewFileSwitcher = new Lang.Class({
         this.file_info_editor = new FileInfoEditor(this.ext, this.delegate, item ? item.file : null);
         this.actor.add_child(this.file_info_editor.actor);
 
-        let is_active = item && item.file.name === this.active_file;
+        let is_active = item && item.active;
 
         this.file_info_editor.button_cancel.grab_key_focus();
         this.content_box.hide();
 
-        this.file_info_editor.connect('ok', (_, info) => {
+        this.file_info_editor.connect('ok', (_, file) => {
             if (item) {
                 this.file_items.delete(item);
                 item.actor.destroy();
+            } else {
+                file.active = true;
+                for (let it of this.file_items) {
+                    if (it.active) {
+                        file.active = false;
+                        break;
+                    }
+                }
             }
-            if (is_active || this.file_items.size === 0) this.active_file = info.name
-            this._add_new_file_item(info);
+
+            this._add_new_file_item(file);
+
             this.content_box.show();
             this.entry_box.show();
             this.file_items_scrollview.show();
@@ -176,9 +186,8 @@ var ViewFileSwitcher = new Lang.Class({
             item.actor.destroy();
 
             if (is_active) {
-                this.active_file = "";
                 for (let it of this.file_items) {
-                    this.active_file = it.file.name;
+                    it.file.active = true;
                     it.check_icon.add_style_class_name('active');
                     it.check_icon.show();
                     break;
@@ -239,7 +248,7 @@ var ViewFileSwitcher = new Lang.Class({
             item.msg.clutter_text.set_markup(this.highlight_tokens(markup));
         }
 
-        if (this.active_file === file.name) {
+        if (file.active) {
             item.active = true;
             item.check_icon.show();
             item.check_icon.add_style_class_name('active');
@@ -250,12 +259,8 @@ var ViewFileSwitcher = new Lang.Class({
         }
 
         // listen
-        this.delegate.sigm.connect_press(item.check_icon, Clutter.BUTTON_PRIMARY, true, () => {
-            this._on_file_selected(item.file.name);
-        });
-        this.delegate.sigm.connect_press(edit_icon, Clutter.BUTTON_PRIMARY, true, () => {
-            this._show_file_editor(item);
-        });
+        this.delegate.sigm.connect_press(item.check_icon, Clutter.BUTTON_PRIMARY, true, () => this._on_file_selected(file));
+        this.delegate.sigm.connect_press(edit_icon, Clutter.BUTTON_PRIMARY, true, () => this._show_file_editor(item));
         item.actor.connect('key-focus-in', () => { item.actor.can_focus = false; });
         item.actor.connect('event', (_, event) => this._on_file_item_event(item, event));
 
@@ -266,18 +271,18 @@ var ViewFileSwitcher = new Lang.Class({
     _select_first: function () {
         let c = this.file_items_scrollbox.get_first_child();
         if (!c) return;
-
-        this._on_file_selected(c._delegate.file.name);
+        this._on_file_selected(c._delegate.file);
     },
 
-    _on_file_selected: function (active_name) {
+    _on_file_selected: function (file) {
         let files = [];
 
         for (let it of this.file_items) {
+            if (file) it.file.active = (it.file.name === file.name);
             files.push(it.file);
         }
 
-        this.emit('update', active_name, files);
+        this.emit('update', files);
     },
 
     highlight_tokens: function (text) {
@@ -348,6 +353,7 @@ var ViewFileSwitcher = new Lang.Class({
     },
 
     close: function () {
+        Mainloop.idle_add(() => this.delegate.actor.remove_style_class_name('view-file-switcher'));
         if (this.file_info_editor) this.file_info_editor.close();
         this.file_info_editor = null;
         this.actor.destroy();
@@ -490,18 +496,24 @@ const FileInfoEditor = new Lang.Class({
                 this.ext.menu.open();
             });
         });
-        this.button_ok.connect('clicked', () => {
-            this.emit('ok', {
-                name             : this.name_entry.text,
-                todo_file        : this.todo_entry.text,
-                done_file        : this.done_entry.text,
-                time_tracker_dir : this.tracker_entry.text,
-                automatic_sort   : file ? file.automatic_sort : true,
-            });
-        });
+        this.button_ok.connect('clicked', () => this._on_ok_clicked());
         this.button_cancel.connect('clicked', () => this.emit('cancel'));
         this.name_entry.clutter_text.connect('text-changed', () => this._update_ok_btn());
         this.todo_entry.clutter_text.connect('text-changed', () => this._update_ok_btn());
+    },
+
+    _on_ok_clicked: function () {
+        let file = this.file;
+
+        if (! file) file = G.TODO_RECORD();
+
+        file.name             = this.name_entry.text,
+        file.todo_file        = this.todo_entry.text,
+        file.done_file        = this.done_entry.text,
+        file.time_tracker_dir = this.tracker_entry.text,
+        file.automatic_sort   = file ? file.automatic_sort : true,
+
+        this.emit('ok', file);
     },
 
     _update_ok_btn: function () {

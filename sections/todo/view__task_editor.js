@@ -54,6 +54,8 @@ var ViewTaskEditor = new Lang.Class({
         this.ext      = ext;
         this.delegate = delegate;
 
+        Mainloop.idle_add(() => this.delegate.actor.add_style_class_name('view-task-editor'));
+
         this.curr_selected_completion   = null;
         this.current_word_start         = 0;
         this.current_word_end           = 0;
@@ -67,7 +69,7 @@ var ViewTaskEditor = new Lang.Class({
         //
         // draw
         //
-        this.actor = new St.Bin({ x_fill: true, style_class: 'view-box task-editor' });
+        this.actor = new St.Bin({ x_fill: true, style_class: 'view-box' });
 
         this.content_box = new St.BoxLayout({ x_expand: true, vertical: true, style_class: 'view-box-content' });
         this.actor.add_actor(this.content_box);
@@ -99,7 +101,7 @@ var ViewTaskEditor = new Lang.Class({
         // help label
         //
         {
-            this.help_label = new St.Button({ can_focus: true, reactive: true, x_align: St.Align.END, style_class: 'row todo-syntax-link' });
+            this.help_label = new St.Button({ can_focus: true, reactive: true, x_align: St.Align.END, style_class: 'link' });
             this.entry_container.insert_child_at_index(this.help_label, 0);
             let label = new St.Label({ text: _('syntax help'), style_class: 'popup-inactive-menu-item', pseudo_class: 'insensitive' });
             this.help_label.add_actor(label);
@@ -151,9 +153,7 @@ var ViewTaskEditor = new Lang.Class({
         // listen
         //
         this.entry.entry.clutter_text.connect('text-changed', () => {
-            if (this.text_changed_handler_block)
-                return Clutter.EVENT_PROPAGATE;
-
+            if (this.text_changed_handler_block) return Clutter.EVENT_PROPAGATE;
             Mainloop.idle_add(() => {
                 let word = this._get_current_word();
                 if (word) this._show_completions(word);
@@ -162,7 +162,6 @@ var ViewTaskEditor = new Lang.Class({
         });
         this.entry.entry.connect('key-press-event', (_, event) => {
             let symbol = event.get_key_symbol();
-
             if (this.completion_menu.visible && symbol === Clutter.Tab) {
                 this._on_tab();
                 return Clutter.EVENT_STOP;
@@ -171,21 +170,15 @@ var ViewTaskEditor = new Lang.Class({
         this.entry.entry.clutter_text.connect('activate', () => this._on_activate());
         this.entry.entry.connect('allocation-changed', () => {
             this.entry.scroll_box.vscrollbar_policy = Gtk.PolicyType.NEVER;
-            if (ext.needs_scrollbar())
-                this.entry.scroll_box.vscrollbar_policy = Gtk.PolicyType.ALWAYS;
+            if (ext.needs_scrollbar()) this.entry.scroll_box.vscrollbar_policy = Gtk.PolicyType.ALWAYS;
         });
         this.completion_menu_content.connect('allocation-changed', () => {
             this.completion_menu.vscrollbar_policy = Gtk.PolicyType.NEVER;
-            if (this.ext.needs_scrollbar())
-                this.completion_menu.vscrollbar_policy = Gtk.PolicyType.ALWAYS;
+            if (this.ext.needs_scrollbar()) this.completion_menu.vscrollbar_policy = Gtk.PolicyType.ALWAYS;
         });
         this.button_ok.connect('clicked', () => this._emit_ok());
         this.button_cancel.connect('clicked', () => this.emit('cancel'));
-        this.help_label.connect('button-press-event', () => MISC_UTILS.open_web_uri(TODO_TXT_SYNTAX_URL));
-        this.help_label.connect('key-press-event', (_, event) => {
-            if (event.get_key_symbol() === Clutter.Return)
-                MISC_UTILS.open_web_uri(TODO_TXT_SYNTAX_URL)
-        });
+        this.help_label.connect('clicked', () => MISC_UTILS.open_web_uri(TODO_TXT_SYNTAX_URL));
         this.actor.connect('key-release-event', (_, event) => {
             switch (event.get_key_symbol()) {
                 case Clutter.KEY_KP_Enter:
@@ -242,7 +235,6 @@ var ViewTaskEditor = new Lang.Class({
         }
 
         let reduced_results = [];
-
         let score;
 
         for (let [keyword,] of haystack) {
@@ -266,20 +258,16 @@ var ViewTaskEditor = new Lang.Class({
     // a context/project.
     _get_current_word: function () {
         let text = this.entry.entry.get_text();
-
         if (! text) return null;
 
-        let len  = text.length;
-
-        if (len === 0) return null;
+        let len = text.length;
+        if (! len) return null;
 
         let pos = this.entry.entry.clutter_text.cursor_position;
 
-        if (pos === -1) pos = len;
-
+        if (pos === -1)                            pos = len;
         if (pos === 0 || /\s/.test(text[pos - 1])) return null;
-
-        if (pos === len || /\s/.test(text[pos])) pos--;
+        if (pos === len || /\s/.test(text[pos]))   pos--;
 
         let start = pos;
         while (start > 0 && !/\s/.test(text[start])) start--;
@@ -387,20 +375,24 @@ var ViewTaskEditor = new Lang.Class({
         // If in add mode, we insert a creation date if the user didn't do it.
         if (words[0] === 'x') {
             if (!Date.parse(words[1]))
-                words.splice(1, 0, G.date_yyyymmdd(), G.date_yyyymmdd());
+                words.splice(1, 0, MISC_UTILS.date_yyyymmdd(), MISC_UTILS.date_yyyymmdd());
             else if (words[2] && !Date.parse(words[2]))
-                words.splice(2, 0, G.date_yyyymmdd());
+                words.splice(2, 0, MISC_UTILS.date_yyyymmdd());
         }
         else if (REG.TODO_PRIO.test(words[0])) {
             if (words[1] && !Date.parse(words[1]))
-                words.splice(1, 0, G.date_yyyymmdd());
+                words.splice(1, 0, MISC_UTILS.date_yyyymmdd());
         }
         else if (!Date.parse(words[0])) {
-            words.splice(0, 0, G.date_yyyymmdd());
+            words.splice(0, 0, MISC_UTILS.date_yyyymmdd());
         }
 
         return words.join(' ').replace(/\n/g, '\\n');
     },
+
+    close: function () {
+        Mainloop.idle_add(() => this.delegate.actor.remove_style_class_name('view-task-editor'));
+        this.actor.destroy();
+    },
 });
 Signals.addSignalMethods(ViewTaskEditor.prototype);
-

@@ -75,7 +75,7 @@ var TaskItem = new Lang.Class({
         //
         // container
         //
-        this.actor = new St.Bin({ reactive: true, style: `width: ${this.delegate.settings.get_int('todo-task-width')}px;`, x_fill: true, style_class: 'task-item' });
+        this.actor = new St.Bin({ style: `width: ${delegate.settings.get_int('todo-task-width')}px;`, reactive: true, x_fill: true, style_class: 'task-item' });
         this.task_item_content = new St.BoxLayout({ vertical: true, style_class: 'task-item-content' });
         this.actor.add_actor(this.task_item_content);
 
@@ -83,7 +83,7 @@ var TaskItem = new Lang.Class({
         //
         // DND
         //
-        this.dnd = new DND.Draggable(this);
+        this.dnd = new DND.Draggable(this, G.DNDGroup.TASK);
 
 
         //
@@ -166,6 +166,8 @@ var TaskItem = new Lang.Class({
         this.tracker_id = '';
 
         this.pinned = 0; // 0 or 1
+
+        this.kanban_boards = null;
 
         // We create these St.Label's on demand.
         if (this.base_date_labels) this.base_date_labels.destroy();
@@ -293,7 +295,6 @@ var TaskItem = new Lang.Class({
             desc_pos           = 1;
         }
 
-
         //
         // Parse 'description'
         //
@@ -339,7 +340,17 @@ var TaskItem = new Lang.Class({
                     '"><u><b>' + word + '</b></u></span>`';
             }
             else if (REG.TODO_EXT.test(word)) {
-                if (this.hidden) {
+                if (REG.TODO_KANBAN_EXT.test(word)) {
+                    if (! this.kanban_boards) this.kanban_boards = [word];
+                    else                      this.kanban_boards.push(word);
+
+                    if (word[4] === '*') {
+                        words[i] = '`<span foreground="' + this.custom_css['-timepp-due-date-color'][0] + '"><b>' + word + '</b></span>`';
+                    } else {
+                        words[i] = '`<b>' + word + '</b>`';
+                    }
+                }
+                else if (this.hidden) {
                     // Ignore all other extensions if task is hidden.
                     continue;
                 }
@@ -360,8 +371,7 @@ var TaskItem = new Lang.Class({
                     words.splice(i, 1); i--; len--;
                 }
                 else if (REG.TODO_REC_EXT_1.test(word)) {
-                    if (this.due_date !== '9999-99-99' ||
-                        this.creation_date === '0000-00-00')
+                    if (this.due_date !== '9999-99-99' || this.creation_date === '0000-00-00')
                         continue;
 
                     this.rec_str  = word;
@@ -369,8 +379,7 @@ var TaskItem = new Lang.Class({
                     words.splice(i, 1); i--; len--;
                 }
                 else if (REG.TODO_REC_EXT_2.test(word)) {
-                    if (this.due_date !== '9999-99-99' ||
-                        (this.completed && this.completion_date === '0000-00-00'))
+                    if (this.due_date !== '9999-99-99' || (this.completed && this.completion_date === '0000-00-00'))
                         continue;
 
                     this.rec_str  = word;
@@ -378,8 +387,7 @@ var TaskItem = new Lang.Class({
                     words.splice(i, 1); i--; len--;
                 }
                 else if (REG.TODO_REC_EXT_3.test(word)) {
-                    if (this.due_date !== '9999-99-99' ||
-                        this.creation_date === '0000-00-00')
+                    if (this.due_date !== '9999-99-99' || this.creation_date === '0000-00-00')
                         continue;
 
                     this.rec_str  = word;
@@ -394,7 +402,11 @@ var TaskItem = new Lang.Class({
                     words.splice(i, 1); i--; len--;
                 }
                 else if (REG.TODO_HIDE_EXT.test(word)) {
+                    let temp = this.kanban_boards; // don't reset kanban ext
+
                     this.reset_props();
+
+                    this.kanban_boards = temp;
 
                     this.hidden = true;
 
@@ -424,7 +436,7 @@ var TaskItem = new Lang.Class({
         this.msg.clutter_text.set_markup(words);
     },
 
-    check_deferred_tasks: function (today = G.date_yyyymmdd()) {
+    check_deferred_tasks: function (today = MISC_UTILS.date_yyyymmdd()) {
         if (! this.defer_date) return false;
 
         this.creation_date = this.defer_date;
@@ -455,9 +467,9 @@ var TaskItem = new Lang.Class({
                 else                              idx = 0;
 
                 if (REG.ISO_DATE.test(words[idx]))
-                    words[idx] = G.date_yyyymmdd();
+                    words[idx] = MISC_UTILS.date_yyyymmdd();
                 else
-                    words.splice(idx, 0, G.date_yyyymmdd());
+                    words.splice(idx, 0, MISC_UTILS.date_yyyymmdd());
 
                 this.task_str = words.join(' ');
             }
@@ -489,7 +501,7 @@ var TaskItem = new Lang.Class({
     // completion but isn't completed.
     _get_recurrence_date: function () {
         let res   = [false, '8999-99-99'];
-        let today = G.date_yyyymmdd();
+        let today = MISC_UTILS.date_yyyymmdd();
 
         if (this.rec_type === 3) {
             let increment =
@@ -497,8 +509,7 @@ var TaskItem = new Lang.Class({
 
             let year  = +(this.creation_date.substr(0, 4));
             let month = +(this.creation_date.substr(5, 2));
-            let day   = +(this.rec_str.slice(this.rec_str.indexOf(':') + 1,
-                                             this.rec_str.indexOf('d')));
+            let day   = +(this.rec_str.slice(this.rec_str.indexOf(':') + 1, this.rec_str.indexOf('d')));
             let iter  = "%d-%02d-%02d".format(year, month, day);
 
             while (iter < today) {
@@ -560,18 +571,18 @@ var TaskItem = new Lang.Class({
 
             let iter      = new Date(reference_date + 'T00:00:00');
             let increment = +(this.rec_str.slice(rec_str_offset, -1)) *
-                (this.rec_str[this.rec_str.length - 1] === 'w' ? 7 : 1);
+                             (this.rec_str[this.rec_str.length - 1] === 'w' ? 7 : 1);
 
-            while (G.date_yyyymmdd(iter) < today) {
+            while (MISC_UTILS.date_yyyymmdd(iter) < today) {
                 iter.setDate(iter.getDate() + increment);
             }
 
-            res[0] = G.date_yyyymmdd(iter) === today && reference_date !== today;
+            res[0] = MISC_UTILS.date_yyyymmdd(iter) === today && reference_date !== today;
 
-            if (res[0] || G.date_yyyymmdd(iter) === reference_date)
+            if (res[0] || MISC_UTILS.date_yyyymmdd(iter) === reference_date)
                 iter.setDate(iter.getDate() + increment);
 
-            res[1] = G.date_yyyymmdd(iter);
+            res[1] = MISC_UTILS.date_yyyymmdd(iter);
         }
 
         return res;
@@ -625,7 +636,7 @@ var TaskItem = new Lang.Class({
                     ngettext('%d day after completion',
                              '%d days after completion', num).format(num);
             } else {
-                txt = `${_('recurrence')}:&#160;${this.rec_next}&#160;(${G.date_delta_str(this.rec_next)})   `;
+                txt = `${_('recurrence')}:&#160;${this.rec_next}&#160;(${MISC_UTILS.date_delta_str(this.rec_next)})   `;
             }
 
             markup +=
@@ -638,7 +649,7 @@ var TaskItem = new Lang.Class({
             markup +=
                 '<span font-weight="bold" foreground="' +
                 this.custom_css['-timepp-due-date-color'][0] + '">' +
-                `${_('due')}:&#160;${this.due_date}&#160;(${G.date_delta_str(this.due_date)})   ` +
+                `${_('due')}:&#160;${this.due_date}&#160;(${MISC_UTILS.date_delta_str(this.due_date)})   ` +
                 '</span>';
         }
 
@@ -646,7 +657,7 @@ var TaskItem = new Lang.Class({
             markup +=
                 '<span font-weight="bold" foreground="' +
                 this.custom_css['-timepp-defer-date-color'][0] + '">' +
-                `${_('deferred')}:&#160;${this.defer_date}&#160;(${G.date_delta_str(this.defer_date)})   ` +
+                `${_('deferred')}:&#160;${this.defer_date}&#160;(${MISC_UTILS.date_delta_str(this.defer_date)})   ` +
                 '</span>';
         }
 
@@ -723,14 +734,14 @@ var TaskItem = new Lang.Class({
             let task_str = this.task_str;
 
             if (this.priority === '(_)')
-                task_str = `x ${G.date_yyyymmdd()} ${task_str}`;
+                task_str = `x ${MISC_UTILS.date_yyyymmdd()} ${task_str}`;
             else
-                task_str = `x ${G.date_yyyymmdd()} ${task_str.slice(4)} pri:${this.priority[1]}`;
+                task_str = `x ${MISC_UTILS.date_yyyymmdd()} ${task_str.slice(4)} pri:${this.priority[1]}`;
 
             this.reset(true, task_str);
         }
 
-        this.delegate.on_tasks_changed();
+        Mainloop.timeout_add(0, () => this.delegate.on_tasks_changed(true, this.delegate.get_current_todo_file().automatic_sort));
     },
 
      // @SPEED Lazy load the icons.
@@ -829,7 +840,7 @@ var TaskItem = new Lang.Class({
 
 
         if (this.delegate.view_manager.current_view_name !== G.View.SEARCH) {
-            this.delegate.on_tasks_changed();
+            Mainloop.timeout_add(0, () => this.delegate.on_tasks_changed(true, this.delegate.get_current_todo_file().automatic_sort));
         }
     },
 
@@ -922,17 +933,55 @@ var TaskItem = new Lang.Class({
     },
 
     _finish_scrolling_priority: function () {
-        if (this.priority === "(_)") {
-            this.reset(true, this.prio_label.text + " " + this.task_str);
-        } else {
-            let temp = this.task_str.slice(4);
-            if (this.prio_label.text)
-                this.reset(true, this.prio_label.text + " " + temp);
-            else
-                this.reset(true, temp);
+        let t = this.prio_label.text;
+        this.reset(true, this.new_str_for_prio(t ? t : '(_)'));
+        this.delegate.on_tasks_changed(true, this.delegate.get_current_todo_file().automatic_sort);
+    },
+
+    // A little utility func to generate a new task_str with a new property.
+    // If the task is completed the 'pri:' extension will be updated/added.
+    //
+    // @priority: string (prio str or '(_)' to mean 'no priority')
+    //
+    // returns task string with the updated priority.
+    new_str_for_prio: function (priority, task_str = this.task_str) {
+        if (priority !== '(_)' && !REG.TODO_PRIO.test(priority)) return task_str;
+
+        priority = priority === '(_)' ? '' : priority;
+
+        if (task_str.startsWith('x ')) {
+            let words = task_str.split(' ');
+
+            for (let i = 0, len = words.length; i < len; i++) {
+                if (REG.TODO_PRIO_EXT.test(words[i])) {
+                    if (priority) words[i] = 'pri:' + priority[1];
+                    else          words.splice(i, 1);
+
+                    return words.join(' ');
+                }
+            }
+
+            if (priority) return task_str + ' pri:' + priority[1];
+        }
+        else if (/^\([A-Z]\) /.test(task_str)) {
+            if (priority) return priority + ' ' + task_str.slice(4);
+            else          return task_str.slice(4);
+        }
+        else if (priority) {
+            return priority + ' ' + task_str;
         }
 
-        this.delegate.on_tasks_changed();
+        return task_str;
+    },
+
+    scroll_into_view: function () {
+        if (! this.actor_scrollview) return;
+
+        for (let i = 0; i < 2; i++) {
+            for (let s of this.actor_scrollview[i]) {
+                MISC_UTILS.scroll_to_item(s, s.get_last_child(), this.actor, this.actor_parent, !!i);
+            }
+        }
     },
 
     _on_event: function (actor, event) {
@@ -940,9 +989,8 @@ var TaskItem = new Lang.Class({
             case Clutter.EventType.ENTER: {
                 let related = event.get_related();
 
-                if (related && !this.actor.contains(related)) {
+                if (related && !this.actor.contains(related))
                     this.show_header_icons();
-                }
 
                 if (this.prio_label.has_pointer)
                     global.screen.set_cursor(Meta.Cursor.POINTING_HAND);
@@ -971,7 +1019,7 @@ var TaskItem = new Lang.Class({
 
             case Clutter.EventType.KEY_RELEASE: {
                 this.show_header_icons();
-                if (this.actor_scrollview) MISC_UTILS.scroll_to_item(this.actor_scrollview, this.actor_parent, actor);
+                if (this.actor_scrollview) this.scroll_into_view();
                 this.has_focus = true;
                 break;
             }
@@ -988,7 +1036,7 @@ var TaskItem = new Lang.Class({
                         }
                     });
                 } else if (this.actor_scrollview) {
-                    MISC_UTILS.scroll_to_item(this.actor_scrollview, this.actor_parent, actor);
+                    this.scroll_into_view();
                 }
 
                 break;

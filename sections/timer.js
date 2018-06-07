@@ -215,7 +215,6 @@ var SectionMain = new Lang.Class({
         });
         this.sigm.connect(this.settings, 'changed::timer-show-seconds', () => this._update_time_display());
         this.sigm.connect(this.settings, 'changed::timer-panel-mode', () => this._toggle_panel_item_mode());
-        this.sigm.connect(this.panel_item, 'left-click', () => this.ext.toggle_menu(this.section_name));
         this.sigm.connect(this.panel_item, 'middle-click', () => this.toggle_timer());
         this.sigm.connect_press(this.start_pause_icon, Clutter.BUTTON_PRIMARY, true, () => this.toggle_timer());
         this.sigm.connect_press(this.fullscreen_icon, Clutter.BUTTON_PRIMARY, true, () => this.show_fullscreen());

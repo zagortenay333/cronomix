@@ -6,6 +6,7 @@ const CheckBox  = imports.ui.checkBox;
 const PopupMenu = imports.ui.popupMenu;
 const Lang      = imports.lang;
 const Signals   = imports.signals;
+const Mainloop  = imports.mainloop;
 
 
 const ME = imports.misc.extensionUtils.getCurrentExtension();
@@ -30,7 +31,7 @@ const G = ME.imports.sections.todo.GLOBAL;
 // @delegate : obj (main section object)
 //
 // @signals:
-//  - 'filters-updated' returns obj with which to replace the cache.filters obj
+//  - 'filters-updated' returns new filters record
 // =====================================================================
 var ViewFilters = new Lang.Class({
     Name: 'Timepp.ViewFilters',
@@ -39,6 +40,7 @@ var ViewFilters = new Lang.Class({
         this.ext      = ext;
         this.delegate = delegate;
 
+        Mainloop.idle_add(() => this.delegate.actor.add_style_class_name('view-filters-editor'));
 
         // We store all filter item objects here.
         // I.e., those objects created by the _new_filter_item() func.
@@ -59,7 +61,7 @@ var ViewFilters = new Lang.Class({
         //
         // actor
         //
-        this.actor = new St.Bin({ x_fill: true, style_class: 'view-box filter-window' });
+        this.actor = new St.Bin({ x_fill: true, style_class: 'view-box' });
 
         this.content_box = new St.BoxLayout({ x_expand: true, vertical: true, style_class: 'view-box-content' });
         this.actor.add_actor(this.content_box);
@@ -235,9 +237,7 @@ var ViewFilters = new Lang.Class({
         });
         this.filter_sectors_scroll_box.connect('allocation-changed', () => {
             this.filter_sectors_scroll.vscrollbar_policy = Gtk.PolicyType.NEVER;
-
-            if (this.ext.needs_scrollbar())
-                this.filter_sectors_scroll.vscrollbar_policy = Gtk.PolicyType.ALWAYS;
+            if (this.ext.needs_scrollbar()) this.filter_sectors_scroll.vscrollbar_policy = Gtk.PolicyType.ALWAYS;
         });
         this.show_hidden_tasks_toggle_btn.connect('clicked', () => this._on_nand_toggle_clicked(this.show_hidden_tasks_toggle));
         this.show_hidden_tasks_item.connect('button-press-event', () => this._on_nand_toggle_clicked(this.show_hidden_tasks_toggle));
@@ -252,7 +252,7 @@ var ViewFilters = new Lang.Class({
     },
 
     _load_filters: function () {
-        let filters = this.delegate.cache.filters;
+        let filters = this.delegate.get_current_todo_file().filters;
 
         this.invert_toggle.setToggleState(filters.invert_filters);
         this.show_hidden_tasks_toggle.setToggleState(filters.hidden);
@@ -420,21 +420,14 @@ var ViewFilters = new Lang.Class({
     },
 
     _on_ok_clicked: function () {
-        let filters = {
-            invert_filters : this.invert_toggle.state,
-            deferred       : this.show_deferred_tasks_toggle.state,
-            recurring      : this.show_recurring_tasks_toggle.state,
-            hidden         : this.show_hidden_tasks_toggle.state,
-            completed      : Boolean(this.filter_register.completed &&
-                             this.filter_register.completed.checkbox.actor.checked),
-            no_priority    : Boolean(this.filter_register.no_priority &&
-                             this.filter_register.no_priority.checkbox.actor.checked),
-            priorities     : [],
-            contexts       : [],
-            projects       : [],
-            custom         : [],
-            custom_active  : [],
-        };
+        let filters = G.FILTER_RECORD();
+
+        filters.invert_filters = this.invert_toggle.state;
+        filters.deferred       = this.show_deferred_tasks_toggle.state;
+        filters.recurring      = this.show_recurring_tasks_toggle.state;
+        filters.hidden         = this.show_hidden_tasks_toggle.state;
+        filters.completed      = !!(this.filter_register.completed && this.filter_register.completed.checkbox.actor.checked);
+        filters.no_priority    = !!(this.filter_register.no_priority && this.filter_register.no_priority.checkbox.actor.checked);
 
         for (let i = 0; i < this.filter_register.priorities.length; i++) {
             let it = this.filter_register.priorities[i];
@@ -458,6 +451,11 @@ var ViewFilters = new Lang.Class({
         }
 
         this.emit('filters-updated', filters);
+    },
+
+    close: function () {
+        Mainloop.idle_add(() => this.delegate.actor.remove_style_class_name('view-filters-editor'));
+        this.actor.destroy();
     },
 });
 Signals.addSignalMethods(ViewFilters.prototype);

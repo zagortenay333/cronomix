@@ -1,13 +1,14 @@
-const St        = imports.gi.St;
-const Gio       = imports.gi.Gio;
-const GLib      = imports.gi.GLib;
-const Shell     = imports.gi.Shell;
-const Clutter   = imports.gi.Clutter;
-const Main      = imports.ui.main;
-const PopupMenu = imports.ui.popupMenu;
-const PanelMenu = imports.ui.panelMenu;
-const Lang      = imports.lang;
-const Mainloop  = imports.mainloop;
+const St         = imports.gi.St;
+const Gio        = imports.gi.Gio;
+const GLib       = imports.gi.GLib;
+const Shell      = imports.gi.Shell;
+const Clutter    = imports.gi.Clutter;
+const Main       = imports.ui.main;
+const PopupMenu  = imports.ui.popupMenu;
+const BoxPointer = imports.ui.boxpointer;
+const PanelMenu  = imports.ui.panelMenu;
+const Lang       = imports.lang;
+const Mainloop   = imports.mainloop;
 
 
 const ME = imports.misc.extensionUtils.getCurrentExtension();
@@ -50,35 +51,66 @@ const Timepp = new Lang.Class({
     Extends : PanelMenu.Button,
 
     _init: function () {
+        // @HACK
+        // This func only updates the max-height prop but not max-width.
+        // We unset it and do our own thing.
+        //
+        // NOTE: Do this before calling the parent constructor because they use
+        // bind() on the original func..
+        this._onOpenStateChanged = () => false;
+
+
         this.parent(0.5, 'Timepp');
+
+
+        // @SPEED @HACK
+        // - We patch the menu.open function to emit the 'open-state-changed'
+        //   in a timeout.
+        // - We remove the raise_top() func which causes a lot of lag and seems
+        //   to be useless anyway.
+        this.menu.open = function () {
+            if (this.isOpen) return;
+            this.isOpen = true;
+
+            // @HACK
+            // If an extension puts the panel to the bottom and updates the
+            // _arrowSide prop, then the func _updateFlip() in boxpointer will
+            // call _calculateArrowSide() and reset that prop if the menu is
+            // higher than the monitor.
+            // This will lead to the menu not being shown because it will be
+            // rendered below the panel.
+            //
+            // I don't understand what the point of _calculateArrowSide() is..
+            //
+            // Since we patch the open() func, we have to include this hack here.
+            let panel_pos = Main.layoutManager.panelBox.anchor_y == 0 ? St.Side.TOP : St.Side.BOTTOM;
+            this._boxPointer._userArrowSide = panel_pos;
+            this._boxPointer._arrowSide     = panel_pos;
+
+            this._boxPointer.setPosition(this.sourceActor, this._arrowAlignment);
+
+            // If there is another menu open, we emit 'open-state-changed' the
+            // normal way to avoid any deadlocks.
+            if (Main.panel.menuManager.activeMenu) {
+                this._boxPointer.show(BoxPointer.PopupAnimation.FULL);
+                this.emit('open-state-changed', true);
+            } else {
+                // Put in boxpointer callback to play nicely with animations.
+                this._boxPointer.show(BoxPointer.PopupAnimation.FULL, () => {
+                    Mainloop.timeout_add(0, () => this.emit('open-state-changed', true));
+                });
+            }
+        };
+
 
         this.actor.style_class = '';
         this.actor.can_focus   = false;
         this.actor.reactive    = false;
         this.menu.actor.add_style_class_name('timepp-menu');
 
+
         this.panel_item_box = new St.BoxLayout({ style_class: 'timepp-panel-box timepp-custom-css-root'});
         this.actor.add_actor(this.panel_item_box);
-
-
-        // @SPEED @HACK
-        // The GrabHelper.grab() func seems to be tanking popupmenu opening perf
-        // big time.
-        // We patch the menu.open function to emit the 'open-state-changed' sig
-        // in a timeout.
-        this.menu.open = function () {
-            let that = this;
-            if (this.isOpen) return;
-            this.isOpen = true;
-            this._boxPointer.setPosition(this.sourceActor, this._arrowAlignment);
-            this._boxPointer.show(false);
-            this.actor.raise_top();
-
-            if (Main.panel.menuManager.activeMenu)
-                that.emit('open-state-changed', true);
-            else
-                Mainloop.timeout_add(0, () => that.emit('open-state-changed', true));
-        };
 
 
         this.markdown_map = new Map([
@@ -220,10 +252,10 @@ const Timepp = new Lang.Class({
         this.sigm.connect(this.settings, 'changed::unicon-mode', () => this.update_panel_items());
         this.sigm.connect(this.panel_item_box, 'style-changed', () => this._update_custom_css());
         this.sigm.connect(this.menu, 'open-state-changed', (_, state) => this._on_open_state_changed(state));
-        this.sigm.connect(this.unicon_panel_item.actor, 'key-focus-in', () => this.open_menu());
         this.sigm.connect(this.unicon_panel_item, 'left-click', () => this.toggle_menu());
         this.sigm.connect(this.unicon_panel_item, 'right-click', () => this.toggle_context_menu());
         this.sigm.connect(this.unicon_panel_item.actor, 'enter-event', () => { if (Main.panel.menuManager.activeMenu) this.open_menu(); });
+        this.sigm.connect(this.unicon_panel_item.actor, 'key-focus-in', () => this.open_menu());
     },
 
     _sync_sections_with_settings: function () {
@@ -276,13 +308,14 @@ const Timepp = new Lang.Class({
     //     - If @section is not a sep menu, we show all joined sections that
     //       are enabled.
     open_menu: function (section_name) {
+        let section = this.sections.get(section_name);
+
+        if (this.menu.isOpen && section && section.actor.visible) return;
         if (this.context_menu.actor.visible) return;
 
         this.unicon_panel_item.actor.remove_style_pseudo_class('checked');
         this.unicon_panel_item.actor.remove_style_pseudo_class('focus');
         this.unicon_panel_item.actor.can_focus = true;
-
-        let section = this.sections.get(section_name);
 
         // Track sections whose state has changed and call their
         // on_section_open_state_changed method after the menu has been shown.
@@ -326,6 +359,7 @@ const Timepp = new Lang.Class({
             }
         }
 
+        this._update_menu_min_size();
         this._update_separators();
         this.menu.open();
 
@@ -355,8 +389,32 @@ const Timepp = new Lang.Class({
             }
         }
 
+        this._update_menu_min_size();
         this._update_separators();
         this.menu.open();
+    },
+
+    // PanelMenu only updates the min-height, we also need to update min-width.
+    _update_menu_min_size: function () {
+        let work_area    = Main.layoutManager.getWorkAreaForMonitor(Main.layoutManager.findIndexForActor(this.menu.actor));
+        let monitor      = Main.layoutManager.findMonitorForActor(this.menu.actor);
+        let scale_factor = St.ThemeContext.get_for_stage(global.stage).scale_factor;
+
+        // @HACK
+        // Some extensions enable autohiding of the panel and as a result the
+        // height of the panel is not taken into account when computing the
+        // work area. This is just a simple work around.
+        let tweak = 16;
+        if (monitor.height === work_area.height)
+            tweak = Main.layoutManager.panelBox.height + tweak;
+
+        let max_h = Math.floor((work_area.height - tweak) / scale_factor);
+        let max_w = Math.floor((work_area.width  - 16) / scale_factor);
+
+        this.menu_max_w = max_w;
+        this.menu_max_h = max_h;
+
+        this.menu.actor.style = `max-height: ${max_h}px; max-width: ${max_w}px;`;
     },
 
     _update_menu_arrow: function (source_actor) {
@@ -503,9 +561,7 @@ const Timepp = new Lang.Class({
             }
         }
 
-        // load custom stylesheet
-        St.ThemeContext.get_for_stage(global.stage).get_theme()
-            .load_stylesheet(this.custom_stylesheet);
+        St.ThemeContext.get_for_stage(global.stage).get_theme().load_stylesheet(this.custom_stylesheet);
 
         // reload theme
         Main.reloadThemeResource();
@@ -538,11 +594,10 @@ const Timepp = new Lang.Class({
     // policy is set to AUTOMATIC. The result is an ugly padding on the right
     // when the scrollbar is invisible.
     needs_scrollbar: function () {
-        let a     = Shell.util_get_transformed_allocation(this.menu.actor);
-        let min_h = a.y2 - a.y1;
-        let max_h = this.menu.actor.get_theme_node().get_max_height();
+        let [, nat_h] = this.menu.actor.get_preferred_height(-1);
+        let max_h     = this.menu.actor.get_theme_node().get_max_height();
 
-        return max_h >= 0 && min_h >= max_h;
+        return max_h >= 0 && nat_h >= max_h;
     },
 
     destroy: function () {

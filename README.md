@@ -164,6 +164,7 @@ When in fullscreen, some keyboard shortcuts are available:
 
 Some of the features of the todo.txt manager are:
 
+* Kanban boards.
 * Fuzzy task searching.
 * Filtering by context, project, priority, custom fuzzy filters...
 * Toggling a filter on/off by clicking on a priority, context, or proj in a task.
@@ -233,6 +234,39 @@ The following extensions are supported:
 
 <table>
     <tr>
+        <td valign="top"><code>kan:kan_string</code></td>
+        <td>
+            Used to specify kanban boards.<br>
+            Multiple kan boards can be specified by writing multiple kan extensions into the todo.txt file<br><br>
+            The format of the extension is: <code>kan:[*]name|column1[|column2|...]</code><br><br>
+            <ul>
+                <li>The optional * indicates whether the kanban board is active.</li>
+                <li>Each column is either:<br>
+                <ul>
+                    <li>a comma separated list of todo.txt priorities, contexts, projects.</li>
+                    <li>a string indicating a 'kitchen-sink' column.</li>
+                    <li>the char '$' indicating a 'kitchen-sink' column with no title</li>
+                </ul></li>
+                <li>Tasks are split into columns based on whether or not they have one or more properties specified in a column.</li>
+                <li>A 'kitchen-sink' column is one into which any task goes.</li>
+                <li>The string '(_)' can be used to refer to completed tasks and tasks with no priorities.</li>
+                <li>The order of the columns matters.<br>
+                    If a task can go into multiple columns, it will be added to the leftmost one.<br>
+                    The position of a 'kitchen-sink' column can affect the sorting a lot.</li>
+            </ul>
+            Examples:<br>
+            <ul>
+                <li><code>kan:*main|(A),(B),(C)|(D),(E),(F)|(G)</code></li>
+                <li><code>kan:other_project|(A)|(B)|(C)|(D)|(E)|(F)|(G)</code></li>
+                <li><code>kan:stuff|(D),@stuf,+my_project|everything\ else</code></li>
+                <li><code>kan:a_and_no_prios|(A)|(_)</code></li>
+                <li><code>kan:kitchen_sink_with_title|some_title_maybe_with\ spaces</code></li>
+                <li><code>kan:no_title|$</code></li>
+                <li><code>kan:column_order_matters|$|(A)</code></li>
+            </ul>
+        </td>
+    </tr>
+    <tr>
         <td valign="top"><code>tracker_id:string</code></td>
         <td>
             Used to identify a task when starting/stopping
@@ -258,7 +292,7 @@ The following extensions are supported:
         <td valign="top"><code>h:1</code></td>
         <td>
             Hides a task.<br><br>
-            <b>This extension disables all other extensions.</b><br><br>
+            <b>This extension disables all other extensions except the <code>kan</code> extension.</b><br><br>
             <i>Among other things, can be used to populate the todo manager<br>
             with context/project keywords for autocompletion.<br>
             </i>

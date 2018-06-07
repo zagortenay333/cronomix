@@ -217,7 +217,6 @@ var SectionMain = new Lang.Class({
         });
         this.sigm.connect(this.settings, 'changed::pomodoro-show-seconds', () => this._update_time_display());
         this.sigm.connect(this.settings, 'changed::pomodoro-panel-mode', () => this._toggle_panel_mode());
-        this.sigm.connect(this.panel_item, 'left-click', () => this.ext.toggle_menu(this.section_name));
         this.sigm.connect(this.panel_item, 'middle-click', () => this.timer_toggle());
         this.sigm.connect_press(this.settings_icon, Clutter.BUTTON_PRIMARY, true, () => this._show_settings());
         this.sigm.connect_press(this.fullscreen_icon, Clutter.BUTTON_PRIMARY, true, () => this.show_fullscreen());

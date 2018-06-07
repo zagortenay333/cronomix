@@ -6,6 +6,7 @@ const Main      = imports.ui.main;
 const PopupMenu = imports.ui.popupMenu;
 const Lang      = imports.lang;
 const Signals   = imports.signals;
+const Mainloop  = imports.mainloop;
 
 
 const ME = imports.misc.extensionUtils.getCurrentExtension();
@@ -37,10 +38,13 @@ var ViewSort = new Lang.Class({
         this.ext      = ext;
         this.delegate = delegate;
 
+        Mainloop.idle_add(() => this.delegate.actor.add_style_class_name('view-sort'));
+
+
         //
         // draw
         //
-        this.actor = new St.BoxLayout({ y_expand: true, x_expand: true, style_class: 'view-box sort-window' });
+        this.actor = new St.BoxLayout({ y_expand: true, x_expand: true, style_class: 'view-box' });
 
         this.content_box = new St.BoxLayout({ y_expand: true, x_expand: true, vertical: true, style_class: 'view-box-content' });
         this.actor.add_actor(this.content_box);
@@ -68,13 +72,14 @@ var ViewSort = new Lang.Class({
                 [G.SortType.COMPLETION_DATE] : _('Sort by Completion Date'),
             };
 
-            for (let it of this.delegate.cache.sort) {
+
+            for (let it of this.delegate.get_current_todo_file().sorts) {
                 let [sort_type, sort_order] = [it[0], it[1]];
                 let item = new SortItem(delegate, this.scrollview, this.sort_items_box, sort_text_map[sort_type], sort_type, sort_order);
                 this.sort_items_box.add_child(item.actor);
             }
-        }
 
+        }
 
         {
             let sep = new PopupMenu.PopupSeparatorMenuItem();
@@ -133,6 +138,11 @@ var ViewSort = new Lang.Class({
     _on_toggle_clicked: function () {
         this.toggle.setToggleState(!this.toggle.state);
     },
+
+    close: function () {
+        Mainloop.idle_add(() => this.delegate.actor.remove_style_class_name('view-sort'));
+        this.actor.destroy();
+    },
 });
 Signals.addSignalMethods(ViewSort.prototype);
 
@@ -149,7 +159,7 @@ let SortItem = new Lang.Class({
 
     _init: function (delegate, actor_scrollview, actor_parent, label, sort_type, sort_order) {
         this.delegate         = delegate;
-        this.actor_scrollview = actor_scrollview;
+        this.actor_scrollview = [[actor_scrollview], []];
         this.actor_parent     = actor_parent;
         this.label            = label;
         this.sort_type        = sort_type;

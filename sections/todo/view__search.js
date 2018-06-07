@@ -37,9 +37,12 @@ var ViewSearch = new Lang.Class({
         this.ext      = ext;
         this.delegate = delegate;
 
+        Mainloop.idle_add(() => this.delegate.actor.add_style_class_name('view-search'));
+
         this.add_tasks_to_menu_mainloop_id = null;
 
         this.tasks_viewport = [];
+        this.current_file = this.delegate.get_current_todo_file();
 
         // @key : string (a search query)
         // @val : array  (of tasks that match the search query)
@@ -49,7 +52,7 @@ var ViewSearch = new Lang.Class({
         //
         // draw
         //
-        this.actor = new St.Bin({ x_fill: true, style_class: 'view-search' });
+        this.actor = new St.Bin({ x_fill: true });
 
         this.content_box = new St.BoxLayout({ x_expand: true, vertical: true, });
         this.actor.add_actor(this.content_box);
@@ -62,7 +65,7 @@ var ViewSearch = new Lang.Class({
             let box = new St.BoxLayout({ style_class: 'timepp-menu-item' });
             this.content_box.add_child(box);
 
-            this.search_entry = new St.Entry({ x_expand: true, can_focus: true });
+            this.search_entry = new St.Entry({ style: `width: ${delegate.settings.get_int('todo-task-width') + 30}px;`, x_expand: true, can_focus: true });
             box.add_child(this.search_entry);
 
             box = new St.BoxLayout({ style_class: 'icon-box' });
@@ -118,7 +121,7 @@ var ViewSearch = new Lang.Class({
             return;
         }
 
-        this.add_filter_icon.visible = this.delegate.cache.filters.custom.indexOf(this.search_entry.get_text()) === -1;
+        this.add_filter_icon.visible = this.current_file.filters.custom.indexOf(this.search_entry.get_text()) === -1;
 
         let [search_needed, search_space] = this._find_prev_search_results(needle);
 
@@ -168,19 +171,8 @@ var ViewSearch = new Lang.Class({
 
         this.tasks_scroll.vscrollbar_policy = Gtk.PolicyType.NEVER;
 
-        let n = Math.min(this.tasks_viewport.length, 30);
-
-        for (let i = 0; i < n; i++) {
-            let it = this.tasks_viewport[i];
-
-            this.tasks_scroll_content.add_child(it.actor);
-            it.dnd.drag_enabled = false;
-            it.actor_parent     = this.tasks_scroll_content;
-            it.actor_scrollview = this.tasks_scroll;
-        }
-
         this.add_tasks_to_menu_mainloop_id = Mainloop.idle_add(() => {
-           this._add_tasks_to_menu__finish(n, false);
+           this._add_tasks_to_menu__finish(0, false);
         });
     },
 
@@ -190,20 +182,18 @@ var ViewSearch = new Lang.Class({
             scrollbar_shown = true;
         }
 
-        if (i === this.tasks_viewport.length) {
-            this.add_tasks_to_menu_mainloop_id = null;
-            return;
-        }
-
         for (let j = 0; j < 50; j++, i++) {
-            if (i === this.tasks_viewport.length) break;
+            if (i === this.tasks_viewport.length) {
+                this.add_tasks_to_menu_mainloop_id = null;
+                return;
+            }
 
             let it = this.tasks_viewport[i];
-
             this.tasks_scroll_content.add_child(it.actor);
+
             it.dnd.drag_enabled = false;
             it.actor_parent     = this.tasks_scroll_content;
-            it.actor_scrollview = this.tasks_scroll;
+            it.actor_scrollview = [[this.tasks_scroll], []];
         }
 
         this.add_tasks_to_menu_mainloop_id = Mainloop.idle_add(() => {
@@ -228,7 +218,7 @@ var ViewSearch = new Lang.Class({
 
     _add_custom_filter: function () {
         let needle  = this.search_entry.get_text();
-        let filters = this.delegate.cache.filters;
+        let filters = this.delegate.get_current_todo_file().filters;
 
         if (filters.custom.indexOf(needle) !== -1) return;
 
@@ -239,6 +229,7 @@ var ViewSearch = new Lang.Class({
     },
 
     close: function () {
+        Mainloop.idle_add(() => this.delegate.actor.remove_style_class_name('view-search'));
         this.search_dict.clear();
         this._remove_tasks_from_menu();
         this.actor.destroy();

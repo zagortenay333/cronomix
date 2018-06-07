@@ -78,10 +78,7 @@ var SectionMain = new Lang.Class({
 
 
         this.sound_player = new SOUND_PLAYER.SoundPlayer();
-
-
-        this.fullscreen = new AlarmFullscreen(this.ext, this,
-            this.settings.get_int('alarms-fullscreen-monitor-pos'));
+        this.fullscreen   = new AlarmFullscreen(this.ext, this, this.settings.get_int('alarms-fullscreen-monitor-pos'));
 
 
         this.wallclock     = new GnomeDesktop.WallClock();
@@ -117,8 +114,7 @@ var SectionMain = new Lang.Class({
                     alarms: [],
                 };
             }
-        }
-        catch (e) {
+        } catch (e) {
             logError(e);
             return;
         }
@@ -191,7 +187,6 @@ var SectionMain = new Lang.Class({
         });
         this.sigm.connect(this.wallclock, 'notify::clock', () => this._tic());
         this.sigm.connect(this.fullscreen, 'monitor-changed', () => this.settings.set_int('alarms-fullscreen-monitor-pos', this.fullscreen.monitor));
-        this.sigm.connect(this.panel_item, 'left-click', () => this.ext.toggle_menu(this.section_name));
         this.sigm.connect_press(this.add_alarm_button, Clutter.BUTTON_PRIMARY, true, () => this.alarm_editor());
 
 
@@ -203,7 +198,7 @@ var SectionMain = new Lang.Class({
     },
 
     disable_section: function () {
-        this.alarms_scroll_content.destroy_all_children();
+        for (let [it,] of this.alarm_items) it.close(),
         this.sigm.clear();
         this.keym.clear();
         this.snoozed_alarms.clear();
@@ -279,8 +274,7 @@ var SectionMain = new Lang.Class({
                 this.add_alarm_button.grab_key_focus();
                 editor.actor.destroy();
             });
-        }
-        else {
+        } else {
             editor.connect('edited-alarm', (_, alarm) => {
                 this.snoozed_alarms.delete(alarm);
 
@@ -291,8 +285,7 @@ var SectionMain = new Lang.Class({
                 if (alarm.msg) {
                     alarm_item.set_body_text(alarm.msg);
                     alarm_item.msg.visible = true;
-                }
-                else {
+                } else {
                     alarm_item.msg.visible = false;
                 }
 
@@ -310,9 +303,10 @@ var SectionMain = new Lang.Class({
                 this.alarms_scroll.show();
                 this.add_alarm_button.grab_key_focus();
                 editor.actor.destroy();
-                this.alarm_items.delete(alarm_item);
                 alarm_item.actor.destroy();
                 this._delete_alarm(alarm_item.alarm);
+                alarm_item.close();
+                this.alarm_items.delete(alarm_item);
             });
         }
 
@@ -705,9 +699,10 @@ const AlarmItem = new Lang.Class({
         //
         // listen
         //
+        this.css_sig_id =
+            this.ext.connect('custom-css-changed', () => this._on_custom_css_updated());
         this.toggle_bin.connect('clicked', () => this._on_toggle());
         this.delegate.sigm.connect_press(this.edit_icon, Clutter.BUTTON_PRIMARY, true, () => this._on_edit());
-        this.ext.connect('custom-css-changed', () => this._on_custom_css_updated());
         this.actor.connect('enter-event',  () => this.edit_icon.show());
         this.actor.connect('event', (actor, event) => this._on_event(actor, event));
     },
@@ -724,7 +719,6 @@ const AlarmItem = new Lang.Class({
         // update clock ETA (time until alarm goes off)
         if (this.alarm.days.indexOf(date.getDay()) === -1) {
             markup += `  <b>${_('inactive today')}</b>`;
-
             if (this.alarm.toggle) this.actor.remove_style_class_name('active');
         } else if (this.alarm.toggle) {
             let clock_then;
@@ -816,6 +810,11 @@ const AlarmItem = new Lang.Class({
                 break;
             }
         }
+    },
+
+    close: function () {
+        this.ext.disconnect(this.css_sig_id);
+        this.actor.destroy();
     },
 });
 Signals.addSignalMethods(AlarmItem.prototype);

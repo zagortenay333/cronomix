@@ -219,7 +219,6 @@ var SectionMain = new Lang.Class({
                 this.laps_scroll.vscrollbar_policy = Gtk.PolicyType.ALWAYS;
         });
         this.sigm.connect(this.settings, 'changed::stopwatch-panel-mode', () => this._toggle_panel_mode());
-        this.sigm.connect(this.panel_item, 'left-click', () => this.ext.toggle_menu(this.section_name));
         this.sigm.connect(this.panel_item, 'middle-click', () => this.stopwatch_toggle());
         this.sigm.connect_press(this.fullscreen_icon, Clutter.BUTTON_PRIMARY, true, () => this.show_fullscreen());
         this.sigm.connect_press(this.button_start, Clutter.BUTTON_PRIMARY, true, () => this.start());

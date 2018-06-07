@@ -31,8 +31,7 @@ var ViewManager = new Lang.Class({
         this.ext      = ext;
         this.delegate = delegate;
 
-        this.lock = false;
-
+        this.lock      = false;
         this.container = this.delegate.actor;
 
         this.reset();
@@ -104,8 +103,9 @@ var ViewManager = new Lang.Class({
 
         // Because we are tweaking the menu.open func, we must grab the focus
         // with a timeout call..
-        if (view_params.focused_actor && this.ext.menu.isOpen)
+        if (view_params.focused_actor && this.ext.menu.isOpen) {
             Mainloop.timeout_add(0, () => view_params.focused_actor.grab_key_focus());
+        }
     },
 });
 Signals.addSignalMethods(ViewManager.prototype);

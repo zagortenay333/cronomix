@@ -21,29 +21,29 @@ const ngettext = Gettext.ngettext;
 const SIG_MANAGER  = ME.imports.lib.signal_manager;
 const KEY_MANAGER  = ME.imports.lib.keybinding_manager;
 const MISC_UTILS   = ME.imports.lib.misc_utils;
-const PANEL_ITEM   = ME.imports.lib.panel_item;
 
 
 const G = ME.imports.sections.todo.GLOBAL;
 
 
-const TIME_TRACKER       = ME.imports.sections.todo.time_tracker;
-const TASK               = ME.imports.sections.todo.task_item;
-const VIEW_MANAGER       = ME.imports.sections.todo.view_manager;
-const VIEW_STATS         = ME.imports.sections.todo.view__stats;
-const VIEW_CLEAR         = ME.imports.sections.todo.view__clear_tasks;
-const VIEW_SORT          = ME.imports.sections.todo.view__sort;
-const VIEW_DEFAULT       = ME.imports.sections.todo.view__default;
-const VIEW_SEARCH        = ME.imports.sections.todo.view__search;
-const VIEW_LOADING       = ME.imports.sections.todo.view__loading;
-const VIEW_FILTERS       = ME.imports.sections.todo.view__filters;
-const VIEW_TASK_EDITOR   = ME.imports.sections.todo.view__task_editor;
-const VIEW_FILE_SWITCHER = ME.imports.sections.todo.view__file_switcher;
+const TASK                 = ME.imports.sections.todo.task_item;
+const VIEW_MANAGER         = ME.imports.sections.todo.view_manager;
+const TIME_TRACKER         = ME.imports.sections.todo.time_tracker;
+
+const VIEW_STATS           = ME.imports.sections.todo.view__stats;
+const VIEW_CLEAR           = ME.imports.sections.todo.view__clear_tasks;
+const VIEW_SORT            = ME.imports.sections.todo.view__sort;
+const VIEW_DEFAULT         = ME.imports.sections.todo.view__default;
+const VIEW_SEARCH          = ME.imports.sections.todo.view__search;
+const VIEW_LOADING         = ME.imports.sections.todo.view__loading;
+const VIEW_FILTERS         = ME.imports.sections.todo.view__filters;
+const VIEW_TASK_EDITOR     = ME.imports.sections.todo.view__task_editor;
+const VIEW_FILE_SWITCHER   = ME.imports.sections.todo.view__file_switcher;
+const VIEW_KANBAN_SWITCHER = ME.imports.sections.todo.view__kanban_switcher;
 
 
 const CACHE_FILE = GLib.get_home_dir() +
                    '/.cache/timepp_gnome_shell_extension/timepp_todo.json';
-
 
 
 // =====================================================================
@@ -101,43 +101,8 @@ var SectionMain = new Lang.Class({
                 this.cache = {
                     format_version: cache_format_version,
 
-                    // @todo_files: array [of todo_struct]
-                    //    @todo_struct: obj {
-                    //        name             : string,
-                    //        todo_file        : string, (file path)
-                    //        done_file        : string, (file path or "")
-                    //        time_tracker_dir : string, (file path or "")
-                    //        automatic_sort   : bool
-                    //    }
+                    // array [of G.TODO_RECORD]
                     todo_files: [],
-
-                    active_file: "unique", // @todo_struct.name
-
-                    sort: [
-                        [G.SortType.PIN             , G.SortOrder.DESCENDING],
-                        [G.SortType.COMPLETED       , G.SortOrder.ASCENDING],
-                        [G.SortType.PRIORITY        , G.SortOrder.ASCENDING],
-                        [G.SortType.DUE_DATE        , G.SortOrder.ASCENDING],
-                        [G.SortType.RECURRENCE      , G.SortOrder.ASCENDING],
-                        [G.SortType.CONTEXT         , G.SortOrder.ASCENDING],
-                        [G.SortType.PROJECT         , G.SortOrder.ASCENDING],
-                        [G.SortType.CREATION_DATE   , G.SortOrder.ASCENDING],
-                        [G.SortType.COMPLETION_DATE , G.SortOrder.ASCENDING],
-                    ],
-
-                    filters: {
-                        invert_filters : false,
-                        deferred       : false,
-                        recurring      : false,
-                        hidden         : false,
-                        completed      : false,
-                        no_priority    : false,
-                        priorities     : [],
-                        contexts       : [],
-                        projects       : [],
-                        custom         : [],
-                        custom_active  : [],
-                    },
                 };
             }
         } catch (e) {
@@ -158,6 +123,10 @@ var SectionMain = new Lang.Class({
         this._reset_stats_obj();
 
 
+        // ref to current todo record in cache file
+        this.current_todo_file = null;
+
+
         // A GFile to the todo.txt file, GMonitor.
         this.todo_txt_file     = null;
         this.todo_file_monitor = null;
@@ -171,9 +140,7 @@ var SectionMain = new Lang.Class({
         // Tweak this function to completely disable animations when closing
         // the popup menu in order to avoid lag when there are lots of items.
         this.ext.menu.close = function () {
-            if (this._boxPointer.actor.visible) {
-                this._boxPointer.hide(false, () => this.emit('menu-closed'));
-            }
+            if (this._boxPointer.actor.visible) this._boxPointer.hide(false, () => this.emit('menu-closed'));
             if (!this.isOpen) return;
             this.isOpen = false;
             this.emit('open-state-changed', false);
@@ -185,7 +152,7 @@ var SectionMain = new Lang.Class({
         //
         this.keym.add('todo-keybinding-open', () => {
             this.ext.open_menu(this.section_name);
-                this.show_view__default();
+            this.show_view__default();
         });
         this.keym.add('todo-keybinding-open-to-add', () => {
             this.ext.open_menu(this.section_name);
@@ -234,7 +201,6 @@ var SectionMain = new Lang.Class({
             if (t === '00:00') this._on_new_day_started();
         });
         this.sigm.connect(this.settings, 'changed::todo-panel-mode', () => this._toggle_panel_item_mode());
-        this.sigm.connect(this.panel_item, 'left-click', () => this.ext.toggle_menu(this.section_name));
         this.sigm.connect(this.ext, 'custom-css-changed', () => this._on_custom_css_changed());
 
 
@@ -269,8 +235,8 @@ var SectionMain = new Lang.Class({
         this.keym.clear();
 
         this.view_manager.close_current_view();
-        this.view_manager   = null;
-        this.tasks          = [];
+        this.view_manager      = null;
+        this.tasks             = [];
 
         this.parent();
     },
@@ -308,6 +274,7 @@ var SectionMain = new Lang.Class({
                 return;
             }
 
+            this.current_todo_file = null;
             let current = this.get_current_todo_file();
 
             if (!current) {
@@ -327,6 +294,7 @@ var SectionMain = new Lang.Class({
             this.show_view__file_switcher(true);
             this.view_manager.lock = true;
             logError(e);
+            Main.notify(_('Unable to load todo file'));
             return;
         }
 
@@ -349,16 +317,16 @@ var SectionMain = new Lang.Class({
     },
 
     get_current_todo_file: function () {
-        let current = null;
+        if (this.current_todo_file) return this.current_todo_file;
 
         for (let it of this.cache.todo_files) {
-            if (it.name === this.cache.active_file) {
-                current = it;
+            if (it.active) {
+                this.current_todo_file = it;
                 break;
             }
         }
 
-        return current;
+        return this.current_todo_file;
     },
 
     write_tasks_to_file: function () {
@@ -405,15 +373,15 @@ var SectionMain = new Lang.Class({
     },
 
     _on_new_day_started: function () {
-        this.emit('new-day', G.date_yyyymmdd());
+        this.emit('new-day', MISC_UTILS.date_yyyymmdd());
 
         if (this._check_dates()) {
-            this.on_tasks_changed();
+            this.on_tasks_changed(true, true);
         }
     },
 
     _check_dates: function () {
-        let today          = G.date_yyyymmdd();
+        let today          = MISC_UTILS.date_yyyymmdd();
         let tasks_updated  = false;
         let recurred_tasks = 0;
         let deferred_tasks = 0;
@@ -528,7 +496,7 @@ var SectionMain = new Lang.Class({
         });
     },
 
-    on_tasks_changed: function (write_to_file = true) {
+    on_tasks_changed: function (write_to_file = true, refresh_default_view = false) {
         //
         // Update stats obj
         //
@@ -599,9 +567,10 @@ var SectionMain = new Lang.Class({
         // have redundant filters in case tasks were deleted. Clean 'em up.
         //
         {
+            let current = this.get_current_todo_file();
             let i, arr, len;
 
-            arr = this.cache.filters.priorities;
+            arr = current.filters.priorities;
             for (i = 0, len = arr.length; i < len; i++) {
                 if (! this.stats.priorities.has(arr[i])) {
                     arr.splice(i, 1);
@@ -609,7 +578,7 @@ var SectionMain = new Lang.Class({
                 }
             }
 
-            arr = this.cache.filters.contexts;
+            arr = current.filters.contexts;
             for (i = 0, len = arr.length; i < len; i++) {
                 if (! this.stats.contexts.has(arr[i])) {
                     arr.splice(i, 1);
@@ -617,7 +586,7 @@ var SectionMain = new Lang.Class({
                 }
             }
 
-            arr = this.cache.filters.projects;
+            arr = current.filters.projects;
             for (i = 0, len = arr.length; i < len; i++) {
                 if (! this.stats.projects.has(arr[i])) {
                     arr.splice(i, 1);
@@ -627,7 +596,7 @@ var SectionMain = new Lang.Class({
         }
 
         this.sort_tasks();
-        this.show_view__default(true);
+        this.show_view__default(true, refresh_default_view);
         if (write_to_file) this.write_tasks_to_file();
     },
 
@@ -646,13 +615,13 @@ var SectionMain = new Lang.Class({
             [G.SortType.COMPLETION_DATE] : 'completion_date',
         };
 
-        let cache = this.cache;
+        let sort  = this.get_current_todo_file().sorts;
         let i     = 0;
-        let len   = cache.sort.length;
+        let len   = sort.length;
         let props = Array(len);
 
         for (; i < len; i++) {
-            props[i] = property_map[ cache.sort[i][0] ];
+            props[i] = property_map[ sort[i][0] ];
         }
 
         this.tasks.sort((a, b) => {
@@ -660,24 +629,18 @@ var SectionMain = new Lang.Class({
 
             if (i === len) return 0;
 
-            switch (cache.sort[i][0]) {
+            switch (sort[i][0]) {
                 case G.SortType.PRIORITY:
-                    if (cache.sort[i][1] === G.SortOrder.DESCENDING) {
-                        return +(a[props[i]] > b[props[i]]) ||
-                               +(a[props[i]] === b[props[i]]) - 1;
-                    } else {
-                        return +(a[props[i]] < b[props[i]]) ||
-                               +(a[props[i]] === b[props[i]]) - 1;
-                    }
+                    if (sort[i][1] === G.SortOrder.DESCENDING)
+                        return +(a[props[i]] > b[props[i]]) || +(a[props[i]] === b[props[i]]) - 1;
+                    else
+                        return +(a[props[i]] < b[props[i]]) || +(a[props[i]] === b[props[i]]) - 1;
 
                 default:
-                    if (cache.sort[i][1] === G.SortOrder.DESCENDING) {
-                        return +(a[props[i]] < b[props[i]]) ||
-                               +(a[props[i]] === b[props[i]]) - 1;
-                    } else {
-                        return +(a[props[i]] > b[props[i]]) ||
-                               +(a[props[i]] === b[props[i]]) - 1;
-                    }
+                    if (sort[i][1] === G.SortOrder.DESCENDING)
+                        return +(a[props[i]] < b[props[i]]) || +(a[props[i]] === b[props[i]]) - 1;
+                    else
+                        return +(a[props[i]] > b[props[i]]) || +(a[props[i]] === b[props[i]]) - 1;
             }
         });
     },
@@ -692,7 +655,7 @@ var SectionMain = new Lang.Class({
     // @tasks: array (of task objects)
     archive_tasks: function (tasks) {
         let content = '';
-        let today   = G.date_yyyymmdd();
+        let today   = MISC_UTILS.date_yyyymmdd();
 
         for (let task of tasks) {
             if (task.completed) {
@@ -716,6 +679,28 @@ var SectionMain = new Lang.Class({
         } catch (e) { logError(e); }
     },
 
+    show_view__default: function (unlock = false, force_refresh = false) {
+        if (unlock) this.view_manager.lock = false;
+        else if (this.view_manager.lock) return;
+
+        if (!force_refresh && this.view_manager.current_view_name === G.View.DEFAULT) {
+            Mainloop.idle_add(() => this.view_manager.current_view.dummy_focus_actor.grab_key_focus());
+            return;
+        }
+
+        this.view_manager.close_current_view();
+
+        let view = new VIEW_DEFAULT.ViewDefault(this.ext, this);
+
+        this.view_manager.show_view({
+            view           : view,
+            view_name      : G.View.DEFAULT,
+            actors         : [view.actor],
+            focused_actor  : view.dummy_focus_actor,
+            close_callback : () => view.close(),
+        });
+    },
+
     show_view__time_tracker_stats: function (task) {
         if (! this.time_tracker) return;
 
@@ -732,7 +717,7 @@ var SectionMain = new Lang.Class({
                 this.stats_view.show_mode__banner(_('Nothing found.'));
             } else if (!task) {
                 this.stats_view.set_stats(...stats);
-                this.stats_view.show_mode__global(G.date_yyyymmdd());
+                this.stats_view.show_mode__global(MISC_UTILS.date_yyyymmdd());
             } else {
                 this.stats_view.set_stats(...stats);
                 let d = new Date();
@@ -783,19 +768,17 @@ var SectionMain = new Lang.Class({
         if (search_str) view.search_entry.text = search_str;
     },
 
-    show_view__default: function (unlock = false) {
+    show_view__kanban_switcher: function (unlock = false) {
         if (unlock) this.view_manager.lock = false;
         else if (this.view_manager.lock) return;
 
-        this.view_manager.close_current_view();
-
-        let view = new VIEW_DEFAULT.ViewDefault(this.ext, this);
+        let view = new VIEW_KANBAN_SWITCHER.KanbanSwitcher(this.ext, this);
 
         this.view_manager.show_view({
             view           : view,
-            view_name      : G.View.DEFAULT,
+            view_name      : G.View.KANBAN_SWITCHER,
             actors         : [view.actor],
-            focused_actor  : view.add_task_button,
+            focused_actor  : view.entry,
             close_callback : () => view.close(),
         });
     },
@@ -811,7 +794,7 @@ var SectionMain = new Lang.Class({
             view_name      : G.View.CLEAR,
             actors         : [view.actor],
             focused_actor  : view.button_cancel,
-            close_callback : () => { view.actor.destroy(); },
+            close_callback : () => view.close(),
         });
 
         view.connect('delete-all', () => {
@@ -856,14 +839,13 @@ var SectionMain = new Lang.Class({
             view_name      : G.View.FILE_SWITCH,
             actors         : [view.actor],
             focused_actor  : this.cache.todo_files.length ? view.entry : view.button_add_file,
-            close_callback : () => { view.close(); },
+            close_callback : () => view.close(),
         });
 
         if (this.cache.todo_files.length === 0) this.panel_item.set_mode('icon');
 
-        view.connect('update', (_, active, files) => {
-            this.cache.active_file = active;
-            this.cache.todo_files  = files;
+        view.connect('update', (_, files) => {
+            this.cache.todo_files = files;
             this.store_cache();
             Main.panel.menuManager.ignoreRelease();
             this._init_todo_file();
@@ -885,17 +867,16 @@ var SectionMain = new Lang.Class({
             view_name      : G.View.SELECT_SORT,
             actors         : [view.actor],
             focused_actor  : view.button_ok,
-            close_callback : () => { view.actor.destroy(); },
+            close_callback : () => view.close(),
         });
 
-        view.connect('update-sort', (_, new_sort_obj, automatic_sort) => {
-            this.cache.sort = new_sort_obj;
-
-            let current = this.get_current_todo_file();
+        view.connect('update-sort', (_, new_sort, automatic_sort) => {
+            let current            = this.get_current_todo_file();
+            current.sorts          = new_sort;
             current.automatic_sort = automatic_sort;
 
-            this.store_cache();
             this.sort_tasks();
+            this.store_cache();
             this.show_view__default();
         });
     },
@@ -911,11 +892,11 @@ var SectionMain = new Lang.Class({
             view_name      : G.View.SELECT_FILTER,
             actors         : [view.actor],
             focused_actor  : view.entry.entry,
-            close_callback : () => { view.actor.destroy(); },
+            close_callback : () => view.close(),
         });
 
         view.connect('filters-updated', (_, filters) => {
-            this.cache.filters = filters;
+            this.get_current_todo_file().filters = filters;
             this.store_cache();
             this.show_view__default();
         });
@@ -934,7 +915,7 @@ var SectionMain = new Lang.Class({
             view_name      : G.View.EDITOR,
             actors         : [view.actor],
             focused_actor  : view.entry.entry,
-            close_callback : () => { view.actor.destroy(); },
+            close_callback : () => view.close(),
         });
 
         if (task) this.time_tracker.stop_tracking(task);

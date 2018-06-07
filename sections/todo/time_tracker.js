@@ -196,7 +196,7 @@ var TimeTracker = new Lang.Class({
     _write_daily_csv_file: function () {
         if (! this.csv_dir) return;
 
-        let today    = G.date_yyyymmdd();
+        let today    = MISC_UTILS.date_yyyymmdd();
         let projects = '';
         let tasks    = '';
 
@@ -236,7 +236,7 @@ var TimeTracker = new Lang.Class({
 
         let d        = new Date();
         let time_str = "%02d:%02d:%02d".format(d.getHours(), d.getMinutes(), d.getSeconds());
-        let d_str    = G.date_yyyymmdd(d);
+        let d_str    = MISC_UTILS.date_yyyymmdd(d);
 
         for (let [,v] of this.daily_csv_map) {
             v.time = 0;
@@ -339,7 +339,7 @@ var TimeTracker = new Lang.Class({
 
         this.daily_csv_map.clear();
 
-        let today = G.date_yyyymmdd();
+        let today = MISC_UTILS.date_yyyymmdd();
 
         let [, lines] = this.daily_csv_file.load_contents(null);
         lines = String(lines).split(/\r?\n/).filter((l) => /\S/.test(l));
@@ -676,7 +676,7 @@ var TimeTracker = new Lang.Class({
     get_stats: function () {
         if (! this.csv_dir) return null;
 
-        let today = G.date_yyyymmdd();
+        let today = MISC_UTILS.date_yyyymmdd();
         let oldest_date = this.oldest_date ? this.oldest_date : today;
 
         let stats_unique_tasks    = this.stats_unique_tasks;
