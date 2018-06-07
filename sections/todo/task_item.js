@@ -971,16 +971,26 @@ var TaskItem = new Lang.Class({
 
             case Clutter.EventType.KEY_RELEASE: {
                 this.show_header_icons();
-                if (this.actor_scrollview)
-                    MISC_UTILS.scroll_to_item(this.actor_scrollview, this.actor_parent, actor);
+                if (this.actor_scrollview) MISC_UTILS.scroll_to_item(this.actor_scrollview, this.actor_parent, actor);
+                this.has_focus = true;
                 break;
             }
 
             case Clutter.EventType.KEY_PRESS: {
-                Mainloop.timeout_add(0, () => {
-                    if (! this.header.contains(global.stage.get_key_focus()))
-                        this.hide_header_icons();
-                });
+                if (this.has_focus) {
+                    if (event.get_key_symbol() === Clutter.KEY_e)
+                        this.delegate.show_view__task_editor(this);
+
+                    Mainloop.timeout_add(0, () => {
+                        if (! this.header.contains(global.stage.get_key_focus())) {
+                            this.hide_header_icons();
+                            this.has_focus = false;
+                        }
+                    });
+                } else if (this.actor_scrollview) {
+                    MISC_UTILS.scroll_to_item(this.actor_scrollview, this.actor_parent, actor);
+                }
+
                 break;
             }
 
