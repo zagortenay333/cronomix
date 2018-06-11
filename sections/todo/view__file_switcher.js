@@ -505,16 +505,26 @@ const FileInfoEditor = new Lang.Class({
     },
 
     _update_ok_btn: function () {
-        let visible = !!this.name_entry.text && !!this.todo_entry.text;
+        if (!this.name_entry.text || !this.todo_entry.text) {
+            this.button_ok.visible = false;
+            return;
+        }
+
+        let name = this.name_entry.get_text();
+
+        if (this.file && this.file.name === name) {
+            this.button_ok.visible = true;
+            return;
+        }
 
         for (let file of this.delegate.cache.todo_files) {
-            if (file.name === this.name_entry.text) {
-                visible = false;
-                break;
+            if (file.name === name) {
+                this.button_ok.visible = false;
+                return;
             }
         }
 
-        this.button_ok.visible = visible;
+        this.button_ok.visible = true;
     },
 
     close: function () {
