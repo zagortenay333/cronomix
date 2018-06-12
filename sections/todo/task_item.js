@@ -447,7 +447,7 @@ var TaskItem = new Lang.Class({
         if (do_recur) {
             // update/insert creation date
             {
-                let words = MISC_UTILS.split_on_whitespace(this.task_str);
+                let words = this.task_str.split(' ');
                 let idx;
 
                 if      (this.completed)          idx = 2;
@@ -459,7 +459,7 @@ var TaskItem = new Lang.Class({
                 else
                     words.splice(idx, 0, G.date_yyyymmdd());
 
-                this.task_str = words.join('');
+                this.task_str = words.join(' ');
             }
 
             if (this.completed) this.toggle_task();
@@ -700,7 +700,7 @@ var TaskItem = new Lang.Class({
 
     toggle_task: function () {
         if (this.completed) {
-            let words = MISC_UTILS.split_on_whitespace(this.task_str);
+            let words = this.task_str.split(' ');
 
             // See if there's an old priority stored in an ext (e.g., pri:A).
             let prio  = '';
@@ -716,7 +716,7 @@ var TaskItem = new Lang.Class({
             if (Date.parse(words[1])) words.splice(0, 2);
             else                      words.splice(0, 1);
 
-            this.reset(true, prio + words.join(''));
+            this.reset(true, prio + words.join(' '));
         } else {
             this.delegate.time_tracker.stop_tracking(this);
 
