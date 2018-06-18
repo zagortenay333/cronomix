@@ -747,7 +747,8 @@ var KanbanColumn = new Lang.Class({
                 new_task_str = new_task_str + ' ' + prop;
             }
             else if (prop === '(_)' || REG.TODO_PRIO.test(prop)) {
-                new_task_str = task.new_str_for_prio(prop);
+                task.priority = prop;
+                new_task_str  = task.new_str_for_prio(prop);
             }
         }
 
@@ -776,7 +777,7 @@ var KanbanColumn = new Lang.Class({
                 else if (REG.TODO_PROJ.test(f) && task.projects.indexOf(f) !== -1) {
                     new_task_str = new_task_str.replace(new RegExp(`(^| )\\${f}`, 'g'), '');
                 }
-                else if (REG.TODO_PRIO.test(f)) {
+                else if (REG.TODO_PRIO.test(f) && task.priority === f) {
                     new_task_str = task.new_str_for_prio('(_)', new_task_str);
                 }
                 else if (f === '(_)' && ltr && !no_prio_col[0]) {
