@@ -838,9 +838,8 @@ var TaskItem = new Lang.Class({
             this.delegate.time_tracker.update_record_name(old_task_str, this.task_str);
         }
 
-
         if (this.delegate.view_manager.current_view_name !== G.View.SEARCH) {
-            Mainloop.timeout_add(0, () => this.delegate.on_tasks_changed(true, this.delegate.get_current_todo_file().automatic_sort));
+            Mainloop.timeout_add(0, () => this.delegate.on_tasks_changed(true, true));
         }
     },
 
