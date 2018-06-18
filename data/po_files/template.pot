@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-06 20:20+0200\n"
+"POT-Creation-Date: 2018-06-18 13:54+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,9 +18,27 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: data/po_files/../../lib/misc_utils.js:44
+#: data/po_files/../../lib/misc_utils.js:45
 msgid "File or dir not found."
 msgstr ""
+
+#: data/po_files/../../lib/misc_utils.js:116
+msgid "today"
+msgstr ""
+
+#: data/po_files/../../lib/misc_utils.js:117
+#, javascript-format
+msgid "%d day ago"
+msgid_plural "%d days ago"
+msgstr[0] ""
+msgstr[1] ""
+
+#: data/po_files/../../lib/misc_utils.js:118
+#, javascript-format
+msgid "in %d day"
+msgid_plural "in %d days"
+msgstr[0] ""
+msgstr[1] ""
 
 #: data/po_files/../../lib/fullscreen.js:222
 msgid "Move to Primary Monitor"
@@ -57,21 +75,21 @@ msgstr ""
 #: data/po_files/../../data/prefs.ui:213 data/po_files/../../data/prefs.ui:942
 #: data/po_files/../../sections/pomodoro.js:159
 #: data/po_files/../../sections/timer.js:172
-#: data/po_files/../../sections/timer.js:332
+#: data/po_files/../../sections/timer.js:331
 msgid "Timer"
 msgstr ""
 
 #: data/po_files/../../data/prefs.ui:257 data/po_files/../../data/prefs.ui:1291
 #: data/po_files/../../sections/stopwatch.js:158
-#: data/po_files/../../sections/stopwatch.js:336
+#: data/po_files/../../sections/stopwatch.js:335
 msgid "Stopwatch"
 msgstr ""
 
 #: data/po_files/../../data/prefs.ui:301 data/po_files/../../data/prefs.ui:1624
 #: data/po_files/../../data/prefs.ui:1954
 #: data/po_files/../../sections/pomodoro.js:37
-#: data/po_files/../../sections/pomodoro.js:238
-#: data/po_files/../../sections/pomodoro.js:344
+#: data/po_files/../../sections/pomodoro.js:237
+#: data/po_files/../../sections/pomodoro.js:343
 msgid "Pomodoro"
 msgstr ""
 
@@ -219,7 +237,7 @@ msgid "Notification Sounds"
 msgstr ""
 
 #: data/po_files/../../data/prefs.ui:1579
-#: data/po_files/../../sections/alarms.js:543
+#: data/po_files/../../sections/alarms.js:537
 msgid "Repeat notification sound?"
 msgstr ""
 
@@ -265,111 +283,113 @@ msgstr ""
 msgid "Todo / Time Tracker"
 msgstr ""
 
-#: data/po_files/../../sections/todo/task_item.js:624
-#: data/po_files/../../sections/todo/task_item.js:628
+#: data/po_files/../../sections/todo/task_item.js:635
+#: data/po_files/../../sections/todo/task_item.js:639
 msgid "recurrence"
 msgstr ""
 
-#: data/po_files/../../sections/todo/task_item.js:625
+#: data/po_files/../../sections/todo/task_item.js:636
 #, javascript-format
 msgid "%d day after completion"
 msgid_plural "%d days after completion"
 msgstr[0] ""
 msgstr[1] ""
 
-#: data/po_files/../../sections/todo/task_item.js:641
+#: data/po_files/../../sections/todo/task_item.js:652
 msgid "due"
 msgstr ""
 
-#: data/po_files/../../sections/todo/task_item.js:649
+#: data/po_files/../../sections/todo/task_item.js:660
 msgid "deferred"
 msgstr ""
 
-#: data/po_files/../../sections/todo/task_item.js:688
+#: data/po_files/../../sections/todo/task_item.js:699
 msgid "created"
 msgstr ""
 
-#: data/po_files/../../sections/todo/task_item.js:691
+#: data/po_files/../../sections/todo/task_item.js:702
 msgid "completed"
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__sort.js:60
+#: data/po_files/../../sections/todo/view__sort.js:64
 msgid "Sort by Pin"
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__sort.js:61
+#: data/po_files/../../sections/todo/view__sort.js:65
 msgid "Sort by Context"
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__sort.js:62
+#: data/po_files/../../sections/todo/view__sort.js:66
 msgid "Sort by Projects"
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__sort.js:63
+#: data/po_files/../../sections/todo/view__sort.js:67
 msgid "Sort by Priority"
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__sort.js:64
+#: data/po_files/../../sections/todo/view__sort.js:68
 msgid "Sort by Due Date"
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__sort.js:65
+#: data/po_files/../../sections/todo/view__sort.js:69
 msgid "Sort by Recurrence Date"
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__sort.js:66
+#: data/po_files/../../sections/todo/view__sort.js:70
 msgid "Sort by Completed"
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__sort.js:67
+#: data/po_files/../../sections/todo/view__sort.js:71
 msgid "Sort by Creation Date"
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__sort.js:68
+#: data/po_files/../../sections/todo/view__sort.js:72
 msgid "Sort by Completion Date"
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__sort.js:92
+#: data/po_files/../../sections/todo/view__sort.js:97
 msgid "Automatic sorting"
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__sort.js:106
-#: data/po_files/../../sections/todo/view__task_editor.js:146
+#: data/po_files/../../sections/todo/view__sort.js:111
+#: data/po_files/../../sections/todo/view__task_editor.js:148
 #: data/po_files/../../sections/todo/view__stats.js:246
-#: data/po_files/../../sections/todo/view__filters.js:206
-#: data/po_files/../../sections/todo/view__file_switcher.js:103
-#: data/po_files/../../sections/todo/view__file_switcher.js:457
-#: data/po_files/../../sections/pomodoro.js:766
-#: data/po_files/../../sections/alarms.js:582
+#: data/po_files/../../sections/todo/view__filters.js:208
+#: data/po_files/../../sections/todo/view__file_switcher.js:104
+#: data/po_files/../../sections/todo/view__file_switcher.js:463
+#: data/po_files/../../sections/pomodoro.js:765
+#: data/po_files/../../sections/alarms.js:576
 msgid "Ok"
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__task_editor.js:82
+#: data/po_files/../../sections/todo/view__task_editor.js:84
 msgid "Task..."
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__task_editor.js:104
+#: data/po_files/../../sections/todo/view__task_editor.js:106
+#: data/po_files/../../sections/todo/view__kanban_switcher.js:73
 msgid "syntax help"
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__task_editor.js:130
-#: data/po_files/../../sections/todo/view__clear_tasks.js:92
-#: data/po_files/../../sections/todo/view__file_switcher.js:451
-#: data/po_files/../../sections/alarms.js:573
+#: data/po_files/../../sections/todo/view__task_editor.js:132
+#: data/po_files/../../sections/todo/view__clear_tasks.js:95
+#: data/po_files/../../sections/todo/view__file_switcher.js:457
+#: data/po_files/../../sections/alarms.js:567
 msgid "Delete"
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__task_editor.js:138
+#: data/po_files/../../sections/todo/view__task_editor.js:140
 msgid "Archive"
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__task_editor.js:143
+#: data/po_files/../../sections/todo/view__task_editor.js:145
 #: data/po_files/../../sections/todo/view__stats.js:249
-#: data/po_files/../../sections/todo/view__clear_tasks.js:95
-#: data/po_files/../../sections/todo/view__file_switcher.js:99
-#: data/po_files/../../sections/todo/view__file_switcher.js:456
-#: data/po_files/../../sections/pomodoro.js:767
-#: data/po_files/../../sections/alarms.js:581
+#: data/po_files/../../sections/todo/view__clear_tasks.js:98
+#: data/po_files/../../sections/todo/view__kanban_switcher.js:94
+#: data/po_files/../../sections/todo/view__file_switcher.js:100
+#: data/po_files/../../sections/todo/view__file_switcher.js:462
+#: data/po_files/../../sections/pomodoro.js:766
+#: data/po_files/../../sections/alarms.js:575
 msgid "Cancel"
 msgstr ""
 
@@ -398,8 +418,9 @@ msgid "All Time"
 msgstr ""
 
 #: data/po_files/../../sections/todo/view__stats.js:165
-#: data/po_files/../../sections/todo/view__file_switcher.js:69
-#: data/po_files/../../sections/timer.js:614
+#: data/po_files/../../sections/todo/view__kanban_switcher.js:63
+#: data/po_files/../../sections/todo/view__file_switcher.js:70
+#: data/po_files/../../sections/timer.js:613
 msgid "Search..."
 msgstr ""
 
@@ -476,103 +497,93 @@ msgstr ""
 msgid "To track time, select a dir for csv files in the settings."
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__clear_tasks.js:55
+#: data/po_files/../../sections/todo/view__clear_tasks.js:58
 msgid "Delete all completed tasks"
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__clear_tasks.js:68
+#: data/po_files/../../sections/todo/view__clear_tasks.js:71
 msgid "Archive all completed tasks to done.txt and delete them"
 msgstr ""
 
-#: data/po_files/../../sections/todo/GLOBAL.js:67
-msgid "today"
-msgstr ""
-
-#: data/po_files/../../sections/todo/GLOBAL.js:68
-#, javascript-format
-msgid "%d day ago"
-msgid_plural "%d days ago"
-msgstr[0] ""
-msgstr[1] ""
-
-#: data/po_files/../../sections/todo/GLOBAL.js:69
-#, javascript-format
-msgid "in %d day"
-msgid_plural "in %d days"
-msgstr[0] ""
-msgstr[1] ""
-
-#: data/po_files/../../sections/todo/view__default.js:75
+#: data/po_files/../../sections/todo/view__default.js:497
 msgid "Add New Task..."
 msgstr ""
 
-#: data/po_files/../../sections/todo/MAIN.js:437
+#: data/po_files/../../sections/todo/MAIN.js:297
+msgid "Unable to load todo file"
+msgstr ""
+
+#: data/po_files/../../sections/todo/MAIN.js:405
 #, javascript-format
 msgid "%d task has recurred"
 msgid_plural "%d tasks have recurred"
 msgstr[0] ""
 msgstr[1] ""
 
-#: data/po_files/../../sections/todo/MAIN.js:443
+#: data/po_files/../../sections/todo/MAIN.js:411
 #, javascript-format
 msgid "%d deferred task has been opened"
 msgid_plural "%d deferred tasks have been opened"
 msgstr[0] ""
 msgstr[1] ""
 
-#: data/po_files/../../sections/todo/MAIN.js:726
-#: data/po_files/../../sections/todo/view__loading.js:37
+#: data/po_files/../../sections/todo/MAIN.js:711
+#: data/po_files/../../sections/todo/view__loading.js:40
 msgid "Loading..."
 msgstr ""
 
-#: data/po_files/../../sections/todo/MAIN.js:732
+#: data/po_files/../../sections/todo/MAIN.js:717
 msgid "Nothing found."
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__filters.js:71
+#: data/po_files/../../sections/todo/view__kanban_switcher.js:131
+msgid "To use kanban boards, add the kanban todo extension to a task."
+msgstr ""
+
+#: data/po_files/../../sections/todo/view__filters.js:73
 msgid "Add custom filter..."
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__filters.js:116
+#: data/po_files/../../sections/todo/view__filters.js:118
 msgid "Show hidden tasks only"
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__filters.js:123
+#: data/po_files/../../sections/todo/view__filters.js:125
 #, javascript-format
 msgid "%d hidden task"
 msgid_plural "%d hidden tasks"
 msgstr[0] ""
 msgstr[1] ""
 
-#: data/po_files/../../sections/todo/view__filters.js:139
+#: data/po_files/../../sections/todo/view__filters.js:141
 msgid "Show recurring tasks only"
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__filters.js:149
+#: data/po_files/../../sections/todo/view__filters.js:151
 #, javascript-format
 msgid "%d recurring task"
 msgid_plural "%d recurring tasks"
 msgstr[0] ""
 msgstr[1] ""
 
-#: data/po_files/../../sections/todo/view__filters.js:165
+#: data/po_files/../../sections/todo/view__filters.js:167
 msgid "Show deferred tasks only"
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__filters.js:174
+#: data/po_files/../../sections/todo/view__filters.js:176
 #, javascript-format
 msgid "%d deferred task"
 msgid_plural "%d deferred tasks"
 msgstr[0] ""
 msgstr[1] ""
 
-#: data/po_files/../../sections/todo/view__filters.js:190
+#: data/po_files/../../sections/todo/view__filters.js:192
 msgid "Invert filters"
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__filters.js:205
+#: data/po_files/../../sections/todo/view__filters.js:207
 #: data/po_files/../../sections/stopwatch.js:174
-#: data/po_files/../../sections/stopwatch.js:562
+#: data/po_files/../../sections/stopwatch.js:561
 msgid "Reset"
 msgstr ""
 
@@ -591,78 +602,78 @@ msgid_plural "%d tasks"
 msgstr[0] ""
 msgstr[1] ""
 
-#: data/po_files/../../sections/todo/view__file_switcher.js:96
+#: data/po_files/../../sections/todo/view__file_switcher.js:97
 msgid "Add File"
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__file_switcher.js:393
+#: data/po_files/../../sections/todo/view__file_switcher.js:399
 msgid "Unique name"
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__file_switcher.js:404
+#: data/po_files/../../sections/todo/view__file_switcher.js:410
 msgid "Todo file"
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__file_switcher.js:418
+#: data/po_files/../../sections/todo/view__file_switcher.js:424
 msgid "Done file"
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__file_switcher.js:418
-#: data/po_files/../../sections/todo/view__file_switcher.js:433
+#: data/po_files/../../sections/todo/view__file_switcher.js:424
+#: data/po_files/../../sections/todo/view__file_switcher.js:439
 msgid "optional"
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__file_switcher.js:433
+#: data/po_files/../../sections/todo/view__file_switcher.js:439
 msgid "Time-tracker directory"
 msgstr ""
 
 #: data/po_files/../../sections/stopwatch.js:175
-#: data/po_files/../../sections/stopwatch.js:563
+#: data/po_files/../../sections/stopwatch.js:562
 msgid "Lap"
 msgstr ""
 
 #: data/po_files/../../sections/stopwatch.js:176
-#: data/po_files/../../sections/stopwatch.js:565
+#: data/po_files/../../sections/stopwatch.js:564
 msgid "Start"
 msgstr ""
 
 #: data/po_files/../../sections/stopwatch.js:177
-#: data/po_files/../../sections/stopwatch.js:564
+#: data/po_files/../../sections/stopwatch.js:563
 #: data/po_files/../../sections/pomodoro.js:193
-#: data/po_files/../../sections/pomodoro.js:860
+#: data/po_files/../../sections/pomodoro.js:859
 msgid "Stop"
 msgstr ""
 
 #: data/po_files/../../sections/pomodoro.js:190
-#: data/po_files/../../sections/pomodoro.js:857
+#: data/po_files/../../sections/pomodoro.js:856
 msgid "New Pomo"
 msgstr ""
 
 #: data/po_files/../../sections/pomodoro.js:191
-#: data/po_files/../../sections/pomodoro.js:858
+#: data/po_files/../../sections/pomodoro.js:857
 msgid "Take Break"
 msgstr ""
 
 #: data/po_files/../../sections/pomodoro.js:192
-#: data/po_files/../../sections/pomodoro.js:859
+#: data/po_files/../../sections/pomodoro.js:858
 msgid "Continue"
 msgstr ""
 
-#: data/po_files/../../sections/pomodoro.js:664
+#: data/po_files/../../sections/pomodoro.js:663
 msgid "Reset pomodoro counter?"
 msgstr ""
 
-#: data/po_files/../../sections/pomodoro.js:680
-#: data/po_files/../../sections/pomodoro.js:699
-#: data/po_files/../../sections/pomodoro.js:718
+#: data/po_files/../../sections/pomodoro.js:679
+#: data/po_files/../../sections/pomodoro.js:698
+#: data/po_files/../../sections/pomodoro.js:717
 msgid "(min:sec)"
 msgstr ""
 
-#: data/po_files/../../sections/pomodoro.js:737
+#: data/po_files/../../sections/pomodoro.js:736
 msgid "Num of pomos until long break"
 msgstr ""
 
-#: data/po_files/../../sections/pomodoro.js:753
+#: data/po_files/../../sections/pomodoro.js:752
 msgid "Control todo time tracker by task id..."
 msgstr ""
 
@@ -682,47 +693,47 @@ msgstr ""
 msgid "Help with translations"
 msgstr ""
 
-#: data/po_files/../../sections/alarms.js:160
+#: data/po_files/../../sections/alarms.js:156
 msgid "Add New Alarm..."
 msgstr ""
 
 #. TRANSLATORS: %s is a time string in the format HH:MM (e.g., 13:44)
-#: data/po_files/../../sections/alarms.js:379
-#: data/po_files/../../sections/alarms.js:910
+#: data/po_files/../../sections/alarms.js:373
+#: data/po_files/../../sections/alarms.js:909
 #, javascript-format
 msgid "Alarm at %s"
 msgstr ""
 
-#: data/po_files/../../sections/alarms.js:394
-#: data/po_files/../../sections/alarms.js:917
+#: data/po_files/../../sections/alarms.js:388
+#: data/po_files/../../sections/alarms.js:916
 msgid "Snooze"
 msgstr ""
 
-#: data/po_files/../../sections/alarms.js:486
+#: data/po_files/../../sections/alarms.js:480
 msgid "Alarm time"
 msgstr ""
 
-#: data/po_files/../../sections/alarms.js:486
+#: data/po_files/../../sections/alarms.js:480
 msgid "(h:min)"
 msgstr ""
 
-#: data/po_files/../../sections/alarms.js:525
+#: data/po_files/../../sections/alarms.js:519
 msgid "Snooze duration"
 msgstr ""
 
-#: data/po_files/../../sections/alarms.js:525
+#: data/po_files/../../sections/alarms.js:519
 msgid "(min)"
 msgstr ""
 
-#: data/po_files/../../sections/alarms.js:555
+#: data/po_files/../../sections/alarms.js:549
 msgid "Alarm Message..."
 msgstr ""
 
-#: data/po_files/../../sections/alarms.js:736
+#: data/po_files/../../sections/alarms.js:730
 msgid "Snoozed"
 msgstr ""
 
-#: data/po_files/../../sections/alarms.js:934
+#: data/po_files/../../sections/alarms.js:933
 #, javascript-format
 msgid "%d alarm went off!"
 msgid_plural "%d alarms went off!"
@@ -733,6 +744,6 @@ msgstr[1] ""
 msgid "Timer Expired!"
 msgstr ""
 
-#: data/po_files/../../sections/timer.js:642
+#: data/po_files/../../sections/timer.js:641
 msgid "Default preset"
 msgstr ""
