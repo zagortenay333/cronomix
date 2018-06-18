@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-18 13:54+0200\n"
+"POT-Creation-Date: 2018-06-18 16:25+0200\n"
 "PO-Revision-Date: 2017-11-29 13:36+0200\n"
 "Last-Translator: Sergey Shlyapugin <shlyapugin@gmail.com>\n"
 "Language-Team: Russian\n"
@@ -375,7 +375,7 @@ msgstr ""
 #: data/po_files/../../sections/todo/view__stats.js:246
 #: data/po_files/../../sections/todo/view__filters.js:208
 #: data/po_files/../../sections/todo/view__file_switcher.js:104
-#: data/po_files/../../sections/todo/view__file_switcher.js:463
+#: data/po_files/../../sections/todo/view__file_switcher.js:457
 #: data/po_files/../../sections/pomodoro.js:765
 #: data/po_files/../../sections/alarms.js:576
 msgid "Ok"
@@ -393,7 +393,7 @@ msgstr ""
 
 #: data/po_files/../../sections/todo/view__task_editor.js:132
 #: data/po_files/../../sections/todo/view__clear_tasks.js:95
-#: data/po_files/../../sections/todo/view__file_switcher.js:457
+#: data/po_files/../../sections/todo/view__file_switcher.js:451
 #: data/po_files/../../sections/alarms.js:567
 msgid "Delete"
 msgstr "Удалить"
@@ -407,7 +407,7 @@ msgstr "Архивировать"
 #: data/po_files/../../sections/todo/view__clear_tasks.js:98
 #: data/po_files/../../sections/todo/view__kanban_switcher.js:94
 #: data/po_files/../../sections/todo/view__file_switcher.js:100
-#: data/po_files/../../sections/todo/view__file_switcher.js:462
+#: data/po_files/../../sections/todo/view__file_switcher.js:456
 #: data/po_files/../../sections/pomodoro.js:766
 #: data/po_files/../../sections/alarms.js:575
 msgid "Cancel"
@@ -635,25 +635,25 @@ msgstr[2] "%d задач"
 msgid "Add File"
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__file_switcher.js:399
+#: data/po_files/../../sections/todo/view__file_switcher.js:393
 msgid "Unique name"
 msgstr "Уникальное имя"
 
-#: data/po_files/../../sections/todo/view__file_switcher.js:410
+#: data/po_files/../../sections/todo/view__file_switcher.js:404
 msgid "Todo file"
 msgstr "Файл списка дел"
 
-#: data/po_files/../../sections/todo/view__file_switcher.js:424
+#: data/po_files/../../sections/todo/view__file_switcher.js:418
 #, fuzzy
 msgid "Done file"
 msgstr "Файл списка дел"
 
-#: data/po_files/../../sections/todo/view__file_switcher.js:424
-#: data/po_files/../../sections/todo/view__file_switcher.js:439
+#: data/po_files/../../sections/todo/view__file_switcher.js:418
+#: data/po_files/../../sections/todo/view__file_switcher.js:433
 msgid "optional"
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__file_switcher.js:439
+#: data/po_files/../../sections/todo/view__file_switcher.js:433
 #, fuzzy
 msgid "Time-tracker directory"
 msgstr "Папка с csv для тайм-трекера (опционально)"
