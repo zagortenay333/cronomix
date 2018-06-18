@@ -317,7 +317,6 @@ var ViewFileSwitcher = new Lang.Class({
 
             case Clutter.EventType.LEAVE: {
                 let related = event.get_related();
-
                 if (!item.header.contains(global.stage.get_key_focus()) && related && !item.actor.contains(related)) {
                     for (let it of item.icon_box.get_children()) it.hide();
                     item.check_icon.visible = item.active;
@@ -328,14 +327,9 @@ var ViewFileSwitcher = new Lang.Class({
 
             case Clutter.EventType.KEY_RELEASE: {
                 for (let it of item.icon_box.get_children()) it.show();
-
-                if (!item.header.contains(global.stage.get_key_focus())) {
-                    item.icon_box.get_first_child().grab_key_focus();
-                }
-
-                MISC_UTILS.scroll_to_item(this.file_items_scrollview,
-                                          this.file_items_scrollbox,
-                                          item.actor);
+                if (!item.header.contains(global.stage.get_key_focus())) item.icon_box.get_first_child().grab_key_focus();
+                MISC_UTILS.scroll_to_item(this.file_items_scrollview, this.file_items_scrollbox, item.actor);
+                item.actor.can_focus = false;
                 break;
             }
 

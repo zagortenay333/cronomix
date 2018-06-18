@@ -150,8 +150,9 @@ var KanbanSwitcher = new Lang.Class({
         let item = {};
         this.kan_items.add(item);
 
-        item.task    = task;
-        item.kan_str = kan_str
+        item.task      = task;
+        item.kan_str   = kan_str
+        item.is_active = is_active;
 
 
         // actor
@@ -270,7 +271,7 @@ var KanbanSwitcher = new Lang.Class({
             let related = event.get_related();
             if (!item.header.contains(global.stage.get_key_focus()) && related && !item.actor.contains(related)) {
                 for (let it of item.icon_box.get_children()) it.hide();
-                item.check_icon.visible = item.active;
+                item.check_icon.visible = item.is_active;
                 item.actor.can_focus = true;
             }
         }
@@ -278,13 +279,14 @@ var KanbanSwitcher = new Lang.Class({
             for (let it of item.icon_box.get_children()) it.show();
             if (!item.header.contains(global.stage.get_key_focus())) item.icon_box.get_first_child().grab_key_focus();
             MISC_UTILS.scroll_to_item(this.items_scrollview, this.items_scrollbox, item.actor);
+            item.actor.can_focus = false;
         }
         else if (event_type === Clutter.EventType.KEY_PRESS) {
             Mainloop.idle_add(() => {
                 if (item.icon_box && !item.header.contains(global.stage.get_key_focus())) {
                     item.actor.can_focus = true;
                     for (let it of item.icon_box.get_children()) it.hide();
-                    item.check_icon.visible = item.active;
+                    item.check_icon.visible = item.is_active;
                 }
             });
         }
