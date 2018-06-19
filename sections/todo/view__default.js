@@ -669,8 +669,16 @@ var KanbanColumn = new Lang.Class({
     },
 
     on_drag_end: function (old_parent, new_parent, task) {
+        task.hide_header_icons();
+
         if (old_parent === new_parent) {
-            this._sort_task_in_column(new_parent, task);
+            if (this.delegate.get_current_todo_file().automatic_sort) {
+                this._sort_task_in_column(new_parent, task);
+            } else {
+                this._sort_task_in_arrays(task);
+                this.delegate.write_tasks_to_file();
+            }
+
             return;
         }
 
@@ -687,28 +695,61 @@ var KanbanColumn = new Lang.Class({
         task.actor_scrollview = [[destination_column.tasks_scroll], [this.owner.columns_scroll]];
 
         this.delegate.on_tasks_changed();
-        this._sort_task_in_column(task.actor_parent, task);
+
+        if (this.delegate.get_current_todo_file().automatic_sort)
+            this._sort_task_in_column(task.actor_parent, task);
     },
 
     // We don't want to refresh the entire view after the tasks have been
     // sorted; we only need to put the dragged task in the right position.
     _sort_task_in_column: function (container, task) {
-        if (! this.delegate.get_current_todo_file().automatic_sort) return;
-
-        let tasks = this.delegate.tasks;
-        let idx   = tasks.indexOf(task);
+        let tasks  = this.delegate.tasks;
+        let idx    = tasks.indexOf(task);
+        let sorted = false;
 
         for (let i = idx+1; i < tasks.length; i++) {
             let it = tasks[i].actor;
 
             if (container.contains(it)) {
                 container.set_child_below_sibling(task.actor, it);
-                return;
+                sorted = true;
+                break;
             }
         }
 
-        container.remove_child(task.actor);
-        container.add_child(task.actor);
+        if (! sorted) {
+            container.remove_child(task.actor);
+            container.add_child(task.actor);
+        }
+    },
+
+    _sort_task_in_arrays: function (task) {
+        if (this.tasks_scroll_content.get_n_children() < 2) return;
+
+        let above    = true;
+        let relative = task.actor.get_next_sibling();
+
+        if (! relative) {
+            above    = false;
+            relative = task.actor.get_previous_sibling();
+        }
+
+        for (let arr of [this.owner.tasks_viewport, this.delegate.tasks]) {
+            for (let i = 0; i < arr.length; i++) {
+                if (arr[i] === task) {
+                    arr.splice(i, 1);
+                    break;
+                }
+            }
+
+            for (let i = 0; i < arr.length; i++) {
+                if (arr[i].actor === relative) {
+                    if (above) arr.splice(i, 0, task);
+                    else       arr.splice(i+1, 0, task);
+                    break;
+                }
+            }
+        }
     },
 
     // When the user drags a task from one column to another:
