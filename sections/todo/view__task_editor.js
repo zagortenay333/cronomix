@@ -168,6 +168,7 @@ var ViewTaskEditor = new Lang.Class({
             }
         });
         this.entry.entry.clutter_text.connect('activate', () => this._on_activate());
+        this.entry.entry.clutter_text.connect('cursor-changed', () => this.completion_menu.hide());
         this.entry.entry.connect('allocation-changed', () => {
             this.entry.scroll_box.vscrollbar_policy = Gtk.PolicyType.NEVER;
             if (ext.needs_scrollbar()) this.entry.scroll_box.vscrollbar_policy = Gtk.PolicyType.ALWAYS;
@@ -183,11 +184,22 @@ var ViewTaskEditor = new Lang.Class({
             switch (event.get_key_symbol()) {
                 case Clutter.KEY_KP_Enter:
                 case Clutter.Return:
-                    if (event.get_state() === Clutter.ModifierType.CONTROL_MASK) {
-                        this._emit_ok();
-                    }
+                    if (event.get_state() === Clutter.ModifierType.CONTROL_MASK) this._emit_ok();
+                    break;
+                case Clutter.KEY_f:
+                    if (event.get_state() === Clutter.ModifierType.CONTROL_MASK) this._find_file();
                     break;
             }
+        });
+    },
+
+    _find_file: function () {
+        this.ext.menu.close();
+        this.file_chooser = MISC_UTILS.open_file_dialog(false, (out) => {
+            if (out) this.entry.insert_text(out);
+            this.todo_file_chooser_proc = null;
+            this.ext.menu.open();
+            Mainloop.idle_add(() => this.entry.entry.grab_key_focus());
         });
     },
 
@@ -296,37 +308,32 @@ var ViewTaskEditor = new Lang.Class({
 
     _on_tab: function () {
         this.curr_selected_completion.pseudo_class = '';
-
         let next = this.curr_selected_completion.get_next_sibling();
 
         if (next) {
             this.curr_selected_completion = next;
             next.pseudo_class = 'active';
-        }
-        else {
+        } else {
             this.curr_selected_completion = this.completion_menu_content.first_child;
             this.curr_selected_completion.pseudo_class = 'active';
         }
 
-        MISC_UTILS.scroll_to_item(this.completion_menu,
-                                  this.completion_menu_content,
-                                  this.curr_selected_completion);
+        MISC_UTILS.scroll_to_item(this.completion_menu, this.completion_menu_content, this.curr_selected_completion);
     },
 
     _on_activate: function () {
         if (!this.completion_menu.visible || !this.curr_selected_completion) {
-            this.entry.insert_newline();
+            this.entry.insert_text('\n');
             return;
         }
 
         this.text_changed_handler_block = true;
-
         let completion = this.curr_selected_completion.label;
 
         this.entry.entry.text =
             this.entry.entry.get_text().slice(0, this.current_word_start) +
             completion + ' ' +
-            this.entry.entry.get_text().slice(this.current_word_end + 2);
+            this.entry.entry.get_text().slice(this.current_word_end + 1);
 
         // @BUG or feature?
         // Setting the cursor pos directly seeems to also select the text, so
@@ -336,7 +343,6 @@ var ViewTaskEditor = new Lang.Class({
 
         this.curr_selected_completion = null;
         this.completion_menu.hide();
-
         this.text_changed_handler_block = false;
     },
 
@@ -392,6 +398,7 @@ var ViewTaskEditor = new Lang.Class({
 
     close: function () {
         Mainloop.idle_add(() => this.delegate.actor.remove_style_class_name('view-task-editor'));
+        if (this.file_chooser_proc) this.file_chooser_proc.force_exit();
         this.actor.destroy();
     },
 });
