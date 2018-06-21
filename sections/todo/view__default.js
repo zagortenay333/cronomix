@@ -758,7 +758,17 @@ var KanbanColumn = new Lang.Class({
     //   - ensure that the task has the property that will make it go into
     //     the new column.
     //
-    // returns true if task was moved from a kitchen-sink column to the right.
+    // In some cases it is not possible to ensure that the task will not be put
+    // into a column that the user didn't drag it into.
+    // E.g.,
+    //   - User dragged from col1 to col3 but col2 is a kitchen sink.
+    //   - User dragged from col1 (a priority column) into col3 not a priority
+    //     column but col2 is (_). When we remove priority (A) from the task, it
+    //     will end up in col2.
+    //
+    // For this reason, we return [@new_col, @destination_column]
+    //   @new_col            : column user dropped the task into
+    //   @destination_column : column into which the task will actually go
     _update_task_props: function (old_parent, new_parent, task) {
         let old_col, new_col, idx_old, idx_new;
 
