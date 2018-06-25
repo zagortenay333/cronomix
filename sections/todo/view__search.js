@@ -185,6 +185,9 @@ var ViewSearch = new Lang.Class({
         for (let j = 0; j < 50; j++, i++) {
             if (i === this.tasks_viewport.length) {
                 this.add_tasks_to_menu_mainloop_id = null;
+                if (!scrollbar_shown && this.ext.needs_scrollbar())
+                    this.tasks_scroll.vscrollbar_policy = Gtk.PolicyType.ALWAYS;
+
                 return;
             }
 
