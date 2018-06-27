@@ -152,7 +152,7 @@ var StatsView = new Lang.Class({
 
         this.global_mode_icon = new St.Button({ y_align: St.Align.MIDDLE, can_focus: true });
         this.nav_bar.add_actor(this.global_mode_icon);
-        this.global_mode_icon.add_actor(new St.Icon({ icon_name: 'timepp-eye-symbolic' }));
+        this.global_mode_icon.add_actor(new St.Icon({ icon_name: 'timepp-home-symbolic' }));
 
         this.hot_mode_icon = new St.Button({ y_align: St.Align.MIDDLE, can_focus: true });
         this.nav_bar.add_actor(this.hot_mode_icon);

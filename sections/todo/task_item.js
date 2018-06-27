@@ -75,7 +75,7 @@ var TaskItem = new Lang.Class({
         //
         // container
         //
-        this.actor = new St.Bin({ style: `width: ${delegate.settings.get_int('todo-task-width')}px;`, reactive: true, x_fill: true, style_class: 'task-item' });
+        this.actor = new St.Bin({ style: `width: ${delegate.settings.get_int('todo-task-width')}px;`, reactive: true, y_fill: true, x_fill: true, style_class: 'task-item' });
         this.task_item_content = new St.BoxLayout({ vertical: true, style_class: 'task-item-content' });
         this.actor.add_actor(this.task_item_content);
 
@@ -139,9 +139,9 @@ var TaskItem = new Lang.Class({
         this.completion_checkbox.connect('clicked', () => this.toggle_task());
     },
 
-    reset: function (self_update, task_str) {
+    reset: function (self_update, task_str, update_tracker = true) {
         if (task_str) {
-            if (this.delegate.time_tracker)
+            if (update_tracker && this.delegate.time_tracker)
                 this.delegate.time_tracker.update_record_name(this.task_str, task_str);
 
             this.task_str = task_str;

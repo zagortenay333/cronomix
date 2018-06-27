@@ -598,6 +598,8 @@ var SectionMain = new Lang.Class({
         this.sort_tasks();
         this.show_view__default(true, refresh_default_view);
         if (write_to_file) this.write_tasks_to_file();
+
+        this.emit('tasks-changed');
     },
 
     sort_tasks: function () {

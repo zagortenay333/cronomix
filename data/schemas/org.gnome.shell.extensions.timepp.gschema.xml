@@ -230,6 +230,10 @@
             <default>300</default>
         </key>
 
+        <key name="todo-show-task-editor-preview" type="b">
+            <default>true</default>
+        </key>
+
         <key name="todo-resume-tracking" type="b">
             <default>true</default>
         </key>

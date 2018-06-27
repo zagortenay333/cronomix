@@ -77,7 +77,6 @@ var ViewDefault = new Lang.Class({
         // listen
         //
         this.sigm.connect(this.delegate, 'section-open-state-changed', (_, state) => {
-            this.update_scrollbars();
             if (!this.tasks_added_to_menu) this._add_tasks_to_menu();
         });
         this.columns_scroll.connect('scroll-event', (_, event) => this.horiz_scroll(event));
@@ -193,7 +192,7 @@ var ViewDefault = new Lang.Class({
                 this.needs_filtering = false;
                 this.add_tasks_to_menu_mainloop_id = null;
                 for (let [,col] of this.kanban_columns) col.set_title();
-                this.update_scrollbars();
+                Mainloop.idle_add(() => this.update_scrollbars());
 
                 return;
             }
@@ -570,6 +569,9 @@ var KanbanColumn = new Lang.Class({
         //
         // listen
         //
+        this.sigm.connect(this.delegate, 'tasks-changed', (_, state) => {
+            this.clear_icon.visible = this.delegate.stats.completed > 0;
+        });
         this.sigm.connect(this.delegate.settings, 'changed::todo-task-width', () => {
             let width = this.delegate.settings.get_int('todo-task-width');
             this.tasks_scroll_content.style = `width: ${width}px;`;

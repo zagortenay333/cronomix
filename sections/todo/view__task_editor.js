@@ -2,6 +2,7 @@ const St       = imports.gi.St;
 const Gtk      = imports.gi.Gtk;
 const Gio      = imports.gi.Gio
 const Meta     = imports.gi.Meta;
+const Shell    = imports.gi.Shell;
 const Clutter  = imports.gi.Clutter;
 const Main     = imports.ui.main;
 const Lang     = imports.lang;
@@ -17,17 +18,26 @@ const _        = Gettext.gettext;
 const ngettext = Gettext.ngettext;
 
 
-const FUZZ         = ME.imports.lib.fuzzy_search;
-const MULTIL_ENTRY = ME.imports.lib.multiline_entry;
-const MISC_UTILS   = ME.imports.lib.misc_utils;
-const RESIZE       = ME.imports.lib.resize;
+const TASK         = ME.imports.sections.todo.task_item;
+
 const REG          = ME.imports.lib.regex;
+const FUZZ         = ME.imports.lib.fuzzy_search;
+const RESIZE       = ME.imports.lib.resize;
+const MISC_UTILS   = ME.imports.lib.misc_utils;
+const SIG_MANAGER  = ME.imports.lib.signal_manager;
+const MULTIL_ENTRY = ME.imports.lib.multiline_entry;
+
+
+const G = ME.imports.sections.todo.GLOBAL;
 
 
 const TODO_TXT_SYNTAX_URL = 'https://github.com/zagortenay333/timepp__gnome#todotxt-syntax';
 
 
-const G = ME.imports.sections.todo.GLOBAL;
+const EditorMode = {
+    ADD_TASK  : "ADD_TASK",
+    EDIT_TASK : "EDIT_TASK",
+};
 
 
 // =====================================================================
@@ -56,23 +66,45 @@ var ViewTaskEditor = new Lang.Class({
 
         Mainloop.idle_add(() => this.delegate.actor.add_style_class_name('view-task-editor'));
 
+        this.sigm = new SIG_MANAGER.SignalManager();
+
         this.curr_selected_completion   = null;
         this.current_word_start         = 0;
         this.current_word_end           = 0;
         this.text_changed_handler_block = false;
 
 
-        // One of: 'edit-task', 'add-task'.
-        this.mode = task ? 'edit-task' : 'add-task';
+        this.mode = task ? EditorMode.EDIT_TASK : EditorMode.ADD_TASK;
 
 
         //
-        // draw
+        // container
         //
-        this.actor = new St.Bin({ x_fill: true, style_class: 'view-box' });
+        this.actor = new St.BoxLayout({ style_class: 'view-box' });
 
-        this.content_box = new St.BoxLayout({ x_expand: true, vertical: true, style_class: 'view-box-content' });
+        this.content_box = new St.BoxLayout({ vertical: true, style_class: 'view-box-content' });
         this.actor.add_actor(this.content_box);
+
+
+        //
+        // preview task
+        //
+        this.preview_scrollview = new St.ScrollView();
+        this.actor.add_actor(this.preview_scrollview);
+        this.preview_scrollview.visible = this.delegate.settings.get_boolean('todo-show-task-editor-preview');
+
+        this.preview_scrollbox = new St.BoxLayout({ vertical: true });
+        this.preview_scrollview.add_actor(this.preview_scrollbox);
+
+        this.preview_task = new TASK.TaskItem(this.ext, this.delegate, task ? task.task_str : " ", true);
+        this.preview_scrollbox.add_child(this.preview_task.actor);
+
+        this.preview_task.actor.connect('captured-event', (_, event) => {
+            // We can't use the 'captured-event' sig to prevent actors from
+            // getting focused via the keyboard...
+            if (event.type() === Clutter.EventType.KEY_RELEASE) this.actor.grab_key_focus();
+            return Clutter.EVENT_STOP;
+        });
 
 
         //
@@ -87,35 +119,75 @@ var ViewTaskEditor = new Lang.Class({
         this.entry.keep_min_height          = false;
         this.entry.resize_with_keyboard     = true;
 
+        Mainloop.idle_add(() => this.entry.entry.set_height(64));
+
         this.entry.scroll_box.vscrollbar_policy = Gtk.PolicyType.NEVER;
         this.entry.scroll_box.hscrollbar_policy = Gtk.PolicyType.NEVER;
 
-        if (this.mode === 'edit-task') {
-            this.entry.set_text(task.task_str.replace(/\\n/g, '\n'));
-        }
+        if (this.mode === EditorMode.EDIT_TASK) this.entry.set_text(task.task_str.replace(/\\n/g, '\n'));
 
         this.entry_resize = new RESIZE.MakeResizable(this.entry.entry);
 
 
         //
-        // help label
+        // icons
         //
-        {
-            this.help_label = new St.Button({ can_focus: true, reactive: true, x_align: St.Align.END, style_class: 'link' });
-            this.entry_container.insert_child_at_index(this.help_label, 0);
-            let label = new St.Label({ text: _('syntax help'), style_class: 'popup-inactive-menu-item', pseudo_class: 'insensitive' });
-            this.help_label.add_actor(label);
+        let header = new St.BoxLayout();
+        this.entry_container.insert_child_at_index(header, 0);
+
+        { // help icon
+            let box = new St.BoxLayout({ style_class: 'icon-box' });
+            header.add_child(box);
+            this.help_icon = new St.Icon({ icon_name: 'timepp-question-symbolic', can_focus: true, reactive: true, track_hover: true, x_align: Clutter.ActorAlign.START, y_align: Clutter.ActorAlign.CENTER, });
+            box.add_child(this.help_icon);
+        }
+
+        { // other icons
+            let box = new St.BoxLayout({ x_expand: true, x_align: Clutter.ActorAlign.END, style_class: 'icon-box-group' });
+            header.add_child(box);
+
+            // group 1
+            let icon_group = new St.BoxLayout({ style_class: 'icon-box' });
+            box.add_child(icon_group);
+            this.header_icon = new St.Icon({ icon_name: 'timepp-header-symbolic', can_focus: true, reactive: true, track_hover: true, x_align: Clutter.ActorAlign.START, y_align: Clutter.ActorAlign.CENTER, });
+            icon_group.add_child(this.header_icon);
+            this.mark_icon = new St.Icon({ icon_name: 'timepp-mark-symbolic', can_focus: true, reactive: true, track_hover: true, x_align: Clutter.ActorAlign.START, y_align: Clutter.ActorAlign.CENTER, });
+            icon_group.add_child(this.mark_icon);
+
+            // group 2
+            icon_group = new St.BoxLayout({ style_class: 'icon-box' });
+            box.add_child(icon_group);
+            this.bold_icon = new St.Icon({ icon_name: 'timepp-bold-symbolic', can_focus: true, reactive: true, track_hover: true, x_align: Clutter.ActorAlign.START, y_align: Clutter.ActorAlign.CENTER, });
+            icon_group.add_child(this.bold_icon);
+            this.italic_icon = new St.Icon({ icon_name: 'timepp-italic-symbolic', can_focus: true, reactive: true, track_hover: true, x_align: Clutter.ActorAlign.START, y_align: Clutter.ActorAlign.CENTER, });
+            icon_group.add_child(this.italic_icon);
+            this.strike_icon = new St.Icon({ icon_name: 'timepp-strike-symbolic', can_focus: true, reactive: true, track_hover: true, x_align: Clutter.ActorAlign.START, y_align: Clutter.ActorAlign.CENTER, });
+            icon_group.add_child(this.strike_icon);
+            this.underscore_icon = new St.Icon({ icon_name: 'timepp-underscore-symbolic', can_focus: true, reactive: true, track_hover: true, x_align: Clutter.ActorAlign.START, y_align: Clutter.ActorAlign.CENTER, });
+            icon_group.add_child(this.underscore_icon);
+
+            // group 3
+            icon_group = new St.BoxLayout({ style_class: 'icon-box' });
+            box.add_child(icon_group);
+            this.link_icon = new St.Icon({ icon_name: 'timepp-link-symbolic', can_focus: true, reactive: true, track_hover: true, x_align: Clutter.ActorAlign.START, y_align: Clutter.ActorAlign.CENTER, });
+            icon_group.add_child(this.link_icon);
+            this.code_icon = new St.Icon({ icon_name: 'timepp-code-symbolic', can_focus: true, reactive: true, track_hover: true, x_align: Clutter.ActorAlign.START, y_align: Clutter.ActorAlign.CENTER, });
+            icon_group.add_child(this.code_icon);
+
+            // group 4
+            icon_group = new St.BoxLayout({ style_class: 'icon-box' });
+            box.add_child(icon_group);
+            this.eye_icon = new St.Icon({ can_focus: true, reactive: true, track_hover: true, x_align: Clutter.ActorAlign.START, y_align: Clutter.ActorAlign.CENTER, });
+            icon_group.add_child(this.eye_icon);
+            if (this.preview_scrollview.visible) this.eye_icon.icon_name = 'timepp-eye-symbolic';
+            else                                 this.eye_icon.icon_name = 'timepp-eye-closed-symbolic'
         }
 
 
         //
-        // used to show project/context completions
+        // competion menu
         //
-        this.completion_menu = new St.ScrollView({ visible: false, style_class: 'vfade' });
-
-        this.completion_menu.vscrollbar_policy = Gtk.PolicyType.NEVER;
-        this.completion_menu.hscrollbar_policy = Gtk.PolicyType.NEVER;
-
+        this.completion_menu = new St.ScrollView({ hscrollbar_policy: Gtk.PolicyType.NEVER, vscrollbar_policy: Gtk.PolicyType.NEVER, visible: false, style_class: 'vfade' });
         this.entry_container.add_child(this.completion_menu);
 
         this.completion_menu_content = new St.BoxLayout({ vertical: true, reactive: true, style_class: 'completion-box' });
@@ -128,7 +200,7 @@ var ViewTaskEditor = new Lang.Class({
         this.btn_box = new St.BoxLayout({ style_class: 'row btn-box' });
         this.content_box.add_actor(this.btn_box);
 
-        if (this.mode === 'edit-task') {
+        if (this.mode === EditorMode.EDIT_TASK) {
             this.button_delete = new St.Button({ can_focus: true, label: _('Delete'), style_class: 'btn-delete button', x_expand: true });
             this.btn_box.add(this.button_delete, {expand: true});
             this.button_delete.connect('clicked', () => this.emit('delete-task'));
@@ -136,7 +208,7 @@ var ViewTaskEditor = new Lang.Class({
 
         let current = this.delegate.get_current_todo_file();
 
-        if (this.mode === 'edit-task' && current && current.done_file && !task.hidden) {
+        if (this.mode === EditorMode.EDIT_TASK && current && current.done_file && !task.hidden) {
             this.button_archive = new St.Button({ can_focus: true, label: _('Archive'), style_class: 'btn-delete button', x_expand: true });
             this.btn_box.add(this.button_archive, {expand: true});
             this.button_archive.connect('clicked', () => this.emit('delete-task', true));
@@ -152,13 +224,22 @@ var ViewTaskEditor = new Lang.Class({
         //
         // listen
         //
-        this.entry.entry.clutter_text.connect('text-changed', () => {
-            if (this.text_changed_handler_block) return Clutter.EVENT_PROPAGATE;
-            Mainloop.idle_add(() => {
-                let word = this._get_current_word();
-                if (word) this._show_completions(word);
-                else      this.completion_menu.hide();
-            });
+        this.content_box.connect('allocation-changed', () => {
+            this.entry.scroll_box.vscrollbar_policy = Gtk.PolicyType.NEVER;
+            this.preview_scrollview.vscrollbar_policy = Gtk.PolicyType.NEVER;
+            this.preview_scrollview.hscrollbar_policy = Gtk.PolicyType.NEVER;
+
+            let [, nat_h] = this.ext.menu.actor.get_preferred_height(-1);
+            let [, nat_w] = this.ext.menu.actor.get_preferred_width(-1);
+            let max_h     = this.ext.menu_max_h;
+            let max_w     = this.ext.menu_max_w;
+
+            if (nat_w >= max_w) this.preview_scrollview.hscrollbar_policy = Gtk.PolicyType.ALWAYS;
+
+            if (nat_h >= max_h) {
+                this.preview_scrollview.vscrollbar_policy = Gtk.PolicyType.ALWAYS;
+                this.entry.scroll_box.vscrollbar_policy = Gtk.PolicyType.ALWAYS;
+            }
         });
         this.entry.entry.connect('key-press-event', (_, event) => {
             let symbol = event.get_key_symbol();
@@ -167,19 +248,25 @@ var ViewTaskEditor = new Lang.Class({
                 return Clutter.EVENT_STOP;
             }
         });
+        Mainloop.idle_add(() => { // Connect with a slight delay to avoid some initial confusion.
+            this.entry.entry.clutter_text.connect('text-changed', () => {
+                // In idle_add because the cursor_position will not be reported correctly.
+                Mainloop.idle_add(() => this._on_text_changed());
+            });
+        });
+        this.sigm.connect_release(this.help_icon, Clutter.BUTTON_PRIMARY, true, () => MISC_UTILS.open_web_uri(TODO_TXT_SYNTAX_URL));
+        this.sigm.connect_release(this.header_icon, Clutter.BUTTON_PRIMARY, true, () => this._insert_markdown('#'));
+        this.sigm.connect_release(this.mark_icon, Clutter.BUTTON_PRIMARY, true, () => this._insert_markdown('***'));
+        this.sigm.connect_release(this.bold_icon, Clutter.BUTTON_PRIMARY, true, () => this._insert_markdown('*'));
+        this.sigm.connect_release(this.italic_icon, Clutter.BUTTON_PRIMARY, true, () => this._insert_markdown('__'));
+        this.sigm.connect_release(this.strike_icon, Clutter.BUTTON_PRIMARY, true, () => this._insert_markdown('~~'));
+        this.sigm.connect_release(this.underscore_icon, Clutter.BUTTON_PRIMARY, true, () => this._insert_markdown('___'));
+        this.sigm.connect_release(this.link_icon, Clutter.BUTTON_PRIMARY, true, () => this._find_file());
+        this.sigm.connect_release(this.code_icon, Clutter.BUTTON_PRIMARY, true, () => this._insert_markdown('``'));
+        this.sigm.connect_release(this.eye_icon, Clutter.BUTTON_PRIMARY, true, () => this._toggle_preview());
         this.entry.entry.clutter_text.connect('activate', () => this._on_activate());
-        this.entry.entry.clutter_text.connect('cursor-changed', () => this.completion_menu.hide());
-        this.entry.entry.connect('allocation-changed', () => {
-            this.entry.scroll_box.vscrollbar_policy = Gtk.PolicyType.NEVER;
-            if (ext.needs_scrollbar()) this.entry.scroll_box.vscrollbar_policy = Gtk.PolicyType.ALWAYS;
-        });
-        this.completion_menu_content.connect('allocation-changed', () => {
-            this.completion_menu.vscrollbar_policy = Gtk.PolicyType.NEVER;
-            if (this.ext.needs_scrollbar()) this.completion_menu.vscrollbar_policy = Gtk.PolicyType.ALWAYS;
-        });
         this.button_ok.connect('clicked', () => this._emit_ok());
         this.button_cancel.connect('clicked', () => this.emit('cancel'));
-        this.help_label.connect('clicked', () => MISC_UTILS.open_web_uri(TODO_TXT_SYNTAX_URL));
         this.actor.connect('key-release-event', (_, event) => {
             switch (event.get_key_symbol()) {
                 case Clutter.KEY_KP_Enter:
@@ -191,6 +278,134 @@ var ViewTaskEditor = new Lang.Class({
                     break;
             }
         });
+    },
+
+    _on_text_changed: function () {
+        if (this.text_changed_handler_block) return Clutter.EVENT_PROPAGATE;
+
+        let text = this.entry.entry.get_text();
+        this.preview_task.reset(true, text || " ", false)
+
+        let [word, start, end] = this._get_current_word();
+
+        if (word && /[@+]/.test(word[0])) {
+            this._show_completions(word);
+            this.current_word_start = start;
+            this.current_word_end   = end;
+        } else {
+            this.completion_menu.hide();
+        }
+    },
+
+    _on_tab: function () {
+        this.curr_selected_completion.pseudo_class = '';
+        let next = this.curr_selected_completion.get_next_sibling();
+
+        if (next) {
+            this.curr_selected_completion = next;
+            next.pseudo_class = 'active';
+        } else {
+            this.curr_selected_completion = this.completion_menu_content.first_child;
+            this.curr_selected_completion.pseudo_class = 'active';
+        }
+
+        MISC_UTILS.scroll_to_item(this.completion_menu, this.completion_menu_content, this.curr_selected_completion);
+    },
+
+    _on_activate: function () {
+        if (!this.completion_menu.visible || !this.curr_selected_completion) {
+            this.entry.insert_text('\n');
+            return;
+        }
+
+        this.text_changed_handler_block = true;
+        let completion = this.curr_selected_completion.label;
+
+        this.entry.entry.text =
+            this.entry.entry.get_text().slice(0, this.current_word_start) +
+            completion + ' ' +
+            this.entry.entry.get_text().slice(this.current_word_end + 1);
+
+        let text = this.entry.entry.get_text();
+        this.preview_task.reset(true, text || " ", false)
+
+        // @BUG or feature?
+        // Setting the cursor pos directly seeems to also select the text, so
+        // use set_selection instead.
+        let p = this.current_word_start + completion.length + 1;
+        this.entry.entry.clutter_text.set_selection(p, p);
+
+        this.curr_selected_completion = null;
+        this.completion_menu.hide();
+        this.text_changed_handler_block = false;
+    },
+
+    _on_completion_hovered: function (item) {
+        // It seems that when the completion menu gets hidden, the items are
+        // moving for a brief moment which triggers the hover callback.
+        // We prevent any possible issues in this case by just checking whether
+        // the menu is visible.
+        if (! this.completion_menu.visible) return;
+
+        this.curr_selected_completion.pseudo_class = '';
+        this.curr_selected_completion = item;
+        item.pseudo_class = 'active';
+    },
+
+    _emit_ok: function () {
+        if (this.done) return;
+
+        let text = this._create_task_str();
+
+        if (! text) return;
+
+        this.done = true;
+        this.emit(this.mode === EditorMode.EDIT_TASK ? 'edit-task' : 'add-task', text);
+    },
+
+    _insert_markdown: function (delim) {
+        let text  = this.entry.entry.get_text();
+        let pos   = this.entry.entry.clutter_text.get_cursor_position();
+        let bound = this.entry.entry.clutter_text.get_selection_bound();
+
+        if (pos === -1)   pos   = text.length;
+        if (bound === -1) bound = text.length;
+
+        let word;
+        let end;
+        let start;
+
+        if (bound === pos) { // nothing selected so wrap current word
+            [word, start, end] = this._get_current_word();
+        } else {
+            word = this.entry.entry.clutter_text.get_selection() + "";
+
+            if (bound < pos) {
+                start = bound;
+                end   = pos;
+            } else {
+                start = pos;
+                end   = bound;
+            }
+
+            if (end > 0) end--;
+        }
+
+        this.entry.entry.text = text.slice(0, start) + delim + word + delim + text.slice(end + 1);
+
+        let l = delim.length;
+        if (bound === pos) this.entry.entry.clutter_text.set_selection(pos + l, pos + l);
+        else               this.entry.entry.clutter_text.set_selection(start + l, end + l + 1);
+    },
+
+    _toggle_preview: function () {
+        let state = !this.delegate.settings.get_boolean('todo-show-task-editor-preview');
+
+        if (state) this.eye_icon.icon_name = 'timepp-eye-symbolic';
+        else       this.eye_icon.icon_name = 'timepp-eye-closed-symbolic'
+
+        this.preview_scrollview.visible = state;
+        this.delegate.settings.set_boolean('todo-show-task-editor-preview', state);
     },
 
     _find_file: function () {
@@ -266,107 +481,23 @@ var ViewTaskEditor = new Lang.Class({
         return results;
     },
 
-    // Get the word that the cursor is currently on or null if the word is not
-    // a context/project.
     _get_current_word: function () {
         let text = this.entry.entry.get_text();
-        if (! text) return null;
+        let len  = text.length;
 
-        let len = text.length;
-        if (! len) return null;
+        let pos = this.entry.entry.clutter_text.get_cursor_position();
+        if (pos === -1) pos = len;
 
-        let pos = this.entry.entry.clutter_text.cursor_position;
+        let start = pos - 1;
+        let end   = pos;
 
-        if (pos === -1)                            pos = len;
-        if (pos === 0 || /\s/.test(text[pos - 1])) return null;
-        if (pos === len || /\s/.test(text[pos]))   pos--;
+        while (start > -1 && !/\s/.test(text[start])) start--;
+        while (end < len && !/\s/.test(text[end]))    end++;
 
-        let start = pos;
-        while (start > 0 && !/\s/.test(text[start])) start--;
+        start++;
+        if (end > 0) end--;
 
-        let end = pos;
-        while (end < len && !/\s/.test(text[end])) end++;
-
-        if (/\s/.test(text[start])) start++;
-        if (end !== len && /\s/.test(text[end])) end--;
-
-        let word = text.substring(start, end + 1);
-
-        if ((pos === 0 && word === '(') ||
-            /[@+]/.test(word) ||
-            REG.TODO_CONTEXT.test(word) ||
-            REG.TODO_PROJ.test(word)) {
-
-            this.current_word_start = start;
-            this.current_word_end   = end;
-
-            return word;
-        } else {
-            return null;
-        }
-    },
-
-    _on_tab: function () {
-        this.curr_selected_completion.pseudo_class = '';
-        let next = this.curr_selected_completion.get_next_sibling();
-
-        if (next) {
-            this.curr_selected_completion = next;
-            next.pseudo_class = 'active';
-        } else {
-            this.curr_selected_completion = this.completion_menu_content.first_child;
-            this.curr_selected_completion.pseudo_class = 'active';
-        }
-
-        MISC_UTILS.scroll_to_item(this.completion_menu, this.completion_menu_content, this.curr_selected_completion);
-    },
-
-    _on_activate: function () {
-        if (!this.completion_menu.visible || !this.curr_selected_completion) {
-            this.entry.insert_text('\n');
-            return;
-        }
-
-        this.text_changed_handler_block = true;
-        let completion = this.curr_selected_completion.label;
-
-        this.entry.entry.text =
-            this.entry.entry.get_text().slice(0, this.current_word_start) +
-            completion + ' ' +
-            this.entry.entry.get_text().slice(this.current_word_end + 1);
-
-        // @BUG or feature?
-        // Setting the cursor pos directly seeems to also select the text, so
-        // use set_selection instead.
-        let p = this.current_word_start + completion.length + 1;
-        this.entry.entry.clutter_text.set_selection(p, p);
-
-        this.curr_selected_completion = null;
-        this.completion_menu.hide();
-        this.text_changed_handler_block = false;
-    },
-
-    _on_completion_hovered: function (item) {
-        // It seems that when the completion menu gets hidden, the items are
-        // moving for a brief moment which triggers the hover callback.
-        // We prevent any possible issues in this case by just checking whether
-        // the menu is visible.
-        if (! this.completion_menu.visible) return;
-
-        this.curr_selected_completion.pseudo_class = '';
-        this.curr_selected_completion = item;
-        item.pseudo_class = 'active';
-    },
-
-    _emit_ok: function () {
-        if (this.done) return;
-
-        let text = this._create_task_str();
-
-        if (! text) return;
-
-        this.done = true;
-        this.emit(this.mode, text);
+        return [text.substring(start, end + 1), start, end];
     },
 
     _create_task_str: function () {
@@ -376,7 +507,7 @@ var ViewTaskEditor = new Lang.Class({
 
         let words = text.split(' ');
 
-        if (this.mode === 'edit-task') return text.replace(/\n/g, '\\n');
+        if (this.mode === EditorMode.EDIT_TASK) return text.replace(/\n/g, '\\n');
 
         // If in add mode, we insert a creation date if the user didn't do it.
         if (words[0] === 'x') {

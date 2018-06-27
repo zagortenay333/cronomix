@@ -109,6 +109,10 @@
     width: 22em;
 }
 
+.timepp-menu .view-box {
+    spacing: .7em;
+}
+
 .timepp-menu .view-box-content {
     background: rgba(125, 125, 125, .15);
     border-radius: 2px;
@@ -148,6 +152,10 @@
 
 .timepp-separator {
     min-height: 2em;
+}
+
+.timepp-menu .icon-box-group {
+    spacing: 2em;
 }
 
 .timepp-menu .icon-box,
@@ -685,6 +693,10 @@
 
 .timepp-menu .todo-section.view-default.one-column .view-box {
     padding: 0;
+}
+
+.timepp-menu .todo-section.view-task-editor StEntry {
+    min-width: 30em;
 }
 
 .timepp-menu .todo-section.view-default.one-column .kanban-column {
