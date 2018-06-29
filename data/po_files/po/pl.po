@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-18 16:25+0200\n"
+"POT-Creation-Date: 2018-06-30 01:05+0200\n"
 "PO-Revision-Date: 2018-01-10 10:35+0100\n"
 "Last-Translator: Piotr Komur <pkomur@gmail.com>\n"
 "Language-Team: \n"
@@ -371,7 +371,7 @@ msgid "Automatic sorting"
 msgstr ""
 
 #: data/po_files/../../sections/todo/view__sort.js:111
-#: data/po_files/../../sections/todo/view__task_editor.js:148
+#: data/po_files/../../sections/todo/view__task_editor.js:220
 #: data/po_files/../../sections/todo/view__stats.js:246
 #: data/po_files/../../sections/todo/view__filters.js:208
 #: data/po_files/../../sections/todo/view__file_switcher.js:104
@@ -381,28 +381,23 @@ msgstr ""
 msgid "Ok"
 msgstr "OK"
 
-#: data/po_files/../../sections/todo/view__task_editor.js:84
+#: data/po_files/../../sections/todo/view__task_editor.js:116
 #, fuzzy
 msgid "Task..."
 msgstr "Zadanie..."
 
-#: data/po_files/../../sections/todo/view__task_editor.js:106
-#: data/po_files/../../sections/todo/view__kanban_switcher.js:73
-msgid "syntax help"
-msgstr "podpowiedź składni"
-
-#: data/po_files/../../sections/todo/view__task_editor.js:132
+#: data/po_files/../../sections/todo/view__task_editor.js:204
 #: data/po_files/../../sections/todo/view__clear_tasks.js:95
 #: data/po_files/../../sections/todo/view__file_switcher.js:451
 #: data/po_files/../../sections/alarms.js:567
 msgid "Delete"
 msgstr "Usuń"
 
-#: data/po_files/../../sections/todo/view__task_editor.js:140
+#: data/po_files/../../sections/todo/view__task_editor.js:212
 msgid "Archive"
 msgstr "Archiwum"
 
-#: data/po_files/../../sections/todo/view__task_editor.js:145
+#: data/po_files/../../sections/todo/view__task_editor.js:217
 #: data/po_files/../../sections/todo/view__stats.js:249
 #: data/po_files/../../sections/todo/view__clear_tasks.js:98
 #: data/po_files/../../sections/todo/view__kanban_switcher.js:94
@@ -528,7 +523,7 @@ msgstr "Usuń wszystkie ukończone zadania"
 msgid "Archive all completed tasks to done.txt and delete them"
 msgstr "Zarchiwizuj ukończone zadania do pliku 'done.txt' przed ich usunięciem"
 
-#: data/po_files/../../sections/todo/view__default.js:497
+#: data/po_files/../../sections/todo/view__default.js:496
 msgid "Add New Task..."
 msgstr "Dodaj nowe zadanie..."
 
@@ -552,14 +547,18 @@ msgstr[0] "%d odroczone zadanie zostało otwarte"
 msgstr[1] "%d odroczone zadania zostały otwarte"
 msgstr[2] "%d odroczonych zadań zostało otwartych"
 
-#: data/po_files/../../sections/todo/MAIN.js:711
+#: data/po_files/../../sections/todo/MAIN.js:713
 #: data/po_files/../../sections/todo/view__loading.js:40
 msgid "Loading..."
 msgstr "Wczytuję..."
 
-#: data/po_files/../../sections/todo/MAIN.js:717
+#: data/po_files/../../sections/todo/MAIN.js:719
 msgid "Nothing found."
 msgstr "Nic nie znaleziono..."
+
+#: data/po_files/../../sections/todo/view__kanban_switcher.js:73
+msgid "syntax help"
+msgstr "podpowiedź składni"
 
 #: data/po_files/../../sections/todo/view__kanban_switcher.js:131
 msgid "To use kanban boards, add the kanban todo extension to a task."
