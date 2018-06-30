@@ -741,7 +741,7 @@ var TaskItem = new Lang.Class({
             this.reset(true, task_str);
         }
 
-        Mainloop.timeout_add(0, () => this.delegate.on_tasks_changed(true, this.delegate.get_current_todo_file().automatic_sort));
+        Mainloop.timeout_add(0, () => this.delegate.on_tasks_changed(true, true));
     },
 
      // @SPEED Lazy load the icons.

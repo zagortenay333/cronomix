@@ -569,9 +569,6 @@ var KanbanColumn = new Lang.Class({
         //
         // listen
         //
-        this.sigm.connect(this.delegate, 'tasks-changed', (_, state) => {
-            this.clear_icon.visible = this.delegate.stats.completed > 0;
-        });
         this.sigm.connect(this.delegate.settings, 'changed::todo-task-width', () => {
             let width = this.delegate.settings.get_int('todo-task-width');
             this.tasks_scroll_content.style = `width: ${width}px;`;
