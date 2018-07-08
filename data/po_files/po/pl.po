@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-30 01:05+0200\n"
+"POT-Creation-Date: 2018-07-08 21:20+0200\n"
 "PO-Revision-Date: 2018-01-10 10:35+0100\n"
 "Last-Translator: Piotr Komur <pkomur@gmail.com>\n"
 "Language-Team: \n"
@@ -372,7 +372,7 @@ msgstr ""
 
 #: data/po_files/../../sections/todo/view__sort.js:111
 #: data/po_files/../../sections/todo/view__task_editor.js:220
-#: data/po_files/../../sections/todo/view__stats.js:246
+#: data/po_files/../../sections/todo/view__stats.js:250
 #: data/po_files/../../sections/todo/view__filters.js:208
 #: data/po_files/../../sections/todo/view__file_switcher.js:104
 #: data/po_files/../../sections/todo/view__file_switcher.js:457
@@ -398,7 +398,7 @@ msgid "Archive"
 msgstr "Archiwum"
 
 #: data/po_files/../../sections/todo/view__task_editor.js:217
-#: data/po_files/../../sections/todo/view__stats.js:249
+#: data/po_files/../../sections/todo/view__stats.js:253
 #: data/po_files/../../sections/todo/view__clear_tasks.js:98
 #: data/po_files/../../sections/todo/view__kanban_switcher.js:94
 #: data/po_files/../../sections/todo/view__file_switcher.js:100
@@ -408,75 +408,75 @@ msgstr "Archiwum"
 msgid "Cancel"
 msgstr "Anuluj"
 
-#: data/po_files/../../sections/todo/view__stats.js:98
+#: data/po_files/../../sections/todo/view__stats.js:103
 msgid "Today"
 msgstr "Dziś"
 
-#: data/po_files/../../sections/todo/view__stats.js:99
+#: data/po_files/../../sections/todo/view__stats.js:104
 msgid "This Week"
 msgstr "Ten tydzień"
 
-#: data/po_files/../../sections/todo/view__stats.js:100
+#: data/po_files/../../sections/todo/view__stats.js:105
 msgid "This Month"
 msgstr "Ten miesiąc"
 
-#: data/po_files/../../sections/todo/view__stats.js:101
+#: data/po_files/../../sections/todo/view__stats.js:106
 msgid "Last 3 Months"
 msgstr "Ostatnie 3 miesiące"
 
-#: data/po_files/../../sections/todo/view__stats.js:102
+#: data/po_files/../../sections/todo/view__stats.js:107
 msgid "Last 6 Months"
 msgstr "Ostatnie 6 miesięcy"
 
-#: data/po_files/../../sections/todo/view__stats.js:103
+#: data/po_files/../../sections/todo/view__stats.js:108
 msgid "All Time"
 msgstr "Cały czas"
 
-#: data/po_files/../../sections/todo/view__stats.js:165
+#: data/po_files/../../sections/todo/view__stats.js:169
 #: data/po_files/../../sections/todo/view__kanban_switcher.js:63
 #: data/po_files/../../sections/todo/view__file_switcher.js:70
 #: data/po_files/../../sections/timer.js:613
 msgid "Search..."
 msgstr "Szukaj..."
 
-#: data/po_files/../../sections/todo/view__stats.js:180
-#: data/po_files/../../sections/todo/view__stats.js:294
-#: data/po_files/../../sections/todo/view__stats.js:693
+#: data/po_files/../../sections/todo/view__stats.js:184
+#: data/po_files/../../sections/todo/view__stats.js:298
+#: data/po_files/../../sections/todo/view__stats.js:698
 msgid "Tasks"
 msgstr "Zadanie..."
 
-#: data/po_files/../../sections/todo/view__stats.js:195
-#: data/po_files/../../sections/todo/view__stats.js:289
-#: data/po_files/../../sections/todo/view__stats.js:693
+#: data/po_files/../../sections/todo/view__stats.js:199
+#: data/po_files/../../sections/todo/view__stats.js:293
+#: data/po_files/../../sections/todo/view__stats.js:698
 msgid "Projects"
 msgstr "Projekty"
 
-#: data/po_files/../../sections/todo/view__stats.js:216
+#: data/po_files/../../sections/todo/view__stats.js:220
 msgid "Year:"
 msgstr "Rok:"
 
-#: data/po_files/../../sections/todo/view__stats.js:216
+#: data/po_files/../../sections/todo/view__stats.js:220
 msgid "Month:"
 msgstr "Miesiąc:"
 
-#: data/po_files/../../sections/todo/view__stats.js:216
+#: data/po_files/../../sections/todo/view__stats.js:220
 msgid "Day:"
 msgstr "Dzień:"
 
-#: data/po_files/../../sections/todo/view__stats.js:283
+#: data/po_files/../../sections/todo/view__stats.js:287
 msgid "Custom Range..."
 msgstr "Własny zakres..."
 
-#: data/po_files/../../sections/todo/view__stats.js:598
+#: data/po_files/../../sections/todo/view__stats.js:602
 #, fuzzy
 msgid "Stats for task"
 msgstr "Statystyka dla projektu"
 
-#: data/po_files/../../sections/todo/view__stats.js:624
-#: data/po_files/../../sections/todo/view__stats.js:648
-#: data/po_files/../../sections/todo/view__stats.js:692
-#: data/po_files/../../sections/todo/view__stats.js:1157
-#: data/po_files/../../sections/todo/view__stats.js:1166
+#: data/po_files/../../sections/todo/view__stats.js:628
+#: data/po_files/../../sections/todo/view__stats.js:652
+#: data/po_files/../../sections/todo/view__stats.js:696
+#: data/po_files/../../sections/todo/view__stats.js:1165
+#: data/po_files/../../sections/todo/view__stats.js:1174
 #, javascript-format
 msgid "%d day"
 msgid_plural "%d days"
@@ -484,24 +484,24 @@ msgstr[0] "w ciągu %d dnia"
 msgstr[1] "w ciągu %d dni"
 msgstr[2] "w ciągu %d dni"
 
-#: data/po_files/../../sections/todo/view__stats.js:1156
+#: data/po_files/../../sections/todo/view__stats.js:1164
 msgid "Average per day (including off days)"
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__stats.js:1165
+#: data/po_files/../../sections/todo/view__stats.js:1173
 msgid "Average per day (excluding off days)"
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__stats.js:1168
-#: data/po_files/../../sections/todo/view__stats.js:1178
+#: data/po_files/../../sections/todo/view__stats.js:1176
+#: data/po_files/../../sections/todo/view__stats.js:1186
 msgid "Total"
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__stats.js:1210
+#: data/po_files/../../sections/todo/view__stats.js:1218
 msgid "Interval"
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__stats.js:1212
+#: data/po_files/../../sections/todo/view__stats.js:1220
 #, fuzzy
 msgid "No intervals found."
 msgstr "Nic nie znaleziono..."
