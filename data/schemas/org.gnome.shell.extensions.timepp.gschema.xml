@@ -24,6 +24,11 @@
         <value value="2" nick="h:m:s:ms"/>
     </enum>
 
+    <enum id="org.gnome.shell.extensions.timepp.todo-hot-mode-type">
+        <value value="0" nick="Task"/>
+        <value value="1" nick="Project"/>
+    </enum>
+
     <schema path="/org/gnome/shell/extensions/timepp/" id="org.gnome.shell.extensions.timepp">
         <!-- ======================================
         @@@  General
@@ -240,6 +245,10 @@
 
         <key name="todo-stats-heatmap-visible" type="b">
             <default>true</default>
+        </key>
+
+        <key name="todo-hot-mode-type" enum="org.gnome.shell.extensions.timepp.todo-hot-mode-type">
+            <default>"Project"</default>
         </key>
 
         <key name="todo-graph-shows-intervals" type="b">

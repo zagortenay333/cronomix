@@ -29,6 +29,12 @@ const REG         = ME.imports.lib.regex;
 const G = ME.imports.sections.todo.GLOBAL;
 
 
+const HotMode = {
+    TASK    : 0,
+    PROJECT : 1,
+}
+
+
 const StatsMode = {
     BANNER : 'BANNER',
     GLOBAL : 'GLOBAL',
@@ -36,7 +42,6 @@ const StatsMode = {
     SEARCH : 'SEARCH',
     HOT    : 'HOT',
 };
-
 
 
 // =====================================================================
@@ -112,7 +117,6 @@ var StatsView = new Lang.Class({
 
 
         this.selected_search_result = null; // {label_actor: St.Label, type: string ('()' or '++'}
-        this.hot_mode_type = '()'; // '()' or '++'
 
 
         // A map from mode names to functions that invoke it.
@@ -287,12 +291,12 @@ var StatsView = new Lang.Class({
             });
 
             this.type_menu.addAction(_('Projects'), () => {
-                this.hot_mode_type = '++';
+                this.delegate.settings.set_enum('todo-hot-mode-type', HotMode.PROJECT);
                 this.show_mode__hot(this.current_mode.args[0], this.current_mode.args[1]);
             });
 
             this.type_menu.addAction(_('Tasks'), () => {
-                this.hot_mode_type = '()';
+                this.delegate.settings.set_enum('todo-hot-mode-type', HotMode.TASK);
                 this.show_mode__hot(this.current_mode.args[0], this.current_mode.args[1]);
             });
         }
@@ -690,7 +694,8 @@ var StatsView = new Lang.Class({
         n_days_in_range     = Math.round(n_days_in_range / 86400000) + 1;
 
         this.range_btn.label = `${label}  (${ngettext('%d day', '%d days', n_days_in_range).format(n_days_in_range)})`;
-        this.type_btn.label  = this.hot_mode_type === '()' ? _('Tasks') : _('Projects');
+        let hot_mode_type    = this.delegate.settings.get_enum('todo-hot-mode-type');
+        this.type_btn.label  = hot_mode_type === HotMode.TASK ? _('Tasks') : _('Projects');
 
         let vbars = this._get_stats__vbars_hot(lower_bound, upper_bound);
 
@@ -959,12 +964,15 @@ var StatsView = new Lang.Class({
     _get_stats__vbars_hot: function (lower_bound, upper_bound) {
         let stats = [];
 
+        let hot_mode_type = this.delegate.settings.get_enum('todo-hot-mode-type');
+        hot_mode_type     = hot_mode_type === HotMode.TASK ? '()' : '++';
+
         for (let [date, records] of this.stats_data) {
             if (date < lower_bound) break;
             if (date > upper_bound) continue;
 
             for (let record of records) {
-                if (record.type !== this.hot_mode_type) continue;
+                if (record.type !== hot_mode_type) continue;
 
                 let found = false;
 
@@ -977,7 +985,7 @@ var StatsView = new Lang.Class({
                     }
                 }
 
-                if (!found) {
+                if (! found) {
                     stats.push({
                         label         : record.label,
                         type          : record.type,
@@ -992,8 +1000,8 @@ var StatsView = new Lang.Class({
         stats.sort((a, b) => +(a.total_time < b.total_time) || +(a.total_time === b.total_time) - 1);
 
         let rgba;
-        if (this.hot_mode_type === '()') rgba = this.custom_css['-timepp-task-vbar-color'][1];
-        else                             rgba = this.custom_css['-timepp-proj-vbar-color'][1];
+        if (hot_mode_type === '()') rgba = this.custom_css['-timepp-task-vbar-color'][1];
+        else                        rgba = this.custom_css['-timepp-proj-vbar-color'][1];
 
         let max_vbars = Math.min(stats.length, 100);
         let vbars     = new Array(max_vbars);

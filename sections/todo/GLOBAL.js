@@ -3,12 +3,10 @@ var DNDGroup = {
     KANBAN_COLUMN : 'KANBAN_COLUMN',
 };
 
-
 var SortOrder = {
     ASCENDING  : 'ASCENDING',
     DESCENDING : 'DESCENDING',
 };
-
 
 var SortType = {
     PIN             : 'PIN',
@@ -21,7 +19,6 @@ var SortType = {
     CREATION_DATE   : 'CREATION_DATE',
     COMPLETION_DATE : 'COMPLETION_DATE',
 };
-
 
 var View = {
     CLEAR           : 'CLEAR',
@@ -36,7 +33,6 @@ var View = {
     KANBAN_SWITCHER : 'KANBAN_SWITCHER',
 };
 
-
 var SORT_RECORD = () => [
     [SortType.PIN             , SortOrder.DESCENDING],
     [SortType.COMPLETED       , SortOrder.ASCENDING],
@@ -48,7 +44,6 @@ var SORT_RECORD = () => [
     [SortType.CREATION_DATE   , SortOrder.ASCENDING],
     [SortType.COMPLETION_DATE , SortOrder.ASCENDING],
 ];
-
 
 var FILTER_RECORD = () => ({
     invert_filters : false,
@@ -63,7 +58,6 @@ var FILTER_RECORD = () => ({
     custom         : [],
     custom_active  : [],
 });
-
 
 var TODO_RECORD = () => ({
     name             : "",
