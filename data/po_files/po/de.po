@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: timepp@zagortenay 333\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-08 21:20+0200\n"
+"POT-Creation-Date: 2018-07-11 12:55+0200\n"
 "PO-Revision-Date: 2017-08-29 10:51+0200\n"
 "Last-Translator: Christian Mattes <mac@tasarion.de>\n"
 "Language-Team: German\n"
@@ -295,31 +295,31 @@ msgstr "aktuelle Datei"
 msgid "Todo / Time Tracker"
 msgstr "Aufgaben / Zeiterfassung"
 
-#: data/po_files/../../sections/todo/task_item.js:635
-#: data/po_files/../../sections/todo/task_item.js:639
+#: data/po_files/../../sections/todo/task_item.js:637
+#: data/po_files/../../sections/todo/task_item.js:641
 msgid "recurrence"
 msgstr "Wiederholung"
 
-#: data/po_files/../../sections/todo/task_item.js:636
+#: data/po_files/../../sections/todo/task_item.js:638
 #, javascript-format
 msgid "%d day after completion"
 msgid_plural "%d days after completion"
 msgstr[0] "%d Tag nach Erledigung"
 msgstr[1] "%d Tage nach Erledigung"
 
-#: data/po_files/../../sections/todo/task_item.js:652
+#: data/po_files/../../sections/todo/task_item.js:654
 msgid "due"
 msgstr "fällig"
 
-#: data/po_files/../../sections/todo/task_item.js:660
+#: data/po_files/../../sections/todo/task_item.js:662
 msgid "deferred"
 msgstr "zurückgestellt"
 
-#: data/po_files/../../sections/todo/task_item.js:699
+#: data/po_files/../../sections/todo/task_item.js:701
 msgid "created"
 msgstr "angelegt"
 
-#: data/po_files/../../sections/todo/task_item.js:702
+#: data/po_files/../../sections/todo/task_item.js:704
 msgid "completed"
 msgstr "erledigt"
 
@@ -346,26 +346,31 @@ msgstr "Nach Fälligkeit sortieren"
 
 #: data/po_files/../../sections/todo/view__sort.js:69
 #, fuzzy
+msgid "Sort by Alphabet"
+msgstr "Nach Erledigt-Status sortieren"
+
+#: data/po_files/../../sections/todo/view__sort.js:70
+#, fuzzy
 msgid "Sort by Recurrence Date"
 msgstr "Nach Fälligkeit sortieren"
 
-#: data/po_files/../../sections/todo/view__sort.js:70
+#: data/po_files/../../sections/todo/view__sort.js:71
 msgid "Sort by Completed"
 msgstr "Nach Erledigt-Status sortieren"
 
-#: data/po_files/../../sections/todo/view__sort.js:71
+#: data/po_files/../../sections/todo/view__sort.js:72
 msgid "Sort by Creation Date"
 msgstr "Nach Erstelldatum sortieren"
 
-#: data/po_files/../../sections/todo/view__sort.js:72
+#: data/po_files/../../sections/todo/view__sort.js:73
 msgid "Sort by Completion Date"
 msgstr "Nach Erledigungsdatum sortieren"
 
-#: data/po_files/../../sections/todo/view__sort.js:97
+#: data/po_files/../../sections/todo/view__sort.js:98
 msgid "Automatic sorting"
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__sort.js:111
+#: data/po_files/../../sections/todo/view__sort.js:112
 #: data/po_files/../../sections/todo/view__task_editor.js:220
 #: data/po_files/../../sections/todo/view__stats.js:250
 #: data/po_files/../../sections/todo/view__filters.js:208
@@ -539,12 +544,12 @@ msgid_plural "%d deferred tasks have been opened"
 msgstr[0] "%d zurückgestellte Aufgabe wurden geöffnet"
 msgstr[1] "%d zurückgestellte Aufgaben wurden geöffnet"
 
-#: data/po_files/../../sections/todo/MAIN.js:713
+#: data/po_files/../../sections/todo/MAIN.js:711
 #: data/po_files/../../sections/todo/view__loading.js:40
 msgid "Loading..."
 msgstr "Lade..."
 
-#: data/po_files/../../sections/todo/MAIN.js:719
+#: data/po_files/../../sections/todo/MAIN.js:717
 msgid "Nothing found."
 msgstr "Nichts gefunden."
 

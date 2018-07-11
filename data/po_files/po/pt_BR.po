@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: timepp@zagortenay 333\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-08 21:20+0200\n"
+"POT-Creation-Date: 2018-07-11 12:55+0200\n"
 "PO-Revision-Date: 2017-11-03 09:24-0200\n"
 "Last-Translator: Helder <he7d3r@gmail.com>\n"
 "Language-Team: Brazilian Portuguese\n"
@@ -296,31 +296,31 @@ msgstr "arquivo atual"
 msgid "Todo / Time Tracker"
 msgstr "Tarefas / Gerenciador de Tempo"
 
-#: data/po_files/../../sections/todo/task_item.js:635
-#: data/po_files/../../sections/todo/task_item.js:639
+#: data/po_files/../../sections/todo/task_item.js:637
+#: data/po_files/../../sections/todo/task_item.js:641
 msgid "recurrence"
 msgstr "repetição"
 
-#: data/po_files/../../sections/todo/task_item.js:636
+#: data/po_files/../../sections/todo/task_item.js:638
 #, javascript-format
 msgid "%d day after completion"
 msgid_plural "%d days after completion"
 msgstr[0] "%d dia após a conclusão"
 msgstr[1] "%d dias após a conclusão"
 
-#: data/po_files/../../sections/todo/task_item.js:652
+#: data/po_files/../../sections/todo/task_item.js:654
 msgid "due"
 msgstr "prazo"
 
-#: data/po_files/../../sections/todo/task_item.js:660
+#: data/po_files/../../sections/todo/task_item.js:662
 msgid "deferred"
 msgstr "adiado"
 
-#: data/po_files/../../sections/todo/task_item.js:699
+#: data/po_files/../../sections/todo/task_item.js:701
 msgid "created"
 msgstr "criado"
 
-#: data/po_files/../../sections/todo/task_item.js:702
+#: data/po_files/../../sections/todo/task_item.js:704
 msgid "completed"
 msgstr "concluído"
 
@@ -347,26 +347,31 @@ msgstr "Ordenar por prazo"
 
 #: data/po_files/../../sections/todo/view__sort.js:69
 #, fuzzy
+msgid "Sort by Alphabet"
+msgstr "Ordenar por conclusão"
+
+#: data/po_files/../../sections/todo/view__sort.js:70
+#, fuzzy
 msgid "Sort by Recurrence Date"
 msgstr "Ordenar por prazo"
 
-#: data/po_files/../../sections/todo/view__sort.js:70
+#: data/po_files/../../sections/todo/view__sort.js:71
 msgid "Sort by Completed"
 msgstr "Ordenar por conclusão"
 
-#: data/po_files/../../sections/todo/view__sort.js:71
+#: data/po_files/../../sections/todo/view__sort.js:72
 msgid "Sort by Creation Date"
 msgstr "Ordenar por data de criação"
 
-#: data/po_files/../../sections/todo/view__sort.js:72
+#: data/po_files/../../sections/todo/view__sort.js:73
 msgid "Sort by Completion Date"
 msgstr "Ordenar por data de conclusão"
 
-#: data/po_files/../../sections/todo/view__sort.js:97
+#: data/po_files/../../sections/todo/view__sort.js:98
 msgid "Automatic sorting"
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__sort.js:111
+#: data/po_files/../../sections/todo/view__sort.js:112
 #: data/po_files/../../sections/todo/view__task_editor.js:220
 #: data/po_files/../../sections/todo/view__stats.js:250
 #: data/po_files/../../sections/todo/view__filters.js:208
@@ -542,12 +547,12 @@ msgid_plural "%d deferred tasks have been opened"
 msgstr[0] "%d tarefa adiada foi aberta"
 msgstr[1] "%d tarefas adiadas foram abertas"
 
-#: data/po_files/../../sections/todo/MAIN.js:713
+#: data/po_files/../../sections/todo/MAIN.js:711
 #: data/po_files/../../sections/todo/view__loading.js:40
 msgid "Loading..."
 msgstr "Carregando..."
 
-#: data/po_files/../../sections/todo/MAIN.js:719
+#: data/po_files/../../sections/todo/MAIN.js:717
 msgid "Nothing found."
 msgstr "Nada encontrado."
 
