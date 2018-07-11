@@ -66,6 +66,7 @@ var ViewSort = new Lang.Class({
                 [G.SortType.PROJECT]         : _('Sort by Projects'),
                 [G.SortType.PRIORITY]        : _('Sort by Priority'),
                 [G.SortType.DUE_DATE]        : _('Sort by Due Date'),
+                [G.SortType.ALPHABET]        : _('Sort by Alphabet'),
                 [G.SortType.RECURRENCE]      : _('Sort by Recurrence Date'),
                 [G.SortType.COMPLETED]       : _('Sort by Completed'),
                 [G.SortType.CREATION_DATE]   : _('Sort by Creation Date'),
