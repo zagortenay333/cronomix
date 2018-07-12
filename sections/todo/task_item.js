@@ -162,6 +162,7 @@ var TaskItem = new Lang.Class({
         this.actor.style_class = 'task-item';
 
         this.msg.text = '';
+        this.msg_text = ''; // for sorting purposes we want this prop not nested
 
         this.tracker_id = '';
 
@@ -261,7 +262,6 @@ var TaskItem = new Lang.Class({
         //
         // NOTE: split_on_whitespace() keeps the whitespace between tokens as
         // separate items in the words array.
-        //
         if (words[0] === 'x') {
             this.completed                   = true;
             this.completion_checkbox.checked = true;
@@ -294,6 +294,7 @@ var TaskItem = new Lang.Class({
             this.creation_date = words[0];
             desc_pos           = 1;
         }
+
 
         //
         // Parse 'description'
@@ -434,6 +435,7 @@ var TaskItem = new Lang.Class({
         words = MISC_UTILS.markdown_to_pango(words, this.ext.markdown_map);
 
         this.msg.clutter_text.set_markup(words);
+        this.msg_text = this.msg.text;
     },
 
     check_deferred_tasks: function (today = MISC_UTILS.date_yyyymmdd()) {
@@ -892,8 +894,8 @@ var TaskItem = new Lang.Class({
         if (i >= words.length) return null;
 
         if (REG.TODO_CONTEXT.test(words[i]) ||
-            REG.TODO_PROJ.test(words[i]) ||
-            REG.URL.test(words[i]) ||
+            REG.TODO_PROJ.test(words[i])    ||
+            REG.URL.test(words[i])          ||
             REG.FILE_PATH.test(words[i]))
             return words[i];
         else

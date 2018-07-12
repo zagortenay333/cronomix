@@ -14,6 +14,7 @@ var SortType = {
     PROJECT         : 'PROJECT',
     PRIORITY        : 'PRIORITY',
     DUE_DATE        : 'DUE_DATE',
+    ALPHABET        : 'ALPHABET',
     RECURRENCE      : 'RECURRENCE',
     COMPLETED       : 'COMPLETED',
     CREATION_DATE   : 'CREATION_DATE',
@@ -43,6 +44,7 @@ var SORT_RECORD = () => [
     [SortType.PROJECT         , SortOrder.ASCENDING],
     [SortType.CREATION_DATE   , SortOrder.ASCENDING],
     [SortType.COMPLETION_DATE , SortOrder.ASCENDING],
+    [SortType.ALPHABET        , SortOrder.ASCENDING],
 ];
 
 var FILTER_RECORD = () => ({

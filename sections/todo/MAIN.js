@@ -607,12 +607,13 @@ var SectionMain = new Lang.Class({
 
         let property_map = {
             [G.SortType.PIN]             : 'pinned',
-            [G.SortType.COMPLETED]       : 'completed',
-            [G.SortType.PRIORITY]        : 'priority',
-            [G.SortType.DUE_DATE]        : 'due_date',
-            [G.SortType.RECURRENCE]      : 'rec_next',
             [G.SortType.CONTEXT]         : 'first_context',
             [G.SortType.PROJECT]         : 'first_project',
+            [G.SortType.PRIORITY]        : 'priority',
+            [G.SortType.COMPLETED]       : 'completed',
+            [G.SortType.DUE_DATE]        : 'due_date',
+            [G.SortType.ALPHABET]        : 'msg_text',
+            [G.SortType.RECURRENCE]      : 'rec_next',
             [G.SortType.CREATION_DATE]   : 'creation_date',
             [G.SortType.COMPLETION_DATE] : 'completion_date',
         };
@@ -627,22 +628,19 @@ var SectionMain = new Lang.Class({
         }
 
         this.tasks.sort((a, b) => {
-            for (i = 0; (i < len) && (a[props[i]] === b[props[i]]); i++);
+            let x, y;
+
+            for (i = 0; (i < len) && (x = a[props[i]]) === (y = b[props[i]]); i++);
 
             if (i === len) return 0;
 
             switch (sort[i][0]) {
                 case G.SortType.PRIORITY:
-                    if (sort[i][1] === G.SortOrder.DESCENDING)
-                        return +(a[props[i]] > b[props[i]]) || +(a[props[i]] === b[props[i]]) - 1;
-                    else
-                        return +(a[props[i]] < b[props[i]]) || +(a[props[i]] === b[props[i]]) - 1;
-
+                    if (sort[i][1] === G.SortOrder.DESCENDING) return +(x > y) || +(x === y) - 1;
+                    else                                       return +(x < y) || +(x === y) - 1;
                 default:
-                    if (sort[i][1] === G.SortOrder.DESCENDING)
-                        return +(a[props[i]] < b[props[i]]) || +(a[props[i]] === b[props[i]]) - 1;
-                    else
-                        return +(a[props[i]] > b[props[i]]) || +(a[props[i]] === b[props[i]]) - 1;
+                    if (sort[i][1] === G.SortOrder.DESCENDING) return +(x < y) || +(x === y) - 1;
+                    else                                       return +(x > y) || +(x === y) - 1;
             }
         });
     },
