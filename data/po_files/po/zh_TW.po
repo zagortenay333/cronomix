@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-07-12 22:40+0200\n"
-"PO-Revision-Date: 2018-07-12 07:31+0800\n"
+"PO-Revision-Date: 2018-07-14 13:42+0800\n"
 "Last-Translator: OriginCode <origincoder@yahoo.com>\n"
 "Language-Team: Chinese <kde-i18n-doc@kde.org>\n"
 "Language: zh_CN\n"
@@ -47,7 +47,7 @@ msgstr "移動到子顯示器"
 
 #: data/po_files/../../data/prefs.ui:80
 msgid "Show only 1 panel icon for joined menus"
-msgstr "只顯示1個已加入選單的面板圖示"
+msgstr "只爲已加入的選單顯示1個面板圖示"
 
 #: data/po_files/../../data/prefs.ui:124
 msgid "Position in the panel"
