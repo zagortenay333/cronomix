@@ -171,7 +171,7 @@ var ViewSearch = new Lang.Class({
 
         this.tasks_scroll.vscrollbar_policy = Gtk.PolicyType.NEVER;
 
-        this.add_tasks_to_menu_mainloop_id = Mainloop.idle_add(() => {
+        this.add_tasks_to_menu_mainloop_id = Mainloop.timeout_add(0, () => {
            this._add_tasks_to_menu__finish(0, false);
         });
     },
@@ -182,7 +182,7 @@ var ViewSearch = new Lang.Class({
             scrollbar_shown = true;
         }
 
-        for (let j = 0; j < 50; j++, i++) {
+        for (let j = 0; j < 8; j++, i++) {
             if (i === this.tasks_viewport.length) {
                 this.add_tasks_to_menu_mainloop_id = null;
                 if (!scrollbar_shown && this.ext.needs_scrollbar())

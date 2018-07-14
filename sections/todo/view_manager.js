@@ -101,11 +101,8 @@ var ViewManager = new Lang.Class({
 
         MISC_UTILS.maybe_ignore_release(this.ext.menu.actor);
 
-        // Because we are tweaking the menu.open func, we must grab the focus
-        // with a timeout call..
-        if (view_params.focused_actor && this.ext.menu.isOpen) {
-            Mainloop.timeout_add(0, () => view_params.focused_actor.grab_key_focus());
-        }
+        if (view_params.focused_actor && this.ext.menu.isOpen)
+            view_params.focused_actor.grab_key_focus();
     },
 });
 Signals.addSignalMethods(ViewManager.prototype);

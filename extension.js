@@ -97,7 +97,11 @@ const Timepp = new Lang.Class({
             } else {
                 // Put in boxpointer callback to play nicely with animations.
                 this._boxPointer.show(BoxPointer.PopupAnimation.FULL, () => {
-                    Mainloop.timeout_add(0, () => this.emit('open-state-changed', true));
+                    let f = global.stage.get_key_focus();
+                    Mainloop.timeout_add(0, () => {
+                        this.emit('open-state-changed', true);
+                        f.grab_key_focus();
+                    });
                 });
             }
         };
