@@ -119,7 +119,7 @@ var ViewTaskEditor = new Lang.Class({
         this.entry.keep_min_height          = false;
         this.entry.resize_with_keyboard     = true;
 
-        Mainloop.idle_add(() => this.entry.entry.set_height(64));
+        this.entry.entry.set_size(400, 64);
 
         this.entry.scroll_box.vscrollbar_policy = Gtk.PolicyType.NEVER;
         this.entry.scroll_box.hscrollbar_policy = Gtk.PolicyType.NEVER;
