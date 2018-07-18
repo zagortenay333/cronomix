@@ -73,10 +73,12 @@ Alarms, stopwatch and other timers won't work when the screen is locked.
 
 ### Sections
 
-Each section (timer, stopwatch, alarms..) can open as a separate menu when it's
-icon is clicked, or it can appear together with other sections in one menu.
+This is a modular extension consisting of several sections (timer, stopwatch, alarms..)
 
-Individual sections can be disabled.
+Each section can open as a separate menu when it's icon is clicked, or it
+can appear together with other sections in one menu.
+
+Individual sections can be disabled if you don't need them.
 
 Right-clicking on the panel icons will open a context section with
 some useful links.
@@ -291,11 +293,10 @@ The following extensions are supported:
     <tr>
         <td valign="top"><code>h:1</code></td>
         <td>
-            Hides a task.<br><br>
             <b>This extension disables all other extensions except the <code>kan</code> extension.</b><br><br>
-            <i>Among other things, can be used to populate the todo manager<br>
+            Hides a task.<br>
+            Among other things, can be used to populate the todo manager<br>
             with context/project keywords for autocompletion.<br>
-            </i>
         </td>
     </tr>
     <tr>
@@ -308,19 +309,14 @@ The following extensions are supported:
         <td valign="top"><code>due|DUE:yyyy-mm-dd</code></td>
         <td>
             Sets a due date on a task.<br>
-            <i>
-            Timepp will also show how many days until/since the due date as well
-as<br>
-            provide the ability to sort tasks by due date.
-            </i>
         </td>
     </tr>
     <tr>
         <td valign="top"><code>rec:recurrence_string</code></td>
         <td>
+            <b>This extension is incompatible with the <code>due</code> and <code>defer</code> extensions.</b><br><br>
             Used to automatically reopen a task after a given amount of
 time.<br><br>
-            <b>This extension is incompatible with the due and defer extensions.</b><br><br>
             <i>Each time a task recurs, it's creation date is updated.<br>
             If a task is already open on the date of the recursion, it's
 creation date will be updated anyway.</i><br><br>
