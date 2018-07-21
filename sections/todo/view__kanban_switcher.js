@@ -201,11 +201,10 @@ var KanbanSwitcher = new Lang.Class({
 
 
         // listen
-        this.delegate.sigm.connect_press(item.check_icon, Clutter.BUTTON_PRIMARY, true, () => {
+        this.delegate.sigm.connect_release(item.check_icon, Clutter.BUTTON_PRIMARY, true, () => {
             this._on_kanban_selected(item);
-            MISC_UTILS.maybe_ignore_release(this.ext.menu.actor);
         });
-        this.delegate.sigm.connect_press(edit_icon, Clutter.BUTTON_PRIMARY, true, () => this._on_edit_clicked(item));
+        this.delegate.sigm.connect_release(edit_icon, Clutter.BUTTON_PRIMARY, true, () => this._on_edit_clicked(item));
         item.actor.connect('event', (_, event) => this._on_item_event(item, event));
     },
 

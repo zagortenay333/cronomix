@@ -260,7 +260,7 @@ var TaskItem = new Lang.Class({
         // - ["creation-date"]
         // - []
         //
-        // NOTE: split_on_whitespace() keeps the whitespace between tokens as
+        // @NOTE: split_on_whitespace() keeps the whitespace between tokens as
         // separate items in the words array.
         if (words[0] === 'x') {
             this.completed                   = true;
@@ -765,6 +765,7 @@ var TaskItem = new Lang.Class({
         this.tracker_icon = new St.Icon({ visible:false, reactive: true, can_focus: true, track_hover: true, icon_name: 'timepp-start-symbolic', style_class: 'tracker-start-icon' });
         this.header_icon_box.add_actor(this.tracker_icon);
 
+        // @NOTE: Use connect_press here because we need to play well with dnd.
         this.delegate.sigm.connect_press(this.stat_icon, Clutter.BUTTON_PRIMARY, true, () => {
             this.delegate.show_view__time_tracker_stats(this);
             this.hide_header_icons();
@@ -774,6 +775,7 @@ var TaskItem = new Lang.Class({
         });
         this.delegate.sigm.connect_press(this.edit_icon, Clutter.BUTTON_PRIMARY, true, () => {
             this.delegate.show_view__task_editor(this);
+            Mainloop.idle_add(() => MISC_UTILS.maybe_ignore_release(this.ext.menu.actor));
             this.hide_header_icons();
         });
         this.delegate.sigm.connect_press(this.tracker_icon, Clutter.BUTTON_PRIMARY, true, () => {
@@ -995,9 +997,7 @@ var TaskItem = new Lang.Class({
 
                 if (this.prio_label.has_pointer)
                     global.screen.set_cursor(Meta.Cursor.POINTING_HAND);
-
-                break;
-            }
+            } break;
 
             case Clutter.EventType.LEAVE: {
                 // related is the new actor we hovered over with the mouse
@@ -1014,16 +1014,13 @@ var TaskItem = new Lang.Class({
                     this._finish_scrolling_priority();
 
                 global.screen.set_cursor(Meta.Cursor.DEFAULT);
-
-                break;
-            }
+            } break;
 
             case Clutter.EventType.KEY_RELEASE: {
                 this.show_header_icons();
                 if (this.actor_scrollview) this.scroll_into_view();
                 this.has_focus = true;
-                break;
-            }
+            } break;
 
             case Clutter.EventType.KEY_PRESS: {
                 if (this.has_focus) {
@@ -1039,9 +1036,7 @@ var TaskItem = new Lang.Class({
                 } else if (this.actor_scrollview) {
                     this.scroll_into_view();
                 }
-
-                break;
-            }
+            } break;
 
             case Clutter.EventType.BUTTON_RELEASE: {
                 if (this.prio_label.has_pointer) {
@@ -1057,16 +1052,14 @@ var TaskItem = new Lang.Class({
                         this.delegate.show_view__search(this.current_keyword);
                     }
                 }
-                break;
-            }
+            } break;
 
             case Clutter.EventType.SCROLL: {
                 if (this.completion_checkbox.has_pointer && !this.completed) {
                     this._scroll_task_priority(event.get_scroll_direction());
                     return Clutter.EVENT_STOP;
                 }
-                break;
-            }
+            } break;
         }
     },
 });

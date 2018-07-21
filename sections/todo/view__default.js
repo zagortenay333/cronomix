@@ -600,15 +600,15 @@ var KanbanColumn = new Lang.Class({
         this.header.connect('leave-event', (_, event) => this._maybe_show_title(event));
         this.header.connect('enter-event', () => this._hide_title());
         this.sigm.connect(this.ext, 'custom-css-changed', () => this.set_title());
-        this.sigm.connect_press(this.add_task_button, Clutter.BUTTON_PRIMARY, true, () => this.delegate.show_view__task_editor());
-        this.sigm.connect_press(this.kanban_icon, Clutter.BUTTON_PRIMARY, true, () => this.delegate.show_view__kanban_switcher());
-        this.sigm.connect_press(this.filter_icon, Clutter.BUTTON_PRIMARY, true, () => this.delegate.show_view__filters());
+        this.sigm.connect_release(this.add_task_button, Clutter.BUTTON_PRIMARY, true, () => this.delegate.show_view__task_editor());
+        this.sigm.connect_release(this.kanban_icon, Clutter.BUTTON_PRIMARY, true, () => this.delegate.show_view__kanban_switcher());
+        this.sigm.connect_release(this.filter_icon, Clutter.BUTTON_PRIMARY, true, () => this.delegate.show_view__filters());
         this.sigm.connect_on_button(this.filter_icon, Clutter.BUTTON_MIDDLE, () => this._toggle_filters());
-        this.sigm.connect_press(this.file_switcher_icon, Clutter.BUTTON_PRIMARY, true, () => this.delegate.show_view__file_switcher());
-        this.sigm.connect_press(this.search_icon, Clutter.BUTTON_PRIMARY, true, () => this.delegate.show_view__search());
-        this.sigm.connect_press(this.stats_icon, Clutter.BUTTON_PRIMARY, true, () => this.delegate.show_view__time_tracker_stats());
-        this.sigm.connect_press(this.clear_icon, Clutter.BUTTON_PRIMARY, true, () => this.delegate.show_view__clear_completed());
-        this.sigm.connect_press(this.sort_icon, Clutter.BUTTON_PRIMARY, true, () => this.delegate.show_view__sort());
+        this.sigm.connect_release(this.file_switcher_icon, Clutter.BUTTON_PRIMARY, true, () => this.delegate.show_view__file_switcher());
+        this.sigm.connect_release(this.search_icon, Clutter.BUTTON_PRIMARY, true, () => this.delegate.show_view__search());
+        this.sigm.connect_release(this.stats_icon, Clutter.BUTTON_PRIMARY, true, () => this.delegate.show_view__time_tracker_stats());
+        this.sigm.connect_release(this.clear_icon, Clutter.BUTTON_PRIMARY, true, () => this.delegate.show_view__clear_completed());
+        this.sigm.connect_release(this.sort_icon, Clutter.BUTTON_PRIMARY, true, () => this.delegate.show_view__sort());
         this.sigm.connect_on_button(this.sort_icon, Clutter.BUTTON_MIDDLE, () => this.owner.toggle_automatic_sort());
     },
 

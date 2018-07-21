@@ -99,8 +99,6 @@ var ViewManager = new Lang.Class({
             }
         }
 
-        MISC_UTILS.maybe_ignore_release(this.ext.menu.actor);
-
         if (view_params.focused_actor && this.ext.menu.isOpen)
             view_params.focused_actor.grab_key_focus();
     },

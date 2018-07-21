@@ -259,8 +259,8 @@ var ViewFileSwitcher = new Lang.Class({
         }
 
         // listen
-        this.delegate.sigm.connect_press(item.check_icon, Clutter.BUTTON_PRIMARY, true, () => this._on_file_selected(file));
-        this.delegate.sigm.connect_press(edit_icon, Clutter.BUTTON_PRIMARY, true, () => this._show_file_editor(item));
+        this.delegate.sigm.connect_release(item.check_icon, Clutter.BUTTON_PRIMARY, true, () => this._on_file_selected(file));
+        this.delegate.sigm.connect_release(edit_icon, Clutter.BUTTON_PRIMARY, true, () => this._show_file_editor(item));
         item.actor.connect('key-focus-in', () => { item.actor.can_focus = false; });
         item.actor.connect('event', (_, event) => this._on_file_item_event(item, event));
 
