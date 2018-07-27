@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-11 12:55+0200\n"
+"POT-Creation-Date: 2018-07-27 12:00+0200\n"
 "PO-Revision-Date: 2018-01-10 10:35+0100\n"
 "Last-Translator: Piotr Komur <pkomur@gmail.com>\n"
 "Language-Team: \n"
@@ -19,15 +19,15 @@ msgstr ""
 "|| n%100>=20) ? 1 : 2);\n"
 "X-Generator: Poedit 2.0.1\n"
 
-#: data/po_files/../../lib/misc_utils.js:45
+#: data/po_files/../../lib/misc_utils.js:57
 msgid "File or dir not found."
 msgstr "Nie znaleziono pliku lub katalogu."
 
-#: data/po_files/../../lib/misc_utils.js:116
+#: data/po_files/../../lib/misc_utils.js:128
 msgid "today"
 msgstr "dziś"
 
-#: data/po_files/../../lib/misc_utils.js:117
+#: data/po_files/../../lib/misc_utils.js:129
 #, javascript-format
 msgid "%d day ago"
 msgid_plural "%d days ago"
@@ -35,7 +35,7 @@ msgstr[0] "%d dzień temu"
 msgstr[1] "%d dni temu"
 msgstr[2] "%d dni temu"
 
-#: data/po_files/../../lib/misc_utils.js:118
+#: data/po_files/../../lib/misc_utils.js:130
 #, javascript-format
 msgid "in %d day"
 msgid_plural "in %d days"
@@ -43,11 +43,11 @@ msgstr[0] "w ciągu %d dnia"
 msgstr[1] "w ciagu %d dni"
 msgstr[2] "w ciagu %d dni"
 
-#: data/po_files/../../lib/fullscreen.js:222
+#: data/po_files/../../lib/fullscreen.js:230
 msgid "Move to Primary Monitor"
 msgstr "Przenieś na podstawowy monitor"
 
-#: data/po_files/../../lib/fullscreen.js:228
+#: data/po_files/../../lib/fullscreen.js:236
 msgid "Move to Secondary Monitor"
 msgstr "Przenieś na dodatkowy monitor"
 
@@ -328,54 +328,54 @@ msgstr "utworzono:"
 msgid "completed"
 msgstr "ukończono:"
 
-#: data/po_files/../../sections/todo/view__sort.js:64
+#: data/po_files/../../sections/todo/view__sort.js:65
 #, fuzzy
 msgid "Sort by Pin"
 msgstr "Sortuj wg priorytetu"
 
-#: data/po_files/../../sections/todo/view__sort.js:65
+#: data/po_files/../../sections/todo/view__sort.js:66
 msgid "Sort by Context"
 msgstr "Sortuj wg daty utworzenia"
 
-#: data/po_files/../../sections/todo/view__sort.js:66
+#: data/po_files/../../sections/todo/view__sort.js:67
 msgid "Sort by Projects"
 msgstr "Sortuj wg priorytetu"
 
-#: data/po_files/../../sections/todo/view__sort.js:67
+#: data/po_files/../../sections/todo/view__sort.js:68
 msgid "Sort by Priority"
 msgstr "Sortuj wg priorytetu"
 
-#: data/po_files/../../sections/todo/view__sort.js:68
+#: data/po_files/../../sections/todo/view__sort.js:69
 msgid "Sort by Due Date"
 msgstr "Sortuj wg terminu"
 
-#: data/po_files/../../sections/todo/view__sort.js:69
+#: data/po_files/../../sections/todo/view__sort.js:70
 #, fuzzy
 msgid "Sort by Alphabet"
 msgstr "Sortuj wg daty zakończenia"
 
-#: data/po_files/../../sections/todo/view__sort.js:70
+#: data/po_files/../../sections/todo/view__sort.js:71
 #, fuzzy
 msgid "Sort by Recurrence Date"
 msgstr "Sortuj wg terminu"
 
-#: data/po_files/../../sections/todo/view__sort.js:71
+#: data/po_files/../../sections/todo/view__sort.js:72
 msgid "Sort by Completed"
 msgstr "Sortuj wg daty zakończenia"
 
-#: data/po_files/../../sections/todo/view__sort.js:72
+#: data/po_files/../../sections/todo/view__sort.js:73
 msgid "Sort by Creation Date"
 msgstr "Sortuj wg daty utworzenia"
 
-#: data/po_files/../../sections/todo/view__sort.js:73
+#: data/po_files/../../sections/todo/view__sort.js:74
 msgid "Sort by Completion Date"
 msgstr "Sortuj wg daty zakończenia"
 
-#: data/po_files/../../sections/todo/view__sort.js:98
+#: data/po_files/../../sections/todo/view__sort.js:99
 msgid "Automatic sorting"
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__sort.js:112
+#: data/po_files/../../sections/todo/view__sort.js:113
 #: data/po_files/../../sections/todo/view__task_editor.js:220
 #: data/po_files/../../sections/todo/view__stats.js:250
 #: data/po_files/../../sections/todo/view__filters.js:208

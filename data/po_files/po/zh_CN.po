@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-08 21:20+0200\n"
+"POT-Creation-Date: 2018-07-27 12:00+0200\n"
 "PO-Revision-Date: 2018-07-12 07:31+0800\n"
 "Last-Translator: OriginCode <origincoder@yahoo.com>\n"
 "Language-Team: Chinese <kde-i18n-doc@kde.org>\n"
@@ -17,31 +17,31 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Poedit 2.0.6\n"
 
-#: data/po_files/../../lib/misc_utils.js:45
+#: data/po_files/../../lib/misc_utils.js:57
 msgid "File or dir not found."
 msgstr "目录或文件无法找到。"
 
-#: data/po_files/../../lib/misc_utils.js:116
+#: data/po_files/../../lib/misc_utils.js:128
 msgid "today"
 msgstr "今天"
 
-#: data/po_files/../../lib/misc_utils.js:117
+#: data/po_files/../../lib/misc_utils.js:129
 #, javascript-format
 msgid "%d day ago"
 msgid_plural "%d days ago"
 msgstr[0] "%d 天前"
 
-#: data/po_files/../../lib/misc_utils.js:118
+#: data/po_files/../../lib/misc_utils.js:130
 #, javascript-format
 msgid "in %d day"
 msgid_plural "in %d days"
 msgstr[0] "在 %d 天后"
 
-#: data/po_files/../../lib/fullscreen.js:222
+#: data/po_files/../../lib/fullscreen.js:230
 msgid "Move to Primary Monitor"
 msgstr "移动到主显示器"
 
-#: data/po_files/../../lib/fullscreen.js:228
+#: data/po_files/../../lib/fullscreen.js:236
 msgid "Move to Secondary Monitor"
 msgstr "移动到子显示器"
 
@@ -311,53 +311,53 @@ msgstr "已创建"
 msgid "completed"
 msgstr "已完成"
 
-#: data/po_files/../../sections/todo/view__sort.js:64
+#: data/po_files/../../sections/todo/view__sort.js:65
 msgid "Sort by Pin"
 msgstr "根据引脚排序"
 
-#: data/po_files/../../sections/todo/view__sort.js:65
+#: data/po_files/../../sections/todo/view__sort.js:66
 msgid "Sort by Context"
 msgstr "根据上下文排序"
 
-#: data/po_files/../../sections/todo/view__sort.js:66
+#: data/po_files/../../sections/todo/view__sort.js:67
 msgid "Sort by Projects"
 msgstr "根据项目排序"
 
-#: data/po_files/../../sections/todo/view__sort.js:67
+#: data/po_files/../../sections/todo/view__sort.js:68
 msgid "Sort by Priority"
 msgstr "根据优先级排序"
 
-#: data/po_files/../../sections/todo/view__sort.js:68
+#: data/po_files/../../sections/todo/view__sort.js:69
 msgid "Sort by Due Date"
 msgstr "根据截止日期排序"
 
-#: data/po_files/../../sections/todo/view__sort.js:69
+#: data/po_files/../../sections/todo/view__sort.js:70
 #, fuzzy
 msgid "Sort by Alphabet"
 msgstr "根据完成情况排序"
 
-#: data/po_files/../../sections/todo/view__sort.js:70
+#: data/po_files/../../sections/todo/view__sort.js:71
 #, fuzzy
 msgid "Sort by Recurrence Date"
 msgstr "根据重启日期排序"
 
-#: data/po_files/../../sections/todo/view__sort.js:71
+#: data/po_files/../../sections/todo/view__sort.js:72
 msgid "Sort by Completed"
 msgstr "根据完成情况排序"
 
-#: data/po_files/../../sections/todo/view__sort.js:72
+#: data/po_files/../../sections/todo/view__sort.js:73
 msgid "Sort by Creation Date"
 msgstr "根据创建日期排序"
 
-#: data/po_files/../../sections/todo/view__sort.js:73
+#: data/po_files/../../sections/todo/view__sort.js:74
 msgid "Sort by Completion Date"
 msgstr "根据完成日期排序"
 
-#: data/po_files/../../sections/todo/view__sort.js:98
+#: data/po_files/../../sections/todo/view__sort.js:99
 msgid "Automatic sorting"
 msgstr "自动排序"
 
-#: data/po_files/../../sections/todo/view__sort.js:112
+#: data/po_files/../../sections/todo/view__sort.js:113
 #: data/po_files/../../sections/todo/view__task_editor.js:220
 #: data/po_files/../../sections/todo/view__stats.js:250
 #: data/po_files/../../sections/todo/view__filters.js:208
