@@ -581,7 +581,7 @@ var TaskItem = new Lang.Class({
 
             res[0] = MISC.date_yyyymmdd(iter) === today && reference_date !== today;
 
-            if (res[0] || MISC_UTILS.date_yyyymmdd(iter) === reference_date)
+            if (res[0] || MISC.date_yyyymmdd(iter) === reference_date)
                 iter.setDate(iter.getDate() + increment);
 
             res[1] = MISC.date_yyyymmdd(iter);
