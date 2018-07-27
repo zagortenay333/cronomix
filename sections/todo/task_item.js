@@ -19,9 +19,9 @@ const _        = Gettext.gettext;
 const ngettext = Gettext.ngettext;
 
 
-const MISC_UTILS = ME.imports.lib.misc_utils;
-const REG        = ME.imports.lib.regex;
-const DND        = ME.imports.lib.dnd;
+const MISC = ME.imports.lib.misc_utils;
+const REG  = ME.imports.lib.regex;
+const DND  = ME.imports.lib.dnd;
 
 
 const G = ME.imports.sections.todo.GLOBAL;
@@ -131,10 +131,10 @@ var TaskItem = new Lang.Class({
         //
         this.msg.connect('motion-event', (_, event) => {
             this.current_keyword = this._find_keyword(event);
-            if (this.current_keyword) global.screen.set_cursor(Meta.Cursor.POINTING_HAND);
-            else                      global.screen.set_cursor(Meta.Cursor.DEFAULT);
+            if (this.current_keyword) MISC.global_wrapper.display.set_cursor(Meta.Cursor.POINTING_HAND);
+            else                      MISC.global_wrapper.display.set_cursor(Meta.Cursor.DEFAULT);
         });
-        this.msg.connect('leave-event', () => global.screen.set_cursor(Meta.Cursor.DEFAULT));
+        this.msg.connect('leave-event', () => MISC.global_wrapper.display.set_cursor(Meta.Cursor.DEFAULT));
         this.actor.connect('event', (actor, event) => this._on_event(actor, event));
         this.completion_checkbox.connect('clicked', () => this.toggle_task());
     },
@@ -239,7 +239,7 @@ var TaskItem = new Lang.Class({
 
         let words    = GLib.markup_escape_text(this.task_str, -1);
         words        = words.replace(/\\n/g, '\n');
-        words        = MISC_UTILS.split_on_whitespace(words);
+        words        = MISC.split_on_whitespace(words);
         let len      = words.length;
         let desc_pos = 0; // idx of first word of 'description' in words arr
 
@@ -432,13 +432,13 @@ var TaskItem = new Lang.Class({
         this.description_markup = words;
 
         words = words.join('');
-        words = MISC_UTILS.markdown_to_pango(words, this.ext.markdown_map);
+        words = MISC.markdown_to_pango(words, this.ext.markdown_map);
 
         this.msg.clutter_text.set_markup(words);
         this.msg_text = this.msg.text;
     },
 
-    check_deferred_tasks: function (today = MISC_UTILS.date_yyyymmdd()) {
+    check_deferred_tasks: function (today = MISC.date_yyyymmdd()) {
         if (! this.defer_date) return false;
 
         this.creation_date = this.defer_date;
@@ -469,9 +469,9 @@ var TaskItem = new Lang.Class({
                 else                              idx = 0;
 
                 if (REG.ISO_DATE.test(words[idx]))
-                    words[idx] = MISC_UTILS.date_yyyymmdd();
+                    words[idx] = MISC.date_yyyymmdd();
                 else
-                    words.splice(idx, 0, MISC_UTILS.date_yyyymmdd());
+                    words.splice(idx, 0, MISC.date_yyyymmdd());
 
                 this.task_str = words.join(' ');
             }
@@ -503,7 +503,7 @@ var TaskItem = new Lang.Class({
     // completion but isn't completed.
     _get_recurrence_date: function () {
         let res   = [false, '8999-99-99'];
-        let today = MISC_UTILS.date_yyyymmdd();
+        let today = MISC.date_yyyymmdd();
 
         if (this.rec_type === 3) {
             let increment =
@@ -575,16 +575,16 @@ var TaskItem = new Lang.Class({
             let increment = +(this.rec_str.slice(rec_str_offset, -1)) *
                              (this.rec_str[this.rec_str.length - 1] === 'w' ? 7 : 1);
 
-            while (MISC_UTILS.date_yyyymmdd(iter) < today) {
+            while (MISC.date_yyyymmdd(iter) < today) {
                 iter.setDate(iter.getDate() + increment);
             }
 
-            res[0] = MISC_UTILS.date_yyyymmdd(iter) === today && reference_date !== today;
+            res[0] = MISC.date_yyyymmdd(iter) === today && reference_date !== today;
 
             if (res[0] || MISC_UTILS.date_yyyymmdd(iter) === reference_date)
                 iter.setDate(iter.getDate() + increment);
 
-            res[1] = MISC_UTILS.date_yyyymmdd(iter);
+            res[1] = MISC.date_yyyymmdd(iter);
         }
 
         return res;
@@ -615,7 +615,7 @@ var TaskItem = new Lang.Class({
         }
 
         let markup = this.description_markup.join('');
-        markup     = MISC_UTILS.markdown_to_pango(markup, this.ext.markdown_map);
+        markup     = MISC.markdown_to_pango(markup, this.ext.markdown_map);
 
         this.msg.clutter_text.set_markup(markup);
     },
@@ -638,7 +638,7 @@ var TaskItem = new Lang.Class({
                     ngettext('%d day after completion',
                              '%d days after completion', num).format(num);
             } else {
-                txt = `${_('recurrence')}:&#160;${this.rec_next}&#160;(${MISC_UTILS.date_delta_str(this.rec_next)})   `;
+                txt = `${_('recurrence')}:&#160;${this.rec_next}&#160;(${MISC.date_delta_str(this.rec_next)})   `;
             }
 
             markup +=
@@ -651,7 +651,7 @@ var TaskItem = new Lang.Class({
             markup +=
                 '<span font-weight="bold" foreground="' +
                 this.custom_css['-timepp-due-date-color'][0] + '">' +
-                `${_('due')}:&#160;${this.due_date}&#160;(${MISC_UTILS.date_delta_str(this.due_date)})   ` +
+                `${_('due')}:&#160;${this.due_date}&#160;(${MISC.date_delta_str(this.due_date)})   ` +
                 '</span>';
         }
 
@@ -659,7 +659,7 @@ var TaskItem = new Lang.Class({
             markup +=
                 '<span font-weight="bold" foreground="' +
                 this.custom_css['-timepp-defer-date-color'][0] + '">' +
-                `${_('deferred')}:&#160;${this.defer_date}&#160;(${MISC_UTILS.date_delta_str(this.defer_date)})   ` +
+                `${_('deferred')}:&#160;${this.defer_date}&#160;(${MISC.date_delta_str(this.defer_date)})   ` +
                 '</span>';
         }
 
@@ -736,9 +736,9 @@ var TaskItem = new Lang.Class({
             let task_str = this.task_str;
 
             if (this.priority === '(_)')
-                task_str = `x ${MISC_UTILS.date_yyyymmdd()} ${task_str}`;
+                task_str = `x ${MISC.date_yyyymmdd()} ${task_str}`;
             else
-                task_str = `x ${MISC_UTILS.date_yyyymmdd()} ${task_str.slice(4)} pri:${this.priority[1]}`;
+                task_str = `x ${MISC.date_yyyymmdd()} ${task_str.slice(4)} pri:${this.priority[1]}`;
 
             this.reset(true, task_str);
         }
@@ -775,7 +775,7 @@ var TaskItem = new Lang.Class({
         });
         this.delegate.sigm.connect_press(this.edit_icon, Clutter.BUTTON_PRIMARY, true, () => {
             this.delegate.show_view__task_editor(this);
-            Mainloop.idle_add(() => MISC_UTILS.maybe_ignore_release(this.ext.menu.actor));
+            Mainloop.idle_add(() => MISC.maybe_ignore_release(this.ext.menu.actor));
             this.hide_header_icons();
         });
         this.delegate.sigm.connect_press(this.tracker_icon, Clutter.BUTTON_PRIMARY, true, () => {
@@ -827,7 +827,7 @@ var TaskItem = new Lang.Class({
         } else {
             this.pin_icon.remove_style_class_name('active');
 
-            let words = MISC_UTILS.split_on_whitespace(this.task_str);
+            let words = MISC.split_on_whitespace(this.task_str);
             for (let i = 0, len = words.length; i < len; i++) {
                 if (REG.TODO_PIN_EXT.test(words[i])) {
                     words.splice(i, 1);
@@ -883,7 +883,7 @@ var TaskItem = new Lang.Class({
 
         if (pos === this.msg.text.length) return;
 
-        let words = MISC_UTILS.split_on_whitespace(this.msg.get_text());
+        let words = MISC.split_on_whitespace(this.msg.get_text());
 
         let i       = 0;
         let abs_idx = 0;
@@ -982,7 +982,7 @@ var TaskItem = new Lang.Class({
 
         for (let i = 0; i < 2; i++) {
             for (let s of this.actor_scrollview[i]) {
-                MISC_UTILS.scroll_to_item(s, s.get_last_child(), this.actor, this.actor_parent, !!i);
+                MISC.scroll_to_item(s, s.get_last_child(), this.actor, this.actor_parent, !!i);
             }
         }
     },
@@ -996,7 +996,7 @@ var TaskItem = new Lang.Class({
                     this.show_header_icons();
 
                 if (this.prio_label.has_pointer)
-                    global.screen.set_cursor(Meta.Cursor.POINTING_HAND);
+                    MISC.global_wrapper.display.set_cursor(Meta.Cursor.POINTING_HAND);
             } break;
 
             case Clutter.EventType.LEAVE: {
@@ -1013,7 +1013,7 @@ var TaskItem = new Lang.Class({
                 if (this.finish_scrolling_priority)
                     this._finish_scrolling_priority();
 
-                global.screen.set_cursor(Meta.Cursor.DEFAULT);
+                MISC.global_wrapper.display.set_cursor(Meta.Cursor.DEFAULT);
             } break;
 
             case Clutter.EventType.KEY_RELEASE: {
@@ -1045,9 +1045,9 @@ var TaskItem = new Lang.Class({
                     if (! this.current_keyword) break;
 
                     if (REG.URL.test(this.current_keyword)) {
-                        MISC_UTILS.open_web_uri(this.current_keyword);
+                        MISC.open_web_uri(this.current_keyword);
                     } else if (REG.FILE_PATH.test(this.current_keyword)) {
-                        MISC_UTILS.open_file_path(this.current_keyword);
+                        MISC.open_file_path(this.current_keyword);
                     } else {
                         this.delegate.show_view__search(this.current_keyword);
                     }

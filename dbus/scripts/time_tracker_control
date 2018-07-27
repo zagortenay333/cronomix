@@ -61,6 +61,12 @@ current_id=0
 
 default_id="stop"
 
+shell_version=$(gnome-shell --version | cut -d " " -f 3)
+
+get_workspace_cmd="global.display.get_active_workspace_index()"
+
+[[ $shell_version < "3.29" ]] &&
+    get_workspace_cmd="global.screen.get_active_workspace_index()"
 
 
 # =====================================================================
@@ -110,14 +116,13 @@ on_workspace_changed () {
 
 check_workspace () {
     local workspace
-
     read -r -a workspace <<< "$(
         gdbus call                         \
             --session                      \
             --dest org.gnome.Shell         \
             --object-path /org/gnome/Shell \
             --method org.gnome.Shell.Eval  \
-                "global.screen.get_active_workspace_index()"
+                "$get_workspace_cmd"
     )"
 
     # gdbus will return a string of the form "('bool', 'n')".
@@ -130,7 +135,6 @@ check_workspace () {
         on_workspace_changed
     fi
 }
-
 
 
 # =====================================================================
@@ -150,7 +154,6 @@ for it in "$@"; do
             id_workspace_map[${it[0]}]="${it[*]:1}"
     esac
 done
-
 
 
 # =====================================================================

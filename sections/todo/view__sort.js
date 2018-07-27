@@ -17,7 +17,8 @@ const _        = Gettext.gettext;
 const ngettext = Gettext.ngettext;
 
 
-const DND = ME.imports.lib.dnd;
+const DND  = ME.imports.lib.dnd;
+const MISC = ME.imports.lib.misc_utils;
 
 
 const G = ME.imports.sections.todo.GLOBAL;
@@ -199,10 +200,10 @@ let SortItem = new Lang.Class({
         // listen
         //
         this.label.connect('enter-event', () => {
-            global.screen.set_cursor(Meta.Cursor.MOVE_OR_RESIZE_WINDOW);
+            MISC.global_wrapper.display.set_cursor(Meta.Cursor.MOVE_OR_RESIZE_WINDOW);
         });
         this.label.connect('leave-event', () => {
-            global.screen.set_cursor(Meta.Cursor.DEFAULT);
+            MISC.global_wrapper.display.set_cursor(Meta.Cursor.DEFAULT);
         });
         this.delegate.sigm.connect_press(this.sort_icon, Clutter.BUTTON_PRIMARY, true, () => {
             if (this.sort_order === G.SortOrder.ASCENDING) {
