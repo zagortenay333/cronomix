@@ -900,9 +900,7 @@ const TimerPresetEditor = new Lang.Class({
         //
         // container
         //
-        this.actor = new St.Bin({ x_fill: true, style_class: 'view-box' });
-        this.content_box = new St.BoxLayout({ x_expand: true, vertical: true, style_class: 'view-box-content' });
-        this.actor.add_actor(this.content_box);
+        this.actor = new St.BoxLayout({ vertical: true, style_class: 'view-box-content' });
 
 
         //
@@ -910,7 +908,7 @@ const TimerPresetEditor = new Lang.Class({
         //
         {
             let box = new St.BoxLayout({ style_class: 'row numpicker-box' });
-            this.content_box.add_actor(box);
+            this.actor.add_actor(box);
 
             let label = new St.Label({ x_expand: true, y_align: Clutter.ActorAlign.CENTER });
             box.add_child(label);
@@ -937,7 +935,7 @@ const TimerPresetEditor = new Lang.Class({
         // entry
         //
         this.entry_container = new St.BoxLayout({ x_expand: true, style_class: 'row entry-container' });
-        this.content_box.add_actor(this.entry_container);
+        this.actor.add_actor(this.entry_container);
 
         this.entry = new MULTIL_ENTRY.MultiLineEntry(_('Timer message...'), true);
         this.entry_container.add(this.entry.actor, {expand: true});
@@ -952,7 +950,7 @@ const TimerPresetEditor = new Lang.Class({
         // repeat sound checkbox
         //
         this.checkbox_item = new St.BoxLayout({ reactive: true, x_expand: true, style_class: 'row' });
-        this.content_box.add_actor(this.checkbox_item);
+        this.actor.add_actor(this.checkbox_item);
 
         this.checkbox_item.add_child(
             new St.Label({ text: _('Repeat notification sound?'), x_expand: true, y_align: Clutter.ActorAlign.CENTER }));
@@ -966,7 +964,7 @@ const TimerPresetEditor = new Lang.Class({
         // buttons
         //
         let btn_box = new St.BoxLayout({ style_class: 'row btn-box' });
-        this.content_box.add(btn_box, {expand: true});
+        this.actor.add(btn_box, {expand: true});
 
         if (is_deletable) {
             this.button_delete = new St.Button({ can_focus: true, label: _('Delete'), style_class: 'btn-delete button', x_expand: true });
