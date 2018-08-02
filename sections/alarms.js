@@ -85,6 +85,14 @@ var SectionMain = new Lang.Class({
         this.wallclock_str = ''; // time_str
 
 
+        // AlarmItem objects
+        this.alarm_items = new Set();
+
+        // @key: alarm obj
+        // @val: time_str
+        this.snoozed_alarms = new Map();
+
+
         try {
             this.cache_file = Gio.file_new_for_path(CACHE_FILE);
 
@@ -118,15 +126,6 @@ var SectionMain = new Lang.Class({
             logError(e);
             return;
         }
-
-
-        // AlarmItem objects
-        this.alarm_items = new Set();
-
-
-        // @key: alarm obj
-        // @val: time_str
-        this.snoozed_alarms = new Map();
 
 
         //
@@ -198,7 +197,7 @@ var SectionMain = new Lang.Class({
     },
 
     disable_section: function () {
-        for (let [it,] of this.alarm_items) it.close(),
+        for (let it of this.alarm_items) it.close();
         this.sigm.clear();
         this.keym.clear();
         this.snoozed_alarms.clear();
