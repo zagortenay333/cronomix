@@ -57,6 +57,14 @@ const NotifStyle = {
 };
 
 
+const PanelMode = {
+    ICON      : 0,
+    TEXT      : 1,
+    ICON_TEXT : 2,
+    DYNAMIC   : 3,
+};
+
+
 // =====================================================================
 // @@@ Main
 //
@@ -280,6 +288,8 @@ var SectionMain = new Lang.Class({
 
     // @time: int (seconds)
     start: function (time) {
+        this.timer_state = TimerState.RUNNING;
+
         if (this.tic_mainloop_id) {
             Mainloop.source_remove(this.tic_mainloop_id);
             this.tic_mainloop_id = null;
@@ -288,23 +298,26 @@ var SectionMain = new Lang.Class({
         this.sound_player.stop();
         if (this.notif_source) this.notif_source.destroyNonResidentNotifications();
 
-        this.timer_state = TimerState.RUNNING;
-
         if (time) time *= 1000000;
         else      time  = this.clock;
 
         this.end_time = GLib.get_monotonic_time() + time;
 
         this.fullscreen.on_timer_started();
+        this.start_pause_icon.show();
         this.start_pause_icon.icon_name   = 'timepp-pause-symbolic';
         this.start_pause_icon.style_class = 'pause-icon';
-        this.start_pause_icon.show();
         this.panel_item.actor.add_style_class_name('on');
+
+        if (this.settings.get_enum('timer-panel-mode') === PanelMode.DYNAMIC)
+            this.panel_item.set_mode('icon_text');
 
         this._tic();
     },
 
     stop: function () {
+        this.timer_state = TimerState.STOPPED;
+
         this.clock = this.end_time - GLib.get_monotonic_time();
 
         if (this.tic_mainloop_id) {
@@ -313,13 +326,17 @@ var SectionMain = new Lang.Class({
         }
 
         this.fullscreen.on_timer_stopped();
-        this.timer_state = TimerState.STOPPED;
         this.start_pause_icon.icon_name   = 'timepp-start-symbolic';
         this.start_pause_icon.style_class = 'start-icon';
         this.panel_item.actor.remove_style_class_name('on');
+
+        if (this.settings.get_enum('timer-panel-mode') === PanelMode.DYNAMIC)
+            this.panel_item.set_mode('icon');
     },
 
     reset: function () {
+        this.timer_state = TimerState.OFF;
+
         if (this.tic_mainloop_id) {
             Mainloop.source_remove(this.tic_mainloop_id);
             this.tic_mainloop_id = null;
@@ -327,10 +344,12 @@ var SectionMain = new Lang.Class({
 
         this.slider.setValue(0);
         this.fullscreen.on_timer_off();
-        this.timer_state = TimerState.OFF;
         this.header_label.text = _('Timer');
         this.start_pause_icon.hide();
         this.panel_item.actor.remove_style_class_name('on');
+
+        if (this.settings.get_enum('timer-panel-mode') === PanelMode.DYNAMIC)
+            this.panel_item.set_mode('icon');
     },
 
     _on_timer_expired: function () {
@@ -368,8 +387,7 @@ var SectionMain = new Lang.Class({
                 Math.floor(time % 3600 / 60),
                 time % 60
             );
-        }
-        else {
+        } else {
             if (time % 3600 !== 0) time += 60;
 
             txt = "%02d:%02d".format(
@@ -397,8 +415,7 @@ var SectionMain = new Lang.Class({
     slider_released: function () {
         if (this.clock < 1000000) {
             this.reset();
-        }
-        else {
+        } else {
             this.start_from_preset(this.cache.default_preset, Math.round(this.clock / 1000000));
             this.start();
             this._store_cache();
@@ -406,7 +423,10 @@ var SectionMain = new Lang.Class({
     },
 
     slider_changed: function (slider, value) {
-        this.stop();
+        if (this.tic_mainloop_id) {
+            Mainloop.source_remove(this.tic_mainloop_id);
+            this.tic_mainloop_id = null;
+        }
 
         if (value < 1) {
             // Make rate of change of the timer duration an exponential curve.
@@ -423,15 +443,13 @@ var SectionMain = new Lang.Class({
                 else if (value < .5)  step = 30;
                 else if (value < .8)  step = 60;
                 else                  step = 3600;
-            }
-            else {
+            } else {
                 if      (value < .7)  step = 59;
                 else if (value < .9)  step = 1800;
                 else                  step = 3600;
             }
 
             this.clock = Math.floor(y * TIMER_MAX_DURATION / step) * step;
-
             this._update_time_display();
         }
         else { // slider has been dragged past the limit
@@ -536,12 +554,20 @@ var SectionMain = new Lang.Class({
     },
 
     _toggle_panel_item_mode: function () {
-        if (this.settings.get_enum('timer-panel-mode') === 0)
+        switch (this.settings.get_enum('timer-panel-mode')) {
+          case PanelMode.ICON:
             this.panel_item.set_mode('icon');
-        else if (this.settings.get_enum('timer-panel-mode') === 1)
+            break;
+          case PanelMode.TEXT:
             this.panel_item.set_mode('text');
-        else
+            break;
+          case PanelMode.ICON_TEXT:
             this.panel_item.set_mode('icon_text');
+            break;
+          case PanelMode.DYNAMIC:
+            if (this.timer_state === TimerState.RUNNING) this.panel_item.set_mode('icon_text');
+            else                                         this.panel_item.set_mode('icon');
+        }
     },
 
     highlight_tokens: function (text) {

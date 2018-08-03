@@ -600,6 +600,7 @@
                                               <item translatable="yes">Icon only</item>
                                               <item translatable="yes">Text only</item>
                                               <item translatable="yes">Icon and Text</item>
+                                              <item translatable="yes">Dynamic</item>
                                             </items>
                                           </object>
                                           <packing>
@@ -1110,6 +1111,7 @@ F3</property>
                                               <item translatable="yes">Icon only</item>
                                               <item translatable="yes">Text only</item>
                                               <item translatable="yes">Icon and Text</item>
+                                              <item translatable="yes">Dynamic</item>
                                             </items>
                                           </object>
                                           <packing>
@@ -1453,6 +1455,7 @@ F3</property>
                                               <item translatable="yes">Icon only</item>
                                               <item translatable="yes">Text only</item>
                                               <item translatable="yes">Icon and Text</item>
+                                              <item translatable="yes">Dynamic</item>
                                             </items>
                                           </object>
                                           <packing>

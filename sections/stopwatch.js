@@ -36,15 +36,25 @@ const StopwatchState = {
     RESET   : 'RESET',
 };
 
+
 const ClockFormat = {
     H_M      : 0,
     H_M_S    : 1,
     H_M_S_CS : 2,
 };
 
+
 const NotifStyle = {
     STANDARD   : 0,
     FULLSCREEN : 1,
+};
+
+
+const PanelMode = {
+    ICON      : 0,
+    TEXT      : 1,
+    ICON_TEXT : 2,
+    DYNAMIC   : 3,
 };
 
 
@@ -72,7 +82,7 @@ var SectionMain = new Lang.Class({
         this.tic_mainloop_id = null;
         this.time_backup_mainloop_id = null;
 
-        this.state = StopwatchState.RESET;
+        this.stopwatch_state = StopwatchState.RESET;
 
         {
             let [,xml,] = Gio.file_new_for_path(IFACE).load_contents(null);
@@ -108,8 +118,7 @@ var SectionMain = new Lang.Class({
                     laps           : [],
                 };
             }
-        }
-        catch (e) {
+        } catch (e) {
             logError(e);
             return;
         }
@@ -134,18 +143,17 @@ var SectionMain = new Lang.Class({
         this._toggle_panel_mode();
 
         switch (this.clock_format) {
-            case ClockFormat.H_M:
-                this.panel_item.set_label('00:00');
-                this.fullscreen.set_banner_text('00:00')
-                break;
-            case ClockFormat.H_M_S:
-                this.panel_item.set_label('00:00:00');
-                this.fullscreen.set_banner_text('00:00:00')
-                break;
-            case ClockFormat.H_M_S_CS:
-                this.panel_item.set_label('00:00:00.00');
-                this.fullscreen.set_banner_text('00:00:00.00')
-                break;
+          case ClockFormat.H_M:
+            this.panel_item.set_label('00:00');
+            this.fullscreen.set_banner_text('00:00')
+            break;
+          case ClockFormat.H_M_S:
+            this.panel_item.set_label('00:00:00');
+            this.fullscreen.set_banner_text('00:00:00')
+            break;
+          case ClockFormat.H_M_S_CS:
+            this.panel_item.set_label('00:00:00.00');
+            this.fullscreen.set_banner_text('00:00:00.00')
         }
 
 
@@ -220,11 +228,11 @@ var SectionMain = new Lang.Class({
         });
         this.sigm.connect(this.settings, 'changed::stopwatch-panel-mode', () => this._toggle_panel_mode());
         this.sigm.connect(this.panel_item, 'middle-click', () => this.stopwatch_toggle());
-        this.sigm.connect_press(this.fullscreen_icon, Clutter.BUTTON_PRIMARY, true, () => this.show_fullscreen());
-        this.sigm.connect_press(this.button_start, Clutter.BUTTON_PRIMARY, true, () => this.start());
-        this.sigm.connect_press(this.button_reset, Clutter.BUTTON_PRIMARY, true, () => this.reset());
-        this.sigm.connect_press(this.button_stop, Clutter.BUTTON_PRIMARY, true, () => this.stop());
-        this.sigm.connect_press(this.button_lap, Clutter.BUTTON_PRIMARY, true, () => this.lap());
+        this.sigm.connect_release(this.fullscreen_icon, Clutter.BUTTON_PRIMARY, true, () => this.show_fullscreen());
+        this.sigm.connect_release(this.button_start, Clutter.BUTTON_PRIMARY, true, () => this.start());
+        this.sigm.connect_release(this.button_reset, Clutter.BUTTON_PRIMARY, true, () => this.reset());
+        this.sigm.connect_release(this.button_stop, Clutter.BUTTON_PRIMARY, true, () => this.stop());
+        this.sigm.connect_release(this.button_lap, Clutter.BUTTON_PRIMARY, true, () => this.lap());
 
 
         //
@@ -233,7 +241,7 @@ var SectionMain = new Lang.Class({
         if (this.cache.time > 0) {
             this._update_laps();
             this._update_time_display();
-            this.state = StopwatchState.STOPPED;
+            this.stopwatch_state = StopwatchState.STOPPED;
         }
     },
 
@@ -243,7 +251,7 @@ var SectionMain = new Lang.Class({
             this.time_backup_mainloop_id = null;
         }
 
-        if (this.state === StopwatchState.RUNNING) this.stop();
+        if (this.stopwatch_state === StopwatchState.RUNNING) this.stop();
         this.dbus_impl.unexport();
         this._store_cache();
         this.sigm.clear();
@@ -267,14 +275,17 @@ var SectionMain = new Lang.Class({
 
     start: function () {
         this.start_time = GLib.get_monotonic_time() - this.cache.time;
+        this.stopwatch_state = StopwatchState.RUNNING;
 
         if (!this.fullscreen.is_open && this.actor.visible)
             this.button_stop.grab_key_focus();
 
-        this.state = StopwatchState.RUNNING;
         this._toggle_buttons();
         this._panel_item_UI_update();
         this.fullscreen.on_timer_started();
+
+        if (this.settings.get_enum('stopwatch-panel-mode') === PanelMode.DYNAMIC)
+            this.panel_item.set_mode('icon_text');
 
         if (! this.time_backup_mainloop_id) this._periodic_time_backup();
 
@@ -283,8 +294,8 @@ var SectionMain = new Lang.Class({
     },
 
     stop: function () {
-        if (this.start_time)
-            this.cache.time = GLib.get_monotonic_time() - this.start_time;
+        if (this.start_time) this.cache.time = GLib.get_monotonic_time() - this.start_time;
+        this.stopwatch_state = StopwatchState.STOPPED;
 
         if (this.tic_mainloop_id) {
             Mainloop.source_remove(this.tic_mainloop_id);
@@ -301,14 +312,18 @@ var SectionMain = new Lang.Class({
         if (!this.fullscreen.is_open && this.actor.visible)
             this.button_start.grab_key_focus();
 
-        this.state = StopwatchState.STOPPED;
         this._panel_item_UI_update();
         this._toggle_buttons();
+
+        if (this.settings.get_enum('stopwatch-panel-mode') === PanelMode.DYNAMIC)
+            this.panel_item.set_mode('icon');
 
         this._store_cache();
     },
 
     reset: function () {
+        this.stopwatch_state = StopwatchState.RESET;
+
         if (this.tic_mainloop_id) {
             Mainloop.source_remove(this.tic_mainloop_id);
             this.tic_mainloop_id = null;
@@ -324,19 +339,23 @@ var SectionMain = new Lang.Class({
         if (!this.fullscreen.is_open && this.actor.visible)
             this.button_start.grab_key_focus();
 
-        this.state = StopwatchState.RESET;
         this.cache.laps = [];
         this.cache.time = 0;
-        this._store_cache();
+        this._destroy_laps();
+
         this._update_time_display();
         this._toggle_buttons();
         this._panel_item_UI_update();
-        this._destroy_laps();
         this.header_label.text = _('Stopwatch');
+
+        if (this.settings.get_enum('stopwatch-panel-mode') === PanelMode.DYNAMIC)
+            this.panel_item.set_mode('icon');
+
+        this._store_cache();
     },
 
     stopwatch_toggle: function () {
-        if (this.state === StopwatchState.RUNNING)
+        if (this.stopwatch_state === StopwatchState.RUNNING)
             this.stop();
         else
             this.start();
@@ -348,14 +367,9 @@ var SectionMain = new Lang.Class({
         this._update_time_display();
 
         if (this.clock_format === ClockFormat.H_M_S_CS) {
-            this.tic_mainloop_id = Mainloop.timeout_add(10, () => {
-                this._tic();
-            });
-        }
-        else {
-            this.tic_mainloop_id = Mainloop.timeout_add_seconds(1, () => {
-                this._tic();
-            });
+            this.tic_mainloop_id = Mainloop.timeout_add(10, () => this._tic());
+        } else {
+            this.tic_mainloop_id = Mainloop.timeout_add_seconds(1, () => this._tic());
         }
     },
 
@@ -378,24 +392,24 @@ var SectionMain = new Lang.Class({
         let s   = t % 60;
 
         switch (this.clock_format) {
-            case ClockFormat.H_M:
-                return "%02d:%02d".format(h, m);
-            case ClockFormat.H_M_S:
-                return "%02d:%02d:%02d".format(h, m, s);
-            case ClockFormat.H_M_S_CS:
-                return "%02d:%02d:%02d.%02d".format(h, m, s, cs);
+          case ClockFormat.H_M:
+            return "%02d:%02d".format(h, m);
+          case ClockFormat.H_M_S:
+            return "%02d:%02d:%02d".format(h, m, s);
+          case ClockFormat.H_M_S_CS:
+            return "%02d:%02d:%02d.%02d".format(h, m, s, cs);
         }
     },
 
     _panel_item_UI_update: function () {
-        if (this.state === StopwatchState.RUNNING)
+        if (this.stopwatch_state === StopwatchState.RUNNING)
             this.panel_item.actor.add_style_class_name('on');
         else
             this.panel_item.actor.remove_style_class_name('on');
     },
 
     lap: function () {
-        if (this.state !== StopwatchState.RUNNING) return;
+        if (this.stopwatch_state !== StopwatchState.RUNNING) return;
 
         this.cache.laps.push(this._time_format_str());
         this._store_cache();
@@ -430,45 +444,44 @@ var SectionMain = new Lang.Class({
     },
 
     _toggle_buttons: function () {
-        switch (this.state) {
-            case StopwatchState.RESET:
-                this.button_reset.hide();
-                this.button_lap.hide();
-                this.button_start.show();
-                this.button_stop.hide();
-                this.button_start.add_style_pseudo_class('first-child');
-                this.button_start.add_style_pseudo_class('last-child');
-                this.fullscreen.button_reset.hide();
-                this.fullscreen.button_lap.hide();
-                this.fullscreen.button_start.show();
-                this.fullscreen.button_stop.hide();
-                this.fullscreen.button_start.add_style_pseudo_class('first-child');
-                this.fullscreen.button_start.add_style_pseudo_class('last-child');
-                break;
-            case StopwatchState.RUNNING:
-                this.button_reset.show();
-                this.button_lap.show();
-                this.button_start.hide();
-                this.button_stop.show();
-                this.fullscreen.button_reset.show();
-                this.fullscreen.button_lap.show();
-                this.fullscreen.button_start.hide();
-                this.fullscreen.button_stop.show();
-                break;
-            case StopwatchState.STOPPED:
-                this.button_reset.show();
-                this.button_lap.hide();
-                this.button_start.show();
-                this.button_stop.hide();
-                this.button_start.remove_style_pseudo_class('first-child');
-                this.button_start.add_style_pseudo_class('last-child');
-                this.fullscreen.button_reset.show();
-                this.fullscreen.button_lap.hide();
-                this.fullscreen.button_start.show();
-                this.fullscreen.button_stop.hide();
-                this.fullscreen.button_start.remove_style_pseudo_class('first-child');
-                this.fullscreen.button_start.add_style_pseudo_class('last-child');
-                break;
+        switch (this.stopwatch_state) {
+          case StopwatchState.RESET:
+            this.button_reset.hide();
+            this.button_lap.hide();
+            this.button_start.show();
+            this.button_stop.hide();
+            this.button_start.add_style_pseudo_class('first-child');
+            this.button_start.add_style_pseudo_class('last-child');
+            this.fullscreen.button_reset.hide();
+            this.fullscreen.button_lap.hide();
+            this.fullscreen.button_start.show();
+            this.fullscreen.button_stop.hide();
+            this.fullscreen.button_start.add_style_pseudo_class('first-child');
+            this.fullscreen.button_start.add_style_pseudo_class('last-child');
+            break;
+          case StopwatchState.RUNNING:
+            this.button_reset.show();
+            this.button_lap.show();
+            this.button_start.hide();
+            this.button_stop.show();
+            this.fullscreen.button_reset.show();
+            this.fullscreen.button_lap.show();
+            this.fullscreen.button_start.hide();
+            this.fullscreen.button_stop.show();
+            break;
+          case StopwatchState.STOPPED:
+            this.button_reset.show();
+            this.button_lap.hide();
+            this.button_start.show();
+            this.button_stop.hide();
+            this.button_start.remove_style_pseudo_class('first-child');
+            this.button_start.add_style_pseudo_class('last-child');
+            this.fullscreen.button_reset.show();
+            this.fullscreen.button_lap.hide();
+            this.fullscreen.button_start.show();
+            this.fullscreen.button_stop.hide();
+            this.fullscreen.button_start.remove_style_pseudo_class('first-child');
+            this.fullscreen.button_start.add_style_pseudo_class('last-child');
         }
     },
 
@@ -493,17 +506,27 @@ var SectionMain = new Lang.Class({
     },
 
     _toggle_panel_mode: function () {
-        if (this.settings.get_enum('stopwatch-panel-mode') === 0)
+        switch (this.settings.get_enum('stopwatch-panel-mode')) {
+          case PanelMode.ICON:
             this.panel_item.set_mode('icon');
-        else if (this.settings.get_enum('stopwatch-panel-mode') === 1)
+            break;
+          case PanelMode.TEXT:
             this.panel_item.set_mode('text');
-        else
+            break;
+          case PanelMode.ICON_TEXT:
             this.panel_item.set_mode('icon_text');
+            break;
+          case PanelMode.DYNAMIC:
+            if (this.stopwatch_state === StopwatchState.RUNNING)
+                this.panel_item.set_mode('icon_text');
+            else
+                this.panel_item.set_mode('icon');
+        }
     },
 
     // returns int (microseconds)
     get_time: function () {
-        if (this.state === StopwatchState.RUNNING)
+        if (this.stopwatch_state === StopwatchState.RUNNING)
             return GLib.get_monotonic_time() - this.start_time;
         else
             return this.cache.time;
@@ -589,20 +612,20 @@ const StopwatchFullscreen = new Lang.Class({
         });
         this.actor.connect('key-release-event', (_, event) => {
             switch (event.get_key_symbol()) {
-                case Clutter.KEY_space:
-                    this.delegate.stopwatch_toggle();
-                    return Clutter.EVENT_STOP;
-                case Clutter.KEY_l:
-                case Clutter.KEY_KP_Enter:
-                case Clutter.Return:
-                    this.delegate.lap();
-                    return Clutter.EVENT_STOP;
-                case Clutter.KEY_r:
-                case Clutter.KEY_BackSpace:
-                    this.delegate.reset();
-                    return Clutter.EVENT_STOP;
-                default:
-                    return Clutter.EVENT_PROPAGATE;
+              case Clutter.KEY_space:
+                this.delegate.stopwatch_toggle();
+                return Clutter.EVENT_STOP;
+              case Clutter.KEY_l:
+              case Clutter.KEY_KP_Enter:
+              case Clutter.Return:
+                this.delegate.lap();
+                return Clutter.EVENT_STOP;
+              case Clutter.KEY_r:
+              case Clutter.KEY_BackSpace:
+                this.delegate.reset();
+                return Clutter.EVENT_STOP;
+              default:
+                return Clutter.EVENT_PROPAGATE;
             }
         });
     },

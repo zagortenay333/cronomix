@@ -7,7 +7,15 @@
         <value value="2" nick="Right"/>
     </enum>
 
-    <enum id="org.gnome.shell.extensions.timepp.panel-mode">
+    <!-- timer, stopwatch, pomodoro -->
+    <enum id="org.gnome.shell.extensions.timepp.clocks-panel-mode">
+        <value value="0" nick="Icon"/>
+        <value value="1" nick="Text"/>
+        <value value="2" nick="Icon and Text"/>
+        <value value="3" nick="Dynamic"/>
+    </enum>
+
+    <enum id="org.gnome.shell.extensions.timepp.todo-panel-mode">
         <value value="0" nick="Icon"/>
         <value value="1" nick="Text"/>
         <value value="2" nick="Icon and Text"/>
@@ -67,7 +75,7 @@
             <default>false</default>
         </key>
 
-        <key name="timer-panel-mode" enum="org.gnome.shell.extensions.timepp.panel-mode">
+        <key name="timer-panel-mode" enum="org.gnome.shell.extensions.timepp.clocks-panel-mode">
             <default>"Icon and Text"</default>
         </key>
 
@@ -115,7 +123,7 @@
             <default>"h:m:s"</default>
         </key>
 
-        <key name="stopwatch-panel-mode" enum="org.gnome.shell.extensions.timepp.panel-mode">
+        <key name="stopwatch-panel-mode" enum="org.gnome.shell.extensions.timepp.clocks-panel-mode">
             <default>"Icon and Text"</default>
         </key>
 
@@ -143,7 +151,7 @@
             <default>false</default>
         </key>
 
-        <key name="pomodoro-panel-mode" enum="org.gnome.shell.extensions.timepp.panel-mode">
+        <key name="pomodoro-panel-mode" enum="org.gnome.shell.extensions.timepp.clocks-panel-mode">
             <default>"Icon and Text"</default>
         </key>
 
@@ -227,7 +235,7 @@
             <default>true</default>
         </key>
 
-        <key name="todo-panel-mode" enum="org.gnome.shell.extensions.timepp.panel-mode">
+        <key name="todo-panel-mode" enum="org.gnome.shell.extensions.timepp.todo-panel-mode">
             <default>"Icon and Text"</default>
         </key>
 

@@ -53,6 +53,14 @@ const NotifStyle = {
 };
 
 
+const PanelMode = {
+    ICON      : 0,
+    TEXT      : 1,
+    ICON_TEXT : 2,
+    DYNAMIC   : 3,
+};
+
+
 // =====================================================================
 // @@@ Main
 //
@@ -123,8 +131,7 @@ var SectionMain = new Lang.Class({
                     todo_task_id    : '',
                 };
             }
-        }
-        catch (e) {
+        } catch (e) {
             logError(e);
             return;
         }
@@ -310,7 +317,6 @@ var SectionMain = new Lang.Class({
     clear_pomo_counter: function () {
         this.cache.pomo_counter = 0;
         this.clock_label.text = '';
-
         this._store_cache();
     },
 
@@ -369,12 +375,13 @@ var SectionMain = new Lang.Class({
         this._update_phase_label();
         this._update_panel_item();
 
-        this.dbus_impl.emit_signal(
-            'pomo_state_changed', GLib.Variant.new('(s)', [this.pomo_state]));
+        if (this.settings.get_enum('pomodoro-panel-mode') === PanelMode.DYNAMIC)
+            this.panel_item.set_mode('icon');
+
+        this.dbus_impl.emit_signal('pomo_state_changed', GLib.Variant.new('(s)', [this.pomo_state]));
 
         if (this.cache.todo_task_id) {
-            this.ext.emit_to_sections(
-                'stop-time-tracking-by-id', this.section_name, this.cache.todo_task_id);
+            this.ext.emit_to_sections('stop-time-tracking-by-id', this.section_name, this.cache.todo_task_id);
         }
     },
 
@@ -384,33 +391,22 @@ var SectionMain = new Lang.Class({
 
     // @time: int (seconds)
     start_pomo: function (time) {
-        if (time) time *= 1000000;
-        else      time  = this.clock;
-
         if (this.tic_mainloop_id) {
             Mainloop.source_remove(this.tic_mainloop_id);
             this.tic_mainloop_id = null;
         }
 
+        if (time) time *= 1000000;
+        else      time  = this.clock;
+
+        this.pomo_state = PomoState.POMO;
+        this.end_time = GLib.get_monotonic_time() + time;
+
         this.sound_player.stop();
         if (this.notif_source) this.notif_source.destroyNonResidentNotifications();
 
-        this.pomo_state = PomoState.POMO;
-
-        this.dbus_impl.emit_signal(
-            'pomo_state_changed', GLib.Variant.new('(s)', [this.pomo_state]));
-
-        if (this.cache.todo_task_id) {
-            this.ext.emit_to_sections(
-                'start-time-tracking-by-id', this.section_name, this.cache.todo_task_id);
-        }
-
-        this.end_time = GLib.get_monotonic_time() + time;
-
         this._update_panel_item();
         this._update_phase_label();
-        this.fullscreen.on_start();
-
         this.button_continue.visible              = false;
         this.button_stop.visible                  = true;
         this.button_take_break.visible            = true;
@@ -420,11 +416,19 @@ var SectionMain = new Lang.Class({
         this.fullscreen.button_take_break.visible = true;
         this.fullscreen.button_new_pomo.visible   = true;
 
-        if (!this.fullscreen.is_open && this.actor.visible) {
+        if (this.settings.get_enum('pomodoro-panel-mode') === PanelMode.DYNAMIC)
+            this.panel_item.set_mode('icon_text');
+
+        if (!this.fullscreen.is_open && this.actor.visible)
             this.button_stop.grab_key_focus();
-        }
 
         this._tic();
+
+        this.fullscreen.on_start();
+        this.dbus_impl.emit_signal('pomo_state_changed', GLib.Variant.new('(s)', [this.pomo_state]));
+        if (this.cache.todo_task_id) {
+            this.ext.emit_to_sections('start-time-tracking-by-id', this.section_name, this.cache.todo_task_id);
+        }
     },
 
     take_break: function () {
@@ -433,13 +437,10 @@ var SectionMain = new Lang.Class({
             this.tic_mainloop_id = null;
         }
 
-        if (this.cache.pomo_counter &&
-            ((this.cache.pomo_counter % this.cache.long_break_rate) === 0)) {
-
+        if (this.cache.pomo_counter && (this.cache.pomo_counter % this.cache.long_break_rate) === 0) {
             this.pomo_state = PomoState.LONG_BREAK;
             this.clock      = this.cache.long_break * 1000000;
-        }
-        else {
+        } else {
             this.pomo_state = PomoState.SHORT_BREAK;
             this.clock      = this.cache.short_break * 1000000;
         }
@@ -462,15 +463,15 @@ var SectionMain = new Lang.Class({
         this.fullscreen.button_take_break.visible = false;
         this.fullscreen.button_new_pomo.visible   = true;
 
-        this.dbus_impl.emit_signal(
-            'pomo_state_changed', GLib.Variant.new('(s)', [this.pomo_state]));
+        if (this.settings.get_enum('pomodoro-panel-mode') === PanelMode.DYNAMIC)
+            this.panel_item.set_mode('icon_text');
 
-        if (this.cache.todo_task_id) {
-            this.ext.emit_to_sections(
-                'stop-time-tracking-by-id', this.section_name, this.cache.todo_task_id);
-        }
+        if (this.cache.todo_task_id)
+            this.ext.emit_to_sections('stop-time-tracking-by-id', this.section_name, this.cache.todo_task_id);
 
         this._tic();
+
+        this.dbus_impl.emit_signal('pomo_state_changed', GLib.Variant.new('(s)', [this.pomo_state]));
     },
 
     timer_toggle: function () {
@@ -492,11 +493,8 @@ var SectionMain = new Lang.Class({
                 Math.floor(time % 3600 / 60),
                 time % 60
             );
-        }
-        else {
-            if (time > 0 && time !== this.cache.pomo_duration) {
-                time += 60;
-            }
+        } else {
+            if (time > 0 && time !== this.cache.pomo_duration) time += 60;
 
             txt = "%02d:%02d".format(
                 Math.floor(time / 3600),
@@ -511,22 +509,22 @@ var SectionMain = new Lang.Class({
 
     _update_phase_label: function () {
         switch (this.pomo_state) {
-            case PomoState.POMO:
-                this.phase_label.text            = POMO_STARTED_MSG;
-                this.fullscreen.phase_label.text = POMO_STARTED_MSG;
-                break;
-            case PomoState.LONG_BREAK:
-                this.phase_label.text            = LONG_BREAK_MSG;
-                this.fullscreen.phase_label.text = LONG_BREAK_MSG;
-                break;
-            case PomoState.SHORT_BREAK:
-                this.phase_label.text            = SHORT_BREAK_MSG;
-                this.fullscreen.phase_label.text = SHORT_BREAK_MSG;
-                break;
-            case PomoState.STOPPED:
-                this.phase_label.text            = '';
-                this.fullscreen.phase_label.text = '';
-                break;
+          case PomoState.POMO:
+            this.phase_label.text            = POMO_STARTED_MSG;
+            this.fullscreen.phase_label.text = POMO_STARTED_MSG;
+            break;
+          case PomoState.LONG_BREAK:
+            this.phase_label.text            = LONG_BREAK_MSG;
+            this.fullscreen.phase_label.text = LONG_BREAK_MSG;
+            break;
+          case PomoState.SHORT_BREAK:
+            this.phase_label.text            = SHORT_BREAK_MSG;
+            this.fullscreen.phase_label.text = SHORT_BREAK_MSG;
+            break;
+          case PomoState.STOPPED:
+            this.phase_label.text            = '';
+            this.fullscreen.phase_label.text = '';
+            break;
         }
     },
 
@@ -573,23 +571,23 @@ var SectionMain = new Lang.Class({
         let do_play_sound, msg;
 
         switch (this.pomo_state) {
-            case PomoState.POMO:
-                msg = POMO_STARTED_MSG;
-                do_play_sound = this.settings.get_boolean('pomodoro-play-sound-pomo');
-                this.sound_player.set_sound_uri(this.settings.get_string('pomodoro-sound-file-path-pomo'));
-                break;
-            case PomoState.SHORT_BREAK:
-                msg = SHORT_BREAK_MSG;
-                do_play_sound = this.settings.get_boolean('pomodoro-play-sound-short-break');
-                this.sound_player.set_sound_uri(this.settings.get_string('pomodoro-sound-file-path-short-break'));
-                break;
-            case PomoState.LONG_BREAK:
-                msg = LONG_BREAK_MSG;
-                do_play_sound = this.settings.get_boolean('pomodoro-play-sound-long-break');
-                this.sound_player.set_sound_uri(this.settings.get_string('pomodoro-sound-file-path-long-break'));
-                break;
-            default:
-                return;
+          case PomoState.POMO:
+            msg = POMO_STARTED_MSG;
+            do_play_sound = this.settings.get_boolean('pomodoro-play-sound-pomo');
+            this.sound_player.set_sound_uri(this.settings.get_string('pomodoro-sound-file-path-pomo'));
+            break;
+          case PomoState.SHORT_BREAK:
+            msg = SHORT_BREAK_MSG;
+            do_play_sound = this.settings.get_boolean('pomodoro-play-sound-short-break');
+            this.sound_player.set_sound_uri(this.settings.get_string('pomodoro-sound-file-path-short-break'));
+            break;
+          case PomoState.LONG_BREAK:
+            msg = LONG_BREAK_MSG;
+            do_play_sound = this.settings.get_boolean('pomodoro-play-sound-long-break');
+            this.sound_player.set_sound_uri(this.settings.get_string('pomodoro-sound-file-path-long-break'));
+            break;
+          default:
+            return;
         }
 
         if (this.fullscreen.is_open) {
@@ -621,12 +619,22 @@ var SectionMain = new Lang.Class({
     },
 
     _toggle_panel_mode: function () {
-        if (this.settings.get_enum('pomodoro-panel-mode') === 0)
+        switch (this.settings.get_enum('pomodoro-panel-mode')) {
+          case PanelMode.ICON:
             this.panel_item.set_mode('icon');
-        else if (this.settings.get_enum('pomodoro-panel-mode') === 1)
+            break;
+          case PanelMode.TEXT:
             this.panel_item.set_mode('text');
-        else
+            break;
+          case PanelMode.ICON_TEXT:
             this.panel_item.set_mode('icon_text');
+            break;
+          case PanelMode.DYNAMIC:
+            if (this.pomo_state === PomoState.STOPPED)
+                this.panel_item.set_mode('icon');
+            else
+                this.panel_item.set_mode('icon_text');
+        }
     },
 });
 Signals.addSignalMethods(SectionMain.prototype);
@@ -884,11 +892,11 @@ const PomodoroFullscreen = new Lang.Class({
         });
         this.actor.connect('key-release-event', (_, event) => {
             switch (event.get_key_symbol()) {
-                case Clutter.KEY_space:
-                    this.delegate.timer_toggle();
-                    return Clutter.EVENT_STOP;
-                default:
-                    return Clutter.EVENT_PROPAGATE;
+              case Clutter.KEY_space:
+                this.delegate.timer_toggle();
+                return Clutter.EVENT_STOP;
+              default:
+                return Clutter.EVENT_PROPAGATE;
             }
         });
     },
@@ -900,15 +908,15 @@ const PomodoroFullscreen = new Lang.Class({
 
     on_start: function () {
         switch (this.delegate.pomo_state) {
-            case PomoState.POMO:
-                this.actor.style_class = this.default_style_class + ' pomo-running';
-                break;
-            case PomoState.LONG_BREAK:
-                this.actor.style_class = this.default_style_class + ' pomo-long-break';
-                break;
-            case PomoState.SHORT_BREAK:
-                this.actor.style_class = this.default_style_class + ' pomo-short-break';
-                break;
+          case PomoState.POMO:
+            this.actor.style_class = this.default_style_class + ' pomo-running';
+            break;
+          case PomoState.LONG_BREAK:
+            this.actor.style_class = this.default_style_class + ' pomo-long-break';
+            break;
+          case PomoState.SHORT_BREAK:
+            this.actor.style_class = this.default_style_class + ' pomo-short-break';
+            break;
         }
     },
 
@@ -924,14 +932,14 @@ const PomodoroFullscreen = new Lang.Class({
 
     on_break: function () {
         switch (this.delegate.pomo_state) {
-            case PomoState.LONG_BREAK:
-                this.actor.style_class = this.default_style_class + ' pomo-long-break';
-                this.phase_label.text  = LONG_BREAK_MSG;
-                break;
-            case PomoState.SHORT_BREAK:
-                this.actor.style_class = this.default_style_class + ' pomo-short-break';
-                this.phase_label.text  = SHORT_BREAK_MSG;
-                break;
+          case PomoState.LONG_BREAK:
+            this.actor.style_class = this.default_style_class + ' pomo-long-break';
+            this.phase_label.text  = LONG_BREAK_MSG;
+            break;
+          case PomoState.SHORT_BREAK:
+            this.actor.style_class = this.default_style_class + ' pomo-short-break';
+            this.phase_label.text  = SHORT_BREAK_MSG;
+            break;
         }
     },
 });
