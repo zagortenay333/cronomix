@@ -83,6 +83,7 @@ var ViewSort = new Lang.Class({
 
         }
 
+
         {
             let sep = new PopupMenu.PopupSeparatorMenuItem();
             sep.actor.add_style_class_name('timepp-separator');
@@ -119,9 +120,7 @@ var ViewSort = new Lang.Class({
         //
         this.sort_items_box.connect('allocation-changed', () => {
             this.scrollview.vscrollbar_policy = Gtk.PolicyType.NEVER;
-            if (this.ext.needs_scrollbar()) {
-                this.scrollview.vscrollbar_policy = Gtk.PolicyType.ALWAYS;
-            }
+            if (this.ext.needs_scrollbar()) this.scrollview.vscrollbar_policy = Gtk.PolicyType.ALWAYS;
         });
         this.button_ok.connect('clicked', () => this._on_ok_clicked());
         this.toggle_automatic_sort_btn.connect('clicked', () => this._on_toggle_clicked());
@@ -205,7 +204,7 @@ let SortItem = new Lang.Class({
         this.label.connect('leave-event', () => {
             MISC.global_wrapper.display.set_cursor(Meta.Cursor.DEFAULT);
         });
-        this.delegate.sigm.connect_release(this.sort_icon, Clutter.BUTTON_PRIMARY, true, () => {
+        this.delegate.sigm.connect_press(this.sort_icon, Clutter.BUTTON_PRIMARY, true, () => {
             if (this.sort_order === G.SortOrder.ASCENDING) {
                 this.sort_order = G.SortOrder.DESCENDING;
                 this.sort_icon.icon_name = 'timepp-sort-descending-symbolic';
