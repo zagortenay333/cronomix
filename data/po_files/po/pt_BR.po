@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: timepp@zagortenay 333\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-03 23:28+0200\n"
+"POT-Creation-Date: 2018-08-04 12:25+0200\n"
 "PO-Revision-Date: 2017-11-03 09:24-0200\n"
 "Last-Translator: Helder <he7d3r@gmail.com>\n"
 "Language-Team: Brazilian Portuguese\n"
@@ -381,7 +381,7 @@ msgstr ""
 #: data/po_files/../../sections/todo/view__stats.js:250
 #: data/po_files/../../sections/todo/view__filters.js:208
 #: data/po_files/../../sections/todo/view__file_switcher.js:104
-#: data/po_files/../../sections/todo/view__file_switcher.js:457
+#: data/po_files/../../sections/todo/view__file_switcher.js:453
 #: data/po_files/../../sections/pomodoro.js:773
 #: data/po_files/../../sections/alarms.js:575
 msgid "Ok"
@@ -394,7 +394,7 @@ msgstr "Tarefas"
 
 #: data/po_files/../../sections/todo/view__task_editor.js:204
 #: data/po_files/../../sections/todo/view__clear_tasks.js:95
-#: data/po_files/../../sections/todo/view__file_switcher.js:451
+#: data/po_files/../../sections/todo/view__file_switcher.js:447
 #: data/po_files/../../sections/alarms.js:566
 msgid "Delete"
 msgstr "Deletar"
@@ -408,7 +408,7 @@ msgstr "Arquivar"
 #: data/po_files/../../sections/todo/view__clear_tasks.js:98
 #: data/po_files/../../sections/todo/view__kanban_switcher.js:94
 #: data/po_files/../../sections/todo/view__file_switcher.js:100
-#: data/po_files/../../sections/todo/view__file_switcher.js:456
+#: data/po_files/../../sections/todo/view__file_switcher.js:452
 #: data/po_files/../../sections/pomodoro.js:774
 #: data/po_files/../../sections/alarms.js:574
 msgid "Cancel"
@@ -635,25 +635,25 @@ msgstr[1] "%d tarefas"
 msgid "Add File"
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__file_switcher.js:393
+#: data/po_files/../../sections/todo/view__file_switcher.js:389
 msgid "Unique name"
 msgstr "Nome único"
 
-#: data/po_files/../../sections/todo/view__file_switcher.js:404
+#: data/po_files/../../sections/todo/view__file_switcher.js:400
 msgid "Todo file"
 msgstr "Arquivo de tarefas pendentes"
 
-#: data/po_files/../../sections/todo/view__file_switcher.js:418
+#: data/po_files/../../sections/todo/view__file_switcher.js:414
 #, fuzzy
 msgid "Done file"
 msgstr "Arquivo de tarefas pendentes"
 
-#: data/po_files/../../sections/todo/view__file_switcher.js:418
-#: data/po_files/../../sections/todo/view__file_switcher.js:433
+#: data/po_files/../../sections/todo/view__file_switcher.js:414
+#: data/po_files/../../sections/todo/view__file_switcher.js:429
 msgid "optional"
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__file_switcher.js:433
+#: data/po_files/../../sections/todo/view__file_switcher.js:429
 #, fuzzy
 msgid "Time-tracker directory"
 msgstr "Diretório dos arquivos csv do gerenciador de tempo (opcional)"
@@ -730,13 +730,13 @@ msgstr "Adicionar um novo alarme"
 
 #. TRANSLATORS: %s is a time string in the format HH:MM (e.g., 13:44)
 #: data/po_files/../../sections/alarms.js:372
-#: data/po_files/../../sections/alarms.js:908
+#: data/po_files/../../sections/alarms.js:902
 #, javascript-format
 msgid "Alarm at %s"
 msgstr "Alarme às %s"
 
 #: data/po_files/../../sections/alarms.js:387
-#: data/po_files/../../sections/alarms.js:915
+#: data/po_files/../../sections/alarms.js:909
 msgid "Snooze"
 msgstr "Soneca"
 
@@ -765,7 +765,7 @@ msgstr "Mensagem do alerta..."
 msgid "Snoozed"
 msgstr "Soneca"
 
-#: data/po_files/../../sections/alarms.js:932
+#: data/po_files/../../sections/alarms.js:926
 #, javascript-format
 msgid "%d alarm went off!"
 msgid_plural "%d alarms went off!"
