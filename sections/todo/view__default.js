@@ -88,21 +88,21 @@ var ViewDefault = new Lang.Class({
         });
         this.actor.connect('event', (_, event) => {
             switch (event.get_key_symbol()) {
-                case Clutter.KEY_slash:
-                    this.delegate.show_view__search();
-                    break;
-                case Clutter.KEY_f:
-                    this.delegate.show_view__file_switcher();
-                    break;
-                case Clutter.KEY_i:
-                    this.delegate.show_view__task_editor();
-                    break;
-                case Clutter.KEY_k:
-                    this.delegate.show_view__kanban_switcher();
-                    break;
-                case Clutter.KEY_s:
-                    this.delegate.show_view__sort();
-                    break;
+              case Clutter.KEY_slash:
+                this.delegate.show_view__search();
+                break;
+              case Clutter.KEY_f:
+                this.delegate.show_view__file_switcher();
+                break;
+              case Clutter.KEY_i:
+                this.delegate.show_view__task_editor();
+                break;
+              case Clutter.KEY_k:
+                this.delegate.show_view__kanban_switcher();
+                break;
+              case Clutter.KEY_s:
+                this.delegate.show_view__sort();
+                break;
             }
         });
 
@@ -658,12 +658,12 @@ var KanbanColumn = new Lang.Class({
         if (this.owner.kanban_columns.size < 2) return Clutter.EVENT_STOP;
 
         switch (event.get_source()) {
-            case this.actor:
-            case this.header:
-            case this.tasks_scroll:
-                return Clutter.EVENT_PROPAGATE;
-            default:
-                return Clutter.EVENT_STOP;
+          case this.actor:
+          case this.header:
+          case this.tasks_scroll:
+            return Clutter.EVENT_PROPAGATE;
+          default:
+            return Clutter.EVENT_STOP;
         }
     },
 

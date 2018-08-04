@@ -269,13 +269,13 @@ var ViewTaskEditor = new Lang.Class({
         this.button_cancel.connect('clicked', () => this.emit('cancel'));
         this.actor.connect('key-release-event', (_, event) => {
             switch (event.get_key_symbol()) {
-                case Clutter.KEY_KP_Enter:
-                case Clutter.Return:
-                    if (event.get_state() === Clutter.ModifierType.CONTROL_MASK) this._emit_ok();
-                    break;
-                case Clutter.KEY_f:
-                    if (event.get_state() === Clutter.ModifierType.CONTROL_MASK) this._find_file();
-                    break;
+              case Clutter.KEY_KP_Enter:
+              case Clutter.Return:
+                if (event.get_state() === Clutter.ModifierType.CONTROL_MASK) this._emit_ok();
+                break;
+              case Clutter.KEY_f:
+                if (event.get_state() === Clutter.ModifierType.CONTROL_MASK) this._find_file();
+                break;
             }
         });
     },

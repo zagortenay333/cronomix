@@ -307,42 +307,38 @@ var ViewFileSwitcher = new Lang.Class({
 
     _on_file_item_event: function (item, event) {
         switch (event.type()) {
-            case Clutter.EventType.ENTER: {
-                let related = event.get_related();
-                if (related && !item.actor.contains(related)) {
-                    for (let it of item.icon_box.get_children()) it.show();
-                }
-                break;
+          case Clutter.EventType.ENTER: {
+            let related = event.get_related();
+            if (related && !item.actor.contains(related)) {
+                for (let it of item.icon_box.get_children()) it.show();
             }
+          } break;
 
-            case Clutter.EventType.LEAVE: {
-                let related = event.get_related();
-                if (!item.header.contains(global.stage.get_key_focus()) && related && !item.actor.contains(related)) {
+          case Clutter.EventType.LEAVE: {
+            let related = event.get_related();
+            if (!item.header.contains(global.stage.get_key_focus()) && related && !item.actor.contains(related)) {
+                for (let it of item.icon_box.get_children()) it.hide();
+                item.check_icon.visible = item.active;
+                item.actor.can_focus = true;
+            }
+          } break;
+
+          case Clutter.EventType.KEY_RELEASE: {
+            for (let it of item.icon_box.get_children()) it.show();
+            if (!item.header.contains(global.stage.get_key_focus())) item.icon_box.get_first_child().grab_key_focus();
+            MISC_UTILS.scroll_to_item(this.file_items_scrollview, this.file_items_scrollbox, item.actor);
+            item.actor.can_focus = false;
+          } break;
+
+          case Clutter.EventType.KEY_PRESS: {
+            Mainloop.idle_add(() => {
+                if (item.icon_box && !item.header.contains(global.stage.get_key_focus())) {
+                    item.actor.can_focus = true;
                     for (let it of item.icon_box.get_children()) it.hide();
                     item.check_icon.visible = item.active;
-                    item.actor.can_focus = true;
                 }
-                break;
-            }
-
-            case Clutter.EventType.KEY_RELEASE: {
-                for (let it of item.icon_box.get_children()) it.show();
-                if (!item.header.contains(global.stage.get_key_focus())) item.icon_box.get_first_child().grab_key_focus();
-                MISC_UTILS.scroll_to_item(this.file_items_scrollview, this.file_items_scrollbox, item.actor);
-                item.actor.can_focus = false;
-                break;
-            }
-
-            case Clutter.EventType.KEY_PRESS: {
-                Mainloop.idle_add(() => {
-                    if (item.icon_box && !item.header.contains(global.stage.get_key_focus())) {
-                        item.actor.can_focus = true;
-                        for (let it of item.icon_box.get_children()) it.hide();
-                        item.check_icon.visible = item.active;
-                    }
-                });
-                break;
-            }
+            });
+          } break;
         }
     },
 

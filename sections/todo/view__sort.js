@@ -205,7 +205,7 @@ let SortItem = new Lang.Class({
         this.label.connect('leave-event', () => {
             MISC.global_wrapper.display.set_cursor(Meta.Cursor.DEFAULT);
         });
-        this.delegate.sigm.connect_press(this.sort_icon, Clutter.BUTTON_PRIMARY, true, () => {
+        this.delegate.sigm.connect_release(this.sort_icon, Clutter.BUTTON_PRIMARY, true, () => {
             if (this.sort_order === G.SortOrder.ASCENDING) {
                 this.sort_order = G.SortOrder.DESCENDING;
                 this.sort_icon.icon_name = 'timepp-sort-descending-symbolic';
@@ -221,8 +221,9 @@ let SortItem = new Lang.Class({
             let i        = 0;
             let children = this.actor_parent.get_children();
 
-            for (; i < children.length; i++)
+            for (; i < children.length; i++) {
                 if (children[i] === this.actor) break;
+            }
 
             if (event.get_key_symbol() === Clutter.KEY_Up && i > 0) {
                 this.actor_parent.set_child_at_index(this.actor, --i);

@@ -385,12 +385,12 @@ var StatsView = new Lang.Class({
         });
         this.actor.connect('key-press-event', (_, event) => {
             switch (event.get_key_symbol()) {
-                case Clutter.KEY_f:
-                case Clutter.KEY_slash:
-                    this.show_mode__search();
-                    return Clutter.EVENT_STOP;
-                default:
-                    return Clutter.EVENT_PROPAGATE;
+              case Clutter.KEY_f:
+              case Clutter.KEY_slash:
+                this.show_mode__search();
+                return Clutter.EVENT_STOP;
+              default:
+                return Clutter.EVENT_PROPAGATE;
             }
         });
         this.global_mode_icon.connect('clicked', () => {

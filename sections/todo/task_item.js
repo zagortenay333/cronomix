@@ -989,77 +989,77 @@ var TaskItem = new Lang.Class({
 
     _on_event: function (actor, event) {
         switch (event.type()) {
-            case Clutter.EventType.ENTER: {
-                let related = event.get_related();
+          case Clutter.EventType.ENTER: {
+            let related = event.get_related();
 
-                if (related && !this.actor.contains(related))
-                    this.show_header_icons();
-
-                if (this.prio_label.has_pointer)
-                    MISC.global_wrapper.display.set_cursor(Meta.Cursor.POINTING_HAND);
-            } break;
-
-            case Clutter.EventType.LEAVE: {
-                // related is the new actor we hovered over with the mouse
-                let related = event.get_related();
-
-                if (!this.header.contains(global.stage.get_key_focus()) &&
-                    related &&
-                    !this.actor.contains(related)) {
-
-                    this.hide_header_icons();
-                }
-
-                if (this.finish_scrolling_priority)
-                    this._finish_scrolling_priority();
-
-                MISC.global_wrapper.display.set_cursor(Meta.Cursor.DEFAULT);
-            } break;
-
-            case Clutter.EventType.KEY_RELEASE: {
+            if (related && !this.actor.contains(related))
                 this.show_header_icons();
-                if (this.actor_scrollview) this.scroll_into_view();
-                this.has_focus = true;
-            } break;
 
-            case Clutter.EventType.KEY_PRESS: {
-                if (this.has_focus) {
-                    if (event.get_key_symbol() === Clutter.KEY_e)
-                        this.delegate.show_view__task_editor(this);
+            if (this.prio_label.has_pointer)
+                MISC.global_wrapper.display.set_cursor(Meta.Cursor.POINTING_HAND);
+          } break;
 
-                    Mainloop.timeout_add(0, () => {
-                        if (! this.header.contains(global.stage.get_key_focus())) {
-                            this.hide_header_icons();
-                            this.has_focus = false;
-                        }
-                    });
-                } else if (this.actor_scrollview) {
-                    this.scroll_into_view();
-                }
-            } break;
+          case Clutter.EventType.LEAVE: {
+            // related is the new actor we hovered over with the mouse
+            let related = event.get_related();
 
-            case Clutter.EventType.BUTTON_RELEASE: {
-                if (this.prio_label.has_pointer) {
-                    this.delegate.show_view__search(this.prio_label.text);
-                } else if (this.msg.has_pointer) {
-                    if (! this.current_keyword) break;
+            if (!this.header.contains(global.stage.get_key_focus()) &&
+                related &&
+                !this.actor.contains(related)) {
 
-                    if (REG.URL.test(this.current_keyword)) {
-                        MISC.open_web_uri(this.current_keyword);
-                    } else if (REG.FILE_PATH.test(this.current_keyword)) {
-                        MISC.open_file_path(this.current_keyword);
-                    } else {
-                        this.delegate.show_view__search(this.current_keyword);
+                this.hide_header_icons();
+            }
+
+            if (this.finish_scrolling_priority)
+                this._finish_scrolling_priority();
+
+            MISC.global_wrapper.display.set_cursor(Meta.Cursor.DEFAULT);
+          } break;
+
+          case Clutter.EventType.KEY_RELEASE: {
+            this.show_header_icons();
+            if (this.actor_scrollview) this.scroll_into_view();
+            this.has_focus = true;
+          } break;
+
+          case Clutter.EventType.KEY_PRESS: {
+            if (this.has_focus) {
+                if (event.get_key_symbol() === Clutter.KEY_e)
+                    this.delegate.show_view__task_editor(this);
+
+                Mainloop.timeout_add(0, () => {
+                    if (! this.header.contains(global.stage.get_key_focus())) {
+                        this.hide_header_icons();
+                        this.has_focus = false;
                     }
-                }
-            } break;
+                });
+            } else if (this.actor_scrollview) {
+                this.scroll_into_view();
+            }
+          } break;
 
-            case Clutter.EventType.SCROLL: {
-                if (this.completion_checkbox.has_pointer && !this.completed) {
-                    this._scroll_task_priority(event.get_scroll_direction());
-                    return Clutter.EVENT_STOP;
+          case Clutter.EventType.BUTTON_RELEASE: {
+            if (this.prio_label.has_pointer) {
+                this.delegate.show_view__search(this.prio_label.text);
+            } else if (this.msg.has_pointer) {
+                if (! this.current_keyword) break;
+
+                if (REG.URL.test(this.current_keyword)) {
+                    MISC.open_web_uri(this.current_keyword);
+                } else if (REG.FILE_PATH.test(this.current_keyword)) {
+                    MISC.open_file_path(this.current_keyword);
+                } else {
+                    this.delegate.show_view__search(this.current_keyword);
                 }
-            } break;
+            }
+          } break;
+
+          case Clutter.EventType.SCROLL: {
+            if (this.completion_checkbox.has_pointer && !this.completed) {
+                this._scroll_task_priority(event.get_scroll_direction());
+                return Clutter.EVENT_STOP;
+            }
+          } break;
         }
     },
 });

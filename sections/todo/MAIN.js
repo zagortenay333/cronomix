@@ -635,12 +635,12 @@ var SectionMain = new Lang.Class({
             if (i === len) return 0;
 
             switch (sort[i][0]) {
-                case G.SortType.PRIORITY:
-                    if (sort[i][1] === G.SortOrder.DESCENDING) return +(x > y) || +(x === y) - 1;
-                    else                                       return +(x < y) || +(x === y) - 1;
-                default:
-                    if (sort[i][1] === G.SortOrder.DESCENDING) return +(x < y) || +(x === y) - 1;
-                    else                                       return +(x > y) || +(x === y) - 1;
+              case G.SortType.PRIORITY:
+                if (sort[i][1] === G.SortOrder.DESCENDING) return +(x > y) || +(x === y) - 1;
+                else                                       return +(x < y) || +(x === y) - 1;
+              default:
+                if (sort[i][1] === G.SortOrder.DESCENDING) return +(x < y) || +(x === y) - 1;
+                else                                       return +(x > y) || +(x === y) - 1;
             }
         });
     },

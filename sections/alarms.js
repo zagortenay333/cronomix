@@ -186,7 +186,7 @@ var SectionMain = new Lang.Class({
         });
         this.sigm.connect(this.wallclock, 'notify::clock', () => this._tic());
         this.sigm.connect(this.fullscreen, 'monitor-changed', () => this.settings.set_int('alarms-fullscreen-monitor-pos', this.fullscreen.monitor));
-        this.sigm.connect_press(this.add_alarm_button, Clutter.BUTTON_PRIMARY, true, () => this.alarm_editor());
+        this.sigm.connect_release(this.add_alarm_button, Clutter.BUTTON_PRIMARY, true, () => this.alarm_editor());
 
 
         //
@@ -701,7 +701,7 @@ const AlarmItem = new Lang.Class({
         this.css_sig_id =
             this.ext.connect('custom-css-changed', () => this._on_custom_css_updated());
         this.toggle_bin.connect('clicked', () => this._on_toggle());
-        this.delegate.sigm.connect_press(this.edit_icon, Clutter.BUTTON_PRIMARY, true, () => this._on_edit());
+        this.delegate.sigm.connect_release(this.edit_icon, Clutter.BUTTON_PRIMARY, true, () => this._on_edit());
         this.actor.connect('enter-event',  () => this.edit_icon.show());
         this.actor.connect('event', (actor, event) => this._on_event(actor, event));
     },
@@ -782,32 +782,26 @@ const AlarmItem = new Lang.Class({
 
     _on_event: function (actor, event) {
         switch (event.type()) {
-            case Clutter.EventType.ENTER: {
-                this.edit_icon.show();
-                break;
-            }
+          case Clutter.EventType.ENTER: {
+            this.edit_icon.show();
+          } break;
 
-            case Clutter.EventType.LEAVE: {
+          case Clutter.EventType.LEAVE: {
+            if (! this.header.contains(global.stage.get_key_focus()))
+                this.edit_icon.hide();
+          } break;
+
+          case Clutter.EventType.KEY_RELEASE: {
+            this.edit_icon.show();
+            MISC_UTILS.scroll_to_item(this.delegate.alarms_scroll, this.delegate.alarms_scroll_content, actor);
+          } break;
+
+          case Clutter.EventType.KEY_PRESS: {
+            Mainloop.idle_add(() => {
                 if (! this.header.contains(global.stage.get_key_focus()))
                     this.edit_icon.hide();
-                break;
-            }
-
-            case Clutter.EventType.KEY_RELEASE: {
-                this.edit_icon.show();
-                MISC_UTILS.scroll_to_item(this.delegate.alarms_scroll,
-                                          this.delegate.alarms_scroll_content,
-                                          actor);
-                break;
-            }
-
-            case Clutter.EventType.KEY_PRESS: {
-                Mainloop.idle_add(() => {
-                    if (! this.header.contains(global.stage.get_key_focus()))
-                        this.edit_icon.hide();
-                });
-                break;
-            }
+            });
+          } break;
         }
     },
 

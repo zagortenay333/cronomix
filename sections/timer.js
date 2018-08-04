@@ -224,9 +224,9 @@ var SectionMain = new Lang.Class({
         this.sigm.connect(this.settings, 'changed::timer-show-seconds', () => this._update_time_display());
         this.sigm.connect(this.settings, 'changed::timer-panel-mode', () => this._toggle_panel_item_mode());
         this.sigm.connect(this.panel_item, 'middle-click', () => this.toggle_timer());
-        this.sigm.connect_press(this.start_pause_icon, Clutter.BUTTON_PRIMARY, true, () => this.toggle_timer());
-        this.sigm.connect_press(this.fullscreen_icon, Clutter.BUTTON_PRIMARY, true, () => this.show_fullscreen());
-        this.sigm.connect_press(this.settings_icon, Clutter.BUTTON_PRIMARY, true, () => this._show_presets());
+        this.sigm.connect_release(this.start_pause_icon, Clutter.BUTTON_PRIMARY, true, () => this.toggle_timer());
+        this.sigm.connect_release(this.fullscreen_icon, Clutter.BUTTON_PRIMARY, true, () => this.show_fullscreen());
+        this.sigm.connect_release(this.settings_icon, Clutter.BUTTON_PRIMARY, true, () => this._show_presets());
         this.sigm.connect(this.slider, 'value-changed', (slider, value) => this.slider_changed(slider, value));
         this.sigm.connect(this.slider, 'drag-end', () => this.slider_released());
         this.sigm.connect(this.slider.actor, 'scroll-event', () => this.slider_released());
@@ -843,10 +843,10 @@ const TimerPresetsView = new Lang.Class({
 
 
         // listen
-        this.delegate.sigm.connect_press(start_icon, Clutter.BUTTON_PRIMARY, true, () => {
+        this.delegate.sigm.connect_release(start_icon, Clutter.BUTTON_PRIMARY, true, () => {
             this.emit('start-timer', preset);
         });
-        this.delegate.sigm.connect_press(edit_icon, Clutter.BUTTON_PRIMARY, true, () => {
+        this.delegate.sigm.connect_release(edit_icon, Clutter.BUTTON_PRIMARY, true, () => {
             Main.panel.menuManager.ignoreRelease();
             this._show_preset_editor(item);
         });

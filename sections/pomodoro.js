@@ -225,12 +225,12 @@ var SectionMain = new Lang.Class({
         this.sigm.connect(this.settings, 'changed::pomodoro-show-seconds', () => this._update_time_display());
         this.sigm.connect(this.settings, 'changed::pomodoro-panel-mode', () => this._toggle_panel_mode());
         this.sigm.connect(this.panel_item, 'middle-click', () => this.timer_toggle());
-        this.sigm.connect_press(this.settings_icon, Clutter.BUTTON_PRIMARY, true, () => this._show_settings());
-        this.sigm.connect_press(this.fullscreen_icon, Clutter.BUTTON_PRIMARY, true, () => this.show_fullscreen());
-        this.sigm.connect_press(this.button_continue, Clutter.BUTTON_PRIMARY, true, () => this.start_pomo());
-        this.sigm.connect_press(this.button_stop, Clutter.BUTTON_PRIMARY, true, () => this.stop());
-        this.sigm.connect_press(this.button_new_pomo, Clutter.BUTTON_PRIMARY, true, () => this.start_new_pomo());
-        this.sigm.connect_press(this.button_take_break, Clutter.BUTTON_PRIMARY, true, () => this.take_break());
+        this.sigm.connect_release(this.settings_icon, Clutter.BUTTON_PRIMARY, true, () => this._show_settings());
+        this.sigm.connect_release(this.fullscreen_icon, Clutter.BUTTON_PRIMARY, true, () => this.show_fullscreen());
+        this.sigm.connect_release(this.button_continue, Clutter.BUTTON_PRIMARY, true, () => this.start_pomo());
+        this.sigm.connect_release(this.button_stop, Clutter.BUTTON_PRIMARY, true, () => this.stop());
+        this.sigm.connect_release(this.button_new_pomo, Clutter.BUTTON_PRIMARY, true, () => this.start_new_pomo());
+        this.sigm.connect_release(this.button_take_break, Clutter.BUTTON_PRIMARY, true, () => this.take_break());
 
 
         //

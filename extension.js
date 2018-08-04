@@ -495,26 +495,26 @@ const Timepp = new Lang.Class({
         let ref = this.container;
 
         switch (old_pos) {
-            case PanelPosition.LEFT:
-                Main.panel._leftBox.remove_child(this.container);
-                break;
-            case PanelPosition.CENTER:
-                Main.panel._centerBox.remove_child(this.container);
-                break;
-            case PanelPosition.RIGHT:
-                Main.panel._rightBox.remove_child(this.container);
-                break;
+          case PanelPosition.LEFT:
+            Main.panel._leftBox.remove_child(this.container);
+            break;
+          case PanelPosition.CENTER:
+            Main.panel._centerBox.remove_child(this.container);
+            break;
+          case PanelPosition.RIGHT:
+            Main.panel._rightBox.remove_child(this.container);
+            break;
         }
 
         switch (new_pos) {
-            case PanelPosition.LEFT:
-                Main.panel._leftBox.add_child(ref);
-                break;
-            case PanelPosition.CENTER:
-                Main.panel._centerBox.add_child(ref);
-                break;
-            case PanelPosition.RIGHT:
-                Main.panel._rightBox.insert_child_at_index(ref, 0);
+          case PanelPosition.LEFT:
+            Main.panel._leftBox.add_child(ref);
+            break;
+          case PanelPosition.CENTER:
+            Main.panel._centerBox.add_child(ref);
+            break;
+          case PanelPosition.RIGHT:
+            Main.panel._rightBox.insert_child_at_index(ref, 0);
         }
     },
 
@@ -639,16 +639,16 @@ function enable () {
         let pos;
 
         switch (timepp.settings.get_enum('panel-item-position')) {
-            case PanelPosition.LEFT:
-                pos = Main.panel._leftBox.get_n_children();
-                Main.panel.addToStatusArea('timepp', timepp, pos, 'left');
-                break;
-            case PanelPosition.CENTER:
-                pos = Main.panel._centerBox.get_n_children();
-                Main.panel.addToStatusArea('timepp', timepp, pos, 'center');
-                break;
-            case PanelPosition.RIGHT:
-                Main.panel.addToStatusArea('timepp', timepp, 0, 'right');
+          case PanelPosition.LEFT:
+            pos = Main.panel._leftBox.get_n_children();
+            Main.panel.addToStatusArea('timepp', timepp, pos, 'left');
+            break;
+          case PanelPosition.CENTER:
+            pos = Main.panel._centerBox.get_n_children();
+            Main.panel.addToStatusArea('timepp', timepp, pos, 'center');
+            break;
+          case PanelPosition.RIGHT:
+            Main.panel.addToStatusArea('timepp', timepp, 0, 'right');
         }
     }
 
