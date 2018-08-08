@@ -291,18 +291,15 @@ const Settings = new Lang.Class({
             Gio.SettingsBindFlags.DEFAULT);
 
         if (! this.settings.get_string('pomodoro-sound-file-path-pomo')) {
-            this.settings.set_string('pomodoro-sound-file-path-pomo',
-                GLib.filename_to_uri(ME.path + '/data/sounds/beeps.ogg', null));
+            this.settings.set_string('pomodoro-sound-file-path-pomo', GLib.filename_to_uri(ME.path + '/data/sounds/beeps.ogg', null));
         }
 
         if (! this.settings.get_string('pomodoro-sound-file-path-short-break')) {
-            this.settings.set_string('pomodoro-sound-file-path-short-break',
-                GLib.filename_to_uri(ME.path + '/data/sounds/beeps.ogg', null));
+            this.settings.set_string('pomodoro-sound-file-path-short-break', GLib.filename_to_uri(ME.path + '/data/sounds/beeps.ogg', null));
         }
 
         if (!  this.settings.get_string('pomodoro-sound-file-path-long-break')) {
-            this.settings.set_string('pomodoro-sound-file-path-long-break',
-                GLib.filename_to_uri(ME.path + '/data/sounds/beeps.ogg', null));
+            this.settings.set_string('pomodoro-sound-file-path-long-break', GLib.filename_to_uri(ME.path + '/data/sounds/beeps.ogg', null));
         }
 
         widget = this.builder.get_object('pomodoro-sound-chooser-pomo');
@@ -390,7 +387,7 @@ const Settings = new Lang.Class({
             Gio.SettingsBindFlags.DEFAULT);
 
 
-        if (this.settings.get_string('alarms-sound-file-path')) {
+        if (! this.settings.get_string('alarms-sound-file-path')) {
             this.settings.set_string('alarms-sound-file-path', GLib.filename_to_uri(ME.path + '/data/sounds/beeps.ogg', null));
         }
 
