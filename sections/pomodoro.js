@@ -591,6 +591,7 @@ var SectionMain = new Lang.Class({
         }
 
         if (this.fullscreen.is_open) {
+            // do nothing
         } else if (this.settings.get_enum('pomodoro-notif-style') === NotifStyle.FULLSCREEN) {
             this.fullscreen.open();
         } else {
@@ -609,7 +610,7 @@ var SectionMain = new Lang.Class({
             };
 
             let notif = new MessageTray.Notification(this.notif_source, msg, '', params);
-            notif.setUrgency(MessageTray.Urgency.CRITICAL);
+            notif.setUrgency(MessageTray.Urgency.NORMAL);
 
             this.notif_source.notify(notif);
         }
