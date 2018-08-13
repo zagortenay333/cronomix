@@ -631,7 +631,7 @@ const StopwatchFullscreen = new Lang.Class({
     },
 
     close: function () {
-        if (this.delegate.state === StopwatchState.RESET) {
+        if (this.delegate.stopwatch_state === StopwatchState.RESET) {
             this.actor.style_class = this.default_style_class;
 
             switch (this.delegate.clock_format) {
