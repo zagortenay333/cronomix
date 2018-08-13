@@ -471,14 +471,10 @@ var StatsView = new Lang.Class({
             this.graph_interval_icon,
         ];
 
-        this._set_mode(
-            StatsMode.GLOBAL,
-            [date],
-            () => {
-                actors.forEach((it) => it.hide());
-                this.vbars_graph.draw_vbars([], 8, 64);
-            }
-        );
+        this._set_mode(StatsMode.GLOBAL, [date], () => {
+            actors.forEach((it) => it.hide());
+            this.vbars_graph.draw_vbars([], 8, 64);
+        });
 
         this.middle_box.vertical = true;
         actors.forEach((it) => it.show());
@@ -536,15 +532,11 @@ var StatsView = new Lang.Class({
             this.graph_interval_icon,
         ];
 
-        this._set_mode(
-            StatsMode.SINGLE,
-            [year, month, label, type],
-            () => {
-                actors.forEach((it) => it.hide());
-                this.date_picker.day_picker.actor.show();
-                this.vbars_graph.draw_vbars([], 8, 64);
-            }
-        );
+        this._set_mode(StatsMode.SINGLE, [year, month, label, type], () => {
+            actors.forEach((it) => it.hide());
+            this.date_picker.day_picker.actor.show();
+            this.vbars_graph.draw_vbars([], 8, 64);
+        });
 
         this.middle_box.vertical = false;
         this.date_picker.day_picker.actor.visible = false;
@@ -667,14 +659,12 @@ var StatsView = new Lang.Class({
             this.hot_mode_control_box,
         ];
 
-        this._set_mode(
-            StatsMode.HOT,
-            [label, range],
-            () => actors.forEach((it) => {
+        this._set_mode(StatsMode.HOT, [label, range], () => {
+            actors.forEach((it) => {
                 it.hide()
                 this.vbars_graph.draw_vbars([], 8, 64);
-            })
-        );
+            });
+        });
 
         actors.forEach((it) => it.show());
         this.nav_bar.get_children().forEach((it) => { it.checked = false; });
@@ -697,11 +687,10 @@ var StatsView = new Lang.Class({
         let hot_mode_type    = this.delegate.settings.get_enum('todo-hot-mode-type');
         this.type_btn.label  = hot_mode_type === HotMode.TASK ? _('Tasks') : _('Projects');
 
-        let vbars = this._get_stats__vbars_hot(lower_bound, upper_bound);
-
+        let vbars     = this._get_stats__vbars_hot(lower_bound, upper_bound);
         let max_hours = 24;
-        if (vbars.length > 0)
-            max_hours = Math.floor(vbars[0].info.total_time / 3600) + 10;
+
+        if (vbars.length > 0) max_hours = Math.floor(vbars[0].info.total_time / 3600) + 10;
 
         if (max_hours <= 24) {
             this.vbars_graph.draw_coord_system({
@@ -732,49 +721,38 @@ var StatsView = new Lang.Class({
             });
         }
 
-        this.vbars_graph.draw_vbars(
-            vbars,
-            8,
-            64,
-            (vbar) => this._tooltip_format_hot_mode(vbar, n_days_in_range)
-        );
+        this.vbars_graph.draw_vbars(vbars, 8, 64, (vbar) => {
+            this._tooltip_format_hot_mode(vbar, n_days_in_range);
+        });
     },
 
     show_mode__search: function () {
         let actors = [this.entry, this.search_results_container];
 
-        this._set_mode(
-            StatsMode.SEARCH,
-            null,
-            () => {
-                this.task_results.scrollbox.destroy_all_children();
-                this.project_results.scrollbox.destroy_all_children();
-                this.task_results.box.hide();
-                this.project_results.box.hide();
-                actors.forEach((it) => it.hide());
-                this.single_mode_icon.show();
-                this.top_box.layout_manager.homogeneous = false;
-                this.entry.set_text('');
-                this.selected_search_result = null;
-            }
-        );
+        this._set_mode(StatsMode.SEARCH, null, () => {
+            this.task_results.scrollbox.destroy_all_children();
+            this.project_results.scrollbox.destroy_all_children();
+            this.task_results.box.hide();
+            this.project_results.box.hide();
+            actors.forEach((it) => it.hide());
+            this.single_mode_icon.show();
+            this.top_box.layout_manager.homogeneous = false;
+            this.entry.set_text('');
+            this.selected_search_result = null;
+        });
 
         actors.forEach((it) => it.show());
         this.single_mode_icon.hide();
-        this.top_box.layout_manager.homogeneous = true; // center entry
+        this.top_box.layout_manager.homogeneous = true; // centers the entry
         this.nav_bar.get_children().forEach((it) => it.checked = false);
         Mainloop.idle_add(() => this.entry.grab_key_focus());
     },
 
     show_mode__banner: function (text) {
-        this._set_mode(
-            StatsMode.BANNER,
-            null,
-            () => {
-                this.set_banner_size(0);
-                this.nav_bar.show();
-            }
-        );
+        this._set_mode(StatsMode.BANNER, null, () => {
+            this.set_banner_size(0);
+            this.nav_bar.show();
+        });
 
         this.nav_bar.hide();
         this.set_banner_size(.2);
