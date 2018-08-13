@@ -722,7 +722,7 @@ var StatsView = new Lang.Class({
         }
 
         this.vbars_graph.draw_vbars(vbars, 8, 64, (vbar) => {
-            this._tooltip_format_hot_mode(vbar, n_days_in_range);
+            return this._tooltip_format_hot_mode(vbar, n_days_in_range);
         });
     },
 
