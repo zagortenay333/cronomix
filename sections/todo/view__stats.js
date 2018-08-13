@@ -1295,9 +1295,6 @@ var StatsView = new Lang.Class({
         this.task_results.scrollview.get_vscroll_bar().get_adjustment().set_value(0);
         this.project_results.scrollview.get_vscroll_bar().get_adjustment().set_value(0);
 
-        if (this.selected_search_result) this.selected_search_result.label_actor.pseudo_class = '';
-        this.selected_search_result = null;
-
         let needle = this.entry.get_text().toLowerCase();
 
         if (! needle) return;
