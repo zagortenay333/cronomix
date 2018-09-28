@@ -325,8 +325,15 @@ var TimeTracker = new Lang.Class({
             this.daily_csv_file_monitor = this.daily_csv_file.monitor_file(
                 Gio.FileMonitorFlags.WATCH_MOVES, null);
 
-            this.daily_csv_file_monitor.connect('changed', () => {
-                this._on_tracker_files_modified();
+            this.daily_csv_file_monitor.connect('changed', (...args) => {
+                let event_type = args[3];
+                if (event_type === Gio.FileMonitorEvent.DELETED ||
+                    event_type === Gio.FileMonitorEvent.MOVED   ||
+                    event_type === Gio.FileMonitorEvent.CREATED ||
+                    event_type === undefined                    ||
+                    event_type === Gio.FileMonitorEvent.CHANGES_DONE_HINT) {
+                    this._on_tracker_files_modified();
+                }
             });
         } catch (e) {
             logError(e);
