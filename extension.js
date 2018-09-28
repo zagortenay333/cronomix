@@ -286,6 +286,12 @@ const Timepp = new Lang.Class({
                 }
             } else if (this.sections.has(key)) {
                 let s = this.sections.get(key);
+
+                // The current sourceActor could be the panel_item of the section
+                // we are about to disable which destroys panel_item.
+                if (s.panel_item.actor === this.menu.sourceActor)
+                    this._update_menu_arrow(this.menu.actor);
+
                 s.disable_section();
                 this.sections.delete(key);
                 this.separators.get(key).destroy();
@@ -422,10 +428,8 @@ const Timepp = new Lang.Class({
     },
 
     _update_menu_arrow: function (source_actor) {
-        if (this.menu.isOpen)
-            this.menu._boxPointer.setPosition(source_actor, this.menu._arrowAlignment);
-        else
-            this.menu.sourceActor = source_actor;
+        this.menu._boxPointer.setPosition(source_actor, this.menu._arrowAlignment);
+        this.menu.sourceActor = source_actor;
     },
 
     _update_separators: function () {
