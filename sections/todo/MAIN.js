@@ -136,17 +136,6 @@ var SectionMain = new Lang.Class({
         this.tasks = [];
 
 
-        // @SPEED
-        // Tweak this function to completely disable animations when closing
-        // the popup menu in order to avoid lag when there are lots of items.
-        this.ext.menu.close = function () {
-            if (this._boxPointer.actor.visible) this._boxPointer.hide(false, () => this.emit('menu-closed'));
-            if (!this.isOpen) return;
-            this.isOpen = false;
-            this.emit('open-state-changed', false);
-        };
-
-
         //
         // keybindings
         //
