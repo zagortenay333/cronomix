@@ -290,7 +290,7 @@ const Timepp = new Lang.Class({
                 // The current sourceActor could be the panel_item of the section
                 // we are about to disable which destroys panel_item.
                 if (s.panel_item.actor === this.menu.sourceActor)
-                    this._update_menu_arrow(this.menu.actor);
+                    this._update_menu_arrow(this.actor);
 
                 s.disable_section();
                 this.sections.delete(key);
@@ -609,6 +609,12 @@ const Timepp = new Lang.Class({
     },
 
     destroy: function () {
+        // We need to make sure that this one is set to the default actor or
+        // else the shell will try to destroy the wrong panel actor.
+        // In fact, the source actor (which is a section's panel item) will
+        // already be destroyed by this point.
+        this.menu.sourceActor = this.actor;
+
         for (let [, section] of this.sections) section.disable_section();
 
         this.sections.clear();
@@ -616,12 +622,6 @@ const Timepp = new Lang.Class({
 
         this._unload_stylesheet();
         this.sigm.clear();
-
-        // We need to make sure that this one is set to the default actor or
-        // else the shell will try to destroy the wrong panel actor.
-        // In fact, the source actor (which is a section's panel item) will
-        // already be destroyed by this point.
-        this.menu.sourceActor = this.actor;
 
         this.parent();
     },
