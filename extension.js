@@ -613,7 +613,7 @@ const Timepp = new Lang.Class({
         // else the shell will try to destroy the wrong panel actor.
         // In fact, the source actor (which is a section's panel item) will
         // already be destroyed by this point.
-        this.menu.sourceActor = this.actor;
+        this._update_menu_arrow(this.actor);
 
         for (let [, section] of this.sections) section.disable_section();
 
