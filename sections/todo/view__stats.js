@@ -683,14 +683,16 @@ var StatsView = new Lang.Class({
         let n_days_in_range = (new Date(upper_bound)) - (new Date(lower_bound));
         n_days_in_range     = Math.round(n_days_in_range / 86400000) + 1;
 
-        this.range_btn.label = `${label}  (${ngettext('%d day', '%d days', n_days_in_range).format(n_days_in_range)})`;
-        let hot_mode_type    = this.delegate.settings.get_enum('todo-hot-mode-type');
-        this.type_btn.label  = hot_mode_type === HotMode.TASK ? _('Tasks') : _('Projects');
+        {
+            this.range_btn.label = `${label}  (${ngettext('%d day', '%d days', n_days_in_range).format(n_days_in_range)})`;
+            let hot_mode_type    = this.delegate.settings.get_enum('todo-hot-mode-type');
+            this.type_btn.label  = hot_mode_type === HotMode.TASK ? _('Tasks') : _('Projects');
+        }
 
-        let vbars     = this._get_stats__vbars_hot(lower_bound, upper_bound);
+        let vbars = this._get_stats__vbars_hot(lower_bound, upper_bound);
+
         let max_hours = 24;
-
-        if (vbars.length > 0) max_hours = Math.floor(vbars[0].info.total_time / 3600) + 10;
+        if (vbars.length > 0) max_hours = Math.floor(vbars[0].info.total_time / 3600);
 
         if (max_hours <= 24) {
             this.vbars_graph.draw_coord_system({
@@ -699,25 +701,61 @@ var StatsView = new Lang.Class({
                 n_rulers            : 12,
                 x_offset            : 30,
                 y_offset            : 0,
-                y_label_format_func : (y_val) => y_val + 'h',
+                y_label_format_func : (y_val) => y_val + '',
+            });
+        } else if (max_hours < 100) {
+            let y_max = 3600 * ((max_hours - max_hours % 5) + 5);
+            this.vbars_graph.draw_coord_system({
+                y_max               : y_max,
+                y_conversion_factor : 3600,
+                n_rulers            : Math.floor(y_max / (3600 * 5)),
+                x_offset            : 30,
+                y_offset            : 0,
+                y_label_format_func : (y_val) => y_val + '',
+            });
+        } else if (max_hours < 200) {
+            let y_max = 3600 * ((max_hours - max_hours % 10) + 10);
+            this.vbars_graph.draw_coord_system({
+                y_max               : y_max,
+                y_conversion_factor : 3600,
+                n_rulers            : Math.floor(y_max / (3600 * 10)),
+                x_offset            : 30,
+                y_offset            : 0,
+                y_label_format_func : (y_val) => y_val + '',
+            });
+        } else if (max_hours < 300) {
+            let y_max = 3600 * ((max_hours - max_hours % 20) + 20);
+            this.vbars_graph.draw_coord_system({
+                y_max               : y_max,
+                y_conversion_factor : 3600,
+                n_rulers            : Math.floor(y_max / (3600 * 20)),
+                x_offset            : 30,
+                y_offset            : 0,
+                y_label_format_func : (y_val) => y_val + '',
             });
         } else if (max_hours < 1000) {
+            let y_max = 3600 * ((max_hours - max_hours % 50) + 50);
             this.vbars_graph.draw_coord_system({
-                y_max               : 3600 * (max_hours - max_hours % 10),
+                y_max               : y_max,
                 y_conversion_factor : 3600,
-                n_rulers            : 10,
-                x_offset            : (max_hours < 100) ? 30 : 40,
+                n_rulers            : Math.floor(y_max / (3600 * 50)),
+                x_offset            : 40,
                 y_offset            : 0,
-                y_label_format_func : (y_val) => y_val + 'h',
+                y_label_format_func : (y_val) => y_val + '',
             });
         } else {
+            let i = 1000;
+            for (; max_hours >= i; i *= 10);
+            i /= 100;
+
+            let y_max = 3600 * ((max_hours - max_hours % i) + i);
             this.vbars_graph.draw_coord_system({
-                y_max               : vbars[0].info.total_time,
-                y_conversion_factor : 3600000,
-                n_rulers            : 10,
+                y_max               : y_max,
+                y_conversion_factor : 3600,
+                n_rulers            : Math.floor(y_max / (3600 * i)),
                 x_offset            : 60,
                 y_offset            : 0,
-                y_label_format_func : (y_val) => y_val + 'kh',
+                y_label_format_func : (y_val) => y_val + '',
             });
         }
 
