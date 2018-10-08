@@ -425,7 +425,7 @@ var StatsView = new Lang.Class({
             }
         });
         this.entry.clutter_text.connect('text-changed', () => this._search());
-        this.entry.clutter_text.connect('key-press-event', (_, event) => this._maybe_navigate_search_results(event.get_key_symbol()));
+        this.entry.connect('key-release-event', (_, event) => this._maybe_navigate_search_results(event.get_key_symbol()));
         this.heatmap_graph.connect('square-clicked', (_, square_label) => this._on_heatmap_clicked(square_label));
         this.single_mode_icon.connect('clicked', () => this.show_mode__search());
         this.heatmap_icon.connect('clicked', () => this._toggle_heatmap());
@@ -434,16 +434,6 @@ var StatsView = new Lang.Class({
         this.type_btn.connect('clicked', () => this.type_menu.toggle());
         this.ext.connect('custom-css-changed', () => this._on_custom_css_updated());
         this.date_picker.connect('date-changed', (_, ...args) => this._on_date_picker_changed(...args));
-    },
-
-    close: function () {
-        this.stats_data            = null;
-        this.stats_unique_tasks    = null;
-        this.stats_unique_projects = null;
-
-        this._set_mode('', null, null);
-
-        this.parent();
     },
 
     set_stats: function (stats_data, stats_unique_tasks, stats_unique_projects, oldest_date) {
@@ -768,6 +758,7 @@ var StatsView = new Lang.Class({
         let actors = [this.entry, this.search_results_container];
 
         this._set_mode(StatsMode.SEARCH, null, () => {
+            this.selected_search_result = null;
             this.task_results.scrollbox.destroy_all_children();
             this.project_results.scrollbox.destroy_all_children();
             this.task_results.box.hide();
@@ -776,7 +767,6 @@ var StatsView = new Lang.Class({
             this.single_mode_icon.show();
             this.top_box.layout_manager.homogeneous = false;
             this.entry.set_text('');
-            this.selected_search_result = null;
         });
 
         actors.forEach((it) => it.show());
@@ -1288,39 +1278,26 @@ var StatsView = new Lang.Class({
             return;
 
         let direction;
-
         if      (key_symbol === Clutter.KEY_Up)    direction = 1;
         else if (key_symbol === Clutter.KEY_Down)  direction = 2;
         else if (key_symbol === Clutter.KEY_Right) direction = 3;
         else if (key_symbol === Clutter.KEY_Left)  direction = 4;
-
-        if (!direction) return;
+        if (! direction) return;
 
         let new_selected;
-
-        if (direction === 1) {
-            new_selected = this.selected_search_result.label_actor.get_previous_sibling();
-        } else if (direction === 2) {
-            new_selected = this.selected_search_result.label_actor.get_next_sibling();
-        } else if (direction === 3) {
-            new_selected = this.project_results.scrollbox.get_first_child();
-        } else if (direction === 4) {
-            new_selected = this.task_results.scrollbox.get_first_child();
-        }
-
-        if (!new_selected) return;
+        if      (direction === 1) new_selected = this.selected_search_result.label_actor.get_previous_sibling();
+        else if (direction === 2) new_selected = this.selected_search_result.label_actor.get_next_sibling();
+        else if (direction === 3) new_selected = this.project_results.scrollbox.get_first_child();
+        else if (direction === 4) new_selected = this.task_results.scrollbox.get_first_child();
+        if (! new_selected) return;
 
         this.selected_search_result.label_actor.pseudo_class = '';
         new_selected.pseudo_class   = 'selected';
         this.selected_search_result = new_selected._delegate;
 
         let parents;
-
-        if (new_selected._delegate.type === '()') {
-            parents = [this.task_results.scrollview, this.task_results.scrollbox];
-        } else {
-            parents = [this.project_results.scrollview, this.project_results.scrollbox];
-        }
+        if (new_selected._delegate.type === '()') parents = [this.task_results.scrollview, this.task_results.scrollbox];
+        else                                      parents = [this.project_results.scrollview, this.project_results.scrollbox];
 
         MISC_UTILS.scroll_to_item(parents[0], parents[1], new_selected);
     },
@@ -1389,7 +1366,7 @@ var StatsView = new Lang.Class({
                         if (!this.task_results.scrollview.vscrollbar_visible)
                             MISC_UTILS.resize_label(label);
                     } else if (!this.project_results.scrollview.vscrollbar_visible) {
-                            MISC_UTILS.resize_label(label);
+                        MISC_UTILS.resize_label(label);
                     }
                 });
                 label.connect('notify::hover', () => {
@@ -1516,6 +1493,16 @@ var StatsView = new Lang.Class({
         this.bound_date_2.set_range(lower, today);
 
         this._update_string_date_map();
+    },
+
+    close: function () {
+        this.stats_data            = null;
+        this.stats_unique_tasks    = null;
+        this.stats_unique_projects = null;
+
+        this._set_mode('', null, null);
+
+        this.parent();
     },
 
     destroy: function () {
