@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-13 15:04+0200\n"
+"POT-Creation-Date: 2018-10-08 19:30+0200\n"
 "PO-Revision-Date: 2018-01-09 19:02+0100\n"
 "Last-Translator: Luc Bournaud <luc.bournaud@hotmail.fr>\n"
 "Language-Team: français <>\n"
@@ -78,13 +78,13 @@ msgstr "Rechercher..."
 
 #: data/po_files/../../sections/todo/view__stats.js:184
 #: data/po_files/../../sections/todo/view__stats.js:298
-#: data/po_files/../../sections/todo/view__stats.js:688
+#: data/po_files/../../sections/todo/view__stats.js:679
 msgid "Tasks"
 msgstr "Tâches"
 
 #: data/po_files/../../sections/todo/view__stats.js:199
 #: data/po_files/../../sections/todo/view__stats.js:293
-#: data/po_files/../../sections/todo/view__stats.js:688
+#: data/po_files/../../sections/todo/view__stats.js:679
 msgid "Projects"
 msgstr "Projets"
 
@@ -115,40 +115,40 @@ msgstr "OK"
 msgid "Custom Range..."
 msgstr "Période personnalisée..."
 
-#: data/po_files/../../sections/todo/view__stats.js:594
+#: data/po_files/../../sections/todo/view__stats.js:584
 #, fuzzy
 msgid "Stats for task"
 msgstr "Statistiques du projet"
 
-#: data/po_files/../../sections/todo/view__stats.js:620
-#: data/po_files/../../sections/todo/view__stats.js:644
-#: data/po_files/../../sections/todo/view__stats.js:686
-#: data/po_files/../../sections/todo/view__stats.js:1143
-#: data/po_files/../../sections/todo/view__stats.js:1152
+#: data/po_files/../../sections/todo/view__stats.js:610
+#: data/po_files/../../sections/todo/view__stats.js:634
+#: data/po_files/../../sections/todo/view__stats.js:677
+#: data/po_files/../../sections/todo/view__stats.js:1171
+#: data/po_files/../../sections/todo/view__stats.js:1180
 #, javascript-format
 msgid "%d day"
 msgid_plural "%d days"
 msgstr[0] "%d jour"
 msgstr[1] "%d jours"
 
-#: data/po_files/../../sections/todo/view__stats.js:1142
+#: data/po_files/../../sections/todo/view__stats.js:1170
 msgid "Average per day (including off days)"
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__stats.js:1151
+#: data/po_files/../../sections/todo/view__stats.js:1179
 msgid "Average per day (excluding off days)"
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__stats.js:1154
-#: data/po_files/../../sections/todo/view__stats.js:1164
+#: data/po_files/../../sections/todo/view__stats.js:1182
+#: data/po_files/../../sections/todo/view__stats.js:1192
 msgid "Total"
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__stats.js:1196
+#: data/po_files/../../sections/todo/view__stats.js:1224
 msgid "Interval"
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__stats.js:1198
+#: data/po_files/../../sections/todo/view__stats.js:1226
 #, fuzzy
 msgid "No intervals found."
 msgstr "Aucun résultat."
@@ -209,7 +209,7 @@ msgid "To use kanban boards, add the kanban todo extension to a task."
 msgstr ""
 
 #: data/po_files/../../sections/todo/view__loading.js:40
-#: data/po_files/../../sections/todo/MAIN.js:711
+#: data/po_files/../../sections/todo/MAIN.js:700
 msgid "Loading..."
 msgstr "Chargement..."
 
@@ -275,34 +275,34 @@ msgid_plural "%d tasks"
 msgstr[0] "%d tâche"
 msgstr[1] "%d tâches"
 
-#: data/po_files/../../sections/todo/time_tracker.js:357
-#: data/po_files/../../sections/todo/time_tracker.js:754
+#: data/po_files/../../sections/todo/time_tracker.js:364
+#: data/po_files/../../sections/todo/time_tracker.js:761
 msgid "Error while parsing csv file. See logs."
 msgstr ""
 
-#: data/po_files/../../sections/todo/time_tracker.js:535
+#: data/po_files/../../sections/todo/time_tracker.js:542
 msgid "To track time, select a dir for csv files in the settings."
 msgstr ""
 
-#: data/po_files/../../sections/todo/MAIN.js:297
+#: data/po_files/../../sections/todo/MAIN.js:286
 msgid "Unable to load todo file"
 msgstr ""
 
-#: data/po_files/../../sections/todo/MAIN.js:405
+#: data/po_files/../../sections/todo/MAIN.js:394
 #, javascript-format
 msgid "%d task has recurred"
 msgid_plural "%d tasks have recurred"
 msgstr[0] "%d tâche récurrente a eu lieu"
 msgstr[1] "%d tâche récurrentes ont eu lieux"
 
-#: data/po_files/../../sections/todo/MAIN.js:411
+#: data/po_files/../../sections/todo/MAIN.js:400
 #, javascript-format
 msgid "%d deferred task has been opened"
 msgid_plural "%d deferred tasks have been opened"
 msgstr[0] "%d tâche différée a été ouverte"
 msgstr[1] "%d tâches différées ont été ouvertes"
 
-#: data/po_files/../../sections/todo/MAIN.js:717
+#: data/po_files/../../sections/todo/MAIN.js:706
 msgid "Nothing found."
 msgstr "Aucun résultat."
 
