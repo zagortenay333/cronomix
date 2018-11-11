@@ -80,5 +80,3 @@ tracker_monitor () {
         esac
     done
 }
-
-get_tracked_tasks
