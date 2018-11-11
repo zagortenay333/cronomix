@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 19:30+0200\n"
+"POT-Creation-Date: 2018-11-11 20:18+0100\n"
 "PO-Revision-Date: 2018-01-10 10:35+0100\n"
 "Last-Translator: Piotr Komur <pkomur@gmail.com>\n"
 "Language-Team: \n"
@@ -281,7 +281,7 @@ msgstr[1] "%d zadania"
 msgstr[2] "%d zadań"
 
 #: data/po_files/../../sections/todo/time_tracker.js:364
-#: data/po_files/../../sections/todo/time_tracker.js:761
+#: data/po_files/../../sections/todo/time_tracker.js:785
 msgid "Error while parsing csv file. See logs."
 msgstr ""
 

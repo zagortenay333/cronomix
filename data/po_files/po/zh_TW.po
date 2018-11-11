@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 19:30+0200\n"
+"POT-Creation-Date: 2018-11-11 20:18+0100\n"
 "PO-Revision-Date: 2018-07-14 13:42+0800\n"
 "Last-Translator: OriginCode <origincoder@yahoo.com>\n"
 "Language-Team: Chinese <kde-i18n-doc@kde.org>\n"
@@ -265,7 +265,7 @@ msgid_plural "%d tasks"
 msgstr[0] "%d 個任務"
 
 #: data/po_files/../../sections/todo/time_tracker.js:364
-#: data/po_files/../../sections/todo/time_tracker.js:761
+#: data/po_files/../../sections/todo/time_tracker.js:785
 msgid "Error while parsing csv file. See logs."
 msgstr "當處理CSV檔案時出現了錯誤。參見日誌。"
 

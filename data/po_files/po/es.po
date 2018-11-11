@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 19:30+0200\n"
+"POT-Creation-Date: 2018-11-11 20:18+0100\n"
 "PO-Revision-Date: 2018-11-02 19:36+0100\n"
 "Last-Translator: Felipe Hommen <felibank@gmail.com>\n"
 "Language-Team: Spanish\n"
@@ -270,13 +270,15 @@ msgstr[0] "%d tarea"
 msgstr[1] "%d tareas"
 
 #: data/po_files/../../sections/todo/time_tracker.js:364
-#: data/po_files/../../sections/todo/time_tracker.js:761
+#: data/po_files/../../sections/todo/time_tracker.js:785
 msgid "Error while parsing csv file. See logs."
 msgstr "Error interpretando el archivo csv. Ver registros."
 
 #: data/po_files/../../sections/todo/time_tracker.js:542
 msgid "To track time, select a dir for csv files in the settings."
-msgstr "Para registrar tiempo, selecciona una carpeta para los archivos csv en los ajustes"
+msgstr ""
+"Para registrar tiempo, selecciona una carpeta para los archivos csv en los "
+"ajustes"
 
 #: data/po_files/../../sections/todo/MAIN.js:286
 msgid "Unable to load todo file"
@@ -683,7 +685,6 @@ msgstr ""
 "<super><ctrl><alt><shift>t\n"
 "<shift>super\n"
 "F3"
-
 
 #: data/po_files/../../data/prefs.ui:804 data/po_files/../../data/prefs.ui:854
 #: data/po_files/../../data/prefs.ui:904 data/po_files/../../data/prefs.ui:1204
