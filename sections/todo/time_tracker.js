@@ -602,6 +602,8 @@ var TimeTracker = new Lang.Class({
         for (let it of this.delegate.tasks) {
             if (it.task_str === task.task_str) it.on_tracker_started();
         }
+
+        this.dbus_impl.emit_signal('started_tracking', GLib.Variant.new('(s)', [task.task_str]));
     },
 
     stop_tracking: function (task, do_write_daily_csv_file = true, close_intervals = true) {
@@ -646,6 +648,28 @@ var TimeTracker = new Lang.Class({
         }
 
         if (do_write_daily_csv_file) this._write_daily_csv_file();
+
+        this.dbus_impl.emit_signal('stopped_tracking', GLib.Variant.new('(s)', [task.task_str]));
+    },
+
+    get_tracked_tasks: function () {
+        let res = "";
+
+        for (let [k, v] of this.daily_csv_map) {
+            if (v.tracking && v.type === '()') res += k + "___timepp___";
+        }
+
+        return res ? res : "none";
+    },
+
+    get_tracked_projects: function () {
+        let res = "";
+
+        for (let [k, v] of this.daily_csv_map) {
+            if (v.tracking && v.type === '++') res += k + "___timepp___";
+        }
+
+        return res ? res : "none";
     },
 
     // Swap the old_task_str with the new_task_str in the daily_csv_map only.
