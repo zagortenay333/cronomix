@@ -667,6 +667,7 @@ var KanbanColumn = new Lang.Class({
         }
     },
 
+    // A task got dropped
     on_drag_end: function (old_parent, new_parent, task) {
         task.hide_header_icons();
 
@@ -681,7 +682,7 @@ var KanbanColumn = new Lang.Class({
             return;
         }
 
-        let [target_col, destination_column] = this._update_task_props(old_parent, new_parent, task);
+        let [old_col, target_col, destination_column] = this._update_task_props(old_parent, new_parent, task);
 
         if (target_col !== destination_column) {
             task.actor_parent.remove_child(task.actor);
@@ -694,6 +695,9 @@ var KanbanColumn = new Lang.Class({
         task.actor_scrollview = [[destination_column.tasks_scroll], [this.owner.columns_scroll]];
 
         this.delegate.on_tasks_changed();
+
+        old_col.set_title();
+        destination_column.set_title();
 
         if (this.delegate.get_current_todo_file().automatic_sort)
             this._sort_task_in_column(task.actor_parent, task);
@@ -766,6 +770,7 @@ var KanbanColumn = new Lang.Class({
     //     will end up in col2.
     //
     // For this reason, we return [@new_col, @destination_column]
+    //   @old_col            : column in which the task used to be in
     //   @new_col            : column user dropped the task into
     //   @destination_column : column into which the task will actually go
     _update_task_props: function (old_parent, new_parent, task) {
@@ -851,7 +856,7 @@ var KanbanColumn = new Lang.Class({
         else if (i1 < i2)   destination_column = kitchen_sink_col[0];
         else                destination_column = no_prio_col[0];
 
-        return [new_col, destination_column];
+        return [old_col, new_col, destination_column];
     },
 
     handleDragOver: function (source, drag_actor, x, y, time) {
