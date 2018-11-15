@@ -769,10 +769,10 @@ var KanbanColumn = new Lang.Class({
     //     column but col2 is (_). When we remove priority (A) from the task, it
     //     will end up in col2.
     //
-    // For this reason, we return [@new_col, @destination_column]
+    // For this reason, we return [@old_col, @new_col, @destination_column]
     //   @old_col            : column in which the task used to be in
-    //   @new_col            : column user dropped the task into
-    //   @destination_column : column into which the task will actually go
+    //   @new_col            : column into which the user dropped the task
+    //   @destination_column : column in which the task ended up
     _update_task_props: function (old_parent, new_parent, task) {
         let old_col, new_col, idx_old, idx_new;
 
