@@ -125,15 +125,19 @@ var ViewDefault = new Lang.Class({
             this.task_with_active_kanban_str = task;
 
             let columns = str.slice(str.indexOf('|')+1).split('|');
-
             for (let it of columns) {
-                let column = new KanbanColumn(this.ext, this.delegate, this, it);
+                let is_collapsed = (it[0] === '_');
+                if (is_collapsed) it = it.slice(1);
+
+                let column = new KanbanColumn(this.ext, this.delegate, this, it, is_collapsed);
                 column.tasks_scroll_content.style = `width: ${w}px;`;
                 this.kanban_columns.set(it, column);
                 this.content_box.add_child(column.actor);
             }
+
+            this.update_kan_string();
         } else {
-            let column = new KanbanColumn(this.ext, this.delegate, this, '$');
+            let column = new KanbanColumn(this.ext, this.delegate, this, '$', false);
             column.tasks_scroll_content.style = `width: ${w}px;`;
             this.kanban_columns.set('$', column);
             this.content_box.add_child(column.actor);
@@ -363,16 +367,22 @@ var ViewDefault = new Lang.Class({
     },
 
     on_drag_end: function (old_parent, new_parent, column) {
+        this.update_kan_string();
+        Mainloop.timeout_add(0, () => this.delegate.on_tasks_changed(true, true));
+    },
+
+    update_kan_string: function () {
         let new_kanban_str = this.kanban_string.slice(0, this.kanban_string.indexOf('|'));
 
         for (let it of this.content_box.get_children()) {
-            new_kanban_str += '|' + it._owner.col_str;
+            let col = it._owner;
+            if (col.is_collapsed) new_kanban_str += '|_' + col.col_str;
+            else                  new_kanban_str += '|' + col.col_str;
         }
 
         let t = this.task_with_active_kanban_str;
         t.reset(true, t.task_str.replace(this.kanban_string, new_kanban_str));
-
-        Mainloop.timeout_add(0, () => this.delegate.on_tasks_changed(true, true));
+        this.delegate.write_tasks_to_file();
     },
 
     _get_column: function (task) {
@@ -420,17 +430,21 @@ Signals.addSignalMethods(ViewDefault.prototype);
 // =====================================================================
 // @@@ KanbanColumn
 //
-// @ext      : obj (main extension object)
-// @delegate : obj (main section object)
+// @ext          : obj (main extension object)
+// @delegate     : obj (main section object)
+// @owner        : obj (@@@ ViewDefault)
+// @col_str      : string
+// @is_collapsed : bool
 // =====================================================================
 var KanbanColumn = new Lang.Class({
     Name: 'Timepp.KanbanColumn',
 
-    _init: function (ext, delegate, owner, col_str) {
-        this.ext      = ext;
-        this.delegate = delegate;
-        this.owner    = owner;
-        this.col_str  = col_str;
+    _init: function (ext, delegate, owner, col_str, is_collapsed) {
+        this.ext          = ext;
+        this.delegate     = delegate;
+        this.owner        = owner;
+        this.col_str      = col_str;
+        this.is_collapsed = is_collapsed;
 
         this.actor_scrollview = [[], [this.owner.columns_scroll]];
         this.actor_parent     = this.owner.content_box;
@@ -451,12 +465,13 @@ var KanbanColumn = new Lang.Class({
 
 
         this.sigm = new SIG_MANAGER.SignalManager();
+        this.rotate_id = null;
 
 
         //
         // draw
         //
-        this.actor  = new St.BoxLayout({ vertical: true, x_expand: true, style_class: 'kanban-column' });
+        this.actor  = new St.BoxLayout({ vertical: true, y_expand: true, x_expand: false, style_class: 'kanban-column' });
         this.actor._owner = this; // can't use _delegate here due to dnd !!!
 
         this.content_box = new St.BoxLayout({ vertical: true, y_expand: true });
@@ -467,8 +482,10 @@ var KanbanColumn = new Lang.Class({
         //
         // header
         //
-        this.header = new St.BoxLayout({ reactive: true, x_expand: true, style_class: 'timepp-menu-item header' });
-        this.content_box.add_child(this.header);
+        this.header_wrapper = new St.Widget({ style_class: 'timepp-menu-item header', layout_manager: new Clutter.BoxLayout(), });
+        this.content_box.add_child(this.header_wrapper);
+        this.header = new St.BoxLayout({ reactive: true, x_expand: true });
+        this.header_wrapper.add_child(this.header);
 
 
         //
@@ -503,7 +520,10 @@ var KanbanColumn = new Lang.Class({
         this.icon_box = new St.BoxLayout({ x_align: Clutter.ActorAlign.END, style_class: 'icon-box' });
         this.header_fn_btns.add_child(this.icon_box);
 
-        this.kanban_icon = new St.Icon({ icon_name: 'timepp-kanban-symbolic', can_focus: true, reactive: true, track_hover: true, y_align: Clutter.ActorAlign.CENTER, style_class: 'clear-icon' });
+        this.collapse_icon = new St.Icon({ icon_name: 'timepp-column-collapse-symbolic', can_focus: true, reactive: true, track_hover: true, y_align: Clutter.ActorAlign.CENTER, style_class: 'collapse-icon' });
+        this.icon_box.add_child(this.collapse_icon);
+
+        this.kanban_icon = new St.Icon({ icon_name: 'timepp-kanban-symbolic', can_focus: true, reactive: true, track_hover: true, y_align: Clutter.ActorAlign.CENTER, style_class: 'kanban-icon' });
         this.icon_box.add_child(this.kanban_icon);
 
         this.clear_icon = new St.Icon({ icon_name: 'timepp-clear-symbolic', can_focus: true, reactive: true, track_hover: true, y_align: Clutter.ActorAlign.CENTER, style_class: 'clear-icon' });
@@ -601,6 +621,7 @@ var KanbanColumn = new Lang.Class({
         this.header.connect('enter-event', () => this._hide_title());
         this.sigm.connect(this.ext, 'custom-css-changed', () => this.set_title());
         this.sigm.connect_release(this.add_task_button, Clutter.BUTTON_PRIMARY, true, () => this.delegate.show_view__task_editor());
+        this.sigm.connect_release(this.collapse_icon, Clutter.BUTTON_PRIMARY, true, () => this.toggle_collapse());
         this.sigm.connect_release(this.kanban_icon, Clutter.BUTTON_PRIMARY, true, () => this.delegate.show_view__kanban_switcher());
         this.sigm.connect_release(this.filter_icon, Clutter.BUTTON_PRIMARY, true, () => this.delegate.show_view__filters());
         this.sigm.connect_on_button(this.filter_icon, Clutter.BUTTON_MIDDLE, () => this._toggle_filters());
@@ -610,26 +631,90 @@ var KanbanColumn = new Lang.Class({
         this.sigm.connect_release(this.clear_icon, Clutter.BUTTON_PRIMARY, true, () => this.delegate.show_view__clear_completed());
         this.sigm.connect_release(this.sort_icon, Clutter.BUTTON_PRIMARY, true, () => this.delegate.show_view__sort());
         this.sigm.connect_on_button(this.sort_icon, Clutter.BUTTON_MIDDLE, () => this.owner.toggle_automatic_sort());
+
+
+        //
+        // finally
+        //
+        if (is_collapsed) {
+            this.is_collapsed = false;
+            this.collapse(false);
+        }
+    },
+
+    toggle_collapse: function () {
+        if (this.is_collapsed) this.uncollapse();
+        else                   this.collapse();
+    },
+
+    collapse: function (update_kan_string = true) {
+        if (this.is_collapsed) return;
+        this.is_collapsed = true;
+
+        this.tasks_scroll.hide();
+        this.collapse_icon.icon_name = 'timepp-column-uncollapse-symbolic';
+        this.actor.add_style_class_name('collapsed');
+        // this.icon_box.remove_child(this.collapse_icon);
+        // this.header.insert_child_at_index(this.collapse_icon, 0);
+        this.kanban_title.style = "padding-left: 10px;";
+
+        // Don't like the way we rotate the text, but it's the only thing I
+        // could come up with..
+        this.header.set_pivot_point(0, 1);
+        this.header.rotation_angle_z = 90;
+        this.header_wrapper.layout_manager = new Clutter.FixedLayout();
+        this.rotate_id = this.header.connect('allocation-changed', () => {
+            this.header_wrapper.set_width(this.header.get_height());
+            this.header.set_width(Math.floor(this.actor.get_height() * 0.85));
+            this.header.disconnect(this.rotate_id);
+            this.rotate_id = null;
+        });
+
+        if (update_kan_string) this.owner.update_kan_string();
+    },
+
+    uncollapse: function () {
+        if (! this.is_collapsed) return;
+        this.is_collapsed = false;
+
+        if (this.rotate_id) {
+            this.header.disconnect(this.rotate_id);
+            this.rotate_id = null;
+        }
+
+        this.tasks_scroll.show();
+        this.actor.set_height(-1);
+        this.header.set_width(-1);
+        this.header_wrapper.set_width(-1);
+        this.collapse_icon.icon_name = 'timepp-column-collapse-symbolic';
+        this.actor.remove_style_class_name('collapsed');
+        // this.header.remove_child(this.collapse_icon);
+        // this.icon_box.insert_child_at_index(this.collapse_icon, 0);
+        this.kanban_title.style = "";
+
+        this.header_wrapper.layout_manager = new Clutter.BoxLayout();
+        this.header.rotation_angle_z = 0;
+
+        this.owner.update_kan_string();
     },
 
     set_title: function () {
-        let markup = "<b>" + this.tasks_scroll_content.get_n_children() + "</b>   ";
+        return;
+        let markup = `<b>${this.tasks_scroll_content.get_n_children()}</b>   `;
 
         for (let i = 0; i < this.filters.length; i++) {
             let it = this.filters[i];
 
             if (REG.TODO_CONTEXT.test(it)) {
-                markup +=
-                    '<span foreground="' + this.ext.custom_css['-timepp-context-color'][0] +
-                    '"><b>' + it + '</b></span>  ';
+                let c = this.ext.custom_css['-timepp-context-color'][0];
+                markup += `<span foreground="${c}"><b>${it}</b></span>  `;
             }
             else if (REG.TODO_PROJ.test(it)) {
-                markup +=
-                    '<span foreground="' + this.ext.custom_css['-timepp-project-color'][0] +
-                    '"><b>' + it + '</b></span>  ';
+                let c = this.ext.custom_css['-timepp-project-color'][0];
+                markup += `<span foreground="${c}"><b>${it}</b></span>  `;
             }
             else {
-                markup += '<b>' + it + '</b>  ';
+                markup += `<b>${it}</b>  `;
             }
         }
 
@@ -640,7 +725,6 @@ var KanbanColumn = new Lang.Class({
         if (! this.title_visible) return;
 
         let related = event.get_related();
-
         if (related && !this.header_fn_btns.contains(related)) {
             this.header_fn_btns.hide();
             this.kanban_title.show();
@@ -649,8 +733,8 @@ var KanbanColumn = new Lang.Class({
     },
 
     _hide_title: function () {
-        this.kanban_title.hide();
         this.header_fn_btns.show();
+        this.kanban_title.hide();
         if (this.title_visible) this.header_fn_btns.get_first_child().grab_key_focus();
     },
 

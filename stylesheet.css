@@ -710,6 +710,11 @@
     border: 1px rgba(125, 125, 125, .15);
     padding: .5em;
     border-radius: 2px;
+    min-height: 20em;
+}
+
+.timepp-menu .todo-section .kanban-column.collapsed {
+    padding: 0 1em 0 1em;
 }
 
 .timepp-menu .todo-section .kanban-switcher-item,
