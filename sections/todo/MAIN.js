@@ -294,7 +294,7 @@ var SectionMain = new Lang.Class({
 
     _monitor_todo_file: function () {
         [this.todo_file_monitor, this.todo_file_monitor_id] =
-            MISC_UTILS.file_monitor(this.todo_txt_file, this._on_todo_file_changed);
+            MISC_UTILS.file_monitor(this.todo_txt_file, () => this._on_todo_file_changed());
     },
 
     store_cache: function () {
