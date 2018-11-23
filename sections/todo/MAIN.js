@@ -324,7 +324,7 @@ var SectionMain = new Lang.Class({
     },
 
     write_tasks_to_file: function () {
-        this.todo_file_monitor.cancel();
+        this._disable_todo_file_monitor();
 
         let content = '';
         for (let it of this.tasks) content += it.task_str + '\n';
