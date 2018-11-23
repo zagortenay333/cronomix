@@ -57,18 +57,14 @@ var TimeTracker = new Lang.Class({
         this.csv_dir = this.get_csv_dir_path();
 
 
-        // GFiles
         this.yearly_csv_dir  = null;
         this.yearly_csv_file = null;
         this.daily_csv_file  = null;
 
 
-        // GFileMonitors
         this.yearly_csv_dir_monitor  = null;
         this.yearly_csv_file_monitor = null;
         this.daily_csv_file_monitor  = null;
-
-        this.monitors_block          = false;
 
 
         // @stats_data: Map
@@ -173,14 +169,6 @@ var TimeTracker = new Lang.Class({
     },
 
     _on_tracker_files_modified: function () {
-        // @HACK
-        // The normal handler_block/unblock methods don't work with a file
-        // monitor for some reason.
-        if (this.monitors_block) {
-            Mainloop.idle_add(() => this.monitors_block = false);
-            return;
-        }
-
         this.stop_all_tracking(false);
 
         this.daily_csv_map.clear();
@@ -206,33 +194,25 @@ var TimeTracker = new Lang.Class({
             else                 tasks    += line;
         }
 
+        this._disable_file_monitors();
         try {
-            this.monitors_block = true;
-
-            if (! this.daily_csv_file.query_exists(null))
-                this.daily_csv_file.create(Gio.FileCreateFlags.NONE, null);
-
             this.daily_csv_file.replace_contents(projects + tasks, null, false,
                 Gio.FileCreateFlags.REPLACE_DESTINATION, null);
         } catch (e) { logError(e); }
+        this._enable_file_monitors();
     },
 
     _archive_daily_csv_file: function () {
         if (! this.csv_dir) return;
 
-        this.monitors_block = true;
-
+        this._disable_file_monitors();
         try {
             let [, contents]  = this.daily_csv_file.load_contents(null);
-
-            let append_stream = this.yearly_csv_file.append_to(
-                Gio.FileCreateFlags.NONE, null);
-
+            let append_stream = this.yearly_csv_file.append_to(Gio.FileCreateFlags.NONE, null);
             append_stream.write_all(contents, null);
-
-            this.daily_csv_file.replace_contents('', null, false,
-                Gio.FileCreateFlags.REPLACE_DESTINATION, null);
+            this.daily_csv_file.replace_contents('', null, false, Gio.FileCreateFlags.REPLACE_DESTINATION, null);
         } catch (e) { logError(e); }
+        this._enable_file_monitors();
 
         let d        = new Date();
         let time_str = "%02d:%02d:%02d".format(d.getHours(), d.getMinutes(), d.getSeconds());
@@ -251,13 +231,13 @@ var TimeTracker = new Lang.Class({
         if (! this.csv_dir) return;
 
         let d = new Date();
-
         let prev_f = `${this.csv_dir}/${d.getFullYear() - 1}__time_tracker.csv`;
 
         if (GLib.file_test(prev_f, GLib.FileTest.EXISTS)) {
-            this.monitors_block = true;
+            this._disable_file_monitors();
             let dir = `${this.csv_dir}/YEARS__time_tracker`;
             Util.spawnCommandLine(`mv ${prev_f} ${dir}`);
+            this._enable_file_monitors();
             return true;
         }
 
@@ -265,20 +245,7 @@ var TimeTracker = new Lang.Class({
     },
 
     _init_tracker_dir: function () {
-        if (this.daily_csv_file_monitor) {
-            this.daily_csv_file_monitor.cancel();
-            this.daily_csv_file_monitor = null;
-        }
-
-        if (this.yearly_csv_file_monitor) {
-            this.yearly_csv_file_monitor.cancel();
-            this.yearly_csv_file_monitor = null;
-        }
-
-        if (this.yearly_csv_dir_monitor) {
-            this.yearly_csv_dir_monitor.cancel();
-            this.yearly_csv_dir_monitor = null;
-        }
+        this._disable_file_monitors();
 
         if (! this.csv_dir) return;
 
@@ -288,53 +255,24 @@ var TimeTracker = new Lang.Class({
             // yearly dir
             this.yearly_csv_dir = MISC_UTILS.file_new_for_path(
                 `${this.csv_dir}/YEARS__time_tracker`);
-
             if (! this.yearly_csv_dir.query_exists(null))
                 this.yearly_csv_dir.make_directory_with_parents(null);
-
-            this.yearly_csv_dir_monitor = this.yearly_csv_dir.monitor_directory(
-                Gio.FileMonitorFlags.WATCH_MOVES, null);
-
-            this.yearly_csv_dir_monitor.connect('changed', () => {
-                this._on_tracker_files_modified();
-            });
 
 
             // yearly file
             this.yearly_csv_file = MISC_UTILS.file_new_for_path(
                 `${this.csv_dir}/${d.getFullYear()}__time_tracker.csv`);
-
             if (! this.yearly_csv_file.query_exists(null))
                 this.yearly_csv_file.create(Gio.FileCreateFlags.NONE, null);
 
-            this.yearly_csv_file_monitor = this.yearly_csv_file.monitor_file(
-                Gio.FileMonitorFlags.WATCH_MOVES, null);
-
-            this.yearly_csv_file_monitor.connect('changed', () => {
-                this._on_tracker_files_modified();
-            });
-
 
             // daily file
-            this.daily_csv_file = MISC_UTILS.file_new_for_path(
-                `${this.csv_dir}/TODAY__time_tracker.csv`);
-
+            this.daily_csv_file = MISC_UTILS.file_new_for_path(`${this.csv_dir}/TODAY__time_tracker.csv`);
             if (! this.daily_csv_file.query_exists(null))
                 this.daily_csv_file.create(Gio.FileCreateFlags.NONE, null);
 
-            this.daily_csv_file_monitor = this.daily_csv_file.monitor_file(
-                Gio.FileMonitorFlags.WATCH_MOVES, null);
 
-            this.daily_csv_file_monitor.connect('changed', (...args) => {
-                let event_type = args[3];
-                if (event_type === Gio.FileMonitorEvent.DELETED ||
-                    event_type === Gio.FileMonitorEvent.MOVED   ||
-                    event_type === Gio.FileMonitorEvent.CREATED ||
-                    event_type === undefined                    ||
-                    event_type === Gio.FileMonitorEvent.CHANGES_DONE_HINT) {
-                    this._on_tracker_files_modified();
-                }
-            });
+            this._enable_file_monitors();
         } catch (e) {
             logError(e);
             this.csv_dir = "";
@@ -405,6 +343,37 @@ var TimeTracker = new Lang.Class({
                     }
                 }
             }
+        }
+    },
+
+    _enable_file_monitors: function () {
+        [this.daily_csv_file_monitor,] = MISC_UTILS.file_monitor(this.daily_csv_file, () => {
+            this._on_tracker_files_modified();
+        });
+
+        [this.yearly_csv_file_monitor,] = MISC_UTILS.file_monitor(this.yearly_csv_file, () => {
+            this._on_tracker_files_modified();
+        });
+
+        [this.yearly_csv_dir_monitor,] = MISC_UTILS.file_monitor(this.yearly_csv_dir, () => {
+            this._on_tracker_files_modified();
+        });
+    },
+
+    _disable_file_monitors: function () {
+        if (this.daily_csv_file_monitor) {
+            this.daily_csv_file_monitor.cancel();
+            this.daily_csv_file_monitor = null;
+        }
+
+        if (this.yearly_csv_file_monitor) {
+            this.yearly_csv_file_monitor.cancel();
+            this.yearly_csv_file_monitor = null;
+        }
+
+        if (this.yearly_csv_dir_monitor) {
+            this.yearly_csv_dir_monitor.cancel();
+            this.yearly_csv_dir_monitor = null;
         }
     },
 

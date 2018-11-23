@@ -204,11 +204,6 @@ var SectionMain = new Lang.Class({
             this.create_tasks_mainloop_id = null;
         }
 
-        if (this.todo_file_monitor) {
-            this.todo_file_monitor.cancel();
-            this.todo_file_monitor = null;
-        }
-
         if (this.time_tracker) {
             this.time_tracker.close();
             this.time_tracker = null;
@@ -219,6 +214,7 @@ var SectionMain = new Lang.Class({
             this.stats_view = null;
         }
 
+        this._disable_todo_file_monitor();
         this.sigm.clear();
         this.keym.clear();
 
@@ -273,7 +269,7 @@ var SectionMain = new Lang.Class({
 
             this.todo_txt_file = MISC_UTILS.file_new_for_path(current.todo_file);
             if (! this.todo_txt_file.query_exists(null)) this.todo_txt_file.create(Gio.FileCreateFlags.NONE, null);
-            this._monitor_todo_file();
+            this._enable_todo_file_monitor();
         } catch (e) {
             this.show_view__file_switcher(true);
             this.view_manager.lock = true;
@@ -292,8 +288,15 @@ var SectionMain = new Lang.Class({
         });
     },
 
-    _monitor_todo_file: function () {
-        [this.todo_file_monitor, this.todo_file_monitor_id] =
+    _disable_todo_file_monitor: function () {
+        if (this.todo_file_monitor) {
+            this.todo_file_monitor.cancel();
+            this.todo_file_monitor = null;
+        }
+    },
+
+    _enable_todo_file_monitor: function () {
+        [this.todo_file_monitor,] =
             MISC_UTILS.file_monitor(this.todo_txt_file, () => this._on_todo_file_changed());
     },
 
@@ -329,7 +332,7 @@ var SectionMain = new Lang.Class({
         this.todo_txt_file.replace_contents(content, null, false,
             Gio.FileCreateFlags.REPLACE_DESTINATION, null);
 
-        this._monitor_todo_file();
+        this._enable_todo_file_monitor();
     },
 
     _on_todo_file_changed: function (event_type) {
