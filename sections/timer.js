@@ -36,8 +36,7 @@ const REG             = ME.imports.lib.regex;
 const IFACE = `${ME.path}/dbus/timer_iface.xml`;
 
 
-const CACHE_FILE = GLib.get_home_dir() +
-                   '/.cache/timepp_gnome_shell_extension/timepp_timer.json';
+const CACHE_FILE = '~/.cache/timepp_gnome_shell_extension/timepp_timer.json';
 
 
 const TIMER_MAX_DURATION = 24 * 60 * 60 * 1000000; // microseconds
@@ -113,7 +112,7 @@ var SectionMain = new Lang.Class({
 
 
         try {
-            this.cache_file = Gio.file_new_for_path(CACHE_FILE);
+            this.cache_file = MISC_UTILS.file_new_for_path(CACHE_FILE);
 
             let cache_format_version =
                 ME.metadata['cache-file-format-version'].timer;

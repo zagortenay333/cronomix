@@ -17,17 +17,17 @@ const _        = Gettext.gettext;
 const ngettext = Gettext.ngettext;
 
 
-const FULLSCREEN    = ME.imports.lib.fullscreen;
-const SIG_MANAGER   = ME.imports.lib.signal_manager;
-const KEY_MANAGER   = ME.imports.lib.keybinding_manager;
-const PANEL_ITEM    = ME.imports.lib.panel_item;
+const MISC_UTILS  = ME.imports.lib.misc_utils;
+const FULLSCREEN  = ME.imports.lib.fullscreen;
+const SIG_MANAGER = ME.imports.lib.signal_manager;
+const KEY_MANAGER = ME.imports.lib.keybinding_manager;
+const PANEL_ITEM  = ME.imports.lib.panel_item;
 
 
 const IFACE = `${ME.path}/dbus/stopwatch_iface.xml`;
 
 
-const CACHE_FILE = GLib.get_home_dir() +
-                   '/.cache/timepp_gnome_shell_extension/timepp_stopwatch.json';
+const CACHE_FILE = '~/.cache/timepp_gnome_shell_extension/timepp_stopwatch.json';
 
 
 const StopwatchState = {
@@ -99,7 +99,7 @@ var SectionMain = new Lang.Class({
 
 
         try {
-            this.cache_file = Gio.file_new_for_path(CACHE_FILE);
+            this.cache_file = MISC_UTILS.file_new_for_path(CACHE_FILE);
 
             let cache_format_version =
                 ME.metadata['cache-file-format-version'].stopwatch;
