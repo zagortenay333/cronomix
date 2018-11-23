@@ -255,11 +255,12 @@ The following extensions are supported:
                 <li>The order of the columns matters.<br>
                     If a task can go into multiple columns, it will be added to the leftmost one.<br>
                     The position of a 'kitchen-sink' column can affect the sorting a lot.</li>
+                <li>Columns that start with '_' (underscore) are collapsed (visually minimized).</li>
             </ul>
             Examples:<br>
             <ul>
                 <li><code>kan:*main|(A),(B),(C)|(D),(E),(F)|(G)</code></li>
-                <li><code>kan:other_project|(A)|(B)|(C)|(D)|(E)|(F)|(G)</code></li>
+                <li><code>kan:other_project|_(A)|_(B)|(C)|_(D)|(E)|(F)|(G)</code></li>
                 <li><code>kan:stuff|(D),@stuf,+my_project|everything\ else</code></li>
                 <li><code>kan:a_and_no_prios|(A)|(_)</code></li>
                 <li><code>kan:kitchen_sink_with_title|some_title_maybe_with\ spaces</code></li>
