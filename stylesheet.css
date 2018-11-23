@@ -717,6 +717,11 @@
     padding: 0 1em 0 1em;
 }
 
+.timepp-menu .todo-section .kanban-column.collapsed .collapse-icon {
+    /* padding-right will act like padding-bottom in this case */
+    padding-right: .7em;
+}
+
 .timepp-menu .todo-section .kanban-switcher-item,
 .timepp-menu .todo-section .file-switcher-item {
     background: rgba(125, 125, 125, .15);

@@ -69,7 +69,7 @@ var ViewDefault = new Lang.Class({
         this.columns_scroll = new St.ScrollView({ vscrollbar_policy: Gtk.PolicyType.NEVER,});
         this.actor.add_actor(this.columns_scroll);
 
-        this.content_box = new St.BoxLayout({ x_expand: true, y_expand: true, style_class: 'view-box-content' });
+        this.content_box = new St.BoxLayout({ x_align: Clutter.ActorAlign.CENTER, x_expand: true, y_expand: true, style_class: 'view-box-content' });
         this.columns_scroll.add_actor(this.content_box);
 
 
@@ -134,8 +134,6 @@ var ViewDefault = new Lang.Class({
                 this.kanban_columns.set(it, column);
                 this.content_box.add_child(column.actor);
             }
-
-            this.update_kan_string();
         } else {
             let column = new KanbanColumn(this.ext, this.delegate, this, '$', false);
             column.tasks_scroll_content.style = `width: ${w}px;`;
@@ -367,11 +365,11 @@ var ViewDefault = new Lang.Class({
     },
 
     on_drag_end: function (old_parent, new_parent, column) {
-        this.update_kan_string();
-        Mainloop.timeout_add(0, () => this.delegate.on_tasks_changed(true, true));
+        this.update_kan_string(false);
+        this.delegate.on_tasks_changed(true, true);
     },
 
-    update_kan_string: function () {
+    update_kan_string: function (write_to_file = true) {
         let new_kanban_str = this.kanban_string.slice(0, this.kanban_string.indexOf('|'));
 
         for (let it of this.content_box.get_children()) {
@@ -382,7 +380,9 @@ var ViewDefault = new Lang.Class({
 
         let t = this.task_with_active_kanban_str;
         t.reset(true, t.task_str.replace(this.kanban_string, new_kanban_str));
-        this.delegate.write_tasks_to_file();
+        this.kanban_string = new_kanban_str;
+
+        if (write_to_file) this.delegate.write_tasks_to_file();
     },
 
     _get_column: function (task) {
@@ -654,18 +654,19 @@ var KanbanColumn = new Lang.Class({
         this.tasks_scroll.hide();
         this.collapse_icon.icon_name = 'timepp-column-uncollapse-symbolic';
         this.actor.add_style_class_name('collapsed');
-        // this.icon_box.remove_child(this.collapse_icon);
-        // this.header.insert_child_at_index(this.collapse_icon, 0);
-        this.kanban_title.style = "padding-left: 10px;";
+        this.icon_box.remove_child(this.collapse_icon);
+        this.header.insert_child_at_index(this.collapse_icon, 0);
 
         // Don't like the way we rotate the text, but it's the only thing I
         // could come up with..
+        // We switch the layout manager of the header_wrapper in addition to
+        // rotating the header.
         this.header.set_pivot_point(0, 1);
         this.header.rotation_angle_z = 90;
-        this.header_wrapper.layout_manager = new Clutter.FixedLayout();
+        this.header_wrapper.set_layout_manager(new Clutter.FixedLayout());
         this.rotate_id = this.header.connect('allocation-changed', () => {
             this.header_wrapper.set_width(this.header.get_height());
-            this.header.set_width(Math.floor(this.actor.get_height() * 0.85));
+            this.header.set_width(Math.floor(this.actor.get_height() * 0.9));
             this.header.disconnect(this.rotate_id);
             this.rotate_id = null;
         });
@@ -688,18 +689,16 @@ var KanbanColumn = new Lang.Class({
         this.header_wrapper.set_width(-1);
         this.collapse_icon.icon_name = 'timepp-column-collapse-symbolic';
         this.actor.remove_style_class_name('collapsed');
-        // this.header.remove_child(this.collapse_icon);
-        // this.icon_box.insert_child_at_index(this.collapse_icon, 0);
-        this.kanban_title.style = "";
+        this.header.remove_child(this.collapse_icon);
+        this.icon_box.insert_child_at_index(this.collapse_icon, 0);
 
-        this.header_wrapper.layout_manager = new Clutter.BoxLayout();
+        this.header_wrapper.set_layout_manager(new Clutter.BoxLayout());
         this.header.rotation_angle_z = 0;
 
         this.owner.update_kan_string();
     },
 
     set_title: function () {
-        return;
         let markup = `<b>${this.tasks_scroll_content.get_n_children()}</b>   `;
 
         for (let i = 0; i < this.filters.length; i++) {
@@ -733,8 +732,9 @@ var KanbanColumn = new Lang.Class({
     },
 
     _hide_title: function () {
-        this.header_fn_btns.show();
+        if (this.is_collapsed) return;
         this.kanban_title.hide();
+        this.header_fn_btns.show();
         if (this.title_visible) this.header_fn_btns.get_first_child().grab_key_focus();
     },
 

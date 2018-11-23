@@ -18,8 +18,6 @@ const ngettext = Gettext.ngettext;
 //
 // @ext      : obj (main extension object)
 // @delegate : obj (main section object)
-//
-// @signals:
 // =====================================================================
 var ViewLoading = new Lang.Class({
     Name: 'Timepp.ViewLoading',

@@ -42,8 +42,7 @@ const VIEW_FILE_SWITCHER   = ME.imports.sections.todo.view__file_switcher;
 const VIEW_KANBAN_SWITCHER = ME.imports.sections.todo.view__kanban_switcher;
 
 
-const CACHE_FILE = GLib.get_home_dir() +
-                   '/.cache/timepp_gnome_shell_extension/timepp_todo.json';
+const CACHE_FILE = '~/.cache/timepp_gnome_shell_extension/timepp_todo.json';
 
 
 // =====================================================================
@@ -85,7 +84,7 @@ var SectionMain = new Lang.Class({
         // init cache file
         //
         try {
-            this.cache_file = Gio.file_new_for_path(CACHE_FILE);
+            this.cache_file = MISC_UTILS.file_new_for_path(CACHE_FILE);
 
             let cache_format_version =
                 ME.metadata['cache-file-format-version'].todo;
@@ -273,12 +272,8 @@ var SectionMain = new Lang.Class({
             }
 
             this.todo_txt_file = MISC_UTILS.file_new_for_path(current.todo_file);
-
-            this.todo_file_monitor = this.todo_txt_file.monitor_file(Gio.FileMonitorFlags.NONE, null);
-            this.todo_file_monitor.connect('changed', (...args) => this._on_todo_file_changed(args[3]));
-
-            if (!this.todo_txt_file.query_exists(null))
-                this.todo_txt_file.create(Gio.FileCreateFlags.NONE, null);
+            if (! this.todo_txt_file.query_exists(null)) this.todo_txt_file.create(Gio.FileCreateFlags.NONE, null);
+            this._monitor_todo_file();
         } catch (e) {
             this.show_view__file_switcher(true);
             this.view_manager.lock = true;
@@ -297,8 +292,15 @@ var SectionMain = new Lang.Class({
         });
     },
 
+    _monitor_todo_file: function () {
+        [this.todo_file_monitor, this.todo_file_monitor_id] =
+            MISC_UTILS.file_monitor(this.todo_txt_file, this._on_todo_file_changed);
+    },
+
     store_cache: function () {
-        if (!this.cache_file || !this.cache_file.query_exists(null))
+        if (! this.cache_file) return;
+
+        if(! this.cache_file.query_exists(null))
             this.cache_file.create(Gio.FileCreateFlags.NONE, null);
 
         this.cache_file.replace_contents(JSON.stringify(this.cache, null, 2),
@@ -319,54 +321,24 @@ var SectionMain = new Lang.Class({
     },
 
     write_tasks_to_file: function () {
-        this.file_monitor_handler_block = true;
+        this.todo_file_monitor.cancel();
 
-        let res = '';
+        let content = '';
+        for (let it of this.tasks) content += it.task_str + '\n';
 
-        let len = this.tasks.length;
-        for (let i = 0; i < len; i++) res += this.tasks[i].task_str + '\n';
-
-        if (!this.todo_txt_file || !this.todo_txt_file.query_exists(null))
-            this.cache_file.create(Gio.FileCreateFlags.NONE, null);
-
-        this.todo_txt_file.replace_contents(res, null, false,
+        this.todo_txt_file.replace_contents(content, null, false,
             Gio.FileCreateFlags.REPLACE_DESTINATION, null);
+
+        this._monitor_todo_file();
     },
 
     _on_todo_file_changed: function (event_type) {
-        // @HACK
-        // The normal handler_block/unblock methods don't work with a file
-        // monitor for some reason. This seems to work well enough.
-        if (this.file_monitor_handler_block) {
-            Mainloop.idle_add(() => {
-                this.file_monitor_handler_block = false;
-            });
-            return;
-        }
-
-        if (event_type === Gio.FileMonitorEvent.DELETED ||
-            event_type === Gio.FileMonitorEvent.MOVED   ||
-            event_type === Gio.FileMonitorEvent.CREATED) {
-
-            this._init_todo_file();
-            return;
-        }
-
-        if (event_type !== undefined &&
-            event_type !== Gio.FileMonitorEvent.CHANGES_DONE_HINT) {
-
-            return;
-        }
-
         this._init_todo_file();
     },
 
     _on_new_day_started: function () {
         this.emit('new-day', MISC_UTILS.date_yyyymmdd());
-
-        if (this._check_dates()) {
-            this.on_tasks_changed(true, true);
-        }
+        if (this._check_dates()) this.on_tasks_changed(true, true);
     },
 
     _check_dates: function () {
