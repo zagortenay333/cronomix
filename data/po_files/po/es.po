@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-11 20:18+0100\n"
+"POT-Creation-Date: 2018-11-23 18:46+0100\n"
 "PO-Revision-Date: 2018-11-02 19:36+0100\n"
 "Last-Translator: Felipe Hommen <felibank@gmail.com>\n"
 "Language-Team: Spanish\n"
@@ -29,7 +29,7 @@ msgstr "Archivar todas las tareas completadas en done.txt y eliminarlas"
 #: data/po_files/../../sections/todo/view__clear_tasks.js:95
 #: data/po_files/../../sections/todo/view__task_editor.js:204
 #: data/po_files/../../sections/todo/view__file_switcher.js:447
-#: data/po_files/../../sections/alarms.js:566
+#: data/po_files/../../sections/alarms.js:565
 msgid "Delete"
 msgstr "Eliminar"
 
@@ -39,8 +39,8 @@ msgstr "Eliminar"
 #: data/po_files/../../sections/todo/view__task_editor.js:217
 #: data/po_files/../../sections/todo/view__file_switcher.js:100
 #: data/po_files/../../sections/todo/view__file_switcher.js:452
-#: data/po_files/../../sections/alarms.js:574
-#: data/po_files/../../sections/pomodoro.js:775
+#: data/po_files/../../sections/alarms.js:573
+#: data/po_files/../../sections/pomodoro.js:774
 msgid "Cancel"
 msgstr "Cancelar"
 
@@ -71,7 +71,7 @@ msgstr "Siempre"
 #: data/po_files/../../sections/todo/view__stats.js:169
 #: data/po_files/../../sections/todo/view__kanban_switcher.js:63
 #: data/po_files/../../sections/todo/view__file_switcher.js:70
-#: data/po_files/../../sections/timer.js:639
+#: data/po_files/../../sections/timer.js:638
 msgid "Search..."
 msgstr "Buscar..."
 
@@ -105,8 +105,8 @@ msgstr "Día:"
 #: data/po_files/../../sections/todo/view__task_editor.js:220
 #: data/po_files/../../sections/todo/view__file_switcher.js:104
 #: data/po_files/../../sections/todo/view__file_switcher.js:453
-#: data/po_files/../../sections/alarms.js:575
-#: data/po_files/../../sections/pomodoro.js:774
+#: data/po_files/../../sections/alarms.js:574
+#: data/po_files/../../sections/pomodoro.js:773
 msgid "Ok"
 msgstr "Ok"
 
@@ -202,8 +202,8 @@ msgstr "Ayuda con la sintaxis"
 msgid "To use kanban boards, add the kanban todo extension to a task."
 msgstr "Para usar tableros Kanban, añade la extensión kanban todo a una tarea"
 
-#: data/po_files/../../sections/todo/view__loading.js:40
-#: data/po_files/../../sections/todo/MAIN.js:700
+#: data/po_files/../../sections/todo/view__loading.js:38
+#: data/po_files/../../sections/todo/MAIN.js:675
 msgid "Loading..."
 msgstr "Cargando..."
 
@@ -269,36 +269,36 @@ msgid_plural "%d tasks"
 msgstr[0] "%d tarea"
 msgstr[1] "%d tareas"
 
-#: data/po_files/../../sections/todo/time_tracker.js:364
-#: data/po_files/../../sections/todo/time_tracker.js:785
+#: data/po_files/../../sections/todo/time_tracker.js:302
+#: data/po_files/../../sections/todo/time_tracker.js:754
 msgid "Error while parsing csv file. See logs."
 msgstr "Error interpretando el archivo csv. Ver registros."
 
-#: data/po_files/../../sections/todo/time_tracker.js:542
+#: data/po_files/../../sections/todo/time_tracker.js:511
 msgid "To track time, select a dir for csv files in the settings."
 msgstr ""
 "Para registrar tiempo, selecciona una carpeta para los archivos csv en los "
 "ajustes"
 
-#: data/po_files/../../sections/todo/MAIN.js:286
+#: data/po_files/../../sections/todo/MAIN.js:277
 msgid "Unable to load todo file"
 msgstr "No se a podido cargar el fichero todo"
 
-#: data/po_files/../../sections/todo/MAIN.js:394
+#: data/po_files/../../sections/todo/MAIN.js:369
 #, javascript-format
 msgid "%d task has recurred"
 msgid_plural "%d tasks have recurred"
 msgstr[0] "Se ha repetido %d tarea"
 msgstr[1] "Se han repetido % tareas"
 
-#: data/po_files/../../sections/todo/MAIN.js:400
+#: data/po_files/../../sections/todo/MAIN.js:375
 #, javascript-format
 msgid "%d deferred task has been opened"
 msgid_plural "%d deferred tasks have been opened"
 msgstr[0] "Se ha abierto %d tarea pospuesta"
 msgstr[1] "Se han abierto %d tareas pospuestas"
 
-#: data/po_files/../../sections/todo/MAIN.js:706
+#: data/po_files/../../sections/todo/MAIN.js:681
 msgid "Nothing found."
 msgstr "No se ha encontrado nada"
 
@@ -338,7 +338,7 @@ msgstr "Tarea..."
 msgid "Archive"
 msgstr "Archivo"
 
-#: data/po_files/../../sections/todo/view__default.js:496
+#: data/po_files/../../sections/todo/view__default.js:513
 msgid "Add New Task..."
 msgstr "Añadir nueva tarea..."
 
@@ -367,128 +367,128 @@ msgstr "opcional"
 msgid "Time-tracker directory"
 msgstr "Carpeta de registro de tiempo"
 
-#: data/po_files/../../sections/alarms.js:155
+#: data/po_files/../../sections/alarms.js:154
 msgid "Add New Alarm..."
 msgstr "Añadir nueva alarma"
 
 #. TRANSLATORS: %s is a time string in the format HH:MM (e.g., 13:44)
-#: data/po_files/../../sections/alarms.js:372
-#: data/po_files/../../sections/alarms.js:902
+#: data/po_files/../../sections/alarms.js:371
+#: data/po_files/../../sections/alarms.js:901
 #, javascript-format
 msgid "Alarm at %s"
 msgstr "Alarma a las %s"
 
-#: data/po_files/../../sections/alarms.js:387
-#: data/po_files/../../sections/alarms.js:909
+#: data/po_files/../../sections/alarms.js:386
+#: data/po_files/../../sections/alarms.js:908
 msgid "Snooze"
 msgstr "Retrasar"
 
-#: data/po_files/../../sections/alarms.js:479
+#: data/po_files/../../sections/alarms.js:478
 msgid "Alarm time"
 msgstr "Hora de alarma"
 
-#: data/po_files/../../sections/alarms.js:479
+#: data/po_files/../../sections/alarms.js:478
 msgid "(h:min)"
 msgstr "(h:min)"
 
-#: data/po_files/../../sections/alarms.js:518
+#: data/po_files/../../sections/alarms.js:517
 msgid "Snooze duration"
 msgstr "Tiempo de retraso"
 
-#: data/po_files/../../sections/alarms.js:518
+#: data/po_files/../../sections/alarms.js:517
 msgid "(min)"
 msgstr "(min)"
 
-#: data/po_files/../../sections/alarms.js:536
+#: data/po_files/../../sections/alarms.js:535
 #: data/po_files/../../data/prefs.ui:1582
 msgid "Repeat notification sound?"
 msgstr "¿Repetir sonido de notificación?"
 
-#: data/po_files/../../sections/alarms.js:548
+#: data/po_files/../../sections/alarms.js:547
 msgid "Alarm Message..."
 msgstr "Mensaje de alarma..."
 
-#: data/po_files/../../sections/alarms.js:729
+#: data/po_files/../../sections/alarms.js:728
 msgid "Snoozed"
 msgstr "Retrasada"
 
-#: data/po_files/../../sections/alarms.js:926
+#: data/po_files/../../sections/alarms.js:925
 #, javascript-format
 msgid "%d alarm went off!"
 msgid_plural "%d alarms went off!"
 msgstr[0] "Se ha pasado %d alarma"
 msgstr[1] "Se han pasado %d alarmas"
 
-#: data/po_files/../../sections/pomodoro.js:37
-#: data/po_files/../../sections/pomodoro.js:244
-#: data/po_files/../../sections/pomodoro.js:349
+#: data/po_files/../../sections/pomodoro.js:36
+#: data/po_files/../../sections/pomodoro.js:243
+#: data/po_files/../../sections/pomodoro.js:348
 #: data/po_files/../../data/prefs.ui:301 data/po_files/../../data/prefs.ui:1627
 #: data/po_files/../../data/prefs.ui:1957
 msgid "Pomodoro"
 msgstr "Pomodoro"
 
-#: data/po_files/../../sections/pomodoro.js:38
+#: data/po_files/../../sections/pomodoro.js:37
 #: data/po_files/../../data/prefs.ui:1751
 msgid "Long Break"
 msgstr "Descanso largo"
 
-#: data/po_files/../../sections/pomodoro.js:39
+#: data/po_files/../../sections/pomodoro.js:38
 #: data/po_files/../../data/prefs.ui:1689
 msgid "Short Break"
 msgstr "Descanso corto"
 
-#: data/po_files/../../sections/pomodoro.js:166
-#: data/po_files/../../sections/timer.js:180
-#: data/po_files/../../sections/timer.js:347
+#: data/po_files/../../sections/pomodoro.js:165
+#: data/po_files/../../sections/timer.js:179
+#: data/po_files/../../sections/timer.js:346
 #: data/po_files/../../data/prefs.ui:213 data/po_files/../../data/prefs.ui:943
 msgid "Timer"
 msgstr "Cuenta atrás"
 
-#: data/po_files/../../sections/pomodoro.js:197
-#: data/po_files/../../sections/pomodoro.js:865
+#: data/po_files/../../sections/pomodoro.js:196
+#: data/po_files/../../sections/pomodoro.js:864
 msgid "New Pomo"
 msgstr "Nuevo pomodoro"
 
-#: data/po_files/../../sections/pomodoro.js:198
-#: data/po_files/../../sections/pomodoro.js:866
+#: data/po_files/../../sections/pomodoro.js:197
+#: data/po_files/../../sections/pomodoro.js:865
 msgid "Take Break"
 msgstr "Descansar"
 
-#: data/po_files/../../sections/pomodoro.js:199
-#: data/po_files/../../sections/pomodoro.js:867
+#: data/po_files/../../sections/pomodoro.js:198
+#: data/po_files/../../sections/pomodoro.js:866
 msgid "Continue"
 msgstr "Continuar"
 
-#: data/po_files/../../sections/pomodoro.js:200
-#: data/po_files/../../sections/pomodoro.js:868
+#: data/po_files/../../sections/pomodoro.js:199
+#: data/po_files/../../sections/pomodoro.js:867
 #: data/po_files/../../sections/stopwatch.js:185
 #: data/po_files/../../sections/stopwatch.js:586
 msgid "Stop"
 msgstr "Parar"
 
-#: data/po_files/../../sections/pomodoro.js:672
+#: data/po_files/../../sections/pomodoro.js:671
 msgid "Reset pomodoro counter?"
 msgstr "¿Resetear el contador del pomodoro?"
 
-#: data/po_files/../../sections/pomodoro.js:688
-#: data/po_files/../../sections/pomodoro.js:707
-#: data/po_files/../../sections/pomodoro.js:726
+#: data/po_files/../../sections/pomodoro.js:687
+#: data/po_files/../../sections/pomodoro.js:706
+#: data/po_files/../../sections/pomodoro.js:725
 msgid "(min:sec)"
 msgstr "(min:seg)"
 
-#: data/po_files/../../sections/pomodoro.js:745
+#: data/po_files/../../sections/pomodoro.js:744
 msgid "Num of pomos until long break"
 msgstr "Núm. de pomodoros antes del descanso largo"
 
-#: data/po_files/../../sections/pomodoro.js:761
+#: data/po_files/../../sections/pomodoro.js:760
 msgid "Control todo time tracker by task id..."
 msgstr "Controlae el registro de tiempo por id de tarea"
 
-#: data/po_files/../../sections/timer.js:44
+#: data/po_files/../../sections/timer.js:43
 msgid "Timer Expired!"
 msgstr "¡Terminó la cuenta atrás!"
 
-#: data/po_files/../../sections/timer.js:667
+#: data/po_files/../../sections/timer.js:666
 msgid "Default preset"
 msgstr "Ajuste predefinido"
 
@@ -532,22 +532,22 @@ msgstr "Mover al monitor principal"
 msgid "Move to Secondary Monitor"
 msgstr "Mover al monitor secundario"
 
-#: data/po_files/../../lib/misc_utils.js:57
+#: data/po_files/../../lib/misc_utils.js:51
 msgid "File or dir not found."
 msgstr "No se ha encontrado el fichero o carpeta"
 
-#: data/po_files/../../lib/misc_utils.js:128
+#: data/po_files/../../lib/misc_utils.js:148
 msgid "today"
 msgstr "hoy"
 
-#: data/po_files/../../lib/misc_utils.js:129
+#: data/po_files/../../lib/misc_utils.js:149
 #, javascript-format
 msgid "%d day ago"
 msgid_plural "%d days ago"
 msgstr[0] "hace %d día"
 msgstr[1] "hace %d días"
 
-#: data/po_files/../../lib/misc_utils.js:130
+#: data/po_files/../../lib/misc_utils.js:150
 #, javascript-format
 msgid "in %d day"
 msgid_plural "in %d days"

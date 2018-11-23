@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-11 20:18+0100\n"
+"POT-Creation-Date: 2018-11-23 18:46+0100\n"
 "PO-Revision-Date: 2018-07-14 13:42+0800\n"
 "Last-Translator: OriginCode <origincoder@yahoo.com>\n"
 "Language-Team: Chinese <kde-i18n-doc@kde.org>\n"
@@ -28,7 +28,7 @@ msgstr "將所有已完成的任務儲存至 done.txt 並刪除它們"
 #: data/po_files/../../sections/todo/view__clear_tasks.js:95
 #: data/po_files/../../sections/todo/view__task_editor.js:204
 #: data/po_files/../../sections/todo/view__file_switcher.js:447
-#: data/po_files/../../sections/alarms.js:566
+#: data/po_files/../../sections/alarms.js:565
 msgid "Delete"
 msgstr "刪除"
 
@@ -38,8 +38,8 @@ msgstr "刪除"
 #: data/po_files/../../sections/todo/view__task_editor.js:217
 #: data/po_files/../../sections/todo/view__file_switcher.js:100
 #: data/po_files/../../sections/todo/view__file_switcher.js:452
-#: data/po_files/../../sections/alarms.js:574
-#: data/po_files/../../sections/pomodoro.js:775
+#: data/po_files/../../sections/alarms.js:573
+#: data/po_files/../../sections/pomodoro.js:774
 msgid "Cancel"
 msgstr "取消"
 
@@ -70,7 +70,7 @@ msgstr "所有時間"
 #: data/po_files/../../sections/todo/view__stats.js:169
 #: data/po_files/../../sections/todo/view__kanban_switcher.js:63
 #: data/po_files/../../sections/todo/view__file_switcher.js:70
-#: data/po_files/../../sections/timer.js:639
+#: data/po_files/../../sections/timer.js:638
 msgid "Search..."
 msgstr "搜尋……"
 
@@ -104,8 +104,8 @@ msgstr "日："
 #: data/po_files/../../sections/todo/view__task_editor.js:220
 #: data/po_files/../../sections/todo/view__file_switcher.js:104
 #: data/po_files/../../sections/todo/view__file_switcher.js:453
-#: data/po_files/../../sections/alarms.js:575
-#: data/po_files/../../sections/pomodoro.js:774
+#: data/po_files/../../sections/alarms.js:574
+#: data/po_files/../../sections/pomodoro.js:773
 msgid "Ok"
 msgstr "好"
 
@@ -201,8 +201,8 @@ msgstr "語法幫助"
 msgid "To use kanban boards, add the kanban todo extension to a task."
 msgstr "為了使用看板，請將看板TODO擴充套件新增到一個任務。"
 
-#: data/po_files/../../sections/todo/view__loading.js:40
-#: data/po_files/../../sections/todo/MAIN.js:700
+#: data/po_files/../../sections/todo/view__loading.js:38
+#: data/po_files/../../sections/todo/MAIN.js:675
 msgid "Loading..."
 msgstr "載入..."
 
@@ -264,32 +264,32 @@ msgid "%d task"
 msgid_plural "%d tasks"
 msgstr[0] "%d 個任務"
 
-#: data/po_files/../../sections/todo/time_tracker.js:364
-#: data/po_files/../../sections/todo/time_tracker.js:785
+#: data/po_files/../../sections/todo/time_tracker.js:302
+#: data/po_files/../../sections/todo/time_tracker.js:754
 msgid "Error while parsing csv file. See logs."
 msgstr "當處理CSV檔案時出現了錯誤。參見日誌。"
 
-#: data/po_files/../../sections/todo/time_tracker.js:542
+#: data/po_files/../../sections/todo/time_tracker.js:511
 msgid "To track time, select a dir for csv files in the settings."
 msgstr "在設定中選擇一個目錄或CSV檔案用於時間追溯。"
 
-#: data/po_files/../../sections/todo/MAIN.js:286
+#: data/po_files/../../sections/todo/MAIN.js:277
 msgid "Unable to load todo file"
 msgstr "無法載入TODO檔案"
 
-#: data/po_files/../../sections/todo/MAIN.js:394
+#: data/po_files/../../sections/todo/MAIN.js:369
 #, javascript-format
 msgid "%d task has recurred"
 msgid_plural "%d tasks have recurred"
 msgstr[0] "%d 個任務已經重新開始執行"
 
-#: data/po_files/../../sections/todo/MAIN.js:400
+#: data/po_files/../../sections/todo/MAIN.js:375
 #, javascript-format
 msgid "%d deferred task has been opened"
 msgid_plural "%d deferred tasks have been opened"
 msgstr[0] "%d 個延時任務已經開啟"
 
-#: data/po_files/../../sections/todo/MAIN.js:706
+#: data/po_files/../../sections/todo/MAIN.js:681
 msgid "Nothing found."
 msgstr "無物可尋。"
 
@@ -328,7 +328,7 @@ msgstr "任務……"
 msgid "Archive"
 msgstr "儲存"
 
-#: data/po_files/../../sections/todo/view__default.js:496
+#: data/po_files/../../sections/todo/view__default.js:513
 msgid "Add New Task..."
 msgstr "新建任務……"
 
@@ -357,127 +357,127 @@ msgstr "可選"
 msgid "Time-tracker directory"
 msgstr "時間追溯器目錄（可選）"
 
-#: data/po_files/../../sections/alarms.js:155
+#: data/po_files/../../sections/alarms.js:154
 msgid "Add New Alarm..."
 msgstr "新建鬧鐘……"
 
 #. TRANSLATORS: %s is a time string in the format HH:MM (e.g., 13:44)
-#: data/po_files/../../sections/alarms.js:372
-#: data/po_files/../../sections/alarms.js:902
+#: data/po_files/../../sections/alarms.js:371
+#: data/po_files/../../sections/alarms.js:901
 #, javascript-format
 msgid "Alarm at %s"
 msgstr "%s 的鬧鐘"
 
-#: data/po_files/../../sections/alarms.js:387
-#: data/po_files/../../sections/alarms.js:909
+#: data/po_files/../../sections/alarms.js:386
+#: data/po_files/../../sections/alarms.js:908
 msgid "Snooze"
 msgstr "延後"
 
-#: data/po_files/../../sections/alarms.js:479
+#: data/po_files/../../sections/alarms.js:478
 msgid "Alarm time"
 msgstr "鬧鐘時間"
 
-#: data/po_files/../../sections/alarms.js:479
+#: data/po_files/../../sections/alarms.js:478
 msgid "(h:min)"
 msgstr "（時:分）"
 
-#: data/po_files/../../sections/alarms.js:518
+#: data/po_files/../../sections/alarms.js:517
 msgid "Snooze duration"
 msgstr "延後時長"
 
-#: data/po_files/../../sections/alarms.js:518
+#: data/po_files/../../sections/alarms.js:517
 msgid "(min)"
 msgstr "（分）"
 
-#: data/po_files/../../sections/alarms.js:536
+#: data/po_files/../../sections/alarms.js:535
 #: data/po_files/../../data/prefs.ui:1582
 msgid "Repeat notification sound?"
 msgstr "重複提醒音？"
 
-#: data/po_files/../../sections/alarms.js:548
+#: data/po_files/../../sections/alarms.js:547
 msgid "Alarm Message..."
 msgstr "鬧鐘訊息……"
 
-#: data/po_files/../../sections/alarms.js:729
+#: data/po_files/../../sections/alarms.js:728
 msgid "Snoozed"
 msgstr "已延後"
 
-#: data/po_files/../../sections/alarms.js:926
+#: data/po_files/../../sections/alarms.js:925
 #, javascript-format
 msgid "%d alarm went off!"
 msgid_plural "%d alarms went off!"
 msgstr[0] "%d 個鬧鐘已停止！"
 
-#: data/po_files/../../sections/pomodoro.js:37
-#: data/po_files/../../sections/pomodoro.js:244
-#: data/po_files/../../sections/pomodoro.js:349
+#: data/po_files/../../sections/pomodoro.js:36
+#: data/po_files/../../sections/pomodoro.js:243
+#: data/po_files/../../sections/pomodoro.js:348
 #: data/po_files/../../data/prefs.ui:301 data/po_files/../../data/prefs.ui:1627
 #: data/po_files/../../data/prefs.ui:1957
 msgid "Pomodoro"
 msgstr "番茄計時器"
 
-#: data/po_files/../../sections/pomodoro.js:38
+#: data/po_files/../../sections/pomodoro.js:37
 #: data/po_files/../../data/prefs.ui:1751
 msgid "Long Break"
 msgstr "長時休息"
 
-#: data/po_files/../../sections/pomodoro.js:39
+#: data/po_files/../../sections/pomodoro.js:38
 #: data/po_files/../../data/prefs.ui:1689
 msgid "Short Break"
 msgstr "短時休息"
 
-#: data/po_files/../../sections/pomodoro.js:166
-#: data/po_files/../../sections/timer.js:180
-#: data/po_files/../../sections/timer.js:347
+#: data/po_files/../../sections/pomodoro.js:165
+#: data/po_files/../../sections/timer.js:179
+#: data/po_files/../../sections/timer.js:346
 #: data/po_files/../../data/prefs.ui:213 data/po_files/../../data/prefs.ui:943
 msgid "Timer"
 msgstr "計時器"
 
-#: data/po_files/../../sections/pomodoro.js:197
-#: data/po_files/../../sections/pomodoro.js:865
+#: data/po_files/../../sections/pomodoro.js:196
+#: data/po_files/../../sections/pomodoro.js:864
 msgid "New Pomo"
 msgstr "新番茄鍾"
 
-#: data/po_files/../../sections/pomodoro.js:198
-#: data/po_files/../../sections/pomodoro.js:866
+#: data/po_files/../../sections/pomodoro.js:197
+#: data/po_files/../../sections/pomodoro.js:865
 msgid "Take Break"
 msgstr "休息"
 
-#: data/po_files/../../sections/pomodoro.js:199
-#: data/po_files/../../sections/pomodoro.js:867
+#: data/po_files/../../sections/pomodoro.js:198
+#: data/po_files/../../sections/pomodoro.js:866
 msgid "Continue"
 msgstr "繼續"
 
-#: data/po_files/../../sections/pomodoro.js:200
-#: data/po_files/../../sections/pomodoro.js:868
+#: data/po_files/../../sections/pomodoro.js:199
+#: data/po_files/../../sections/pomodoro.js:867
 #: data/po_files/../../sections/stopwatch.js:185
 #: data/po_files/../../sections/stopwatch.js:586
 msgid "Stop"
 msgstr "停止"
 
-#: data/po_files/../../sections/pomodoro.js:672
+#: data/po_files/../../sections/pomodoro.js:671
 msgid "Reset pomodoro counter?"
 msgstr "重置番茄計時器？"
 
-#: data/po_files/../../sections/pomodoro.js:688
-#: data/po_files/../../sections/pomodoro.js:707
-#: data/po_files/../../sections/pomodoro.js:726
+#: data/po_files/../../sections/pomodoro.js:687
+#: data/po_files/../../sections/pomodoro.js:706
+#: data/po_files/../../sections/pomodoro.js:725
 msgid "(min:sec)"
 msgstr "（分:秒）"
 
-#: data/po_files/../../sections/pomodoro.js:745
+#: data/po_files/../../sections/pomodoro.js:744
 msgid "Num of pomos until long break"
 msgstr "直到長時休息前的番茄鍾數"
 
-#: data/po_files/../../sections/pomodoro.js:761
+#: data/po_files/../../sections/pomodoro.js:760
 msgid "Control todo time tracker by task id..."
 msgstr "以任務ID控制TODO時間追溯器……"
 
-#: data/po_files/../../sections/timer.js:44
+#: data/po_files/../../sections/timer.js:43
 msgid "Timer Expired!"
 msgstr "計時器時間已到！"
 
-#: data/po_files/../../sections/timer.js:667
+#: data/po_files/../../sections/timer.js:666
 msgid "Default preset"
 msgstr "預設預設"
 
@@ -521,21 +521,21 @@ msgstr "移動到主顯示器"
 msgid "Move to Secondary Monitor"
 msgstr "移動到子顯示器"
 
-#: data/po_files/../../lib/misc_utils.js:57
+#: data/po_files/../../lib/misc_utils.js:51
 msgid "File or dir not found."
 msgstr "目錄或檔案無法找到。"
 
-#: data/po_files/../../lib/misc_utils.js:128
+#: data/po_files/../../lib/misc_utils.js:148
 msgid "today"
 msgstr "今天"
 
-#: data/po_files/../../lib/misc_utils.js:129
+#: data/po_files/../../lib/misc_utils.js:149
 #, javascript-format
 msgid "%d day ago"
 msgid_plural "%d days ago"
 msgstr[0] "%d 天前"
 
-#: data/po_files/../../lib/misc_utils.js:130
+#: data/po_files/../../lib/misc_utils.js:150
 #, javascript-format
 msgid "in %d day"
 msgid_plural "in %d days"
