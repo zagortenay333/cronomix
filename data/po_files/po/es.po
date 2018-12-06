@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-23 18:46+0100\n"
+"POT-Creation-Date: 2018-12-06 12:50+0100\n"
 "PO-Revision-Date: 2018-11-02 19:36+0100\n"
 "Last-Translator: Felipe Hommen <felibank@gmail.com>\n"
 "Language-Team: Spanish\n"
@@ -27,7 +27,7 @@ msgid "Archive all completed tasks to done.txt and delete them"
 msgstr "Archivar todas las tareas completadas en done.txt y eliminarlas"
 
 #: data/po_files/../../sections/todo/view__clear_tasks.js:95
-#: data/po_files/../../sections/todo/view__task_editor.js:204
+#: data/po_files/../../sections/todo/view__task_editor.js:205
 #: data/po_files/../../sections/todo/view__file_switcher.js:447
 #: data/po_files/../../sections/alarms.js:565
 msgid "Delete"
@@ -36,7 +36,7 @@ msgstr "Eliminar"
 #: data/po_files/../../sections/todo/view__clear_tasks.js:98
 #: data/po_files/../../sections/todo/view__stats.js:253
 #: data/po_files/../../sections/todo/view__kanban_switcher.js:94
-#: data/po_files/../../sections/todo/view__task_editor.js:217
+#: data/po_files/../../sections/todo/view__task_editor.js:218
 #: data/po_files/../../sections/todo/view__file_switcher.js:100
 #: data/po_files/../../sections/todo/view__file_switcher.js:452
 #: data/po_files/../../sections/alarms.js:573
@@ -102,7 +102,7 @@ msgstr "Día:"
 #: data/po_files/../../sections/todo/view__stats.js:250
 #: data/po_files/../../sections/todo/view__sort.js:114
 #: data/po_files/../../sections/todo/view__filters.js:208
-#: data/po_files/../../sections/todo/view__task_editor.js:220
+#: data/po_files/../../sections/todo/view__task_editor.js:221
 #: data/po_files/../../sections/todo/view__file_switcher.js:104
 #: data/po_files/../../sections/todo/view__file_switcher.js:453
 #: data/po_files/../../sections/alarms.js:574
@@ -302,31 +302,31 @@ msgstr[1] "Se han abierto %d tareas pospuestas"
 msgid "Nothing found."
 msgstr "No se ha encontrado nada"
 
-#: data/po_files/../../sections/todo/task_item.js:637
-#: data/po_files/../../sections/todo/task_item.js:641
+#: data/po_files/../../sections/todo/task_item.js:643
+#: data/po_files/../../sections/todo/task_item.js:647
 msgid "recurrence"
 msgstr "recurrencia"
 
-#: data/po_files/../../sections/todo/task_item.js:638
+#: data/po_files/../../sections/todo/task_item.js:644
 #, javascript-format
 msgid "%d day after completion"
 msgid_plural "%d days after completion"
 msgstr[0] "%d día después de completado"
 msgstr[1] "% días despues de completado"
 
-#: data/po_files/../../sections/todo/task_item.js:654
+#: data/po_files/../../sections/todo/task_item.js:660
 msgid "due"
 msgstr "vencimiento"
 
-#: data/po_files/../../sections/todo/task_item.js:662
+#: data/po_files/../../sections/todo/task_item.js:668
 msgid "deferred"
 msgstr "pospuesta"
 
-#: data/po_files/../../sections/todo/task_item.js:701
+#: data/po_files/../../sections/todo/task_item.js:707
 msgid "created"
 msgstr "creada"
 
-#: data/po_files/../../sections/todo/task_item.js:704
+#: data/po_files/../../sections/todo/task_item.js:710
 msgid "completed"
 msgstr "completada"
 
@@ -334,11 +334,11 @@ msgstr "completada"
 msgid "Task..."
 msgstr "Tarea..."
 
-#: data/po_files/../../sections/todo/view__task_editor.js:212
+#: data/po_files/../../sections/todo/view__task_editor.js:213
 msgid "Archive"
 msgstr "Archivo"
 
-#: data/po_files/../../sections/todo/view__default.js:513
+#: data/po_files/../../sections/todo/view__default.js:519
 msgid "Add New Task..."
 msgstr "Añadir nueva tarea..."
 

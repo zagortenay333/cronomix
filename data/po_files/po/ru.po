@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-23 18:46+0100\n"
+"POT-Creation-Date: 2018-12-06 12:50+0100\n"
 "PO-Revision-Date: 2017-11-29 13:36+0200\n"
 "Last-Translator: Sergey Shlyapugin <shlyapugin@gmail.com>\n"
 "Language-Team: Russian\n"
@@ -28,7 +28,7 @@ msgid "Archive all completed tasks to done.txt and delete them"
 msgstr "Архивировать все выполненные задачи в done.txt, а затем удалить"
 
 #: data/po_files/../../sections/todo/view__clear_tasks.js:95
-#: data/po_files/../../sections/todo/view__task_editor.js:204
+#: data/po_files/../../sections/todo/view__task_editor.js:205
 #: data/po_files/../../sections/todo/view__file_switcher.js:447
 #: data/po_files/../../sections/alarms.js:565
 msgid "Delete"
@@ -37,7 +37,7 @@ msgstr "Удалить"
 #: data/po_files/../../sections/todo/view__clear_tasks.js:98
 #: data/po_files/../../sections/todo/view__stats.js:253
 #: data/po_files/../../sections/todo/view__kanban_switcher.js:94
-#: data/po_files/../../sections/todo/view__task_editor.js:217
+#: data/po_files/../../sections/todo/view__task_editor.js:218
 #: data/po_files/../../sections/todo/view__file_switcher.js:100
 #: data/po_files/../../sections/todo/view__file_switcher.js:452
 #: data/po_files/../../sections/alarms.js:573
@@ -103,7 +103,7 @@ msgstr "День:"
 #: data/po_files/../../sections/todo/view__stats.js:250
 #: data/po_files/../../sections/todo/view__sort.js:114
 #: data/po_files/../../sections/todo/view__filters.js:208
-#: data/po_files/../../sections/todo/view__task_editor.js:220
+#: data/po_files/../../sections/todo/view__task_editor.js:221
 #: data/po_files/../../sections/todo/view__file_switcher.js:104
 #: data/po_files/../../sections/todo/view__file_switcher.js:453
 #: data/po_files/../../sections/alarms.js:574
@@ -313,12 +313,12 @@ msgstr[2] "%d отложенных задача было открыто"
 msgid "Nothing found."
 msgstr "Ничего не найдено."
 
-#: data/po_files/../../sections/todo/task_item.js:637
-#: data/po_files/../../sections/todo/task_item.js:641
+#: data/po_files/../../sections/todo/task_item.js:643
+#: data/po_files/../../sections/todo/task_item.js:647
 msgid "recurrence"
 msgstr "возобновление"
 
-#: data/po_files/../../sections/todo/task_item.js:638
+#: data/po_files/../../sections/todo/task_item.js:644
 #, javascript-format
 msgid "%d day after completion"
 msgid_plural "%d days after completion"
@@ -326,19 +326,19 @@ msgstr[0] "%d день после выполнения"
 msgstr[1] "%d дня после выполнения"
 msgstr[2] "%d дней после выполнения"
 
-#: data/po_files/../../sections/todo/task_item.js:654
+#: data/po_files/../../sections/todo/task_item.js:660
 msgid "due"
 msgstr "до"
 
-#: data/po_files/../../sections/todo/task_item.js:662
+#: data/po_files/../../sections/todo/task_item.js:668
 msgid "deferred"
 msgstr "отложена"
 
-#: data/po_files/../../sections/todo/task_item.js:701
+#: data/po_files/../../sections/todo/task_item.js:707
 msgid "created"
 msgstr "создана"
 
-#: data/po_files/../../sections/todo/task_item.js:704
+#: data/po_files/../../sections/todo/task_item.js:710
 msgid "completed"
 msgstr "выполнена"
 
@@ -347,11 +347,11 @@ msgstr "выполнена"
 msgid "Task..."
 msgstr "Задачи"
 
-#: data/po_files/../../sections/todo/view__task_editor.js:212
+#: data/po_files/../../sections/todo/view__task_editor.js:213
 msgid "Archive"
 msgstr "Архивировать"
 
-#: data/po_files/../../sections/todo/view__default.js:513
+#: data/po_files/../../sections/todo/view__default.js:519
 msgid "Add New Task..."
 msgstr "Добавить задачу..."
 
