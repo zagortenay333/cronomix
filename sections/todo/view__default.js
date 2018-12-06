@@ -86,7 +86,7 @@ var ViewDefault = new Lang.Class({
             let max_w = this.ext.menu_max_w;
             if (nat_w >= max_w) this.columns_scroll.hscrollbar_policy = Gtk.PolicyType.ALWAYS;
         });
-        this.actor.connect('event', (_, event) => {
+        this.sigm.connect(this.actor, 'event', (_, event) => {
             switch (event.get_key_symbol()) {
               case Clutter.KEY_slash:
                 this.delegate.show_view__search();
@@ -420,7 +420,13 @@ var ViewDefault = new Lang.Class({
         this._clear_kanban_columns();
         this.delegate.actor.style_class = this.delegate.actor.style_class.replace(' view-default', '');
         this.delegate.actor.style_class = this.delegate.actor.style_class.replace(' one-column', '');
-        Mainloop.timeout_add(0, () => this.actor.destroy()); // @SPEED
+        // @SPEED
+        Mainloop.timeout_add(0, () => {
+            if (this.actor) {
+                this.actor.destroy();
+                this.actor = null;
+            }
+        });
     },
 });
 Signals.addSignalMethods(ViewDefault.prototype);
@@ -596,29 +602,29 @@ var KanbanColumn = new Lang.Class({
         this.sigm.connect(this.delegate.settings, 'changed::todo-task-width', () => {
             this.header.set_width(this.delegate.settings.get_int('todo-task-width'));
         });
-        this.tasks_scroll.connect('scroll-event', (_, event) => {
+        this.sigm.connect(this.tasks_scroll, 'scroll-event', (_, event) => {
             if (event.get_state() & Clutter.ModifierType.CONTROL_MASK) {
                 this.owner.horiz_scroll(event);
                 return Clutter.EVENT_STOP;
             }
         });
-        this.header_fn_btns.connect('event', (_, event) => {
+        this.sigm.connect(this.header_fn_btns, 'event', (_, event) => {
             if (! this.title_visible) return;
 
-            Mainloop.idle_add(() => {
+            Mainloop.timeout_add(0, () => {
                 if (!this.header_fn_btns.contains(global.stage.get_key_focus())) {
                     this.kanban_title.show();
                     this.header_fn_btns.hide();
                 }
             });
         });
-        this.kanban_title.connect('key-focus-in', () => {
+        this.sigm.connect(this.kanban_title, 'key-focus-in', () => {
             Mainloop.idle_add(() => {
                 if (global.stage.get_key_focus() === this.kanban_title) this._hide_title();
             });
         });
-        this.header.connect('leave-event', (_, event) => this._maybe_show_title(event));
-        this.header.connect('enter-event', () => this._hide_title());
+        this.sigm.connect(this.header, 'leave-event', (_, event) => this._maybe_show_title(event));
+        this.sigm.connect(this.header, 'enter-event', () => this._hide_title());
         this.sigm.connect(this.ext, 'custom-css-changed', () => this.set_title());
         this.sigm.connect_release(this.add_task_button, Clutter.BUTTON_PRIMARY, true, () => this.delegate.show_view__task_editor());
         this.sigm.connect_release(this.collapse_icon, Clutter.BUTTON_PRIMARY, true, () => this.toggle_collapse());

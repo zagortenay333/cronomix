@@ -1060,16 +1060,16 @@ var TaskItem = new Lang.Class({
             }
           } break;
 
-          // case Clutter.EventType.BUTTON_PRESS: {
-          //   let t = GLib.get_monotonic_time();
-          //   if (t - LAST_TIME_CLICKED < DOUBLE_CLICK_DELAY) {
-          //     LAST_TIME_CLICKED = 0;
-          //     this.hide_header_icons();
-          //     this.delegate.show_view__task_editor(this);
-          //   } else {
-          //     LAST_TIME_CLICKED = t;
-          //   }
-          // } break;
+          case Clutter.EventType.BUTTON_PRESS: {
+            let t = GLib.get_monotonic_time();
+            if (t - LAST_TIME_CLICKED < DOUBLE_CLICK_DELAY) {
+              LAST_TIME_CLICKED = 0;
+              this.hide_header_icons();
+              this.delegate.show_view__task_editor(this);
+            } else {
+              LAST_TIME_CLICKED = t;
+            }
+          } break;
 
           case Clutter.EventType.SCROLL: {
             if (this.completion_checkbox.has_pointer && !this.completed) {
