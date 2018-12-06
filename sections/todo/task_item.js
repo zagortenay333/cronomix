@@ -26,6 +26,8 @@ const DND  = ME.imports.lib.dnd;
 
 const G = ME.imports.sections.todo.GLOBAL;
 
+const DOUBLE_CLICK_DELAY = 200000; // 200 ms
+
 
 // =====================================================================
 // @@@ Task item/object including the actor to be drawn in the popup menu.
@@ -53,12 +55,16 @@ var TaskItem = new Lang.Class({
         this.task_str = task_str;
 
 
-        this.custom_css = this.ext.custom_css;
-
-
+        //
         // @NOTE
         // If a var needs to be resettable, add it to the reset_props() method
         // instead of the _init() method.
+        //
+
+
+        this.custom_css = this.ext.custom_css;
+
+        this.last_clicked_time = 0; // for double click on task
 
 
         // Project/context/url below mouse pointer, null if none of those.
@@ -1051,6 +1057,16 @@ var TaskItem = new Lang.Class({
                 } else {
                     this.delegate.show_view__search(this.current_keyword);
                 }
+            }
+          } break;
+
+          case Clutter.EventType.BUTTON_PRESS: {
+            let t = GLib.get_monotonic_time();
+            if (t - this.last_clicked_time < DOUBLE_CLICK_DELAY) {
+              this.last_clicked_time = 0;
+              this.delegate.show_view__task_editor(this);
+            } else {
+              this.last_clicked_time = t;
             }
           } break;
 
