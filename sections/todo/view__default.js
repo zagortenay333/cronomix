@@ -418,9 +418,9 @@ var ViewDefault = new Lang.Class({
     close: function () {
         this.sigm.clear();
         this._clear_kanban_columns();
-        this.actor.destroy();
         this.delegate.actor.style_class = this.delegate.actor.style_class.replace(' view-default', '');
         this.delegate.actor.style_class = this.delegate.actor.style_class.replace(' one-column', '');
+        Mainloop.timeout_add(0, () => this.actor.destroy()); // @SPEED
     },
 });
 Signals.addSignalMethods(ViewDefault.prototype);

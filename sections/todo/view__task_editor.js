@@ -48,8 +48,8 @@ const EditorMode = {
 // @task     : obj (optional)
 //
 // @signals:
-//   - 'add-task'    (returns task string)
-//   - 'edit-task'   (returns task string)
+//   - 'add-task'    (returns a new task)
+//   - 'edited-task' (the task has been edited)
 //   - 'delete-task' (returns bool; if true, the task is to be archived as well)
 //   - 'cancel'
 //
@@ -96,15 +96,15 @@ var ViewTaskEditor = new Lang.Class({
         this.preview_scrollbox = new St.BoxLayout({ vertical: true });
         this.preview_scrollview.add_actor(this.preview_scrollbox);
 
-        this.preview_task = new TASK.TaskItem(this.ext, this.delegate, task ? task.task_str : " ", true);
-        this.preview_scrollbox.add_child(this.preview_task.actor);
+        if (this.mode === EditorMode.ADD_TASK) {
+            this.preview_task = new TASK.TaskItem(this.ext, this.delegate, task ? task.task_str : " ", true);
+        } else {
+            if (task.actor_parent) task.actor_parent.remove_child(task.actor);
+            this.preview_task = task;
+        }
 
-        this.preview_task.actor.connect('captured-event', (_, event) => {
-            // We can't use the 'captured-event' sig to prevent actors from
-            // getting focused via the keyboard...
-            if (event.type() === Clutter.EventType.KEY_RELEASE) this.actor.grab_key_focus();
-            return Clutter.EVENT_STOP;
-        });
+        this.preview_task.actor_parent = this.preview_scrollbox;
+        this.preview_scrollbox.add_child(this.preview_task.actor);
 
 
         //
@@ -124,7 +124,8 @@ var ViewTaskEditor = new Lang.Class({
         this.entry.scroll_box.vscrollbar_policy = Gtk.PolicyType.NEVER;
         this.entry.scroll_box.hscrollbar_policy = Gtk.PolicyType.NEVER;
 
-        if (this.mode === EditorMode.EDIT_TASK) this.entry.set_text(task.task_str.replace(/\\n/g, '\n'));
+        if (this.mode === EditorMode.EDIT_TASK)
+            this.entry.set_text(task.task_str.replace(/\\n/g, '\n'));
 
         this.entry_resize = new RESIZE.MakeResizable(this.entry.entry);
 
@@ -224,6 +225,12 @@ var ViewTaskEditor = new Lang.Class({
         //
         // listen
         //
+        this.preview_task_sid = this.preview_task.actor.connect('captured-event', (_, event) => {
+            // We can't use the 'captured-event' sig to prevent actors from
+            // getting focused via the keyboard...
+            if (event.type() === Clutter.EventType.KEY_RELEASE) this.actor.grab_key_focus();
+            return Clutter.EVENT_STOP;
+        });
         this.content_box.connect('allocation-changed', () => {
             this.entry.scroll_box.vscrollbar_policy = Gtk.PolicyType.NEVER;
             this.preview_scrollview.vscrollbar_policy = Gtk.PolicyType.NEVER;
@@ -267,7 +274,7 @@ var ViewTaskEditor = new Lang.Class({
         this.entry.entry.clutter_text.connect('activate', () => this._on_activate());
         this.button_ok.connect('clicked', () => this._emit_ok());
         this.button_cancel.connect('clicked', () => this.emit('cancel'));
-        this.actor.connect('key-release-event', (_, event) => {
+        this.actor.connect('key-press-event', (_, event) => {
             switch (event.get_key_symbol()) {
               case Clutter.KEY_KP_Enter:
               case Clutter.Return:
@@ -356,11 +363,18 @@ var ViewTaskEditor = new Lang.Class({
         if (this.done) return;
 
         let text = this._create_task_str();
-
         if (! text) return;
 
         this.done = true;
-        this.emit(this.mode === EditorMode.EDIT_TASK ? 'edit-task' : 'add-task', text);
+
+        let r = this.preview_task;
+        this.preview_task.actor.disconnect(this.preview_task_sid);
+        this.preview_scrollbox.remove_child(this.preview_task.actor);
+        this.preview_task.actor_parent = null;
+        this.preview_task = null;
+
+        if (this.mode === EditorMode.ADD_TASK) this.emit('add-task', r);
+        else                                   this.emit('edited-task');
     },
 
     _insert_markdown: function (delim) {
@@ -502,11 +516,9 @@ var ViewTaskEditor = new Lang.Class({
 
     _create_task_str: function () {
         let text = this.entry.entry.get_text();
-
         if (! text) return "";
 
         let words = text.split(' ');
-
         if (this.mode === EditorMode.EDIT_TASK) return text.replace(/\n/g, '\\n');
 
         // If in add mode, we insert a creation date if the user didn't do it.
@@ -528,9 +540,19 @@ var ViewTaskEditor = new Lang.Class({
     },
 
     close: function () {
-        Mainloop.idle_add(() => this.delegate.actor.remove_style_class_name('view-task-editor'));
         if (this.file_chooser_proc) this.file_chooser_proc.force_exit();
-        this.actor.destroy();
+
+        if (this.preview_task) {
+            this.preview_task.actor.disconnect(this.preview_task_sid);
+            this.preview_scrollbox.remove_child(this.preview_task.actor);
+            this.preview_task.actor_parent = null;
+            this.preview_task = null;
+        }
+
+        Mainloop.timeout_add(0, () => {
+            this.actor.destroy();
+            this.delegate.actor.remove_style_class_name('view-task-editor');
+        });
     },
 });
 Signals.addSignalMethods(ViewTaskEditor.prototype);

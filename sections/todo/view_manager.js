@@ -93,14 +93,15 @@ var ViewManager = new Lang.Class({
         } else {
             this.container.remove_all_children();
 
-            for (let actor of this.actors) {
-                this.container.add_actor(actor);
-                actor.show();
-            }
+            // @HACK: Seems to speed things up when written like this...
+            for (let actor of this.actors) actor.hide();
+            for (let actor of this.actors) this.container.add_actor(actor);
+            for (let actor of this.actors) actor.show();
         }
 
-        if (view_params.focused_actor && this.ext.menu.isOpen)
+        if (view_params.focused_actor && this.ext.menu.isOpen) {
             view_params.focused_actor.grab_key_focus();
+        }
     },
 });
 Signals.addSignalMethods(ViewManager.prototype);

@@ -27,6 +27,8 @@ const DND  = ME.imports.lib.dnd;
 const G = ME.imports.sections.todo.GLOBAL;
 
 const DOUBLE_CLICK_DELAY = 200000; // 200 ms
+let LAST_TIME_CLICKED    = 0; // for double click on task
+
 
 
 // =====================================================================
@@ -63,8 +65,6 @@ var TaskItem = new Lang.Class({
 
 
         this.custom_css = this.ext.custom_css;
-
-        this.last_clicked_time = 0; // for double click on task
 
 
         // Project/context/url below mouse pointer, null if none of those.
@@ -1060,15 +1060,16 @@ var TaskItem = new Lang.Class({
             }
           } break;
 
-          case Clutter.EventType.BUTTON_PRESS: {
-            let t = GLib.get_monotonic_time();
-            if (t - this.last_clicked_time < DOUBLE_CLICK_DELAY) {
-              this.last_clicked_time = 0;
-              this.delegate.show_view__task_editor(this);
-            } else {
-              this.last_clicked_time = t;
-            }
-          } break;
+          // case Clutter.EventType.BUTTON_PRESS: {
+          //   let t = GLib.get_monotonic_time();
+          //   if (t - LAST_TIME_CLICKED < DOUBLE_CLICK_DELAY) {
+          //     LAST_TIME_CLICKED = 0;
+          //     this.hide_header_icons();
+          //     this.delegate.show_view__task_editor(this);
+          //   } else {
+          //     LAST_TIME_CLICKED = t;
+          //   }
+          // } break;
 
           case Clutter.EventType.SCROLL: {
             if (this.completion_checkbox.has_pointer && !this.completed) {

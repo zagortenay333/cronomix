@@ -884,11 +884,6 @@ var SectionMain = new Lang.Class({
 
         if (task) this.time_tracker.stop_tracking(task);
 
-        view.connect('add-task', (_, task_str) => {
-            this.tasks.unshift(new TASK.TaskItem(this.ext, this, task_str, true));
-            this.on_tasks_changed();
-        });
-
         view.connect('delete-task', (_, do_archive) => {
             if (do_archive) this.archive_tasks([task]);
 
@@ -902,8 +897,12 @@ var SectionMain = new Lang.Class({
             this.on_tasks_changed();
         });
 
-        view.connect('edit-task', (_, task_str) => {
-            task.reset(true, task_str);
+        view.connect('add-task', (_, task) => {
+            this.tasks.push(task);
+            this.on_tasks_changed();
+        });
+
+        view.connect('edited-task', () => {
             this.on_tasks_changed();
         });
 
