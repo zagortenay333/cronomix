@@ -373,6 +373,8 @@ var ViewTaskEditor = new Lang.Class({
         this.preview_task.actor_parent = null;
         this.preview_task = null;
 
+        r.task_str = text;
+
         if (this.mode === EditorMode.ADD_TASK) this.emit('add-task', r);
         else                                   this.emit('edited-task');
     },
