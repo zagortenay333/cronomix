@@ -99,9 +99,10 @@
 .timepp-menu .view-box {
     padding: .4em 1.2em;
     min-width: 22em;
+    spacing: .7em;
 }
 
-.timepp-menu .clear-view .view-box-content {
+.timepp-menu .view-clear-tasks .view-box-content {
     border: 1px #e74f4f;
 }
 
@@ -109,12 +110,9 @@
     width: 22em;
 }
 
-.timepp-menu .view-box {
-    spacing: .7em;
-}
-
 .timepp-menu .view-box-content {
     background: rgba(125, 125, 125, .15);
+    border: 1px rgba(125, 125, 125, .15);
     border-radius: 2px;
     padding: .7em;
     spacing: .7em;
@@ -126,7 +124,7 @@
     spacing: 1em;
 }
 
-.timepp-menu .row.days {
+.timepp-menu .row.days { /* example in alarms editor */
     spacing: .1em;
 }
 
@@ -682,24 +680,16 @@
 
 .timepp-menu .todo-section .task-item-header { spacing: .4em; }
 
-.timepp-menu .todo-section.view-default .view-box {
-}
-
-.timepp-menu .todo-section.view-default .view-box-content {
+.timepp-menu .todo-section .view-default .view-box-content {
     background: transparent;
-    padding: 0;
-    spacing: 1em;
-}
-
-.timepp-menu .todo-section.view-default.one-column .view-box {
+    border: 0;
     padding: 0;
 }
 
-.timepp-menu .todo-section.view-task-editor StEntry {
-    min-width: 30em;
+.timepp-menu .todo-section .view-default {
 }
 
-.timepp-menu .todo-section.view-default.one-column .kanban-column {
+.timepp-menu .todo-section .view-default.one-column .kanban-column {
     background: transparent;
     border: 0;
     padding: 0;

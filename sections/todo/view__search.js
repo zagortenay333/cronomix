@@ -37,8 +37,6 @@ var ViewSearch = new Lang.Class({
         this.ext      = ext;
         this.delegate = delegate;
 
-        Mainloop.idle_add(() => this.delegate.actor.add_style_class_name('view-search'));
-
         this.add_tasks_to_menu_mainloop_id = null;
 
         this.tasks_viewport = [];
@@ -50,11 +48,11 @@ var ViewSearch = new Lang.Class({
 
 
         //
-        // draw
+        // container
         //
-        this.actor = new St.Bin({ x_fill: true });
+        this.actor = new St.Bin({ x_fill: true, style_class: 'view-search view-box' });
 
-        this.content_box = new St.BoxLayout({ x_expand: true, vertical: true, });
+        this.content_box = new St.BoxLayout({ x_expand: true, vertical: true, style_class: 'view-box-content' });
         this.actor.add_actor(this.content_box);
 
 
@@ -232,7 +230,6 @@ var ViewSearch = new Lang.Class({
     },
 
     close: function () {
-        Mainloop.idle_add(() => this.delegate.actor.remove_style_class_name('view-search'));
         this.search_dict.clear();
         this._remove_tasks_from_menu();
         this.actor.destroy();

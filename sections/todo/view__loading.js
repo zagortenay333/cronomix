@@ -26,21 +26,19 @@ var ViewLoading = new Lang.Class({
         this.ext      = ext;
         this.delegate = delegate;
 
-        Mainloop.idle_add(() => this.delegate.actor.add_style_class_name('view-loading'));
-
         this.view_lock = true;
+
 
         //
         // draw
         //
-        this.actor = new St.BoxLayout({ x_expand: true, style_class: 'timepp-menu-item' });
+        this.actor = new St.BoxLayout({ x_expand: true, style_class: 'view-loading timepp-menu-item' });
 
         this.loading_msg = new St.Label({ text: _('Loading...'), style_class: 'loading-msg' });
         this.actor.add_child(this.loading_msg);
     },
 
     close: function () {
-        Mainloop.idle_add(() => this.delegate.actor.remove_style_class_name('view-loading'));
         this.actor.destroy();
     },
 });

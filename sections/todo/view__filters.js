@@ -40,8 +40,6 @@ var ViewFilters = new Lang.Class({
         this.ext      = ext;
         this.delegate = delegate;
 
-        Mainloop.idle_add(() => this.delegate.actor.add_style_class_name('view-filters-editor'));
-
         // We store all filter item objects here.
         // I.e., those objects created by the _new_filter_item() func.
         this.filter_register = {
@@ -61,7 +59,7 @@ var ViewFilters = new Lang.Class({
         //
         // actor
         //
-        this.actor = new St.Bin({ x_fill: true, style_class: 'view-box' });
+        this.actor = new St.Bin({ x_fill: true, style_class: 'view-filters view-box' });
 
         this.content_box = new St.BoxLayout({ x_expand: true, vertical: true, style_class: 'view-box-content' });
         this.actor.add_actor(this.content_box);
@@ -454,7 +452,6 @@ var ViewFilters = new Lang.Class({
     },
 
     close: function () {
-        Mainloop.idle_add(() => this.delegate.actor.remove_style_class_name('view-filters-editor'));
         this.actor.destroy();
     },
 });

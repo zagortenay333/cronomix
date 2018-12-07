@@ -40,8 +40,6 @@ var ViewDefault = new Lang.Class({
         this.ext      = ext;
         this.delegate = delegate;
 
-        this.delegate.actor.style_class += ' view-default';
-
         this.kanban_string               = "";
         this.kanban_columns              = new Map();
         this.task_with_active_kanban_str = null;
@@ -61,7 +59,7 @@ var ViewDefault = new Lang.Class({
         //
         // draw
         //
-        this.actor = new St.BoxLayout({ vertical: true, x_expand: true, style_class: 'view-box' });
+        this.actor = new St.BoxLayout({ vertical: true, x_expand: true, style_class: 'view-default view-box' });
 
         this.dummy_focus_actor = new St.Widget({ visible: false, width: 0, height: 0 });
         this.actor.add_child(this.dummy_focus_actor);
@@ -99,6 +97,9 @@ var ViewDefault = new Lang.Class({
                 break;
               case Clutter.KEY_k:
                 this.delegate.show_view__kanban_switcher();
+                break;
+              case Clutter.KEY_y:
+                this.delegate.show_view__filters();
                 break;
               case Clutter.KEY_s:
                 this.delegate.show_view__sort();
@@ -418,9 +419,6 @@ var ViewDefault = new Lang.Class({
     close: function () {
         this.sigm.clear();
         this._clear_kanban_columns();
-        this.delegate.actor.style_class = this.delegate.actor.style_class.replace(' view-default', '');
-        this.delegate.actor.style_class = this.delegate.actor.style_class.replace(' one-column', '');
-        // @SPEED
         Mainloop.timeout_add(0, () => {
             if (this.actor) {
                 this.actor.destroy();

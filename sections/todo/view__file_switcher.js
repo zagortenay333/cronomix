@@ -43,8 +43,6 @@ var ViewFileSwitcher = new Lang.Class({
         this.ext      = ext;
         this.delegate = delegate;
 
-        Mainloop.idle_add(() => this.delegate.actor.add_style_class_name('view-file-switcher'));
-
 
         this.linkm            = new TEXT_LINKS_MNGR.TextLinksManager();
         this.file_items       = new Set();
@@ -54,7 +52,7 @@ var ViewFileSwitcher = new Lang.Class({
         //
         // container
         //
-        this.actor = new St.BoxLayout({ x_expand: true, vertical: true, style_class: 'view-box' });
+        this.actor = new St.BoxLayout({ x_expand: true, vertical: true, style_class: 'view-file-switcher view-box' });
 
         this.content_box = new St.BoxLayout({ x_expand: true, vertical: true, style_class: 'view-box-content' });
         this.actor.add_child(this.content_box);
@@ -343,7 +341,6 @@ var ViewFileSwitcher = new Lang.Class({
     },
 
     close: function () {
-        Mainloop.idle_add(() => this.delegate.actor.remove_style_class_name('view-file-switcher'));
         if (this.file_info_editor) this.file_info_editor.close();
         this.file_info_editor = null;
         this.actor.destroy();

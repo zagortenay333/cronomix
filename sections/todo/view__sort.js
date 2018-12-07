@@ -39,13 +39,11 @@ var ViewSort = new Lang.Class({
         this.ext      = ext;
         this.delegate = delegate;
 
-        Mainloop.idle_add(() => this.delegate.actor.add_style_class_name('view-sort'));
-
 
         //
         // draw
         //
-        this.actor = new St.BoxLayout({ y_expand: true, x_expand: true, style_class: 'view-box' });
+        this.actor = new St.BoxLayout({ y_expand: true, x_expand: true, style_class: 'view-sort view-box' });
 
         this.content_box = new St.BoxLayout({ y_expand: true, x_expand: true, vertical: true, style_class: 'view-box-content' });
         this.actor.add_actor(this.content_box);
@@ -141,7 +139,6 @@ var ViewSort = new Lang.Class({
     },
 
     close: function () {
-        Mainloop.idle_add(() => this.delegate.actor.remove_style_class_name('view-sort'));
         this.actor.destroy();
     },
 });
