@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-06 12:50+0100\n"
+"POT-Creation-Date: 2018-12-07 16:57+0100\n"
 "PO-Revision-Date: 2018-01-10 10:35+0100\n"
 "Last-Translator: Piotr Komur <pkomur@gmail.com>\n"
 "Language-Team: \n"
@@ -19,27 +19,27 @@ msgstr ""
 "|| n%100>=20) ? 1 : 2);\n"
 "X-Generator: Poedit 2.0.1\n"
 
-#: data/po_files/../../sections/todo/view__clear_tasks.js:58
+#: data/po_files/../../sections/todo/view__clear_tasks.js:56
 msgid "Delete all completed tasks"
 msgstr "Usuń wszystkie ukończone zadania"
 
-#: data/po_files/../../sections/todo/view__clear_tasks.js:71
+#: data/po_files/../../sections/todo/view__clear_tasks.js:69
 msgid "Archive all completed tasks to done.txt and delete them"
 msgstr "Zarchiwizuj ukończone zadania do pliku 'done.txt' przed ich usunięciem"
 
-#: data/po_files/../../sections/todo/view__clear_tasks.js:95
+#: data/po_files/../../sections/todo/view__clear_tasks.js:93
 #: data/po_files/../../sections/todo/view__task_editor.js:205
-#: data/po_files/../../sections/todo/view__file_switcher.js:447
+#: data/po_files/../../sections/todo/view__file_switcher.js:444
 #: data/po_files/../../sections/alarms.js:565
 msgid "Delete"
 msgstr "Usuń"
 
-#: data/po_files/../../sections/todo/view__clear_tasks.js:98
+#: data/po_files/../../sections/todo/view__clear_tasks.js:96
 #: data/po_files/../../sections/todo/view__stats.js:253
-#: data/po_files/../../sections/todo/view__kanban_switcher.js:94
+#: data/po_files/../../sections/todo/view__kanban_switcher.js:93
 #: data/po_files/../../sections/todo/view__task_editor.js:218
-#: data/po_files/../../sections/todo/view__file_switcher.js:100
-#: data/po_files/../../sections/todo/view__file_switcher.js:452
+#: data/po_files/../../sections/todo/view__file_switcher.js:98
+#: data/po_files/../../sections/todo/view__file_switcher.js:449
 #: data/po_files/../../sections/alarms.js:573
 #: data/po_files/../../sections/pomodoro.js:774
 msgid "Cancel"
@@ -70,8 +70,8 @@ msgid "All Time"
 msgstr "Cały czas"
 
 #: data/po_files/../../sections/todo/view__stats.js:169
-#: data/po_files/../../sections/todo/view__kanban_switcher.js:63
-#: data/po_files/../../sections/todo/view__file_switcher.js:70
+#: data/po_files/../../sections/todo/view__kanban_switcher.js:62
+#: data/po_files/../../sections/todo/view__file_switcher.js:68
 #: data/po_files/../../sections/timer.js:638
 msgid "Search..."
 msgstr "Szukaj..."
@@ -101,11 +101,11 @@ msgid "Day:"
 msgstr "Dzień:"
 
 #: data/po_files/../../sections/todo/view__stats.js:250
-#: data/po_files/../../sections/todo/view__sort.js:114
-#: data/po_files/../../sections/todo/view__filters.js:208
+#: data/po_files/../../sections/todo/view__sort.js:112
+#: data/po_files/../../sections/todo/view__filters.js:206
 #: data/po_files/../../sections/todo/view__task_editor.js:221
-#: data/po_files/../../sections/todo/view__file_switcher.js:104
-#: data/po_files/../../sections/todo/view__file_switcher.js:453
+#: data/po_files/../../sections/todo/view__file_switcher.js:102
+#: data/po_files/../../sections/todo/view__file_switcher.js:450
 #: data/po_files/../../sections/alarms.js:574
 #: data/po_files/../../sections/pomodoro.js:773
 msgid "Ok"
@@ -154,75 +154,75 @@ msgstr ""
 msgid "No intervals found."
 msgstr "Nic nie znaleziono..."
 
-#: data/po_files/../../sections/todo/view__sort.js:65
+#: data/po_files/../../sections/todo/view__sort.js:63
 #, fuzzy
 msgid "Sort by Pin"
 msgstr "Sortuj wg priorytetu"
 
-#: data/po_files/../../sections/todo/view__sort.js:66
+#: data/po_files/../../sections/todo/view__sort.js:64
 msgid "Sort by Context"
 msgstr "Sortuj wg daty utworzenia"
 
-#: data/po_files/../../sections/todo/view__sort.js:67
+#: data/po_files/../../sections/todo/view__sort.js:65
 msgid "Sort by Projects"
 msgstr "Sortuj wg priorytetu"
 
-#: data/po_files/../../sections/todo/view__sort.js:68
+#: data/po_files/../../sections/todo/view__sort.js:66
 msgid "Sort by Priority"
 msgstr "Sortuj wg priorytetu"
 
-#: data/po_files/../../sections/todo/view__sort.js:69
+#: data/po_files/../../sections/todo/view__sort.js:67
 msgid "Sort by Due Date"
 msgstr "Sortuj wg terminu"
 
-#: data/po_files/../../sections/todo/view__sort.js:70
+#: data/po_files/../../sections/todo/view__sort.js:68
 #, fuzzy
 msgid "Sort by Alphabet"
 msgstr "Sortuj wg daty zakończenia"
 
-#: data/po_files/../../sections/todo/view__sort.js:71
+#: data/po_files/../../sections/todo/view__sort.js:69
 #, fuzzy
 msgid "Sort by Recurrence Date"
 msgstr "Sortuj wg terminu"
 
-#: data/po_files/../../sections/todo/view__sort.js:72
+#: data/po_files/../../sections/todo/view__sort.js:70
 msgid "Sort by Completed"
 msgstr "Sortuj wg daty zakończenia"
 
-#: data/po_files/../../sections/todo/view__sort.js:73
+#: data/po_files/../../sections/todo/view__sort.js:71
 msgid "Sort by Creation Date"
 msgstr "Sortuj wg daty utworzenia"
 
-#: data/po_files/../../sections/todo/view__sort.js:74
+#: data/po_files/../../sections/todo/view__sort.js:72
 msgid "Sort by Completion Date"
 msgstr "Sortuj wg daty zakończenia"
 
-#: data/po_files/../../sections/todo/view__sort.js:100
+#: data/po_files/../../sections/todo/view__sort.js:98
 msgid "Automatic sorting"
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__kanban_switcher.js:73
+#: data/po_files/../../sections/todo/view__kanban_switcher.js:72
 msgid "syntax help"
 msgstr "podpowiedź składni"
 
-#: data/po_files/../../sections/todo/view__kanban_switcher.js:131
+#: data/po_files/../../sections/todo/view__kanban_switcher.js:130
 msgid "To use kanban boards, add the kanban todo extension to a task."
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__loading.js:38
+#: data/po_files/../../sections/todo/view__loading.js:37
 #: data/po_files/../../sections/todo/MAIN.js:675
 msgid "Loading..."
 msgstr "Wczytuję..."
 
-#: data/po_files/../../sections/todo/view__filters.js:73
+#: data/po_files/../../sections/todo/view__filters.js:71
 msgid "Add custom filter..."
 msgstr "Dodaj własny filtr..."
 
-#: data/po_files/../../sections/todo/view__filters.js:118
+#: data/po_files/../../sections/todo/view__filters.js:116
 msgid "Show hidden tasks only"
 msgstr "Pokaż tylko ukryte zadania"
 
-#: data/po_files/../../sections/todo/view__filters.js:125
+#: data/po_files/../../sections/todo/view__filters.js:123
 #, javascript-format
 msgid "%d hidden task"
 msgid_plural "%d hidden tasks"
@@ -230,11 +230,11 @@ msgstr[0] "%d ukryte zadanie"
 msgstr[1] "%d ukryte zadania"
 msgstr[2] "%d ukrytych zadań"
 
-#: data/po_files/../../sections/todo/view__filters.js:141
+#: data/po_files/../../sections/todo/view__filters.js:139
 msgid "Show recurring tasks only"
 msgstr "Pokaż tylko powtarzające się zadania"
 
-#: data/po_files/../../sections/todo/view__filters.js:151
+#: data/po_files/../../sections/todo/view__filters.js:149
 #, javascript-format
 msgid "%d recurring task"
 msgid_plural "%d recurring tasks"
@@ -242,11 +242,11 @@ msgstr[0] "%d powtarzające się zadanie"
 msgstr[1] "%d powtarzające się zadania"
 msgstr[2] "%d powtarzających się zadań"
 
-#: data/po_files/../../sections/todo/view__filters.js:167
+#: data/po_files/../../sections/todo/view__filters.js:165
 msgid "Show deferred tasks only"
 msgstr "Pokaż tylko ukryte zadania"
 
-#: data/po_files/../../sections/todo/view__filters.js:176
+#: data/po_files/../../sections/todo/view__filters.js:174
 #, javascript-format
 msgid "%d deferred task"
 msgid_plural "%d deferred tasks"
@@ -254,25 +254,25 @@ msgstr[0] "%d ukryte zadanie"
 msgstr[1] "%d ukryte zadania"
 msgstr[2] "%d ukrytych zadań"
 
-#: data/po_files/../../sections/todo/view__filters.js:192
+#: data/po_files/../../sections/todo/view__filters.js:190
 msgid "Invert filters"
 msgstr "Odwróć filtry"
 
-#: data/po_files/../../sections/todo/view__filters.js:207
+#: data/po_files/../../sections/todo/view__filters.js:205
 #: data/po_files/../../sections/stopwatch.js:182
 #: data/po_files/../../sections/stopwatch.js:584
 msgid "Reset"
 msgstr "Zeruj"
 
-#: data/po_files/../../sections/todo/view__filters.js:278
+#: data/po_files/../../sections/todo/view__filters.js:276
 msgid "Completed"
 msgstr "Ukończone"
 
-#: data/po_files/../../sections/todo/view__filters.js:285
+#: data/po_files/../../sections/todo/view__filters.js:283
 msgid "No Priority"
 msgstr "Bez priorytetu"
 
-#: data/po_files/../../sections/todo/view__filters.js:371
+#: data/po_files/../../sections/todo/view__filters.js:369
 #, javascript-format
 msgid "%d task"
 msgid_plural "%d tasks"
@@ -351,33 +351,33 @@ msgstr "Zadanie..."
 msgid "Archive"
 msgstr "Archiwum"
 
-#: data/po_files/../../sections/todo/view__default.js:519
+#: data/po_files/../../sections/todo/view__default.js:517
 msgid "Add New Task..."
 msgstr "Dodaj nowe zadanie..."
 
-#: data/po_files/../../sections/todo/view__file_switcher.js:97
+#: data/po_files/../../sections/todo/view__file_switcher.js:95
 msgid "Add File"
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__file_switcher.js:389
+#: data/po_files/../../sections/todo/view__file_switcher.js:386
 msgid "Unique name"
 msgstr "Unikatowa nazwa"
 
-#: data/po_files/../../sections/todo/view__file_switcher.js:400
+#: data/po_files/../../sections/todo/view__file_switcher.js:397
 msgid "Todo file"
 msgstr "Plik z zadaniami"
 
-#: data/po_files/../../sections/todo/view__file_switcher.js:414
+#: data/po_files/../../sections/todo/view__file_switcher.js:411
 #, fuzzy
 msgid "Done file"
 msgstr "Plik z zadaniami"
 
-#: data/po_files/../../sections/todo/view__file_switcher.js:414
-#: data/po_files/../../sections/todo/view__file_switcher.js:429
+#: data/po_files/../../sections/todo/view__file_switcher.js:411
+#: data/po_files/../../sections/todo/view__file_switcher.js:426
 msgid "optional"
 msgstr ""
 
-#: data/po_files/../../sections/todo/view__file_switcher.js:429
+#: data/po_files/../../sections/todo/view__file_switcher.js:426
 #, fuzzy
 msgid "Time-tracker directory"
 msgstr "Katalog z plikami śledzenia csv (opcjonalnie)"
