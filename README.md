@@ -26,6 +26,7 @@ time tracker, timer, stopwatch, pomodoro, and alarms [gnome-shell extension](htt
 * [Time Tracker](#time-tracker)
 * [DBus API](#dbus-api)
 * [Custom Theme Support](#custom-theme-support)
+* [Keyboard Shortcuts](#keyboard-shortcuts)
 * [Preview](#preview)
 
 </details>
@@ -92,73 +93,6 @@ corresponding section as well as replace regular notifications.
 
 The interface has multi-monitor support, and it can be opened _(and brought into
 focus)_ via a keyboard shortcut.
-
-When in fullscreen, some keyboard shortcuts are available:
-
-<table>
-    <th align="left" colspan="2">All</th>
-    <tr>
-        <td><kbd>Tab</kbd></td>
-        <td>navigate forward</td>
-    </tr>
-    <tr>
-        <td><kbd>Ctrl</kbd> + <kbd>Tab</kbd></td>
-        <td>navigate backward</td>
-    </tr>
-    <tr>
-        <td><kbd>Esc</kbd></td>
-        <td>close fullscreen</td>
-    </tr>
-</table>
-
-<table>
-    <th align="left" colspan="2">Timer</th>
-    <tr>
-        <td><kbd>space</kbd></td>
-        <td>stop/start timer</td>
-    </tr>
-    <tr>
-        <td><kbd>r</kbd> or <kbd>Backspace</kbd></td>
-        <td>repeat last timer preset</td>
-    </tr>
-    <tr>
-        <td><kbd>1</kbd> ... <kbd>9</kbd> and <kbd>0</kbd></td>
-        <td>start timer at the time specified by a num key.<br><i>1=1min,
-2=2min, ..., 0=10min</i></td>
-    </tr>
-</table>
-
-<table>
-    <th align="left" colspan="2">Stopwatch</th>
-    <tr>
-        <td><kbd>space</kbd></td>
-        <td>stop/start timer</td>
-    </tr>
-    <tr>
-        <td><kbd>l</kbd> or <kbd>Enter</kbd></td>
-        <td>lap</td>
-    </tr>
-    <tr>
-        <td><kbd>r</kbd> or <kbd>Backspace</kbd></td>
-        <td>reset</td>
-    </tr>
-</table>
-
-<table>
-    <th align="left" colspan="2">Pomodoro</th>
-    <tr>
-        <td><kbd>space</kbd></td>
-        <td>stop/start timer</td>
-    </tr>
-</table>
-
-<table>
-    <th align="left" colspan="2">Stats View</th>
-    <tr>
-        <td><kbd>f</kbd> or <kbd>/</kbd></td>
-        <td>start searching history</td>
-    </tr>
-</table>
 
 ---
 
@@ -445,6 +379,140 @@ This extension supports custom themes. In order to style it, place a
 
 You must use the `!important` directive in order to override a property from the
 extensions' stylesheet.
+
+---
+
+### Keyboard Shortcuts
+
+<table>
+    <th align="left" colspan="2">Any fullscreen view</th>
+    <tr>
+        <td><kbd>Tab</kbd></td>
+        <td>navigate forward</td>
+    </tr>
+    <tr>
+        <td><kbd>Ctrl</kbd> + <kbd>Tab</kbd></td>
+        <td>navigate backward</td>
+    </tr>
+    <tr>
+        <td><kbd>Esc</kbd></td>
+        <td>close fullscreen</td>
+    </tr>
+</table>
+
+<table>
+    <th align="left" colspan="2">Timer (fullscreen)</th>
+    <tr>
+        <td><kbd>space</kbd></td>
+        <td>stop/start timer</td>
+    </tr>
+    <tr>
+        <td><kbd>r</kbd> or <kbd>Backspace</kbd></td>
+        <td>repeat last timer preset</td>
+    </tr>
+    <tr>
+        <td><kbd>1</kbd> ... <kbd>9</kbd> and <kbd>0</kbd></td>
+        <td>start timer at the time specified by a num key.<br><i>1=1min,
+2=2min, ..., 0=10min</i></td>
+    </tr>
+</table>
+
+<table>
+    <th align="left" colspan="2">Stopwatch (fullscreen)</th>
+    <tr>
+        <td><kbd>space</kbd></td>
+        <td>stop/start timer</td>
+    </tr>
+    <tr>
+        <td><kbd>l</kbd> or <kbd>Enter</kbd></td>
+        <td>lap</td>
+    </tr>
+    <tr>
+        <td><kbd>r</kbd> or <kbd>Backspace</kbd></td>
+        <td>reset</td>
+    </tr>
+</table>
+
+<table>
+    <th align="left" colspan="2">Pomodoro (fullscreen)</th>
+    <tr>
+        <td><kbd>space</kbd></td>
+        <td>stop/start timer</td>
+    </tr>
+</table>
+
+<table>
+    <th align="left" colspan="2">Stats View</th>
+    <tr>
+        <td><kbd>f</kbd> or <kbd>/</kbd></td>
+        <td>start searching history</td>
+    </tr>
+</table>
+
+<table>
+    <th align="left" colspan="2">Todo Section in popup menu (default view)</th>
+    <tr>
+        <td><kbd>/</kbd></td>
+        <td>start searching tasks</td>
+    </tr>
+    <tr>
+        <td><kbd>f</kbd></td>
+        <td>open file switcher</td>
+    </tr>
+    <tr>
+        <td><kbd>i</kbd></td>
+        <td>open task editor to add new task</td>
+    </tr>
+    <tr>
+        <td><kbd>k</kbd></td>
+        <td>open kanban switcher</td>
+    </tr>
+        <tr>
+        <td><kbd>y</kbd></td>
+        <td>open filters editor</td>
+    </tr>
+    </tr>
+        <tr>
+        <td><kbd>s</kbd></td>
+        <td>open sort editor</td>
+    </tr>
+</table>
+
+<table>
+    <th align="left" colspan="2">When focus is inside a task item in popup menu</th>
+    <tr>
+        <td><kbd>e</kbd></td>
+        <td>start editing task</td>
+    </tr>
+</table>
+
+<table>
+    <th align="left" colspan="2">Task editor</th>
+    <tr>
+        <td><kbd>ctrl</kbd> + <kbd>h</kbd></td>
+        <td>resize editor to the left</td>
+    </tr>
+    <tr>
+        <td><kbd>ctrl</kbd> + <kbd>j</kbd></td>
+        <td>resize editor down</td>
+    </tr>
+    <tr>
+        <td><kbd>ctrl</kbd> + <kbd>k</kbd></td>
+        <td>resize editor up</td>
+    </tr>
+    <tr>
+        <td><kbd>ctrl</kbd> + <kbd>l</kbd></td>
+        <td>resize editor to the right</td>
+    </tr>
+    <tr>
+        <td><kbd>ctrl</kbd> + <kbd>f</kbd></td>
+        <td>open file selector</td>
+    </tr>
+    <tr>
+        <td><kbd>ctrl</kbd> + <kbd>enter</kbd></td>
+        <td>commit the change</td>
+    </tr>
+</table>
 
 ---
 
