@@ -75,6 +75,7 @@ var ViewTaskEditor = new Lang.Class({
 
 
         this.mode = task ? EditorMode.EDIT_TASK : EditorMode.ADD_TASK;
+        this.old_task_str = "";
 
 
         //
@@ -101,6 +102,7 @@ var ViewTaskEditor = new Lang.Class({
         } else {
             if (task.actor_parent) task.actor_parent.remove_child(task.actor);
             this.preview_task = task;
+            this.old_task_str = task.task_str;
         }
 
         this.preview_task.actor_parent = this.preview_scrollbox;
@@ -273,7 +275,7 @@ var ViewTaskEditor = new Lang.Class({
         this.sigm.connect_release(this.eye_icon, Clutter.BUTTON_PRIMARY, true, () => this._toggle_preview());
         this.entry.entry.clutter_text.connect('activate', () => this._on_activate());
         this.button_ok.connect('clicked', () => this._emit_ok());
-        this.button_cancel.connect('clicked', () => this.emit('cancel'));
+        this.button_cancel.connect('clicked', () => this._emit_cancel());
         this.actor.connect('key-press-event', (_, event) => {
             switch (event.get_key_symbol()) {
               case Clutter.KEY_KP_Enter:
@@ -357,6 +359,13 @@ var ViewTaskEditor = new Lang.Class({
         this.curr_selected_completion.pseudo_class = '';
         this.curr_selected_completion = item;
         item.pseudo_class = 'active';
+    },
+
+    _emit_cancel: function () {
+        if (this.mode === EditorMode.EDIT_TASK)
+            this.preview_task.reset(true, this.old_task_str, false)
+
+        this.emit('cancel');
     },
 
     _emit_ok: function () {
