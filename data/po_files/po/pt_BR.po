@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: timepp@zagortenay 333\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-07 16:57+0100\n"
+"POT-Creation-Date: 2018-12-08 18:29+0100\n"
 "PO-Revision-Date: 2017-11-03 09:24-0200\n"
 "Last-Translator: Helder <he7d3r@gmail.com>\n"
 "Language-Team: Brazilian Portuguese\n"
@@ -29,7 +29,7 @@ msgstr ""
 "deletá-las"
 
 #: data/po_files/../../sections/todo/view__clear_tasks.js:93
-#: data/po_files/../../sections/todo/view__task_editor.js:205
+#: data/po_files/../../sections/todo/view__task_editor.js:207
 #: data/po_files/../../sections/todo/view__file_switcher.js:444
 #: data/po_files/../../sections/alarms.js:565
 msgid "Delete"
@@ -38,7 +38,7 @@ msgstr "Deletar"
 #: data/po_files/../../sections/todo/view__clear_tasks.js:96
 #: data/po_files/../../sections/todo/view__stats.js:253
 #: data/po_files/../../sections/todo/view__kanban_switcher.js:93
-#: data/po_files/../../sections/todo/view__task_editor.js:218
+#: data/po_files/../../sections/todo/view__task_editor.js:220
 #: data/po_files/../../sections/todo/view__file_switcher.js:98
 #: data/po_files/../../sections/todo/view__file_switcher.js:449
 #: data/po_files/../../sections/alarms.js:573
@@ -104,7 +104,7 @@ msgstr "Dia:"
 #: data/po_files/../../sections/todo/view__stats.js:250
 #: data/po_files/../../sections/todo/view__sort.js:112
 #: data/po_files/../../sections/todo/view__filters.js:206
-#: data/po_files/../../sections/todo/view__task_editor.js:221
+#: data/po_files/../../sections/todo/view__task_editor.js:223
 #: data/po_files/../../sections/todo/view__file_switcher.js:102
 #: data/po_files/../../sections/todo/view__file_switcher.js:450
 #: data/po_files/../../sections/alarms.js:574
@@ -335,12 +335,12 @@ msgstr "criado"
 msgid "completed"
 msgstr "concluído"
 
-#: data/po_files/../../sections/todo/view__task_editor.js:116
+#: data/po_files/../../sections/todo/view__task_editor.js:118
 #, fuzzy
 msgid "Task..."
 msgstr "Tarefas"
 
-#: data/po_files/../../sections/todo/view__task_editor.js:213
+#: data/po_files/../../sections/todo/view__task_editor.js:215
 msgid "Archive"
 msgstr "Arquivar"
 
