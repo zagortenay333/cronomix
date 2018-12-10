@@ -19,6 +19,7 @@ const ngettext = Gettext.ngettext;
 
 
 const SOUND_PLAYER = ME.imports.lib.sound_player;
+const MISC_UTILS   = ME.imports.lib.misc_utils;
 const FULLSCREEN   = ME.imports.lib.fullscreen;
 const SIG_MANAGER  = ME.imports.lib.signal_manager;
 const KEY_MANAGER  = ME.imports.lib.keybinding_manager;
