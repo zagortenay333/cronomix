@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-08 18:29+0100\n"
+"POT-Creation-Date: 2018-12-10 12:48+0100\n"
 "PO-Revision-Date: 2018-01-10 10:35+0100\n"
 "Last-Translator: Piotr Komur <pkomur@gmail.com>\n"
 "Language-Team: \n"
@@ -41,7 +41,7 @@ msgstr "Usuń"
 #: data/po_files/../../sections/todo/view__file_switcher.js:98
 #: data/po_files/../../sections/todo/view__file_switcher.js:449
 #: data/po_files/../../sections/alarms.js:573
-#: data/po_files/../../sections/pomodoro.js:774
+#: data/po_files/../../sections/pomodoro.js:775
 msgid "Cancel"
 msgstr "Anuluj"
 
@@ -107,7 +107,7 @@ msgstr "Dzień:"
 #: data/po_files/../../sections/todo/view__file_switcher.js:102
 #: data/po_files/../../sections/todo/view__file_switcher.js:450
 #: data/po_files/../../sections/alarms.js:574
-#: data/po_files/../../sections/pomodoro.js:773
+#: data/po_files/../../sections/pomodoro.js:774
 msgid "Ok"
 msgstr "OK"
 
@@ -437,70 +437,70 @@ msgstr[0] "%d alarm minął!"
 msgstr[1] "%d alarmy minęły!"
 msgstr[2] "%d alarmów minęło!"
 
-#: data/po_files/../../sections/pomodoro.js:36
-#: data/po_files/../../sections/pomodoro.js:243
-#: data/po_files/../../sections/pomodoro.js:348
+#: data/po_files/../../sections/pomodoro.js:37
+#: data/po_files/../../sections/pomodoro.js:244
+#: data/po_files/../../sections/pomodoro.js:349
 #: data/po_files/../../data/prefs.ui:301 data/po_files/../../data/prefs.ui:1627
 #: data/po_files/../../data/prefs.ui:1957
 msgid "Pomodoro"
 msgstr ""
 
-#: data/po_files/../../sections/pomodoro.js:37
+#: data/po_files/../../sections/pomodoro.js:38
 #: data/po_files/../../data/prefs.ui:1751
 #, fuzzy
 msgid "Long Break"
 msgstr "Weź długą przerwę!"
 
-#: data/po_files/../../sections/pomodoro.js:38
+#: data/po_files/../../sections/pomodoro.js:39
 #: data/po_files/../../data/prefs.ui:1689
 #, fuzzy
 msgid "Short Break"
 msgstr "Krótka przerwa"
 
-#: data/po_files/../../sections/pomodoro.js:165
+#: data/po_files/../../sections/pomodoro.js:166
 #: data/po_files/../../sections/timer.js:179
 #: data/po_files/../../sections/timer.js:346
 #: data/po_files/../../data/prefs.ui:213 data/po_files/../../data/prefs.ui:943
 msgid "Timer"
 msgstr "Minutnik"
 
-#: data/po_files/../../sections/pomodoro.js:196
-#: data/po_files/../../sections/pomodoro.js:864
+#: data/po_files/../../sections/pomodoro.js:197
+#: data/po_files/../../sections/pomodoro.js:865
 msgid "New Pomo"
 msgstr "Nowe Pomodoro"
 
-#: data/po_files/../../sections/pomodoro.js:197
-#: data/po_files/../../sections/pomodoro.js:865
+#: data/po_files/../../sections/pomodoro.js:198
+#: data/po_files/../../sections/pomodoro.js:866
 msgid "Take Break"
 msgstr "Weź przerwę!"
 
-#: data/po_files/../../sections/pomodoro.js:198
-#: data/po_files/../../sections/pomodoro.js:866
+#: data/po_files/../../sections/pomodoro.js:199
+#: data/po_files/../../sections/pomodoro.js:867
 msgid "Continue"
 msgstr "Kontynuuj"
 
-#: data/po_files/../../sections/pomodoro.js:199
-#: data/po_files/../../sections/pomodoro.js:867
+#: data/po_files/../../sections/pomodoro.js:200
+#: data/po_files/../../sections/pomodoro.js:868
 #: data/po_files/../../sections/stopwatch.js:185
 #: data/po_files/../../sections/stopwatch.js:586
 msgid "Stop"
 msgstr ""
 
-#: data/po_files/../../sections/pomodoro.js:671
+#: data/po_files/../../sections/pomodoro.js:672
 msgid "Reset pomodoro counter?"
 msgstr "Skasuj licznik pomodoro?"
 
-#: data/po_files/../../sections/pomodoro.js:687
-#: data/po_files/../../sections/pomodoro.js:706
-#: data/po_files/../../sections/pomodoro.js:725
+#: data/po_files/../../sections/pomodoro.js:688
+#: data/po_files/../../sections/pomodoro.js:707
+#: data/po_files/../../sections/pomodoro.js:726
 msgid "(min:sec)"
 msgstr "(min.:sek.)"
 
-#: data/po_files/../../sections/pomodoro.js:744
+#: data/po_files/../../sections/pomodoro.js:745
 msgid "Num of pomos until long break"
 msgstr "Liczba pomodoro do długiej przerwy"
 
-#: data/po_files/../../sections/pomodoro.js:760
+#: data/po_files/../../sections/pomodoro.js:761
 msgid "Control todo time tracker by task id..."
 msgstr ""
 
