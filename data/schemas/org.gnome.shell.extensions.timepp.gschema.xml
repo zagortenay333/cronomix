@@ -24,6 +24,7 @@
     <enum id="org.gnome.shell.extensions.timepp.notif-style">
         <value value="0" nick="Standard"/>
         <value value="1" nick="Fullscreen"/>
+        <value value="2" nick="None"/>
     </enum>
 
     <enum id="org.gnome.shell.extensions.timepp.clock-format">

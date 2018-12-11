@@ -41,6 +41,7 @@ const CACHE_FILE = '~/.cache/timepp_gnome_shell_extension/timepp_alarms.json';
 const NotifStyle = {
     STANDARD   : 0,
     FULLSCREEN : 1,
+    NONE       : 2,
 };
 
 
@@ -360,7 +361,11 @@ var SectionMain = new Lang.Class({
     },
 
     _send_notif: function (alarm) {
-        if (this.settings.get_enum('alarms-notif-style') === NotifStyle.FULLSCREEN) {
+        let notif_style = this.settings.get_enum('alarms-notif-style');
+
+        if (notif_style === NotifStyle.NONE) {
+            // no visual notification
+        } else if (notif_style === NotifStyle.FULLSCREEN) {
             this.fullscreen.fire_alarm(alarm);
         } else {
             let source = new MessageTray.Source();

@@ -50,6 +50,7 @@ const PomoState = {
 const NotifStyle = {
     STANDARD   : 0,
     FULLSCREEN : 1,
+    NONE       : 2,
 };
 
 
@@ -590,9 +591,11 @@ var SectionMain = new Lang.Class({
             return;
         }
 
-        if (this.fullscreen.is_open) {
+        let notif_style = this.settings.get_enum('pomodoro-notif-style');
+
+        if (notif_style === NotifStyle.NONE || this.fullscreen.is_open) {
             // do nothing
-        } else if (this.settings.get_enum('pomodoro-notif-style') === NotifStyle.FULLSCREEN) {
+        } else if (notif_style === NotifStyle.FULLSCREEN) {
             this.fullscreen.open();
         } else {
             if (this.notif_source) {

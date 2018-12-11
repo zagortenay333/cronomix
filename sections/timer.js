@@ -53,6 +53,7 @@ const TimerState = {
 const NotifStyle = {
     STANDARD   : 0,
     FULLSCREEN : 1,
+    NONE       : 2,
 };
 
 
@@ -458,7 +459,11 @@ var SectionMain = new Lang.Class({
     },
 
     _send_notif: function () {
-        if (this.fullscreen.is_open || this.settings.get_enum('timer-notif-style') === NotifStyle.FULLSCREEN) {
+        let notif_type = this.settings.get_enum('timer-notif-style');
+
+        if (notif_type === NotifStyle.NONE) {
+            // no visual notification
+        } else if (notif_type === NotifStyle.FULLSCREEN || this.fullscreen.is_open) {
             this.fullscreen.open();
             this.fullscreen.on_timer_expired();
         } else {
