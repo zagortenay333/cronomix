@@ -391,13 +391,33 @@ var ViewDefault = new Lang.Class({
             if (column.is_kitchen_sink) return column;
 
             for (let it of column.filters) {
-                if (task.projects.indexOf(it) !== -1 || task.contexts.indexOf(it) !== -1 || task.priority === it) {
+                if (task.projects.indexOf(it) !== -1 || task.contexts.indexOf(it) !== -1 || task.priority === it || this.match_due_date(it, task.due_in_days)) {
                     return column;
                 }
             }
         }
 
         return null;
+    },
+
+    match_due_date: function(filter, due_in) {
+        if (due_in >=  99999999) return false;
+        if (!filter.toLowerCase().startsWith('due')) return false;
+        let parsed = filter.match(REG.TODO_KANBAN_DUE)
+        let offset = parsed[2] * {'d': 1, 'w': 7, 'm': 30, 'y': 365}[parsed[3]];
+        switch(parsed[1]) {
+            case '<=':
+                return(due_in <= offset);
+            case '<':
+                return(due_in < offset);
+            case '>':
+                return(due_in > offset);
+            case '>=':
+                return(due_in >= offset);
+            default:
+                return(due_in == offset);
+        }
+        return(false);
     },
 
     horiz_scroll: function (event) {
@@ -453,7 +473,7 @@ var KanbanColumn = new Lang.Class({
         this.actor_scrollview = [[], [this.owner.columns_scroll]];
         this.actor_parent     = this.owner.content_box;
 
-        this.filters = this.col_str.split(',');
+        this.filters = this.col_str.replace('&lt;', '<').replace('&gt;', '>').split(',');
 
         this.is_kitchen_sink = true;
         this.title_visible   = false;
@@ -461,7 +481,7 @@ var KanbanColumn = new Lang.Class({
         for (let it of this.filters) {
             if (it && it !== '$') this.title_visible = true;
 
-            if (REG.TODO_CONTEXT.test(it) || REG.TODO_PROJ.test(it) || it === '(_)' || REG.TODO_PRIO.test(it)) {
+            if (REG.TODO_CONTEXT.test(it) || REG.TODO_PROJ.test(it) || it === '(_)' || REG.TODO_PRIO.test(it) || REG.TODO_KANBAN_DUE.test(it)) {
                 this.is_kitchen_sink = false;
                 break;
             }
@@ -714,6 +734,11 @@ var KanbanColumn = new Lang.Class({
             }
             else if (REG.TODO_PROJ.test(it)) {
                 let c = this.ext.custom_css['-timepp-project-color'][0];
+                markup += `<span foreground="${c}"><b>${it}</b></span>  `;
+            }
+            else if (REG.TODO_KANBAN_DUE.test(it)) {
+                it = it.replace('<', '&lt;').replace('>', '&gt;');
+                let c = this.ext.custom_css['-timepp-due-date-color'][0];
                 markup += `<span foreground="${c}"><b>${it}</b></span>  `;
             }
             else {

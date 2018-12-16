@@ -194,6 +194,7 @@ var TaskItem = new Lang.Class({
         this.creation_date   = '0000-00-00';
         this.completion_date = '0000-00-00';
         this.due_date        = '9999-99-99';
+        this.due_in_days     = 99999999;
 
         this.completed                   = false;
         this.completion_checkbox.checked = false;
@@ -370,6 +371,7 @@ var TaskItem = new Lang.Class({
 
                     this.due_date = word.slice(4);
                     words.splice(i, 1); i--; len--;
+                    this.due_in_days = MISC.date_delta(this.due_date);
                 }
                 else if (REG.TODO_DEFER_EXT.test(word)) {
                     if (this.rec_str) continue;
