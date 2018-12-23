@@ -1044,12 +1044,10 @@ var TaskItem = new Lang.Class({
             }
           } break;
 
-          case Clutter.EventType.BUTTON_RELEASE: {
+          case Clutter.EventType.BUTTON_PRESS: {
             if (this.prio_label.has_pointer) {
                 this.delegate.show_view__search(this.prio_label.text);
-            } else if (this.msg.has_pointer) {
-                if (! this.current_keyword) break;
-
+            } else if (this.msg.has_pointer && this.current_keyword) {
                 if (REG.URL.test(this.current_keyword)) {
                     MISC.open_web_uri(this.current_keyword);
                 } else if (REG.FILE_PATH.test(this.current_keyword)) {
@@ -1057,17 +1055,15 @@ var TaskItem = new Lang.Class({
                 } else {
                     this.delegate.show_view__search(this.current_keyword);
                 }
-            }
-          } break;
-
-          case Clutter.EventType.BUTTON_PRESS: {
-            let t = GLib.get_monotonic_time();
-            if (t - LAST_TIME_CLICKED < DOUBLE_CLICK_DELAY) {
-              LAST_TIME_CLICKED = 0;
-              this.hide_header_icons();
-              this.delegate.show_view__task_editor(this);
-            } else {
-              LAST_TIME_CLICKED = t;
+            } else { // maybe double click
+                let t = GLib.get_monotonic_time();
+                if (t - LAST_TIME_CLICKED < DOUBLE_CLICK_DELAY) {
+                  LAST_TIME_CLICKED = 0;
+                  this.hide_header_icons();
+                  this.delegate.show_view__task_editor(this);
+                } else {
+                  LAST_TIME_CLICKED = t;
+                }
             }
           } break;
 
