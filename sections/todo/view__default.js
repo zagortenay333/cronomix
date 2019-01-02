@@ -419,12 +419,8 @@ var ViewDefault = new Lang.Class({
     close: function () {
         this.sigm.clear();
         this._clear_kanban_columns();
-        Mainloop.timeout_add(0, () => {
-            if (this.actor) {
-                this.actor.destroy();
-                this.actor = null;
-            }
-        });
+        this.actor.destroy();
+        this.actor = null;
     },
 });
 Signals.addSignalMethods(ViewDefault.prototype);
