@@ -32,10 +32,10 @@ const G = ME.imports.sections.todo.GLOBAL;
 //
 // @signals: 'update-sort'
 // =====================================================================
-var ViewSort = new Lang.Class({
-    Name: 'Timepp.ViewSort',
+class ViewSort {
+    
 
-    _init: function (ext, delegate) {
+    _init (ext, delegate) {
         this.ext      = ext;
         this.delegate = delegate;
 
@@ -123,25 +123,25 @@ var ViewSort = new Lang.Class({
         this.button_ok.connect('clicked', () => this._on_ok_clicked());
         this.toggle_automatic_sort_btn.connect('clicked', () => this._on_toggle_clicked());
         this.toggle_automatic_sort.connect('button-press-event', () => this._on_toggle_clicked());
-    },
+    }
 
-    _on_ok_clicked: function () {
+    _on_ok_clicked () {
         let res = [];
 
         for (let it of this.sort_items_box.get_children())
             res.push([it._owner.sort_type, it._owner.sort_order]);
 
         this.emit('update-sort', res, this.toggle.state);
-    },
+    }
 
-    _on_toggle_clicked: function () {
+    _on_toggle_clicked () {
         this.toggle.setToggleState(!this.toggle.state);
-    },
+    }
 
-    close: function () {
+    close () {
         this.actor.destroy();
-    },
-});
+    }
+}
 Signals.addSignalMethods(ViewSort.prototype);
 
 
@@ -152,10 +152,10 @@ Signals.addSignalMethods(ViewSort.prototype);
 //
 // @signals:
 // =====================================================================
-let SortItem = new Lang.Class({
-    Name: 'Timepp.SortItem',
+class SortItem{
+    
 
-    _init: function (delegate, actor_scrollview, actor_parent, label, sort_type, sort_order) {
+    _init (delegate, actor_scrollview, actor_parent, label, sort_type, sort_order) {
         this.delegate         = delegate;
         this.actor_scrollview = [[actor_scrollview], []];
         this.actor_parent     = actor_parent;
@@ -231,5 +231,5 @@ let SortItem = new Lang.Class({
 
             return Clutter.EVENT_PROPAGATE;
         });
-    },
-});
+    }
+}

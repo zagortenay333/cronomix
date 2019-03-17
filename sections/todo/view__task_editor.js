@@ -57,10 +57,10 @@ const EditorMode = {
 // of that task object and the signals 'delete-task' and 'edit-task' will be
 // used instead of 'add-task'.
 // =====================================================================
-var ViewTaskEditor = new Lang.Class({
-    Name: 'Timepp.ViewTaskEditor',
+class ViewTaskEditor {
+    
 
-    _init: function (ext, delegate, task) {
+    _init (ext, delegate, task) {
         this.ext      = ext;
         this.delegate = delegate;
 
@@ -287,9 +287,9 @@ var ViewTaskEditor = new Lang.Class({
                 break;
             }
         });
-    },
+    }
 
-    _on_text_changed: function () {
+    _on_text_changed () {
         if (this.text_changed_handler_block) return Clutter.EVENT_PROPAGATE;
 
         let text = this.entry.entry.get_text();
@@ -304,9 +304,9 @@ var ViewTaskEditor = new Lang.Class({
         } else {
             this.completion_menu.hide();
         }
-    },
+    }
 
-    _on_tab: function () {
+    _on_tab () {
         this.curr_selected_completion.pseudo_class = '';
         let next = this.curr_selected_completion.get_next_sibling();
 
@@ -319,9 +319,9 @@ var ViewTaskEditor = new Lang.Class({
         }
 
         MISC_UTILS.scroll_to_item(this.completion_menu, this.completion_menu_content, this.curr_selected_completion);
-    },
+    }
 
-    _on_activate: function () {
+    _on_activate () {
         if (!this.completion_menu.visible || !this.curr_selected_completion) {
             this.entry.insert_text('\n');
             return;
@@ -347,9 +347,9 @@ var ViewTaskEditor = new Lang.Class({
         this.curr_selected_completion = null;
         this.completion_menu.hide();
         this.text_changed_handler_block = false;
-    },
+    }
 
-    _on_completion_hovered: function (item) {
+    _on_completion_hovered (item) {
         // It seems that when the completion menu gets hidden, the items are
         // moving for a brief moment which triggers the hover callback.
         // We prevent any possible issues in this case by just checking whether
@@ -359,16 +359,16 @@ var ViewTaskEditor = new Lang.Class({
         this.curr_selected_completion.pseudo_class = '';
         this.curr_selected_completion = item;
         item.pseudo_class = 'active';
-    },
+    }
 
-    _emit_cancel: function () {
+    _emit_cancel () {
         if (this.mode === EditorMode.EDIT_TASK)
             this.preview_task.reset(true, this.old_task_str, false)
 
         this.emit('cancel');
-    },
+    }
 
-    _emit_ok: function () {
+    _emit_ok () {
         if (this.done) return;
 
         let text = this._create_task_str();
@@ -386,9 +386,9 @@ var ViewTaskEditor = new Lang.Class({
 
         if (this.mode === EditorMode.ADD_TASK) this.emit('add-task', r);
         else                                   this.emit('edited-task');
-    },
+    }
 
-    _insert_markdown: function (delim) {
+    _insert_markdown (delim) {
         let text  = this.entry.entry.get_text();
         let pos   = this.entry.entry.clutter_text.get_cursor_position();
         let bound = this.entry.entry.clutter_text.get_selection_bound();
@@ -421,9 +421,9 @@ var ViewTaskEditor = new Lang.Class({
         let l = delim.length;
         if (bound === pos) this.entry.entry.clutter_text.set_selection(pos + l, pos + l);
         else               this.entry.entry.clutter_text.set_selection(start + l, end + l + 1);
-    },
+    }
 
-    _toggle_preview: function () {
+    _toggle_preview () {
         let state = !this.delegate.settings.get_boolean('todo-show-task-editor-preview');
 
         if (state) this.eye_icon.icon_name = 'timepp-eye-symbolic';
@@ -431,9 +431,9 @@ var ViewTaskEditor = new Lang.Class({
 
         this.preview_scrollview.visible = state;
         this.delegate.settings.set_boolean('todo-show-task-editor-preview', state);
-    },
+    }
 
-    _find_file: function () {
+    _find_file () {
         this.ext.menu.close();
         this.file_chooser = MISC_UTILS.open_file_dialog(false, (out) => {
             if (out) this.entry.insert_text(out);
@@ -441,10 +441,10 @@ var ViewTaskEditor = new Lang.Class({
             this.ext.menu.open();
             Mainloop.idle_add(() => this.entry.entry.grab_key_focus());
         });
-    },
+    }
 
     // @word: string (a context or project)
-    _show_completions: function (word) {
+    _show_completions (word) {
         let completions = null;
 
         if (word === '(')
@@ -472,14 +472,14 @@ var ViewTaskEditor = new Lang.Class({
 
         this.completion_menu_content.first_child.pseudo_class = 'active';
         this.curr_selected_completion = this.completion_menu_content.first_child;
-    },
+    }
 
     // @needle   : string (a context or project)
     // @haystack : map    (of all contexts or projects);
     //
     // If @needle is a context, then the @haystack has to be the map of all
     // contexts. Likewise for projects.
-    _find_completions: function (needle, haystack) {
+    _find_completions (needle, haystack) {
         if (needle === '@' || needle === '+') {
             let res = [];
             for (let [key,] of haystack) res.push(key);
@@ -504,9 +504,9 @@ var ViewTaskEditor = new Lang.Class({
         }
 
         return results;
-    },
+    }
 
-    _get_current_word: function () {
+    _get_current_word () {
         let text = this.entry.entry.get_text();
         let len  = text.length;
 
@@ -523,9 +523,9 @@ var ViewTaskEditor = new Lang.Class({
         if (end > 0) end--;
 
         return [text.substring(start, end + 1), start, end];
-    },
+    }
 
-    _create_task_str: function () {
+    _create_task_str () {
         let text = this.entry.entry.get_text();
         if (! text) return "";
 
@@ -548,9 +548,9 @@ var ViewTaskEditor = new Lang.Class({
         }
 
         return words.join(' ').replace(/\n/g, '\\n');
-    },
+    }
 
-    close: function () {
+    close () {
         if (this.file_chooser_proc) this.file_chooser_proc.force_exit();
 
         if (this.preview_task) {
@@ -564,6 +564,6 @@ var ViewTaskEditor = new Lang.Class({
             this.actor.destroy();
             this.delegate.actor.remove_style_class_name('view-task-editor');
         });
-    },
-});
+    }
+}
 Signals.addSignalMethods(ViewTaskEditor.prototype);

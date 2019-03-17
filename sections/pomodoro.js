@@ -68,12 +68,10 @@ const PanelMode = {
 // @ext      : obj (main extension object)
 // @settings : obj (extension settings)
 // =====================================================================
-var SectionMain = new Lang.Class({
-    Name    : 'Timepp.Pomodoro',
-    Extends : ME.imports.sections.section_base.SectionBase,
-
-    _init: function (section_name, ext, settings) {
-        this.parent(section_name, ext, settings);
+class SectionMain extends ME.imports.sections.section_base.SectionBase{
+    
+    constructor (section_name, ext, settings) {
+        super(section_name, ext, settings);
 
         this.actor.add_style_class_name('pomo-section');
 
@@ -243,9 +241,9 @@ var SectionMain = new Lang.Class({
 
         this._update_time_display();
         this.header_label.text = _('Pomodoro');
-    },
+    }
 
-    disable_section: function () {
+    disable_section () {
         this.dbus_impl.unexport();
         this.stop();
         this._store_cache();
@@ -257,18 +255,18 @@ var SectionMain = new Lang.Class({
             this.fullscreen = null;
         }
 
-        this.parent();
-    },
+        super.disable_section();
+    }
 
-    _store_cache: function () {
+    _store_cache () {
         if (! this.cache_file.query_exists(null))
             this.cache_file.create(Gio.FileCreateFlags.NONE, null);
 
         this.cache_file.replace_contents(JSON.stringify(this.cache, null, 2),
             null, false, Gio.FileCreateFlags.REPLACE_DESTINATION, null);
-    },
+    }
 
-    _show_settings: function () {
+    _show_settings () {
         let settings = new PomodoroSettings(this.ext, this, this.cache);
         this.settings_container.add_actor(settings.actor);
         settings.button_cancel.grab_key_focus();
@@ -302,9 +300,9 @@ var SectionMain = new Lang.Class({
             settings.actor.destroy();
             this.header.show();
         });
-    },
+    }
 
-    show_fullscreen: function () {
+    show_fullscreen () {
         this.ext.menu.close();
 
         if (! this.fullscreen) {
@@ -313,28 +311,28 @@ var SectionMain = new Lang.Class({
         }
 
         this.fullscreen.open();
-    },
+    }
 
-    clear_pomo_counter: function () {
+    clear_pomo_counter () {
         this.cache.pomo_counter = 0;
         this.clock_label.text = '';
         this._store_cache();
-    },
+    }
 
     // @pomo        : int (seconds)
     // @short_break : int (seconds)
     // @long_break  : int (seconds)
     // @break_rate  : int (num of pomos until long break)
-    set_phase_durations: function (pomo, short_break, long_break, break_rate) {
+    set_phase_durations (pomo, short_break, long_break, break_rate) {
         this.cache.pomo_duration   = Math.max(1, pomo);
         this.cache.short_break     = Math.max(1, short_break);
         this.cache.long_break      = Math.max(1, long_break);
         this.cache.long_break_rate = Math.max(1, break_rate);
 
         this._store_cache();
-    },
+    }
 
-    stop: function () {
+    stop () {
         this.clock = this.end_time - GLib.get_monotonic_time();
 
         if (this.tic_mainloop_id) {
@@ -384,14 +382,14 @@ var SectionMain = new Lang.Class({
         if (this.cache.todo_task_id) {
             this.ext.emit_to_sections('stop-time-tracking-by-id', this.section_name, this.cache.todo_task_id);
         }
-    },
+    }
 
-    start_new_pomo: function () {
+    start_new_pomo () {
         this.start_pomo(this.cache.pomo_duration);
-    },
+    }
 
     // @time: int (seconds)
-    start_pomo: function (time) {
+    start_pomo (time) {
         if (this.tic_mainloop_id) {
             Mainloop.source_remove(this.tic_mainloop_id);
             this.tic_mainloop_id = null;
@@ -430,9 +428,9 @@ var SectionMain = new Lang.Class({
         if (this.cache.todo_task_id) {
             this.ext.emit_to_sections('start-time-tracking-by-id', this.section_name, this.cache.todo_task_id);
         }
-    },
+    }
 
-    take_break: function () {
+    take_break () {
         if (this.tic_mainloop_id) {
             Mainloop.source_remove(this.tic_mainloop_id);
             this.tic_mainloop_id = null;
@@ -473,16 +471,16 @@ var SectionMain = new Lang.Class({
         this._tic();
 
         this.dbus_impl.emit_signal('pomo_state_changed', GLib.Variant.new('(s)', [this.pomo_state]));
-    },
+    }
 
-    timer_toggle: function () {
+    timer_toggle () {
         if (this.pomo_state === PomoState.STOPPED)
             this.start_pomo();
         else
             this.stop();
-    },
+    }
 
-    _update_time_display: function () {
+    _update_time_display () {
         let time = Math.ceil(this.clock / 1000000);
         let txt;
 
@@ -506,9 +504,9 @@ var SectionMain = new Lang.Class({
         this.header_label.text = txt;
         this.panel_item.set_label(txt);
         this.fullscreen.set_banner_text(txt);
-    },
+    }
 
-    _update_phase_label: function () {
+    _update_phase_label () {
         switch (this.pomo_state) {
           case PomoState.POMO:
             this.phase_label.text            = POMO_STARTED_MSG;
@@ -527,16 +525,16 @@ var SectionMain = new Lang.Class({
             this.fullscreen.phase_label.text = '';
             break;
         }
-    },
+    }
 
-    _update_panel_item: function () {
+    _update_panel_item () {
         if (this.pomo_state === PomoState.STOPPED)
             this.panel_item.actor.remove_style_class_name('on');
         else
             this.panel_item.actor.add_style_class_name('on');
-    },
+    }
 
-    _timer_expired: function () {
+    _timer_expired () {
         if (this.pomo_state === PomoState.LONG_BREAK ||
             this.pomo_state === PomoState.SHORT_BREAK) {
 
@@ -550,9 +548,9 @@ var SectionMain = new Lang.Class({
         }
 
         this._send_notif();
-    },
+    }
 
-    _tic: function () {
+    _tic () {
         this.clock = this.end_time - GLib.get_monotonic_time();
 
         if (this.clock <= 0) {
@@ -566,9 +564,9 @@ var SectionMain = new Lang.Class({
         this.tic_mainloop_id = Mainloop.timeout_add_seconds(1, () => {
             this._tic();
         });
-    },
+    }
 
-    _send_notif: function () {
+    _send_notif () {
         let do_play_sound, msg;
 
         switch (this.pomo_state) {
@@ -620,9 +618,9 @@ var SectionMain = new Lang.Class({
 
         if (do_play_sound)
             this.sound_player.play(this.settings.get_boolean('pomodoro-do-repeat-notif-sound'));
-    },
+    }
 
-    _toggle_panel_mode: function () {
+    _toggle_panel_mode () {
         switch (this.settings.get_enum('pomodoro-panel-mode')) {
           case PanelMode.ICON:
             this.panel_item.set_mode('icon');
@@ -639,8 +637,8 @@ var SectionMain = new Lang.Class({
             else
                 this.panel_item.set_mode('icon_text');
         }
-    },
-});
+    }
+}
 Signals.addSignalMethods(SectionMain.prototype);
 
 
@@ -653,10 +651,10 @@ Signals.addSignalMethods(SectionMain.prototype);
 //
 // @signals: 'ok', 'cancel'
 // =====================================================================
-const PomodoroSettings = new Lang.Class({
-    Name: 'Timepp.PomodoroSettings',
+class PomodoroSettings {
+    
 
-    _init: function(ext, delegate, pomo_cache) {
+    constructor(ext, delegate, pomo_cache) {
         this.ext      = ext;
         this.delegate = delegate;
 
@@ -824,8 +822,8 @@ const PomodoroSettings = new Lang.Class({
             if (n === 0 && this.short_break_min_picker.counter === 0)
                 this.short_break_sec_picker.set_counter(1);
         });
-    },
-});
+    }
+}
 Signals.addSignalMethods(PomodoroSettings.prototype);
 
 
@@ -839,12 +837,10 @@ Signals.addSignalMethods(PomodoroSettings.prototype);
 //
 // signals: 'monitor-changed'
 // =====================================================================
-const PomodoroFullscreen = new Lang.Class({
-    Name    : 'Timepp.PomodoroFullscreen',
-    Extends : FULLSCREEN.Fullscreen,
-
-    _init: function (ext, delegate, monitor) {
-        this.parent(monitor);
+class PomodoroFullscreen extends FULLSCREEN.Fullscreen {
+    
+    constructor (ext, delegate, monitor) {
+        super(monitor);
 
         this.ext      = ext;
         this.delegate = delegate;
@@ -903,14 +899,14 @@ const PomodoroFullscreen = new Lang.Class({
                 return Clutter.EVENT_PROPAGATE;
             }
         });
-    },
+    }
 
-    close: function () {
+    close () {
         this.delegate.sound_player.stop();
-        this.parent();
-    },
+        super.close();
+    }
 
-    on_start: function () {
+    on_start () {
         switch (this.delegate.pomo_state) {
           case PomoState.POMO:
             this.actor.style_class = this.default_style_class + ' pomo-running';
@@ -922,19 +918,19 @@ const PomodoroFullscreen = new Lang.Class({
             this.actor.style_class = this.default_style_class + ' pomo-short-break';
             break;
         }
-    },
+    }
 
-    on_stop: function () {
+    on_stop () {
         this.actor.style_class = this.default_style_class + ' pomo-stopped';
         this.phase_label.text  = '';
-    },
+    }
 
-    on_new_pomo: function () {
+    on_new_pomo () {
         this.actor.style_class = this.default_style_class + ' pomo-running';
         this.phase_label.text  = POMO_STARTED_MSG;
-    },
+    }
 
-    on_break: function () {
+    on_break () {
         switch (this.delegate.pomo_state) {
           case PomoState.LONG_BREAK:
             this.actor.style_class = this.default_style_class + ' pomo-long-break';
@@ -945,6 +941,6 @@ const PomodoroFullscreen = new Lang.Class({
             this.phase_label.text  = SHORT_BREAK_MSG;
             break;
         }
-    },
-});
+    }
+}
 Signals.addSignalMethods(PomodoroFullscreen.prototype);

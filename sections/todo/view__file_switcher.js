@@ -36,10 +36,10 @@ const G = ME.imports.sections.todo.GLOBAL;
 // @signals:
 //   - 'update'
 // =====================================================================
-var ViewFileSwitcher = new Lang.Class({
-    Name: 'Timepp.ViewFileSwitcher',
+class ViewFileSwitcher {
+    
 
-    _init: function (ext, delegate) {
+    _init (ext, delegate) {
         this.ext      = ext;
         this.delegate = delegate;
 
@@ -116,9 +116,9 @@ var ViewFileSwitcher = new Lang.Class({
         this.button_cancel.connect('clicked', () => this.emit('cancel'));
         this.button_ok.connect('clicked', () => this._on_file_selected());
         this.entry.clutter_text.connect('activate', () => this._select_first());
-    },
+    }
 
-    _search: function () {
+    _search () {
         this.file_items_scrollbox.remove_all_children();
         let needle = this.entry.get_text().toLowerCase();
 
@@ -139,9 +139,9 @@ var ViewFileSwitcher = new Lang.Class({
             for (let it of reduced_results)
                 this.file_items_scrollbox.add_child(it[1].actor);
         }
-    },
+    }
 
-    _show_file_editor: function (item) {
+    _show_file_editor (item) {
         if (this.file_info_editor) this.file_info_editor.close();
 
         this.file_info_editor = new FileInfoEditor(this.ext, this.delegate, item ? item.file : null);
@@ -206,9 +206,9 @@ var ViewFileSwitcher = new Lang.Class({
             this.file_info_editor.close();
             this.file_info_editor = null;
         });
-    },
+    }
 
-    _add_new_file_item: function (file) {
+    _add_new_file_item (file) {
         let item = {};
         this.file_items.add(item);
 
@@ -264,15 +264,15 @@ var ViewFileSwitcher = new Lang.Class({
 
 
         return item;
-    },
+    }
 
-    _select_first: function () {
+    _select_first () {
         let c = this.file_items_scrollbox.get_first_child();
         if (!c) return;
         this._on_file_selected(c._delegate.file);
-    },
+    }
 
-    _on_file_selected: function (file) {
+    _on_file_selected (file) {
         let files = [];
 
         for (let it of this.file_items) {
@@ -281,9 +281,9 @@ var ViewFileSwitcher = new Lang.Class({
         }
 
         this.emit('update', files);
-    },
+    }
 
-    highlight_tokens: function (text) {
+    highlight_tokens (text) {
         text = GLib.markup_escape_text(text, -1);
         text = MISC_UTILS.markdown_to_pango(text, this.ext.markdown_map);
         text = MISC_UTILS.split_on_whitespace(text);
@@ -301,9 +301,9 @@ var ViewFileSwitcher = new Lang.Class({
         }
 
         return text.join('');
-    },
+    }
 
-    _on_file_item_event: function (item, event) {
+    _on_file_item_event (item, event) {
         switch (event.type()) {
           case Clutter.EventType.ENTER: {
             let related = event.get_related();
@@ -338,14 +338,14 @@ var ViewFileSwitcher = new Lang.Class({
             });
           } break;
         }
-    },
+    }
 
-    close: function () {
+    close () {
         if (this.file_info_editor) this.file_info_editor.close();
         this.file_info_editor = null;
         this.actor.destroy();
-    },
-});
+    }
+}
 Signals.addSignalMethods(ViewFileSwitcher.prototype);
 
 
@@ -359,10 +359,10 @@ Signals.addSignalMethods(ViewFileSwitcher.prototype);
 //
 // @signals: 'ok', 'cancel', 'delete'
 // =====================================================================
-const FileInfoEditor = new Lang.Class({
-    Name: 'Timepp.FileInfoEditor',
+class FileInfoEditor {
+    
 
-    _init: function(ext, delegate, file) {
+    constructor(ext, delegate, file) {
         this.ext      = ext;
         this.delegate = delegate;
         this.file     = file;
@@ -487,9 +487,9 @@ const FileInfoEditor = new Lang.Class({
         this.button_cancel.connect('clicked', () => this.emit('cancel'));
         this.name_entry.clutter_text.connect('text-changed', () => this._update_ok_btn());
         this.todo_entry.clutter_text.connect('text-changed', () => this._update_ok_btn());
-    },
+    }
 
-    _on_ok_clicked: function () {
+    _on_ok_clicked () {
         let file = this.file;
 
         if (! file) file = G.TODO_RECORD();
@@ -501,9 +501,9 @@ const FileInfoEditor = new Lang.Class({
         file.automatic_sort   = file ? file.automatic_sort : true,
 
         this.emit('ok', file);
-    },
+    }
 
-    _update_ok_btn: function () {
+    _update_ok_btn () {
         if (!this.name_entry.text || !this.todo_entry.text) {
             this.button_ok.visible = false;
             return;
@@ -524,13 +524,13 @@ const FileInfoEditor = new Lang.Class({
         }
 
         this.button_ok.visible = true;
-    },
+    }
 
-    close: function () {
+    close () {
         if (this.todo_file_chooser_proc) this.todo_file_chooser_proc.force_exit();
         if (this.done_file_chooser_proc) this.done_file_chooser_proc.force_exit();
         if (this.tracker_file_chooser_proc) this.tracker_file_chooser_proc.force_exit();
         this.actor.destroy();
-    },
-});
+    }
+}
 Signals.addSignalMethods(FileInfoEditor.prototype);

@@ -55,12 +55,10 @@ const CACHE_FILE = '~/.cache/timepp_gnome_shell_extension/timepp_todo.json';
 //   - 'new-day' (new day started) (returns string in yyyy-mm-dd iso format)
 //   - 'tasks-changed'
 // =====================================================================
-var SectionMain = new Lang.Class({
-    Name    : 'Timepp.Todo',
-    Extends : ME.imports.sections.section_base.SectionBase,
-
-    _init: function (section_name, ext, settings) {
-        this.parent(section_name, ext, settings);
+class SectionMain extends ME.imports.sections.section_base.SectionBase {
+    
+    constructor (section_name, ext, settings) {
+        super(section_name, ext, settings);
 
         this.actor.add_style_class_name('todo-section');
 
@@ -196,9 +194,9 @@ var SectionMain = new Lang.Class({
         // finally
         //
         this._init_todo_file();
-    },
+    }
 
-    disable_section: function () {
+    disable_section () {
         if (this.create_tasks_mainloop_id) {
             Mainloop.source_remove(this.create_tasks_mainloop_id);
             this.create_tasks_mainloop_id = null;
@@ -222,10 +220,10 @@ var SectionMain = new Lang.Class({
         this.view_manager      = null;
         this.tasks             = [];
 
-        this.parent();
-    },
+        super.disable_section();
+    }
 
-    _init_todo_file: function () {
+    _init_todo_file () {
         this.show_view__loading(true);
         this.view_manager.lock = true;
 
@@ -286,21 +284,21 @@ var SectionMain = new Lang.Class({
             this.on_tasks_changed(needs_write);
             this.time_tracker = new TIME_TRACKER.TimeTracker(this.ext, this);
         });
-    },
+    }
 
-    _disable_todo_file_monitor: function () {
+    _disable_todo_file_monitor () {
         if (this.todo_file_monitor) {
             this.todo_file_monitor.cancel();
             this.todo_file_monitor = null;
         }
-    },
+    }
 
-    _enable_todo_file_monitor: function () {
+    _enable_todo_file_monitor () {
         [this.todo_file_monitor,] =
             MISC_UTILS.file_monitor(this.todo_txt_file, () => this._on_todo_file_changed());
-    },
+    }
 
-    store_cache: function () {
+    store_cache () {
         if (! this.cache_file) return;
 
         if(! this.cache_file.query_exists(null))
@@ -308,9 +306,9 @@ var SectionMain = new Lang.Class({
 
         this.cache_file.replace_contents(JSON.stringify(this.cache, null, 2),
             null, false, Gio.FileCreateFlags.REPLACE_DESTINATION, null);
-    },
+    }
 
-    get_current_todo_file: function () {
+    get_current_todo_file () {
         if (this.current_todo_file) return this.current_todo_file;
 
         for (let it of this.cache.todo_files) {
@@ -321,9 +319,9 @@ var SectionMain = new Lang.Class({
         }
 
         return this.current_todo_file;
-    },
+    }
 
-    write_tasks_to_file: function () {
+    write_tasks_to_file () {
         this._disable_todo_file_monitor();
 
         let content = '';
@@ -333,18 +331,18 @@ var SectionMain = new Lang.Class({
             Gio.FileCreateFlags.REPLACE_DESTINATION, null);
 
         this._enable_todo_file_monitor();
-    },
+    }
 
-    _on_todo_file_changed: function (event_type) {
+    _on_todo_file_changed (event_type) {
         this._init_todo_file();
-    },
+    }
 
-    _on_new_day_started: function () {
+    _on_new_day_started () {
         this.emit('new-day', MISC_UTILS.date_yyyymmdd());
         if (this._check_dates()) this.on_tasks_changed(true, true);
-    },
+    }
 
-    _check_dates: function () {
+    _check_dates () {
         let today          = MISC_UTILS.date_yyyymmdd();
         let tasks_updated  = false;
         let recurred_tasks = 0;
@@ -379,19 +377,19 @@ var SectionMain = new Lang.Class({
         }
 
         return tasks_updated;
-    },
+    }
 
-    _on_custom_css_changed: function () {
+    _on_custom_css_changed () {
         for (let task of this.tasks) {
             task.update_body_markup();
             task.update_dates_markup();
         }
-    },
+    }
 
     // The maps have the structure:
     // @key : string  (a context/project/priority)
     // @val : natural (number of tasks that have that @key)
-    _reset_stats_obj: function () {
+    _reset_stats_obj () {
         this.stats = {
             deferred_tasks        : 0,
             recurring_completed   : 0,
@@ -403,16 +401,16 @@ var SectionMain = new Lang.Class({
             contexts              : new Map(),
             projects              : new Map(),
         };
-    },
+    }
 
-    _toggle_panel_item_mode: function () {
+    _toggle_panel_item_mode () {
         if (this.settings.get_enum('todo-panel-mode') === 0)
             this.panel_item.set_mode('icon');
         else if (this.settings.get_enum('todo-panel-mode') === 1)
             this.panel_item.set_mode('text');
         else
             this.panel_item.set_mode('icon_text');
-    },
+    }
 
     // Create task objects from the given task strings and add them to the
     // this.tasks array.
@@ -421,7 +419,7 @@ var SectionMain = new Lang.Class({
     //
     // @todo_strings : array (of strings; each string is a line in todo.txt file)
     // @callback     : func
-    create_tasks: function (todo_strings, callback) {
+    create_tasks (todo_strings, callback) {
         if (this.create_tasks_mainloop_id) {
             Mainloop.source_remove(this.create_tasks_mainloop_id);
             this.create_tasks_mainloop_id = null;
@@ -439,9 +437,9 @@ var SectionMain = new Lang.Class({
         this.create_tasks_mainloop_id = Mainloop.idle_add(() => {
             this._create_tasks__finish(0, todo_strings, callback);
         });
-    },
+    }
 
-    _create_tasks__finish: function (i, todo_strings, callback) {
+    _create_tasks__finish (i, todo_strings, callback) {
         if (i === todo_strings.length) {
             if (typeof(callback) === 'function') callback();
             this.create_tasks_mainloop_id = null;
@@ -458,9 +456,9 @@ var SectionMain = new Lang.Class({
         this.create_tasks_mainloop_id = Mainloop.idle_add(() => {
             this._create_tasks__finish(++i, todo_strings, callback);
         });
-    },
+    }
 
-    on_tasks_changed: function (write_to_file = true, refresh_default_view = false) {
+    on_tasks_changed (write_to_file = true, refresh_default_view = false) {
         //
         // Update stats obj
         //
@@ -564,9 +562,9 @@ var SectionMain = new Lang.Class({
         if (write_to_file) this.write_tasks_to_file();
 
         this.emit('tasks-changed');
-    },
+    }
 
-    sort_tasks: function () {
+    sort_tasks () {
         if (! this.get_current_todo_file().automatic_sort) return;
 
         let property_map = {
@@ -607,7 +605,7 @@ var SectionMain = new Lang.Class({
                 else                                       return +(x > y) || +(x === y) - 1;
             }
         });
-    },
+    }
 
     // Append the task strings of each given task to the current done.txt file.
     //
@@ -617,7 +615,7 @@ var SectionMain = new Lang.Class({
     // The task objects will not be changed.
     //
     // @tasks: array (of task objects)
-    archive_tasks: function (tasks) {
+    archive_tasks (tasks) {
         let content = '';
         let today   = MISC_UTILS.date_yyyymmdd();
 
@@ -641,9 +639,9 @@ var SectionMain = new Lang.Class({
 
             append_stream.write_all(content, null);
         } catch (e) { logError(e); }
-    },
+    }
 
-    show_view__default: function (unlock = false, force_refresh = false) {
+    show_view__default (unlock = false, force_refresh = false) {
         if (unlock) this.view_manager.lock = false;
         else if (this.view_manager.lock) return;
 
@@ -663,9 +661,9 @@ var SectionMain = new Lang.Class({
             focused_actor  : view.dummy_focus_actor,
             close_callback : () => view.close(),
         });
-    },
+    }
 
-    show_view__time_tracker_stats: function (task) {
+    show_view__time_tracker_stats (task) {
         if (! this.time_tracker) return;
 
         this.ext.menu.close();
@@ -688,9 +686,9 @@ var SectionMain = new Lang.Class({
                 this.stats_view.show_mode__single(d.getFullYear(), d.getMonth(), task.task_str, '()');
             }
         });
-    },
+    }
 
-    show_view__loading: function (unlock = false) {
+    show_view__loading (unlock = false) {
         if (unlock) this.view_manager.lock = false;
         else if (this.view_manager.lock) return;
 
@@ -709,11 +707,11 @@ var SectionMain = new Lang.Class({
                 view.close();
                 this.panel_item.icon.icon_name = 'timepp-todo-symbolic';
                 this._toggle_panel_item_mode();
-            },
+            }
         });
-    },
+    }
 
-    show_view__search: function (search_str = false, unlock = false) {
+    show_view__search (search_str = false, unlock = false) {
         if (unlock) this.view_manager.lock = false;
         else if (this.view_manager.lock) return;
 
@@ -730,9 +728,9 @@ var SectionMain = new Lang.Class({
         });
 
         if (search_str) view.search_entry.text = search_str;
-    },
+    }
 
-    show_view__kanban_switcher: function (unlock = false) {
+    show_view__kanban_switcher (unlock = false) {
         if (unlock) this.view_manager.lock = false;
         else if (this.view_manager.lock) return;
 
@@ -745,9 +743,9 @@ var SectionMain = new Lang.Class({
             focused_actor  : view.entry,
             close_callback : () => view.close(),
         });
-    },
+    }
 
-    show_view__clear_completed: function (unlock = false) {
+    show_view__clear_completed (unlock = false) {
         if (unlock) this.view_manager.lock = false;
         else if (this.view_manager.lock) return;
 
@@ -790,9 +788,9 @@ var SectionMain = new Lang.Class({
         view.connect('cancel', () => {
             this.show_view__default();
         });
-    },
+    }
 
-    show_view__file_switcher: function (unlock = false) {
+    show_view__file_switcher (unlock = false) {
         if (unlock) this.view_manager.lock = false;
         else if (this.view_manager.lock) return;
 
@@ -818,9 +816,9 @@ var SectionMain = new Lang.Class({
         view.connect('cancel', () => {
             this.show_view__default();
         });
-    },
+    }
 
-    show_view__sort: function (unlock = false) {
+    show_view__sort (unlock = false) {
         if (unlock) this.view_manager.lock = false;
         else if (this.view_manager.lock) return;
 
@@ -843,9 +841,9 @@ var SectionMain = new Lang.Class({
             this.store_cache();
             this.show_view__default();
         });
-    },
+    }
 
-    show_view__filters: function (unlock = false) {
+    show_view__filters (unlock = false) {
         if (unlock) this.view_manager.lock = false;
         else if (this.view_manager.lock) return;
 
@@ -864,9 +862,9 @@ var SectionMain = new Lang.Class({
             this.store_cache();
             this.show_view__default();
         });
-    },
+    }
 
-    show_view__task_editor: function (task, unlock = false) {
+    show_view__task_editor (task, unlock = false) {
         if (unlock) this.view_manager.lock = false;
         else if (this.view_manager.lock) return;
 
@@ -909,6 +907,6 @@ var SectionMain = new Lang.Class({
         view.connect('cancel', () => {
             this.show_view__default(true);
         });
-    },
-});
+    }
+}
 Signals.addSignalMethods(SectionMain.prototype);

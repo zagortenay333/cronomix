@@ -19,10 +19,10 @@ const PANEL_ITEM = ME.imports.lib.panel_item;
 // @signals:
 //     - 'section-open-state-changed' returns bool
 // =====================================================================
-var SectionBase = new Lang.Class({
-    Name: 'Timepp.SectionBase',
+class SectionBase {
+    
 
-    _init: function (section_name, ext, settings) {
+    _init (section_name, ext, settings) {
         this.section_name = section_name;
         this.ext          = ext;
         this.settings     = settings;
@@ -40,14 +40,14 @@ var SectionBase = new Lang.Class({
         this.panel_item.connect('right-click', () => this.ext.toggle_context_menu(this.section_name));
         this.panel_item.actor.connect('enter-event', () => { if (Main.panel.menuManager.activeMenu) this.ext.open_menu(this.section_name)});
         this.panel_item.actor.connect('key-focus-in', () => this.ext.open_menu(this.section_name));
-    },
+    }
 
-    disable_section: function () {
+    disable_section () {
         this.panel_item.actor.destroy();
         this.actor.destroy();
-    },
+    }
 
-    on_section_open_state_changed: function (state) {
+    on_section_open_state_changed (state) {
         if (state) {
             this.panel_item.actor.add_style_pseudo_class('checked');
             this.panel_item.actor.can_focus = false;
@@ -58,5 +58,5 @@ var SectionBase = new Lang.Class({
         }
 
         this.emit('section-open-state-changed', state);
-    },
-});
+    }
+}

@@ -7,8 +7,8 @@ const Main       = imports.ui.main;
 const PopupMenu  = imports.ui.popupMenu;
 const BoxPointer = imports.ui.boxpointer;
 const PanelMenu  = imports.ui.panelMenu;
-const Lang       = imports.lang;
 const Mainloop   = imports.mainloop;
+const GObject    = imports.gi.GObject
 
 
 const ME = imports.misc.extensionUtils.getCurrentExtension();
@@ -46,22 +46,19 @@ const PanelPosition = {
 // =====================================================================
 // @@@ Main extension object
 // =====================================================================
-const Timepp = new Lang.Class({
+/*const Timepp = new Lang.Class({
     Name    : 'Timepp.Timepp',
-    Extends : PanelMenu.Button,
-
-    _init: function () {
+    Extends : PanelMenu.Button,*/
+class Timepp extends PanelMenu.Button{
+    constructor() {
         // @HACK
         // This func only updates the max-height prop but not max-width.
         // We unset it and do our own thing.
         //
         // NOTE: Do this before calling the parent constructor because they use
         // bind() on the original func..
-        this._onOpenStateChanged = () => false;
-
-
-        this.parent(0.5, 'Timepp');
-
+        //this._onOpenStateChanged = () => false; //DO NOT KNOW WHAT TO DO
+        super(0.5, 'Timepp');
 
         // @SPEED @HACK
         // - We patch the menu.open function to emit the 'open-state-changed'
@@ -105,7 +102,6 @@ const Timepp = new Lang.Class({
                 });
             }
         };
-
 
         this.actor.style_class = '';
         this.actor.can_focus   = false;
@@ -260,9 +256,9 @@ const Timepp = new Lang.Class({
         this.sigm.connect(this.unicon_panel_item, 'right-click', () => this.toggle_context_menu());
         this.sigm.connect(this.unicon_panel_item.actor, 'enter-event', () => { if (Main.panel.menuManager.activeMenu) this.open_menu(); });
         this.sigm.connect(this.unicon_panel_item.actor, 'key-focus-in', () => this.open_menu());
-    },
+    }
 
-    _sync_sections_with_settings: function () {
+    _sync_sections_with_settings() {
         let sections = this.settings.get_value('sections').deep_unpack();
 
         for (let key in sections) {
@@ -300,12 +296,12 @@ const Timepp = new Lang.Class({
         }
 
         this.update_panel_items();
-    },
+    }
 
-    toggle_menu: function (section_name) {
+    toggle_menu(section_name) {
         if (this.menu.isOpen) this.menu.close(false);
         else                  this.open_menu(section_name);
-    },
+    }
 
     // @section: obj (a section's main object)
     //
@@ -317,7 +313,7 @@ const Timepp = new Lang.Class({
     //
     //     - If @section is not a sep menu, we show all joined sections that
     //       are enabled.
-    open_menu: function (section_name) {
+    open_menu(section_name) {
         let section = this.sections.get(section_name);
 
         if (this.menu.isOpen && section && section.actor.visible) return;
@@ -375,9 +371,9 @@ const Timepp = new Lang.Class({
 
         for (let s of shown_sections)  s.on_section_open_state_changed(true);
         for (let s of hidden_sections) s.on_section_open_state_changed(false);
-    },
+    }
 
-    toggle_context_menu: function (section_name) {
+    toggle_context_menu(section_name) {
         if (this.menu.isOpen) {
             this.menu.close(false);
             return;
@@ -402,10 +398,10 @@ const Timepp = new Lang.Class({
         this._update_menu_min_size();
         this._update_separators();
         this.menu.open();
-    },
+    }
 
     // PanelMenu only updates the min-height, we also need to update min-width.
-    _update_menu_min_size: function () {
+    _update_menu_min_size() {
         let work_area    = Main.layoutManager.getWorkAreaForMonitor(Main.layoutManager.findIndexForActor(this.menu.actor));
         let monitor      = Main.layoutManager.findMonitorForActor(this.menu.actor);
         let scale_factor = St.ThemeContext.get_for_stage(global.stage).scale_factor;
@@ -425,14 +421,14 @@ const Timepp = new Lang.Class({
         this.menu_max_h = max_h;
 
         this.menu.actor.style = `max-height: ${max_h}px; max-width: ${max_w}px;`;
-    },
+    }
 
-    _update_menu_arrow: function (source_actor) {
+    _update_menu_arrow(source_actor) {
         this.menu._boxPointer.setPosition(source_actor, this.menu._arrowAlignment);
         this.menu.sourceActor = source_actor;
-    },
+    }
 
-    _update_separators: function () {
+    _update_separators() {
         let last_visible;
 
         for (let [k, sep] of this.separators) {
@@ -445,9 +441,9 @@ const Timepp = new Lang.Class({
         }
 
         if (last_visible) last_visible.hide();
-    },
+    }
 
-    _update_custom_css: function () {
+    _update_custom_css() {
         let update_needed = false;
         let theme_node    = this.panel_item_box.get_theme_node();
 
@@ -470,9 +466,9 @@ const Timepp = new Lang.Class({
         }
 
         if (update_needed) this.emit('custom-css-changed');
-    },
+    }
 
-    update_panel_items: function () {
+    update_panel_items() {
         if (this.settings.get_boolean('unicon-mode')) {
             let show_unicon = false;
 
@@ -493,9 +489,9 @@ const Timepp = new Lang.Class({
                 section.panel_item.actor.visible = true;
             }
         }
-    },
+    }
 
-    _on_panel_position_changed: function (old_pos, new_pos) {
+    _on_panel_position_changed(old_pos, new_pos) {
         let ref = this.container;
 
         switch (old_pos) {
@@ -520,9 +516,9 @@ const Timepp = new Lang.Class({
           case PanelPosition.RIGHT:
             Main.panel._rightBox.insert_child_at_index(ref, 0);
         }
-    },
+    }
 
-    _on_open_state_changed: function (state) {
+    _on_open_state_changed(state) {
         if (state) return Clutter.EVENT_PROPAGATE;
 
         this.context_menu.actor.hide();
@@ -540,14 +536,14 @@ const Timepp = new Lang.Class({
                 section.actor.visible = false;
             }
         }
-    },
+    }
 
-    _on_theme_changed: function () {
+    _on_theme_changed() {
         if (this.custom_stylesheet) this._unload_stylesheet();
         this._load_stylesheet();
-    },
+    }
 
-    _load_stylesheet: function () {
+    _load_stylesheet() {
         this.theme_change_signal_block = true;
 
         // determine custom stylesheet
@@ -576,9 +572,9 @@ const Timepp = new Lang.Class({
         Main.loadTheme();
 
         Mainloop.idle_add(() => this.theme_change_signal_block = false);
-    },
+    }
 
-    _unload_stylesheet: function () {
+    _unload_stylesheet() {
 
         if (! this.custom_stylesheet) return;
 
@@ -586,29 +582,29 @@ const Timepp = new Lang.Class({
             .unload_stylesheet(this.custom_stylesheet);
 
         this.custom_stylesheet = null;
-    },
+    }
 
-    is_section_enabled: function (section_name) {
+    is_section_enabled(section_name) {
         return this.sections.has(section_name);
-    },
+    }
 
     // Used by sections to communicate with each other.
     // This way any section can listen for signals on the main ext object.
-    emit_to_sections: function (sig, section_name, data) {
+    emit_to_sections(sig, section_name, data) {
         this.emit(sig, {section_name, data});
-    },
+    }
 
     // ScrollView always allocates horizontal space for the scrollbar when the
     // policy is set to AUTOMATIC. The result is an ugly padding on the right
     // when the scrollbar is invisible.
-    needs_scrollbar: function () {
+    needs_scrollbar() {
         let [, nat_h] = this.menu.actor.get_preferred_height(-1);
         let max_h     = this.menu.actor.get_theme_node().get_max_height();
 
         return max_h >= 0 && nat_h >= max_h;
-    },
+    }
 
-    destroy: function () {
+    destroy() {
         // We need to make sure that this one is set to the default actor or
         // else the shell will try to destroy the wrong panel actor.
         this._update_menu_arrow(this.actor);
@@ -621,9 +617,9 @@ const Timepp = new Lang.Class({
         this._unload_stylesheet();
         this.sigm.clear();
 
-        this.parent();
-    },
-});
+        super.destroy();
+    }
+}
 
 
 
@@ -636,7 +632,6 @@ let timepp;
 
 function enable () {
     timepp = new Timepp();
-
     {
         let pos;
 

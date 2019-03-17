@@ -28,10 +28,10 @@ const G = ME.imports.sections.todo.GLOBAL;
 //   - 'archive-all' (delete and write to done.txt all completed tasks)
 //   - 'cancel'
 // =====================================================================
-var ViewClearTasks = new Lang.Class({
-    Name: 'Timepp.ViewClearTasks',
+class ViewClearTasks {
+    
 
-    _init: function (ext, delegate) {
+    _init (ext, delegate) {
         this.ext      = ext;
         this.delegate = delegate;
 
@@ -109,10 +109,10 @@ var ViewClearTasks = new Lang.Class({
             else
                 this.emit('archive-all');
         });
-    },
+    }
 
-    close: function () {
+    close () {
         this.actor.destroy();
-    },
-});
+    }
+}
 Signals.addSignalMethods(ViewClearTasks.prototype);
