@@ -7,7 +7,7 @@ const Main        = imports.ui.main;
 const CheckBox    = imports.ui.checkBox;
 const MessageTray = imports.ui.messageTray;
 const Slider      = imports.ui.slider;
-const Lang        = imports.lang;
+
 const Signals     = imports.signals;
 const Mainloop    = imports.mainloop;
 

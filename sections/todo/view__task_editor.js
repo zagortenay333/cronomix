@@ -5,7 +5,7 @@ const Meta     = imports.gi.Meta;
 const Shell    = imports.gi.Shell;
 const Clutter  = imports.gi.Clutter;
 const Main     = imports.ui.main;
-const Lang     = imports.lang;
+
 const Signals  = imports.signals;
 const Mainloop = imports.mainloop;
 
@@ -60,7 +60,7 @@ const EditorMode = {
 class ViewTaskEditor {
     
 
-    _init (ext, delegate, task) {
+    constructor (ext, delegate, task) {
         this.ext      = ext;
         this.delegate = delegate;
 

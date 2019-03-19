@@ -6,7 +6,7 @@ const Pango    = imports.gi.Pango;
 const Clutter  = imports.gi.Clutter;
 const Main     = imports.ui.main;
 const CheckBox = imports.ui.checkBox;
-const Lang     = imports.lang;
+
 const Signals  = imports.signals;
 const Mainloop = imports.mainloop;
 
@@ -51,7 +51,7 @@ let LAST_TIME_CLICKED    = 0; // for double click on task
 class TaskItem {
     
 
-    _init (ext, delegate, task_str, self_update = true) {
+    constructor (ext, delegate, task_str, self_update = true) {
         this.ext      = ext;
         this.delegate = delegate;
         this.task_str = task_str;

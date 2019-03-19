@@ -5,7 +5,7 @@ const Clutter     = imports.gi.Clutter;
 const MessageTray = imports.ui.messageTray;
 const Main        = imports.ui.main;
 const CheckBox    = imports.ui.checkBox;
-const Lang        = imports.lang;
+
 const Signals     = imports.signals;
 const Mainloop    = imports.mainloop;
 

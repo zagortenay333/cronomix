@@ -4,7 +4,7 @@ const GLib     = imports.gi.GLib;
 const Pango    = imports.gi.Pango;
 const Clutter  = imports.gi.Clutter;
 const Main     = imports.ui.main;
-const Lang     = imports.lang;
+
 const Signals  = imports.signals;
 const Mainloop = imports.mainloop;
 
@@ -39,7 +39,7 @@ const G = ME.imports.sections.todo.GLOBAL;
 class ViewFileSwitcher {
     
 
-    _init (ext, delegate) {
+    constructor (ext, delegate) {
         this.ext      = ext;
         this.delegate = delegate;
 

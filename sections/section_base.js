@@ -1,6 +1,6 @@
 const St   = imports.gi.St;
 const Main = imports.ui.main;
-const Lang = imports.lang;
+
 
 
 const ME = imports.misc.extensionUtils.getCurrentExtension();
@@ -22,7 +22,7 @@ const PANEL_ITEM = ME.imports.lib.panel_item;
 class SectionBase {
     
 
-    _init (section_name, ext, settings) {
+    constructor (section_name, ext, settings) {
         this.section_name = section_name;
         this.ext          = ext;
         this.settings     = settings;

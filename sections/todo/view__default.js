@@ -3,7 +3,7 @@ const Gtk       = imports.gi.Gtk;
 const Shell     = imports.gi.Shell;
 const Clutter   = imports.gi.Clutter;
 const Main      = imports.ui.main;
-const Lang      = imports.lang;
+
 const Signals   = imports.signals;
 const Mainloop  = imports.mainloop;
 
@@ -36,7 +36,7 @@ const G = ME.imports.sections.todo.GLOBAL;
 class ViewDefault {
     
 
-    _init (ext, delegate) {
+    constructor (ext, delegate) {
         this.ext      = ext;
         this.delegate = delegate;
 
@@ -439,7 +439,7 @@ Signals.addSignalMethods(ViewDefault.prototype);
 class KanbanColumn {
     
 
-    _init (ext, delegate, owner, col_str, is_collapsed) {
+    constructor (ext, delegate, owner, col_str, is_collapsed) {
         this.ext          = ext;
         this.delegate     = delegate;
         this.owner        = owner;
@@ -619,7 +619,7 @@ class KanbanColumn {
         });
         this.sigm.connect(this.header, 'leave-event', (_, event) => this._maybe_show_title(event));
         this.sigm.connect(this.header, 'enter-event', () => this._hide_title());
-        this.sigm.connect(this.ext, 'custom-css-changed', () => this.set_title());
+        //this.sigm.connect(this.ext, 'custom-css-changed', () => this.set_title());
         this.sigm.connect_release(this.add_task_button, Clutter.BUTTON_PRIMARY, true, () => this.delegate.show_view__task_editor());
         this.sigm.connect_release(this.collapse_icon, Clutter.BUTTON_PRIMARY, true, () => this.toggle_collapse());
         this.sigm.connect_release(this.kanban_icon, Clutter.BUTTON_PRIMARY, true, () => this.delegate.show_view__kanban_switcher());

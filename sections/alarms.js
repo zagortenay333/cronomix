@@ -9,7 +9,7 @@ const Main         = imports.ui.main;
 const CheckBox     = imports.ui.checkBox;
 const PopupMenu    = imports.ui.popupMenu;
 const MessageTray  = imports.ui.messageTray;
-const Lang         = imports.lang;
+
 const Signals      = imports.signals;
 const Mainloop     = imports.mainloop;
 
@@ -697,8 +697,8 @@ class AlarmItem {
         //
         // listen
         //
-        this.css_sig_id =
-            this.ext.connect('custom-css-changed', () => this._on_custom_css_updated());
+        //this.css_sig_id =
+        //   this.ext.connect('custom-css-changed', () => this._on_custom_css_updated());
         this.toggle_bin.connect('clicked', () => this._on_toggle());
         this.delegate.sigm.connect_release(this.edit_icon, Clutter.BUTTON_PRIMARY, true, () => this._on_edit());
         this.actor.connect('enter-event',  () => this.edit_icon.show());

@@ -2,7 +2,7 @@ const St        = imports.gi.St;
 const Gtk       = imports.gi.Gtk;
 const Clutter   = imports.gi.Clutter;
 const Main      = imports.ui.main;
-const Lang      = imports.lang;
+
 const Signals   = imports.signals;
 const Mainloop  = imports.mainloop;
 
@@ -33,7 +33,7 @@ const G = ME.imports.sections.todo.GLOBAL;
 class ViewSearch {
     
 
-    _init (ext, delegate) {
+    constructor (ext, delegate) {
         this.ext      = ext;
         this.delegate = delegate;
 

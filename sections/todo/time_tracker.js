@@ -3,7 +3,7 @@ const GLib     = imports.gi.GLib;
 const Shell    = imports.gi.Shell;
 const Main     = imports.ui.main;
 const Util     = imports.misc.util;
-const Lang     = imports.lang;
+
 const Signals  = imports.signals;
 const Mainloop = imports.mainloop;
 
@@ -35,7 +35,7 @@ const G = ME.imports.sections.todo.GLOBAL;
 class TimeTracker {
     
 
-    _init (ext, delegate) {
+    constructor (ext, delegate) {
         this.ext      = ext;
         this.delegate = delegate;
 

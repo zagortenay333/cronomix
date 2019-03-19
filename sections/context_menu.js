@@ -2,7 +2,7 @@ const St        = imports.gi.St;
 const Gio       = imports.gi.Gio
 const PopupMenu = imports.ui.popupMenu;
 const Util      = imports.misc.util;
-const Lang      = imports.lang;
+
 
 
 const ME = imports.misc.extensionUtils.getCurrentExtension();

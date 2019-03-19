@@ -4,7 +4,7 @@ const Meta      = imports.gi.Meta;
 const Clutter   = imports.gi.Clutter;
 const Main      = imports.ui.main;
 const PopupMenu = imports.ui.popupMenu;
-const Lang      = imports.lang;
+
 const Signals   = imports.signals;
 const Mainloop  = imports.mainloop;
 
@@ -35,7 +35,7 @@ const G = ME.imports.sections.todo.GLOBAL;
 class ViewSort {
     
 
-    _init (ext, delegate) {
+    constructor (ext, delegate) {
         this.ext      = ext;
         this.delegate = delegate;
 
@@ -155,7 +155,7 @@ Signals.addSignalMethods(ViewSort.prototype);
 class SortItem{
     
 
-    _init (delegate, actor_scrollview, actor_parent, label, sort_type, sort_order) {
+    constructor (delegate, actor_scrollview, actor_parent, label, sort_type, sort_order) {
         this.delegate         = delegate;
         this.actor_scrollview = [[actor_scrollview], []];
         this.actor_parent     = actor_parent;
