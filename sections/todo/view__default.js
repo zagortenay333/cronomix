@@ -437,7 +437,6 @@ Signals.addSignalMethods(ViewDefault.prototype);
 // @is_collapsed : bool
 // =====================================================================
 class KanbanColumn {
-    
 
     constructor (ext, delegate, owner, col_str, is_collapsed) {
         this.ext          = ext;
@@ -619,7 +618,7 @@ class KanbanColumn {
         });
         this.sigm.connect(this.header, 'leave-event', (_, event) => this._maybe_show_title(event));
         this.sigm.connect(this.header, 'enter-event', () => this._hide_title());
-        //this.sigm.connect(this.ext, 'custom-css-changed', () => this.set_title());
+        this.sigm.connect(this.ext, 'custom-css-changed', () => this.set_title());
         this.sigm.connect_release(this.add_task_button, Clutter.BUTTON_PRIMARY, true, () => this.delegate.show_view__task_editor());
         this.sigm.connect_release(this.collapse_icon, Clutter.BUTTON_PRIMARY, true, () => this.toggle_collapse());
         this.sigm.connect_release(this.kanban_icon, Clutter.BUTTON_PRIMARY, true, () => this.delegate.show_view__kanban_switcher());

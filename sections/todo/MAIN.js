@@ -59,7 +59,6 @@ class SectionMain extends ME.imports.sections.section_base.SectionBase {
     
     constructor (section_name, ext, settings) {
         super(section_name, ext, settings);
-
         this.actor.add_style_class_name('todo-section');
 
         this.separate_menu = this.settings.get_boolean('todo-separate-menu');
@@ -187,8 +186,7 @@ class SectionMain extends ME.imports.sections.section_base.SectionBase {
             if (t === '00:00') this._on_new_day_started();
         });
         this.sigm.connect(this.settings, 'changed::todo-panel-mode', () => this._toggle_panel_item_mode());
-        //this.sigm.connect(this.ext, 'custom-css-changed', () => this._on_custom_css_changed());
-
+        this.sigm.connect(this.ext, 'custom-css-changed', () => this._on_custom_css_changed());
 
         //
         // finally

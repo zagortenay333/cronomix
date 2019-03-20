@@ -33,7 +33,6 @@ const G = ME.imports.sections.todo.GLOBAL;
 // @delegate : obj (main section object)
 // =====================================================================
 class TimeTracker {
-    
 
     constructor (ext, delegate) {
         this.ext      = ext;

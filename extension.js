@@ -49,16 +49,21 @@ const PanelPosition = {
 /*const Timepp = new Lang.Class({
     Name    : 'Timepp.Timepp',
     Extends : PanelMenu.Button,*/
-var Timepp = GObject.registerClass(
-    class Timepp extends PanelMenu.Button{
-        _init() {
+var Timepp = GObject.registerClass({
+    Signals: {
+        'custom-css-changed': {},
+        'start-time-tracking-by-id': {},
+        'stop-time-tracking-by-id': {}
+    }
+},  class Timepp extends PanelMenu.Button{
+            _init() {
             // @HACK
             // This func only updates the max-height prop but not max-width.
             // We unset it and do our own thing.
             //
             // NOTE: Do this before calling the parent constructor because they use
             // bind() on the original func..
-            this._onOpenStateChanged = () => false; //DO NOT KNOW WHAT TO DO
+            this._onOpenStateChanged = () => false;
             super._init(0.5, 'Timepp');
 
             // @SPEED @HACK
@@ -90,11 +95,11 @@ var Timepp = GObject.registerClass(
                 // If there is another menu open, we emit 'open-state-changed' the
                 // normal way to avoid any deadlocks.
                 if (Main.panel.menuManager.activeMenu) {
-                    this._boxPointer.show(BoxPointer.PopupAnimation.FULL);
+                    this._boxPointer.open(BoxPointer.PopupAnimation.FULL);
                     this.emit('open-state-changed', true);
                 } else {
                     // Put in boxpointer callback to play nicely with animations.
-                    this._boxPointer.show(BoxPointer.PopupAnimation.FULL, () => {
+                    this._boxPointer.open(BoxPointer.PopupAnimation.FULL, () => {
                         let f = global.stage.get_key_focus();
                         Mainloop.timeout_add(0, () => {
                             this.emit('open-state-changed', true);
@@ -187,7 +192,6 @@ var Timepp = GObject.registerClass(
             this.custom_stylesheet   = null;
 
             this.theme_change_signal_block = false;
-
 
             // ensure cache dir
             {
@@ -466,7 +470,7 @@ var Timepp = GObject.registerClass(
                 }
             }
 
-            //if (update_needed) this.emit('custom-css-changed');
+            if (update_needed) this.emit('custom-css-changed');
         }
 
         update_panel_items() {

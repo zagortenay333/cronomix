@@ -430,7 +430,7 @@ class StatsView extends FULLSCREEN.Fullscreen{
         this.graph_interval_icon.connect('clicked', () => this._toggle_show_intervals());
         this.range_btn.connect('clicked', () => this.range_menu.toggle());
         this.type_btn.connect('clicked', () => this.type_menu.toggle());
-        //this.ext.connect('custom-css-changed', () => this._on_custom_css_updated());
+        this.ext.connect('custom-css-changed', () => this._on_custom_css_updated());
         this.date_picker.connect('date-changed', (_, ...args) => this._on_date_picker_changed(...args));
     }
 
