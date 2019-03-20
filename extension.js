@@ -216,7 +216,6 @@ var Timepp = GObject.registerClass({
 
             this.panel_item_box.add_child(this.unicon_panel_item.actor);
 
-
             //
             // popup menu
             //
@@ -661,6 +660,8 @@ function enable () {
     // with 'timepp-'.
     {
         let icon_theme = imports.gi.Gtk.IconTheme.get_default();
+        global.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+        global.log(imports.misc.extensionUtils.getCurrentExtension().path)
         icon_theme.prepend_search_path(ME.path + '/data/img/icons');
     }
 }

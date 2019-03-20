@@ -32,7 +32,7 @@ const G = ME.imports.sections.todo.GLOBAL;
 //
 // @signals: 'update-sort'
 // =====================================================================
-class ViewSort {
+var ViewSort  = class ViewSort {
     
 
     constructor (ext, delegate) {
@@ -152,7 +152,7 @@ Signals.addSignalMethods(ViewSort.prototype);
 //
 // @signals:
 // =====================================================================
-class SortItem{
+var SortItem = class SortItem{
     
 
     constructor (delegate, actor_scrollview, actor_parent, label, sort_type, sort_order) {

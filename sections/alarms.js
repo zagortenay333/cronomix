@@ -52,7 +52,7 @@ const NotifStyle = {
 // @ext      : obj (main extension object)
 // @settings : obj (extension settings)
 // =====================================================================
-class SectionMain extends ME.imports.sections.section_base.SectionBase{
+var SectionMain = class SectionMain extends ME.imports.sections.section_base.SectionBase{
 
     constructor(section_name, ext, settings) {
         super(section_name, ext, settings);
@@ -454,7 +454,7 @@ Signals.addSignalMethods(SectionMain.prototype);
 // settings; otherwise, a complete new alarm object will be returned with the
 // 'add-alarm' signal.
 // =====================================================================
-class AlarmEditor{
+var AlarmEditor = class AlarmEditor{
     constructor(ext, delegate, alarm) {
         this.ext      = ext;
         this.delegate = delegate;
@@ -634,7 +634,7 @@ Signals.addSignalMethods(AlarmEditor.prototype);
 //
 // signals: 'alarm-toggled'
 // =====================================================================
-class AlarmItem {
+var AlarmItem  = class AlarmItem {
     constructor(ext, delegate, alarm) {
         this.ext      = ext;
         this.delegate = delegate;
@@ -822,7 +822,7 @@ Signals.addSignalMethods(AlarmItem.prototype);
 //
 // signals: 'monitor-changed'
 // =====================================================================
-class AlarmFullscreen extends FULLSCREEN.Fullscreen {
+var AlarmFullscreen = class AlarmFullscreen extends FULLSCREEN.Fullscreen {
 
     constructor(ext, delegate, monitor) {
         super(monitor);

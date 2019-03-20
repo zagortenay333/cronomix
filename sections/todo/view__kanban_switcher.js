@@ -33,7 +33,7 @@ const G = ME.imports.sections.todo.GLOBAL;
 // @ext      : obj (main extension object)
 // @delegate : obj (main section object)
 // =====================================================================
-class KanbanSwitcher {
+var KanbanSwitcher  = class KanbanSwitcher {
     
 
     constructor (ext, delegate, task) {

@@ -19,7 +19,7 @@ const PANEL_ITEM = ME.imports.lib.panel_item;
 // @signals:
 //     - 'section-open-state-changed' returns bool
 // =====================================================================
-class SectionBase {
+var SectionBase = class SectionBase {
     
     constructor(section_name, ext, settings) {
         this.section_name = section_name;

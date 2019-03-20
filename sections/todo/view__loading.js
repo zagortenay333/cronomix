@@ -19,7 +19,7 @@ const ngettext = Gettext.ngettext;
 // @ext      : obj (main extension object)
 // @delegate : obj (main section object)
 // =====================================================================
-class ViewLoading {
+var ViewLoading  = class ViewLoading {
     
 
     constructor (ext, delegate) {

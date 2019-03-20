@@ -22,7 +22,7 @@ const MISC_UTILS = ME.imports.lib.misc_utils;
 //
 // @ext: obj (main extension object)
 // =====================================================================
-class ContextMenu {
+var ContextMenu  = class ContextMenu {
     
 
     constructor (ext) {
@@ -74,7 +74,7 @@ class ContextMenu {
 // @icon_name : string
 // @label     : string
 // =====================================================================
-class PopupMenuIconItem extends PopupMenu.PopupBaseMenuItem{
+var PopupMenuIconItem = class PopupMenuIconItem extends PopupMenu.PopupBaseMenuItem{
     
     constructor (icon_name, label, params) {
         super(params);

@@ -7,7 +7,7 @@ const Main        = imports.ui.main;
 const CheckBox    = imports.ui.checkBox;
 const MessageTray = imports.ui.messageTray;
 const Slider      = imports.ui.slider;
-
+const ByteArray = imports.byteArray;
 const Signals     = imports.signals;
 const Mainloop    = imports.mainloop;
 
@@ -71,7 +71,7 @@ const PanelMode = {
 // @ext      : obj (main extension object)
 // @settings : obj (extension settings)
 // =====================================================================
-class SectionMain extends ME.imports.sections.section_base.SectionBase {
+var SectionMain = class SectionMain extends ME.imports.sections.section_base.SectionBase {
     
     constructor (section_name, ext, settings) {
         super(section_name, ext, settings);
@@ -92,7 +92,7 @@ class SectionMain extends ME.imports.sections.section_base.SectionBase {
 
         {
             let [,xml,] = Gio.file_new_for_path(IFACE).load_contents(null);
-            xml = '' + xml;
+            xml = '' + ByteArray.toString(xml);
             this.dbus_impl = Gio.DBusExportedObject.wrapJSObject(xml, this);
             this.dbus_impl.export(Gio.DBus.session, '/timepp/zagortenay333/Timer');
         }
@@ -118,7 +118,7 @@ class SectionMain extends ME.imports.sections.section_base.SectionBase {
 
             if (this.cache_file.query_exists(null)) {
                 let [a, contents, b] = this.cache_file.load_contents(null);
-                this.cache = JSON.parse(contents);
+                this.cache = JSON.parse(ByteArray.toString(contents));
             }
 
             if (!this.cache || !this.cache.format_version ||
@@ -612,7 +612,7 @@ Signals.addSignalMethods(SectionMain.prototype);
 //    - 'start-timer'   (returns a preset obj)
 //    - 'delete-preset' (returns a preset obj)
 // =====================================================================
-class TimerPresetsView {
+var TimerPresetsView  = class TimerPresetsView {
     
 
     constructor(ext, delegate) {
@@ -916,7 +916,7 @@ Signals.addSignalMethods(TimerPresetsView.prototype);
 //
 // @signals: 'ok', 'cancel', 'delete'
 // =====================================================================
-class TimerPresetEditor {
+var TimerPresetEditor  = class TimerPresetEditor {
     
 
     constructor(ext, delegate, preset, is_deletable) {
@@ -1056,7 +1056,7 @@ Signals.addSignalMethods(TimerPresetEditor.prototype);
 //
 // @signals: 'monitor-changed'
 // =====================================================================
-class TimerFullscreen extends FULLSCREEN.Fullscreen {
+var TimerFullscreen = class TimerFullscreen extends FULLSCREEN.Fullscreen {
     
     constructor (ext, delegate, monitor) {
         super(monitor);

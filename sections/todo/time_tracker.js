@@ -3,7 +3,7 @@ const GLib     = imports.gi.GLib;
 const Shell    = imports.gi.Shell;
 const Main     = imports.ui.main;
 const Util     = imports.misc.util;
-
+const ByteArray = imports.byteArray;
 const Signals  = imports.signals;
 const Mainloop = imports.mainloop;
 
@@ -32,7 +32,7 @@ const G = ME.imports.sections.todo.GLOBAL;
 // @ext      : obj (main extension object)
 // @delegate : obj (main section object)
 // =====================================================================
-class TimeTracker {
+var TimeTracker  = class TimeTracker {
 
     constructor (ext, delegate) {
         this.ext      = ext;
@@ -41,7 +41,7 @@ class TimeTracker {
 
         {
             let [,xml,] = Gio.file_new_for_path(IFACE).load_contents(null);
-            xml = '' + xml;
+            xml = '' + ByteArray.toString(xml);
             this.dbus_impl = Gio.DBusExportedObject.wrapJSObject(xml, this);
             this.dbus_impl.export(Gio.DBus.session, '/timepp/zagortenay333/TimeTracker');
         }
@@ -180,7 +180,7 @@ class TimeTracker {
         let today = MISC_UTILS.date_yyyymmdd();
 
         let [, lines] = this.daily_csv_file.load_contents(null);
-        lines = String(lines).split(/\r?\n/).filter((l) => /\S/.test(l));
+        lines = ByteArray.toString(lines).split(/\r?\n/).filter((l) => /\S/.test(l));
 
         let do_write_daily_csv_file = false;
         let tasks_to_be_tracked = [];

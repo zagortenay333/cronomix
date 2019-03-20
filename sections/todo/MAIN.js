@@ -5,7 +5,7 @@ const GLib         = imports.gi.GLib;
 const Clutter      = imports.gi.Clutter;
 const GnomeDesktop = imports.gi.GnomeDesktop;
 const Main         = imports.ui.main;
-
+const ByteArray = imports.byteArray;
 const Signals      = imports.signals;
 const Mainloop     = imports.mainloop;
 
@@ -55,7 +55,7 @@ const CACHE_FILE = '~/.cache/timepp_gnome_shell_extension/timepp_todo.json';
 //   - 'new-day' (new day started) (returns string in yyyy-mm-dd iso format)
 //   - 'tasks-changed'
 // =====================================================================
-class SectionMain extends ME.imports.sections.section_base.SectionBase {
+var SectionMain = class SectionMain extends ME.imports.sections.section_base.SectionBase {
     
     constructor (section_name, ext, settings) {
         super(section_name, ext, settings);
@@ -88,7 +88,7 @@ class SectionMain extends ME.imports.sections.section_base.SectionBase {
 
             if (this.cache_file.query_exists(null)) {
                 let [, contents] = this.cache_file.load_contents(null);
-                this.cache = JSON.parse(contents);
+                this.cache = JSON.parse(ByteArray.toString(contents));
             }
 
             if (!this.cache || !this.cache.format_version ||
@@ -275,7 +275,7 @@ class SectionMain extends ME.imports.sections.section_base.SectionBase {
         }
 
         let [, lines] = this.todo_txt_file.load_contents(null);
-        lines = String(lines).split(/\r?\n/).filter((l) => /\S/.test(l));
+        lines = ByteArray.toString(lines).split(/\r?\n/).filter((l) => /\S/.test(l));
 
         this.create_tasks(lines, () => {
             let needs_write = this._check_dates();

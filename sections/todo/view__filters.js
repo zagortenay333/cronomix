@@ -33,7 +33,7 @@ const G = ME.imports.sections.todo.GLOBAL;
 // @signals:
 //  - 'filters-updated' returns new filters record
 // =====================================================================
-class ViewFilters {
+var ViewFilters  = class ViewFilters {
     
 
     constructor (ext, delegate) {
