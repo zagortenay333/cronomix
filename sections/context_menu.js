@@ -79,7 +79,7 @@ var PopupMenuIconItem = class PopupMenuIconItem extends PopupMenu.PopupBaseMenuI
     constructor (icon_name, label, params) {
         super(params);
 
-        this.icon = new St.Icon({ icon_name: icon_name });
+        this.icon = new St.Icon({ gicon: MISC_UTILS.getIcon(icon_name) });
         this.actor.add_child(this.icon);
 
         this.label = new St.Label({ text: label });

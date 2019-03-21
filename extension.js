@@ -20,6 +20,7 @@ Gettext.bindtextdomain(ME.metadata['gettext-domain'], ME.path + '/locale');
 
 const SIG_MANAGER = ME.imports.lib.signal_manager;
 const PANEL_ITEM  = ME.imports.lib.panel_item;
+const MISC_UTILS  = ME.imports.lib.misc_utils;
 
 
 // To add a section, add the module here, update the 'sections' entry in the
@@ -41,8 +42,6 @@ const PanelPosition = {
     CENTER : 1,
     RIGHT  : 2,
 };
-
-
 // =====================================================================
 // @@@ Main extension object
 // =====================================================================
@@ -207,7 +206,7 @@ var Timepp = GObject.registerClass({
             // unicon panel item (shown when single panel item mode is selected)
             //
             this.unicon_panel_item = new PANEL_ITEM.PanelItem(this.menu);
-            this.unicon_panel_item.icon.icon_name = 'timepp-unicon-symbolic';
+            this.unicon_panel_item.icon.gicon = MISC_UTILS.getIcon('timepp-unicon-symbolic');
 
             this.unicon_panel_item.set_mode('icon');
             this.unicon_panel_item.actor.add_style_class_name('unicon-panel-item');
@@ -653,29 +652,9 @@ function enable () {
             Main.panel.addToStatusArea('timepp', timepp, 0, 'right');
         }
     }
-
-    // To make it easier to use custom icons, we just append the img dir to the
-    // search paths of the default icon theme.
-    // To avoid issues, we prefix the file names of our custom symbolic icons
-    // with 'timepp-'.
-    {
-        let icon_theme = imports.gi.Gtk.IconTheme.get_default();
-        global.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
-        global.log(imports.misc.extensionUtils.getCurrentExtension().path)
-        icon_theme.prepend_search_path(ME.path + '/data/img/icons');
-    }
 }
 
 function disable () {
     timepp.destroy();
     timepp = null;
-
-    // remove the custom search path
-    {
-        let icon_theme  = imports.gi.Gtk.IconTheme.get_default();
-        let custom_path = ME.path + '/data/img/icons';
-        let paths       = icon_theme.get_search_path();
-        paths.splice(paths.indexOf(custom_path), 1);
-        icon_theme.set_search_path(paths);
-    }
 }

@@ -165,7 +165,7 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
         // panel item
         //
         this.panel_item.actor.add_style_class_name('todo-panel-item');
-        this.panel_item.icon.icon_name = 'timepp-todo-symbolic';
+        this.panel_item.icon.gicon = MISC_UTILS.getIcon('timepp-todo-symbolic');
         this._toggle_panel_item_mode();
 
 
@@ -692,7 +692,7 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
 
         this.panel_item.set_mode('icon');
         this.panel_item.actor.remove_style_class_name('done');
-        this.panel_item.icon.icon_name = 'timepp-todo-loading-symbolic';
+        this.panel_item.icon.gicon = MISC_UTILS.getIcon('timepp-todo-loading-symbolic');
 
         let view = new VIEW_LOADING.ViewLoading(this.ext, this);
 
@@ -703,7 +703,7 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
             focused_actor  : view.loading_msg,
             close_callback : () => {
                 view.close();
-                this.panel_item.icon.icon_name = 'timepp-todo-symbolic';
+                this.panel_item.icon.gicon = MISC_UTILS.getIcon('timepp-todo-symbolic');
                 this._toggle_panel_item_mode();
             }
         });

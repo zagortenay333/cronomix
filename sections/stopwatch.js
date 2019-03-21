@@ -136,7 +136,7 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
         //
         // panel item
         //
-        this.panel_item.icon.icon_name = 'timepp-stopwatch-symbolic';
+        this.panel_item.icon.gicon = MISC_UTILS.getIcon('timepp-stopwatch-symbolic');
         this.panel_item.actor.add_style_class_name('stopwatch-panel-item');
         this._toggle_panel_mode();
 
@@ -167,7 +167,7 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
         this.icon_box = new St.BoxLayout({ y_align: Clutter.ActorAlign.CENTER, x_align: Clutter.ActorAlign.END, style_class: 'icon-box' });
         this.header.add_child(this.icon_box);
 
-        this.fullscreen_icon = new St.Icon({ reactive: true, can_focus: true, track_hover: true, icon_name: 'timepp-fullscreen-symbolic', style_class: 'fullscreen-icon' });
+        this.fullscreen_icon = new St.Icon({ reactive: true, can_focus: true, track_hover: true, gicon : MISC_UTILS.getIcon('timepp-fullscreen-symbolic'), style_class: 'fullscreen-icon' });
         this.icon_box.add_actor(this.fullscreen_icon);
 
 

@@ -9,7 +9,7 @@ const Main         = imports.ui.main;
 const CheckBox     = imports.ui.checkBox;
 const PopupMenu    = imports.ui.popupMenu;
 const MessageTray  = imports.ui.messageTray;
-
+const ByteArray    = imports.byteArray;
 const Signals      = imports.signals;
 const Mainloop     = imports.mainloop;
 
@@ -58,7 +58,7 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
         super(section_name, ext, settings);
 
         this.actor = new St.BoxLayout({ vertical: true, style_class: 'section alarm-section' });
-        this.panel_item.icon.icon_name = 'timepp-alarms-symbolic';
+        this.panel_item.icon.gicon = MISC_UTILS.getIcon('timepp-alarms-symbolic');
         this.panel_item.actor.add_style_class_name('alarm-panel-item');
         this.panel_item.set_mode('icon');
 
@@ -99,7 +99,7 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
 
             if (this.cache_file.query_exists(null)) {
                 let [, contents] = this.cache_file.load_contents(null);
-                this.cache = JSON.parse(contents);
+                this.cache = JSON.parse(ByteArray.toString(contents));
             }
 
             if (!this.cache || !this.cache.format_version ||
@@ -146,8 +146,7 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
 
             let box = new St.BoxLayout({ x_expand: true });
             this.add_alarm_button.add_actor(box);
-
-            let icon = new St.Icon({ icon_name: 'timepp-plus-symbolic' });
+            let icon = new St.Icon({ gicon: MISC_UTILS.getIcon('timepp-alarms-symbolic')});
             box.add_child(icon);
 
             let label = new St.Label({ x_expand: true, text: _('Add New Alarm...'), y_align: Clutter.ActorAlign.CENTER });
@@ -372,7 +371,7 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
 
             // TRANSLATORS: %s is a time string in the format HH:MM (e.g., 13:44)
             let title  = _('Alarm at %s').format(alarm.time_str);
-            let icon   = new St.Icon({ icon_name: 'timepp-alarms-symbolic' });
+            let icon   = new St.Icon({ gicon : MISC_UTILS.getIcon('timepp-alarms-symbolic') });
             let params = {
                 bannerMarkup : true,
                 gicon        : icon.gicon,
@@ -664,7 +663,7 @@ var AlarmItem  = class AlarmItem {
         this.icon_box = new St.BoxLayout({y_align: Clutter.ActorAlign.CENTER, x_align: Clutter.ActorAlign.CENTER, style_class: 'icon-box'});
         this.header.add_actor(this.icon_box);
 
-        this.edit_icon = new St.Icon({ visible: false, reactive: true, can_focus: true, track_hover: true, icon_name: 'timepp-edit-symbolic', style_class: 'settings-icon' });
+        this.edit_icon = new St.Icon({ visible: false, reactive: true, can_focus: true, track_hover: true, gicon : MISC_UTILS.getIcon('timepp-edit-symbolic'), style_class: 'settings-icon' });
         this.icon_box.add(this.edit_icon);
 
         this.toggle     = new PopupMenu.Switch(alarm.toggle);

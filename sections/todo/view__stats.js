@@ -131,7 +131,13 @@ var StatsView = class StatsView extends FULLSCREEN.Fullscreen{
         //
         this.graph_interval_icon = new St.Button({ visible: false, y_align: St.Align.MIDDLE, can_focus: true, style_class: 'graph-interval-icon' });
         this.top_box_left.insert_child_at_index(this.graph_interval_icon, 0);
-        this.graph_interval_icon.add_actor(new St.Icon({ icon_name: this.delegate.settings.get_boolean('todo-graph-shows-intervals') ? 'timepp-graph-intervals-symbolic' : 'timepp-graph-symbolic' }));
+        this.graph_interval_icon.add_actor(new St.Icon({ gicon:
+            MISC_UTILS.getIcon(
+                this.delegate.settings.get_boolean('todo-graph-shows-intervals') ?
+                'timepp-graph-intervals-symbolic' :
+                'timepp-graph-symbolic'
+            )
+        }));
 
 
         //
@@ -139,7 +145,7 @@ var StatsView = class StatsView extends FULLSCREEN.Fullscreen{
         //
         this.heatmap_icon = new St.Button({ checked: this.delegate.settings.get_boolean('todo-stats-heatmap-visible'), visible: false, y_align: St.Align.MIDDLE, can_focus: true, style_class: 'heatmap-icon' });
         this.top_box_left.insert_child_at_index(this.heatmap_icon, 0);
-        this.heatmap_icon.add_actor(new St.Icon({ icon_name: 'timepp-heatmap-symbolic' }));
+        this.heatmap_icon.add_actor(new St.Icon({ gicon : MISC_UTILS.getIcon('timepp-heatmap-symbolic') }));
 
 
         //
@@ -150,15 +156,15 @@ var StatsView = class StatsView extends FULLSCREEN.Fullscreen{
 
         this.single_mode_icon = new St.Button({ y_align: St.Align.MIDDLE, can_focus: true });
         this.nav_bar.add_actor(this.single_mode_icon);
-        this.single_mode_icon.add_actor(new St.Icon({ icon_name: 'timepp-search-symbolic' }));
+        this.single_mode_icon.add_actor(new St.Icon({ gicon : MISC_UTILS.getIcon('timepp-search-symbolic') }));
 
         this.global_mode_icon = new St.Button({ y_align: St.Align.MIDDLE, can_focus: true });
         this.nav_bar.add_actor(this.global_mode_icon);
-        this.global_mode_icon.add_actor(new St.Icon({ icon_name: 'timepp-home-symbolic' }));
+        this.global_mode_icon.add_actor(new St.Icon({ gicon : MISC_UTILS.getIcon('timepp-home-symbolic') }));
 
         this.hot_mode_icon = new St.Button({ y_align: St.Align.MIDDLE, can_focus: true });
         this.nav_bar.add_actor(this.hot_mode_icon);
-        this.hot_mode_icon.add_actor(new St.Icon({ icon_name: 'timepp-fire-symbolic' }));
+        this.hot_mode_icon.add_actor(new St.Icon({ gicon : MISC_UTILS.getIcon('timepp-fire-symbolic') }));
 
 
         //
@@ -166,7 +172,7 @@ var StatsView = class StatsView extends FULLSCREEN.Fullscreen{
         //
         this.entry = new St.Entry({ can_focus: true, y_align: Clutter.ActorAlign.CENTER, visible: false, hint_text: _('Search...') });
         this.top_box_center.add_actor(this.entry);
-        this.entry.set_primary_icon(new St.Icon({ icon_name: 'timepp-search-symbolic' }));
+        this.entry.set_primary_icon(new St.Icon({ gicon : MISC_UTILS.getIcon('timepp-search-symbolic') }));
 
         this.search_results_container = new St.BoxLayout({ visible: false, x_align: Clutter.ActorAlign.CENTER, x_expand: true, y_expand: true, style_class: 'search-results-box' });
         this.middle_box.add_actor(this.search_results_container);
@@ -1233,10 +1239,10 @@ var StatsView = class StatsView extends FULLSCREEN.Fullscreen{
         let current = this.delegate.settings.get_boolean('todo-graph-shows-intervals');
 
         if (current) {
-            this.graph_interval_icon.get_first_child().icon_name = 'timepp-graph-symbolic';
+            this.graph_interval_icon.get_first_child().gicon = MISC_UTILS.getIcon('timepp-graph-symbolic');
             this.delegate.settings.set_boolean('todo-graph-shows-intervals', false);
         } else {
-            this.graph_interval_icon.get_first_child().icon_name = 'timepp-graph-intervals-symbolic';
+            this.graph_interval_icon.get_first_child().gicon = MISC_UTILS.getIcon('timepp-graph-intervals-symbolic');
             this.delegate.settings.set_boolean('todo-graph-shows-intervals', true);
         }
 

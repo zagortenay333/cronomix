@@ -377,7 +377,7 @@ var ViewFilters  = class ViewFilters {
         if (is_deletable) {
             let close_button = new St.Button({ can_focus: true, style_class: 'close-icon' });
             item.actor.add_actor(close_button);
-            close_button.add_actor(new St.Icon({ icon_name: 'timepp-close-symbolic' }));
+            close_button.add_actor(new St.Icon({ gicon : MISC_UTILS.getIcon('timepp-close-symbolic') }));
             close_button.connect('clicked', () => this._delete_custom_item(item));
             close_button.connect('key-focus-in', () => MISC_UTILS.scroll_to_item(this.filter_sectors_scroll, this.filter_sectors_scroll_box, item.actor, parent_box));
         }

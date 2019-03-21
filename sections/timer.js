@@ -163,7 +163,7 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
         //
         // panel item
         //
-        this.panel_item.icon.icon_name = 'timepp-timer-symbolic';
+        this.panel_item.icon.gicon = MISC_UTILS.getIcon('timepp-timer-symbolic');
         this.panel_item.actor.add_style_class_name('timer-panel-item');
         this.panel_item.set_label(this.settings.get_boolean('timer-show-seconds') ? '00:00:00' : '00:00');
         this._toggle_panel_item_mode();
@@ -181,13 +181,13 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
         this.icon_box = new St.BoxLayout({ y_align: Clutter.ActorAlign.CENTER, style_class: 'icon-box' });
         this.header.add(this.icon_box);
 
-        this.start_pause_icon = new St.Icon({ visible: false, reactive: true, can_focus: true, track_hover: true, icon_name: 'timepp-pause-symbolic', style_class: 'pause-icon' });
+        this.start_pause_icon = new St.Icon({ visible: false, reactive: true, can_focus: true, track_hover: true, gicon : MISC_UTILS.getIcon('timepp-pause-symbolic'), style_class: 'pause-icon' });
         this.icon_box.add_actor(this.start_pause_icon);
 
-        this.fullscreen_icon = new St.Icon({ reactive: true, can_focus: true, track_hover: true, icon_name: 'timepp-fullscreen-symbolic', style_class: 'fullscreen-icon' });
+        this.fullscreen_icon = new St.Icon({ reactive: true, can_focus: true, track_hover: true, gicon : MISC_UTILS.getIcon('timepp-fullscreen-symbolic'), style_class: 'fullscreen-icon' });
         this.icon_box.add_actor(this.fullscreen_icon);
 
-        this.settings_icon = new St.Icon({ reactive: true, can_focus: true, track_hover: true, icon_name: 'timepp-settings-symbolic', style_class: 'settings-icon' });
+        this.settings_icon = new St.Icon({ reactive: true, can_focus: true, track_hover: true, gicon : MISC_UTILS.getIcon('timepp-settings-symbolic'), style_class: 'settings-icon' });
         this.icon_box.add(this.settings_icon);
 
 
@@ -303,7 +303,7 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
 
         this.fullscreen.on_timer_started();
         this.start_pause_icon.show();
-        this.start_pause_icon.icon_name   = 'timepp-pause-symbolic';
+        this.start_pause_icon.gicon = MISC_UTILS.getIcon('timepp-pause-symbolic');
         this.start_pause_icon.style_class = 'pause-icon';
         this.panel_item.actor.add_style_class_name('on');
 
@@ -324,7 +324,7 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
         }
 
         this.fullscreen.on_timer_stopped();
-        this.start_pause_icon.icon_name   = 'timepp-start-symbolic';
+        this.start_pause_icon.gicon = MISC_UTILS.getIcon('timepp-start-symbolic');
         this.start_pause_icon.style_class = 'start-icon';
         this.panel_item.actor.remove_style_class_name('on');
 
@@ -473,7 +473,7 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
             Main.messageTray.add(this.notif_source);
             this.notif_source.connect('destroy', () => this.sound_player.stop());
 
-            let icon = new St.Icon({ icon_name: 'timepp-timer-symbolic' });
+            let icon = new St.Icon({ gicon : MISC_UTILS.getIcon('timepp-timer-symbolic') });
             let params = {
                 bannerMarkup : true,
                 gicon        : icon.gicon,
@@ -837,10 +837,10 @@ var TimerPresetsView  = class TimerPresetsView {
         item.icon_box = new St.BoxLayout({ visible: false, style_class: 'icon-box' });
         item.header.add_child(item.icon_box);
 
-        let start_icon = new St.Icon({ track_hover: true, can_focus: true, reactive: true, icon_name: 'timepp-start-symbolic' });
+        let start_icon = new St.Icon({ track_hover: true, can_focus: true, reactive: true, gicon : MISC_UTILS.getIcon('timepp-start-symbolic') });
         item.icon_box.add_child(start_icon);
 
-        let edit_icon = new St.Icon({ track_hover: true, can_focus: true, reactive: true, icon_name: 'timepp-edit-symbolic' });
+        let edit_icon = new St.Icon({ track_hover: true, can_focus: true, reactive: true, gicon : MISC_UTILS.getIcon('timepp-edit-symbolic') });
         item.icon_box.add_child(edit_icon);
 
 
@@ -1083,7 +1083,7 @@ var TimerFullscreen = class TimerFullscreen extends FULLSCREEN.Fullscreen {
 
         this.start_pause_btn = new St.Button();
         this.top_box.insert_child_at_index(this.start_pause_btn, 0);
-        this.start_pause_icon = new St.Icon({ visible: false, reactive: true, can_focus: true, track_hover: true, icon_name: 'timepp-pause-symbolic', style_class: 'pause-icon' });
+        this.start_pause_icon = new St.Icon({ visible: false, reactive: true, can_focus: true, track_hover: true, gicon : MISC_UTILS.getIcon('timepp-pause-symbolic'), style_class: 'pause-icon' });
         this.start_pause_btn.add_actor(this.start_pause_icon);
 
 
@@ -1168,14 +1168,14 @@ var TimerFullscreen = class TimerFullscreen extends FULLSCREEN.Fullscreen {
     on_timer_started () {
         this.actor.style_class = this.default_style_class;
         this.title.text = '';
-        this.start_pause_icon.icon_name   = 'timepp-pause-symbolic';
+        this.start_pause_icon.gicon = MISC_UTILS.getIcon('timepp-pause-symbolic');
         this.start_pause_icon.style_class = 'pause-icon';
         this.start_pause_icon.show();
     }
 
     on_timer_stopped () {
         this.actor.style_class = this.default_style_class + ' timer-stopped';
-        this.start_pause_icon.icon_name = 'timepp-start-symbolic';
+        this.start_pause_icon.gicon = MISC_UTILS.getIcon('timepp-start-symbolic');
         this.start_pause_icon.style_class = 'start-icon';
     }
 
