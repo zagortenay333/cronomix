@@ -4,7 +4,7 @@ const Clutter   = imports.gi.Clutter;
 const Main      = imports.ui.main;
 const CheckBox  = imports.ui.checkBox;
 const PopupMenu = imports.ui.popupMenu;
-const Lang      = imports.lang;
+
 const Signals   = imports.signals;
 const Mainloop  = imports.mainloop;
 
@@ -33,10 +33,10 @@ const G = ME.imports.sections.todo.GLOBAL;
 // @signals:
 //  - 'filters-updated' returns new filters record
 // =====================================================================
-var ViewFilters = new Lang.Class({
-    Name: 'Timepp.ViewFilters',
+var ViewFilters  = class ViewFilters {
+    
 
-    _init: function (ext, delegate) {
+    constructor (ext, delegate) {
         this.ext      = ext;
         this.delegate = delegate;
 
@@ -247,9 +247,9 @@ var ViewFilters = new Lang.Class({
         this.invert_item.connect('button-press-event', () => this.invert_toggle.toggle());
         this.button_reset.connect('clicked', () => this._reset_all());
         this.button_ok.connect('clicked', () => this._on_ok_clicked());
-    },
+    }
 
-    _load_filters: function () {
+    _load_filters () {
         let filters = this.delegate.get_current_todo_file().filters;
 
         this.invert_toggle.setToggleState(filters.invert_filters);
@@ -332,9 +332,9 @@ var ViewFilters = new Lang.Class({
             this.context_filters_box,
             this.project_filters_box,
         ].forEach((it) => it.get_n_children() === 1 && it.hide());
-    },
+    }
 
-    _reset_all: function () {
+    _reset_all () {
         if (this.filter_register.completed)
             this.filter_register.completed.checkbox.actor.checked = false;
 
@@ -350,9 +350,9 @@ var ViewFilters = new Lang.Class({
             for (let i = 0; i < arr.length; i++)
                 arr[i].checkbox.actor.checked = false;
         });
-    },
+    }
 
-    _new_filter_item: function (is_checked, label, count, is_deletable, parent_box) {
+    _new_filter_item (is_checked, label, count, is_deletable, parent_box) {
         let item = {};
 
         item.actor = new St.BoxLayout({ reactive: true, style_class: 'row filter-window-item' });
@@ -377,7 +377,7 @@ var ViewFilters = new Lang.Class({
         if (is_deletable) {
             let close_button = new St.Button({ can_focus: true, style_class: 'close-icon' });
             item.actor.add_actor(close_button);
-            close_button.add_actor(new St.Icon({ icon_name: 'timepp-close-symbolic' }));
+            close_button.add_actor(new St.Icon({ gicon : MISC_UTILS.getIcon('timepp-close-symbolic') }));
             close_button.connect('clicked', () => this._delete_custom_item(item));
             close_button.connect('key-focus-in', () => MISC_UTILS.scroll_to_item(this.filter_sectors_scroll, this.filter_sectors_scroll_box, item.actor, parent_box));
         }
@@ -386,9 +386,9 @@ var ViewFilters = new Lang.Class({
         item.checkbox.actor.connect('key-focus-in', () => MISC_UTILS.scroll_to_item(this.filter_sectors_scroll, this.filter_sectors_scroll_box, item.actor, parent_box));
 
         return item;
-    },
+    }
 
-    _delete_custom_item: function (item) {
+    _delete_custom_item (item) {
         if (item.checkbox.actor.has_key_focus || close_button.has_key_focus)
             this.entry.entry.grab_key_focus();
 
@@ -400,24 +400,24 @@ var ViewFilters = new Lang.Class({
                 return;
             }
         }
-    },
+    }
 
-    _add_separator: function (container) {
+    _add_separator (container) {
         let sep = new PopupMenu.PopupSeparatorMenuItem();
         sep.actor.add_style_class_name('timepp-separator');
         container.add_child(sep.actor);
-    },
+    }
 
-    _on_nand_toggle_clicked: function (toggle_actor) {
+    _on_nand_toggle_clicked (toggle_actor) {
         if (toggle_actor.state) {
             toggle_actor.setToggleState(false);
         } else {
             for (let toggle of this.nand_toggles) toggle.setToggleState(false);
             toggle_actor.setToggleState(true);
         }
-    },
+    }
 
-    _on_ok_clicked: function () {
+    _on_ok_clicked () {
         let filters = G.FILTER_RECORD();
 
         filters.invert_filters = this.invert_toggle.state;
@@ -449,11 +449,11 @@ var ViewFilters = new Lang.Class({
         }
 
         this.emit('filters-updated', filters);
-    },
+    }
 
-    close: function () {
+    close () {
         this.actor.destroy();
-    },
-});
+    }
+}
 Signals.addSignalMethods(ViewFilters.prototype);
 

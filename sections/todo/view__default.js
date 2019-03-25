@@ -3,7 +3,7 @@ const Gtk       = imports.gi.Gtk;
 const Shell     = imports.gi.Shell;
 const Clutter   = imports.gi.Clutter;
 const Main      = imports.ui.main;
-const Lang      = imports.lang;
+
 const Signals   = imports.signals;
 const Mainloop  = imports.mainloop;
 
@@ -33,10 +33,10 @@ const G = ME.imports.sections.todo.GLOBAL;
 // @ext      : obj (main extension object)
 // @delegate : obj (main section object)
 // =====================================================================
-var ViewDefault = new Lang.Class({
-    Name: 'Timepp.ViewDefault',
+var ViewDefault  = class ViewDefault {
+    
 
-    _init: function (ext, delegate) {
+    constructor (ext, delegate) {
         this.ext      = ext;
         this.delegate = delegate;
 
@@ -112,9 +112,9 @@ var ViewDefault = new Lang.Class({
         // finally
         //
         this._init_columns();
-    },
+    }
 
-    _init_columns: function () {
+    _init_columns () {
         let w = this.delegate.settings.get_int('todo-task-width') + 20;
 
         this._clear_kanban_columns();
@@ -144,9 +144,9 @@ var ViewDefault = new Lang.Class({
 
         if (this.kanban_columns.size === 1) this.delegate.actor.add_style_class_name('one-column');
         if (this.ext.menu.isOpen) this._add_tasks_to_menu();
-    },
+    }
 
-    _get_active_kanban_board: function () {
+    _get_active_kanban_board () {
         for (let it of this.delegate.tasks) {
             if (! it.kanban_boards) continue;
 
@@ -156,15 +156,15 @@ var ViewDefault = new Lang.Class({
         }
 
         return [false, null, null];
-    },
+    }
 
-    _clear_kanban_columns: function () {
+    _clear_kanban_columns () {
         this._remove_tasks_from_menu();
         for (let [,column] of this.kanban_columns) column.close();
         this.kanban_columns.clear();
-    },
+    }
 
-    _add_tasks_to_menu: function () {
+    _add_tasks_to_menu () {
         if (this.add_tasks_to_menu_mainloop_id) {
             Mainloop.source_remove(this.add_tasks_to_menu_mainloop_id);
             this.add_tasks_to_menu_mainloop_id = null;
@@ -185,9 +185,9 @@ var ViewDefault = new Lang.Class({
         }
 
         this._add_tasks_to_menu__finish(0, arr, false);
-    },
+    }
 
-    _add_tasks_to_menu__finish: function (i, arr, scrollbar_shown) {
+    _add_tasks_to_menu__finish (i, arr, scrollbar_shown) {
         let n = 50;
 
         for (let j = 0; j < n; j++, i++) {
@@ -228,9 +228,9 @@ var ViewDefault = new Lang.Class({
         this.add_tasks_to_menu_mainloop_id = Mainloop.idle_add(() => {
             this._add_tasks_to_menu__finish(i, arr, scrollbar_shown);
         });
-    },
+    }
 
-    _remove_tasks_from_menu: function () {
+    _remove_tasks_from_menu () {
         if (this.add_tasks_to_menu_mainloop_id) {
             Mainloop.source_remove(this.add_tasks_to_menu_mainloop_id);
             this.add_tasks_to_menu_mainloop_id = null;
@@ -245,7 +245,7 @@ var ViewDefault = new Lang.Class({
             task.actor_scrollview = null;
             task.owner            = null;
         }
-    },
+    }
 
     // If we only have one column, then we hide it's vertical scrollbar if it's
     // not needed since the extra space that gets allocated for it is ugly.
@@ -253,14 +253,14 @@ var ViewDefault = new Lang.Class({
     // With multiple columns, we get all sorts of little issues with respect to
     // dnd that require nasty hacks.
     // It's not worth it, so we set the scrollbar to AUTOMATIC.
-    update_scrollbars: function () {
+    update_scrollbars () {
         if (!this.ext.menu.isOpen || this.kanban_columns.size > 1) return;
 
         for (let [,col] of this.kanban_columns) {
             col.tasks_scroll.vscrollbar_policy = Gtk.PolicyType.NEVER;
             if (this.ext.needs_scrollbar()) col.tasks_scroll.vscrollbar_policy = Gtk.PolicyType.ALWAYS;
         }
-    },
+    }
 
     // @task: obj (a task object)
     //
@@ -270,7 +270,7 @@ var ViewDefault = new Lang.Class({
     //
     // If invert_filters is false, return true if at least one filter is matched.
     // If invert_filters is true,  return false if at least one filter is matched.
-    _filter_test: function (task) {
+    _filter_test (task) {
         let filters = this.delegate.get_current_todo_file().filters;
 
         if (task.pinned)                    return true;
@@ -312,9 +312,9 @@ var ViewDefault = new Lang.Class({
         }
 
         return filters.invert_filters;
-    },
+    }
 
-    _has_active_filters: function () {
+    _has_active_filters () {
         let filters = this.delegate.get_current_todo_file().filters;
 
         if (filters.deferred          ||
@@ -331,23 +331,25 @@ var ViewDefault = new Lang.Class({
         }
 
         return false;
-    },
+    }
 
-    _toggle_filters: function () {
+    _toggle_filters () {
         let filters = this.delegate.get_current_todo_file().filters;
 
         filters.invert_filters = !filters.invert_filters;
-        this.filter_icon.icon_name = filters.invert_filters ?
-                                     'timepp-filter-inverted-symbolic' :
-                                     'timepp-filter-symbolic';
+        this.filter_icon.gicon = MISC_UTILS.getIcon(
+                                    filters.invert_filters ?
+                                    'timepp-filter-inverted-symbolic' :
+                                    'timepp-filter-symbolic'
+                                )
 
         this.needs_filtering = true;
         this._add_tasks_to_menu();
 
         this.delegate.store_cache();
-    },
+    }
 
-    toggle_automatic_sort: function () {
+    toggle_automatic_sort () {
         let state = !this.automatic_sort;
 
         if (state) {
@@ -363,14 +365,14 @@ var ViewDefault = new Lang.Class({
 
         this.delegate.store_cache();
         if (state) this.delegate.on_tasks_changed(true, true);
-    },
+    }
 
-    on_drag_end: function (old_parent, new_parent, column) {
+    on_drag_end (old_parent, new_parent, column) {
         this.update_kan_string(false);
         this.delegate.on_tasks_changed(true, true);
-    },
+    }
 
-    update_kan_string: function (write_to_file = true) {
+    update_kan_string (write_to_file = true) {
         let new_kanban_str = this.kanban_string.slice(0, this.kanban_string.indexOf('|'));
 
         for (let it of this.content_box.get_children()) {
@@ -384,9 +386,9 @@ var ViewDefault = new Lang.Class({
         this.kanban_string = new_kanban_str;
 
         if (write_to_file) this.delegate.write_tasks_to_file();
-    },
+    }
 
-    _get_column: function (task) {
+    _get_column (task) {
         for (let [name, column] of this.kanban_columns) {
             if (column.is_kitchen_sink) return column;
 
@@ -398,9 +400,9 @@ var ViewDefault = new Lang.Class({
         }
 
         return null;
-    },
+    }
 
-    horiz_scroll: function (event) {
+    horiz_scroll (event) {
         let direction = event.get_scroll_direction();
         let delta = 0;
 
@@ -414,15 +416,15 @@ var ViewDefault = new Lang.Class({
 
         let a = bar.get_adjustment();
         a.value += delta * a.stepIncrement;
-    },
+    }
 
-    close: function () {
+    close () {
         this.sigm.clear();
         this._clear_kanban_columns();
         this.actor.destroy();
         this.actor = null;
-    },
-});
+    }
+}
 Signals.addSignalMethods(ViewDefault.prototype);
 
 
@@ -436,10 +438,9 @@ Signals.addSignalMethods(ViewDefault.prototype);
 // @col_str      : string
 // @is_collapsed : bool
 // =====================================================================
-var KanbanColumn = new Lang.Class({
-    Name: 'Timepp.KanbanColumn',
+var KanbanColumn  = class KanbanColumn {
 
-    _init: function (ext, delegate, owner, col_str, is_collapsed) {
+    constructor (ext, delegate, owner, col_str, is_collapsed) {
         this.ext          = ext;
         this.delegate     = delegate;
         this.owner        = owner;
@@ -507,7 +508,7 @@ var KanbanColumn = new Lang.Class({
         this.add_task_bin = new St.BoxLayout();
         this.add_task_button.add_actor(this.add_task_bin);
 
-        this.add_task_icon = new St.Icon({ icon_name: 'timepp-plus-symbolic', y_align: Clutter.ActorAlign.CENTER });
+        this.add_task_icon = new St.Icon({ gicon : MISC_UTILS.getIcon('timepp-plus-symbolic'), y_align: Clutter.ActorAlign.CENTER });
         this.add_task_bin.add_actor(this.add_task_icon);
 
         this.add_task_label = new St.Label({ text: _('Add New Task...'), y_align: Clutter.ActorAlign.CENTER });
@@ -520,13 +521,13 @@ var KanbanColumn = new Lang.Class({
         this.icon_box = new St.BoxLayout({ x_align: Clutter.ActorAlign.END, style_class: 'icon-box' });
         this.header_fn_btns.add_child(this.icon_box);
 
-        this.collapse_icon = new St.Icon({ icon_name: 'timepp-column-collapse-symbolic', can_focus: true, reactive: true, track_hover: true, y_align: Clutter.ActorAlign.CENTER, style_class: 'collapse-icon' });
+        this.collapse_icon = new St.Icon({ gicon : MISC_UTILS.getIcon('timepp-column-collapse-symbolic'), can_focus: true, reactive: true, track_hover: true, y_align: Clutter.ActorAlign.CENTER, style_class: 'collapse-icon' });
         this.icon_box.add_child(this.collapse_icon);
 
-        this.kanban_icon = new St.Icon({ icon_name: 'timepp-kanban-symbolic', can_focus: true, reactive: true, track_hover: true, y_align: Clutter.ActorAlign.CENTER, style_class: 'kanban-icon' });
+        this.kanban_icon = new St.Icon({ gicon : MISC_UTILS.getIcon('timepp-kanban-symbolic'), can_focus: true, reactive: true, track_hover: true, y_align: Clutter.ActorAlign.CENTER, style_class: 'kanban-icon' });
         this.icon_box.add_child(this.kanban_icon);
 
-        this.clear_icon = new St.Icon({ icon_name: 'timepp-clear-symbolic', can_focus: true, reactive: true, track_hover: true, y_align: Clutter.ActorAlign.CENTER, style_class: 'clear-icon' });
+        this.clear_icon = new St.Icon({ gicon : MISC_UTILS.getIcon('timepp-clear-symbolic'), can_focus: true, reactive: true, track_hover: true, y_align: Clutter.ActorAlign.CENTER, style_class: 'clear-icon' });
         this.icon_box.add_child(this.clear_icon);
         this.clear_icon.visible = this.delegate.stats.completed > 0;
 
@@ -537,22 +538,22 @@ var KanbanColumn = new Lang.Class({
         else                               this.filter_icon.remove_style_class_name('active');
 
         if (this.delegate.get_current_todo_file().filters.invert_filters)
-            this.filter_icon.icon_name = 'timepp-filter-inverted-symbolic';
+            this.filter_icon.gicon = MISC_UTILS.getIcon('timepp-filter-inverted-symbolic');
         else
-            this.filter_icon.icon_name = 'timepp-filter-symbolic';
+            this.filter_icon.gicon = MISC_UTILS.getIcon('timepp-filter-symbolic');
 
-        this.sort_icon = new St.Icon({ icon_name: 'timepp-sort-ascending-symbolic', can_focus: true, reactive: true, track_hover: true, y_align: Clutter.ActorAlign.CENTER, style_class: 'sort-icon' });
+        this.sort_icon = new St.Icon({ gicon : MISC_UTILS.getIcon('timepp-sort-ascending-symbolic'), can_focus: true, reactive: true, track_hover: true, y_align: Clutter.ActorAlign.CENTER, style_class: 'sort-icon' });
         this.icon_box.add_child(this.sort_icon);
         if (this.owner.automatic_sort) this.sort_icon.add_style_class_name('active');
         else                           this.sort_icon.remove_style_class_name('active');
 
-        this.search_icon = new St.Icon({ icon_name: 'timepp-search-symbolic', can_focus: true, reactive: true, track_hover: true, y_align: Clutter.ActorAlign.CENTER, style_class: 'search-icon' });
+        this.search_icon = new St.Icon({ gicon : MISC_UTILS.getIcon('timepp-search-symbolic'), can_focus: true, reactive: true, track_hover: true, y_align: Clutter.ActorAlign.CENTER, style_class: 'search-icon' });
         this.icon_box.add_child(this.search_icon);
 
-        this.file_switcher_icon = new St.Icon({ icon_name: 'timepp-file-symbolic', can_focus: true, reactive: true, track_hover: true, y_align: Clutter.ActorAlign.CENTER, style_class: 'file-switcher-icon' });
+        this.file_switcher_icon = new St.Icon({ gicon : MISC_UTILS.getIcon('timepp-file-symbolic'), can_focus: true, reactive: true, track_hover: true, y_align: Clutter.ActorAlign.CENTER, style_class: 'file-switcher-icon' });
         this.icon_box.add_child(this.file_switcher_icon);
 
-        this.stats_icon = new St.Icon({ icon_name: 'timepp-graph-symbolic', can_focus: true, reactive: true, track_hover: true, y_align: Clutter.ActorAlign.CENTER, style_class: 'stats-icon' });
+        this.stats_icon = new St.Icon({ gicon : MISC_UTILS.getIcon('timepp-graph-symbolic'), can_focus: true, reactive: true, track_hover: true, y_align: Clutter.ActorAlign.CENTER, style_class: 'stats-icon' });
         this.icon_box.add_child(this.stats_icon);
 
 
@@ -640,19 +641,19 @@ var KanbanColumn = new Lang.Class({
             this.is_collapsed = false;
             this.collapse(false);
         }
-    },
+    }
 
-    toggle_collapse: function () {
+    toggle_collapse () {
         if (this.is_collapsed) this.uncollapse();
         else                   this.collapse();
-    },
+    }
 
-    collapse: function (update_kan_string = true) {
+    collapse (update_kan_string = true) {
         if (this.is_collapsed) return;
         this.is_collapsed = true;
 
         this.tasks_scroll.hide();
-        this.collapse_icon.icon_name = 'timepp-column-uncollapse-symbolic';
+        this.collapse_icon.gicon = MISC_UTILS.getIcon('timepp-column-uncollapse-symbolic');
         this.actor.add_style_class_name('collapsed');
         this.icon_box.remove_child(this.collapse_icon);
         this.header.insert_child_at_index(this.collapse_icon, 0);
@@ -672,9 +673,9 @@ var KanbanColumn = new Lang.Class({
         });
 
         if (update_kan_string) this.owner.update_kan_string();
-    },
+    }
 
-    uncollapse: function () {
+    uncollapse () {
         if (! this.is_collapsed) return;
         this.is_collapsed = false;
 
@@ -687,7 +688,7 @@ var KanbanColumn = new Lang.Class({
         this.actor.set_height(-1);
         this.header.set_width(-1);
         this.header_wrapper.set_width(-1);
-        this.collapse_icon.icon_name = 'timepp-column-collapse-symbolic';
+        this.collapse_icon.gicon = MISC_UTILS.getIcon('timepp-column-collapse-symbolic');
         this.actor.remove_style_class_name('collapsed');
         this.header.remove_child(this.collapse_icon);
         this.icon_box.insert_child_at_index(this.collapse_icon, 0);
@@ -696,9 +697,9 @@ var KanbanColumn = new Lang.Class({
         this.header.rotation_angle_z = 0;
 
         this.owner.update_kan_string();
-    },
+    }
 
-    set_title: function () {
+    set_title () {
         let markup = `<b>${this.tasks_scroll_content.get_n_children()}</b>   `;
 
         for (let i = 0; i < this.filters.length; i++) {
@@ -718,9 +719,9 @@ var KanbanColumn = new Lang.Class({
         }
 
         this.kanban_title.clutter_text.set_markup(markup.replace(/\\ /g, ' '));
-    },
+    }
 
-    _maybe_show_title: function (event) {
+    _maybe_show_title (event) {
         if (! this.title_visible) return;
 
         let related = event.get_related();
@@ -729,16 +730,16 @@ var KanbanColumn = new Lang.Class({
             this.kanban_title.show();
             this.delegate.panel_item.actor.grab_key_focus();
         }
-    },
+    }
 
-    _hide_title: function () {
+    _hide_title () {
         if (this.is_collapsed) return;
         this.kanban_title.hide();
         this.header_fn_btns.show();
         if (this.title_visible) this.header_fn_btns.get_first_child().grab_key_focus();
-    },
+    }
 
-    _on_maybe_drag: function (event) {
+    _on_maybe_drag (event) {
         if (this.owner.kanban_columns.size < 2) return Clutter.EVENT_STOP;
 
         switch (event.get_source()) {
@@ -749,10 +750,10 @@ var KanbanColumn = new Lang.Class({
           default:
             return Clutter.EVENT_STOP;
         }
-    },
+    }
 
     // A task got dropped
-    on_drag_end: function (old_parent, new_parent, task) {
+    on_drag_end (old_parent, new_parent, task) {
         task.hide_header_icons();
 
         if (old_parent === new_parent) {
@@ -785,11 +786,11 @@ var KanbanColumn = new Lang.Class({
 
         if (this.delegate.get_current_todo_file().automatic_sort)
             this._sort_task_in_column(task.actor_parent, task);
-    },
+    }
 
     // We don't want to refresh the entire view after the tasks have been
     // sorted; we only need to put the dragged task in the right position.
-    _sort_task_in_column: function (container, task) {
+    _sort_task_in_column (container, task) {
         let tasks  = this.delegate.tasks;
         let idx    = tasks.indexOf(task);
         let sorted = false;
@@ -808,9 +809,9 @@ var KanbanColumn = new Lang.Class({
             container.remove_child(task.actor);
             container.add_child(task.actor);
         }
-    },
+    }
 
-    _sort_task_in_arrays: function (task) {
+    _sort_task_in_arrays (task) {
         if (this.tasks_scroll_content.get_n_children() < 2) return;
 
         let above    = true;
@@ -837,7 +838,7 @@ var KanbanColumn = new Lang.Class({
                 }
             }
         }
-    },
+    }
 
     // When the user drags a task from one column to another:
     //   - remove all properties in the task (priority, context, proj) that
@@ -857,7 +858,7 @@ var KanbanColumn = new Lang.Class({
     //   @old_col            : column in which the task used to be in
     //   @new_col            : column into which the user dropped the task
     //   @destination_column : column in which the task ended up
-    _update_task_props: function (old_parent, new_parent, task) {
+    _update_task_props (old_parent, new_parent, task) {
         let old_col, new_col, idx_old, idx_new;
 
         let children = this.owner.content_box.get_children();
@@ -941,9 +942,9 @@ var KanbanColumn = new Lang.Class({
         else                destination_column = no_prio_col[0];
 
         return [old_col, new_col, destination_column];
-    },
+    }
 
-    handleDragOver: function (source, drag_actor, x, y, time) {
+    handleDragOver (source, drag_actor, x, y, time) {
         if (source.dnd_group !== G.DNDGroup.TASK) return DND.DragMotionResult.CONTINUE;
         if (source.item.actor_parent === this.tasks_scroll_content) return DND.DragMotionResult.CONTINUE;
 
@@ -952,10 +953,10 @@ var KanbanColumn = new Lang.Class({
         this.tasks_scroll_content.add_child(source.item.actor);
 
         return DND.DragMotionResult.MOVE_DROP;
-    },
+    }
 
-    close: function () {
+    close () {
         this.sigm.clear();
-    },
-});
+    }
+}
 Signals.addSignalMethods(KanbanColumn.prototype);

@@ -1,12 +1,13 @@
 const St       = imports.gi.St;
 const Clutter  = imports.gi.Clutter;
 const Main     = imports.ui.main;
-const Lang     = imports.lang;
+
 const Signals  = imports.signals;
 const Mainloop = imports.mainloop;
 
 
 const ME = imports.misc.extensionUtils.getCurrentExtension();
+const MISC_UTILS = ME.imports.lib.misc_utils;
 
 
 const Gettext  = imports.gettext.domain(ME.metadata['gettext-domain']);
@@ -28,10 +29,10 @@ const G = ME.imports.sections.todo.GLOBAL;
 //   - 'archive-all' (delete and write to done.txt all completed tasks)
 //   - 'cancel'
 // =====================================================================
-var ViewClearTasks = new Lang.Class({
-    Name: 'Timepp.ViewClearTasks',
+var ViewClearTasks  = class ViewClearTasks {
+    
 
-    _init: function (ext, delegate) {
+    constructor (ext, delegate) {
         this.ext      = ext;
         this.delegate = delegate;
 
@@ -52,7 +53,7 @@ var ViewClearTasks = new Lang.Class({
             this.delete_all_item = new St.BoxLayout({ reactive: true, style_class: 'row delete-completed-tasks' });
             this.content_box.add_child(this.delete_all_item);
 
-            this.delete_all_item.add(new St.Icon ({ icon_name: 'timepp-radioactive-symbolic' }));
+            this.delete_all_item.add(new St.Icon ({ gicon : MISC_UTILS.getIcon('timepp-radioactive-symbolic') }));
             this.delete_all_item.add(new St.Label ({ text: _('Delete all completed tasks'), x_expand: true, y_align: Clutter.ActorAlign.CENTER }));
 
             this.delete_all_radiobutton = new St.Button({ style_class: 'radiobutton', toggle_mode: true, can_focus: true, y_align: St.Align.MIDDLE });
@@ -109,10 +110,10 @@ var ViewClearTasks = new Lang.Class({
             else
                 this.emit('archive-all');
         });
-    },
+    }
 
-    close: function () {
+    close () {
         this.actor.destroy();
-    },
-});
+    }
+}
 Signals.addSignalMethods(ViewClearTasks.prototype);

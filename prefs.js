@@ -1,7 +1,7 @@
 const Gio      = imports.gi.Gio;
 const Gtk      = imports.gi.Gtk;
 const GLib     = imports.gi.GLib;
-const Lang     = imports.lang;
+
 const Mainloop = imports.mainloop;
 
 
@@ -13,10 +13,9 @@ Gettext.bindtextdomain(ME.metadata['gettext-domain'], ME.path + '/locale');
 const _ = Gettext.domain(ME.metadata['gettext-domain']).gettext;
 
 
-const Settings = new Lang.Class({
-    Name: 'Timepp.Settings',
+class Settings{
 
-    _init: function () {
+    constructor() {
         {
             let GioSSS = Gio.SettingsSchemaSource;
             let schema = GioSSS.new_from_directory(
@@ -34,10 +33,10 @@ const Settings = new Lang.Class({
         this.switcher = new Gtk.StackSwitcher({ visible: true, stack: this.builder.get_object('settings_stack'), halign: Gtk.Align.CENTER, });
 
         this._bind_settings();
-    },
+    }
 
     // Bind the gtk window to the schema settings
-    _bind_settings: function () {
+    _bind_settings() {
         let widget;
 
         //
@@ -569,8 +568,8 @@ const Settings = new Lang.Class({
                 this.settings.set_strv('todo-keybinding-open-todotxt-file', ['']);
             }
         });
-    },
-});
+    }
+}
 
 function init () {}
 

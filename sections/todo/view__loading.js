@@ -1,6 +1,6 @@
 const St       = imports.gi.St;
 const Main     = imports.ui.main;
-const Lang     = imports.lang;
+
 const Signals  = imports.signals;
 const Mainloop = imports.mainloop;
 
@@ -19,10 +19,10 @@ const ngettext = Gettext.ngettext;
 // @ext      : obj (main extension object)
 // @delegate : obj (main section object)
 // =====================================================================
-var ViewLoading = new Lang.Class({
-    Name: 'Timepp.ViewLoading',
+var ViewLoading  = class ViewLoading {
+    
 
-    _init: function (ext, delegate) {
+    constructor (ext, delegate) {
         this.ext      = ext;
         this.delegate = delegate;
 
@@ -36,10 +36,10 @@ var ViewLoading = new Lang.Class({
 
         this.loading_msg = new St.Label({ text: _('Loading...'), style_class: 'loading-msg' });
         this.actor.add_child(this.loading_msg);
-    },
+    }
 
-    close: function () {
+    close () {
         this.actor.destroy();
-    },
-});
+    }
+}
 Signals.addSignalMethods(ViewLoading.prototype);
