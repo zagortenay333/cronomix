@@ -479,9 +479,9 @@ var TimeTracker  = class TimeTracker {
 
             intervals = non_zero_intervals.join('||');
 
-            return `${date} ${h}:${m}:${s} ${type} "${val}", ${intervals}\n`;
+            return `${date}, ${h}:${m}:${s}, ${type}, "${val}", ${intervals}\n`;
         } else {
-            return `${date} ${h}:${m}:${s} ${type} "${val}"\n`;
+            return `${date}, ${h}:${m}:${s}, ${type}, "${val}"\n`;
         }
     }
 
