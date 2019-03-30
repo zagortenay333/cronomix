@@ -53,7 +53,9 @@ site](https://extensions.gnome.org/extension/1238/time/).
 ### Compatibility
 
 The latest version of this extension is on the master branch, and it supports
-gnome-shell versions: **`3.24`**, **`3.26`**, **`3.28`**, **`3.30`**.
+gnome-shell version: **`3.32`**.
+
+For older versions, check the available [releases](../../releases).
 
 ---
 
