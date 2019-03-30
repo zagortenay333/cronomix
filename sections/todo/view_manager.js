@@ -1,7 +1,7 @@
 const Gtk      = imports.gi.Gtk;
 const Clutter  = imports.gi.Clutter;
 const Main     = imports.ui.main;
-const Lang     = imports.lang;
+
 const Signals  = imports.signals;
 const Mainloop = imports.mainloop;
 
@@ -24,10 +24,10 @@ const G = ME.imports.sections.todo.GLOBAL;
 // - To switch to a new view, use the show_view function of this object.
 // - The current_view is always stored in the current_view var of this obj.
 // =====================================================================
-var ViewManager = new Lang.Class({
-    Name: 'Timepp.ViewManager',
+var ViewManager  = class ViewManager {
+    
 
-    _init: function (ext, delegate) {
+    constructor (ext, delegate) {
         this.ext      = ext;
         this.delegate = delegate;
 
@@ -35,21 +35,21 @@ var ViewManager = new Lang.Class({
         this.container = this.delegate.actor;
 
         this.reset();
-    },
+    }
 
-    reset: function () {
+    reset () {
         this.current_view           = null;
         this.current_view_name      = "";
         this.actors                 = [];
         this.open_callback          = null;
         this.close_callback         = null;
         this.show_tasks_mainloop_id = null;
-    },
+    }
 
-    close_current_view: function () {
+    close_current_view () {
         if (typeof this.close_callback === 'function') this.close_callback();
         this.reset();
-    },
+    }
 
     // @view_params: object of the form: { view           : object
     //                                     view_name      : View
@@ -63,7 +63,7 @@ var ViewManager = new Lang.Class({
     //   methods on it.
     //
     // @view_name:
-    //   Name of the new view. Only use the View enum here.
+    //   
     //
     // @actors (can be omitted if @open_callback is given):
     //   Array of all the top-level actors that need to be in the popup
@@ -79,7 +79,7 @@ var ViewManager = new Lang.Class({
     // @open_callback (optional):
     //   Function that is used to open the view. If it is not given, then
     //   opening the view means that the actors will be added to the popup menu.
-    show_view: function (view_params) {
+    show_view (view_params) {
         if (typeof this.close_callback === 'function') this.close_callback();
 
         this.current_view      = view_params.view || null;
@@ -102,6 +102,6 @@ var ViewManager = new Lang.Class({
         if (view_params.focused_actor && this.ext.menu.isOpen) {
             view_params.focused_actor.grab_key_focus();
         }
-    },
-});
+    }
+}
 Signals.addSignalMethods(ViewManager.prototype);

@@ -4,7 +4,7 @@ const Meta      = imports.gi.Meta;
 const Clutter   = imports.gi.Clutter;
 const Main      = imports.ui.main;
 const PopupMenu = imports.ui.popupMenu;
-const Lang      = imports.lang;
+
 const Signals   = imports.signals;
 const Mainloop  = imports.mainloop;
 
@@ -32,10 +32,10 @@ const G = ME.imports.sections.todo.GLOBAL;
 //
 // @signals: 'update-sort'
 // =====================================================================
-var ViewSort = new Lang.Class({
-    Name: 'Timepp.ViewSort',
+var ViewSort  = class ViewSort {
+    
 
-    _init: function (ext, delegate) {
+    constructor (ext, delegate) {
         this.ext      = ext;
         this.delegate = delegate;
 
@@ -123,25 +123,25 @@ var ViewSort = new Lang.Class({
         this.button_ok.connect('clicked', () => this._on_ok_clicked());
         this.toggle_automatic_sort_btn.connect('clicked', () => this._on_toggle_clicked());
         this.toggle_automatic_sort.connect('button-press-event', () => this._on_toggle_clicked());
-    },
+    }
 
-    _on_ok_clicked: function () {
+    _on_ok_clicked () {
         let res = [];
 
         for (let it of this.sort_items_box.get_children())
             res.push([it._owner.sort_type, it._owner.sort_order]);
 
         this.emit('update-sort', res, this.toggle.state);
-    },
+    }
 
-    _on_toggle_clicked: function () {
+    _on_toggle_clicked () {
         this.toggle.setToggleState(!this.toggle.state);
-    },
+    }
 
-    close: function () {
+    close () {
         this.actor.destroy();
-    },
-});
+    }
+}
 Signals.addSignalMethods(ViewSort.prototype);
 
 
@@ -152,10 +152,10 @@ Signals.addSignalMethods(ViewSort.prototype);
 //
 // @signals:
 // =====================================================================
-let SortItem = new Lang.Class({
-    Name: 'Timepp.SortItem',
+var SortItem = class SortItem{
+    
 
-    _init: function (delegate, actor_scrollview, actor_parent, label, sort_type, sort_order) {
+    constructor (delegate, actor_scrollview, actor_parent, label, sort_type, sort_order) {
         this.delegate         = delegate;
         this.actor_scrollview = [[actor_scrollview], []];
         this.actor_parent     = actor_parent;
@@ -179,10 +179,12 @@ let SortItem = new Lang.Class({
         this.sort_icon = new St.Icon({ reactive: true, can_focus: true, track_hover: true });
         this.icn_box.add_actor(this.sort_icon);
 
-        this.sort_icon.set_icon_name(
-            sort_order === G.SortOrder.ASCENDING ?
-            'timepp-sort-ascending-symbolic'   :
-            'timepp-sort-descending-symbolic'
+        this.sort_icon.set_gicon(
+            MISC.getIcon(
+                sort_order === G.SortOrder.ASCENDING ?
+                'timepp-sort-ascending-symbolic'   :
+                'timepp-sort-descending-symbolic'
+            )
         );
 
 
@@ -204,10 +206,10 @@ let SortItem = new Lang.Class({
         this.delegate.sigm.connect_press(this.sort_icon, Clutter.BUTTON_PRIMARY, true, () => {
             if (this.sort_order === G.SortOrder.ASCENDING) {
                 this.sort_order = G.SortOrder.DESCENDING;
-                this.sort_icon.icon_name = 'timepp-sort-descending-symbolic';
+                this.sort_icon.gicon = MISC.getIcon('timepp-sort-descending-symbolic');
             } else {
                 this.sort_order = G.SortOrder.ASCENDING;
-                this.sort_icon.icon_name = 'timepp-sort-ascending-symbolic';
+                this.sort_icon.gicon = MISC.getIcon('timepp-sort-ascending-symbolic');
             }
         });
         this.sort_icon.connect('key-press-event', (_, event) => {
@@ -231,5 +233,5 @@ let SortItem = new Lang.Class({
 
             return Clutter.EVENT_PROPAGATE;
         });
-    },
-});
+    }
+}

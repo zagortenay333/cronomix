@@ -6,7 +6,7 @@ const Pango    = imports.gi.Pango;
 const Clutter  = imports.gi.Clutter;
 const Main     = imports.ui.main;
 const CheckBox = imports.ui.checkBox;
-const Lang     = imports.lang;
+
 const Signals  = imports.signals;
 const Mainloop = imports.mainloop;
 
@@ -48,10 +48,10 @@ let LAST_TIME_CLICKED    = 0; // for double click on task
 // the todo.txt file but must in case a task recurs. (E.g., when we load
 // tasks from the todo.txt file.)
 // =====================================================================
-var TaskItem = new Lang.Class({
-    Name: 'Timepp.TaskItem',
+var TaskItem  = class TaskItem {
+    
 
-    _init: function (ext, delegate, task_str, self_update = true) {
+    constructor (ext, delegate, task_str, self_update = true) {
         this.ext      = ext;
         this.delegate = delegate;
         this.task_str = task_str;
@@ -60,7 +60,7 @@ var TaskItem = new Lang.Class({
         //
         // @NOTE
         // If a var needs to be resettable, add it to the reset_props() method
-        // instead of the _init() method.
+        // instead of the constructor() method.
         //
 
 
@@ -143,9 +143,9 @@ var TaskItem = new Lang.Class({
         this.msg.connect('leave-event', () => MISC.global_wrapper.display.set_cursor(Meta.Cursor.DEFAULT));
         this.actor.connect('event', (actor, event) => this._on_event(actor, event));
         this.completion_checkbox.connect('clicked', () => this.toggle_task());
-    },
+    }
 
-    reset: function (self_update, task_str, update_tracker = true) {
+    reset (self_update, task_str, update_tracker = true) {
         if (task_str) {
             if (update_tracker && this.delegate.time_tracker)
                 this.delegate.time_tracker.update_record_name(this.task_str, task_str);
@@ -162,9 +162,9 @@ var TaskItem = new Lang.Class({
             this.check_deferred_tasks();
             this.update_dates_markup();
         }
-    },
+    }
 
-    reset_props: function () {
+    reset_props () {
         this.actor.style_class = 'task-item';
 
         this.msg.text = '';
@@ -236,9 +236,9 @@ var TaskItem = new Lang.Class({
         this.link_indices       = [];
 
         this.hide_header_icons();
-    },
+    }
 
-    _parse_task_str: function () {
+    _parse_task_str () {
         // The 'header' is part of the task_str at the start that includes
         // the 'x' (checked) sign, the priority, and the completion/creation
         // dates.
@@ -424,7 +424,7 @@ var TaskItem = new Lang.Class({
                     this.actor.add_style_class_name('hidden-task');
                     let icon_incognito_bin = new St.Button({ can_focus: true });
                     this.header.insert_child_at_index(icon_incognito_bin, 0);
-                    icon_incognito_bin.add_actor(new St.Icon({ icon_name: 'timepp-hidden-symbolic' }));
+                    icon_incognito_bin.add_actor(new St.Icon({ gicon : MISC.getIcon('timepp-hidden-symbolic') }));
 
                     words.splice(i, 1); i--; len--;
                 }
@@ -444,9 +444,9 @@ var TaskItem = new Lang.Class({
 
         this.msg.clutter_text.set_markup(words);
         this.msg_text = this.msg.text;
-    },
+    }
 
-    check_deferred_tasks: function (today = MISC.date_yyyymmdd()) {
+    check_deferred_tasks (today = MISC.date_yyyymmdd()) {
         if (! this.defer_date) return false;
 
         this.creation_date = this.defer_date;
@@ -459,9 +459,9 @@ var TaskItem = new Lang.Class({
         let prev = this.is_deferred;
         this.is_deferred = false;
         return prev;
-    },
+    }
 
-    check_recurrence: function () {
+    check_recurrence () {
         if (! this.rec_str) return false;
 
         let [do_recur, next_rec] = this._get_recurrence_date();
@@ -493,7 +493,7 @@ var TaskItem = new Lang.Class({
         if (next_rec) this.rec_next = next_rec;
 
         return do_recur;
-    },
+    }
 
     // This function assumes that the creation/completion dates are either valid
     // or equal to '0000-00-00' and that if a particular type of recurrence
@@ -509,7 +509,7 @@ var TaskItem = new Lang.Class({
     // @next_recurrence can be an empty string, which indicates that the next
     // recurrence couldn't be computed. E.g., the task recurs n days after
     // completion but isn't completed.
-    _get_recurrence_date: function () {
+    _get_recurrence_date () {
         let res   = [false, '8999-99-99'];
         let today = MISC.date_yyyymmdd();
 
@@ -596,9 +596,9 @@ var TaskItem = new Lang.Class({
         }
 
         return res;
-    },
+    }
 
-    update_body_markup: function () {
+    update_body_markup () {
         this.msg.text = '';
 
         for (let it of this.context_indices) {
@@ -626,9 +626,9 @@ var TaskItem = new Lang.Class({
         markup     = MISC.markdown_to_pango(markup, this.ext.markdown_map);
 
         this.msg.clutter_text.set_markup(markup);
-    },
+    }
 
-    update_dates_markup: function () {
+    update_dates_markup () {
         //
         // set the custom (todo.txt extension) dates
         //
@@ -717,9 +717,9 @@ var TaskItem = new Lang.Class({
             this.base_date_labels.destroy();
             this.base_date_labels = null;
         }
-    },
+    }
 
-    toggle_task: function () {
+    toggle_task () {
         if (this.completed) {
             let words = this.task_str.split(' ');
 
@@ -752,25 +752,25 @@ var TaskItem = new Lang.Class({
         }
 
         Mainloop.timeout_add(0, () => this.delegate.on_tasks_changed(true, true));
-    },
+    }
 
      // @SPEED Lazy load the icons.
-    _create_header_icons: function () {
+    _create_header_icons () {
         if (this.header_icon_box) return;
 
         this.header_icon_box = new St.BoxLayout({ x_align: Clutter.ActorAlign.END, style_class: 'icon-box' });
         this.header.add(this.header_icon_box, {expand: true});
 
-        this.stat_icon = new St.Icon({ visible:false, reactive: true, can_focus: true, track_hover: true, icon_name: 'timepp-graph-symbolic' });
+        this.stat_icon = new St.Icon({ visible:false, reactive: true, can_focus: true, track_hover: true, gicon : MISC.getIcon('timepp-graph-symbolic') });
         this.header_icon_box.add_actor(this.stat_icon);
 
-        this.pin_icon = new St.Icon({ visible:false, reactive: true, can_focus: true, track_hover: true, icon_name: 'timepp-pin-symbolic', style_class: 'pin-icon' });
+        this.pin_icon = new St.Icon({ visible:false, reactive: true, can_focus: true, track_hover: true, gicon : MISC.getIcon('timepp-pin-symbolic'), style_class: 'pin-icon' });
         this.header_icon_box.add_actor(this.pin_icon);
 
-        this.edit_icon = new St.Icon({ visible:false, reactive: true, can_focus: true, track_hover: true, icon_name: 'timepp-edit-symbolic' });
+        this.edit_icon = new St.Icon({ visible:false, reactive: true, can_focus: true, track_hover: true, gicon : MISC.getIcon('timepp-edit-symbolic') });
         this.header_icon_box.add_actor(this.edit_icon);
 
-        this.tracker_icon = new St.Icon({ visible:false, reactive: true, can_focus: true, track_hover: true, icon_name: 'timepp-start-symbolic', style_class: 'tracker-start-icon' });
+        this.tracker_icon = new St.Icon({ visible:false, reactive: true, can_focus: true, track_hover: true, gicon : MISC.getIcon('timepp-start-symbolic'), style_class: 'tracker-start-icon' });
         this.header_icon_box.add_actor(this.tracker_icon);
 
         // @NOTE: Use connect_press here because we need to play well with dnd.
@@ -789,9 +789,9 @@ var TaskItem = new Lang.Class({
         this.delegate.sigm.connect_press(this.tracker_icon, Clutter.BUTTON_PRIMARY, true, () => {
             this.delegate.time_tracker.toggle_tracking(this);
         });
-    },
+    }
 
-    show_header_icons: function () {
+    show_header_icons () {
         this._create_header_icons();
 
         if (!this.hidden && !this.completed)
@@ -804,9 +804,9 @@ var TaskItem = new Lang.Class({
                 this.stat_icon.show();
             }
         }
-    },
+    }
 
-    hide_header_icons: function () {
+    hide_header_icons () {
         if (! this.header_icon_box) return;
 
         if (this.tracker_icon.style_class === 'tracker-start-icon' && !this.pinned) {
@@ -823,9 +823,9 @@ var TaskItem = new Lang.Class({
             this.pin_icon.visible = this.pinned;
             this.tracker_icon.visible = this.tracker_icon.style_class !== 'tracker-start-icon';
         }
-    },
+    }
 
-    _on_pin_icon_clicked: function () {
+    _on_pin_icon_clicked () {
         this.pinned = (this.pinned === 1) ? 0 : 1;
         let old_task_str = this.task_str;
 
@@ -853,38 +853,38 @@ var TaskItem = new Lang.Class({
         if (this.delegate.view_manager.current_view_name !== G.View.SEARCH) {
             Mainloop.timeout_add(0, () => this.delegate.on_tasks_changed(true, true));
         }
-    },
+    }
 
-    _toggle_tracker_icon: function () {
+    _toggle_tracker_icon () {
         if (this.tracker_icon.style_class === 'tracker-start-icon')
             this._show_tracker_running_icon();
         else
             this._show_tracker_stopped_icon();
-    },
+    }
 
-    _show_tracker_running_icon: function () {
+    _show_tracker_running_icon () {
         this._create_header_icons();
-        this.tracker_icon.icon_name   = 'timepp-pause-symbolic';
+        this.tracker_icon.gicon = MISC.getIcon('timepp-pause-symbolic');
         this.tracker_icon.style_class = 'tracker-pause-icon';
         this.tracker_icon.visible     = true;
-    },
+    }
 
-    _show_tracker_stopped_icon: function () {
+    _show_tracker_stopped_icon () {
         this.tracker_icon.visible     = this.edit_icon.visible;
         this.tracker_icon.style_class = 'tracker-start-icon';
-        this.tracker_icon.icon_name   = 'timepp-start-symbolic';
-    },
+        this.tracker_icon.gicon = MISC.getIcon('timepp-start-symbolic');
+    }
 
-    on_tracker_started: function () {
+    on_tracker_started () {
         this._show_tracker_running_icon();
-    },
+    }
 
-    on_tracker_stopped: function () {
+    on_tracker_stopped () {
         this._show_tracker_stopped_icon();
-    },
+    }
 
     // Return word under mouse cursor if it's a context or project, else null.
-    _find_keyword: function (event) {
+    _find_keyword (event) {
         let [x, y] = event.get_coords();
         [, x, y]   = this.msg.transform_stage_point(x, y);
         let pos    = this.msg.clutter_text.coords_to_position(x, y);
@@ -910,9 +910,9 @@ var TaskItem = new Lang.Class({
             return words[i];
         else
             return null;
-    },
+    }
 
-    _scroll_task_priority: function (direction) {
+    _scroll_task_priority (direction) {
         let prio = this.prio_label.text;
 
         if (prio) this.actor.remove_style_class_name(prio[1]);
@@ -941,13 +941,13 @@ var TaskItem = new Lang.Class({
         }
 
         this.finish_scrolling_priority = true;
-    },
+    }
 
-    _finish_scrolling_priority: function () {
+    _finish_scrolling_priority () {
         let t = this.prio_label.text;
         this.reset(true, this.new_str_for_prio(t ? t : '(_)'));
         this.delegate.on_tasks_changed(true, this.delegate.get_current_todo_file().automatic_sort);
-    },
+    }
 
     // A little utility func to generate a new task_str with a new property.
     // If the task is completed the 'pri:' extension will be updated/added.
@@ -955,7 +955,7 @@ var TaskItem = new Lang.Class({
     // @priority: string (prio str or '(_)' to mean 'no priority')
     //
     // returns task string with the updated priority.
-    new_str_for_prio: function (priority, task_str = this.task_str) {
+    new_str_for_prio (priority, task_str = this.task_str) {
         if (priority !== '(_)' && !REG.TODO_PRIO.test(priority)) return task_str;
 
         priority = priority === '(_)' ? '' : priority;
@@ -983,9 +983,9 @@ var TaskItem = new Lang.Class({
         }
 
         return task_str;
-    },
+    }
 
-    scroll_into_view: function () {
+    scroll_into_view () {
         if (! this.actor_scrollview) return;
 
         for (let i = 0; i < 2; i++) {
@@ -993,9 +993,9 @@ var TaskItem = new Lang.Class({
                 MISC.scroll_to_item(s, s.get_last_child(), this.actor, this.actor_parent, !!i);
             }
         }
-    },
+    }
 
-    _on_event: function (actor, event) {
+    _on_event (actor, event) {
         switch (event.type()) {
           case Clutter.EventType.ENTER: {
             let related = event.get_related();
@@ -1046,12 +1046,10 @@ var TaskItem = new Lang.Class({
             }
           } break;
 
-          case Clutter.EventType.BUTTON_RELEASE: {
+          case Clutter.EventType.BUTTON_PRESS: {
             if (this.prio_label.has_pointer) {
                 this.delegate.show_view__search(this.prio_label.text);
-            } else if (this.msg.has_pointer) {
-                if (! this.current_keyword) break;
-
+            } else if (this.msg.has_pointer && this.current_keyword) {
                 if (REG.URL.test(this.current_keyword)) {
                     MISC.open_web_uri(this.current_keyword);
                 } else if (REG.FILE_PATH.test(this.current_keyword)) {
@@ -1059,17 +1057,15 @@ var TaskItem = new Lang.Class({
                 } else {
                     this.delegate.show_view__search(this.current_keyword);
                 }
-            }
-          } break;
-
-          case Clutter.EventType.BUTTON_PRESS: {
-            let t = GLib.get_monotonic_time();
-            if (t - LAST_TIME_CLICKED < DOUBLE_CLICK_DELAY) {
-              LAST_TIME_CLICKED = 0;
-              this.hide_header_icons();
-              this.delegate.show_view__task_editor(this);
-            } else {
-              LAST_TIME_CLICKED = t;
+            } else { // maybe double click
+                let t = GLib.get_monotonic_time();
+                if (t - LAST_TIME_CLICKED < DOUBLE_CLICK_DELAY) {
+                  LAST_TIME_CLICKED = 0;
+                  this.hide_header_icons();
+                  this.delegate.show_view__task_editor(this);
+                } else {
+                  LAST_TIME_CLICKED = t;
+                }
             }
           } break;
 
@@ -1080,6 +1076,6 @@ var TaskItem = new Lang.Class({
             }
           } break;
         }
-    },
-});
+    }
+}
 Signals.addSignalMethods(TaskItem.prototype);
