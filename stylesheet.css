@@ -508,6 +508,12 @@
 .timepp-menu .alarm-section .numpicker-box {}
 .timepp-menu .alarm-section .numpicker-box {}
 
+.timepp-menu .alarm-section .day.button {}
+
+.timepp-menu .alarm-section .day.button:active {
+    color: #5a94dc;
+}
+
 .timepp-menu .alarm-section .entry-container {}
 
 .timepp-menu .alarm-section .add-alarm:hover,
