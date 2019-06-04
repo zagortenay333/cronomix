@@ -48,6 +48,11 @@ site](https://extensions.gnome.org/extension/1238/time/).
     * Restart gnome-shell by typing <kbd>Alt</kbd>+<kbd>F2</kbd>, then <kbd>r</kbd>, then <kbd>Enter</kbd>.
     * Enable the extension via gnome tweak tool.
 
+* Alternative manual installation (for development):
+    * Download/clone this repo anywhere on your system
+    * Open a terminal and run `make install`
+    * Enable the extension via `gnome-tweak-tool` or `gnome-shell-extension-tool --enable-extension=timepp@zagortenay333`
+
 ---
 
 ### Compatibility
