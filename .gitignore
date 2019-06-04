@@ -1,3 +1,6 @@
 *.orig
 *~
 \#*#
+
+_build/
+.vscode/
