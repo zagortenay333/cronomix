@@ -438,6 +438,8 @@ var TaskItem  = class TaskItem {
         this.description_markup = words;
 
         words = words.join('');
+	// Remove key:val tags before rendering
+	words = words.replace(REG.TODO_KEY_VAL_TAGS, '');
         words = MISC.markdown_to_pango(words, this.ext.markdown_map);
 
         this.msg.clutter_text.set_markup(words);
@@ -621,6 +623,8 @@ var TaskItem  = class TaskItem {
         }
 
         let markup = this.description_markup.join('');
+	// Remove key:val tags before rendering
+	markup     = markup.replace(REG.TODO_KEY_VAL_TAGS, '');
         markup     = MISC.markdown_to_pango(markup, this.ext.markdown_map);
 
         this.msg.clutter_text.set_markup(markup);
