@@ -64,6 +64,9 @@ var TimeTracker  = class TimeTracker {
         this.yearly_csv_dir_monitor  = null;
         this.yearly_csv_file_monitor = null;
         this.daily_csv_file_monitor  = null;
+        this.yearly_csv_dir_monitor_id  = null;
+        this.yearly_csv_file_monitor_id = null;
+        this.daily_csv_file_monitor_id  = null;
 
 
         // @stats_data: Map
@@ -313,35 +316,42 @@ var TimeTracker  = class TimeTracker {
         return false;
     }
 
-    _enable_file_monitors () {
-        [this.daily_csv_file_monitor,] = MISC_UTILS.file_monitor(this.daily_csv_file, () => {
-            this._on_tracker_files_modified();
-        });
+    _enable_file_monitors (timeout = 100) {
+        if (!this.daily_csv_file_monitor) {
+            this.daily_csv_file_monitor = this.daily_csv_file.monitor(Gio.FileMonitorFlags.NONE, null);
+        }
 
-        [this.yearly_csv_file_monitor,] = MISC_UTILS.file_monitor(this.yearly_csv_file, () => {
-            this._on_tracker_files_modified();
-        });
+        if (!this.yearly_csv_file_monitor) {
+            this.yearly_csv_file_monitor = this.yearly_csv_file.monitor(Gio.FileMonitorFlags.NONE, null);
+        }
 
-        [this.yearly_csv_dir_monitor,] = MISC_UTILS.file_monitor(this.yearly_csv_dir, () => {
-            this._on_tracker_files_modified();
+        if (!this.yearly_csv_dir_monitor) {
+            this.yearly_csv_dir_monitor = this.yearly_csv_dir.monitor(Gio.FileMonitorFlags.NONE, null);
+        }
+
+        Mainloop.timeout_add(timeout, () => {
+            this.daily_csv_file_monitor_id = this.daily_csv_file_monitor.connect('changed', (...args) => {
+                this._on_tracker_files_modified();
+            });
+            this.yearly_csv_file_monitor_id = this.yearly_csv_file_monitor.connect('changed', (...args) => {
+                this._on_tracker_files_modified();
+            });
+            this.yearly_csv_dir_monitor_id = this.yearly_csv_dir_monitor.connect('changed', (...args) => {
+                this._on_tracker_files_modified();
+            });
         });
     }
 
     _disable_file_monitors () {
-        if (this.daily_csv_file_monitor) {
-            this.daily_csv_file_monitor.cancel();
-            this.daily_csv_file_monitor = null;
-        }
+        if (this.daily_csv_file_monitor)
+            this.daily_csv_file_monitor.disconnect(this.daily_csv_file_monitor_id);
 
-        if (this.yearly_csv_file_monitor) {
-            this.yearly_csv_file_monitor.cancel();
-            this.yearly_csv_file_monitor = null;
-        }
+        if (this.yearly_csv_file_monitor)
+            this.yearly_csv_file_monitor.disconnect(this.yearly_csv_file_monitor_id);
 
-        if (this.yearly_csv_dir_monitor) {
-            this.yearly_csv_dir_monitor.cancel();
-            this.yearly_csv_dir_monitor = null;
-        }
+
+        if (this.yearly_csv_dir_monitor)
+            this.yearly_csv_dir_monitor.disconnect(this.yearly_csv_dir_monitor);
     }
 
     _tracker_tic (...args) {
