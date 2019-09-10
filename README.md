@@ -2,7 +2,7 @@
 
 ### Time ++
 
-<img vspace="70" src="data/img/logo.png"></img>
+<img vspace="70" src="data/img/logo.png">logo</img>
 
 **A [todo.txt manager](https://github.com/todotxt/todotxt/),
 time tracker, timer, stopwatch, pomodoro, and alarms [gnome-shell extension](https://extensions.gnome.org/about/).**
@@ -13,11 +13,10 @@ time tracker, timer, stopwatch, pomodoro, and alarms [gnome-shell extension](htt
 
 <details>
     <summary><b>Table of Contents</b></summary>
-        
+
 * [Installation](#installation)
-* [Compatibility](#compatibility)
 * [Translations](#translations)
-* [Lock Screen](#lock-screen)
+* [Lock Screen Warning](#lock-screen-warning)
 * [Sections](#sections)
 * [Fullscreen Interface](#fullscreen-interface)
 * [Todo.txt Manager](#todotxt-manager)
@@ -35,27 +34,12 @@ time tracker, timer, stopwatch, pomodoro, and alarms [gnome-shell extension](htt
 
 ### Installation
 
-* You can install this extension from the [gnome-shell extensions
-site](https://extensions.gnome.org/extension/1238/time/).
-  > **NOTE**:  
-  > Since it takes some time for the extension to be reviewed, the version on
-  > this site might be out of date and contain
-  > bugs that have already been fixed. Consider using the github version.
-
-* You can install it manually:
-    * Download/clone this repo into your `~/.local/share/gnome-shell/extensions` dir and rename 
-      the downloaded dir to `timepp@zagortenay333`.  
-    * Restart gnome-shell by typing <kbd>Alt</kbd>+<kbd>F2</kbd>, then <kbd>r</kbd>, then <kbd>Enter</kbd>.
-    * Enable the extension via gnome tweak tool.
-
----
-
-### Compatibility
-
-The latest version of this extension is on the master branch, and it supports
-gnome-shell version: **`3.32`**.
-
-For older versions, check the available [releases](../../releases).
+1. Download this repository into your `/home/YOUR_USER_NAME/.local/share/gnome-shell/extensions` folder.
+   * Use the download button to get the latest version (`gnome-shell 3.32`, `master-branch`).
+   * Older version are on the [releases](../../releases) page.
+2. Rename the downloaded folder to `timepp@zagortenay333`.
+3. Restart your desktop shell by typing <kbd>Alt</kbd>+<kbd>F2</kbd>, then <kbd>r</kbd>, then <kbd>Enter</kbd>.
+4. Enable the extension via the `gnome tweak tool` program.
 
 ---
 
@@ -66,11 +50,10 @@ If you want to help out with translations, check out the instructions in the
 
 ---
 
-### Lock Screen
+### Lock Screen Warning :bangbang:
 
-:bangbang: **Note that all gnome-shell extensions get disabled in the lock screen**.
-
-Alarms, stopwatch and other timers won't work when the screen is locked.
+**All gnome-shell extensions get disabled in the lock screen so alarms, timer
+and others stuff will not work.**.
 
 ---
 
