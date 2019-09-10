@@ -15,8 +15,8 @@ time tracker, timer, stopwatch, pomodoro, and alarms [gnome-shell extension](htt
     <summary><b>Table of Contents</b></summary>
 
 * [Installation](#installation)
-* [Translations](#translations)
 * [Lock Screen Warning](#lock-screen-warning)
+* [Translations](#translations)
 * [Sections](#sections)
 * [Fullscreen Interface](#fullscreen-interface)
 * [Todo.txt Manager](#todotxt-manager)
@@ -43,16 +43,16 @@ time tracker, timer, stopwatch, pomodoro, and alarms [gnome-shell extension](htt
 
 ---
 
+### Lock Screen Warning :bangbang:
+
+**All gnome-shell extensions get disabled in the lock screen. Alarms, timers, etc will not work.**
+
+---
+
 ### Translations
 
 If you want to help out with translations, check out the instructions in the
 [po_files](data/po_files) dir.
-
----
-
-### Lock Screen Warning :bangbang:
-
-**All gnome-shell extensions get disabled in the lock screen. Alarms, timers, etc will not work.**
 
 ---
 
