@@ -522,4 +522,4 @@ extensions' stylesheet.
 
 <b><sub> [Gnome-Shell theme](https://github.com/zagortenay333/ciliora-tertia-shell), [Wallpaper](https://i.imgur.com/raHVKVk.jpg)</sub></b>
 
-![preview](https://i.imgur.com/W8ivmw9.png)
+![preview](./data/img/preview.png)
