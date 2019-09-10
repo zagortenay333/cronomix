@@ -52,8 +52,7 @@ If you want to help out with translations, check out the instructions in the
 
 ### Lock Screen Warning :bangbang:
 
-**All gnome-shell extensions get disabled in the lock screen so alarms, timer
-and others stuff will not work.**.
+**All gnome-shell extensions get disabled in the lock screen. Alarms, timers and others stuff will not work.**.
 
 ---
 
