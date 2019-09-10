@@ -2,7 +2,7 @@
 
 ### Time ++
 
-<img vspace="70" src="data/img/logo.png">logo</img>
+<img vspace="70" src="data/img/logo.png"></img>
 
 **A [todo.txt manager](https://github.com/todotxt/todotxt/),
 time tracker, timer, stopwatch, pomodoro, and alarms [gnome-shell extension](https://extensions.gnome.org/about/).**
