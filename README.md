@@ -13,11 +13,10 @@ time tracker, timer, stopwatch, pomodoro, and alarms [gnome-shell extension](htt
 
 <details>
     <summary><b>Table of Contents</b></summary>
-        
+
 * [Installation](#installation)
-* [Compatibility](#compatibility)
+* [Lock Screen Warning](#lock-screen-warning)
 * [Translations](#translations)
-* [Lock Screen](#lock-screen)
 * [Sections](#sections)
 * [Fullscreen Interface](#fullscreen-interface)
 * [Todo.txt Manager](#todotxt-manager)
@@ -35,27 +34,18 @@ time tracker, timer, stopwatch, pomodoro, and alarms [gnome-shell extension](htt
 
 ### Installation
 
-* You can install this extension from the [gnome-shell extensions
-site](https://extensions.gnome.org/extension/1238/time/).
-  > **NOTE**:  
-  > Since it takes some time for the extension to be reviewed, the version on
-  > this site might be out of date and contain
-  > bugs that have already been fixed. Consider using the github version.
-
-* You can install it manually:
-    * Download/clone this repo into your `~/.local/share/gnome-shell/extensions` dir and rename 
-      the downloaded dir to `timepp@zagortenay333`.  
-    * Restart gnome-shell by typing <kbd>Alt</kbd>+<kbd>F2</kbd>, then <kbd>r</kbd>, then <kbd>Enter</kbd>.
-    * Enable the extension via gnome tweak tool.
+1. Download this repository into your `/home/YOUR_USER_NAME/.local/share/gnome-shell/extensions` folder.
+   * [The latest version](https://github.com/zagortenay333/timepp__gnome/archive/master.zip) supports `gnome-shell 3.32` (`master-branch`).
+   * For older versions go to [releases](../../releases).
+2. Extract and rename the downloaded folder to `timepp@zagortenay333`.
+3. Restart your desktop shell by typing <kbd>Alt</kbd>+<kbd>F2</kbd>, then <kbd>r</kbd>, then <kbd>Enter</kbd>.
+4. Enable the extension via the `gnome tweak tool` program.
 
 ---
 
-### Compatibility
+### Lock Screen Warning :bangbang:
 
-The latest version of this extension is on the master branch, and it supports
-gnome-shell version: **`3.32`**.
-
-For older versions, check the available [releases](../../releases).
+**All gnome-shell extensions get disabled in the lock screen. Alarms, timers, etc will not work.**
 
 ---
 
@@ -63,14 +53,6 @@ For older versions, check the available [releases](../../releases).
 
 If you want to help out with translations, check out the instructions in the
 [po_files](data/po_files) dir.
-
----
-
-### Lock Screen
-
-:bangbang: **Note that all gnome-shell extensions get disabled in the lock screen**.
-
-Alarms, stopwatch and other timers won't work when the screen is locked.
 
 ---
 
@@ -522,4 +504,4 @@ extensions' stylesheet.
 
 <b><sub> [Gnome-Shell theme](https://github.com/zagortenay333/ciliora-tertia-shell), [Wallpaper](https://i.imgur.com/raHVKVk.jpg)</sub></b>
 
-![preview](https://i.imgur.com/W8ivmw9.png)
+![preview](./data/img/preview.png)

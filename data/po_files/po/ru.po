@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-30 14:15+0100\n"
-"PO-Revision-Date: 2017-11-29 13:36+0200\n"
-"Last-Translator: Sergey Shlyapugin <shlyapugin@gmail.com>\n"
+"PO-Revision-Date: 2019-06-15 01:42+0700\n"
+"Last-Translator: Artem Kulikov <artem.job.kulikov@gmail.com>\n"
 "Language-Team: Russian\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Poedit 2.0.4\n"
+"X-Generator: Poedit 2.2.1\n"
 
 #: data/po_files/../../sections/todo/view__clear_tasks.js:57
 msgid "Delete all completed tasks"
@@ -116,9 +116,8 @@ msgid "Custom Range..."
 msgstr "Произвольный период..."
 
 #: data/po_files/../../sections/todo/view__stats.js:588
-#, fuzzy
 msgid "Stats for task"
-msgstr "Статистика проекта"
+msgstr "Статистика задания"
 
 #: data/po_files/../../sections/todo/view__stats.js:614
 #: data/po_files/../../sections/todo/view__stats.js:638
@@ -134,30 +133,31 @@ msgstr[2] "%d дней"
 
 #: data/po_files/../../sections/todo/view__stats.js:1174
 msgid "Average per day (including off days)"
-msgstr ""
+msgstr "В среднем за день (включая выходные дни)"
 
 #: data/po_files/../../sections/todo/view__stats.js:1183
 msgid "Average per day (excluding off days)"
-msgstr ""
+msgstr "В среднем за день (исключая выходные дни)"
 
 #: data/po_files/../../sections/todo/view__stats.js:1186
 #: data/po_files/../../sections/todo/view__stats.js:1196
 msgid "Total"
-msgstr ""
+msgstr "Всего"
 
 #: data/po_files/../../sections/todo/view__stats.js:1228
+#, fuzzy
 msgid "Interval"
-msgstr ""
+msgstr "Период"
 
 #: data/po_files/../../sections/todo/view__stats.js:1230
 #, fuzzy
 msgid "No intervals found."
-msgstr "Ничего не найдено."
+msgstr "Период не найден."
 
 #: data/po_files/../../sections/todo/view__sort.js:63
 #, fuzzy
 msgid "Sort by Pin"
-msgstr "Упорядочить по приоритету"
+msgstr "Упорядочить по избранному"
 
 #: data/po_files/../../sections/todo/view__sort.js:64
 msgid "Sort by Context"
@@ -181,9 +181,8 @@ msgid "Sort by Alphabet"
 msgstr "Упорядочить по степени выполнения"
 
 #: data/po_files/../../sections/todo/view__sort.js:69
-#, fuzzy
 msgid "Sort by Recurrence Date"
-msgstr "Упорядочить по крайнему сроку выполнения"
+msgstr "Упорядочить по дате повторения"
 
 #: data/po_files/../../sections/todo/view__sort.js:70
 msgid "Sort by Completed"
@@ -199,15 +198,17 @@ msgstr "Упорядочить по дате выполнения"
 
 #: data/po_files/../../sections/todo/view__sort.js:98
 msgid "Automatic sorting"
-msgstr ""
+msgstr "Автосортировка"
 
 #: data/po_files/../../sections/todo/view__kanban_switcher.js:72
 msgid "syntax help"
-msgstr ""
+msgstr "справка по синтаксису"
 
 #: data/po_files/../../sections/todo/view__kanban_switcher.js:130
+#, fuzzy
 msgid "To use kanban boards, add the kanban todo extension to a task."
 msgstr ""
+"Чтобы использовать доски канбан, добавь расширение \"kanban todo\" к задаче."
 
 #: data/po_files/../../sections/todo/view__loading.js:37
 #: data/po_files/../../sections/todo/MAIN.js:671
@@ -283,15 +284,16 @@ msgstr[2] "%d задач"
 #: data/po_files/../../sections/todo/time_tracker.js:195
 #: data/po_files/../../sections/todo/time_tracker.js:767
 msgid "Error while parsing csv file. See logs."
-msgstr ""
+msgstr "Ошибка при разборе csv-файла. Проверьте логи."
 
 #: data/po_files/../../sections/todo/time_tracker.js:524
 msgid "To track time, select a dir for csv files in the settings."
-msgstr ""
+msgstr "Чтобы отслеживать время, выберите каталог для csv-файлов в настройках."
 
 #: data/po_files/../../sections/todo/MAIN.js:273
+#, fuzzy
 msgid "Unable to load todo file"
-msgstr ""
+msgstr "Не удается загрузить файл todo"
 
 #: data/po_files/../../sections/todo/MAIN.js:365
 #, javascript-format
@@ -316,7 +318,7 @@ msgstr "Ничего не найдено."
 #: data/po_files/../../sections/todo/task_item.js:643
 #: data/po_files/../../sections/todo/task_item.js:647
 msgid "recurrence"
-msgstr "возобновление"
+msgstr "повторение"
 
 #: data/po_files/../../sections/todo/task_item.js:644
 #, javascript-format
@@ -343,9 +345,8 @@ msgid "completed"
 msgstr "выполнена"
 
 #: data/po_files/../../sections/todo/view__task_editor.js:118
-#, fuzzy
 msgid "Task..."
-msgstr "Задачи"
+msgstr "Задачи..."
 
 #: data/po_files/../../sections/todo/view__task_editor.js:215
 msgid "Archive"
@@ -357,25 +358,26 @@ msgstr "Добавить задачу..."
 
 #: data/po_files/../../sections/todo/view__file_switcher.js:95
 msgid "Add File"
-msgstr ""
+msgstr "Добавить файл"
 
 #: data/po_files/../../sections/todo/view__file_switcher.js:386
 msgid "Unique name"
 msgstr "Уникальное имя"
 
 #: data/po_files/../../sections/todo/view__file_switcher.js:397
+#, fuzzy
 msgid "Todo file"
-msgstr "Файл списка дел"
+msgstr "Файл текщих дел"
 
 #: data/po_files/../../sections/todo/view__file_switcher.js:411
 #, fuzzy
 msgid "Done file"
-msgstr "Файл списка дел"
+msgstr "Файл завершенных дел"
 
 #: data/po_files/../../sections/todo/view__file_switcher.js:411
 #: data/po_files/../../sections/todo/view__file_switcher.js:426
 msgid "optional"
-msgstr ""
+msgstr "опционально"
 
 #: data/po_files/../../sections/todo/view__file_switcher.js:426
 #, fuzzy
@@ -416,16 +418,14 @@ msgstr "(мин)"
 
 #: data/po_files/../../sections/alarms.js:536
 #: data/po_files/../../data/prefs.ui:1584
-#, fuzzy
 msgid "Repeat notification sound?"
-msgstr "Звук уведомления"
+msgstr "Повторять звук уведомления?"
 
 #: data/po_files/../../sections/alarms.js:548
 msgid "Alarm Message..."
 msgstr "Сообщение напоминания..."
 
 #: data/po_files/../../sections/alarms.js:727
-#, fuzzy
 msgid "Snoozed"
 msgstr "Отложить"
 
@@ -443,17 +443,15 @@ msgstr[2] "%d напоминаний ушло!"
 #: data/po_files/../../data/prefs.ui:301 data/po_files/../../data/prefs.ui:1629
 #: data/po_files/../../data/prefs.ui:1959
 msgid "Pomodoro"
-msgstr "Помидорный таймер"
+msgstr "Помодоро таймер"
 
 #: data/po_files/../../sections/pomodoro.js:38
 #: data/po_files/../../data/prefs.ui:1753
-#, fuzzy
 msgid "Long Break"
-msgstr "Длинный перерыв!"
+msgstr "Длинный перерыв"
 
 #: data/po_files/../../sections/pomodoro.js:39
 #: data/po_files/../../data/prefs.ui:1691
-#, fuzzy
 msgid "Short Break"
 msgstr "Короткий перерыв"
 
@@ -502,15 +500,16 @@ msgstr "Число помидоров до длинного перерыва"
 
 #: data/po_files/../../sections/pomodoro.js:762
 msgid "Control todo time tracker by task id..."
-msgstr ""
+msgstr "Контроль времени отслеживания по идентификатору задачи..."
 
 #: data/po_files/../../sections/timer.js:43
 msgid "Timer Expired!"
 msgstr "Время по таймеру истекло!"
 
 #: data/po_files/../../sections/timer.js:669
+#, fuzzy
 msgid "Default preset"
-msgstr ""
+msgstr "По умолчанию"
 
 #: data/po_files/../../sections/context_menu.js:35
 msgid "Open settings"
@@ -649,8 +648,9 @@ msgstr "Значки и текст"
 
 #: data/po_files/../../data/prefs.ui:603 data/po_files/../../data/prefs.ui:1115
 #: data/po_files/../../data/prefs.ui:1459
+#, fuzzy
 msgid "Dynamic"
-msgstr ""
+msgstr "Динамически"
 
 #: data/po_files/../../data/prefs.ui:638 data/po_files/../../data/prefs.ui:2064
 msgid "Notification sound"
@@ -674,7 +674,7 @@ msgstr "На весь экран"
 #: data/po_files/../../data/prefs.ui:715 data/po_files/../../data/prefs.ui:1509
 #: data/po_files/../../data/prefs.ui:2141
 msgid "None"
-msgstr ""
+msgstr "Ничего"
 
 #: data/po_files/../../data/prefs.ui:747 data/po_files/../../data/prefs.ui:1147
 #: data/po_files/../../data/prefs.ui:1812
@@ -688,7 +688,7 @@ msgstr "Комбинации клавиш"
 #: data/po_files/../../data/prefs.ui:2214
 #: data/po_files/../../data/prefs.ui:2562
 msgid "Open popup menu"
-msgstr ""
+msgstr "Открыть контекстное меню"
 
 #: data/po_files/../../data/prefs.ui:800 data/po_files/../../data/prefs.ui:850
 #: data/po_files/../../data/prefs.ui:900 data/po_files/../../data/prefs.ui:1200
@@ -734,8 +734,9 @@ msgid "Open in fullscreen"
 msgstr "Открыть на весь экран"
 
 #: data/po_files/../../data/prefs.ui:888
+#, fuzzy
 msgid "Open popup menu and search presets"
-msgstr ""
+msgstr "Открыть контекстное меню и найти предустановки"
 
 #: data/po_files/../../data/prefs.ui:1048
 msgid "Format"
@@ -754,42 +755,38 @@ msgid "hours:min:sec:centisec"
 msgstr "часы:мин:сек:сантисек"
 
 #: data/po_files/../../data/prefs.ui:1541
-#, fuzzy
 msgid "Notification Sounds"
-msgstr "Звук уведомления"
+msgstr "Звук уведомлений"
 
 #: data/po_files/../../data/prefs.ui:2443
 msgid "Task width (px)"
 msgstr "Ширина задачи (пикс)"
 
 #: data/po_files/../../data/prefs.ui:2475
+#, fuzzy
 msgid "Resume tracking after abrupt restart?"
-msgstr ""
+msgstr "Возобновить отслеживание после резкого перезапуска?"
 
 #: data/po_files/../../data/prefs.ui:2612
 #, fuzzy
 msgid "Open popup menu and add task"
-msgstr "Открыть этот раздел для создания задачи"
+msgstr "Открыть контекстное меню и добавить задачу"
 
 #: data/po_files/../../data/prefs.ui:2680
-#, fuzzy
 msgid "Open popup menu and search tasks"
-msgstr "Открыть этот раздел для поиска задач"
+msgstr "Открыть контекстное меню и найти задачу"
 
 #: data/po_files/../../data/prefs.ui:2738
-#, fuzzy
 msgid "Open popup menu and switch todo files"
-msgstr "Открыть этот раздел для переключения файлов списков дел"
+msgstr "Открыть контекстное меню и переключит файл списка дел"
 
 #: data/po_files/../../data/prefs.ui:2790
-#, fuzzy
 msgid "Open stats view"
-msgstr "Открыть статистику"
+msgstr "Открыть просмотр статистики"
 
 #: data/po_files/../../data/prefs.ui:2822
-#, fuzzy
 msgid "Open current todo.txt file"
-msgstr "текущий файл"
+msgstr "Открыть файл текущих задач"
 
 #: data/po_files/../../data/prefs.ui:2878
 msgid "Todo / Time Tracker"
