@@ -340,7 +340,7 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
             this.tic_mainloop_id = null;
         }
 
-        this.slider.setValue(0);
+        this.slider.value = 0;
         this.fullscreen.on_timer_off();
         this.header_label.text = _('Timer');
         this.start_pause_icon.hide();
@@ -406,8 +406,8 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
         let x = this.clock / TIMER_MAX_DURATION;
         let y = (Math.log(x * (Math.pow(2, 10) - 1) +1)) / Math.log(2) / 10;
 
-        this.slider.setValue(y);
-        this.fullscreen.slider.setValue(y);
+        this.slider.value = y;
+        this.fullscreen.slider.value = y;
     }
 
     slider_released () {
@@ -1181,7 +1181,7 @@ var TimerFullscreen = class TimerFullscreen extends FULLSCREEN.Fullscreen {
 
     on_timer_off () {
         this.start_pause_icon.hide();
-        this.slider.setValue(0);
+        this.slider.value = 0;
     }
 
     on_timer_expired () {
