@@ -9,7 +9,7 @@ const Main         = imports.ui.main;
 const CheckBox     = imports.ui.checkBox;
 const PopupMenu    = imports.ui.popupMenu;
 const MessageTray  = imports.ui.messageTray;
-const Lang         = imports.lang;
+const ByteArray    = imports.byteArray;
 const Signals      = imports.signals;
 const Mainloop     = imports.mainloop;
 
@@ -52,15 +52,13 @@ const NotifStyle = {
 // @ext      : obj (main extension object)
 // @settings : obj (extension settings)
 // =====================================================================
-var SectionMain = new Lang.Class({
-    Name    : 'Timepp.Alarms',
-    Extends : ME.imports.sections.section_base.SectionBase,
+var SectionMain = class SectionMain extends ME.imports.sections.section_base.SectionBase{
 
-    _init: function (section_name, ext, settings) {
-        this.parent(section_name, ext, settings);
+    constructor(section_name, ext, settings) {
+        super(section_name, ext, settings);
 
         this.actor = new St.BoxLayout({ vertical: true, style_class: 'section alarm-section' });
-        this.panel_item.icon.icon_name = 'timepp-alarms-symbolic';
+        this.panel_item.icon.gicon = MISC_UTILS.getIcon('timepp-alarms-symbolic');
         this.panel_item.actor.add_style_class_name('alarm-panel-item');
         this.panel_item.set_mode('icon');
 
@@ -101,7 +99,7 @@ var SectionMain = new Lang.Class({
 
             if (this.cache_file.query_exists(null)) {
                 let [, contents] = this.cache_file.load_contents(null);
-                this.cache = JSON.parse(contents);
+                this.cache = JSON.parse(ByteArray.toString(contents));
             }
 
             if (!this.cache || !this.cache.format_version ||
@@ -148,8 +146,7 @@ var SectionMain = new Lang.Class({
 
             let box = new St.BoxLayout({ x_expand: true });
             this.add_alarm_button.add_actor(box);
-
-            let icon = new St.Icon({ icon_name: 'timepp-plus-symbolic' });
+            let icon = new St.Icon({ gicon: MISC_UTILS.getIcon('timepp-alarms-symbolic')});
             box.add_child(icon);
 
             let label = new St.Label({ x_expand: true, text: _('Add New Alarm...'), y_align: Clutter.ActorAlign.CENTER });
@@ -194,9 +191,9 @@ var SectionMain = new Lang.Class({
         //
         this.cache.alarms.forEach((a) => this._add_alarm(a));
         this._update_panel_item_UI();
-    },
+    }
 
-    disable_section: function () {
+    disable_section() {
         for (let it of this.alarm_items) it.close();
         this.sigm.clear();
         this.keym.clear();
@@ -207,18 +204,18 @@ var SectionMain = new Lang.Class({
             this.fullscreen = null;
         }
 
-        this.parent();
-    },
+        super.disable_section();
+    }
 
-    _store_cache: function () {
+    _store_cache() {
         if (! this.cache_file.query_exists(null))
             this.cache_file.create(Gio.FileCreateFlags.NONE, null);
 
         this.cache_file.replace_contents(JSON.stringify(this.cache, null, 2),
             null, false, Gio.FileCreateFlags.REPLACE_DESTINATION, null);
-    },
+    }
 
-    _tic: function () {
+    _tic() {
         let d    = GLib.DateTime.new_now(this.wallclock.timezone);
         let time = d.format('%H:%M');
 
@@ -249,11 +246,11 @@ var SectionMain = new Lang.Class({
         }
 
         this._update_panel_item_UI(today);
-    },
+    }
 
     // @alarm_item: obj
     // If @alarm_item is not provided, then we are adding a new alarm.
-    alarm_editor: function (alarm_item) {
+    alarm_editor(alarm_item) {
         let alarm_obj = alarm_item ? alarm_item.alarm : null;
         let editor    = new AlarmEditor(this.ext, this, alarm_obj);
 
@@ -317,11 +314,11 @@ var SectionMain = new Lang.Class({
             if (this.alarms_scroll_content.get_n_children() > 0)
                 this.alarms_scroll.show();
         });
-    },
+    }
 
     // NOTE: This func assumes that @alarm has already been added to the
     // this.cache.alarms array.
-    _add_alarm: function (alarm) {
+    _add_alarm(alarm) {
         this._update_panel_item_UI();
 
         let alarm_item = new AlarmItem(this.ext, this, alarm);
@@ -334,19 +331,19 @@ var SectionMain = new Lang.Class({
             this._update_panel_item_UI();
             this._store_cache();
         });
-    },
+    }
 
-    _delete_alarm: function (alarm) {
+    _delete_alarm (alarm) {
         this.cache.alarms = this.cache.alarms.filter(a => a !== alarm);
         this.snoozed_alarms.delete(alarm);
         this._store_cache();
         this._update_panel_item_UI();
 
         if (this.alarms_scroll_content.get_n_children() === 0)
-            this.alarms_scroll.hide();
-    },
+           this.alarms_scroll.hide();
+    }
 
-    snooze_alarm: function (alarm) {
+    snooze_alarm(alarm) {
         let t;
 
         t = GLib.DateTime.new_now(this.wallclock.timezone)
@@ -358,9 +355,9 @@ var SectionMain = new Lang.Class({
         for (let it of this.alarm_items) {
             if (it.alarm === alarm) it.update_time_label();
         }
-    },
+    }
 
-    _send_notif: function (alarm) {
+    _send_notif(alarm) {
         let notif_style = this.settings.get_enum('alarms-notif-style');
 
         if (notif_style === NotifStyle.NONE) {
@@ -374,7 +371,7 @@ var SectionMain = new Lang.Class({
 
             // TRANSLATORS: %s is a time string in the format HH:MM (e.g., 13:44)
             let title  = _('Alarm at %s').format(alarm.time_str);
-            let icon   = new St.Icon({ icon_name: 'timepp-alarms-symbolic' });
+            let icon   = new St.Icon({ gicon : MISC_UTILS.getIcon('timepp-alarms-symbolic') });
             let params = {
                 bannerMarkup : true,
                 gicon        : icon.gicon,
@@ -399,9 +396,10 @@ var SectionMain = new Lang.Class({
             this.sound_player.set_sound_uri(this.settings.get_string('alarms-sound-file-path'));
             this.sound_player.play(alarm.repeat_sound);
         }
-    },
+    }
 
-    _update_panel_item_UI: function (today = new Date().getDay()) {
+    _update_panel_item_UI(today){
+        today = today || new Date().getDay()
         this.panel_item.actor.remove_style_class_name('on');
 
         for (let a of this.cache.alarms) {
@@ -410,9 +408,9 @@ var SectionMain = new Lang.Class({
                 break;
             }
         }
-    },
+    }
 
-    highlight_tokens: function (text) {
+    highlight_tokens(text) {
         if (! text) return "";
 
         text = GLib.markup_escape_text(text, -1);
@@ -435,8 +433,8 @@ var SectionMain = new Lang.Class({
 
         text = text.join('');
         return MISC_UTILS.markdown_to_pango(text, this.ext.markdown_map);
-    },
-});
+    }
+}
 Signals.addSignalMethods(SectionMain.prototype);
 
 
@@ -455,10 +453,8 @@ Signals.addSignalMethods(SectionMain.prototype);
 // settings; otherwise, a complete new alarm object will be returned with the
 // 'add-alarm' signal.
 // =====================================================================
-const AlarmEditor = new Lang.Class({
-    Name: 'Timepp.AlarmEditor',
-
-    _init: function(ext, delegate, alarm) {
+var AlarmEditor = class AlarmEditor{
+    constructor(ext, delegate, alarm) {
         this.ext      = ext;
         this.delegate = delegate;
         this.alarm    = alarm;
@@ -617,13 +613,13 @@ const AlarmEditor = new Lang.Class({
             if (this.ext.needs_scrollbar())
                 this.entry.scroll_box.vscrollbar_policy = Gtk.PolicyType.ALWAYS;
         });
-    },
+    }
 
-    _get_time_str: function () {
+    _get_time_str() {
         return this.hh.counter_label.get_text() + ':' +
                this.mm.counter_label.get_text();
-    },
-});
+    }
+}
 Signals.addSignalMethods(AlarmEditor.prototype);
 
 
@@ -637,10 +633,8 @@ Signals.addSignalMethods(AlarmEditor.prototype);
 //
 // signals: 'alarm-toggled'
 // =====================================================================
-const AlarmItem = new Lang.Class({
-    Name: 'Timepp.AlarmItem',
-
-    _init: function(ext, delegate, alarm) {
+var AlarmItem  = class AlarmItem {
+    constructor(ext, delegate, alarm) {
         this.ext      = ext;
         this.delegate = delegate;
         this.alarm    = alarm;
@@ -669,7 +663,7 @@ const AlarmItem = new Lang.Class({
         this.icon_box = new St.BoxLayout({y_align: Clutter.ActorAlign.CENTER, x_align: Clutter.ActorAlign.CENTER, style_class: 'icon-box'});
         this.header.add_actor(this.icon_box);
 
-        this.edit_icon = new St.Icon({ visible: false, reactive: true, can_focus: true, track_hover: true, icon_name: 'timepp-edit-symbolic', style_class: 'settings-icon' });
+        this.edit_icon = new St.Icon({ visible: false, reactive: true, can_focus: true, track_hover: true, gicon : MISC_UTILS.getIcon('timepp-edit-symbolic'), style_class: 'settings-icon' });
         this.icon_box.add(this.edit_icon);
 
         this.toggle     = new PopupMenu.Switch(alarm.toggle);
@@ -703,19 +697,19 @@ const AlarmItem = new Lang.Class({
         // listen
         //
         this.css_sig_id =
-            this.ext.connect('custom-css-changed', () => this._on_custom_css_updated());
+           this.ext.connect('custom-css-changed', () => this._on_custom_css_updated());
         this.toggle_bin.connect('clicked', () => this._on_toggle());
         this.delegate.sigm.connect_release(this.edit_icon, Clutter.BUTTON_PRIMARY, true, () => this._on_edit());
         this.actor.connect('enter-event',  () => this.edit_icon.show());
         this.actor.connect('event', (actor, event) => this._on_event(actor, event));
-    },
+    }
 
     // @markup: string
-    set_body_text: function (markup) {
+    set_body_text(markup) {
         this.msg.clutter_text.set_markup(this.delegate.highlight_tokens(markup));
-    },
+    }
 
-    update_time_label: function () {
+    update_time_label() {
         let date   = new Date();
         let markup = `<b>${this.alarm.time_str}</b>`;
 
@@ -757,9 +751,9 @@ const AlarmItem = new Lang.Class({
         }
 
         this.time.clutter_text.set_markup(markup);
-    },
+    }
 
-    _on_toggle: function () {
+    _on_toggle() {
         this.toggle.toggle();
         this.alarm.toggle = !this.alarm.toggle;
 
@@ -770,21 +764,21 @@ const AlarmItem = new Lang.Class({
 
         this.update_time_label();
         this.emit('alarm-toggled');
-    },
+    }
 
-    _on_edit: function () {
+    _on_edit() {
         Main.panel.menuManager.ignoreRelease();
         this.edit_icon.hide();
         this.delegate.alarm_editor(this);
-    },
+    }
 
-    _on_custom_css_updated: function () {
+    _on_custom_css_updated() {
         for (let alarm_item of this.delegate.alarm_items) {
             alarm_item.set_body_text(alarm_item.alarm.msg);
         }
-    },
+    }
 
-    _on_event: function (actor, event) {
+    _on_event(actor, event) {
         switch (event.type()) {
           case Clutter.EventType.ENTER: {
             this.edit_icon.show();
@@ -807,13 +801,13 @@ const AlarmItem = new Lang.Class({
             });
           } break;
         }
-    },
+    }
 
-    close: function () {
+    close() {
         this.ext.disconnect(this.css_sig_id);
         this.actor.destroy();
-    },
-});
+    }
+}
 Signals.addSignalMethods(AlarmItem.prototype);
 
 
@@ -827,12 +821,10 @@ Signals.addSignalMethods(AlarmItem.prototype);
 //
 // signals: 'monitor-changed'
 // =====================================================================
-const AlarmFullscreen = new Lang.Class({
-    Name    : 'Timepp.AlarmFullscreen',
-    Extends : FULLSCREEN.Fullscreen,
+var AlarmFullscreen = class AlarmFullscreen extends FULLSCREEN.Fullscreen {
 
-    _init: function (ext, delegate, monitor) {
-        this.parent(monitor);
+    constructor(ext, delegate, monitor) {
+        super(monitor);
         this.actor.add_style_class_name('alarm');
 
         this.ext      = ext;
@@ -886,20 +878,20 @@ const AlarmFullscreen = new Lang.Class({
 
             this.close();
         });
-    },
+    }
 
-    set_banner_text: function (markup) {
-        this.parent(this.delegate.highlight_tokens(markup));
-    },
+    set_banner_text(markup) {
+        super.set_banner_text(this.delegate.highlight_tokens(markup));
+    }
 
-    close: function () {
+    close() {
         this.delegate.sound_player.stop();
         this.alarms = [];
         this.alarm_cards_scroll_bin.destroy_all_children();
-        this.parent();
-    },
+        super.close();
+    }
 
-    fire_alarm: function (alarm) {
+    fire_alarm(alarm) {
         this.alarms.push(alarm);
 
         // TRANSLATORS: %s is a time string in the format HH:MM (e.g., 13:44)
@@ -932,9 +924,9 @@ const AlarmFullscreen = new Lang.Class({
         }
 
         this.open();
-    },
+    }
 
-    _add_alarm_card: function (title, msg) {
+    _add_alarm_card(title, msg) {
         let alarm_card = new St.BoxLayout({ vertical: true, style_class: 'alarm-card' });
         this.alarm_cards_scroll_bin.add_child(alarm_card);
 
@@ -960,6 +952,6 @@ const AlarmFullscreen = new Lang.Class({
 
             alarm_card.connect('allocation-changed', () => MISC_UTILS.resize_label(body));
         }
-    },
-});
+    }
+}
 Signals.addSignalMethods(AlarmFullscreen.prototype);

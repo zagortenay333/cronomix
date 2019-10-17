@@ -2,7 +2,7 @@ const St        = imports.gi.St;
 const Gtk       = imports.gi.Gtk;
 const Clutter   = imports.gi.Clutter;
 const Main      = imports.ui.main;
-const Lang      = imports.lang;
+
 const Signals   = imports.signals;
 const Mainloop  = imports.mainloop;
 
@@ -30,10 +30,10 @@ const G = ME.imports.sections.todo.GLOBAL;
 //
 // @signals:
 // =====================================================================
-var ViewSearch = new Lang.Class({
-    Name: 'Timepp.ViewSearch',
+var ViewSearch  = class ViewSearch {
+    
 
-    _init: function (ext, delegate) {
+    constructor (ext, delegate) {
         this.ext      = ext;
         this.delegate = delegate;
 
@@ -69,10 +69,10 @@ var ViewSearch = new Lang.Class({
             box = new St.BoxLayout({ style_class: 'icon-box' });
             this.search_entry.set_secondary_icon(box);
 
-            this.add_filter_icon = new St.Icon({ visible: false, track_hover: true, reactive: true, icon_name: 'timepp-filter-add-symbolic' });
+            this.add_filter_icon = new St.Icon({ visible: false, track_hover: true, reactive: true, gicon : MISC_UTILS.getIcon('timepp-filter-add-symbolic') });
             box.add_child(this.add_filter_icon);
 
-            this.search_close_icon = new St.Icon({ track_hover: true, reactive: true, style_class: 'close-icon', icon_name: 'timepp-close-symbolic' });
+            this.search_close_icon = new St.Icon({ track_hover: true, reactive: true, style_class: 'close-icon', gicon : MISC_UTILS.getIcon('timepp-close-symbolic') });
             box.add_child(this.search_close_icon);
         }
 
@@ -100,9 +100,9 @@ var ViewSearch = new Lang.Class({
         // finally
         //
         this._search();
-    },
+    }
 
-    _search: function () {
+    _search () {
         if (this.add_tasks_to_menu_mainloop_id) {
             Mainloop.source_remove(this.add_tasks_to_menu_mainloop_id);
             this.add_tasks_to_menu_mainloop_id = null;
@@ -146,9 +146,9 @@ var ViewSearch = new Lang.Class({
 
         this.search_dict.set(needle, this.tasks_viewport);
         this._add_tasks_to_menu();
-    },
+    }
 
-    _find_prev_search_results: function (pattern) {
+    _find_prev_search_results (pattern) {
         let res = '';
 
         for (let [old_patt,] of this.search_dict) {
@@ -159,9 +159,9 @@ var ViewSearch = new Lang.Class({
         if (pattern === res) return [false, this.search_dict.get(res)];
         else if (res)        return [true,  this.search_dict.get(res)];
         else                 return [true,  this.delegate.tasks];
-    },
+    }
 
-    _add_tasks_to_menu: function () {
+    _add_tasks_to_menu () {
         if (this.add_tasks_to_menu_mainloop_id) {
             Mainloop.source_remove(this.add_tasks_to_menu_mainloop_id);
             this.add_tasks_to_menu_mainloop_id = null;
@@ -172,9 +172,9 @@ var ViewSearch = new Lang.Class({
         this.add_tasks_to_menu_mainloop_id = Mainloop.timeout_add(0, () => {
            this._add_tasks_to_menu__finish(0, false);
         });
-    },
+    }
 
-    _add_tasks_to_menu__finish: function (i, scrollbar_shown) {
+    _add_tasks_to_menu__finish (i, scrollbar_shown) {
         if (!scrollbar_shown && this.ext.needs_scrollbar()) {
             this.tasks_scroll.vscrollbar_policy = Gtk.PolicyType.ALWAYS;
             scrollbar_shown = true;
@@ -200,9 +200,9 @@ var ViewSearch = new Lang.Class({
         this.add_tasks_to_menu_mainloop_id = Mainloop.idle_add(() => {
             this._add_tasks_to_menu__finish(i, scrollbar_shown);
         });
-    },
+    }
 
-    _remove_tasks_from_menu: function () {
+    _remove_tasks_from_menu () {
         if (this.add_tasks_to_menu_mainloop_id) {
             Mainloop.source_remove(this.add_tasks_to_menu_mainloop_id);
             this.add_tasks_to_menu_mainloop_id = null;
@@ -215,9 +215,9 @@ var ViewSearch = new Lang.Class({
 
         this.tasks_scroll_content.remove_all_children();
         this.tasks_viewport = [];
-    },
+    }
 
-    _add_custom_filter: function () {
+    _add_custom_filter () {
         let needle  = this.search_entry.get_text();
         let filters = this.delegate.get_current_todo_file().filters;
 
@@ -227,12 +227,12 @@ var ViewSearch = new Lang.Class({
         filters.custom_active.push(needle);
         this.delegate.store_cache();
         this.delegate.show_view__default();
-    },
+    }
 
-    close: function () {
+    close () {
         this.search_dict.clear();
         this._remove_tasks_from_menu();
         this.actor.destroy();
-    },
-});
+    }
+}
 Signals.addSignalMethods(ViewSearch.prototype);

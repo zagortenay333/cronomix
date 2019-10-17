@@ -3,7 +3,7 @@ const Gtk      = imports.gi.Gtk;
 const Pango    = imports.gi.Pango;
 const Clutter  = imports.gi.Clutter;
 const Main     = imports.ui.main;
-const Lang     = imports.lang;
+
 const Signals  = imports.signals;
 const Mainloop = imports.mainloop;
 
@@ -33,10 +33,10 @@ const G = ME.imports.sections.todo.GLOBAL;
 // @ext      : obj (main extension object)
 // @delegate : obj (main section object)
 // =====================================================================
-var KanbanSwitcher = new Lang.Class({
-    Name: 'Timepp.KanbanSwitcher',
+var KanbanSwitcher  = class KanbanSwitcher {
+    
 
-    _init: function (ext, delegate, task) {
+    constructor (ext, delegate, task) {
         this.ext      = ext;
         this.delegate = delegate;
 
@@ -115,9 +115,9 @@ var KanbanSwitcher = new Lang.Class({
         // finally
         //
         this._init_items();
-    },
+    }
 
-    _init_items: function () {
+    _init_items () {
         for (let it of this.delegate.tasks) {
             if (! it.kanban_boards) continue;
             for (let str of it.kanban_boards) this._add_new_item(str, it);
@@ -141,9 +141,9 @@ var KanbanSwitcher = new Lang.Class({
                 '<span foreground="' + this.ext.custom_css['-timepp-link-color'][0] +
                 '"><u><b>' + label.text + '</b></u></span>');
         }
-    },
+    }
 
-    _add_new_item: function (kan_str, task) {
+    _add_new_item (kan_str, task) {
         let [name, rest, is_active] = this._parse_kan_str(kan_str);
 
         let item = {};
@@ -169,10 +169,10 @@ var KanbanSwitcher = new Lang.Class({
         item.icon_box = new St.BoxLayout({ style_class: 'icon-box' });
         item.header.add_child(item.icon_box);
 
-        item.check_icon = new St.Icon({ visible: false, track_hover: true, can_focus: true, reactive: true, icon_name: 'timepp-todo-symbolic', style_class: 'file-switcher-item-check-icon' });
+        item.check_icon = new St.Icon({ visible: false, track_hover: true, can_focus: true, reactive: true, gicon : MISC_UTILS.getIcon('timepp-todo-symbolic'), style_class: 'file-switcher-item-check-icon' });
         item.icon_box.add_child(item.check_icon);
 
-        let edit_icon = new St.Icon({ visible: false, track_hover: true, can_focus: true, reactive: true, icon_name: 'timepp-edit-symbolic' });
+        let edit_icon = new St.Icon({ visible: false, track_hover: true, can_focus: true, reactive: true, gicon : MISC_UTILS.getIcon('timepp-edit-symbolic') });
         item.icon_box.add_child(edit_icon);
 
         if (is_active && !this.active_kan) {
@@ -205,17 +205,17 @@ var KanbanSwitcher = new Lang.Class({
         });
         this.delegate.sigm.connect_release(edit_icon, Clutter.BUTTON_PRIMARY, true, () => this._on_edit_clicked(item));
         item.actor.connect('event', (_, event) => this._on_item_event(item, event));
-    },
+    }
 
-    _parse_kan_str: function (str) {
+    _parse_kan_str (str) {
         let is_active = str[4] === '*';
         let name      = str.slice((is_active ? 5 : 4), str.indexOf('|'));
         let rest      = str.slice(str.indexOf('|')+1);
 
         return [name, rest, is_active];
-    },
+    }
 
-    _on_kanban_selected: function (item) {
+    _on_kanban_selected (item) {
         if (this.active_kan === item) {
             this.delegate.show_view__default();
             return;
@@ -234,13 +234,13 @@ var KanbanSwitcher = new Lang.Class({
         }
 
         this.delegate.on_tasks_changed(true, true);
-    },
+    }
 
-    _on_edit_clicked: function (item) {
+    _on_edit_clicked (item) {
         this.delegate.show_view__task_editor(item.task);
-    },
+    }
 
-    _search: function () {
+    _search () {
         this.items_scrollbox.remove_all_children();
         let needle = this.entry.get_text().toLowerCase();
 
@@ -258,9 +258,9 @@ var KanbanSwitcher = new Lang.Class({
 
             for (let it of reduced_results) this.items_scrollbox.add_child(it[1].actor);
         }
-    },
+    }
 
-    _on_item_event: function (item, event) {
+    _on_item_event (item, event) {
         let event_type = event.type();
 
         if (event_type === Clutter.EventType.ENTER) {
@@ -291,13 +291,13 @@ var KanbanSwitcher = new Lang.Class({
                 }
             });
         }
-    },
+    }
 
-    close: function () {
+    close () {
         for (let it of this.kan_items) it.task = null;
         this.active_kan = null;
         this.kan_items.clear();
         this.actor.destroy();
-    },
-});
+  }
+}
 Signals.addSignalMethods(KanbanSwitcher.prototype);
