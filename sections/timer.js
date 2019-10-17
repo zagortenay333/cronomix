@@ -225,7 +225,7 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
         this.sigm.connect_release(this.start_pause_icon, Clutter.BUTTON_PRIMARY, true, () => this.toggle_timer());
         this.sigm.connect_release(this.fullscreen_icon, Clutter.BUTTON_PRIMARY, true, () => this.show_fullscreen());
         this.sigm.connect_release(this.settings_icon, Clutter.BUTTON_PRIMARY, true, () => this._show_presets());
-        this.sigm.connect(this.slider, 'value-changed', (slider, value) => this.slider_changed(slider, value));
+        this.sigm.connect(this.slider, 'notify::value', (slider, value) => this.slider_changed(slider, value));
         this.sigm.connect(this.slider, 'drag-end', () => this.slider_released());
         this.sigm.connect(this.slider.actor, 'scroll-event', () => this.slider_released());
     }
@@ -340,7 +340,7 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
             this.tic_mainloop_id = null;
         }
 
-        this.slider.setValue(0);
+        this.slider.value = 0;
         this.fullscreen.on_timer_off();
         this.header_label.text = _('Timer');
         this.start_pause_icon.hide();
@@ -406,8 +406,8 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
         let x = this.clock / TIMER_MAX_DURATION;
         let y = (Math.log(x * (Math.pow(2, 10) - 1) +1)) / Math.log(2) / 10;
 
-        this.slider.setValue(y);
-        this.fullscreen.slider.setValue(y);
+        this.slider.value = y;
+        this.fullscreen.slider.value = y;
     }
 
     slider_released () {
@@ -1100,7 +1100,7 @@ var TimerFullscreen = class TimerFullscreen extends FULLSCREEN.Fullscreen {
             this.delegate.slider_released();
             this.title.text = '';
         });
-        this.slider.connect('value-changed', (slider, val) => {
+        this.slider.connect('notify::value', (slider, val) => {
             this.delegate.slider_changed(slider, val);
             this.actor.remove_style_class_name('timer-expired');
             this.title.text = '';
@@ -1181,7 +1181,7 @@ var TimerFullscreen = class TimerFullscreen extends FULLSCREEN.Fullscreen {
 
     on_timer_off () {
         this.start_pause_icon.hide();
-        this.slider.setValue(0);
+        this.slider.value = 0;
     }
 
     on_timer_expired () {
