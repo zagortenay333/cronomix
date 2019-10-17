@@ -42,19 +42,17 @@ const PanelPosition = {
     CENTER : 1,
     RIGHT  : 2,
 };
+
 // =====================================================================
 // @@@ Main extension object
 // =====================================================================
-/*const Timepp = new Lang.Class({
-    Name    : 'Timepp.Timepp',
-    Extends : PanelMenu.Button,*/
 var Timepp = GObject.registerClass({
     Signals: {
         'custom-css-changed': {},
-        'start-time-tracking-by-id': {},
-        'stop-time-tracking-by-id': {}
+        'start-time-tracking-by-id': { param_types: [GObject.TYPE_STRING, GObject.TYPE_STRING] },
+        'stop-time-tracking-by-id':  { param_types: [GObject.TYPE_STRING, GObject.TYPE_STRING] }
     }
-},  class Timepp extends PanelMenu.Button{
+}, class Timepp extends PanelMenu.Button{
             _init() {
             // @HACK
             // This func only updates the max-height prop but not max-width.
@@ -594,7 +592,7 @@ var Timepp = GObject.registerClass({
         // Used by sections to communicate with each other.
         // This way any section can listen for signals on the main ext object.
         emit_to_sections(sig, section_name, data) {
-            this.emit(sig, {section_name, data});
+            this.emit(sig, section_name, data);
         }
 
         // ScrollView always allocates horizontal space for the scrollbar when the

@@ -120,11 +120,11 @@ var TimeTracker  = class TimeTracker {
         // listen
         //
         this.new_day_sig_id = this.delegate.connect('new-day', () => this._on_new_day_started());
-        this.ext.connect('start-time-tracking-by-id', (_, info) => {
-            this.start_tracking_by_id(info.data);
+        this.ext.connect('start-time-tracking-by-id', (_1, _2, task_id) => {
+            this.start_tracking_by_id(task_id);
         });
-        this.ext.connect('stop-time-tracking-by-id', (_, info) => {
-            this.stop_tracking_by_id(info.data);
+        this.ext.connect('stop-time-tracking-by-id', (_1, _2, task_id) => {
+            this.stop_tracking_by_id(task_id);
         });
 
 
