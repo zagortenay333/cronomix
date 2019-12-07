@@ -15,7 +15,7 @@ time tracker, timer, stopwatch, pomodoro, and alarms [gnome-shell extension](htt
     <summary><b>Table of Contents</b></summary>
 
 * [Installation](#installation)
-* [Lock Screen Warning](#lock-screen-warning)
+* [Warnings](#warnings)
 * [Translations](#translations)
 * [Sections](#sections)
 * [Fullscreen Interface](#fullscreen-interface)
@@ -43,9 +43,11 @@ time tracker, timer, stopwatch, pomodoro, and alarms [gnome-shell extension](htt
 
 ---
 
-### Lock Screen Warning :bangbang:
+### Warnings :bangbang:
 
-**All gnome-shell extensions get disabled in the lock screen. Alarms, timers, etc will not work.**
+1. This extension is in very low-maintenance mode. 
+2. In case of a bug, this extension can freeze your OS, which could require significant effort on your part to solve.
+3. All gnome-shell extensions get disabled in the lock screen. Alarms, timers, etc will not work.
 
 ---
 
