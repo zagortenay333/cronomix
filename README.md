@@ -106,9 +106,9 @@ Some of the features of the todo.txt manager are:
 * The todo.txt format is specified here: https://github.com/todotxt/todo.txt
 
 * In various places throughout this extension (todo.txt, alarms, timer) there is
-support for some **markdown** stuff:
+support for a simple markup language:
 
-    * A simple version of markdown is supported:
+    * Simple text formatting:
         ```
         `     escape other markdown
         ``    monospace and escape other markdown
@@ -126,13 +126,11 @@ support for some **markdown** stuff:
         ##    x-large
         ###   large
 
-        -------------------------------------
-
         For example, *bold*, and ##extra large##, and ``monospaced``, and
         ***this __one__ is nested***, etc...
         ```
 
-    * File paths and web links are supported:
+    * File paths and web links:
         ```
         https://www.google.com
         www.google.com
@@ -143,7 +141,7 @@ support for some **markdown** stuff:
         ~/Documents/file\ with\ spaces.png
         ```
 
-    * Newline chars in the todo.txt file can be used to have multiline support:
+    * Multiple lines can be used by adding `\n` to represent a newline:
         ```
         (A) A task with\nmultiline\n@support \n +asdf
         ```
