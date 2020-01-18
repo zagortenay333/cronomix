@@ -46,7 +46,7 @@ time tracker, timer, stopwatch, pomodoro, and alarms [gnome-shell extension](htt
 
 ### Warnings :bangbang:
 
-1. This extension is in very low-maintenance mode. 
+1. This extension is in very low-maintenance mode (don't make feature requests).
 2. In case of a bug, this extension can freeze your OS, which could require significant effort on your part to solve.
 3. All gnome-shell extensions get disabled in the lock screen. Alarms, timers, etc will not work.
 
@@ -97,6 +97,7 @@ Some of the features of the todo.txt manager are:
 * Autoupdating when the todo.txt file changes.
 * Deleting all completed tasks and optionally storing them into a done.txt file.
 * Switching between different views via keyboard shortcuts.
+* Browse your todo time tracker data in a fullscreen view.
 
 ---
 
@@ -329,23 +330,14 @@ day of February every 2 years starting from 2000.</li>
 
 ### Time Tracker
 
-The time tracker is built into the todo.txt manager.
+You can start time tracking by pressing the play button on a todo card. When you do that,
+the task as well as all projects in that task will be tracked.
 
-* When the play button is pressed, the task as well as all projects in that task
-will be tracked.
+Time tracking data is stored in csv files. The directory structure of the tracker and the
+csv specification can be found [here](data/tracker_spec.md).
 
-* When a task that has been tracked is edited, only the corresponding entry
+When a task that has been tracked is edited, only the corresponding entry
 in the daily csv file will be updated; the yearly csv file will not be changed.
-
-* The directory structure of the tracker and the csv specification can be found
-[here](data/tracker_spec.md).
-
-* This extension features a fullscreen stats view for browsing/searching your time-tracker data.
-    * The stats uses vbar graphs to display total time and/or work intervals.
-    * It supports viewing time spent on tasks/projects on any recorded day.
-    * You can see a detailed view for a particular task/project.
-    * You can fuzzy search your history.
-    * You can view the most worked on tasks/projects in a particular time interval.
 
 ---
 
