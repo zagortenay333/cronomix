@@ -576,12 +576,8 @@ var Timepp = GObject.registerClass({
     }
 
     _unload_stylesheet () {
-
         if (! this.custom_stylesheet) return;
-
-        St.ThemeContext.get_for_stage(global.stage).get_theme()
-            .unload_stylesheet(this.custom_stylesheet);
-
+        St.ThemeContext.get_for_stage(global.stage).get_theme().unload_stylesheet(this.custom_stylesheet);
         this.custom_stylesheet = null;
     }
 
