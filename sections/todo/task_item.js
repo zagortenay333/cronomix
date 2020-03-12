@@ -825,7 +825,7 @@ var TaskItem = class TaskItem {
         this.pinned = (this.pinned === 1) ? 0 : 1;
         let old_task_str = this.task_str;
 
-        if (this.pinned)  {
+        if (this.pinned) {
             this.pin_icon.add_style_class_name('active');
             this.task_str += ' pin:1';
         } else {

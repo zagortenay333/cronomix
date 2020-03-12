@@ -397,7 +397,7 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
         }
     }
 
-    _update_panel_item_UI (today){
+    _update_panel_item_UI (today) {
         today = today || new Date().getDay()
         this.panel_item.actor.remove_style_class_name('on');
 
