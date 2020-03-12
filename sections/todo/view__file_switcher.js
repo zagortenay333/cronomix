@@ -358,7 +358,7 @@ Signals.addSignalMethods(ViewFileSwitcher.prototype);
 // @signals: 'ok', 'cancel', 'delete'
 // =====================================================================
 var FileInfoEditor = class FileInfoEditor {
-    constructor(ext, delegate, file) {
+    constructor (ext, delegate, file) {
         this.ext      = ext;
         this.delegate = delegate;
         this.file     = file;

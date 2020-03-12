@@ -651,7 +651,7 @@ Signals.addSignalMethods(SectionMain.prototype);
 // @signals: 'ok', 'cancel'
 // =====================================================================
 var PomodoroSettings = class PomodoroSettings {
-    constructor(ext, delegate, pomo_cache) {
+    constructor (ext, delegate, pomo_cache) {
         this.ext      = ext;
         this.delegate = delegate;
 

@@ -53,7 +53,7 @@ const NotifStyle = {
 // @settings : obj (extension settings)
 // =====================================================================
 var SectionMain = class SectionMain extends ME.imports.sections.section_base.SectionBase{
-    constructor(section_name, ext, settings) {
+    constructor (section_name, ext, settings) {
         super(section_name, ext, settings);
 
         this.actor = new St.BoxLayout({ vertical: true, style_class: 'section alarm-section' });
@@ -192,7 +192,7 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
         this._update_panel_item_UI();
     }
 
-    disable_section() {
+    disable_section () {
         for (let it of this.alarm_items) it.close();
         this.sigm.clear();
         this.keym.clear();
@@ -206,7 +206,7 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
         super.disable_section();
     }
 
-    _store_cache() {
+    _store_cache () {
         if (! this.cache_file.query_exists(null))
             this.cache_file.create(Gio.FileCreateFlags.NONE, null);
 
@@ -214,7 +214,7 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
             null, false, Gio.FileCreateFlags.REPLACE_DESTINATION, null);
     }
 
-    _tic() {
+    _tic () {
         let d    = GLib.DateTime.new_now(this.wallclock.timezone);
         let time = d.format('%H:%M');
 
@@ -249,7 +249,7 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
 
     // @alarm_item: obj
     // If @alarm_item is not provided, then we are adding a new alarm.
-    alarm_editor(alarm_item) {
+    alarm_editor (alarm_item) {
         let alarm_obj = alarm_item ? alarm_item.alarm : null;
         let editor    = new AlarmEditor(this.ext, this, alarm_obj);
 
@@ -317,7 +317,7 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
 
     // NOTE: This func assumes that @alarm has already been added to the
     // this.cache.alarms array.
-    _add_alarm(alarm) {
+    _add_alarm (alarm) {
         this._update_panel_item_UI();
 
         let alarm_item = new AlarmItem(this.ext, this, alarm);
@@ -342,7 +342,7 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
            this.alarms_scroll.hide();
     }
 
-    snooze_alarm(alarm) {
+    snooze_alarm (alarm) {
         let t;
 
         t = GLib.DateTime.new_now(this.wallclock.timezone)
@@ -356,7 +356,7 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
         }
     }
 
-    _send_notif(alarm) {
+    _send_notif (alarm) {
         let notif_style = this.settings.get_enum('alarms-notif-style');
 
         if (notif_style === NotifStyle.NONE) {
@@ -397,7 +397,7 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
         }
     }
 
-    _update_panel_item_UI(today){
+    _update_panel_item_UI (today){
         today = today || new Date().getDay()
         this.panel_item.actor.remove_style_class_name('on');
 
@@ -409,7 +409,7 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
         }
     }
 
-    highlight_tokens(text) {
+    highlight_tokens (text) {
         if (! text) return "";
 
         text = GLib.markup_escape_text(text, -1);
@@ -453,7 +453,7 @@ Signals.addSignalMethods(SectionMain.prototype);
 // 'add-alarm' signal.
 // =====================================================================
 var AlarmEditor = class AlarmEditor{
-    constructor(ext, delegate, alarm) {
+    constructor (ext, delegate, alarm) {
         this.ext      = ext;
         this.delegate = delegate;
         this.alarm    = alarm;
@@ -614,7 +614,7 @@ var AlarmEditor = class AlarmEditor{
         });
     }
 
-    _get_time_str() {
+    _get_time_str () {
         return this.hh.counter_label.get_text() + ':' +
                this.mm.counter_label.get_text();
     }
@@ -633,7 +633,7 @@ Signals.addSignalMethods(AlarmEditor.prototype);
 // signals: 'alarm-toggled'
 // =====================================================================
 var AlarmItem = class AlarmItem {
-    constructor(ext, delegate, alarm) {
+    constructor (ext, delegate, alarm) {
         this.ext      = ext;
         this.delegate = delegate;
         this.alarm    = alarm;
@@ -704,11 +704,11 @@ var AlarmItem = class AlarmItem {
     }
 
     // @markup: string
-    set_body_text(markup) {
+    set_body_text (markup) {
         this.msg.clutter_text.set_markup(this.delegate.highlight_tokens(markup));
     }
 
-    update_time_label() {
+    update_time_label () {
         let date   = new Date();
         let markup = `<b>${this.alarm.time_str}</b>`;
 
@@ -752,7 +752,7 @@ var AlarmItem = class AlarmItem {
         this.time.clutter_text.set_markup(markup);
     }
 
-    _on_toggle() {
+    _on_toggle () {
         this.toggle.toggle();
         this.alarm.toggle = !this.alarm.toggle;
 
@@ -765,19 +765,19 @@ var AlarmItem = class AlarmItem {
         this.emit('alarm-toggled');
     }
 
-    _on_edit() {
+    _on_edit () {
         Main.panel.menuManager.ignoreRelease();
         this.edit_icon.hide();
         this.delegate.alarm_editor(this);
     }
 
-    _on_custom_css_updated() {
+    _on_custom_css_updated () {
         for (let alarm_item of this.delegate.alarm_items) {
             alarm_item.set_body_text(alarm_item.alarm.msg);
         }
     }
 
-    _on_event(actor, event) {
+    _on_event (actor, event) {
         switch (event.type()) {
           case Clutter.EventType.ENTER: {
             this.edit_icon.show();
@@ -802,7 +802,7 @@ var AlarmItem = class AlarmItem {
         }
     }
 
-    close() {
+    close () {
         this.ext.disconnect(this.css_sig_id);
         this.actor.destroy();
     }
@@ -821,7 +821,7 @@ Signals.addSignalMethods(AlarmItem.prototype);
 // signals: 'monitor-changed'
 // =====================================================================
 var AlarmFullscreen = class AlarmFullscreen extends FULLSCREEN.Fullscreen {
-    constructor(ext, delegate, monitor) {
+    constructor (ext, delegate, monitor) {
         super(monitor);
         this.actor.add_style_class_name('alarm');
 
@@ -878,18 +878,18 @@ var AlarmFullscreen = class AlarmFullscreen extends FULLSCREEN.Fullscreen {
         });
     }
 
-    set_banner_text(markup) {
+    set_banner_text (markup) {
         super.set_banner_text(this.delegate.highlight_tokens(markup));
     }
 
-    close() {
+    close () {
         this.delegate.sound_player.stop();
         this.alarms = [];
         this.alarm_cards_scroll_bin.destroy_all_children();
         super.close();
     }
 
-    fire_alarm(alarm) {
+    fire_alarm (alarm) {
         this.alarms.push(alarm);
 
         // TRANSLATORS: %s is a time string in the format HH:MM (e.g., 13:44)
@@ -924,7 +924,7 @@ var AlarmFullscreen = class AlarmFullscreen extends FULLSCREEN.Fullscreen {
         this.open();
     }
 
-    _add_alarm_card(title, msg) {
+    _add_alarm_card (title, msg) {
         let alarm_card = new St.BoxLayout({ vertical: true, style_class: 'alarm-card' });
         this.alarm_cards_scroll_bin.add_child(alarm_card);
 

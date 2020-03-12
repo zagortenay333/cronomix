@@ -53,7 +53,7 @@ var Timepp = GObject.registerClass({
         'stop-time-tracking-by-id':  { param_types: [GObject.TYPE_STRING, GObject.TYPE_STRING] }
     }
 }, class Timepp extends PanelMenu.Button {
-    _init() {
+    _init () {
         // @HACK
         // This func only updates the max-height prop but not max-width.
         // We unset it and do our own thing.
@@ -259,7 +259,7 @@ var Timepp = GObject.registerClass({
         this.sigm.connect(this.unicon_panel_item.actor, 'key-focus-in', () => this.open_menu());
     }
 
-    _sync_sections_with_settings() {
+    _sync_sections_with_settings () {
         let sections = this.settings.get_value('sections').deep_unpack();
 
         for (let key in sections) {
@@ -299,7 +299,7 @@ var Timepp = GObject.registerClass({
         this.update_panel_items();
     }
 
-    toggle_menu(section_name) {
+    toggle_menu (section_name) {
         if (this.menu.isOpen) this.menu.close(false);
         else                  this.open_menu(section_name);
     }
@@ -314,7 +314,7 @@ var Timepp = GObject.registerClass({
     //
     //     - If @section is not a sep menu, we show all joined sections that
     //       are enabled.
-    open_menu(section_name) {
+    open_menu (section_name) {
         let section = this.sections.get(section_name);
 
         if (this.menu.isOpen && section && section.actor.visible) return;
@@ -374,7 +374,7 @@ var Timepp = GObject.registerClass({
         for (let s of hidden_sections) s.on_section_open_state_changed(false);
     }
 
-    toggle_context_menu(section_name) {
+    toggle_context_menu (section_name) {
         if (this.menu.isOpen) {
             this.menu.close(false);
             return;
@@ -402,7 +402,7 @@ var Timepp = GObject.registerClass({
     }
 
     // PanelMenu only updates the min-height, we also need to update min-width.
-    _update_menu_min_size() {
+    _update_menu_min_size () {
         let work_area    = Main.layoutManager.getWorkAreaForMonitor(Main.layoutManager.findIndexForActor(this.menu.actor));
         let monitor      = Main.layoutManager.findMonitorForActor(this.menu.actor);
         let scale_factor = St.ThemeContext.get_for_stage(global.stage).scale_factor;
@@ -424,12 +424,12 @@ var Timepp = GObject.registerClass({
         this.menu.actor.style = `max-height: ${max_h}px; max-width: ${max_w}px;`;
     }
 
-    _update_menu_arrow(source_actor) {
+    _update_menu_arrow (source_actor) {
         this.menu._boxPointer.setPosition(source_actor, this.menu._arrowAlignment);
         this.menu.sourceActor = source_actor;
     }
 
-    _update_separators() {
+    _update_separators () {
         let last_visible;
 
         for (let [k, sep] of this.separators) {
@@ -444,7 +444,7 @@ var Timepp = GObject.registerClass({
         if (last_visible) last_visible.hide();
     }
 
-    _update_custom_css() {
+    _update_custom_css () {
         let update_needed = false;
         let theme_node    = this.panel_item_box.get_theme_node();
 
@@ -469,7 +469,7 @@ var Timepp = GObject.registerClass({
         if (update_needed) this.emit('custom-css-changed');
     }
 
-    update_panel_items() {
+    update_panel_items () {
         if (this.settings.get_boolean('unicon-mode')) {
             let show_unicon = false;
 
@@ -492,7 +492,7 @@ var Timepp = GObject.registerClass({
         }
     }
 
-    _on_panel_position_changed(old_pos, new_pos) {
+    _on_panel_position_changed (old_pos, new_pos) {
         let ref = this.container;
 
         switch (old_pos) {
@@ -519,7 +519,7 @@ var Timepp = GObject.registerClass({
         }
     }
 
-    _on_open_state_changed(state) {
+    _on_open_state_changed (state) {
         if (state) return Clutter.EVENT_PROPAGATE;
 
         this.context_menu.actor.hide();
@@ -539,12 +539,12 @@ var Timepp = GObject.registerClass({
         }
     }
 
-    _on_theme_changed() {
+    _on_theme_changed () {
         if (this.custom_stylesheet) this._unload_stylesheet();
         this._load_stylesheet();
     }
 
-    _load_stylesheet() {
+    _load_stylesheet () {
         this.theme_change_signal_block = true;
 
         // determine custom stylesheet
@@ -575,7 +575,7 @@ var Timepp = GObject.registerClass({
         Mainloop.idle_add(() => this.theme_change_signal_block = false);
     }
 
-    _unload_stylesheet() {
+    _unload_stylesheet () {
 
         if (! this.custom_stylesheet) return;
 
@@ -585,27 +585,27 @@ var Timepp = GObject.registerClass({
         this.custom_stylesheet = null;
     }
 
-    is_section_enabled(section_name) {
+    is_section_enabled (section_name) {
         return this.sections.has(section_name);
     }
 
     // Used by sections to communicate with each other.
     // This way any section can listen for signals on the main ext object.
-    emit_to_sections(sig, section_name, data) {
+    emit_to_sections (sig, section_name, data) {
         this.emit(sig, section_name, data);
     }
 
     // ScrollView always allocates horizontal space for the scrollbar when the
     // policy is set to AUTOMATIC. The result is an ugly padding on the right
     // when the scrollbar is invisible.
-    needs_scrollbar() {
+    needs_scrollbar () {
         let [, nat_h] = this.menu.actor.get_preferred_height(-1);
         let max_h     = this.menu.actor.get_theme_node().get_max_height();
 
         return max_h >= 0 && nat_h >= max_h;
     }
 
-    destroy() {
+    destroy () {
         // We need to make sure that this one is set to the default actor or
         // else the shell will try to destroy the wrong panel actor.
         this._update_menu_arrow(this.actor);
