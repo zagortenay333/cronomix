@@ -53,7 +53,6 @@ const NotifStyle = {
 // @settings : obj (extension settings)
 // =====================================================================
 var SectionMain = class SectionMain extends ME.imports.sections.section_base.SectionBase{
-
     constructor(section_name, ext, settings) {
         super(section_name, ext, settings);
 
@@ -633,7 +632,7 @@ Signals.addSignalMethods(AlarmEditor.prototype);
 //
 // signals: 'alarm-toggled'
 // =====================================================================
-var AlarmItem  = class AlarmItem {
+var AlarmItem = class AlarmItem {
     constructor(ext, delegate, alarm) {
         this.ext      = ext;
         this.delegate = delegate;
@@ -822,7 +821,6 @@ Signals.addSignalMethods(AlarmItem.prototype);
 // signals: 'monitor-changed'
 // =====================================================================
 var AlarmFullscreen = class AlarmFullscreen extends FULLSCREEN.Fullscreen {
-
     constructor(ext, delegate, monitor) {
         super(monitor);
         this.actor.add_style_class_name('alarm');

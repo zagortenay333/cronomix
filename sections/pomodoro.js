@@ -69,7 +69,6 @@ const PanelMode = {
 // @settings : obj (extension settings)
 // =====================================================================
 var SectionMain = class SectionMain extends ME.imports.sections.section_base.SectionBase{
-    
     constructor (section_name, ext, settings) {
         super(section_name, ext, settings);
 
@@ -651,9 +650,7 @@ Signals.addSignalMethods(SectionMain.prototype);
 //
 // @signals: 'ok', 'cancel'
 // =====================================================================
-var PomodoroSettings  = class PomodoroSettings {
-    
-
+var PomodoroSettings = class PomodoroSettings {
     constructor(ext, delegate, pomo_cache) {
         this.ext      = ext;
         this.delegate = delegate;
@@ -837,8 +834,7 @@ Signals.addSignalMethods(PomodoroSettings.prototype);
 //
 // signals: 'monitor-changed'
 // =====================================================================
-var PomodoroFullscreen  = class PomodoroFullscreen extends FULLSCREEN.Fullscreen {
-    
+var PomodoroFullscreen = class PomodoroFullscreen extends FULLSCREEN.Fullscreen {
     constructor (ext, delegate, monitor) {
         super(monitor);
 

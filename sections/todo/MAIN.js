@@ -56,7 +56,6 @@ const CACHE_FILE = '~/.cache/timepp_gnome_shell_extension/timepp_todo.json';
 //   - 'tasks-changed'
 // =====================================================================
 var SectionMain = class SectionMain extends ME.imports.sections.section_base.SectionBase {
-    
     constructor (section_name, ext, settings) {
         super(section_name, ext, settings);
         this.actor.add_style_class_name('todo-section');

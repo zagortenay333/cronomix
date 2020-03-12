@@ -23,9 +23,7 @@ const MISC_UTILS = ME.imports.lib.misc_utils;
 //
 // @ext: obj (main extension object)
 // =====================================================================
-var ContextMenu  = class ContextMenu {
-
-
+var ContextMenu = class ContextMenu {
     constructor (ext) {
         this.actor = new St.BoxLayout({ vertical: true, style_class: 'section context-menu-section', x_expand: true });
 
@@ -76,11 +74,8 @@ var ContextMenu  = class ContextMenu {
 // @label     : string
 // =====================================================================
 var PopupMenuIconItem = GObject.registerClass({
-        GTypeName: 'PopupMenuIconItem'
-    },
-
-    class PopupMenuIconItem extends PopupMenu.PopupBaseMenuItem{
-
+    GTypeName: 'PopupMenuIconItem'
+}, class PopupMenuIconItem extends PopupMenu.PopupBaseMenuItem {
     _init (icon_name, label, params) {
         super._init(params);
 

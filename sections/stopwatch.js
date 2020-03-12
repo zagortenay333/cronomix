@@ -65,7 +65,6 @@ const PanelMode = {
 // @settings : obj (extension settings)
 // =====================================================================
 var SectionMain = class SectionMain extends ME.imports.sections.section_base.SectionBase{
-
     constructor (section_name, ext, settings) {
         super(section_name, ext, settings);
 
@@ -544,7 +543,6 @@ Signals.addSignalMethods(SectionMain.prototype);
 // signals: 'monitor-changed'
 // =====================================================================
 var StopwatchFullscreen = class StopwatchFullscreen extends FULLSCREEN.Fullscreen{
-    
     constructor (ext, delegate, monitor) {
         super(monitor);
         this.middle_box.vertical = false;

@@ -52,7 +52,6 @@ const StatsMode = {
 // @monitor  : int (monitor position)
 // =====================================================================
 var StatsView = class StatsView extends FULLSCREEN.Fullscreen{
-    
     constructor (ext, delegate, monitor) {
         super(monitor);
 

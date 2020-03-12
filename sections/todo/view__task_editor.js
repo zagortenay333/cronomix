@@ -57,9 +57,7 @@ const EditorMode = {
 // of that task object and the signals 'delete-task' and 'edit-task' will be
 // used instead of 'add-task'.
 // =====================================================================
-var ViewTaskEditor  = class ViewTaskEditor {
-    
-
+var ViewTaskEditor = class ViewTaskEditor {
     constructor (ext, delegate, task) {
         this.ext      = ext;
         this.delegate = delegate;

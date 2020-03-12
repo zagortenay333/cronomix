@@ -30,9 +30,7 @@ const G = ME.imports.sections.todo.GLOBAL;
 //
 // @signals:
 // =====================================================================
-var ViewSearch  = class ViewSearch {
-    
-
+var ViewSearch = class ViewSearch {
     constructor (ext, delegate) {
         this.ext      = ext;
         this.delegate = delegate;

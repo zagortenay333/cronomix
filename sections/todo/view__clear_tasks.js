@@ -29,9 +29,7 @@ const G = ME.imports.sections.todo.GLOBAL;
 //   - 'archive-all' (delete and write to done.txt all completed tasks)
 //   - 'cancel'
 // =====================================================================
-var ViewClearTasks  = class ViewClearTasks {
-    
-
+var ViewClearTasks = class ViewClearTasks {
     constructor (ext, delegate) {
         this.ext      = ext;
         this.delegate = delegate;

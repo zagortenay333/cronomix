@@ -36,9 +36,7 @@ const G = ME.imports.sections.todo.GLOBAL;
 // @signals:
 //   - 'update'
 // =====================================================================
-var ViewFileSwitcher  = class ViewFileSwitcher {
-    
-
+var ViewFileSwitcher = class ViewFileSwitcher {
     constructor (ext, delegate) {
         this.ext      = ext;
         this.delegate = delegate;
@@ -359,9 +357,7 @@ Signals.addSignalMethods(ViewFileSwitcher.prototype);
 //
 // @signals: 'ok', 'cancel', 'delete'
 // =====================================================================
-var FileInfoEditor  = class FileInfoEditor {
-    
-
+var FileInfoEditor = class FileInfoEditor {
     constructor(ext, delegate, file) {
         this.ext      = ext;
         this.delegate = delegate;

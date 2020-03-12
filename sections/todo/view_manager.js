@@ -24,9 +24,7 @@ const G = ME.imports.sections.todo.GLOBAL;
 // - To switch to a new view, use the show_view function of this object.
 // - The current_view is always stored in the current_view var of this obj.
 // =====================================================================
-var ViewManager  = class ViewManager {
-    
-
+var ViewManager = class ViewManager {
     constructor (ext, delegate) {
         this.ext      = ext;
         this.delegate = delegate;

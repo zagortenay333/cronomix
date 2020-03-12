@@ -33,9 +33,7 @@ const G = ME.imports.sections.todo.GLOBAL;
 // @ext      : obj (main extension object)
 // @delegate : obj (main section object)
 // =====================================================================
-var ViewDefault  = class ViewDefault {
-    
-
+var ViewDefault = class ViewDefault {
     constructor (ext, delegate) {
         this.ext      = ext;
         this.delegate = delegate;
@@ -438,8 +436,7 @@ Signals.addSignalMethods(ViewDefault.prototype);
 // @col_str      : string
 // @is_collapsed : bool
 // =====================================================================
-var KanbanColumn  = class KanbanColumn {
-
+var KanbanColumn = class KanbanColumn {
     constructor (ext, delegate, owner, col_str, is_collapsed) {
         this.ext          = ext;
         this.delegate     = delegate;

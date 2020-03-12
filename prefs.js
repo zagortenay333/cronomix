@@ -13,8 +13,7 @@ Gettext.bindtextdomain(ME.metadata['gettext-domain'], ME.path + '/locale');
 const _ = Gettext.domain(ME.metadata['gettext-domain']).gettext;
 
 
-class Settings{
-
+class Settings {
     constructor() {
         {
             let GioSSS = Gio.SettingsSchemaSource;

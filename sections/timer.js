@@ -72,7 +72,6 @@ const PanelMode = {
 // @settings : obj (extension settings)
 // =====================================================================
 var SectionMain = class SectionMain extends ME.imports.sections.section_base.SectionBase {
-    
     constructor (section_name, ext, settings) {
         super(section_name, ext, settings);
 
@@ -612,9 +611,7 @@ Signals.addSignalMethods(SectionMain.prototype);
 //    - 'start-timer'   (returns a preset obj)
 //    - 'delete-preset' (returns a preset obj)
 // =====================================================================
-var TimerPresetsView  = class TimerPresetsView {
-    
-
+var TimerPresetsView = class TimerPresetsView {
     constructor(ext, delegate) {
         this.ext      = ext;
         this.delegate = delegate;
@@ -916,9 +913,7 @@ Signals.addSignalMethods(TimerPresetsView.prototype);
 //
 // @signals: 'ok', 'cancel', 'delete'
 // =====================================================================
-var TimerPresetEditor  = class TimerPresetEditor {
-    
-
+var TimerPresetEditor = class TimerPresetEditor {
     constructor(ext, delegate, preset, is_deletable) {
         this.ext      = ext;
         this.delegate = delegate;
@@ -1057,7 +1052,6 @@ Signals.addSignalMethods(TimerPresetEditor.prototype);
 // @signals: 'monitor-changed'
 // =====================================================================
 var TimerFullscreen = class TimerFullscreen extends FULLSCREEN.Fullscreen {
-    
     constructor (ext, delegate, monitor) {
         super(monitor);
         this.default_style_class = this.actor.style_class;
