@@ -628,21 +628,20 @@ let timepp;
 
 function enable () {
     timepp = new Timepp();
-    {
-        let pos;
 
-        switch (timepp.settings.get_enum('panel-item-position')) {
-          case PanelPosition.LEFT:
-            pos = Main.panel._leftBox.get_n_children();
-            Main.panel.addToStatusArea('timepp', timepp, pos, 'left');
-            break;
-          case PanelPosition.CENTER:
-            pos = Main.panel._centerBox.get_n_children();
-            Main.panel.addToStatusArea('timepp', timepp, pos, 'center');
-            break;
-          case PanelPosition.RIGHT:
-            Main.panel.addToStatusArea('timepp', timepp, 0, 'right');
-        }
+    let pos;
+
+    switch (timepp.settings.get_enum('panel-item-position')) {
+      case PanelPosition.LEFT:
+        pos = Main.panel._leftBox.get_n_children();
+        Main.panel.addToStatusArea('timepp', timepp, pos, 'left');
+        break;
+      case PanelPosition.CENTER:
+        pos = Main.panel._centerBox.get_n_children();
+        Main.panel.addToStatusArea('timepp', timepp, pos, 'center');
+        break;
+      case PanelPosition.RIGHT:
+        Main.panel.addToStatusArea('timepp', timepp, 0, 'right');
     }
 }
 
