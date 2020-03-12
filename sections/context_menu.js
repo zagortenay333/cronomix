@@ -1,5 +1,6 @@
 const St        = imports.gi.St;
 const Gio       = imports.gi.Gio
+const GObject   = imports.gi.GObject
 const PopupMenu = imports.ui.popupMenu;
 const Util      = imports.misc.util;
 
@@ -23,7 +24,7 @@ const MISC_UTILS = ME.imports.lib.misc_utils;
 // @ext: obj (main extension object)
 // =====================================================================
 var ContextMenu  = class ContextMenu {
-    
+
 
     constructor (ext) {
         this.actor = new St.BoxLayout({ vertical: true, style_class: 'section context-menu-section', x_expand: true });
@@ -74,15 +75,19 @@ var ContextMenu  = class ContextMenu {
 // @icon_name : string
 // @label     : string
 // =====================================================================
-var PopupMenuIconItem = class PopupMenuIconItem extends PopupMenu.PopupBaseMenuItem{
-    
-    constructor (icon_name, label, params) {
-        super(params);
+var PopupMenuIconItem = GObject.registerClass({
+        GTypeName: 'PopupMenuIconItem'
+    },
+
+    class PopupMenuIconItem extends PopupMenu.PopupBaseMenuItem{
+
+    _init (icon_name, label, params) {
+        super._init(params);
 
         this.icon = new St.Icon({ gicon: MISC_UTILS.getIcon(icon_name) });
-        this.actor.add_child(this.icon);
+        this.add_child(this.icon);
 
         this.label = new St.Label({ text: label });
-        this.actor.add_child(this.label);
+        this.add_child(this.label);
     }
-}
+})
