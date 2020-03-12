@@ -106,14 +106,14 @@ var Timepp = GObject.registerClass({
                 }
             };
 
-            this.actor.style_class = '';
-            this.actor.can_focus   = false;
-            this.actor.reactive    = false;
+            this.style_class = '';
+            this.can_focus   = false;
+            this.reactive    = false;
             this.menu.actor.add_style_class_name('timepp-menu');
 
 
             this.panel_item_box = new St.BoxLayout({ style_class: 'timepp-panel-box timepp-custom-css-root'});
-            this.actor.add_actor(this.panel_item_box);
+            this.add_actor(this.panel_item_box);
 
 
             this.markdown_map = new Map([
