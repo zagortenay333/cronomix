@@ -273,7 +273,7 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
             editor.connect('edited-alarm', (_, alarm) => {
                 this.snoozed_alarms.delete(alarm);
 
-                alarm_item.toggle.setToggleState(alarm.toggle);
+                alarm_item.toggle.state = alarm.toggle;
                 alarm_item.update_time_label();
                 alarm_item.alarm_item_content.show();
 
