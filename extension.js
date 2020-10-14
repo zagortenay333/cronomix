@@ -588,7 +588,11 @@ var Timepp = GObject.registerClass({
     }
 
     _unload_stylesheet () {
-        if (! this.custom_stylesheet) return;
+        // Also avoid unloading the stylesheet while on lock screen
+        if (
+            ! this.custom_stylesheet
+            || (Main.sessionMode.currentMode === 'unlock-dialog' && ! this.isDestroying)
+        ) return;
         Mainloop.idle_add(() => {
             try {
                 St.ThemeContext.get_for_stage(global.stage).get_theme().unload_stylesheet(this.custom_stylesheet);
