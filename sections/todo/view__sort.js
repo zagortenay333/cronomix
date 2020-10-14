@@ -98,7 +98,7 @@ var ViewSort = class ViewSort {
         this.toggle_automatic_sort_btn = new St.Button({ can_focus: true });
         this.toggle_automatic_sort.add_actor(this.toggle_automatic_sort_btn);
         this.toggle = new PopupMenu.Switch();
-        this.toggle_automatic_sort_btn.add_actor(this.toggle.actor);
+        this.toggle_automatic_sort_btn.add_actor(this.toggle);
         this.toggle.setToggleState(this.delegate.get_current_todo_file().automatic_sort);
 
 

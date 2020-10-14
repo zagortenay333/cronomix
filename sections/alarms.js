@@ -667,7 +667,7 @@ var AlarmItem = class AlarmItem {
 
         this.toggle     = new PopupMenu.Switch(alarm.toggle);
         this.toggle_bin = new St.Button({can_focus: true, y_align: St.Align.START, x_align: St.Align.END });
-        this.toggle_bin.add_actor(this.toggle.actor);
+        this.toggle_bin.add_actor(this.toggle);
         this.icon_box.add(this.toggle_bin);
 
 

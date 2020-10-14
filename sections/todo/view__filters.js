@@ -125,7 +125,7 @@ var ViewFilters = class ViewFilters {
         this.show_hidden_tasks_item.add_actor(this.show_hidden_tasks_toggle_btn);
         this.show_hidden_tasks_toggle = new PopupMenu.Switch();
         this.nand_toggles.push(this.show_hidden_tasks_toggle);
-        this.show_hidden_tasks_toggle_btn.add_actor(this.show_hidden_tasks_toggle.actor);
+        this.show_hidden_tasks_toggle_btn.add_actor(this.show_hidden_tasks_toggle);
 
 
         //
@@ -151,7 +151,7 @@ var ViewFilters = class ViewFilters {
         this.show_recurring_tasks_item.add_actor(this.show_recurring_tasks_toggle_btn);
         this.show_recurring_tasks_toggle = new PopupMenu.Switch();
         this.nand_toggles.push(this.show_recurring_tasks_toggle);
-        this.show_recurring_tasks_toggle_btn.add_actor(this.show_recurring_tasks_toggle.actor);
+        this.show_recurring_tasks_toggle_btn.add_actor(this.show_recurring_tasks_toggle);
 
 
         //
@@ -176,7 +176,7 @@ var ViewFilters = class ViewFilters {
         this.show_deferred_tasks_item.add_actor(this.show_deferred_tasks_toggle_btn);
         this.show_deferred_tasks_toggle = new PopupMenu.Switch();
         this.nand_toggles.push(this.show_deferred_tasks_toggle);
-        this.show_deferred_tasks_toggle_btn.add_actor(this.show_deferred_tasks_toggle.actor);
+        this.show_deferred_tasks_toggle_btn.add_actor(this.show_deferred_tasks_toggle);
 
 
         //
@@ -191,7 +191,7 @@ var ViewFilters = class ViewFilters {
         this.invert_toggle_btn = new St.Button({ can_focus: true });
         this.invert_item.add_actor(this.invert_toggle_btn);
         this.invert_toggle = new PopupMenu.Switch();
-        this.invert_toggle_btn.add_actor(this.invert_toggle.actor);
+        this.invert_toggle_btn.add_actor(this.invert_toggle);
 
 
         //
