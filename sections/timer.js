@@ -979,8 +979,8 @@ var TimerPresetEditor = class TimerPresetEditor {
             new St.Label({ text: _('Repeat notification sound?'), x_expand: true, y_align: Clutter.ActorAlign.CENTER }));
 
         this.sound_checkbox = new CheckBox.CheckBox();
-        this.checkbox_item.add_child(this.sound_checkbox.actor);
-        this.sound_checkbox.actor.checked = preset ? preset.repeat_sound : false;
+        this.checkbox_item.add_child(this.sound_checkbox);
+        this.sound_checkbox.checked = preset ? preset.repeat_sound : false;
 
 
         //
@@ -1013,12 +1013,12 @@ var TimerPresetEditor = class TimerPresetEditor {
             this.emit('ok', {
                 time         : this._get_time(),
                 msg          : this.entry.entry.get_text(),
-                repeat_sound : this.sound_checkbox.actor.checked,
+                repeat_sound : this.sound_checkbox.checked,
             });
         });
         this.button_cancel.connect('clicked', () => this.emit('cancel'));
         this.checkbox_item.connect('button-press-event', () => {
-            this.sound_checkbox.actor.checked = !this.sound_checkbox.actor.checked;
+            this.sound_checkbox.checked = !this.sound_checkbox.checked;
         });
     }
 

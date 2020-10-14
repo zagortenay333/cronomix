@@ -334,10 +334,10 @@ var ViewFilters = class ViewFilters {
 
     _reset_all () {
         if (this.filter_register.completed)
-            this.filter_register.completed.checkbox.actor.checked = false;
+            this.filter_register.completed.checkbox.checked = false;
 
         if (this.filter_register.no_priority)
-            this.filter_register.no_priority.checkbox.actor.checked = false;
+            this.filter_register.no_priority.checkbox.checked = false;
 
         [
             this.filter_register.priorities,
@@ -346,7 +346,7 @@ var ViewFilters = class ViewFilters {
             this.filter_register.custom,
         ].forEach((arr) => {
             for (let i = 0; i < arr.length; i++)
-                arr[i].checkbox.actor.checked = false;
+                arr[i].checkbox.checked = false;
         });
     }
 
@@ -368,9 +368,9 @@ var ViewFilters = class ViewFilters {
         }
 
         item.checkbox = new CheckBox.CheckBox();
-        item.actor.add_actor(item.checkbox.actor);
-        item.checkbox.actor.checked = is_checked;
-        item.checkbox.actor.y_align = St.Align.MIDDLE;
+        item.actor.add_actor(item.checkbox);
+        item.checkbox.checked = is_checked;
+        item.checkbox.y_align = St.Align.MIDDLE;
 
         if (is_deletable) {
             let close_button = new St.Button({ can_focus: true, style_class: 'close-icon' });
@@ -380,14 +380,14 @@ var ViewFilters = class ViewFilters {
             close_button.connect('key-focus-in', () => MISC_UTILS.scroll_to_item(this.filter_sectors_scroll, this.filter_sectors_scroll_box, item.actor, parent_box));
         }
 
-        item.actor.connect('button-press-event', () => { item.checkbox.actor.checked = !item.checkbox.actor.checked; });
-        item.checkbox.actor.connect('key-focus-in', () => MISC_UTILS.scroll_to_item(this.filter_sectors_scroll, this.filter_sectors_scroll_box, item.actor, parent_box));
+        item.actor.connect('button-press-event', () => { item.checkbox.checked = !item.checkbox.checked; });
+        item.checkbox.connect('key-focus-in', () => MISC_UTILS.scroll_to_item(this.filter_sectors_scroll, this.filter_sectors_scroll_box, item.actor, parent_box));
 
         return item;
     }
 
     _delete_custom_item (item) {
-        if (item.checkbox.actor.has_key_focus || close_button.has_key_focus)
+        if (item.checkbox.has_key_focus || close_button.has_key_focus)
             this.entry.entry.grab_key_focus();
 
         item.actor.destroy();
@@ -422,27 +422,27 @@ var ViewFilters = class ViewFilters {
         filters.deferred       = this.show_deferred_tasks_toggle.state;
         filters.recurring      = this.show_recurring_tasks_toggle.state;
         filters.hidden         = this.show_hidden_tasks_toggle.state;
-        filters.completed      = !!(this.filter_register.completed && this.filter_register.completed.checkbox.actor.checked);
-        filters.no_priority    = !!(this.filter_register.no_priority && this.filter_register.no_priority.checkbox.actor.checked);
+        filters.completed      = !!(this.filter_register.completed && this.filter_register.completed.checkbox.checked);
+        filters.no_priority    = !!(this.filter_register.no_priority && this.filter_register.no_priority.checkbox.checked);
 
         for (let i = 0; i < this.filter_register.priorities.length; i++) {
             let it = this.filter_register.priorities[i];
-            if (it.checkbox.actor.checked) filters.priorities.push(it.filter);
+            if (it.checkbox.checked) filters.priorities.push(it.filter);
         }
 
         for (let i = 0; i < this.filter_register.contexts.length; i++) {
             let it = this.filter_register.contexts[i];
-            if (it.checkbox.actor.checked) filters.contexts.push(it.filter);
+            if (it.checkbox.checked) filters.contexts.push(it.filter);
         }
 
         for (let i = 0; i < this.filter_register.projects.length; i++) {
             let it = this.filter_register.projects[i];
-            if (it.checkbox.actor.checked) filters.projects.push(it.filter);
+            if (it.checkbox.checked) filters.projects.push(it.filter);
         }
 
         for (let i = 0; i < this.filter_register.custom.length; i++) {
             let it = this.filter_register.custom[i];
-            if (it.checkbox.actor.checked) filters.custom_active.push(it.filter);
+            if (it.checkbox.checked) filters.custom_active.push(it.filter);
             filters.custom.push(it.filter);
         }
 

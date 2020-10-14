@@ -674,7 +674,7 @@ var PomodoroSettings = class PomodoroSettings {
         this.clear_all_item.add_actor(this.clear_checkbox_bin);
 
         this.clear_item_checkbox = new CheckBox.CheckBox();
-        this.clear_checkbox_bin.add_actor(this.clear_item_checkbox.actor);
+        this.clear_checkbox_bin.add_actor(this.clear_item_checkbox);
 
 
         //
@@ -781,7 +781,7 @@ var PomodoroSettings = class PomodoroSettings {
         //
         this.button_ok.connect('clicked', () => {
             this.emit('ok', {
-                clear_counter : this.clear_item_checkbox.actor.checked,
+                clear_counter : this.clear_item_checkbox.checked,
                 break_rate    : this.long_break_rate_picker.counter,
                 pomo          : this.pomo_dur_min_picker.counter * 60 +
                                 this.pomo_dur_sec_picker.counter,

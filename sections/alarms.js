@@ -535,8 +535,8 @@ var AlarmEditor = class AlarmEditor{
             new St.Label({ text: _('Repeat notification sound?'), x_expand: true, y_align: Clutter.ActorAlign.CENTER }));
 
         this.sound_checkbox = new CheckBox.CheckBox();
-        this.checkbox_item.add_child(this.sound_checkbox.actor);
-        this.sound_checkbox.actor.checked = alarm && alarm.repeat_sound;
+        this.checkbox_item.add_child(this.sound_checkbox);
+        this.sound_checkbox.checked = alarm && alarm.repeat_sound;
 
 
         //
@@ -585,7 +585,7 @@ var AlarmEditor = class AlarmEditor{
                 alarm.msg          = this.entry.entry.get_text(),
                 alarm.days         = this.day_chooser.get_days(),
                 alarm.snooze_dur   = this.snooze_duration_picker.counter;
-                alarm.repeat_sound = this.sound_checkbox.actor.checked;
+                alarm.repeat_sound = this.sound_checkbox.checked;
 
                 this.emit('edited-alarm', alarm);
             }
@@ -596,7 +596,7 @@ var AlarmEditor = class AlarmEditor{
                     days         : this.day_chooser.get_days(),
                     toggle       : true,
                     snooze_dur   : this.snooze_duration_picker.counter,
-                    repeat_sound : this.sound_checkbox.actor.checked,
+                    repeat_sound : this.sound_checkbox.checked,
                 });
             }
         });
@@ -604,7 +604,7 @@ var AlarmEditor = class AlarmEditor{
             this.emit('cancel');
         });
         this.checkbox_item.connect('button-press-event', () => {
-            this.sound_checkbox.actor.checked = !this.sound_checkbox.actor.checked;
+            this.sound_checkbox.checked = !this.sound_checkbox.checked;
         });
         this.entry.entry.connect('allocation-changed', () => {
             this.entry.scroll_box.vscrollbar_policy = Gtk.PolicyType.NEVER;
