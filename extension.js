@@ -604,7 +604,7 @@ var Timepp = GObject.registerClass({
     destroy () {
         // We need to make sure that this one is set to the default actor or
         // else the shell will try to destroy the wrong panel actor.
-        this._update_menu_arrow(this.actor);
+        this._update_menu_arrow(this);
 
         for (let [, section] of this.sections) section.disable_section();
 
