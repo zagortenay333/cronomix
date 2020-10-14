@@ -197,7 +197,7 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
             this.slider_item = new St.BoxLayout({ vertical: true, style_class: 'timepp-menu-item' });
             this.actor.add_child(this.slider_item);
             this.slider = new Slider.Slider(0);
-            this.slider_item.add_actor(this.slider.actor);
+            this.slider_item.add_actor(this.slider);
         }
 
 
@@ -226,7 +226,7 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
         this.sigm.connect_release(this.settings_icon, Clutter.BUTTON_PRIMARY, true, () => this._show_presets());
         this.sigm.connect(this.slider, 'notify::value', () => this.slider_changed(this.slider.value));
         this.sigm.connect(this.slider, 'drag-end', () => this.slider_released());
-        this.sigm.connect(this.slider.actor, 'scroll-event', () => this.slider_released());
+        this.sigm.connect(this.slider, 'scroll-event', () => this.slider_released());
     }
 
     disable_section () {
@@ -1072,8 +1072,8 @@ var TimerFullscreen = class TimerFullscreen extends FULLSCREEN.Fullscreen {
         this.middle_box.insert_child_at_index(this.title, 0);
 
         this.slider = new Slider.Slider(0);
-        this.bottom_box.add_child(this.slider.actor);
-        this.slider.actor.can_focus = true;
+        this.bottom_box.add_child(this.slider);
+        this.slider.can_focus = true;
 
         this.start_pause_btn = new St.Button();
         this.top_box.insert_child_at_index(this.start_pause_btn, 0);
@@ -1090,7 +1090,7 @@ var TimerFullscreen = class TimerFullscreen extends FULLSCREEN.Fullscreen {
         this.slider.connect('drag-end', () => {
             this.delegate.slider_released();
         });
-        this.slider.actor.connect('scroll-event', () => {
+        this.slider.connect('scroll-event', () => {
             this.delegate.slider_released();
             this.title.text = '';
         });
