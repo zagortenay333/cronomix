@@ -679,8 +679,8 @@ var TimerPresetsView = class TimerPresetsView {
         this.content_box.add_child(btn_box);
         this.button_add_preset = new St.Button({ can_focus: true, label: _('Add Preset'), style_class: 'button', x_expand: true });
         this.button_ok         = new St.Button({ can_focus: true, label: _('Ok'), style_class: 'button', x_expand: true });
-        btn_box.add(this.button_add_preset, {expand: true});
-        btn_box.add(this.button_ok, {expand: true});
+        btn_box.add(this.button_add_preset);
+        btn_box.add(this.button_ok);
 
 
         //
@@ -961,7 +961,7 @@ var TimerPresetEditor = class TimerPresetEditor {
         this.actor.add_actor(this.entry_container);
 
         this.entry = new MULTIL_ENTRY.MultiLineEntry(_('Timer message...'), true);
-        this.entry_container.add(this.entry.actor, {expand: true});
+        this.entry_container.add(this.entry.actor);
 
         this.entry.scroll_box.vscrollbar_policy = Gtk.PolicyType.NEVER;
         this.entry.scroll_box.hscrollbar_policy = Gtk.PolicyType.NEVER;
@@ -987,18 +987,18 @@ var TimerPresetEditor = class TimerPresetEditor {
         // buttons
         //
         let btn_box = new St.BoxLayout({ style_class: 'row btn-box' });
-        this.actor.add(btn_box, {expand: true});
+        this.actor.add(btn_box);
 
         if (is_deletable) {
             this.button_delete = new St.Button({ can_focus: true, label: _('Delete'), style_class: 'btn-delete button', x_expand: true });
-            btn_box.add(this.button_delete, {expand: true});
+            btn_box.add(this.button_delete);
             this.button_delete.connect('clicked', () => this.emit('delete'));
         }
 
         this.button_cancel = new St.Button({ can_focus: true, label: _('Cancel'), style_class: 'btn-cancel button', x_expand: true });
         this.button_ok     = new St.Button({ can_focus: true, label: _('Ok'), style_class: 'btn-ok button', x_expand: true });
-        btn_box.add(this.button_cancel, {expand: true});
-        btn_box.add(this.button_ok, {expand: true});
+        btn_box.add(this.button_cancel);
+        btn_box.add(this.button_ok);
 
 
 

@@ -90,10 +90,10 @@ var ViewClearTasks = class ViewClearTasks {
         this.content_box.add_child(this.btn_box);
 
         this.button_delete = new St.Button({ can_focus: true, label: _('Delete'), style_class: 'btn-delete button', x_expand: true });
-        this.btn_box.add(this.button_delete, {expand: true});
+        this.btn_box.add(this.button_delete);
 
         this.button_cancel = new St.Button({ can_focus: true, label: _('Cancel'), style_class: 'btn-cancel button notification-icon-button modal-dialog-button' });
-        this.btn_box.add(this.button_cancel, {expand: true});
+        this.btn_box.add(this.button_cancel);
 
 
         //

@@ -658,7 +658,7 @@ var PomodoroSettings = class PomodoroSettings {
         this.actor = new St.BoxLayout({style_class: 'view-box'});
 
         this.content_box = new St.BoxLayout({vertical: true, style_class: 'view-box-content'});
-        this.actor.add(this.content_box, {expand: true});
+        this.actor.add(this.content_box);
 
 
         //
@@ -668,7 +668,7 @@ var PomodoroSettings = class PomodoroSettings {
         this.content_box.add_actor(this.clear_all_item);
 
         this.clear_item_label = new St.Label({text: `${_('Reset pomodoro counter?')} `, y_align: Clutter.ActorAlign.CENTER});
-        this.clear_all_item.add(this.clear_item_label, {expand: true});
+        this.clear_all_item.add(this.clear_item_label);
 
         this.clear_checkbox_bin = new St.Bin();
         this.clear_all_item.add_actor(this.clear_checkbox_bin);
@@ -684,7 +684,7 @@ var PomodoroSettings = class PomodoroSettings {
         this.content_box.add_actor(this.pomo_duration);
 
         this.pomo_label = new St.Label({text: `${POMO_STARTED_MSG} ${_('(min:sec)')} `, y_align: Clutter.ActorAlign.CENTER});
-        this.pomo_duration.add(this.pomo_label, {expand: true});
+        this.pomo_duration.add(this.pomo_label);
 
         this.pomo_dur_min_picker = new NUM_PICKER.NumPicker(0, null);
         this.pomo_duration.add_actor(this.pomo_dur_min_picker.actor);
@@ -703,7 +703,7 @@ var PomodoroSettings = class PomodoroSettings {
         this.content_box.add_actor(this.short_break);
 
         this.short_break_label = new St.Label({text: `${SHORT_BREAK_MSG} ${_('(min:sec)')} `, y_align: Clutter.ActorAlign.CENTER});
-        this.short_break.add(this.short_break_label, {expand: true});
+        this.short_break.add(this.short_break_label);
 
         this.short_break_min_picker = new NUM_PICKER.NumPicker(0, null);
         this.short_break.add_actor(this.short_break_min_picker.actor);
@@ -722,7 +722,7 @@ var PomodoroSettings = class PomodoroSettings {
         this.content_box.add_actor(this.long_break);
 
         this.long_break_label = new St.Label({text: `${LONG_BREAK_MSG} ${_('(min:sec)')} `, y_align: Clutter.ActorAlign.CENTER});
-        this.long_break.add(this.long_break_label, {expand: true});
+        this.long_break.add(this.long_break_label);
 
         this.long_break_min_picker = new NUM_PICKER.NumPicker(0, null);
         this.long_break.add_actor(this.long_break_min_picker.actor);
@@ -741,7 +741,7 @@ var PomodoroSettings = class PomodoroSettings {
         this.content_box.add_actor(this.long_break_rate);
 
         this.long_break_rate_label = new St.Label({text: `${_('Num of pomos until long break')} `, y_align: Clutter.ActorAlign.CENTER});
-        this.long_break_rate.add(this.long_break_rate_label, {expand: true});
+        this.long_break_rate.add(this.long_break_rate_label);
 
         this.long_break_rate_picker = new NUM_PICKER.NumPicker(1, null);
         this.long_break_rate.add_actor(this.long_break_rate_picker.actor);
@@ -767,13 +767,13 @@ var PomodoroSettings = class PomodoroSettings {
         // buttons
         //
         this.button_box = new St.BoxLayout({ style_class: 'row btn-box' });
-        this.content_box.add(this.button_box, {expand: true});
+        this.content_box.add(this.button_box);
 
         this.button_ok      = new St.Button({can_focus: true, label: _('Ok'), x_expand: true, style_class: 'button'});
         this.button_cancel = new St.Button({can_focus: true, label: _('Cancel'), x_expand: true, style_class: 'button'});
 
-        this.button_box.add(this.button_cancel, {expand: true});
-        this.button_box.add(this.button_ok, {expand: true});
+        this.button_box.add(this.button_cancel);
+        this.button_box.add(this.button_ok);
 
 
         //

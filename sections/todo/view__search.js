@@ -79,7 +79,7 @@ var ViewSearch = class ViewSearch {
         // task items box
         //
         this.tasks_scroll = new St.ScrollView({ style_class: 'timepp-menu-item tasks-container vfade search-results', x_fill: true, y_align: St.Align.START});
-        this.content_box.add(this.tasks_scroll, {expand: true});
+        this.content_box.add(this.tasks_scroll);
         this.tasks_scroll.hscrollbar_policy = Gtk.PolicyType.NEVER;
 
         this.tasks_scroll_content = new St.BoxLayout({ vertical: true, style_class: 'tasks-content-box'});

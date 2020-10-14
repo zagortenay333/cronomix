@@ -563,7 +563,7 @@ var AlarmEditor = class AlarmEditor{
 
         if (alarm) {
             this.button_delete = new St.Button({ can_focus: true, label: _('Delete'), style_class: 'btn-delete button', x_expand: true });
-            btn_box.add(this.button_delete, {expand: true});
+            btn_box.add(this.button_delete);
 
             this.button_delete.connect('clicked', () => {
                 this.emit('delete-alarm');
@@ -573,7 +573,7 @@ var AlarmEditor = class AlarmEditor{
         this.button_cancel = new St.Button({ can_focus: true, label: _('Cancel'), style_class: 'btn-cancel button', x_expand: true });
         this.button_ok     = new St.Button({ can_focus: true, label: _('Ok'), style_class: 'btn-ok button', x_expand: true });
         btn_box.add(this.button_cancel, {expand: true });
-        btn_box.add(this.button_ok, {expand: true});
+        btn_box.add(this.button_ok);
 
 
         //
@@ -657,7 +657,7 @@ var AlarmItem = class AlarmItem {
         this.alarm_item_content.add_actor(this.header);
 
         this.time = new St.Label({ y_align: St.Align.END, x_align: St.Align.START, style_class: 'alarm-item-time' });
-        this.header.add(this.time, {expand: true});
+        this.header.add(this.time);
 
         this.icon_box = new St.BoxLayout({y_align: Clutter.ActorAlign.CENTER, x_align: Clutter.ActorAlign.CENTER, style_class: 'icon-box'});
         this.header.add_actor(this.icon_box);

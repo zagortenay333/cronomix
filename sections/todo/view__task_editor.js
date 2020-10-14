@@ -203,7 +203,7 @@ var ViewTaskEditor = class ViewTaskEditor {
 
         if (this.mode === EditorMode.EDIT_TASK) {
             this.button_delete = new St.Button({ can_focus: true, label: _('Delete'), style_class: 'btn-delete button', x_expand: true });
-            this.btn_box.add(this.button_delete, {expand: true});
+            this.btn_box.add(this.button_delete);
             this.button_delete.connect('clicked', () => this.emit('delete-task'));
         }
 
@@ -211,15 +211,15 @@ var ViewTaskEditor = class ViewTaskEditor {
 
         if (this.mode === EditorMode.EDIT_TASK && current && current.done_file && !task.hidden) {
             this.button_archive = new St.Button({ can_focus: true, label: _('Archive'), style_class: 'btn-delete button', x_expand: true });
-            this.btn_box.add(this.button_archive, {expand: true});
+            this.btn_box.add(this.button_archive);
             this.button_archive.connect('clicked', () => this.emit('delete-task', true));
         }
 
         this.button_cancel = new St.Button({ can_focus: true, label: _('Cancel'), style_class: 'btn-cancel button', x_expand: true });
-        this.btn_box.add(this.button_cancel, {expand: true});
+        this.btn_box.add(this.button_cancel);
 
         this.button_ok = new St.Button({ can_focus: true, label: _('Ok'), style_class: 'btn-ok button', x_expand: true });
-        this.btn_box.add(this.button_ok, {expand: true});
+        this.btn_box.add(this.button_ok);
 
 
         //

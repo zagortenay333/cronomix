@@ -755,7 +755,7 @@ var TaskItem = class TaskItem {
         if (this.header_icon_box) return;
 
         this.header_icon_box = new St.BoxLayout({ x_align: Clutter.ActorAlign.END, style_class: 'icon-box' });
-        this.header.add(this.header_icon_box, {expand: true});
+        this.header.add(this.header_icon_box);
 
         this.stat_icon = new St.Icon({ visible:false, reactive: true, can_focus: true, track_hover: true, gicon : MISC.getIcon('timepp-graph-symbolic') });
         this.header_icon_box.add_actor(this.stat_icon);

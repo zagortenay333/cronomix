@@ -91,15 +91,15 @@ var ViewFileSwitcher = class ViewFileSwitcher {
         this.content_box.add_child(btn_box);
 
         this.button_add_file = new St.Button({ can_focus: true, label: _('Add File'), style_class: 'button', x_expand: true });
-        btn_box.add(this.button_add_file, {expand: true});
+        btn_box.add(this.button_add_file);
 
         this.button_cancel = new St.Button({ can_focus: true, label: _('Cancel'), style_class: 'btn-cancel button', x_expand: true });
-        btn_box.add(this.button_cancel, {expand: true});
+        btn_box.add(this.button_cancel);
         this.button_cancel.visible = this.delegate.cache.todo_files.length > 0;
 
         this.button_ok = new St.Button({ can_focus: true, label: _('Ok'), style_class: 'btn-ok button', x_expand: true });
         this.button_ok.visible = this.delegate.cache.todo_files.length > 0;
-        btn_box.add(this.button_ok, {expand: true});
+        btn_box.add(this.button_ok);
 
 
         //
@@ -434,18 +434,18 @@ var FileInfoEditor = class FileInfoEditor {
         // buttons
         //
         let btn_box = new St.BoxLayout({ style_class: 'row btn-box' });
-        this.actor.add(btn_box, {expand: true});
+        this.actor.add(btn_box);
 
         if (file) {
             this.button_delete = new St.Button({ can_focus: true, label: _('Delete'), style_class: 'btn-delete button', x_expand: true });
-            btn_box.add(this.button_delete, {expand: true});
+            btn_box.add(this.button_delete);
             this.button_delete.connect('clicked', () => this.emit('delete'));
         }
 
         this.button_cancel = new St.Button({ can_focus: true, label: _('Cancel'), style_class: 'btn-cancel button', x_expand: true });
         this.button_ok     = new St.Button({ can_focus: true, label: _('Ok'), style_class: 'btn-ok button', x_expand: true });
-        btn_box.add(this.button_cancel, {expand: true});
-        btn_box.add(this.button_ok, {expand: true});
+        btn_box.add(this.button_cancel);
+        btn_box.add(this.button_ok);
         this._update_ok_btn();
 
 

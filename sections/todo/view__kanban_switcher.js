@@ -89,7 +89,7 @@ var KanbanSwitcher = class KanbanSwitcher {
         this.content_box.add_child(btn_box);
 
         this.button_cancel = new St.Button({ can_focus: true, label: _('Cancel'), style_class: 'btn-cancel button', x_expand: true });
-        btn_box.add(this.button_cancel, {expand: true});
+        btn_box.add(this.button_cancel);
         this.button_cancel.visible = this.delegate.cache.todo_files.length > 0;
 
 
