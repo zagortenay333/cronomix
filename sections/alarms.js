@@ -572,7 +572,7 @@ var AlarmEditor = class AlarmEditor{
 
         this.button_cancel = new St.Button({ can_focus: true, label: _('Cancel'), style_class: 'btn-cancel button', x_expand: true });
         this.button_ok     = new St.Button({ can_focus: true, label: _('Ok'), style_class: 'btn-ok button', x_expand: true });
-        btn_box.add(this.button_cancel, {expand: true });
+        btn_box.add(this.button_cancel);
         btn_box.add(this.button_ok);
 
 
