@@ -567,22 +567,15 @@ var Timepp = GObject.registerClass({
             }
         }
 
-        // St.ThemeContext.get_for_stage(global.stage).get_theme().load_stylesheet(this.custom_stylesheet);
-
-        // // reload theme
-        // Main.reloadThemeResource();
-        // Main.loadTheme();
-
-        // Mainloop.idle_add(() => this.theme_change_signal_block = false);
         if (this.custom_stylesheet) {
             Mainloop.idle_add(() => {
                 try {
+                    // reload theme
                     St.ThemeContext.get_for_stage(global.stage).set_theme(new St.Theme());
                     St.ThemeContext.get_for_stage(global.stage).get_theme().load_stylesheet(this.custom_stylesheet);
                     Main.reloadThemeResource();
                     Main.loadTheme();
                 } catch {
-                    log('* timepp.extension | load stylesheet error *');
                     // ignore upstream issue sometimes after screen locking
                     // Argument 'file' (type interface) may not be null loadTheme@resource:///org/gnome/shell/ui/main.js:428:19
                 }
@@ -596,19 +589,16 @@ var Timepp = GObject.registerClass({
 
     _unload_stylesheet () {
         if (! this.custom_stylesheet) return;
-        // St.ThemeContext.get_for_stage(global.stage).get_theme().unload_stylesheet(this.custom_stylesheet);
-        // this.custom_stylesheet = null;
         Mainloop.idle_add(() => {
             try {
                 St.ThemeContext.get_for_stage(global.stage).get_theme().unload_stylesheet(this.custom_stylesheet);
                 this.custom_stylesheet = null;
-                if (this.isDestroying) {
+                if (this.isDestroying) { // Only reset when destroying
                     St.ThemeContext.get_for_stage(global.stage).set_theme(new St.Theme());
                     Main.reloadThemeResource();
                     Main.loadTheme();
                 }
             } catch {
-                log('* timepp.extension | unload stylesheet error *');
                 // ignore upstream issue sometimes after screen locking
                 // Argument 'file' (type interface) may not be null loadTheme@resource:///org/gnome/shell/ui/main.js:428:19
             }
@@ -636,6 +626,7 @@ var Timepp = GObject.registerClass({
         return max_h >= 0 && nat_h >= max_h;
     }
 
+    // Calling destroy on Clutter.Actor isn't safe, so we override _onDestroy
     _onDestroy () {
         this.isDestroying = true;
         // We need to make sure that this one is set to the default actor or
