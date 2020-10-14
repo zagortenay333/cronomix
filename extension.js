@@ -187,6 +187,7 @@ var Timepp = GObject.registerClass({
         this.sigm                = new SIG_MANAGER.SignalManager();
         this.panel_item_position = this.settings.get_enum('panel-item-position');
         this.custom_stylesheet   = null;
+        this.isDestroying        = false;
 
         this.theme_change_signal_block = false;
 
@@ -234,7 +235,7 @@ var Timepp = GObject.registerClass({
         //
         this._sync_sections_with_settings();
         this.update_panel_items();
-        Mainloop.idle_add(() => this._load_stylesheet());
+        this._load_stylesheet();
 
 
         //
@@ -566,19 +567,53 @@ var Timepp = GObject.registerClass({
             }
         }
 
-        St.ThemeContext.get_for_stage(global.stage).get_theme().load_stylesheet(this.custom_stylesheet);
+        // St.ThemeContext.get_for_stage(global.stage).get_theme().load_stylesheet(this.custom_stylesheet);
 
-        // reload theme
-        Main.reloadThemeResource();
-        Main.loadTheme();
+        // // reload theme
+        // Main.reloadThemeResource();
+        // Main.loadTheme();
 
-        Mainloop.idle_add(() => this.theme_change_signal_block = false);
+        // Mainloop.idle_add(() => this.theme_change_signal_block = false);
+        if (this.custom_stylesheet) {
+            Mainloop.idle_add(() => {
+                try {
+                    St.ThemeContext.get_for_stage(global.stage).set_theme(new St.Theme());
+                    St.ThemeContext.get_for_stage(global.stage).get_theme().load_stylesheet(this.custom_stylesheet);
+                    Main.reloadThemeResource();
+                    Main.loadTheme();
+                } catch {
+                    log('* timepp.extension | load stylesheet error *');
+                    // ignore upstream issue sometimes after screen locking
+                    // Argument 'file' (type interface) may not be null loadTheme@resource:///org/gnome/shell/ui/main.js:428:19
+                }
+                this.theme_change_signal_block = false;
+                return false;
+            });
+        } else {
+            this.theme_change_signal_block = false;
+        }
     }
 
     _unload_stylesheet () {
         if (! this.custom_stylesheet) return;
-        St.ThemeContext.get_for_stage(global.stage).get_theme().unload_stylesheet(this.custom_stylesheet);
-        this.custom_stylesheet = null;
+        // St.ThemeContext.get_for_stage(global.stage).get_theme().unload_stylesheet(this.custom_stylesheet);
+        // this.custom_stylesheet = null;
+        Mainloop.idle_add(() => {
+            try {
+                St.ThemeContext.get_for_stage(global.stage).get_theme().unload_stylesheet(this.custom_stylesheet);
+                this.custom_stylesheet = null;
+                if (this.isDestroying) {
+                    St.ThemeContext.get_for_stage(global.stage).set_theme(new St.Theme());
+                    Main.reloadThemeResource();
+                    Main.loadTheme();
+                }
+            } catch {
+                log('* timepp.extension | unload stylesheet error *');
+                // ignore upstream issue sometimes after screen locking
+                // Argument 'file' (type interface) may not be null loadTheme@resource:///org/gnome/shell/ui/main.js:428:19
+            }
+            return false;
+        });
     }
 
     is_section_enabled (section_name) {
@@ -601,7 +636,8 @@ var Timepp = GObject.registerClass({
         return max_h >= 0 && nat_h >= max_h;
     }
 
-    destroy () {
+    _onDestroy () {
+        this.isDestroying = true;
         // We need to make sure that this one is set to the default actor or
         // else the shell will try to destroy the wrong panel actor.
         this._update_menu_arrow(this);
@@ -614,7 +650,7 @@ var Timepp = GObject.registerClass({
         this._unload_stylesheet();
         this.sigm.clear();
 
-        super.destroy();
+        super._onDestroy();
     }
 })
 
