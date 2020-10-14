@@ -599,7 +599,7 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
                 this.notif_source.destroyNonResidentNotifications();
             }
 
-            this.notif_source = new MessageTray.Source();
+            this.notif_source = new MessageTray.Source('Timepp - Pomodoro', ME.path + '/data/img/icons/timepp-timer-symbolic.svg');
             Main.messageTray.add(this.notif_source);
             this.notif_source.connect('destroy', () => this.sound_player.stop());
 
@@ -612,7 +612,7 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
             let notif = new MessageTray.Notification(this.notif_source, msg, '', params);
             notif.setUrgency(MessageTray.Urgency.NORMAL);
 
-            this.notif_source.notify(notif);
+            this.notif_source.showNotification(notif);
         }
 
         if (do_play_sound)

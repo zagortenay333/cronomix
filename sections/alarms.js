@@ -364,7 +364,7 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
         } else if (notif_style === NotifStyle.FULLSCREEN) {
             this.fullscreen.fire_alarm(alarm);
         } else {
-            let source = new MessageTray.Source();
+            let source = new MessageTray.Source('Timepp - Alarm', ME.path + '/data/img/icons/timepp-timer-symbolic.svg');
             Main.messageTray.add(source);
             source.connect('destroy', () => this.sound_player.stop());
 
@@ -388,7 +388,7 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
                 this.snooze_alarm(alarm);
             });
 
-            source.notify(notif);
+            source.showNotification(notif);
         }
 
         if (this.settings.get_boolean('alarms-play-sound')) {
