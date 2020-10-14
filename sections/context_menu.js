@@ -48,7 +48,7 @@ var ContextMenu = class ContextMenu {
         // listen
         //
         this.settings_link.connect('activate', () => {
-            Util.spawn(["gnome-shell-extension-prefs", ME.metadata.uuid]);
+            Util.spawn(["gnome-extensions", "prefs", ME.metadata.uuid]);
             ext.toggle_context_menu();
         });
         this.website_link.connect('activate', () => {
