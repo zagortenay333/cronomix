@@ -68,7 +68,7 @@ const PanelMode = {
 // @ext      : obj (main extension object)
 // @settings : obj (extension settings)
 // =====================================================================
-var SectionMain = class SectionMain extends ME.imports.sections.section_base.SectionBase{
+var SectionMain = class SectionMain extends ME.imports.sections.section_base.SectionBase {
     constructor (section_name, ext, settings) {
         super(section_name, ext, settings);
 
