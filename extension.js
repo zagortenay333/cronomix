@@ -183,7 +183,6 @@ var Timepp = GObject.registerClass({
         this.sigm                = new SIG_MANAGER.SignalManager();
         this.panel_item_position = this.settings.get_enum('panel-item-position');
 
-        this.theme_change_signal_block = false;
 
         // ensure cache dir
         {
