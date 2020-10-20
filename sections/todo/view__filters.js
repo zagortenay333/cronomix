@@ -123,7 +123,7 @@ var ViewFilters = class ViewFilters {
 
         this.show_hidden_tasks_toggle_btn = new St.Button({ can_focus: true });
         this.show_hidden_tasks_item.add_actor(this.show_hidden_tasks_toggle_btn);
-        this.show_hidden_tasks_toggle = new PopupMenu.Switch();
+        this.show_hidden_tasks_toggle = new PopupMenu.Switch(false);
         this.nand_toggles.push(this.show_hidden_tasks_toggle);
         this.show_hidden_tasks_toggle_btn.add_actor(this.show_hidden_tasks_toggle);
 
@@ -149,7 +149,7 @@ var ViewFilters = class ViewFilters {
 
         this.show_recurring_tasks_toggle_btn = new St.Button({ can_focus: true });
         this.show_recurring_tasks_item.add_actor(this.show_recurring_tasks_toggle_btn);
-        this.show_recurring_tasks_toggle = new PopupMenu.Switch();
+        this.show_recurring_tasks_toggle = new PopupMenu.Switch(false);
         this.nand_toggles.push(this.show_recurring_tasks_toggle);
         this.show_recurring_tasks_toggle_btn.add_actor(this.show_recurring_tasks_toggle);
 
@@ -174,7 +174,7 @@ var ViewFilters = class ViewFilters {
 
         this.show_deferred_tasks_toggle_btn = new St.Button({ can_focus: true });
         this.show_deferred_tasks_item.add_actor(this.show_deferred_tasks_toggle_btn);
-        this.show_deferred_tasks_toggle = new PopupMenu.Switch();
+        this.show_deferred_tasks_toggle = new PopupMenu.Switch(false);
         this.nand_toggles.push(this.show_deferred_tasks_toggle);
         this.show_deferred_tasks_toggle_btn.add_actor(this.show_deferred_tasks_toggle);
 
@@ -190,7 +190,7 @@ var ViewFilters = class ViewFilters {
 
         this.invert_toggle_btn = new St.Button({ can_focus: true });
         this.invert_item.add_actor(this.invert_toggle_btn);
-        this.invert_toggle = new PopupMenu.Switch();
+        this.invert_toggle = new PopupMenu.Switch(false);
         this.invert_toggle_btn.add_actor(this.invert_toggle);
 
 
@@ -250,10 +250,10 @@ var ViewFilters = class ViewFilters {
     _load_filters () {
         let filters = this.delegate.get_current_todo_file().filters;
 
-        this.invert_toggle.setToggleState(filters.invert_filters);
-        this.show_hidden_tasks_toggle.setToggleState(filters.hidden);
-        this.show_deferred_tasks_toggle.setToggleState(filters.deferred);
-        this.show_recurring_tasks_toggle.setToggleState(filters.recurring);
+        this.invert_toggle.state = filters.invert_filters;
+        this.show_hidden_tasks_toggle.state = filters.hidden;
+        this.show_deferred_tasks_toggle.state = filters.deferred;
+        this.show_recurring_tasks_toggle.state = filters.recurring;
 
 
         // custom filters
@@ -408,10 +408,10 @@ var ViewFilters = class ViewFilters {
 
     _on_nand_toggle_clicked (toggle_actor) {
         if (toggle_actor.state) {
-            toggle_actor.setToggleState(false);
+            toggle_actor.state = false;
         } else {
-            for (let toggle of this.nand_toggles) toggle.setToggleState(false);
-            toggle_actor.setToggleState(true);
+            for (let toggle of this.nand_toggles) toggle.state = false;
+            toggle_actor.state = true;
         }
     }
 
