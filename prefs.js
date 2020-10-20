@@ -1,17 +1,11 @@
-const Gio      = imports.gi.Gio;
-const Gtk      = imports.gi.Gtk;
-const GLib     = imports.gi.GLib;
+const Gio            = imports.gi.Gio;
+const Gtk            = imports.gi.Gtk;
+const GLib           = imports.gi.GLib;
+const Mainloop       = imports.mainloop;
+const ExtensionUtils = imports.misc.extensionUtils;
 
-const Mainloop = imports.mainloop;
-
-
-const ME = imports.misc.extensionUtils.getCurrentExtension();
-
-
-const Gettext = imports.gettext;
-Gettext.bindtextdomain(ME.metadata['gettext-domain'], ME.path + '/locale');
-const _ = Gettext.domain(ME.metadata['gettext-domain']).gettext;
-
+const ME = ExtensionUtils.getCurrentExtension();
+const _  = imports.gettext.domain('timepp').gettext;
 
 class Settings {
     constructor () {
@@ -25,7 +19,7 @@ class Settings {
         }
 
         this.builder = new Gtk.Builder();
-        this.builder.set_translation_domain(ME.metadata['gettext-domain']);
+        this.builder.set_translation_domain('timepp');
         this.builder.add_from_file(ME.path + '/data/prefs.ui');
 
         this.widget = this.builder.get_object('settings_widget');
@@ -570,8 +564,6 @@ class Settings {
     }
 }
 
-function init () {}
-
 function buildPrefsWidget () {
     let settings = new Settings();
     let widget = settings.widget;
@@ -584,4 +576,8 @@ function buildPrefsWidget () {
 
     widget.show_all();
     return widget;
+}
+
+function init () {
+    ExtensionUtils.initTranslations('timepp');
 }
