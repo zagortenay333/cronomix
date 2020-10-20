@@ -500,7 +500,7 @@ var KanbanColumn = class KanbanColumn {
         this.header.add_child(this.header_fn_btns);
 
         this.add_task_button = new St.Button({ can_focus: true, x_align: St.Align.START, style_class: 'add-task' });
-        this.header_fn_btns.add(this.add_task_button, { expand: true });
+        this.header_fn_btns.add(this.add_task_button);
 
         this.add_task_bin = new St.BoxLayout();
         this.add_task_button.add_actor(this.add_task_bin);

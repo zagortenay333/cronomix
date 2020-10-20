@@ -186,8 +186,6 @@ var Timepp = GObject.registerClass({
 
         this.sigm                = new SIG_MANAGER.SignalManager();
         this.panel_item_position = this.settings.get_enum('panel-item-position');
-        this.custom_stylesheet   = null;
-        this.isDestroying        = false;
 
         this.theme_change_signal_block = false;
 
@@ -235,16 +233,11 @@ var Timepp = GObject.registerClass({
         //
         this._sync_sections_with_settings();
         this.update_panel_items();
-        this._load_stylesheet();
 
 
         //
         // listen
         //
-        this.sigm.connect(St.ThemeContext.get_for_stage(global.stage), 'changed', () => {
-            if (this.theme_change_signal_block) return;
-            this._on_theme_changed();
-        });
         this.sigm.connect(this.settings, 'changed::panel-item-position', () => {
             let new_val = this.settings.get_enum('panel-item-position');
             this._on_panel_position_changed(this.panel_item_position, new_val);
@@ -540,76 +533,6 @@ var Timepp = GObject.registerClass({
         }
     }
 
-    _on_theme_changed () {
-        if (this.custom_stylesheet) this._unload_stylesheet();
-        this._load_stylesheet();
-    }
-
-    _load_stylesheet () {
-        this.theme_change_signal_block = true;
-
-        // determine custom stylesheet
-        {
-            let stylesheet = Main.getThemeStylesheet();
-            let path       = stylesheet ? stylesheet.get_path() : '';
-            let theme_dir  = path ? GLib.path_get_dirname(path) : '';
-
-            if (theme_dir) {
-                this.custom_stylesheet =
-                    Gio.file_new_for_path(theme_dir + '/timepp.css');
-            }
-
-            if (!this.custom_stylesheet ||
-                !this.custom_stylesheet.query_exists(null)) {
-
-                this.custom_stylesheet =
-                    Gio.File.new_for_path(ME.path + '/stylesheet.css');
-            }
-        }
-
-        if (this.custom_stylesheet) {
-            Mainloop.idle_add(() => {
-                try {
-                    // reload theme
-                    St.ThemeContext.get_for_stage(global.stage).set_theme(new St.Theme());
-                    St.ThemeContext.get_for_stage(global.stage).get_theme().load_stylesheet(this.custom_stylesheet);
-                    Main.reloadThemeResource();
-                    Main.loadTheme();
-                } catch {
-                    // ignore upstream issue sometimes after screen locking
-                    // Argument 'file' (type interface) may not be null loadTheme@resource:///org/gnome/shell/ui/main.js:428:19
-                }
-                this.theme_change_signal_block = false;
-                return false;
-            });
-        } else {
-            this.theme_change_signal_block = false;
-        }
-    }
-
-    _unload_stylesheet () {
-        // Also avoid unloading the stylesheet while on lock screen
-        if (
-            ! this.custom_stylesheet
-            || (Main.sessionMode.currentMode === 'unlock-dialog' && ! this.isDestroying)
-        ) return;
-        Mainloop.idle_add(() => {
-            try {
-                St.ThemeContext.get_for_stage(global.stage).get_theme().unload_stylesheet(this.custom_stylesheet);
-                this.custom_stylesheet = null;
-                if (this.isDestroying) { // Only reset when destroying
-                    St.ThemeContext.get_for_stage(global.stage).set_theme(new St.Theme());
-                    Main.reloadThemeResource();
-                    Main.loadTheme();
-                }
-            } catch {
-                // ignore upstream issue sometimes after screen locking
-                // Argument 'file' (type interface) may not be null loadTheme@resource:///org/gnome/shell/ui/main.js:428:19
-            }
-            return false;
-        });
-    }
-
     is_section_enabled (section_name) {
         return this.sections.has(section_name);
     }
@@ -630,9 +553,7 @@ var Timepp = GObject.registerClass({
         return max_h >= 0 && nat_h >= max_h;
     }
 
-    // Calling destroy on Clutter.Actor isn't safe, so we override _onDestroy
     _onDestroy () {
-        this.isDestroying = true;
         // We need to make sure that this one is set to the default actor or
         // else the shell will try to destroy the wrong panel actor.
         this._update_menu_arrow(this);
@@ -642,7 +563,6 @@ var Timepp = GObject.registerClass({
         this.sections.clear();
         this.separators.clear();
 
-        this._unload_stylesheet();
         this.sigm.clear();
 
         super._onDestroy();

@@ -24,7 +24,6 @@ time tracker, timer, stopwatch, pomodoro, and alarms [gnome-shell extension](htt
 * [Todo.txt Extensions](#todotxt-extensions)
 * [Time Tracker](#time-tracker)
 * [DBus API](#dbus-api)
-* [Custom Theme Support](#custom-theme-support)
 * [Keyboard Shortcuts](#keyboard-shortcuts)
 * [Preview](#preview)
 
@@ -345,17 +344,6 @@ There is a pretty comprehensive dbus api. Check out the [dbus dir](dbus) for inf
 what you can do.
 
 There are also some example scripts that might come in handy. :smile:
-
----
-
-### Custom Theme Support
-
-This extension supports custom themes. In order to style it, place a
-`timepp.css` file into your theme's root directory _(the dir where the
-`gnome-shell.css` file is)_.
-
-You must use the `!important` directive in order to override a property from the
-extensions' stylesheet.
 
 ---
 
