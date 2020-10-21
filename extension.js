@@ -400,9 +400,8 @@ var Timepp = GObject.registerClass({
         // Some extensions enable autohiding of the panel and as a result the
         // height of the panel is not taken into account when computing the
         // work area. This is just a simple work around.
-        let tweak = 16;
-        if (monitor.height === work_area.height)
-            tweak = Main.layoutManager.panelBox.height + tweak;
+        let tweak = 0;
+        if (monitor.height === work_area.height) tweak = Main.layoutManager.panelBox.height + tweak;
 
         let max_h = Math.floor((work_area.height - tweak) / scale_factor);
         let max_w = Math.floor((work_area.width  - 16) / scale_factor);
@@ -505,6 +504,7 @@ var Timepp = GObject.registerClass({
             break;
         case PanelPosition.RIGHT:
             Main.panel._rightBox.insert_child_at_index(ref, 0);
+            break;
         }
     }
 

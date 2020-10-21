@@ -90,7 +90,7 @@ var ViewSearch = class ViewSearch {
         // listen
         //
         this.search_entry.clutter_text.connect('text-changed', () => this._search());
-        this.search_close_icon.connect('button-release-event', () => this.delegate.show_view__default());
+        this.search_close_icon.connect('button-press-event', () => this.delegate.show_view__default());
         this.add_filter_icon.connect('button-release-event', () => this._add_custom_filter());
 
 

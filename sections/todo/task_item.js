@@ -942,7 +942,7 @@ var TaskItem = class TaskItem {
     _finish_scrolling_priority () {
         let t = this.prio_label.text;
         this.reset(true, this.new_str_for_prio(t ? t : '(_)'));
-        this.delegate.on_tasks_changed(true, this.delegate.get_current_todo_file().automatic_sort);
+        this.delegate.on_tasks_changed(true, true);
     }
 
     // A little utility func to generate a new task_str with a new property.
@@ -995,27 +995,18 @@ var TaskItem = class TaskItem {
         switch (event.type()) {
           case Clutter.EventType.ENTER: {
             let related = event.get_related();
-
-            if (related && !this.actor.contains(related))
-                this.show_header_icons();
-
-            if (this.prio_label.has_pointer)
-                MISC.global_wrapper.display.set_cursor(Meta.Cursor.POINTING_HAND);
+            if (related && !this.actor.contains(related)) this.show_header_icons();
+            if (this.prio_label.has_pointer) MISC.global_wrapper.display.set_cursor(Meta.Cursor.POINTING_HAND);
           } break;
 
           case Clutter.EventType.LEAVE: {
-            // related is the new actor we hovered over with the mouse
             let related = event.get_related();
 
-            if (!this.header.contains(global.stage.get_key_focus()) &&
-                related &&
-                !this.actor.contains(related)) {
-
+            if (!this.header.contains(global.stage.get_key_focus()) && related && !this.actor.contains(related)) {
                 this.hide_header_icons();
             }
 
-            if (this.finish_scrolling_priority)
-                this._finish_scrolling_priority();
+            if (this.finish_scrolling_priority) this._finish_scrolling_priority();
 
             MISC.global_wrapper.display.set_cursor(Meta.Cursor.DEFAULT);
           } break;

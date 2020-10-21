@@ -469,8 +469,8 @@ var KanbanColumn = class KanbanColumn {
         //
         // draw
         //
-        this.actor  = new St.BoxLayout({ vertical: true, y_expand: true, x_expand: false, style_class: 'kanban-column' });
-        this.actor._owner = this; // can't use _delegate here due to dnd !!!
+        this.actor = new St.BoxLayout({ vertical: true, y_expand: true, x_expand: false, style_class: 'kanban-column' });
+        this.actor._owner = this; // Can't use _delegate prop here because of the dnd module.
 
         this.content_box = new St.BoxLayout({ vertical: true, y_expand: true });
         this.actor.add_child(this.content_box);
@@ -577,7 +577,7 @@ var KanbanColumn = class KanbanColumn {
         // To prevent this, we also connect on those events and only react if
         // the source was an actor that we whitelist (e.g., the tasks_scroll.)
         //
-        // NOTE: We must connect on these before instantiating our dnd module.
+        // We must connect on these before instantiating our dnd module.
         this.actor.connect('button-press-event', (_, event) => this._on_maybe_drag(event));
         this.actor.connect('touch-event', (_, event) => this._on_maybe_drag(event));
 
@@ -941,19 +941,9 @@ var KanbanColumn = class KanbanColumn {
         return [old_col, new_col, destination_column];
     }
 
-    handleDragOver (source, drag_actor, x, y, time) {
-        if (source.dnd_group !== G.DNDGroup.TASK) return DND.DragMotionResult.CONTINUE;
-        if (source.item.actor_parent === this.tasks_scroll_content) return DND.DragMotionResult.CONTINUE;
-
-        source.item.actor_parent.remove_child(source.item.actor);
-        source.item.actor_parent = this.tasks_scroll_content;
-        this.tasks_scroll_content.add_child(source.item.actor);
-
-        return DND.DragMotionResult.MOVE_DROP;
-    }
-
     close () {
         this.sigm.clear();
+        this.dnd.close();
     }
 }
 Signals.addSignalMethods(KanbanColumn.prototype);
