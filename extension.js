@@ -59,49 +59,6 @@ var Timepp = GObject.registerClass({
         this._onOpenStateChanged = () => false;
         super._init(0.5, 'Timepp');
 
-        // @SPEED @HACK
-        // - We patch the menu.open function to emit the 'open-state-changed'
-        //   in a timeout.
-        // - We remove the raise_top() func which causes a lot of lag and seems
-        //   to be useless anyway.
-        this.menu.open = function () {
-            if (this.isOpen) return;
-            this.isOpen = true;
-
-            // @HACK
-            // If an extension puts the panel to the bottom and updates the
-            // _arrowSide prop, then the func _updateFlip() in boxpointer will
-            // call _calculateArrowSide() and reset that prop if the menu is
-            // higher than the monitor.
-            // This will lead to the menu not being shown because it will be
-            // rendered below the panel.
-            //
-            // I don't understand what the point of _calculateArrowSide() is..
-            //
-            // Since we patch the open() func, we have to include this hack here.
-            let panel_pos = Main.layoutManager.panelBox.anchor_y == 0 ? St.Side.TOP : St.Side.BOTTOM;
-            this._boxPointer._userArrowSide = panel_pos;
-            this._boxPointer._arrowSide     = panel_pos;
-
-            this._boxPointer.setPosition(this.sourceActor, this._arrowAlignment);
-
-            // If there is another menu open, we emit 'open-state-changed' the
-            // normal way to avoid any deadlocks.
-            if (Main.panel.menuManager.activeMenu) {
-                this._boxPointer.open(BoxPointer.PopupAnimation.FULL);
-                this.emit('open-state-changed', true);
-            } else {
-                // Put in boxpointer callback to play nicely with animations.
-                this._boxPointer.open(BoxPointer.PopupAnimation.FULL, () => {
-                    let f = global.stage.get_key_focus();
-                    Mainloop.timeout_add(0, () => {
-                        this.emit('open-state-changed', true);
-                        f.grab_key_focus();
-                    });
-                });
-            }
-        };
-
         this.style_class = '';
         this.can_focus   = false;
         this.reactive    = false;
