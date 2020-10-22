@@ -1,11 +1,11 @@
-const Gio      = imports.gi.Gio
-const GLib     = imports.gi.GLib;
-const Shell    = imports.gi.Shell;
-const Main     = imports.ui.main;
-const Util     = imports.misc.util;
+const Gio       = imports.gi.Gio
+const GLib      = imports.gi.GLib;
+const Shell     = imports.gi.Shell;
+const Main      = imports.ui.main;
+const Util      = imports.misc.util;
 const ByteArray = imports.byteArray;
-const Signals  = imports.signals;
-const Mainloop = imports.mainloop;
+const Signals   = imports.signals;
+const Mainloop  = imports.mainloop;
 
 
 const ME = imports.misc.extensionUtils.getCurrentExtension();
@@ -754,7 +754,7 @@ var TimeTracker = class TimeTracker {
 
             for (let file of csv_files) {
                 let [, content] = file[0].load_contents(null);
-                content         = String(content).split(/[\r\n]/).filter((l) => /\S/.test(l));
+                content         = ByteArray.toString(content).split(/[\r\n]/).filter((l) => /\S/.test(l));
 
                 let parse      = this._parse_csv_line;
                 let stats_data = this.stats_data;

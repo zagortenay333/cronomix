@@ -5,7 +5,7 @@ const GLib         = imports.gi.GLib;
 const Clutter      = imports.gi.Clutter;
 const GnomeDesktop = imports.gi.GnomeDesktop;
 const Main         = imports.ui.main;
-const ByteArray = imports.byteArray;
+const ByteArray    = imports.byteArray;
 const Signals      = imports.signals;
 const Mainloop     = imports.mainloop;
 

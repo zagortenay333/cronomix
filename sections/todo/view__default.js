@@ -941,6 +941,26 @@ var KanbanColumn = class KanbanColumn {
         return [old_col, new_col, destination_column];
     }
 
+    // This function gets triggered when you hover over a kanban column while
+    // dragging a task and it inserts the invisible dummy task into the column.
+    // The reason that this is necesarry is that the dnd  module only inserts
+    // the dummy task when you hover over another task, but a user might grab a
+    // task and just drop it into a new column without ever hovering over a
+    // task in that new column.
+    //
+    // Maybe there might be a way for the our custom dnd module to do this
+    // automatically but it's not worth trying.
+    handleDragOver (source, drag_actor, x, y, time) {
+        if (source.dnd_group !== G.DNDGroup.TASK) return DND.DragMotionResult.CONTINUE;
+        if (source.item.actor_parent === this.tasks_scroll_content) return DND.DragMotionResult.CONTINUE;
+
+        source.item.actor_parent.remove_child(source.item.actor);
+        source.item.actor_parent = this.tasks_scroll_content;
+        this.tasks_scroll_content.add_child(source.item.actor);
+
+        return DND.DragMotionResult.MOVE_DROP;
+    }
+
     close () {
         this.sigm.clear();
         this.dnd.close();
