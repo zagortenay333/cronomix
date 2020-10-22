@@ -201,6 +201,7 @@
 .timepp-fullscreen {
     background-color: rgba(0, 0, 0, .9);
     color: white;
+    padding-top: 100px;
 }
 
 .timepp-fullscreen .content {}
@@ -224,17 +225,29 @@
 }
 
 .timepp-fullscreen .slider {
-    min-height: 37px;
-    -slider-height: 0;
-    -slider-background-color: transparent;
-    -slider-active-background-color: transparent;
-    -slider-border-color: rgba(255, 255, 255, 0.2);
-    -slider-active-border-color: #5a94dc;
-    -slider-border-width: 3px;
+    height: 37px;
+
+    /* slider trough */
+    -barlevel-height: 3px;
+    -barlevel-background-color: rgba(255, 255, 255, 0.2);
+    -barlevel-border-width: 0;
+    -barlevel-border-color: rgba(255, 255, 255, 0.2);
+
+    /* fill style */
+    -barlevel-active-background-color: #5a94dc;
+    -barlevel-active-border-color: #5a94dc;
+
+    /* overfill style (red in this case) */
+    -barlevel-overdrive-color: red;
+    -barlevel-overdrive-border-color: red;
+    -barlevel-overdrive-separator-width: 1px;
+
+    /* slider handler */
     -slider-handle-radius: 6px;
+    -slider-handle-border-width: 1px;
+    -slider-handle-border-color: #5a94dc;
+
     color: #5a94dc;
-    border-image: none;
-    border: 0;
 }
 
 .timepp-fullscreen *:focus {

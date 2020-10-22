@@ -193,12 +193,10 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
         //
         // timer slider
         //
-        {
-            this.slider_item = new St.BoxLayout({ vertical: true, style_class: 'timepp-menu-item' });
-            this.actor.add_child(this.slider_item);
-            this.slider = new Slider.Slider(0);
-            this.slider_item.add_actor(this.slider);
-        }
+        this.slider_item = new St.BoxLayout({ vertical: true, style_class: 'timepp-menu-item' });
+        this.actor.add_child(this.slider_item);
+        this.slider = new Slider.Slider(0);
+        this.slider_item.add_actor(this.slider);
 
 
         //
@@ -376,8 +374,8 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
         let time = Math.ceil(this.clock / 1000000);
         let txt;
 
-        // If the seconds are not shown, we need to make the timer '1-indexed'
-        // in respect to minutes. I.e., 00:00:34 becomes 00:01.
+        // If the seconds are not shown, we make the timer '1-indexed'
+        // with respect to minutes. I.e., 00:00:34 becomes 00:01.
         if (this.settings.get_boolean('timer-show-seconds')) {
             txt = "%02d:%02d:%02d".format(
                 Math.floor(time / 3600),
@@ -398,15 +396,14 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
         this.fullscreen.set_banner_text(txt);
     }
 
-    // Update slider based on the clock.
-    // This function is the inverse of the function that is used to calc the
-    // clock based on the slider.
+    // Update slider based on the clock. This function is the inverse of the
+    // function that is used to calc the clock based on the slider.
     _update_slider () {
         let x = this.clock / TIMER_MAX_DURATION;
         let y = (Math.log(x * (Math.pow(2, 10) - 1) +1)) / Math.log(2) / 10;
 
         this.slider.value = y;
-        this.fullscreen.slider.value = y;
+        if (this.fullscreen.is_open) this.fullscreen.slider.value = y;
     }
 
     slider_released () {
@@ -431,8 +428,7 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
             let y = (Math.pow(2, (10 * value)) - 1) / (Math.pow(2, 10) - 1);
 
             // Change the increment of the slider based on how far it's dragged.
-            // If the seconds are not shown, the increments must be multiples
-            // of 60s.
+            // If the seconds are not shown, the increments must be multiples of 60s.
             let step;
 
             if (this.settings.get_boolean('timer-show-seconds')) {
@@ -523,13 +519,10 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
         });
 
         presets_view.connect('delete-preset', (_, preset) => {
-            if (this.current_preset === preset) {
-                this.current_preset = this.cache.default_preset;
-            }
+            if (this.current_preset === preset) this.current_preset = this.cache.default_preset;
 
             for (let i = 0; i < this.cache.custom_presets.length; i++) {
-                if (this.cache.custom_presets[i] === preset)
-                    this.cache.custom_presets.splice(i, 1);
+                if (this.cache.custom_presets[i] === preset) this.cache.custom_presets.splice(i, 1);
             }
 
             this._store_cache();
@@ -547,8 +540,7 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
         this.ext.menu.close();
 
         if (! this.fullscreen) {
-            this.fullscreen = new TimerFullscreen(
-                this.ext, this, this.settings.get_int('timer-fullscreen-monitor-pos'));
+            this.fullscreen = new TimerFullscreen(this.ext, this, this.settings.get_int('timer-fullscreen-monitor-pos'));
         }
 
         this.fullscreen.open();
