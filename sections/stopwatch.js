@@ -88,8 +88,7 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
             this.dbus_impl.export(Gio.DBus.session, '/timepp/zagortenay333/Stopwatch');
         }
 
-        this.fullscreen = new StopwatchFullscreen(this.ext, this,
-            this.settings.get_int('stopwatch-fullscreen-monitor-pos'));
+        this.fullscreen = new StopwatchFullscreen(this.ext, this, this.settings.get_int('stopwatch-fullscreen-monitor-pos'));
 
         this.sigm = new SIG_MANAGER.SignalManager();
         this.keym = new KEY_MANAGER.KeybindingManager(this.settings);
@@ -306,8 +305,7 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
 
         this.fullscreen.on_timer_stopped();
 
-        if (!this.fullscreen.is_open && this.actor.visible)
-            this.button_start.grab_key_focus();
+        if (!this.fullscreen.is_open && this.actor.visible) this.button_start.grab_key_focus();
 
         this._panel_item_UI_update();
         this._toggle_buttons();
@@ -415,7 +413,6 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
 
     _update_laps () {
         let n = this.cache.laps.length;
-
         if (n === 0) return;
 
         let pad    = String(n).length + 1;
@@ -556,9 +553,10 @@ var StopwatchFullscreen = class StopwatchFullscreen extends FULLSCREEN.Fullscree
         //
         // laps box
         //
-        this.laps_scroll = new St.ScrollView({ visible: false, x_fill: true, y_fill: true, y_align: St.Align.START, style_class: 'laps-scrollview vfade' });
+        this.laps_scroll = new St.ScrollView({ visible: false, style_class: 'timepp-menu-item laps-scrollview vfade', x_fill: true, y_fill: false, y_align: St.Align.START});
         this.middle_box.add_child(this.laps_scroll);
 
+        this.laps_scroll.vscrollbar_policy = Gtk.PolicyType.NEVER;
         this.laps_scroll.hscrollbar_policy = Gtk.PolicyType.NEVER;
 
         this.laps_scroll_bin = new St.BoxLayout({ vertical: true, style_class: 'laps-box' });
@@ -588,22 +586,10 @@ var StopwatchFullscreen = class StopwatchFullscreen extends FULLSCREEN.Fullscree
         //
         // listen
         //
-        this.button_start.connect('clicked', () => {
-            this.delegate.start();
-            return Clutter.EVENT_STOP;
-        });
-        this.button_reset.connect('clicked', () => {
-            this.delegate.reset();
-            return Clutter.EVENT_STOP;
-        });
-        this.button_stop.connect('clicked', () => {
-            this.delegate.stop();
-            return Clutter.EVENT_STOP;
-        });
-        this.button_lap.connect('clicked', () => {
-            this.delegate.lap();
-            return Clutter.EVENT_STOP;
-        });
+        this.button_start.connect('clicked', () => { this.delegate.start(); });
+        this.button_reset.connect('clicked', () => { this.delegate.reset(); });
+        this.button_stop.connect('clicked', () => { this.delegate.stop(); });
+        this.button_lap.connect('clicked', () => { this.delegate.lap(); });
         this.actor.connect('key-release-event', (_, event) => {
             switch (event.get_key_symbol()) {
               case Clutter.KEY_space:

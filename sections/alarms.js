@@ -298,7 +298,6 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
                 this.alarms_scroll.show();
                 this.add_alarm_button.grab_key_focus();
                 editor.actor.destroy();
-                alarm_item.actor.destroy();
                 this._delete_alarm(alarm_item.alarm);
                 alarm_item.close();
                 this.alarm_items.delete(alarm_item);
