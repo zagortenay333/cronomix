@@ -50,13 +50,10 @@ var Timepp = GObject.registerClass({
     }
 }, class Timepp extends PanelMenu.Button {
     _init () {
-        // @HACK
-        // This func only updates the max-height prop but not max-width.
-        // We unset it and do our own thing.
-        //
-        // NOTE: Do this before calling the parent constructor because they use
-        // bind() on the original func..
+        // @HACK This func only updates the max-height prop but not max-width.
+        // We unset it and do our own thing. Must be done before super._init().
         this._onOpenStateChanged = () => false;
+
         super._init(0.5, 'Timepp');
 
         this.style_class = '';
