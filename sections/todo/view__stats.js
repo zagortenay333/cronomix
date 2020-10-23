@@ -128,8 +128,8 @@ var StatsView = class StatsView extends FULLSCREEN.Fullscreen{
         //
         // graph interval icon
         //
-        this.graph_interval_icon = new St.Button({ visible: false, y_align: St.Align.MIDDLE, can_focus: true, style_class: 'graph-interval-icon' });
-        this.top_box_left.insert_child_at_index(this.graph_interval_icon, 0);
+        this.graph_interval_icon = new St.Button({ visible: false, can_focus: true, style_class: 'graph-interval-icon' });
+        this.top_box_left.add_child(this.graph_interval_icon);
         this.graph_interval_icon.add_actor(new St.Icon({ gicon:
             MISC_UTILS.getIcon(
                 this.delegate.settings.get_boolean('todo-graph-shows-intervals') ?
@@ -142,8 +142,8 @@ var StatsView = class StatsView extends FULLSCREEN.Fullscreen{
         //
         // heatmap icon
         //
-        this.heatmap_icon = new St.Button({ checked: this.delegate.settings.get_boolean('todo-stats-heatmap-visible'), visible: false, y_align: St.Align.MIDDLE, can_focus: true, style_class: 'heatmap-icon' });
-        this.top_box_left.insert_child_at_index(this.heatmap_icon, 0);
+        this.heatmap_icon = new St.Button({ checked: this.delegate.settings.get_boolean('todo-stats-heatmap-visible'), visible: false, can_focus: true, style_class: 'heatmap-icon' });
+        this.top_box_left.add_child(this.heatmap_icon);
         this.heatmap_icon.add_actor(new St.Icon({ gicon : MISC_UTILS.getIcon('timepp-heatmap-symbolic') }));
 
 
@@ -153,15 +153,15 @@ var StatsView = class StatsView extends FULLSCREEN.Fullscreen{
         this.nav_bar = new St.BoxLayout({ style_class: 'navbar' });
         this.top_box_right.insert_child_at_index(this.nav_bar, 0);
 
-        this.single_mode_icon = new St.Button({ y_align: St.Align.MIDDLE, can_focus: true });
+        this.single_mode_icon = new St.Button({ can_focus: true });
         this.nav_bar.add_actor(this.single_mode_icon);
         this.single_mode_icon.add_actor(new St.Icon({ gicon : MISC_UTILS.getIcon('timepp-search-symbolic') }));
 
-        this.global_mode_icon = new St.Button({ y_align: St.Align.MIDDLE, can_focus: true });
+        this.global_mode_icon = new St.Button({ can_focus: true });
         this.nav_bar.add_actor(this.global_mode_icon);
         this.global_mode_icon.add_actor(new St.Icon({ gicon : MISC_UTILS.getIcon('timepp-home-symbolic') }));
 
-        this.hot_mode_icon = new St.Button({ y_align: St.Align.MIDDLE, can_focus: true });
+        this.hot_mode_icon = new St.Button({ can_focus: true });
         this.nav_bar.add_actor(this.hot_mode_icon);
         this.hot_mode_icon.add_actor(new St.Icon({ gicon : MISC_UTILS.getIcon('timepp-fire-symbolic') }));
 

@@ -98,8 +98,13 @@
 
 .timepp-menu .view-box {
     padding: .4em 1.2em;
-    min-width: 22em;
-    spacing: .7em;
+    min-width: 20em;
+}
+.timepp-menu .view-box-content {
+    background: rgba(125, 125, 125, .15);
+    border: 1px rgba(125, 125, 125, .15);
+    border-radius: 2px;
+    padding: .7em;
 }
 
 .timepp-menu .view-clear-tasks .view-box-content {
@@ -108,14 +113,6 @@
 
 .timepp-menu StEntry {
     width: 22em;
-}
-
-.timepp-menu .view-box-content {
-    background: rgba(125, 125, 125, .15);
-    border: 1px rgba(125, 125, 125, .15);
-    border-radius: 2px;
-    padding: .7em;
-    spacing: .7em;
 }
 
 /* Used in view-boxes */
@@ -166,8 +163,8 @@
 }
 
 .timepp-menu .numpicker {
-    padding: 4px 6px 4px 12px;
-    spacing: 4px;
+    padding: 0px 2px 0px 8px;
+    spacing: 2px;
     min-height: 32px; /* two 16px icons stacked on top of each other */
 }
 
@@ -177,7 +174,7 @@
 
 .numpicker-counter,
 .numpicker-arrow-box {
-    padding: 4px;
+    padding: 2px;
 }
 
 .numpicker-arrow {}
@@ -637,6 +634,10 @@
 
 .timepp-menu .todo-section .tasks-content-box { spacing: .5em; }
 
+.timepp-menu .todo-section .view-task-editor {
+    spacing: .7em;
+}
+
 .timepp-menu .todo-section .task-item {
     padding: .6em;
     background: rgba(125, 125, 125, .15);
@@ -703,9 +704,11 @@
     background: transparent;
     border: 0;
     padding: 0;
+    spacing: .7em;
 }
 
 .timepp-menu .todo-section .view-default {
+
 }
 
 .timepp-menu .todo-section .view-default.one-column .kanban-column {
@@ -777,7 +780,7 @@
 
 .timepp-menu .todo-section .sort-items-box {
     padding: .5em 0;
-    spacing: .7em;
+    spacing: .2em;
 }
 
 .timepp-menu .todo-section .completion-box {

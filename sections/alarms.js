@@ -658,7 +658,7 @@ var AlarmItem = class AlarmItem {
         this.time = new St.Label({ y_align: St.Align.END, x_align: St.Align.START, style_class: 'alarm-item-time' });
         this.header.add(this.time);
 
-        this.icon_box = new St.BoxLayout({y_align: Clutter.ActorAlign.CENTER, x_align: Clutter.ActorAlign.CENTER, style_class: 'icon-box'});
+        this.icon_box = new St.BoxLayout({ x_expand: true, y_align: Clutter.ActorAlign.CENTER, x_align: Clutter.ActorAlign.END, style_class: 'icon-box'});
         this.header.add_actor(this.icon_box);
 
         this.edit_icon = new St.Icon({ visible: false, reactive: true, can_focus: true, track_hover: true, gicon : MISC_UTILS.getIcon('timepp-edit-symbolic'), style_class: 'settings-icon' });

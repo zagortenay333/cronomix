@@ -62,8 +62,6 @@ var ViewTaskEditor = class ViewTaskEditor {
         this.ext      = ext;
         this.delegate = delegate;
 
-        Mainloop.idle_add(() => this.delegate.actor.add_style_class_name('view-task-editor'));
-
         this.sigm = new SIG_MANAGER.SignalManager();
 
         this.curr_selected_completion   = null;
@@ -79,7 +77,7 @@ var ViewTaskEditor = class ViewTaskEditor {
         //
         // container
         //
-        this.actor = new St.BoxLayout({ style_class: 'view-box' });
+        this.actor = new St.BoxLayout({ style_class: 'view-task-editor view-box' });
 
         this.content_box = new St.BoxLayout({ vertical: true, style_class: 'view-box-content' });
         this.actor.add_actor(this.content_box);
@@ -180,8 +178,7 @@ var ViewTaskEditor = class ViewTaskEditor {
             box.add_child(icon_group);
             this.eye_icon = new St.Icon({ can_focus: true, reactive: true, track_hover: true, x_align: Clutter.ActorAlign.START, y_align: Clutter.ActorAlign.CENTER, });
             icon_group.add_child(this.eye_icon);
-            if (this.preview_scrollview.visible) this.eye_icon.gicon = MISC_UTILS.getIcon('timepp-eye-symbolic');
-            else                                 this.eye_icon.gicon = MISC_UTILS.getIcon('timepp-eye-closed-symbolic')
+            this.eye_icon.gicon = (this.preview_scrollview.visible) ? MISC_UTILS.getIcon('timepp-eye-symbolic') : MISC_UTILS.getIcon('timepp-eye-closed-symbolic');
         }
 
 
@@ -191,7 +188,7 @@ var ViewTaskEditor = class ViewTaskEditor {
         this.completion_menu = new St.ScrollView({ hscrollbar_policy: Gtk.PolicyType.NEVER, vscrollbar_policy: Gtk.PolicyType.NEVER, visible: false, style_class: 'vfade' });
         this.entry_container.add_child(this.completion_menu);
 
-        this.completion_menu_content = new St.BoxLayout({ vertical: true, reactive: true, style_class: 'completion-box' });
+        this.completion_menu_content = new St.BoxLayout({ y_expand: true, vertical: true, reactive: true, style_class: 'completion-box' });
         this.completion_menu.add_actor(this.completion_menu_content);
 
 
@@ -250,7 +247,7 @@ var ViewTaskEditor = class ViewTaskEditor {
         });
         this.entry.entry.connect('key-press-event', (_, event) => {
             let symbol = event.get_key_symbol();
-            if (this.completion_menu.visible && symbol === Clutter.Tab) {
+            if (this.completion_menu.visible && symbol === Clutter.KEY_Tab) {
                 this._on_tab();
                 return Clutter.EVENT_STOP;
             }
@@ -461,9 +458,8 @@ var ViewTaskEditor = class ViewTaskEditor {
         this.completion_menu.show();
 
         for (let i = 0; i < completions.length; i++) {
-            let item = new St.Button({ label: completions[i], reactive: true, track_hover: true, x_align: St.Align.START, style_class: 'row popup-menu-item' });
+            let item = new St.Button({ x_expand: true, x_align: St.Align.MIDDLE, label: completions[i], reactive: true, track_hover: true, style_class: 'row popup-menu-item' });
             this.completion_menu_content.add_child(item);
-
             item.connect('notify::hover', (item) => this._on_completion_hovered(item));
             item.connect('clicked', (item) => this._on_completion_selected());
         }

@@ -111,7 +111,7 @@ var ViewFilters = class ViewFilters {
         this.show_hidden_tasks_item = new St.BoxLayout({ reactive: true, style_class: 'row filter-window-item' });
         this.toggles_sector.add_child(this.show_hidden_tasks_item);
 
-        let show_hidden_tasks_label = new St.Label({ text: _('Show hidden tasks only'), y_align: Clutter.ActorAlign.CENTER });
+        let show_hidden_tasks_label = new St.Label({ x_expand: true, text: _('Show hidden tasks only'), y_align: Clutter.ActorAlign.CENTER });
         this.show_hidden_tasks_item.add(show_hidden_tasks_label);
 
         let hidden_count_label = new St.Label({ y_align: Clutter.ActorAlign.CENTER, style_class: 'popup-inactive-menu-item', pseudo_class: 'insensitive' });
@@ -134,7 +134,7 @@ var ViewFilters = class ViewFilters {
         this.show_recurring_tasks_item = new St.BoxLayout({ reactive: true, style_class: 'row filter-window-item' });
         this.toggles_sector.add_child(this.show_recurring_tasks_item);
 
-        let show_recurring_tasks_label = new St.Label({ text: _('Show recurring tasks only'), y_align: Clutter.ActorAlign.CENTER });
+        let show_recurring_tasks_label = new St.Label({ x_expand: true, text: _('Show recurring tasks only'), y_align: Clutter.ActorAlign.CENTER });
         this.show_recurring_tasks_item.add(show_recurring_tasks_label);
 
         let recurring_count_label = new St.Label({ y_align: Clutter.ActorAlign.CENTER, style_class: 'popup-inactive-menu-item', pseudo_class: 'insensitive' });
@@ -160,7 +160,7 @@ var ViewFilters = class ViewFilters {
         this.show_deferred_tasks_item = new St.BoxLayout({ reactive: true, style_class: 'row filter-window-item' });
         this.toggles_sector.add_child(this.show_deferred_tasks_item);
 
-        let show_deferred_tasks_label = new St.Label({ text: _('Show deferred tasks only'), y_align: Clutter.ActorAlign.CENTER });
+        let show_deferred_tasks_label = new St.Label({ x_expand: true, text: _('Show deferred tasks only'), y_align: Clutter.ActorAlign.CENTER });
         this.show_deferred_tasks_item.add(show_deferred_tasks_label);
 
         let deferred_count_label = new St.Label({ y_align: Clutter.ActorAlign.CENTER, style_class: 'popup-inactive-menu-item', pseudo_class: 'insensitive' });
@@ -185,7 +185,7 @@ var ViewFilters = class ViewFilters {
         this.invert_item = new St.BoxLayout({ reactive: true, style_class: 'row filter-window-item' });
         this.toggles_sector.add_child(this.invert_item);
 
-        let invert_label = new St.Label({ text: _('Invert filters'), y_align: St.Align.END });
+        let invert_label = new St.Label({ x_expand: true, text: _('Invert filters'), y_align: St.Align.END });
         this.invert_item.add(invert_label);
 
         this.invert_toggle_btn = new St.Button({ can_focus: true });
@@ -200,8 +200,8 @@ var ViewFilters = class ViewFilters {
         this.btn_box = new St.BoxLayout({ x_expand: true, style_class: 'row btn-box' });
         this.content_box.add_child(this.btn_box);
 
-        this.button_reset = new St.Button({ can_focus: true, label: _('Reset'), style_class: 'button' });
-        this.button_ok    = new St.Button({ can_focus: true, label: _('Ok'), style_class: 'btn-ok button' });
+        this.button_reset = new St.Button({ x_expand: true, can_focus: true, label: _('Reset'), style_class: 'button' });
+        this.button_ok    = new St.Button({ x_expand: true, can_focus: true, label: _('Ok'), style_class: 'btn-ok button' });
 
         this.btn_box.add(this.button_reset);
         this.btn_box.add(this.button_ok);

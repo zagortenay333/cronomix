@@ -754,7 +754,7 @@ var TaskItem = class TaskItem {
     _create_header_icons () {
         if (this.header_icon_box) return;
 
-        this.header_icon_box = new St.BoxLayout({ x_align: Clutter.ActorAlign.END, style_class: 'icon-box' });
+        this.header_icon_box = new St.BoxLayout({ y_expand: true, x_expand: true, x_align: Clutter.ActorAlign.END, style_class: 'icon-box' });
         this.header.add(this.header_icon_box);
 
         this.stat_icon = new St.Icon({ visible:false, reactive: true, can_focus: true, track_hover: true, gicon : MISC.getIcon('timepp-graph-symbolic') });
@@ -769,7 +769,7 @@ var TaskItem = class TaskItem {
         this.tracker_icon = new St.Icon({ visible:false, reactive: true, can_focus: true, track_hover: true, gicon : MISC.getIcon('timepp-start-symbolic'), style_class: 'tracker-start-icon' });
         this.header_icon_box.add_actor(this.tracker_icon);
 
-        // @NOTE: Use connect_press here because we need to play well with dnd.
+        // Use connect_press here because we need to play well with dnd.
         this.delegate.sigm.connect_press(this.stat_icon, Clutter.BUTTON_PRIMARY, true, () => {
             this.delegate.show_view__time_tracker_stats(this);
             this.hide_header_icons();

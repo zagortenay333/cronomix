@@ -107,7 +107,7 @@ var ViewSort = class ViewSort {
         //
         this.btn_box = new St.BoxLayout({ x_expand: true, style_class: 'row btn-box' });
         this.content_box.add_child(this.btn_box);
-        this.button_ok = new St.Button({ can_focus: true, label: _('Ok'), style_class: 'btn-ok button' });
+        this.button_ok = new St.Button({ x_expand: true, can_focus: true, label: _('Ok'), style_class: 'btn-ok button' });
         this.btn_box.add(this.button_ok);
 
 
