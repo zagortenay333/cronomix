@@ -147,7 +147,7 @@ Signals.addSignalMethods(ViewSort.prototype);
 // =====================================================================
 // @@@ SortItem
 // =====================================================================
-var SortItem = class SortItem{
+var SortItem = class SortItem {
     constructor (delegate, actor_scrollview, actor_parent, label, sort_type, sort_order) {
         this.delegate         = delegate;
         this.actor_scrollview = [[actor_scrollview], []];

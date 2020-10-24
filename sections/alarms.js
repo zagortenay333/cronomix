@@ -52,7 +52,7 @@ const NotifStyle = {
 // @ext      : obj (main extension object)
 // @settings : obj (extension settings)
 // =====================================================================
-var SectionMain = class SectionMain extends ME.imports.sections.section_base.SectionBase{
+var SectionMain = class SectionMain extends ME.imports.sections.section_base.SectionBase {
     constructor (section_name, ext, settings) {
         super(section_name, ext, settings);
 
@@ -451,7 +451,7 @@ Signals.addSignalMethods(SectionMain.prototype);
 // settings; otherwise, a complete new alarm object will be returned with the
 // 'add-alarm' signal.
 // =====================================================================
-var AlarmEditor = class AlarmEditor{
+var AlarmEditor = class AlarmEditor {
     constructor (ext, delegate, alarm) {
         this.ext      = ext;
         this.delegate = delegate;

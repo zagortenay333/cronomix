@@ -51,7 +51,7 @@ const StatsMode = {
 // @delegate : obj (main section object)
 // @monitor  : int (monitor position)
 // =====================================================================
-var StatsView = class StatsView extends FULLSCREEN.Fullscreen{
+var StatsView = class StatsView extends FULLSCREEN.Fullscreen {
     constructor (ext, delegate, monitor) {
         super(monitor);
 
