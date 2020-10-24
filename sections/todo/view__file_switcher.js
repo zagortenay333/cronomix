@@ -222,9 +222,9 @@ var ViewFileSwitcher = class ViewFileSwitcher {
 
         item.icon_box = new St.BoxLayout({ style_class: 'icon-box' });
         item.header.add_child(item.icon_box);
-        item.check_icon = new St.Icon({ visible: false, track_hover: true, can_focus: true, reactive: true, gicon : MISC_UTILS.getIcon('timepp-todo-symbolic'), style_class: 'file-switcher-item-check-icon' });
+        item.check_icon = new St.Icon({ visible: false, track_hover: true, can_focus: true, reactive: true, gicon : MISC_UTILS.get_icon('timepp-todo-symbolic'), style_class: 'file-switcher-item-check-icon' });
         item.icon_box.add_child(item.check_icon);
-        let edit_icon = new St.Icon({ visible: false, track_hover: true, can_focus: true, reactive: true, gicon : MISC_UTILS.getIcon('timepp-edit-symbolic') });
+        let edit_icon = new St.Icon({ visible: false, track_hover: true, can_focus: true, reactive: true, gicon : MISC_UTILS.get_icon('timepp-edit-symbolic') });
         item.icon_box.add_child(edit_icon);
 
         {
@@ -393,7 +393,7 @@ var FileInfoEditor = class FileInfoEditor {
             this.todo_entry = new St.Entry({ hint_text: _('Todo file'), can_focus: true });
             row.add_actor(this.todo_entry);
 
-            this.todo_search_icon = new St.Icon({ track_hover: true, reactive: true, gicon : MISC_UTILS.getIcon('timepp-search-symbolic') });
+            this.todo_search_icon = new St.Icon({ track_hover: true, reactive: true, gicon : MISC_UTILS.get_icon('timepp-search-symbolic') });
             this.todo_entry.set_secondary_icon(this.todo_search_icon);
 
             if (file) this.todo_entry.text = file.todo_file;
@@ -408,7 +408,7 @@ var FileInfoEditor = class FileInfoEditor {
             this.done_entry = new St.Entry({ hint_text: hint, can_focus: true });
             row.add_actor(this.done_entry);
 
-            this.done_search_icon = new St.Icon({ track_hover: true, reactive: true, gicon : MISC_UTILS.getIcon('timepp-search-symbolic') });
+            this.done_search_icon = new St.Icon({ track_hover: true, reactive: true, gicon : MISC_UTILS.get_icon('timepp-search-symbolic') });
             this.done_entry.set_secondary_icon(this.done_search_icon);
 
             if (file) this.done_entry.text = file.done_file;
@@ -423,7 +423,7 @@ var FileInfoEditor = class FileInfoEditor {
             this.tracker_entry = new St.Entry({ hint_text: hint, can_focus: true });
             row.add_actor(this.tracker_entry);
 
-            this.tracker_search_icon = new St.Icon({ track_hover: true, reactive: true, gicon : MISC_UTILS.getIcon('timepp-search-symbolic') });
+            this.tracker_search_icon = new St.Icon({ track_hover: true, reactive: true, gicon : MISC_UTILS.get_icon('timepp-search-symbolic') });
             this.tracker_entry.set_secondary_icon(this.tracker_search_icon);
 
             if (file) this.tracker_entry.text = file.time_tracker_dir;

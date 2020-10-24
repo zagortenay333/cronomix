@@ -335,7 +335,7 @@ var ViewDefault = class ViewDefault {
         let filters = this.delegate.get_current_todo_file().filters;
 
         filters.invert_filters = !filters.invert_filters;
-        this.filter_icon.gicon = MISC_UTILS.getIcon(
+        this.filter_icon.gicon = MISC_UTILS.get_icon(
                                     filters.invert_filters ?
                                     'timepp-filter-inverted-symbolic' :
                                     'timepp-filter-symbolic'
@@ -505,7 +505,7 @@ var KanbanColumn = class KanbanColumn {
         this.add_task_bin = new St.BoxLayout();
         this.add_task_button.add_actor(this.add_task_bin);
 
-        this.add_task_icon = new St.Icon({ gicon : MISC_UTILS.getIcon('timepp-plus-symbolic'), y_align: Clutter.ActorAlign.CENTER });
+        this.add_task_icon = new St.Icon({ gicon : MISC_UTILS.get_icon('timepp-plus-symbolic'), y_align: Clutter.ActorAlign.CENTER });
         this.add_task_bin.add_actor(this.add_task_icon);
 
         this.add_task_label = new St.Label({ text: _('Add New Task...'), y_align: Clutter.ActorAlign.CENTER });
@@ -518,13 +518,13 @@ var KanbanColumn = class KanbanColumn {
         this.icon_box = new St.BoxLayout({ x_align: Clutter.ActorAlign.END, style_class: 'icon-box' });
         this.header_fn_btns.add_child(this.icon_box);
 
-        this.collapse_icon = new St.Icon({ gicon : MISC_UTILS.getIcon('timepp-column-collapse-symbolic'), can_focus: true, reactive: true, track_hover: true, y_align: Clutter.ActorAlign.CENTER, style_class: 'collapse-icon' });
+        this.collapse_icon = new St.Icon({ gicon : MISC_UTILS.get_icon('timepp-column-collapse-symbolic'), can_focus: true, reactive: true, track_hover: true, y_align: Clutter.ActorAlign.CENTER, style_class: 'collapse-icon' });
         this.icon_box.add_child(this.collapse_icon);
 
-        this.kanban_icon = new St.Icon({ gicon : MISC_UTILS.getIcon('timepp-kanban-symbolic'), can_focus: true, reactive: true, track_hover: true, y_align: Clutter.ActorAlign.CENTER, style_class: 'kanban-icon' });
+        this.kanban_icon = new St.Icon({ gicon : MISC_UTILS.get_icon('timepp-kanban-symbolic'), can_focus: true, reactive: true, track_hover: true, y_align: Clutter.ActorAlign.CENTER, style_class: 'kanban-icon' });
         this.icon_box.add_child(this.kanban_icon);
 
-        this.clear_icon = new St.Icon({ gicon : MISC_UTILS.getIcon('timepp-clear-symbolic'), can_focus: true, reactive: true, track_hover: true, y_align: Clutter.ActorAlign.CENTER, style_class: 'clear-icon' });
+        this.clear_icon = new St.Icon({ gicon : MISC_UTILS.get_icon('timepp-clear-symbolic'), can_focus: true, reactive: true, track_hover: true, y_align: Clutter.ActorAlign.CENTER, style_class: 'clear-icon' });
         this.icon_box.add_child(this.clear_icon);
         this.clear_icon.visible = this.delegate.stats.completed > 0;
 
@@ -535,22 +535,22 @@ var KanbanColumn = class KanbanColumn {
         else                               this.filter_icon.remove_style_class_name('active');
 
         if (this.delegate.get_current_todo_file().filters.invert_filters)
-            this.filter_icon.gicon = MISC_UTILS.getIcon('timepp-filter-inverted-symbolic');
+            this.filter_icon.gicon = MISC_UTILS.get_icon('timepp-filter-inverted-symbolic');
         else
-            this.filter_icon.gicon = MISC_UTILS.getIcon('timepp-filter-symbolic');
+            this.filter_icon.gicon = MISC_UTILS.get_icon('timepp-filter-symbolic');
 
-        this.sort_icon = new St.Icon({ gicon : MISC_UTILS.getIcon('timepp-sort-ascending-symbolic'), can_focus: true, reactive: true, track_hover: true, y_align: Clutter.ActorAlign.CENTER, style_class: 'sort-icon' });
+        this.sort_icon = new St.Icon({ gicon : MISC_UTILS.get_icon('timepp-sort-ascending-symbolic'), can_focus: true, reactive: true, track_hover: true, y_align: Clutter.ActorAlign.CENTER, style_class: 'sort-icon' });
         this.icon_box.add_child(this.sort_icon);
         if (this.owner.automatic_sort) this.sort_icon.add_style_class_name('active');
         else                           this.sort_icon.remove_style_class_name('active');
 
-        this.search_icon = new St.Icon({ gicon : MISC_UTILS.getIcon('timepp-search-symbolic'), can_focus: true, reactive: true, track_hover: true, y_align: Clutter.ActorAlign.CENTER, style_class: 'search-icon' });
+        this.search_icon = new St.Icon({ gicon : MISC_UTILS.get_icon('timepp-search-symbolic'), can_focus: true, reactive: true, track_hover: true, y_align: Clutter.ActorAlign.CENTER, style_class: 'search-icon' });
         this.icon_box.add_child(this.search_icon);
 
-        this.file_switcher_icon = new St.Icon({ gicon : MISC_UTILS.getIcon('timepp-file-symbolic'), can_focus: true, reactive: true, track_hover: true, y_align: Clutter.ActorAlign.CENTER, style_class: 'file-switcher-icon' });
+        this.file_switcher_icon = new St.Icon({ gicon : MISC_UTILS.get_icon('timepp-file-symbolic'), can_focus: true, reactive: true, track_hover: true, y_align: Clutter.ActorAlign.CENTER, style_class: 'file-switcher-icon' });
         this.icon_box.add_child(this.file_switcher_icon);
 
-        this.stats_icon = new St.Icon({ gicon : MISC_UTILS.getIcon('timepp-graph-symbolic'), can_focus: true, reactive: true, track_hover: true, y_align: Clutter.ActorAlign.CENTER, style_class: 'stats-icon' });
+        this.stats_icon = new St.Icon({ gicon : MISC_UTILS.get_icon('timepp-graph-symbolic'), can_focus: true, reactive: true, track_hover: true, y_align: Clutter.ActorAlign.CENTER, style_class: 'stats-icon' });
         this.icon_box.add_child(this.stats_icon);
 
 
@@ -650,7 +650,7 @@ var KanbanColumn = class KanbanColumn {
         this.is_collapsed = true;
 
         this.tasks_scroll.hide();
-        this.collapse_icon.gicon = MISC_UTILS.getIcon('timepp-column-uncollapse-symbolic');
+        this.collapse_icon.gicon = MISC_UTILS.get_icon('timepp-column-uncollapse-symbolic');
         this.actor.add_style_class_name('collapsed');
         this.icon_box.remove_child(this.collapse_icon);
         this.header.insert_child_at_index(this.collapse_icon, 0);
@@ -685,7 +685,7 @@ var KanbanColumn = class KanbanColumn {
         this.actor.set_height(-1);
         this.header.set_width(-1);
         this.header_wrapper.set_width(-1);
-        this.collapse_icon.gicon = MISC_UTILS.getIcon('timepp-column-collapse-symbolic');
+        this.collapse_icon.gicon = MISC_UTILS.get_icon('timepp-column-collapse-symbolic');
         this.actor.remove_style_class_name('collapsed');
         this.header.remove_child(this.collapse_icon);
         this.icon_box.insert_child_at_index(this.collapse_icon, 0);

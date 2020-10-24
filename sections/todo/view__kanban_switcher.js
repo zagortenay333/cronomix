@@ -167,10 +167,10 @@ var KanbanSwitcher = class KanbanSwitcher {
         item.icon_box = new St.BoxLayout({ style_class: 'icon-box' });
         item.header.add_child(item.icon_box);
 
-        item.check_icon = new St.Icon({ visible: false, track_hover: true, can_focus: true, reactive: true, gicon : MISC_UTILS.getIcon('timepp-todo-symbolic'), style_class: 'file-switcher-item-check-icon' });
+        item.check_icon = new St.Icon({ visible: false, track_hover: true, can_focus: true, reactive: true, gicon : MISC_UTILS.get_icon('timepp-todo-symbolic'), style_class: 'file-switcher-item-check-icon' });
         item.icon_box.add_child(item.check_icon);
 
-        let edit_icon = new St.Icon({ visible: false, track_hover: true, can_focus: true, reactive: true, gicon : MISC_UTILS.getIcon('timepp-edit-symbolic') });
+        let edit_icon = new St.Icon({ visible: false, track_hover: true, can_focus: true, reactive: true, gicon : MISC_UTILS.get_icon('timepp-edit-symbolic') });
         item.icon_box.add_child(edit_icon);
 
         if (is_active && !this.active_kan) {

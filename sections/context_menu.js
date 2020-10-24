@@ -79,7 +79,7 @@ var PopupMenuIconItem = GObject.registerClass({
     _init (icon_name, label, params) {
         super._init(params);
 
-        this.icon = new St.Icon({ gicon: MISC_UTILS.getIcon(icon_name) });
+        this.icon = new St.Icon({ gicon: MISC_UTILS.get_icon(icon_name) });
         this.add_child(this.icon);
 
         this.label = new St.Label({ text: label });

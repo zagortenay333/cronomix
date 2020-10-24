@@ -67,10 +67,10 @@ var ViewSearch = class ViewSearch {
             box = new St.BoxLayout({ style_class: 'icon-box' });
             this.search_entry.set_secondary_icon(box);
 
-            this.add_filter_icon = new St.Icon({ visible: false, track_hover: true, reactive: true, gicon : MISC_UTILS.getIcon('timepp-filter-add-symbolic') });
+            this.add_filter_icon = new St.Icon({ visible: false, track_hover: true, reactive: true, gicon : MISC_UTILS.get_icon('timepp-filter-add-symbolic') });
             box.add_child(this.add_filter_icon);
 
-            this.search_close_icon = new St.Icon({ track_hover: true, reactive: true, style_class: 'close-icon', gicon : MISC_UTILS.getIcon('timepp-close-symbolic') });
+            this.search_close_icon = new St.Icon({ track_hover: true, reactive: true, style_class: 'close-icon', gicon : MISC_UTILS.get_icon('timepp-close-symbolic') });
             box.add_child(this.search_close_icon);
         }
 

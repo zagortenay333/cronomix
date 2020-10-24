@@ -51,7 +51,7 @@ var ViewClearTasks = class ViewClearTasks {
             this.delete_all_item = new St.BoxLayout({ reactive: true, style_class: 'row delete-completed-tasks' });
             this.content_box.add_child(this.delete_all_item);
 
-            this.delete_all_item.add(new St.Icon ({ gicon : MISC_UTILS.getIcon('timepp-radioactive-symbolic') }));
+            this.delete_all_item.add(new St.Icon ({ gicon : MISC_UTILS.get_icon('timepp-radioactive-symbolic') }));
             this.delete_all_item.add(new St.Label ({ text: _('Delete all completed tasks'), x_expand: true, y_align: Clutter.ActorAlign.CENTER }));
 
             this.delete_all_radiobutton = new St.Button({ style_class: 'radiobutton', toggle_mode: true, can_focus: true, y_align: St.Align.MIDDLE });

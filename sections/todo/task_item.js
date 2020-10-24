@@ -420,7 +420,7 @@ var TaskItem = class TaskItem {
                     this.actor.add_style_class_name('hidden-task');
                     let icon_incognito_bin = new St.Button({ can_focus: true });
                     this.header.insert_child_at_index(icon_incognito_bin, 0);
-                    icon_incognito_bin.add_actor(new St.Icon({ gicon : MISC.getIcon('timepp-hidden-symbolic') }));
+                    icon_incognito_bin.add_actor(new St.Icon({ gicon : MISC.get_icon('timepp-hidden-symbolic') }));
 
                     words.splice(i, 1); i--; len--;
                 }
@@ -757,16 +757,16 @@ var TaskItem = class TaskItem {
         this.header_icon_box = new St.BoxLayout({ y_expand: true, x_expand: true, x_align: Clutter.ActorAlign.END, style_class: 'icon-box' });
         this.header.add(this.header_icon_box);
 
-        this.stat_icon = new St.Icon({ visible:false, reactive: true, can_focus: true, track_hover: true, gicon : MISC.getIcon('timepp-graph-symbolic') });
+        this.stat_icon = new St.Icon({ visible:false, reactive: true, can_focus: true, track_hover: true, gicon : MISC.get_icon('timepp-graph-symbolic') });
         this.header_icon_box.add_actor(this.stat_icon);
 
-        this.pin_icon = new St.Icon({ visible:false, reactive: true, can_focus: true, track_hover: true, gicon : MISC.getIcon('timepp-pin-symbolic'), style_class: 'pin-icon' });
+        this.pin_icon = new St.Icon({ visible:false, reactive: true, can_focus: true, track_hover: true, gicon : MISC.get_icon('timepp-pin-symbolic'), style_class: 'pin-icon' });
         this.header_icon_box.add_actor(this.pin_icon);
 
-        this.edit_icon = new St.Icon({ visible:false, reactive: true, can_focus: true, track_hover: true, gicon : MISC.getIcon('timepp-edit-symbolic') });
+        this.edit_icon = new St.Icon({ visible:false, reactive: true, can_focus: true, track_hover: true, gicon : MISC.get_icon('timepp-edit-symbolic') });
         this.header_icon_box.add_actor(this.edit_icon);
 
-        this.tracker_icon = new St.Icon({ visible:false, reactive: true, can_focus: true, track_hover: true, gicon : MISC.getIcon('timepp-start-symbolic'), style_class: 'tracker-start-icon' });
+        this.tracker_icon = new St.Icon({ visible:false, reactive: true, can_focus: true, track_hover: true, gicon : MISC.get_icon('timepp-start-symbolic'), style_class: 'tracker-start-icon' });
         this.header_icon_box.add_actor(this.tracker_icon);
 
         // Use connect_press here because we need to play well with dnd.
@@ -860,7 +860,7 @@ var TaskItem = class TaskItem {
 
     _show_tracker_running_icon () {
         this._create_header_icons();
-        this.tracker_icon.gicon = MISC.getIcon('timepp-pause-symbolic');
+        this.tracker_icon.gicon = MISC.get_icon('timepp-pause-symbolic');
         this.tracker_icon.style_class = 'tracker-pause-icon';
         this.tracker_icon.visible     = true;
     }
@@ -868,7 +868,7 @@ var TaskItem = class TaskItem {
     _show_tracker_stopped_icon () {
         this.tracker_icon.visible     = this.edit_icon.visible;
         this.tracker_icon.style_class = 'tracker-start-icon';
-        this.tracker_icon.gicon = MISC.getIcon('timepp-start-symbolic');
+        this.tracker_icon.gicon = MISC.get_icon('timepp-start-symbolic');
     }
 
     on_tracker_started () {

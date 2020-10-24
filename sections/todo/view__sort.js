@@ -173,7 +173,7 @@ var SortItem = class SortItem{
         this.icn_box.add_actor(this.sort_icon);
 
         this.sort_icon.set_gicon(
-            MISC.getIcon(
+            MISC.get_icon(
                 sort_order === G.SortOrder.ASCENDING ?
                 'timepp-sort-ascending-symbolic'   :
                 'timepp-sort-descending-symbolic'
@@ -199,10 +199,10 @@ var SortItem = class SortItem{
         this.delegate.sigm.connect_press(this.sort_icon, Clutter.BUTTON_PRIMARY, true, () => {
             if (this.sort_order === G.SortOrder.ASCENDING) {
                 this.sort_order = G.SortOrder.DESCENDING;
-                this.sort_icon.gicon = MISC.getIcon('timepp-sort-descending-symbolic');
+                this.sort_icon.gicon = MISC.get_icon('timepp-sort-descending-symbolic');
             } else {
                 this.sort_order = G.SortOrder.ASCENDING;
-                this.sort_icon.gicon = MISC.getIcon('timepp-sort-ascending-symbolic');
+                this.sort_icon.gicon = MISC.get_icon('timepp-sort-ascending-symbolic');
             }
         });
         this.sort_icon.connect('key-press-event', (_, event) => {

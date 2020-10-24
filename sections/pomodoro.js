@@ -150,7 +150,7 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
         // panel item
         //
         this.panel_item.actor.add_style_class_name('pomodoro-panel-item');
-        this.panel_item.icon.gicon = MISC_UTILS.getIcon('timepp-pomodoro-symbolic');
+        this.panel_item.icon.gicon = MISC_UTILS.get_icon('timepp-pomodoro-symbolic');
         this.panel_item.set_label(this.settings.get_boolean('pomodoro-show-seconds') ? '00:00:00' : '00:00');
         this._toggle_panel_mode();
 
@@ -179,10 +179,10 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
         this.icon_box = new St.BoxLayout({ y_align: Clutter.ActorAlign.CENTER, x_align: Clutter.ActorAlign.END, style_class: 'icon-box' });
         this.header.add_actor(this.icon_box);
 
-        this.fullscreen_icon = new St.Icon({ reactive: true, can_focus: true, track_hover: true, gicon : MISC_UTILS.getIcon('timepp-fullscreen-symbolic'), style_class: 'fullscreen-icon' });
+        this.fullscreen_icon = new St.Icon({ reactive: true, can_focus: true, track_hover: true, gicon : MISC_UTILS.get_icon('timepp-fullscreen-symbolic'), style_class: 'fullscreen-icon' });
         this.icon_box.add_actor(this.fullscreen_icon);
 
-        this.settings_icon = new St.Icon({ reactive: true, can_focus: true, track_hover: true, gicon : MISC_UTILS.getIcon('timepp-settings-symbolic'), style_class: 'settings-icon' });
+        this.settings_icon = new St.Icon({ reactive: true, can_focus: true, track_hover: true, gicon : MISC_UTILS.get_icon('timepp-settings-symbolic'), style_class: 'settings-icon' });
         this.icon_box.add_actor(this.settings_icon);
 
 
@@ -603,7 +603,7 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
             Main.messageTray.add(this.notif_source);
             this.notif_source.connect('destroy', () => this.sound_player.stop());
 
-            let icon   = new St.Icon({ gicon : MISC_UTILS.getIcon('timepp-pomodoro-symbolic') });
+            let icon   = new St.Icon({ gicon : MISC_UTILS.get_icon('timepp-pomodoro-symbolic') });
             let params = {
                 bannerMarkup : true,
                 gicon        : icon.gicon,

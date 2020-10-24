@@ -152,7 +152,7 @@ var Timepp = GObject.registerClass({
         // unicon panel item (shown when single panel item mode is selected)
         //
         this.unicon_panel_item = new PANEL_ITEM.PanelItem(this.menu);
-        this.unicon_panel_item.icon.gicon = MISC_UTILS.getIcon('timepp-unicon-symbolic');
+        this.unicon_panel_item.icon.gicon = MISC_UTILS.get_icon('timepp-unicon-symbolic');
 
         this.unicon_panel_item.set_mode('icon');
         this.unicon_panel_item.actor.add_style_class_name('unicon-panel-item');

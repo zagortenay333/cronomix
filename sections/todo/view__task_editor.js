@@ -137,7 +137,7 @@ var ViewTaskEditor = class ViewTaskEditor {
         { // help icon
             let box = new St.BoxLayout({ style_class: 'icon-box' });
             header.add_child(box);
-            this.help_icon = new St.Icon({ gicon : MISC_UTILS.getIcon('timepp-question-symbolic'), can_focus: true, reactive: true, track_hover: true, x_align: Clutter.ActorAlign.START, y_align: Clutter.ActorAlign.CENTER, });
+            this.help_icon = new St.Icon({ gicon : MISC_UTILS.get_icon('timepp-question-symbolic'), can_focus: true, reactive: true, track_hover: true, x_align: Clutter.ActorAlign.START, y_align: Clutter.ActorAlign.CENTER, });
             box.add_child(this.help_icon);
         }
 
@@ -148,29 +148,29 @@ var ViewTaskEditor = class ViewTaskEditor {
             // group 1
             let icon_group = new St.BoxLayout({ style_class: 'icon-box' });
             box.add_child(icon_group);
-            this.header_icon = new St.Icon({ gicon : MISC_UTILS.getIcon('timepp-header-symbolic'), can_focus: true, reactive: true, track_hover: true, x_align: Clutter.ActorAlign.START, y_align: Clutter.ActorAlign.CENTER, });
+            this.header_icon = new St.Icon({ gicon : MISC_UTILS.get_icon('timepp-header-symbolic'), can_focus: true, reactive: true, track_hover: true, x_align: Clutter.ActorAlign.START, y_align: Clutter.ActorAlign.CENTER, });
             icon_group.add_child(this.header_icon);
-            this.mark_icon = new St.Icon({ gicon : MISC_UTILS.getIcon('timepp-mark-symbolic'), can_focus: true, reactive: true, track_hover: true, x_align: Clutter.ActorAlign.START, y_align: Clutter.ActorAlign.CENTER, });
+            this.mark_icon = new St.Icon({ gicon : MISC_UTILS.get_icon('timepp-mark-symbolic'), can_focus: true, reactive: true, track_hover: true, x_align: Clutter.ActorAlign.START, y_align: Clutter.ActorAlign.CENTER, });
             icon_group.add_child(this.mark_icon);
 
             // group 2
             icon_group = new St.BoxLayout({ style_class: 'icon-box' });
             box.add_child(icon_group);
-            this.bold_icon = new St.Icon({ gicon : MISC_UTILS.getIcon('timepp-bold-symbolic'), can_focus: true, reactive: true, track_hover: true, x_align: Clutter.ActorAlign.START, y_align: Clutter.ActorAlign.CENTER, });
+            this.bold_icon = new St.Icon({ gicon : MISC_UTILS.get_icon('timepp-bold-symbolic'), can_focus: true, reactive: true, track_hover: true, x_align: Clutter.ActorAlign.START, y_align: Clutter.ActorAlign.CENTER, });
             icon_group.add_child(this.bold_icon);
-            this.italic_icon = new St.Icon({ gicon : MISC_UTILS.getIcon('timepp-italic-symbolic'), can_focus: true, reactive: true, track_hover: true, x_align: Clutter.ActorAlign.START, y_align: Clutter.ActorAlign.CENTER, });
+            this.italic_icon = new St.Icon({ gicon : MISC_UTILS.get_icon('timepp-italic-symbolic'), can_focus: true, reactive: true, track_hover: true, x_align: Clutter.ActorAlign.START, y_align: Clutter.ActorAlign.CENTER, });
             icon_group.add_child(this.italic_icon);
-            this.strike_icon = new St.Icon({ gicon : MISC_UTILS.getIcon('timepp-strike-symbolic'), can_focus: true, reactive: true, track_hover: true, x_align: Clutter.ActorAlign.START, y_align: Clutter.ActorAlign.CENTER, });
+            this.strike_icon = new St.Icon({ gicon : MISC_UTILS.get_icon('timepp-strike-symbolic'), can_focus: true, reactive: true, track_hover: true, x_align: Clutter.ActorAlign.START, y_align: Clutter.ActorAlign.CENTER, });
             icon_group.add_child(this.strike_icon);
-            this.underscore_icon = new St.Icon({ gicon : MISC_UTILS.getIcon('timepp-underscore-symbolic'), can_focus: true, reactive: true, track_hover: true, x_align: Clutter.ActorAlign.START, y_align: Clutter.ActorAlign.CENTER, });
+            this.underscore_icon = new St.Icon({ gicon : MISC_UTILS.get_icon('timepp-underscore-symbolic'), can_focus: true, reactive: true, track_hover: true, x_align: Clutter.ActorAlign.START, y_align: Clutter.ActorAlign.CENTER, });
             icon_group.add_child(this.underscore_icon);
 
             // group 3
             icon_group = new St.BoxLayout({ style_class: 'icon-box' });
             box.add_child(icon_group);
-            this.link_icon = new St.Icon({ gicon : MISC_UTILS.getIcon('timepp-link-symbolic'), can_focus: true, reactive: true, track_hover: true, x_align: Clutter.ActorAlign.START, y_align: Clutter.ActorAlign.CENTER, });
+            this.link_icon = new St.Icon({ gicon : MISC_UTILS.get_icon('timepp-link-symbolic'), can_focus: true, reactive: true, track_hover: true, x_align: Clutter.ActorAlign.START, y_align: Clutter.ActorAlign.CENTER, });
             icon_group.add_child(this.link_icon);
-            this.code_icon = new St.Icon({ gicon : MISC_UTILS.getIcon('timepp-code-symbolic'), can_focus: true, reactive: true, track_hover: true, x_align: Clutter.ActorAlign.START, y_align: Clutter.ActorAlign.CENTER, });
+            this.code_icon = new St.Icon({ gicon : MISC_UTILS.get_icon('timepp-code-symbolic'), can_focus: true, reactive: true, track_hover: true, x_align: Clutter.ActorAlign.START, y_align: Clutter.ActorAlign.CENTER, });
             icon_group.add_child(this.code_icon);
 
             // group 4
@@ -178,7 +178,7 @@ var ViewTaskEditor = class ViewTaskEditor {
             box.add_child(icon_group);
             this.eye_icon = new St.Icon({ can_focus: true, reactive: true, track_hover: true, x_align: Clutter.ActorAlign.START, y_align: Clutter.ActorAlign.CENTER, });
             icon_group.add_child(this.eye_icon);
-            this.eye_icon.gicon = (this.preview_scrollview.visible) ? MISC_UTILS.getIcon('timepp-eye-symbolic') : MISC_UTILS.getIcon('timepp-eye-closed-symbolic');
+            this.eye_icon.gicon = (this.preview_scrollview.visible) ? MISC_UTILS.get_icon('timepp-eye-symbolic') : MISC_UTILS.get_icon('timepp-eye-closed-symbolic');
         }
 
 
@@ -421,8 +421,8 @@ var ViewTaskEditor = class ViewTaskEditor {
     _toggle_preview () {
         let state = !this.delegate.settings.get_boolean('todo-show-task-editor-preview');
 
-        if (state) this.eye_icon.gicon = MISC_UTILS.getIcon('timepp-eye-symbolic');
-        else       this.eye_icon.gicon = MISC_UTILS.getIcon('timepp-eye-closed-symbolic')
+        if (state) this.eye_icon.gicon = MISC_UTILS.get_icon('timepp-eye-symbolic');
+        else       this.eye_icon.gicon = MISC_UTILS.get_icon('timepp-eye-closed-symbolic')
 
         this.preview_scrollview.visible = state;
         this.delegate.settings.set_boolean('todo-show-task-editor-preview', state);
