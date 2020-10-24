@@ -8,14 +8,11 @@ const ByteArray = imports.byteArray;
 const Signals   = imports.signals;
 const Mainloop  = imports.mainloop;
 
-
 const ME = imports.misc.extensionUtils.getCurrentExtension();
-
 
 const Gettext  = imports.gettext.domain(ME.metadata['gettext-domain']);
 const _        = Gettext.gettext;
 const ngettext = Gettext.ngettext;
-
 
 const MISC_UTILS  = ME.imports.lib.misc_utils;
 const FULLSCREEN  = ME.imports.lib.fullscreen;
@@ -23,12 +20,9 @@ const SIG_MANAGER = ME.imports.lib.signal_manager;
 const KEY_MANAGER = ME.imports.lib.keybinding_manager;
 const PANEL_ITEM  = ME.imports.lib.panel_item;
 
-
 const IFACE = `${ME.path}/dbus/stopwatch_iface.xml`;
 
-
 const CACHE_FILE = '~/.cache/timepp_gnome_shell_extension/timepp_stopwatch.json';
-
 
 const StopwatchState = {
     RUNNING : 'RUNNING',
@@ -36,19 +30,16 @@ const StopwatchState = {
     RESET   : 'RESET',
 };
 
-
 const ClockFormat = {
     H_M      : 0,
     H_M_S    : 1,
     H_M_S_CS : 2,
 };
 
-
 const NotifStyle = {
     STANDARD   : 0,
     FULLSCREEN : 1,
 };
-
 
 const PanelMode = {
     ICON      : 0,
@@ -56,7 +47,6 @@ const PanelMode = {
     ICON_TEXT : 2,
     DYNAMIC   : 3,
 };
-
 
 // =====================================================================
 // @@@ Main
@@ -93,7 +83,6 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
         this.sigm = new SIG_MANAGER.SignalManager();
         this.keym = new KEY_MANAGER.KeybindingManager(this.settings);
 
-
         try {
             this.cache_file = MISC_UTILS.file_new_for_path(CACHE_FILE);
 
@@ -119,7 +108,6 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
             return;
         }
 
-
         //
         // keybindings
         //
@@ -129,7 +117,6 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
         this.keym.add('stopwatch-keybinding-open-fullscreen', () => {
             this.show_fullscreen();
         });
-
 
         //
         // panel item
@@ -152,7 +139,6 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
             this.fullscreen.set_banner_text('00:00:00.00')
         }
 
-
         //
         // header
         //
@@ -167,7 +153,6 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
 
         this.fullscreen_icon = new St.Icon({ reactive: true, can_focus: true, track_hover: true, gicon : MISC_UTILS.get_icon('timepp-fullscreen-symbolic'), style_class: 'fullscreen-icon' });
         this.icon_box.add_actor(this.fullscreen_icon);
-
 
         //
         // buttons
@@ -184,7 +169,6 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
         this.stopwatch_button_box.add_child(this.button_start);
         this.stopwatch_button_box.add_child(this.button_stop);
 
-
         //
         // laps box
         //
@@ -199,7 +183,6 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
 
         this.laps_string = new St.Label();
         this.laps_scroll_bin.add_actor(this.laps_string);
-
 
         //
         // listen
@@ -229,7 +212,6 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
         this.sigm.connect_release(this.button_reset, Clutter.BUTTON_PRIMARY, true, () => this.reset());
         this.sigm.connect_release(this.button_stop, Clutter.BUTTON_PRIMARY, true, () => this.stop());
         this.sigm.connect_release(this.button_lap, Clutter.BUTTON_PRIMARY, true, () => this.lap());
-
 
         //
         // finally
@@ -529,7 +511,6 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
 Signals.addSignalMethods(SectionMain.prototype);
 
 
-
 // =====================================================================
 // @@@ Stopwatch fullscreen interface
 //
@@ -549,7 +530,6 @@ var StopwatchFullscreen = class StopwatchFullscreen extends FULLSCREEN.Fullscree
 
         this.default_style_class = this.actor.style_class;
 
-
         //
         // laps box
         //
@@ -565,13 +545,11 @@ var StopwatchFullscreen = class StopwatchFullscreen extends FULLSCREEN.Fullscree
         this.laps_string = new St.Label();
         this.laps_scroll_bin.add_actor(this.laps_string);
 
-
         //
         // buttons
         //
         this.stopwatch_button_box = new St.BoxLayout({ x_expand: true, y_expand: true, style_class: 'btn-box', x_align: Clutter.ActorAlign.CENTER, y_align: Clutter.ActorAlign.CENTER, });
         this.bottom_box.add_child(this.stopwatch_button_box);
-
 
         this.button_reset = new St.Button({ can_focus: true, label: _('Reset'), style_class: 'btn-reset button', visible: false });
         this.button_lap   = new St.Button({ can_focus: true, label: _('Lap'),   style_class: 'btn-lap button',   visible: false });
@@ -581,7 +559,6 @@ var StopwatchFullscreen = class StopwatchFullscreen extends FULLSCREEN.Fullscree
         this.stopwatch_button_box.add_child(this.button_lap);
         this.stopwatch_button_box.add_child(this.button_start);
         this.stopwatch_button_box.add_child(this.button_stop);
-
 
         //
         // listen

@@ -11,13 +11,11 @@ const Mainloop       = imports.mainloop;
 const GObject        = imports.gi.GObject
 const ExtensionUtils = imports.misc.extensionUtils;
 
-
 const ME          = ExtensionUtils.getCurrentExtension();
 const _           = imports.gettext.domain('timepp').gettext;
 const SIG_MANAGER = ME.imports.lib.signal_manager;
 const PANEL_ITEM  = ME.imports.lib.panel_item;
 const MISC_UTILS  = ME.imports.lib.misc_utils;
-
 
 // To add a section, add the module here, update the 'sections' entry in the
 // gschema.xml file, and add a toggle to enable/disable it (update ui and
@@ -31,7 +29,6 @@ const SECTIONS = new Map([
 ]);
 
 const ContextMenu = ME.imports.sections.context_menu;
-
 
 const PanelPosition = {
     LEFT   : 0,
@@ -61,41 +58,32 @@ var Timepp = GObject.registerClass({
         this.reactive    = false;
         this.menu.actor.add_style_class_name('timepp-menu');
 
-
         this.panel_item_box = new St.BoxLayout({ style_class: 'timepp-panel-box timepp-custom-css-root'});
         this.add_actor(this.panel_item_box);
-
 
         this.markdown_map = new Map([
             ['`'   , ['', '']],
             ['``'  , ['<tt>', '</tt>']],
-
             ['*'   , ['<b>', '</b>']],
             ['**'  , ['<i>', '</i>']],
             ['***' , ['<b><span foreground="black" background="#e74f4f">', '</span></b>']],
-
             ['_'   , null],
             ['__'  , ['<i>', '</i>']],
             ['___' , ['<u>', '</u>']],
-
             ['~'   , null],
             ['~~'  , ['<s>', '</s>']],
-
             ['#'   , ['<span size="xx-large">', '</span>']],
             ['##'  , ['<span size="x-large">', '</span>']],
             ['###' , ['<span size="large">', '</span>']],
         ]);
 
-
         this.custom_css = {
             ['-timepp-link-color']       : ['blue'    , [0, 0, 1, 1]],
-
             ['-timepp-context-color']    : ['magenta' , [1, 0, 1, 1]],
             ['-timepp-due-date-color']   : ['red'     , [1, 0, 0, 1]],
             ['-timepp-project-color']    : ['green'   , [0, 1, 0, 1]],
             ['-timepp-rec-date-color']   : ['tomato'  , [1, .38, .28, 1]],
             ['-timepp-defer-date-color'] : ['violet'  , [.93, .51, .93, 1]],
-
             ['-timepp-axes-color']       : ['white'   , [1, 1, 1, 1]],
             ['-timepp-y-label-color']    : ['white'   , [1, 1, 1, 1]],
             ['-timepp-x-label-color']    : ['white'   , [1, 1, 1, 1]],
@@ -112,7 +100,6 @@ var Timepp = GObject.registerClass({
             ['-timepp-heatmap-selected-color'] : ['white', [1, 1, 1, 1]],
         };
 
-
         {
             let GioSSS = Gio.SettingsSchemaSource;
             let schema = GioSSS.new_from_directory(
@@ -121,7 +108,6 @@ var Timepp = GObject.registerClass({
 
             this.settings = new Gio.Settings({ settings_schema: schema });
         }
-
 
         // @key: string (a section name)
         // @val: object (an instantiated main section object)
@@ -133,10 +119,8 @@ var Timepp = GObject.registerClass({
         // @val: object (a PopupSeparatorMenuItem().actor)
         this.separators = new Map();
 
-
         this.sigm                = new SIG_MANAGER.SignalManager();
         this.panel_item_position = this.settings.get_enum('panel-item-position');
-
 
         // ensure cache dir
         {
@@ -146,7 +130,6 @@ var Timepp = GObject.registerClass({
             if (!dir.query_exists(null))
                 dir.make_directory_with_parents(null);
         }
-
 
         //
         // unicon panel item (shown when single panel item mode is selected)
@@ -168,7 +151,6 @@ var Timepp = GObject.registerClass({
         this.menu.box.add_child(this.box_content);
         this.box_content._delegate = this;
 
-
         //
         // context menu
         //
@@ -176,13 +158,11 @@ var Timepp = GObject.registerClass({
         this.box_content.add_actor(this.context_menu.actor);
         this.context_menu.actor.hide();
 
-
         //
         // more init
         //
         this._sync_sections_with_settings();
         this.update_panel_items();
-
 
         //
         // listen
@@ -517,7 +497,6 @@ var Timepp = GObject.registerClass({
         super._onDestroy();
     }
 })
-
 
 // =====================================================================
 // @@@ Init

@@ -9,14 +9,11 @@ const ByteArray   = imports.byteArray;
 const Signals     = imports.signals;
 const Mainloop    = imports.mainloop;
 
-
 const ME = imports.misc.extensionUtils.getCurrentExtension();
-
 
 const Gettext  = imports.gettext.domain(ME.metadata['gettext-domain']);
 const _        = Gettext.gettext;
 const ngettext = Gettext.ngettext;
-
 
 const SOUND_PLAYER = ME.imports.lib.sound_player;
 const MISC_UTILS   = ME.imports.lib.misc_utils;
@@ -27,17 +24,13 @@ const PANEL_ITEM   = ME.imports.lib.panel_item;
 const NUM_PICKER   = ME.imports.lib.num_picker;
 const MULTIL_ENTRY = ME.imports.lib.multiline_entry;
 
-
 const IFACE = `${ME.path}/dbus/pomodoro_iface.xml`;
 
-
 const CACHE_FILE = '~/.cache/timepp_gnome_shell_extension/timepp_pomodoro.json';
-
 
 const POMO_STARTED_MSG = _('Pomodoro');
 const LONG_BREAK_MSG   = _('Long Break')
 const SHORT_BREAK_MSG  = _('Short Break')
-
 
 const PomoState = {
     STOPPED     : 'STOPPED',
@@ -46,13 +39,11 @@ const PomoState = {
     SHORT_BREAK : 'SHORT_BREAK',
 };
 
-
 const NotifStyle = {
     STANDARD   : 0,
     FULLSCREEN : 1,
     NONE       : 2,
 };
-
 
 const PanelMode = {
     ICON      : 0,
@@ -60,7 +51,6 @@ const PanelMode = {
     ICON_TEXT : 2,
     DYNAMIC   : 3,
 };
-
 
 // =====================================================================
 // @@@ Main
@@ -76,7 +66,6 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
 
         this.separate_menu = this.settings.get_boolean('pomodoro-separate-menu');
 
-
         this.pomo_state       = PomoState.STOPPED;
         this.tic_mainloop_id  = null;
         this.cache_file       = null;
@@ -85,17 +74,13 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
         this.clock            = 0; // microseconds
         this.end_time         = 0; // For computing elapsed time (microseconds)
 
-
         this.sigm = new SIG_MANAGER.SignalManager();
         this.keym = new KEY_MANAGER.KeybindingManager(this.settings);
 
-
         this.sound_player = new SOUND_PLAYER.SoundPlayer();
-
 
         this.fullscreen = new PomodoroFullscreen(this.ext, this,
             this.settings.get_int('pomodoro-fullscreen-monitor-pos'));
-
 
         {
             let [,xml,] = Gio.file_new_for_path(IFACE).load_contents(null);
@@ -103,7 +88,6 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
             this.dbus_impl = Gio.DBusExportedObject.wrapJSObject(xml, this);
             this.dbus_impl.export(Gio.DBus.session, '/timepp/zagortenay333/Pomodoro');
         }
-
 
         try {
             this.cache_file = MISC_UTILS.file_new_for_path(CACHE_FILE);
@@ -134,7 +118,6 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
             return;
         }
 
-
         //
         // keybindings
         //
@@ -145,7 +128,6 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
             this.show_fullscreen();
         });
 
-
         //
         // panel item
         //
@@ -153,7 +135,6 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
         this.panel_item.icon.gicon = MISC_UTILS.get_icon('timepp-pomodoro-symbolic');
         this.panel_item.set_label(this.settings.get_boolean('pomodoro-show-seconds') ? '00:00:00' : '00:00');
         this._toggle_panel_mode();
-
 
         //
         // header
@@ -164,16 +145,13 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
         this.header_label = new St.Label({ x_expand: true, text: _('Timer'), style_class: 'clock' });
         this.header.add_child(this.header_label);
 
-
         // pomo phase label
         this.phase_label = new St.Label({ y_align: Clutter.ActorAlign.CENTER, style_class: 'pomo-phase-label popup-inactive-menu-item', pseudo_class: 'insensitive' });
         this.header.add_child(this.phase_label);
 
-
         // clock
         this.clock_label = new St.Label({ y_align: Clutter.ActorAlign.CENTER, style_class: 'pomo-counter' });
         this.header.add_child(this.clock_label);
-
 
         // icons
         this.icon_box = new St.BoxLayout({ y_align: Clutter.ActorAlign.CENTER, x_align: Clutter.ActorAlign.END, style_class: 'icon-box' });
@@ -184,7 +162,6 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
 
         this.settings_icon = new St.Icon({ reactive: true, can_focus: true, track_hover: true, gicon : MISC_UTILS.get_icon('timepp-settings-symbolic'), style_class: 'settings-icon' });
         this.icon_box.add_actor(this.settings_icon);
-
 
         //
         // buttons
@@ -202,13 +179,11 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
         this.button_box.add_actor(this.button_continue);
         this.button_box.add_actor(this.button_stop);
 
-
         //
         // settings container
         //
         this.settings_container = new St.Bin({x_fill: true});
         this.actor.add_actor(this.settings_container);
-
 
         //
         // listen
@@ -229,7 +204,6 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
         this.sigm.connect_release(this.button_stop, Clutter.BUTTON_PRIMARY, true, () => this.stop());
         this.sigm.connect_release(this.button_new_pomo, Clutter.BUTTON_PRIMARY, true, () => this.start_new_pomo());
         this.sigm.connect_release(this.button_take_break, Clutter.BUTTON_PRIMARY, true, () => this.take_break());
-
 
         //
         // finally
@@ -641,7 +615,6 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
 Signals.addSignalMethods(SectionMain.prototype);
 
 
-
 // =====================================================================
 // @@@ Pomodoro settings
 //
@@ -660,7 +633,6 @@ var PomodoroSettings = class PomodoroSettings {
         this.content_box = new St.BoxLayout({vertical: true, style_class: 'view-box-content'});
         this.actor.add(this.content_box);
 
-
         //
         // clear all pomodoros
         //
@@ -675,7 +647,6 @@ var PomodoroSettings = class PomodoroSettings {
 
         this.clear_item_checkbox = new CheckBox.CheckBox();
         this.clear_checkbox_bin.add_actor(this.clear_item_checkbox);
-
 
         //
         // pomodoro duration
@@ -695,7 +666,6 @@ var PomodoroSettings = class PomodoroSettings {
         this.pomo_dur_min_picker.set_counter(Math.floor(pomo_cache.pomo_duration / 60));
         this.pomo_dur_sec_picker.set_counter(pomo_cache.pomo_duration % 60);
 
-
         //
         // short break
         //
@@ -713,7 +683,6 @@ var PomodoroSettings = class PomodoroSettings {
 
         this.short_break_min_picker.set_counter(Math.floor(pomo_cache.short_break / 60));
         this.short_break_sec_picker.set_counter(pomo_cache.short_break % 60);
-
 
         //
         // long break
@@ -733,7 +702,6 @@ var PomodoroSettings = class PomodoroSettings {
         this.long_break_min_picker.set_counter(Math.floor(pomo_cache.long_break / 60));
         this.long_break_sec_picker.set_counter(pomo_cache.long_break % 60);
 
-
         //
         // how many pomodoros 'till long break
         //
@@ -748,7 +716,6 @@ var PomodoroSettings = class PomodoroSettings {
 
         this.long_break_rate_picker.set_counter(pomo_cache.long_break_rate);
 
-
         //
         // task id entry
         //
@@ -762,7 +729,6 @@ var PomodoroSettings = class PomodoroSettings {
             this.entry.set_text(this.delegate.cache.todo_task_id);
         }
 
-
         //
         // buttons
         //
@@ -774,7 +740,6 @@ var PomodoroSettings = class PomodoroSettings {
 
         this.button_box.add(this.button_cancel);
         this.button_box.add(this.button_ok);
-
 
         //
         // listen
@@ -824,7 +789,6 @@ var PomodoroSettings = class PomodoroSettings {
 Signals.addSignalMethods(PomodoroSettings.prototype);
 
 
-
 // =====================================================================
 // @@@ Pomodoro fullscreen
 //
@@ -843,13 +807,11 @@ var PomodoroFullscreen = class PomodoroFullscreen extends FULLSCREEN.Fullscreen 
 
         this.default_style_class = this.actor.style_class;
 
-
         //
         // phase label
         //
         this.phase_label = new St.Label({ x_expand: true, x_align: Clutter.ActorAlign.CENTER, style_class: 'pomo-phase-label' });
         this.middle_box.insert_child_at_index(this.phase_label, 0);
-
 
         //
         // buttons
@@ -865,7 +827,6 @@ var PomodoroFullscreen = class PomodoroFullscreen extends FULLSCREEN.Fullscreen 
         this.button_box.add_child(this.button_take_break);
         this.button_box.add_child(this.button_continue);
         this.button_box.add_child(this.button_stop);
-
 
         //
         // listen

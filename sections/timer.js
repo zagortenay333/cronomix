@@ -11,14 +11,11 @@ const ByteArray   = imports.byteArray;
 const Signals     = imports.signals;
 const Mainloop    = imports.mainloop;
 
-
 const ME = imports.misc.extensionUtils.getCurrentExtension();
-
 
 const Gettext  = imports.gettext.domain(ME.metadata['gettext-domain']);
 const _        = Gettext.gettext;
 const ngettext = Gettext.ngettext;
-
 
 const SOUND_PLAYER    = ME.imports.lib.sound_player;
 const FULLSCREEN      = ME.imports.lib.fullscreen;
@@ -32,16 +29,12 @@ const MISC_UTILS      = ME.imports.lib.misc_utils;
 const FUZZ            = ME.imports.lib.fuzzy_search;
 const REG             = ME.imports.lib.regex;
 
-
 const IFACE = `${ME.path}/dbus/timer_iface.xml`;
-
 
 const CACHE_FILE = '~/.cache/timepp_gnome_shell_extension/timepp_timer.json';
 
-
 const TIMER_MAX_DURATION = 24 * 60 * 60 * 1000000; // microseconds
 const TIMER_EXPIRED_MSG  = _('Timer Expired!');
-
 
 const TimerState = {
     RUNNING : 'RUNNING',
@@ -49,13 +42,11 @@ const TimerState = {
     OFF     : 'OFF',
 };
 
-
 const NotifStyle = {
     STANDARD   : 0,
     FULLSCREEN : 1,
     NONE       : 2,
 };
-
 
 const PanelMode = {
     ICON      : 0,
@@ -63,7 +54,6 @@ const PanelMode = {
     ICON_TEXT : 2,
     DYNAMIC   : 3,
 };
-
 
 // =====================================================================
 // @@@ Main
@@ -78,7 +68,6 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
         this.actor.add_style_class_name('timer-section');
 
         this.separate_menu = this.settings.get_boolean('timer-separate-menu');
-
 
         this.timer_state     = TimerState.OFF;
         this.tic_mainloop_id = null;
@@ -96,18 +85,15 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
             this.dbus_impl.export(Gio.DBus.session, '/timepp/zagortenay333/Timer');
         }
 
-
         this.linkm = new TEXT_LINKS_MNGR.TextLinksManager();
         this.sigm  = new SIG_MANAGER.SignalManager();
         this.keym  = new KEY_MANAGER.KeybindingManager(this.settings);
         this.sound_player = new SOUND_PLAYER.SoundPlayer();
 
-
         this.fullscreen = new TimerFullscreen(this.ext, this,
             this.settings.get_int('timer-fullscreen-monitor-pos'));
         this.fullscreen.set_banner_text(
             this.settings.get_boolean('timer-show-seconds') ? '00:00:00' : '00:00');
-
 
         try {
             this.cache_file = MISC_UTILS.file_new_for_path(CACHE_FILE);
@@ -140,9 +126,7 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
             return;
         }
 
-
         this.current_preset = this.cache.default_preset;
-
 
         //
         // keybindings
@@ -158,7 +142,6 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
             this._show_presets();
         });
 
-
         //
         // panel item
         //
@@ -166,7 +149,6 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
         this.panel_item.actor.add_style_class_name('timer-panel-item');
         this.panel_item.set_label(this.settings.get_boolean('timer-show-seconds') ? '00:00:00' : '00:00');
         this._toggle_panel_item_mode();
-
 
         //
         // header
@@ -189,7 +171,6 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
         this.settings_icon = new St.Icon({ reactive: true, can_focus: true, track_hover: true, gicon : MISC_UTILS.get_icon('timepp-settings-symbolic'), style_class: 'settings-icon' });
         this.icon_box.add(this.settings_icon);
 
-
         //
         // timer slider
         //
@@ -198,13 +179,11 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
         this.slider = new Slider.Slider(0);
         this.slider_item.add_actor(this.slider);
 
-
         //
         // settings window container
         //
         this.timepicker_container = new St.Bin({ x_fill: true });
         this.actor.add_child(this.timepicker_container);
-
 
         //
         // listen
@@ -589,7 +568,6 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
 Signals.addSignalMethods(SectionMain.prototype);
 
 
-
 // =====================================================================
 // @@@ TimerPresetsView
 //
@@ -610,10 +588,8 @@ var TimerPresetsView = class TimerPresetsView {
 
         this.css = this.ext.custom_css;
 
-
         // objects returned by _new_preset_item() func
         this.preset_items = new Set();
-
 
         //
         // container
@@ -623,7 +599,6 @@ var TimerPresetsView = class TimerPresetsView {
         this.content_box = new St.BoxLayout({ x_expand: true, vertical: true, style_class: 'view-box-content' });
         this.actor.add_actor(this.content_box);
 
-
         //
         // search presets entry
         //
@@ -632,7 +607,6 @@ var TimerPresetsView = class TimerPresetsView {
         this.entry.actor.add_style_class_name('row');
         this.entry.scroll_box.vscrollbar_policy = Gtk.PolicyType.NEVER;
         this.entry.scroll_box.hscrollbar_policy = Gtk.PolicyType.NEVER;
-
 
         //
         // preset items container
@@ -663,7 +637,6 @@ var TimerPresetsView = class TimerPresetsView {
             this.preset_items_scrollbox.add_child(this._new_preset_item(preset).actor);
         }
 
-
         //
         // buttons
         //
@@ -673,7 +646,6 @@ var TimerPresetsView = class TimerPresetsView {
         this.button_ok         = new St.Button({ can_focus: true, label: _('Ok'), style_class: 'button', x_expand: true });
         btn_box.add(this.button_add_preset);
         btn_box.add(this.button_ok);
-
 
         //
         // listen
@@ -821,7 +793,6 @@ var TimerPresetsView = class TimerPresetsView {
             item.time_label.clutter_text.set_markup(`<b>${time_label}</b>`);
         }
 
-
         // icons
         item.icon_box = new St.BoxLayout({ visible: false, style_class: 'icon-box' });
         item.header.add_child(item.icon_box);
@@ -831,7 +802,6 @@ var TimerPresetsView = class TimerPresetsView {
 
         let edit_icon = new St.Icon({ track_hover: true, can_focus: true, reactive: true, gicon : MISC_UTILS.get_icon('timepp-edit-symbolic') });
         item.icon_box.add_child(edit_icon);
-
 
         // listen
         this.delegate.sigm.connect_release(start_icon, Clutter.BUTTON_PRIMARY, true, () => {
@@ -843,7 +813,6 @@ var TimerPresetsView = class TimerPresetsView {
         });
         item.actor.connect('key-focus-in', () => { item.actor.can_focus = false; });
         item.actor.connect('event', (_, event) => this._on_preset_item_event(item, event));
-
 
         return item;
     }
@@ -895,7 +864,6 @@ var TimerPresetsView = class TimerPresetsView {
 Signals.addSignalMethods(TimerPresetsView.prototype);
 
 
-
 // =====================================================================
 // @@@ TimerPresetEditor
 //
@@ -911,12 +879,10 @@ var TimerPresetEditor = class TimerPresetEditor {
         this.delegate = delegate;
         this.preset   = preset;
 
-
         //
         // container
         //
         this.actor = new St.BoxLayout({ vertical: true, style_class: 'view-box-content' });
-
 
         //
         // time pickers
@@ -945,7 +911,6 @@ var TimerPresetEditor = class TimerPresetEditor {
 
         this._set_time();
 
-
         //
         // entry
         //
@@ -960,7 +925,6 @@ var TimerPresetEditor = class TimerPresetEditor {
 
         if (preset) this.entry.set_text(preset.msg);
 
-
         //
         // repeat sound checkbox
         //
@@ -973,7 +937,6 @@ var TimerPresetEditor = class TimerPresetEditor {
         this.sound_checkbox = new CheckBox.CheckBox();
         this.checkbox_item.add_child(this.sound_checkbox);
         this.sound_checkbox.checked = preset ? preset.repeat_sound : false;
-
 
         //
         // buttons
@@ -991,7 +954,6 @@ var TimerPresetEditor = class TimerPresetEditor {
         this.button_ok     = new St.Button({ can_focus: true, label: _('Ok'), style_class: 'btn-ok button', x_expand: true });
         btn_box.add(this.button_cancel);
         btn_box.add(this.button_ok);
-
 
 
         //
@@ -1033,7 +995,6 @@ var TimerPresetEditor = class TimerPresetEditor {
 Signals.addSignalMethods(TimerPresetEditor.prototype);
 
 
-
 // =====================================================================
 // @@@ Timer fullscreen interface
 //
@@ -1056,7 +1017,6 @@ var TimerFullscreen = class TimerFullscreen extends FULLSCREEN.Fullscreen {
             [REG.FILE_PATH , MISC_UTILS.open_file_path],
         ]));
 
-
         //
         // actors
         //
@@ -1071,7 +1031,6 @@ var TimerFullscreen = class TimerFullscreen extends FULLSCREEN.Fullscreen {
         this.top_box.insert_child_at_index(this.start_pause_btn, 0);
         this.start_pause_icon = new St.Icon({ visible: false, reactive: true, can_focus: true, track_hover: true, gicon : MISC_UTILS.get_icon('timepp-pause-symbolic'), style_class: 'pause-icon' });
         this.start_pause_btn.add_actor(this.start_pause_icon);
-
 
         //
         // listen

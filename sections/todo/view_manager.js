@@ -5,13 +5,11 @@ const Main     = imports.ui.main;
 const Signals  = imports.signals;
 const Mainloop = imports.mainloop;
 
-
 const ME = imports.misc.extensionUtils.getCurrentExtension();
 
 const MISC_UTILS = ME.imports.lib.misc_utils;
 
 const G = ME.imports.sections.todo.GLOBAL;
-
 
 // =====================================================================
 // @@@ View Manager

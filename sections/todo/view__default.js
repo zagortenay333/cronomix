@@ -7,14 +7,11 @@ const Main      = imports.ui.main;
 const Signals   = imports.signals;
 const Mainloop  = imports.mainloop;
 
-
 const ME = imports.misc.extensionUtils.getCurrentExtension();
-
 
 const Gettext  = imports.gettext.domain(ME.metadata['gettext-domain']);
 const _        = Gettext.gettext;
 const ngettext = Gettext.ngettext;
-
 
 const SIG_MANAGER = ME.imports.lib.signal_manager;
 const MISC_UTILS  = ME.imports.lib.misc_utils;
@@ -22,9 +19,7 @@ const FUZZ        = ME.imports.lib.fuzzy_search;
 const REG         = ME.imports.lib.regex;
 const DND         = ME.imports.lib.dnd;
 
-
 const G = ME.imports.sections.todo.GLOBAL;
-
 
 
 // =====================================================================
@@ -53,7 +48,6 @@ var ViewDefault = class ViewDefault {
 
         this.sigm = new SIG_MANAGER.SignalManager();
 
-
         //
         // draw
         //
@@ -67,7 +61,6 @@ var ViewDefault = class ViewDefault {
 
         this.content_box = new St.BoxLayout({ x_align: Clutter.ActorAlign.CENTER, x_expand: true, y_expand: true, style_class: 'view-box-content' });
         this.columns_scroll.add_actor(this.content_box);
-
 
         //
         // listen
@@ -104,7 +97,6 @@ var ViewDefault = class ViewDefault {
                 break;
             }
         });
-
 
         //
         // finally
@@ -426,7 +418,6 @@ var ViewDefault = class ViewDefault {
 Signals.addSignalMethods(ViewDefault.prototype);
 
 
-
 // =====================================================================
 // @@@ KanbanColumn
 //
@@ -461,10 +452,8 @@ var KanbanColumn = class KanbanColumn {
             }
         }
 
-
         this.sigm = new SIG_MANAGER.SignalManager();
         this.rotate_id = null;
-
 
         //
         // draw
@@ -476,7 +465,6 @@ var KanbanColumn = class KanbanColumn {
         this.actor.add_child(this.content_box);
         this.content_box._delegate = this;
 
-
         //
         // header
         //
@@ -485,13 +473,11 @@ var KanbanColumn = class KanbanColumn {
         this.header = new St.BoxLayout({ reactive: true, x_expand: true });
         this.header_wrapper.add_child(this.header);
 
-
         //
         // kanban column title
         //
         this.kanban_title = new St.Label({ visible: this.title_visible, reactive: true, can_focus: true, x_expand: true, y_align: Clutter.ActorAlign.CENTER });
         this.header.add_child(this.kanban_title);
-
 
         //
         // the functional part of the header (add task, ...)
@@ -510,7 +496,6 @@ var KanbanColumn = class KanbanColumn {
 
         this.add_task_label = new St.Label({ text: _('Add New Task...'), y_align: Clutter.ActorAlign.CENTER });
         this.add_task_bin.add_actor(this.add_task_label);
-
 
         //
         // header icons
@@ -553,7 +538,6 @@ var KanbanColumn = class KanbanColumn {
         this.stats_icon = new St.Icon({ gicon : MISC_UTILS.get_icon('timepp-graph-symbolic'), can_focus: true, reactive: true, track_hover: true, y_align: Clutter.ActorAlign.CENTER, style_class: 'stats-icon' });
         this.icon_box.add_child(this.stats_icon);
 
-
         //
         // task items box
         //
@@ -564,7 +548,6 @@ var KanbanColumn = class KanbanColumn {
 
         this.tasks_scroll_content = new St.BoxLayout({ vertical: true, style_class: 'tasks-content-box'});
         this.tasks_scroll.add_actor(this.tasks_scroll_content);
-
 
         //
         // DND
@@ -582,7 +565,6 @@ var KanbanColumn = class KanbanColumn {
         this.actor.connect('touch-event', (_, event) => this._on_maybe_drag(event));
 
         this.dnd = new DND.Draggable(this, G.DNDGroup.KANBAN_COLUMN, false);
-
 
         //
         // listen
@@ -629,7 +611,6 @@ var KanbanColumn = class KanbanColumn {
         this.sigm.connect_release(this.clear_icon, Clutter.BUTTON_PRIMARY, true, () => this.delegate.show_view__clear_completed());
         this.sigm.connect_release(this.sort_icon, Clutter.BUTTON_PRIMARY, true, () => this.delegate.show_view__sort());
         this.sigm.connect_on_button(this.sort_icon, Clutter.BUTTON_MIDDLE, () => this.owner.toggle_automatic_sort());
-
 
         //
         // finally

@@ -9,14 +9,11 @@ const Main     = imports.ui.main;
 const Signals  = imports.signals;
 const Mainloop = imports.mainloop;
 
-
 const ME = imports.misc.extensionUtils.getCurrentExtension();
-
 
 const Gettext  = imports.gettext.domain(ME.metadata['gettext-domain']);
 const _        = Gettext.gettext;
 const ngettext = Gettext.ngettext;
-
 
 const TASK         = ME.imports.sections.todo.task_item;
 
@@ -27,18 +24,14 @@ const MISC_UTILS   = ME.imports.lib.misc_utils;
 const SIG_MANAGER  = ME.imports.lib.signal_manager;
 const MULTIL_ENTRY = ME.imports.lib.multiline_entry;
 
-
 const G = ME.imports.sections.todo.GLOBAL;
 
-
 const TODO_TXT_SYNTAX_URL = 'https://github.com/zagortenay333/timepp__gnome#todotxt-syntax';
-
 
 const EditorMode = {
     ADD_TASK  : "ADD_TASK",
     EDIT_TASK : "EDIT_TASK",
 };
-
 
 // =====================================================================
 // @@@ ViewTaskEditor
@@ -69,10 +62,8 @@ var ViewTaskEditor = class ViewTaskEditor {
         this.current_word_end           = 0;
         this.text_changed_handler_block = false;
 
-
         this.mode = task ? EditorMode.EDIT_TASK : EditorMode.ADD_TASK;
         this.old_task_str = "";
-
 
         //
         // container
@@ -81,7 +72,6 @@ var ViewTaskEditor = class ViewTaskEditor {
 
         this.content_box = new St.BoxLayout({ vertical: true, style_class: 'view-box-content' });
         this.actor.add_actor(this.content_box);
-
 
         //
         // preview task
@@ -104,7 +94,6 @@ var ViewTaskEditor = class ViewTaskEditor {
         this.preview_task.actor_parent = this.preview_scrollbox;
         this.preview_scrollbox.add_child(this.preview_task.actor);
 
-
         //
         // entry
         //
@@ -126,7 +115,6 @@ var ViewTaskEditor = class ViewTaskEditor {
             this.entry.set_text(task.task_str.replace(/\\n/g, '\n'));
 
         this.entry_resize = new RESIZE.MakeResizable(this.entry.entry);
-
 
         //
         // icons
@@ -181,7 +169,6 @@ var ViewTaskEditor = class ViewTaskEditor {
             this.eye_icon.gicon = (this.preview_scrollview.visible) ? MISC_UTILS.get_icon('timepp-eye-symbolic') : MISC_UTILS.get_icon('timepp-eye-closed-symbolic');
         }
 
-
         //
         // competion menu
         //
@@ -190,7 +177,6 @@ var ViewTaskEditor = class ViewTaskEditor {
 
         this.completion_menu_content = new St.BoxLayout({ y_expand: true, vertical: true, reactive: true, style_class: 'completion-box' });
         this.completion_menu.add_actor(this.completion_menu_content);
-
 
         //
         // buttons
@@ -217,7 +203,6 @@ var ViewTaskEditor = class ViewTaskEditor {
 
         this.button_ok = new St.Button({ can_focus: true, label: _('Ok'), style_class: 'btn-ok button', x_expand: true });
         this.btn_box.add(this.button_ok);
-
 
         //
         // listen

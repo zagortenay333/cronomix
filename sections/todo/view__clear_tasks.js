@@ -5,18 +5,14 @@ const Main     = imports.ui.main;
 const Signals  = imports.signals;
 const Mainloop = imports.mainloop;
 
-
 const ME = imports.misc.extensionUtils.getCurrentExtension();
 const MISC_UTILS = ME.imports.lib.misc_utils;
-
 
 const Gettext  = imports.gettext.domain(ME.metadata['gettext-domain']);
 const _        = Gettext.gettext;
 const ngettext = Gettext.ngettext;
 
-
 const G = ME.imports.sections.todo.GLOBAL;
-
 
 // =====================================================================
 // @@@ ViewClearTasks
@@ -34,7 +30,6 @@ var ViewClearTasks = class ViewClearTasks {
         this.ext      = ext;
         this.delegate = delegate;
 
-
         //
         // container
         //
@@ -42,7 +37,6 @@ var ViewClearTasks = class ViewClearTasks {
 
         this.content_box = new St.BoxLayout({ x_expand: true, vertical: true, style_class: 'view-box-content' });
         this.actor.add_actor(this.content_box);
-
 
         //
         // options
@@ -82,7 +76,6 @@ var ViewClearTasks = class ViewClearTasks {
             }
         }
 
-
         //
         // buttons
         //
@@ -94,7 +87,6 @@ var ViewClearTasks = class ViewClearTasks {
 
         this.button_cancel = new St.Button({ can_focus: true, label: _('Cancel'), style_class: 'btn-cancel button notification-icon-button modal-dialog-button' });
         this.btn_box.add(this.button_cancel);
-
 
         //
         // listen

@@ -7,25 +7,19 @@ const Main     = imports.ui.main;
 const Signals  = imports.signals;
 const Mainloop = imports.mainloop;
 
-
 const ME = imports.misc.extensionUtils.getCurrentExtension();
-
 
 const Gettext  = imports.gettext.domain(ME.metadata['gettext-domain']);
 const _        = Gettext.gettext;
 const ngettext = Gettext.ngettext;
 
-
 const FUZZ         = ME.imports.lib.fuzzy_search;
 const MISC_UTILS   = ME.imports.lib.misc_utils;
 const MULTIL_ENTRY = ME.imports.lib.multiline_entry;
 
-
 const KAN_HELP_LINK = 'https://github.com/zagortenay333/timepp__gnome#todotxt-extensions';
 
-
 const G = ME.imports.sections.todo.GLOBAL;
-
 
 // =====================================================================
 // @@@ KanbanSwitcher
@@ -38,10 +32,8 @@ var KanbanSwitcher = class KanbanSwitcher {
         this.ext      = ext;
         this.delegate = delegate;
 
-
         this.active_kan = null;
         this.kan_items  = new Set();
-
 
         //
         // container
@@ -49,7 +41,6 @@ var KanbanSwitcher = class KanbanSwitcher {
         this.actor = new St.BoxLayout({ x_expand: true, vertical: true, style_class: 'viwe-kanban-switcher view-box' });
         this.content_box = new St.BoxLayout({ x_expand: true, vertical: true, style_class: 'view-box-content' });
         this.actor.add_child(this.content_box);
-
 
         //
         // search files entry
@@ -59,7 +50,6 @@ var KanbanSwitcher = class KanbanSwitcher {
 
         this.entry = new St.Entry({ hint_text: _('Search...'), can_focus: true, x_expand: true, name: 'menu-search-entry' });
         this.entry_box.add_child(this.entry);
-
 
         //
         // help label
@@ -71,7 +61,6 @@ var KanbanSwitcher = class KanbanSwitcher {
             this.help_label.add_actor(label);
         }
 
-
         //
         // items
         //
@@ -80,7 +69,6 @@ var KanbanSwitcher = class KanbanSwitcher {
 
         this.items_scrollbox = new St.BoxLayout({ vertical: true, style_class: 'row' });
         this.items_scrollview.add_actor(this.items_scrollbox);
-
 
         //
         // buttons
@@ -91,7 +79,6 @@ var KanbanSwitcher = class KanbanSwitcher {
         this.button_cancel = new St.Button({ can_focus: true, label: _('Cancel'), style_class: 'btn-cancel button', x_expand: true });
         btn_box.add(this.button_cancel);
         this.button_cancel.visible = this.delegate.cache.todo_files.length > 0;
-
 
         //
         // listen
@@ -107,7 +94,6 @@ var KanbanSwitcher = class KanbanSwitcher {
             let first = this.items_scrollbox.get_first_child();
             if (first) this._on_kanban_selected(first._delegate);
         });
-
 
         //
         // finally
@@ -151,17 +137,14 @@ var KanbanSwitcher = class KanbanSwitcher {
         item.kan_str   = kan_str
         item.is_active = is_active;
 
-
         // actor
         item.actor = new St.BoxLayout({ can_focus: true, reactive: true, vertical: true, style_class: 'kanban-switcher-item' });
         item.actor._delegate = item;
-
 
         // header
         item.header = new St.BoxLayout();
         item.actor.add_child(item.header);
         item.header.add_child(new St.Label({ text: name, x_expand: true, y_align: Clutter.ActorAlign.CENTER, style_class: 'kanban-switcher-item-title' }));
-
 
         // icons
         item.icon_box = new St.BoxLayout({ style_class: 'icon-box' });
@@ -182,7 +165,6 @@ var KanbanSwitcher = class KanbanSwitcher {
             this.items_scrollbox.add_child(item.actor);
         }
 
-
         // columns body
         item.msg = new St.Label({ y_align: Clutter.ActorAlign.CENTER });
         item.actor.add_child(item.msg);
@@ -195,7 +177,6 @@ var KanbanSwitcher = class KanbanSwitcher {
             markup += "\n  <b>-  " + it.replace(/,/g, ',  ') + "</b>";
         }
         item.msg.clutter_text.set_markup(markup.slice(1));
-
 
         // listen
         this.delegate.sigm.connect_release(item.check_icon, Clutter.BUTTON_PRIMARY, true, () => {

@@ -8,21 +8,16 @@ const PopupMenu = imports.ui.popupMenu;
 const Signals   = imports.signals;
 const Mainloop  = imports.mainloop;
 
-
 const ME = imports.misc.extensionUtils.getCurrentExtension();
-
 
 const Gettext  = imports.gettext.domain(ME.metadata['gettext-domain']);
 const _        = Gettext.gettext;
 const ngettext = Gettext.ngettext;
 
-
 const MULTIL_ENTRY = ME.imports.lib.multiline_entry;
 const MISC_UTILS   = ME.imports.lib.misc_utils;
 
-
 const G = ME.imports.sections.todo.GLOBAL;
-
 
 // =====================================================================
 // @@@ ViewFilters
@@ -49,10 +44,8 @@ var ViewFilters = class ViewFilters {
             custom      : [],
         };
 
-
         // Array of PopupMenu.Switch() actors
         this.nand_toggles = [];
-
 
         //
         // actor
@@ -62,14 +55,12 @@ var ViewFilters = class ViewFilters {
         this.content_box = new St.BoxLayout({ x_expand: true, vertical: true, style_class: 'view-box-content' });
         this.actor.add_actor(this.content_box);
 
-
         //
         // custom filters entry
         //
         this.entry = new MULTIL_ENTRY.MultiLineEntry(_('Add custom filter...'), false, true);
         this.content_box.add_child(this.entry.actor);
         this.entry.actor.add_style_class_name('row');
-
 
         //
         // filters
@@ -94,16 +85,13 @@ var ViewFilters = class ViewFilters {
         this.project_filters_box = new St.BoxLayout({ vertical: true, x_expand: true, style_class: 'filter-settings-sector' });
         this.filter_sectors_scroll_box.add_actor(this.project_filters_box);
 
-
         this._add_separator(this.content_box);
-
 
         //
         // toggles sector
         //
         this.toggles_sector = new St.BoxLayout({ vertical: true, x_expand: true, style_class: 'filter-settings-sector' });
         this.content_box.add_child(this.toggles_sector);
-
 
         //
         // show hidden only switch
@@ -126,7 +114,6 @@ var ViewFilters = class ViewFilters {
         this.show_hidden_tasks_toggle = new PopupMenu.Switch(false);
         this.nand_toggles.push(this.show_hidden_tasks_toggle);
         this.show_hidden_tasks_toggle_btn.add_actor(this.show_hidden_tasks_toggle);
-
 
         //
         // show recurring only switch
@@ -153,7 +140,6 @@ var ViewFilters = class ViewFilters {
         this.nand_toggles.push(this.show_recurring_tasks_toggle);
         this.show_recurring_tasks_toggle_btn.add_actor(this.show_recurring_tasks_toggle);
 
-
         //
         // show deferred tasks only switch
         //
@@ -178,7 +164,6 @@ var ViewFilters = class ViewFilters {
         this.nand_toggles.push(this.show_deferred_tasks_toggle);
         this.show_deferred_tasks_toggle_btn.add_actor(this.show_deferred_tasks_toggle);
 
-
         //
         // Invert switch (whitelist/blacklist)
         //
@@ -193,7 +178,6 @@ var ViewFilters = class ViewFilters {
         this.invert_toggle = new PopupMenu.Switch(false);
         this.invert_toggle_btn.add_actor(this.invert_toggle);
 
-
         //
         // buttons
         //
@@ -206,12 +190,10 @@ var ViewFilters = class ViewFilters {
         this.btn_box.add(this.button_reset);
         this.btn_box.add(this.button_ok);
 
-
         //
         // load filter items
         //
         this._load_filters();
-
 
         //
         // listen
@@ -255,7 +237,6 @@ var ViewFilters = class ViewFilters {
         this.show_deferred_tasks_toggle.state = filters.deferred;
         this.show_recurring_tasks_toggle.state = filters.recurring;
 
-
         // custom filters
         for (let i = 0, len = filters.custom.length; i < len; i++) {
             let value = filters.custom[i];
@@ -265,9 +246,7 @@ var ViewFilters = class ViewFilters {
             this.filter_register.custom.push(item);
         }
 
-
         this._add_separator(this.priority_filters_box);
-
 
         // completed
         if (this.delegate.stats.completed > 0) {
@@ -282,7 +261,6 @@ var ViewFilters = class ViewFilters {
             this.filter_register.no_priority = item;
             this.priority_filters_box.add_child(item.actor);
         }
-
 
         // priorities
         for (let [key, value] of this.delegate.stats.priorities) {
@@ -299,9 +277,7 @@ var ViewFilters = class ViewFilters {
             this.priority_filters_box.add_child(this.filter_register.priorities[i].actor);
         }
 
-
         this._add_separator(this.context_filters_box);
-
 
         // contexts
         for (let [key, value] of this.delegate.stats.contexts) {
@@ -311,9 +287,7 @@ var ViewFilters = class ViewFilters {
             this.filter_register.contexts.push(item);
         }
 
-
         this._add_separator(this.project_filters_box);
-
 
         // projects
         for (let [key, value] of this.delegate.stats.projects) {
@@ -322,7 +296,6 @@ var ViewFilters = class ViewFilters {
             this.project_filters_box.add_child(item.actor);
             this.filter_register.projects.push(item);
         }
-
 
         // hide the sections that don't have any items
         [

@@ -7,24 +7,18 @@ const ByteArray = imports.byteArray;
 const Signals   = imports.signals;
 const Mainloop  = imports.mainloop;
 
-
 const ME = imports.misc.extensionUtils.getCurrentExtension();
-
 
 const Gettext  = imports.gettext.domain(ME.metadata['gettext-domain']);
 const _        = Gettext.gettext;
 const ngettext = Gettext.ngettext;
 
-
 const IFACE = `${ME.path}/dbus/time_tracker_iface.xml`;
-
 
 const MISC_UTILS = ME.imports.lib.misc_utils;
 const REG        = ME.imports.lib.regex;
 
-
 const G = ME.imports.sections.todo.GLOBAL;
-
 
 // =====================================================================
 // @@@ TimeTracker
@@ -37,7 +31,6 @@ var TimeTracker = class TimeTracker {
         this.ext      = ext;
         this.delegate = delegate;
 
-
         {
             let [,xml,] = Gio.file_new_for_path(IFACE).load_contents(null);
             xml = '' + ByteArray.toString(xml);
@@ -45,20 +38,16 @@ var TimeTracker = class TimeTracker {
             this.dbus_impl.export(Gio.DBus.session, '/timepp/zagortenay333/TimeTracker');
         }
 
-
         this.number_of_tracked_tasks = 0;
         this.tic_mainloop_id         = 0;
-
 
         // Holds the path of the current csv directory.
         // We also use this as a flag to check whether the tracker is active.
         this.csv_dir = this.get_csv_dir_path();
 
-
         this.yearly_csv_dir  = null;
         this.yearly_csv_file = null;
         this.daily_csv_file  = null;
-
 
         this.yearly_csv_dir_monitor  = null;
         this.yearly_csv_file_monitor = null;
@@ -66,7 +55,6 @@ var TimeTracker = class TimeTracker {
         this.yearly_csv_dir_monitor_id  = null;
         this.yearly_csv_file_monitor_id = null;
         this.daily_csv_file_monitor_id  = null;
-
 
         // @stats_data: Map
         //   - @key: string (date in 'yyyy-mm-dd' iso format)
@@ -82,7 +70,6 @@ var TimeTracker = class TimeTracker {
         // In each @val inside @stats_data, the projects are sorted after tasks.
         this.stats_data = new Map();
 
-
         // @stats_unique_task     : Set (of all unique tasks strings)
         // @stats_unique_projcets : Set (of all unique projects strings)
         this.stats_unique_tasks    = new Set();
@@ -91,7 +78,6 @@ var TimeTracker = class TimeTracker {
         // string (in yyyy-mm-dd iso format)
         // This is the oldest date in the stats data entry
         this.oldest_date = '';
-
 
         // @key: string
         //   - task string (a single line in the todo.txt file)
@@ -114,7 +100,6 @@ var TimeTracker = class TimeTracker {
         //                               project and that are being tracked)
         this.daily_csv_map = new Map();
 
-
         //
         // listen
         //
@@ -125,7 +110,6 @@ var TimeTracker = class TimeTracker {
         this.ext.connect('stop-time-tracking-by-id', (_1, _2, task_id) => {
             this.stop_tracking_by_id(task_id);
         });
-
 
         //
         // finally
@@ -153,19 +137,16 @@ var TimeTracker = class TimeTracker {
             if (! this.yearly_csv_dir.query_exists(null))
                 this.yearly_csv_dir.make_directory_with_parents(null);
 
-
             // yearly file
             this.yearly_csv_file = MISC_UTILS.file_new_for_path(
                 `${this.csv_dir}/${d.getFullYear()}__time_tracker.csv`);
             if (! this.yearly_csv_file.query_exists(null))
                 this.yearly_csv_file.create(Gio.FileCreateFlags.NONE, null);
 
-
             // daily file
             this.daily_csv_file = MISC_UTILS.file_new_for_path(`${this.csv_dir}/TODAY__time_tracker.csv`);
             if (! this.daily_csv_file.query_exists(null))
                 this.daily_csv_file.create(Gio.FileCreateFlags.NONE, null);
-
 
             this._enable_file_monitors();
         } catch (e) {
@@ -347,7 +328,6 @@ var TimeTracker = class TimeTracker {
 
         if (this.yearly_csv_file_monitor)
             this.yearly_csv_file_monitor.disconnect(this.yearly_csv_file_monitor_id);
-
 
         if (this.yearly_csv_dir_monitor)
             this.yearly_csv_dir_monitor.disconnect(this.yearly_csv_dir_monitor);

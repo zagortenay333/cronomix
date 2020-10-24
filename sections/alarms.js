@@ -13,14 +13,11 @@ const ByteArray    = imports.byteArray;
 const Signals      = imports.signals;
 const Mainloop     = imports.mainloop;
 
-
 const ME = imports.misc.extensionUtils.getCurrentExtension();
-
 
 const Gettext  = imports.gettext.domain(ME.metadata['gettext-domain']);
 const _        = Gettext.gettext;
 const ngettext = Gettext.ngettext;
-
 
 const SOUND_PLAYER    = ME.imports.lib.sound_player;
 const FULLSCREEN      = ME.imports.lib.fullscreen;
@@ -34,16 +31,13 @@ const MISC_UTILS      = ME.imports.lib.misc_utils;
 const TEXT_LINKS_MNGR = ME.imports.lib.text_links_manager;
 const REG             = ME.imports.lib.regex;
 
-
 const CACHE_FILE = '~/.cache/timepp_gnome_shell_extension/timepp_alarms.json';
-
 
 const NotifStyle = {
     STANDARD   : 0,
     FULLSCREEN : 1,
     NONE       : 2,
 };
-
 
 
 // =====================================================================
@@ -63,24 +57,19 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
 
         this.separate_menu = this.settings.get_boolean('alarms-separate-menu');
 
-
         this.cache_file = null;
         this.cache      = null;
         this.css        = this.ext.custom_css;
-
 
         this.linkm = new TEXT_LINKS_MNGR.TextLinksManager();
         this.sigm  = new SIG_MANAGER.SignalManager();
         this.keym  = new KEY_MANAGER.KeybindingManager(this.settings);
 
-
         this.sound_player = new SOUND_PLAYER.SoundPlayer();
         this.fullscreen   = new AlarmFullscreen(this.ext, this, this.settings.get_int('alarms-fullscreen-monitor-pos'));
 
-
         this.wallclock     = new GnomeDesktop.WallClock();
         this.wallclock_str = ''; // time_str
-
 
         // AlarmItem objects
         this.alarm_items = new Set();
@@ -88,7 +77,6 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
         // @key: alarm obj
         // @val: time_str
         this.snoozed_alarms = new Map();
-
 
         try {
             this.cache_file = MISC_UTILS.file_new_for_path(CACHE_FILE);
@@ -124,14 +112,12 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
             return;
         }
 
-
         //
         // keybindings
         //
         this.keym.add('alarms-keybinding-open', () => {
              this.ext.open_menu(this.section_name);
         });
-
 
         //
         // add new alarm item
@@ -152,7 +138,6 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
             box.add_actor(label);
         }
 
-
         //
         // alarm items box
         //
@@ -164,7 +149,6 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
 
         this.alarms_scroll_content = new St.BoxLayout({ vertical: true, style_class: 'alarms-content-box' });
         this.alarms_scroll.add_actor(this.alarms_scroll_content);
-
 
         //
         // listen
@@ -183,7 +167,6 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
         this.sigm.connect(this.wallclock, 'notify::clock', () => this._tic());
         this.sigm.connect(this.fullscreen, 'monitor-changed', () => this.settings.set_int('alarms-fullscreen-monitor-pos', this.fullscreen.monitor));
         this.sigm.connect_release(this.add_alarm_button, Clutter.BUTTON_PRIMARY, true, () => this.alarm_editor());
-
 
         //
         // finally
@@ -436,7 +419,6 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
 Signals.addSignalMethods(SectionMain.prototype);
 
 
-
 // =====================================================================
 // @@@ Alarm Editor
 //
@@ -457,7 +439,6 @@ var AlarmEditor = class AlarmEditor {
         this.delegate = delegate;
         this.alarm    = alarm;
 
-
         //
         // container
         //
@@ -465,7 +446,6 @@ var AlarmEditor = class AlarmEditor {
 
         this.content_box = new St.BoxLayout({ x_expand: true, vertical: true, style_class: 'view-box-content'});
         this.actor.add_actor(this.content_box);
-
 
         //
         // alarm time
@@ -490,7 +470,6 @@ var AlarmEditor = class AlarmEditor {
             }
         }
 
-
         //
         // choose day
         //
@@ -504,7 +483,6 @@ var AlarmEditor = class AlarmEditor {
                 btn.add_style_pseudo_class('active');
             });
         }
-
 
         //
         // snooze duration
@@ -523,7 +501,6 @@ var AlarmEditor = class AlarmEditor {
                 this.snooze_duration_picker.set_counter(alarm.snooze_dur);
         }
 
-
         //
         // repeat sound checkbox
         //
@@ -536,7 +513,6 @@ var AlarmEditor = class AlarmEditor {
         this.sound_checkbox = new CheckBox.CheckBox();
         this.checkbox_item.add_child(this.sound_checkbox);
         this.sound_checkbox.checked = alarm && alarm.repeat_sound;
-
 
         //
         // entry
@@ -552,7 +528,6 @@ var AlarmEditor = class AlarmEditor {
 
         if (alarm)
             this.entry.set_text(alarm.msg);
-
 
         //
         // buttons
@@ -573,7 +548,6 @@ var AlarmEditor = class AlarmEditor {
         this.button_ok     = new St.Button({ can_focus: true, label: _('Ok'), style_class: 'btn-ok button', x_expand: true });
         btn_box.add(this.button_cancel);
         btn_box.add(this.button_ok);
-
 
         //
         // listen
@@ -621,7 +595,6 @@ var AlarmEditor = class AlarmEditor {
 Signals.addSignalMethods(AlarmEditor.prototype);
 
 
-
 // =====================================================================
 // @@@ Alarm Item
 //
@@ -639,7 +612,6 @@ var AlarmItem = class AlarmItem {
 
         this.msg_vert_padding = -1;
 
-
         //
         // container
         //
@@ -647,7 +619,6 @@ var AlarmItem = class AlarmItem {
 
         this.alarm_item_content = new St.BoxLayout({vertical: true, style_class: 'alarm-item-content'});
         this.actor.add_actor(this.alarm_item_content);
-
 
         //
         // header
@@ -669,7 +640,6 @@ var AlarmItem = class AlarmItem {
         this.toggle_bin.add_actor(this.toggle);
         this.icon_box.add(this.toggle_bin);
 
-
         //
         // body
         //
@@ -689,7 +659,6 @@ var AlarmItem = class AlarmItem {
         else this.set_body_text(alarm.msg);
 
         this.update_time_label();
-
 
         //
         // listen
@@ -809,7 +778,6 @@ var AlarmItem = class AlarmItem {
 Signals.addSignalMethods(AlarmItem.prototype);
 
 
-
 // =====================================================================
 // @@@ Alarm fullscreen interface
 //
@@ -834,7 +802,6 @@ var AlarmFullscreen = class AlarmFullscreen extends FULLSCREEN.Fullscreen {
 
         this.alarms = [];
 
-
         //
         // multi alarm view
         //
@@ -849,13 +816,11 @@ var AlarmFullscreen = class AlarmFullscreen extends FULLSCREEN.Fullscreen {
         this.alarm_cards_scroll_bin = new St.BoxLayout({ y_expand: true, y_align: Clutter.ActorAlign.CENTER, vertical: true, style_class: 'alarm-cards-container'});
         this.alarm_cards_scroll.add_actor(this.alarm_cards_scroll_bin);
 
-
         //
         // title
         //
         this.title = new St.Label({ x_expand: true, x_align: Clutter.ActorAlign.CENTER, style_class: 'main-title' });
         this.middle_box.insert_child_at_index(this.title, 0);
-
 
         //
         // snooze button
@@ -864,7 +829,6 @@ var AlarmFullscreen = class AlarmFullscreen extends FULLSCREEN.Fullscreen {
         this.bottom_box.add_child(this.button_box)
         this.button_snooze = new St.Button({ can_focus: true, style_class: 'button' });
         this.button_box.add_child(this.button_snooze);
-
 
         //
         // listen

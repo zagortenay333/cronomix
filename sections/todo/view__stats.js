@@ -9,14 +9,11 @@ const PopupMenu = imports.ui.popupMenu;
 const Signals   = imports.signals;
 const Mainloop  = imports.mainloop;
 
-
 const ME = imports.misc.extensionUtils.getCurrentExtension();
-
 
 const Gettext  = imports.gettext.domain(ME.metadata['gettext-domain']);
 const _        = Gettext.gettext;
 const ngettext = Gettext.ngettext;
-
 
 const FUZZ        = ME.imports.lib.fuzzy_search;
 const MISC_UTILS  = ME.imports.lib.misc_utils;
@@ -25,15 +22,12 @@ const FULLSCREEN  = ME.imports.lib.fullscreen;
 const DATE_PICKER = ME.imports.lib.date_picker;
 const REG         = ME.imports.lib.regex;
 
-
 const G = ME.imports.sections.todo.GLOBAL;
-
 
 const HotMode = {
     TASK    : 0,
     PROJECT : 1,
 }
-
 
 const StatsMode = {
     BANNER : 'BANNER',
@@ -42,7 +36,6 @@ const StatsMode = {
     SEARCH : 'SEARCH',
     HOT    : 'HOT',
 };
-
 
 // =====================================================================
 // @@@ Stats View
@@ -74,9 +67,7 @@ var StatsView = class StatsView extends FULLSCREEN.Fullscreen {
             this.monitor_button.visible = visible;
         }
 
-
         this.custom_css = this.ext.custom_css;
-
 
         // Values as returned by the time tracker's get_stats.
         // @stats_unique_tasks and @stats_unique_projects are converted into
@@ -84,7 +75,6 @@ var StatsView = class StatsView extends FULLSCREEN.Fullscreen {
         this.stats_data            = null;
         this.stats_unique_tasks    = null;
         this.stats_unique_projects = null;
-
 
         // A map between 'human-readable' properties and translated strings as
         // well as date intervals consisting of two date strings in 'yyyy-mm-dd'
@@ -105,16 +95,13 @@ var StatsView = class StatsView extends FULLSCREEN.Fullscreen {
             ['all'          , [_('All Time')      , ['', '']] ],
         ]);
 
-
         this.current_mode = this.prev_mode = {
             name   : '',
             args   : null,
             actors : null,
         }
 
-
         this.selected_search_result = null; // {label_actor: St.Label, type: string ('()' or '++'}
-
 
         // A map from mode names to functions that invoke it.
         this.mode_func_map = {
@@ -123,7 +110,6 @@ var StatsView = class StatsView extends FULLSCREEN.Fullscreen {
             [StatsMode.SINGLE] : this.show_mode__single.bind(this),
             [StatsMode.HOT]    : this.show_mode__hot.bind(this),
         };
-
 
         //
         // graph interval icon
@@ -138,14 +124,12 @@ var StatsView = class StatsView extends FULLSCREEN.Fullscreen {
             )
         }));
 
-
         //
         // heatmap icon
         //
         this.heatmap_icon = new St.Button({ checked: this.delegate.settings.get_boolean('todo-stats-heatmap-visible'), visible: false, can_focus: true, style_class: 'heatmap-icon' });
         this.top_box_left.add_child(this.heatmap_icon);
         this.heatmap_icon.add_actor(new St.Icon({ gicon : MISC_UTILS.get_icon('timepp-heatmap-symbolic') }));
-
 
         //
         // nav bar
@@ -164,7 +148,6 @@ var StatsView = class StatsView extends FULLSCREEN.Fullscreen {
         this.hot_mode_icon = new St.Button({ can_focus: true });
         this.nav_bar.add_actor(this.hot_mode_icon);
         this.hot_mode_icon.add_actor(new St.Icon({ gicon : MISC_UTILS.get_icon('timepp-fire-symbolic') }));
-
 
         //
         // search entry and results container
@@ -209,7 +192,6 @@ var StatsView = class StatsView extends FULLSCREEN.Fullscreen {
             this.project_results.scrollview.add_actor(this.project_results.scrollbox);
         }
 
-
         //
         // date picker
         //
@@ -227,7 +209,6 @@ var StatsView = class StatsView extends FULLSCREEN.Fullscreen {
             this.top_box_left.add_child(this.date_picker.actor);
         }
 
-
         //
         // hot mode controls
         //
@@ -236,7 +217,6 @@ var StatsView = class StatsView extends FULLSCREEN.Fullscreen {
 
             this.hot_mode_control_box = new St.BoxLayout({ y_align: Clutter.ActorAlign.CENTER, visible: false, style_class: 'hot-mode-control-box' });
             this.top_box_left.insert_child_at_index(this.hot_mode_control_box, 0);
-
 
             // custom range view
             this.date_range_custom_view = new St.BoxLayout({ visible: false, style_class: 'custom-date-range-box' });
@@ -255,7 +235,6 @@ var StatsView = class StatsView extends FULLSCREEN.Fullscreen {
 
             this.custom_range_cancel_btn = new St.Button({ can_focus: true, label: _('Cancel'), style_class: 'button btn-cancel' });
             this.date_range_custom_view.add_actor(this.custom_range_cancel_btn);
-
 
             // the main view
             this.date_range_main_view = new St.BoxLayout({ style_class: 'btn-box' });
@@ -304,7 +283,6 @@ var StatsView = class StatsView extends FULLSCREEN.Fullscreen {
             });
         }
 
-
         //
         // heatmap graph
         //
@@ -326,14 +304,12 @@ var StatsView = class StatsView extends FULLSCREEN.Fullscreen {
             return date + '   ' + time_str;
         };
 
-
         //
         // vbars graph
         //
         this.vbars_graph = new GRAPHS.VBars();
         this.inner_middle_box.add_child(this.vbars_graph.actor);
         this.vbars_graph.actor.hide();
-
 
         //
         // sum stats card
@@ -357,7 +333,6 @@ var StatsView = class StatsView extends FULLSCREEN.Fullscreen {
                 this[it].clutter_text.line_wrap_mode = Pango.WrapMode.WORD_CHAR;
             });
         }
-
 
         //
         // listen
@@ -571,13 +546,11 @@ var StatsView = class StatsView extends FULLSCREEN.Fullscreen {
             (vbar, interval_idx) => this._tooltip_format(vbar, interval_idx)
         );
 
-
         //
         // update stats card
         //
         if (this.prev_mode.name === StatsMode.SINGLE && this.prev_mode.args[2] === label)
             return;
-
 
         //
         // title
@@ -591,7 +564,6 @@ var StatsView = class StatsView extends FULLSCREEN.Fullscreen {
 
         this.stats_card_title.clutter_text.set_markup(
             MISC_UTILS.markdown_to_pango(markup, this.ext.markdown_map));
-
 
         //
         // global stats
@@ -614,7 +586,6 @@ var StatsView = class StatsView extends FULLSCREEN.Fullscreen {
 
             markup += `<b>${v[0]}:</b>\n  ${time_str}${day_str}\n\n`;
         };
-
 
         //
         // yearly quarters

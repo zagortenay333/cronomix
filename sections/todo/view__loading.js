@@ -4,14 +4,11 @@ const Main     = imports.ui.main;
 const Signals  = imports.signals;
 const Mainloop = imports.mainloop;
 
-
 const ME = imports.misc.extensionUtils.getCurrentExtension();
-
 
 const Gettext  = imports.gettext.domain(ME.metadata['gettext-domain']);
 const _        = Gettext.gettext;
 const ngettext = Gettext.ngettext;
-
 
 // =====================================================================
 // @@@ ViewLoading
@@ -25,7 +22,6 @@ var ViewLoading = class ViewLoading {
         this.delegate = delegate;
 
         this.view_lock = true;
-
 
         //
         // draw

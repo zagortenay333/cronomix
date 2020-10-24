@@ -6,21 +6,16 @@ const Main      = imports.ui.main;
 const Signals   = imports.signals;
 const Mainloop  = imports.mainloop;
 
-
 const ME = imports.misc.extensionUtils.getCurrentExtension();
-
 
 const Gettext  = imports.gettext.domain(ME.metadata['gettext-domain']);
 const _        = Gettext.gettext;
 const ngettext = Gettext.ngettext;
 
-
 const MISC_UTILS = ME.imports.lib.misc_utils;
 const FUZZ       = ME.imports.lib.fuzzy_search;
 
-
 const G = ME.imports.sections.todo.GLOBAL;
-
 
 // =====================================================================
 // @@@ ViewSearch
@@ -44,7 +39,6 @@ var ViewSearch = class ViewSearch {
         // @val : array  (of tasks that match the search query)
         this.search_dict = new Map();
 
-
         //
         // container
         //
@@ -52,7 +46,6 @@ var ViewSearch = class ViewSearch {
 
         this.content_box = new St.BoxLayout({ x_expand: true, vertical: true, style_class: 'view-box-content' });
         this.actor.add_actor(this.content_box);
-
 
         //
         // search entry
@@ -74,7 +67,6 @@ var ViewSearch = class ViewSearch {
             box.add_child(this.search_close_icon);
         }
 
-
         //
         // task items box
         //
@@ -85,14 +77,12 @@ var ViewSearch = class ViewSearch {
         this.tasks_scroll_content = new St.BoxLayout({ vertical: true, style_class: 'tasks-content-box'});
         this.tasks_scroll.add_actor(this.tasks_scroll_content);
 
-
         //
         // listen
         //
         this.search_entry.clutter_text.connect('text-changed', () => this._search());
         this.search_close_icon.connect('button-press-event', () => this.delegate.show_view__default());
         this.add_filter_icon.connect('button-release-event', () => this._add_custom_filter());
-
 
         //
         // finally

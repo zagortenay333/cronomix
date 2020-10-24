@@ -10,25 +10,20 @@ const CheckBox = imports.ui.checkBox;
 const Signals  = imports.signals;
 const Mainloop = imports.mainloop;
 
-
 const ME = imports.misc.extensionUtils.getCurrentExtension();
-
 
 const Gettext  = imports.gettext.domain(ME.metadata['gettext-domain']);
 const _        = Gettext.gettext;
 const ngettext = Gettext.ngettext;
 
-
 const MISC = ME.imports.lib.misc_utils;
 const REG  = ME.imports.lib.regex;
 const DND  = ME.imports.lib.dnd;
-
 
 const G = ME.imports.sections.todo.GLOBAL;
 
 const DOUBLE_CLICK_DELAY = 200000; // 200 ms
 let LAST_TIME_CLICKED    = 0; // for double click on task
-
 
 
 // =====================================================================
@@ -54,27 +49,22 @@ var TaskItem = class TaskItem {
         this.delegate = delegate;
         this.task_str = task_str;
 
-
         //
         // @NOTE
         // If a var needs to be resettable, add it to the reset_props() method
         // instead of the constructor() method.
         //
 
-
         this.custom_css = this.ext.custom_css;
-
 
         // Project/context/url below mouse pointer, null if none of those.
         this.current_keyword = null;
-
 
         // Each time the task is added somewhere, these three props must be
         // updated.
         this.owner            = null; // js obj
         this.actor_parent     = null; // clutter actor containing this.actor
         this.actor_scrollview = null; // StScrollView (optional)
-
 
         //
         // container
@@ -83,19 +73,16 @@ var TaskItem = class TaskItem {
         this.task_item_content = new St.BoxLayout({ vertical: true, style_class: 'task-item-content' });
         this.actor.add_actor(this.task_item_content);
 
-
         //
         // DND
         //
         this.dnd = new DND.Draggable(this, G.DNDGroup.TASK);
-
 
         //
         // header
         //
         this.header = new St.BoxLayout({ style_class: 'task-item-header' });
         this.task_item_content.add_actor(this.header);
-
 
         //
         // checkbox
@@ -105,13 +92,11 @@ var TaskItem = class TaskItem {
         let checkmark = new St.Bin();
         this.completion_checkbox.add_actor(checkmark);
 
-
         //
         // priority label
         //
         this.prio_label = new St.Label({ reactive: true, y_align: Clutter.ActorAlign.CENTER, style_class: 'priority-label' });
         this.header.add_child(this.prio_label);
-
 
         //
         // body
@@ -123,12 +108,10 @@ var TaskItem = class TaskItem {
         this.msg.clutter_text.ellipsize        = Pango.EllipsizeMode.NONE;
         this.msg.clutter_text.line_wrap_mode   = Pango.WrapMode.WORD_CHAR;
 
-
         //
         // init the remaining vars and parse task string
         //
         this.reset(self_update);
-
 
         //
         // listen
@@ -247,7 +230,6 @@ var TaskItem = class TaskItem {
         let len      = words.length;
         let desc_pos = 0; // idx of first word of 'description' in words arr
 
-
         //
         // Parse 'header'
         //
@@ -298,7 +280,6 @@ var TaskItem = class TaskItem {
             this.creation_date = words[0];
             desc_pos           = 1;
         }
-
 
         //
         // Parse 'description'
@@ -682,7 +663,6 @@ var TaskItem = class TaskItem {
             this.ext_date_labels.destroy();
             this.ext_date_labels = null;
         }
-
 
         //
         // set creation/completion dates

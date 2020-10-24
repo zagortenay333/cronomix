@@ -9,22 +9,17 @@ const ByteArray    = imports.byteArray;
 const Signals      = imports.signals;
 const Mainloop     = imports.mainloop;
 
-
 const ME = imports.misc.extensionUtils.getCurrentExtension();
-
 
 const Gettext  = imports.gettext.domain(ME.metadata['gettext-domain']);
 const _        = Gettext.gettext;
 const ngettext = Gettext.ngettext;
 
-
 const SIG_MANAGER  = ME.imports.lib.signal_manager;
 const KEY_MANAGER  = ME.imports.lib.keybinding_manager;
 const MISC_UTILS   = ME.imports.lib.misc_utils;
 
-
 const G = ME.imports.sections.todo.GLOBAL;
-
 
 const TASK                 = ME.imports.sections.todo.task_item;
 const VIEW_MANAGER         = ME.imports.sections.todo.view_manager;
@@ -41,9 +36,7 @@ const VIEW_TASK_EDITOR     = ME.imports.sections.todo.view__task_editor;
 const VIEW_FILE_SWITCHER   = ME.imports.sections.todo.view__file_switcher;
 const VIEW_KANBAN_SWITCHER = ME.imports.sections.todo.view__kanban_switcher;
 
-
 const CACHE_FILE = '~/.cache/timepp_gnome_shell_extension/timepp_todo.json';
-
 
 // =====================================================================
 // @@@ Main
@@ -75,7 +68,6 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
         // the other views, so we don't use the view manager for it.
         this.stats_view = new VIEW_STATS.StatsView(this.ext, this, 0);
 
-
         //
         // init cache file
         //
@@ -105,31 +97,24 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
             return;
         }
 
-
         this.create_tasks_mainloop_id = null;
-
 
         // We use this for tracking when a new day begins.
         this.wallclock = new GnomeDesktop.WallClock();
-
 
         // Track how many tasks have a particular proj/context/prio, a
         this.stats = null;
         this._reset_stats_obj();
 
-
         // ref to current todo record in cache file
         this.current_todo_file = null;
-
 
         // A GFile to the todo.txt file, GMonitor.
         this.todo_txt_file     = null;
         this.todo_file_monitor = null;
 
-
         // All task objects.
         this.tasks = [];
-
 
         //
         // keybindings
@@ -159,14 +144,12 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
             if (path) MISC_UTILS.open_file_path(path);
         });
 
-
         //
         // panel item
         //
         this.panel_item.actor.add_style_class_name('todo-panel-item');
         this.panel_item.icon.gicon = MISC_UTILS.get_icon('timepp-todo-symbolic');
         this._toggle_panel_item_mode();
-
 
         //
         // listen
@@ -502,7 +485,6 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
             }
         }
 
-
         //
         // update panel label
         //
@@ -518,7 +500,6 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
             if (n_incompleted) this.panel_item.actor.remove_style_class_name('done');
             else               this.panel_item.actor.add_style_class_name('done');
         }
-
 
         //
         // Since contexts/projects/priorities are filters, it can happen that we

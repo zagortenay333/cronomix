@@ -8,21 +8,16 @@ const PopupMenu = imports.ui.popupMenu;
 const Signals   = imports.signals;
 const Mainloop  = imports.mainloop;
 
-
 const ME = imports.misc.extensionUtils.getCurrentExtension();
-
 
 const Gettext  = imports.gettext.domain(ME.metadata['gettext-domain']);
 const _        = Gettext.gettext;
 const ngettext = Gettext.ngettext;
 
-
 const DND  = ME.imports.lib.dnd;
 const MISC = ME.imports.lib.misc_utils;
 
-
 const G = ME.imports.sections.todo.GLOBAL;
-
 
 // =====================================================================
 // @@@ ViewSort
@@ -37,7 +32,6 @@ var ViewSort = class ViewSort {
         this.ext      = ext;
         this.delegate = delegate;
 
-
         //
         // draw
         //
@@ -51,7 +45,6 @@ var ViewSort = class ViewSort {
 
         this.sort_items_box = new St.BoxLayout({ y_expand: true, x_expand: true, vertical: true, style_class: 'sort-items-box' });
         this.scrollview.add_actor(this.sort_items_box);
-
 
         //
         // create sort items
@@ -70,7 +63,6 @@ var ViewSort = class ViewSort {
                 [G.SortType.COMPLETION_DATE] : _('Sort by Completion Date'),
             };
 
-
             for (let it of this.delegate.get_current_todo_file().sorts) {
                 let [sort_type, sort_order] = [it[0], it[1]];
                 let item = new SortItem(delegate, this.scrollview, this.sort_items_box, sort_text_map[sort_type], sort_type, sort_order);
@@ -79,13 +71,11 @@ var ViewSort = class ViewSort {
 
         }
 
-
         {
             let sep = new PopupMenu.PopupSeparatorMenuItem();
             sep.actor.add_style_class_name('timepp-separator');
             this.content_box.add_child(sep.actor);
         }
-
 
         //
         // toggle automatic sort
@@ -101,7 +91,6 @@ var ViewSort = class ViewSort {
         this.toggle_automatic_sort_btn.add_actor(this.toggle);
         this.toggle.state = this.delegate.get_current_todo_file().automatic_sort;
 
-
         //
         // buttons
         //
@@ -109,7 +98,6 @@ var ViewSort = class ViewSort {
         this.content_box.add_child(this.btn_box);
         this.button_ok = new St.Button({ x_expand: true, can_focus: true, label: _('Ok'), style_class: 'btn-ok button' });
         this.btn_box.add(this.button_ok);
-
 
         //
         // listen
@@ -143,7 +131,6 @@ var ViewSort = class ViewSort {
 Signals.addSignalMethods(ViewSort.prototype);
 
 
-
 // =====================================================================
 // @@@ SortItem
 // =====================================================================
@@ -155,7 +142,6 @@ var SortItem = class SortItem {
         this.label            = label;
         this.sort_type        = sort_type;
         this.sort_order       = sort_order;
-
 
         //
         // draw
@@ -180,12 +166,10 @@ var SortItem = class SortItem {
             )
         );
 
-
         //
         // DND
         //
         this.draggable = new DND.Draggable(this);
-
 
         //
         // listen

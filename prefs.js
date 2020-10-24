@@ -87,7 +87,6 @@ class Settings {
             this.settings.set_value('sections', GLib.Variant.new('a{sa{sb}}', v));
         });
 
-
         //
         // @@@ Timer
         //
@@ -188,7 +187,6 @@ class Settings {
             }
         });
 
-
         //
         // @@@ Stopwatch
         //
@@ -247,7 +245,6 @@ class Settings {
                 this.settings.set_strv('stopwatch-keybinding-open-fullscreen', ['']);
             }
         });
-
 
         //
         // @@@ Pomodoro
@@ -368,7 +365,6 @@ class Settings {
             }
         });
 
-
         //
         // @@@ Alarms
         //
@@ -377,7 +373,6 @@ class Settings {
             this.builder.get_object('alarms-separate-menu-switch'),
             'active',
             Gio.SettingsBindFlags.DEFAULT);
-
 
         if (! this.settings.get_string('alarms-sound-file-path')) {
             this.settings.set_string('alarms-sound-file-path', GLib.filename_to_uri(ME.path + '/data/sounds/beeps.ogg', null));
@@ -419,7 +414,6 @@ class Settings {
                 this.settings.set_strv('alarms-keybinding-open', ['']);
             }
         });
-
 
         //
         // @@@ Todo

@@ -2,12 +2,9 @@ const St   = imports.gi.St;
 const Main = imports.ui.main;
 
 
-
 const ME = imports.misc.extensionUtils.getCurrentExtension();
 
-
 const PANEL_ITEM = ME.imports.lib.panel_item;
-
 
 
 // =====================================================================
@@ -29,7 +26,6 @@ var SectionBase = class SectionBase {
 
         this.panel_item = new PANEL_ITEM.PanelItem(ext.menu);
         this.actor      = new St.BoxLayout({ vertical: true, style_class: 'section' });
-
 
         //
         // listen

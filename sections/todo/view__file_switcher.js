@@ -8,14 +8,11 @@ const Main     = imports.ui.main;
 const Signals  = imports.signals;
 const Mainloop = imports.mainloop;
 
-
 const ME = imports.misc.extensionUtils.getCurrentExtension();
-
 
 const Gettext  = imports.gettext.domain(ME.metadata['gettext-domain']);
 const _        = Gettext.gettext;
 const ngettext = Gettext.ngettext;
-
 
 const FUZZ            = ME.imports.lib.fuzzy_search;
 const MULTIL_ENTRY    = ME.imports.lib.multiline_entry;
@@ -23,9 +20,7 @@ const MISC_UTILS      = ME.imports.lib.misc_utils;
 const REG             = ME.imports.lib.regex;
 const TEXT_LINKS_MNGR = ME.imports.lib.text_links_manager;
 
-
 const G = ME.imports.sections.todo.GLOBAL;
-
 
 // =====================================================================
 // @@@ ViewFileSwitcher
@@ -41,11 +36,9 @@ var ViewFileSwitcher = class ViewFileSwitcher {
         this.ext      = ext;
         this.delegate = delegate;
 
-
         this.linkm            = new TEXT_LINKS_MNGR.TextLinksManager();
         this.file_items       = new Set();
         this.file_info_editor = null;
-
 
         //
         // container
@@ -54,7 +47,6 @@ var ViewFileSwitcher = class ViewFileSwitcher {
 
         this.content_box = new St.BoxLayout({ x_expand: true, vertical: true, style_class: 'view-box-content' });
         this.actor.add_child(this.content_box);
-
 
         //
         // search files entry
@@ -65,7 +57,6 @@ var ViewFileSwitcher = class ViewFileSwitcher {
 
         this.entry = new St.Entry({ hint_text: _('Search...'), can_focus: true, x_expand: true, name: 'menu-search-entry' });
         this.entry_box.add_child(this.entry);
-
 
         //
         // file items container
@@ -83,7 +74,6 @@ var ViewFileSwitcher = class ViewFileSwitcher {
             this._add_new_file_item(file);
         }
 
-
         //
         // buttons
         //
@@ -100,7 +90,6 @@ var ViewFileSwitcher = class ViewFileSwitcher {
         this.button_ok = new St.Button({ can_focus: true, label: _('Ok'), style_class: 'btn-ok button', x_expand: true });
         this.button_ok.visible = this.delegate.cache.todo_files.length > 0;
         btn_box.add(this.button_ok);
-
 
         //
         // listen
@@ -260,7 +249,6 @@ var ViewFileSwitcher = class ViewFileSwitcher {
         item.actor.connect('key-focus-in', () => { item.actor.can_focus = false; });
         item.actor.connect('event', (_, event) => this._on_file_item_event(item, event));
 
-
         return item;
     }
 
@@ -347,7 +335,6 @@ var ViewFileSwitcher = class ViewFileSwitcher {
 Signals.addSignalMethods(ViewFileSwitcher.prototype);
 
 
-
 // =====================================================================
 // @@@ FileInfoEditor
 //
@@ -363,17 +350,14 @@ var FileInfoEditor = class FileInfoEditor {
         this.delegate = delegate;
         this.file     = file;
 
-
         this.todo_file_chooser_proc    = null;
         this.done_file_chooser_proc    = null;
         this.tracker_file_chooser_proc = null;
-
 
         //
         // container
         //
         this.actor = new St.BoxLayout({ x_expand: true, vertical: true, style_class: 'view-box-content' });
-
 
         // unique name
         {
@@ -429,7 +413,6 @@ var FileInfoEditor = class FileInfoEditor {
             if (file) this.tracker_entry.text = file.time_tracker_dir;
         }
 
-
         //
         // buttons
         //
@@ -447,7 +430,6 @@ var FileInfoEditor = class FileInfoEditor {
         btn_box.add(this.button_cancel);
         btn_box.add(this.button_ok);
         this._update_ok_btn();
-
 
         //
         // listen

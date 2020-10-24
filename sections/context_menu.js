@@ -5,17 +5,13 @@ const PopupMenu = imports.ui.popupMenu;
 const Util      = imports.misc.util;
 
 
-
 const ME = imports.misc.extensionUtils.getCurrentExtension();
-
 
 const Gettext  = imports.gettext.domain(ME.metadata['gettext-domain']);
 const _        = Gettext.gettext;
 const ngettext = Gettext.ngettext;
 
-
 const MISC_UTILS = ME.imports.lib.misc_utils;
-
 
 
 // =====================================================================
@@ -26,7 +22,6 @@ const MISC_UTILS = ME.imports.lib.misc_utils;
 var ContextMenu = class ContextMenu {
     constructor (ext) {
         this.actor = new St.BoxLayout({ vertical: true, style_class: 'section context-menu-section', x_expand: true });
-
 
         //
         // items
@@ -42,7 +37,6 @@ var ContextMenu = class ContextMenu {
 
         this.translations_link = new PopupMenuIconItem('timepp-translate-symbolic', _('Help with translations'));
         this.actor.add_actor(this.translations_link.actor);
-
 
         //
         // listen
@@ -65,7 +59,6 @@ var ContextMenu = class ContextMenu {
         });
     }
 }
-
 
 // =====================================================================
 // @@@ PopupMenuIconItem
