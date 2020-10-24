@@ -944,7 +944,6 @@ var KanbanColumn = class KanbanColumn {
 
     close () {
         this.sigm.clear();
-        this.dnd.close();
     }
 }
 Signals.addSignalMethods(KanbanColumn.prototype);
