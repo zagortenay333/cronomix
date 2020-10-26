@@ -536,9 +536,6 @@ var StopwatchFullscreen = class StopwatchFullscreen extends FULLSCREEN.Fullscree
         this.laps_scroll = new St.ScrollView({ visible: false, style_class: 'timepp-menu-item laps-scrollview vfade', x_fill: true, y_fill: false, y_align: St.Align.START});
         this.middle_box.add_child(this.laps_scroll);
 
-        this.laps_scroll.vscrollbar_policy = Gtk.PolicyType.NEVER;
-        this.laps_scroll.hscrollbar_policy = Gtk.PolicyType.NEVER;
-
         this.laps_scroll_bin = new St.BoxLayout({ vertical: true, style_class: 'laps-box' });
         this.laps_scroll.add_actor(this.laps_scroll_bin);
 
@@ -563,10 +560,10 @@ var StopwatchFullscreen = class StopwatchFullscreen extends FULLSCREEN.Fullscree
         //
         // listen
         //
-        this.button_start.connect('clicked', () => { this.delegate.start(); });
-        this.button_reset.connect('clicked', () => { this.delegate.reset(); });
-        this.button_stop.connect('clicked', () => { this.delegate.stop(); });
-        this.button_lap.connect('clicked', () => { this.delegate.lap(); });
+        this.button_start.connect('button-press-event', () => { this.delegate.start(); });
+        this.button_reset.connect('button-press-event', () => { this.delegate.reset(); });
+        this.button_stop.connect('button-press-event', () => { this.delegate.stop(); });
+        this.button_lap.connect('button-press-event', () => { this.delegate.lap(); });
         this.actor.connect('key-release-event', (_, event) => {
             switch (event.get_key_symbol()) {
               case Clutter.KEY_space:
