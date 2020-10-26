@@ -552,18 +552,15 @@ var KanbanColumn = class KanbanColumn {
         //
         // DND
         //
-        // @HACK
-        // The task items are draggable and their container is also draggable.
-        // Gnome's dnd module propagates button-press-event and touch-event to
-        // the container when a task item is dragged which will result in
-        // dragging the container at the same time the task item is dragged.
-        // To prevent this, we also connect on those events and only react if
-        // the source was an actor that we whitelist (e.g., the tasks_scroll.)
-        //
-        // We must connect on these before instantiating our dnd module.
+        // @HACK The task items are draggable and their container is also draggable.
+        // Gnome's dnd module propagates button-press-event and touch-event to the
+        // container when a task item is dragged which will result in dragging the
+        // container at the same time the task item is dragged. To prevent this, we
+        // also connect on those events and only react if the source was an actor that
+        // we whitelist (e.g., the tasks_scroll.) We must connect on these before
+        // instantiating our dnd module.
         this.actor.connect('button-press-event', (_, event) => this._on_maybe_drag(event));
         this.actor.connect('touch-event', (_, event) => this._on_maybe_drag(event));
-
         this.dnd = new DND.Draggable(this, G.DNDGroup.KANBAN_COLUMN, false);
 
         //
@@ -636,10 +633,9 @@ var KanbanColumn = class KanbanColumn {
         this.icon_box.remove_child(this.collapse_icon);
         this.header.insert_child_at_index(this.collapse_icon, 0);
 
-        // Don't like the way we rotate the text, but it's the only thing I
-        // could come up with..
-        // We switch the layout manager of the header_wrapper in addition to
-        // rotating the header.
+        // Don't like the way we rotate the text, but it's the only thing I could
+        // come up with.. We switch the layout manager of the header_wrapper in
+        // addition to rotating the header.
         this.header.set_pivot_point(0, 1);
         this.header.rotation_angle_z = 90;
         this.header_wrapper.set_layout_manager(new Clutter.FixedLayout());

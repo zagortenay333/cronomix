@@ -209,8 +209,7 @@ var Timepp = GObject.registerClass({
 
                 // The current sourceActor could be the panel_item of the section
                 // we are about to disable which destroys panel_item.
-                if (s.panel_item.actor === this.menu.sourceActor)
-                    this._update_menu_arrow(this.actor);
+                if (s.panel_item.actor === this.menu.sourceActor) this._update_menu_arrow(this);
 
                 s.disable_section();
                 this.sections.delete(key);
