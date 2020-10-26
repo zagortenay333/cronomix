@@ -324,7 +324,7 @@ var TimeTracker = class TimeTracker {
         if (this.daily_csv_file_monitor && this.daily_csv_file_monitor_id)
             this.daily_csv_file_monitor.disconnect(this.daily_csv_file_monitor_id);
 
-        if (this.yearly_csv_file_monitor && this.yearly_csv_dir_monitor_id)
+        if (this.yearly_csv_file_monitor && this.yearly_csv_file_monitor_id)
             this.yearly_csv_file_monitor.disconnect(this.yearly_csv_file_monitor_id);
 
         if (this.yearly_csv_dir_monitor && this.yearly_csv_dir_monitor_id)
