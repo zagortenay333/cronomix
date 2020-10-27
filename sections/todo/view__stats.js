@@ -740,13 +740,13 @@ var StatsView = class StatsView extends FULLSCREEN.Fullscreen {
             actors.forEach((it) => it.hide());
             this.single_mode_icon.show();
             this.top_box.layout_manager.homogeneous = false;
-            this.entry.set_text('');
         });
 
         actors.forEach((it) => it.show());
         this.single_mode_icon.hide();
         this.top_box.layout_manager.homogeneous = true; // centers the entry
         this.nav_bar.get_children().forEach((it) => it.checked = false);
+        this.entry.set_text('');
         Mainloop.idle_add(() => this.entry.grab_key_focus());
     }
 
@@ -786,10 +786,7 @@ var StatsView = class StatsView extends FULLSCREEN.Fullscreen {
         };
 
         if (typeof this.prev_mode.hide_callback === 'function') {
-            let focused_actor = this.prev_mode.name === this.current_mode.name ?
-                                global.stage.get_key_focus() :
-                                this.actor;
-
+            let focused_actor = this.prev_mode.name === this.current_mode.name ? global.stage.get_key_focus() : this.actor;
             this.prev_mode.hide_callback();
             Mainloop.idle_add(() => focused_actor.grab_key_focus());
         }
@@ -1337,8 +1334,7 @@ var StatsView = class StatsView extends FULLSCREEN.Fullscreen {
 
                 label.connect('allocation-changed', () => {
                     if (type === '()') {
-                        if (!this.task_results.scrollview.vscrollbar_visible)
-                            MISC_UTILS.resize_label(label);
+                        if (!this.task_results.scrollview.vscrollbar_visible) MISC_UTILS.resize_label(label);
                     } else if (!this.project_results.scrollview.vscrollbar_visible) {
                         MISC_UTILS.resize_label(label);
                     }

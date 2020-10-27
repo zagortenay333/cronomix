@@ -271,10 +271,9 @@
 .timepp-fullscreen StEntry {
     border: 0;
     border-image: none;
-
+    box-shadow: none;
     background-color: rgba(255, 255, 255, .2);
     border-radius: 2px;
-    padding: 0;
     width: 22em;
     padding: .4em 1em;
     font-weight: bold;
@@ -285,8 +284,17 @@
 }
 
 .timepp-fullscreen StEntry:focus {
+    color: #fff;
     outline: 0;
+    border: 0;
+    box-shadow: none;
+    border-image: none;
     background-color: rgba(255, 255, 255, .5);
+}
+
+.timepp-fullscreen StEntry:focus .hint-text,
+.timepp-fullscreen StEntry .hint-text {
+    color: rgba(255, 255, 255, .6);
 }
 
 .timepp-fullscreen StEntry StIcon {
