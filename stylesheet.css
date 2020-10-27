@@ -162,6 +162,10 @@
     max-width: 12em;
 }
 
+.multiline-entry-scrollbox StEntry {
+    padding: .3em 1em;
+}
+
 .timepp-menu .numpicker {
     padding: 0px 2px 0px 8px;
     spacing: 2px;
@@ -715,9 +719,7 @@
     spacing: .7em;
 }
 
-.timepp-menu .todo-section .view-default {
-
-}
+.timepp-menu .todo-section .view-default { }
 
 .timepp-menu .todo-section .view-default.one-column .kanban-column {
     background: transparent;
