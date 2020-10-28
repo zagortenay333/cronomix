@@ -161,7 +161,7 @@ var Timepp = GObject.registerClass({
         //
         // more init
         //
-        this._update_custom_css();
+        this._load_custom_css_props();
         this._sync_sections_with_settings();
 
         //
@@ -362,7 +362,7 @@ var Timepp = GObject.registerClass({
         if (last_visible) last_visible.hide();
     }
 
-    _update_custom_css () {
+    _load_custom_css_props () {
         let theme_node = this.panel_item_box.get_theme_node();
 
         for (let prop in this.custom_css) {
