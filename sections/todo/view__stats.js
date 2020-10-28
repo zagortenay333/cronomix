@@ -310,6 +310,12 @@ var StatsView = class StatsView extends FULLSCREEN.Fullscreen {
         this.vbars_graph = new GRAPHS.VBars();
         this.inner_middle_box.add_child(this.vbars_graph.actor);
         this.vbars_graph.actor.hide();
+        this.vbars_graph.coord_info.axes_rgba     = this.custom_css['-timepp-axes-color'][1];
+        this.vbars_graph.coord_info.y_label_rgba  = this.custom_css['-timepp-y-label-color'][1];
+        this.vbars_graph.coord_info.x_label_rgba  = this.custom_css['-timepp-x-label-color'][1];
+        this.vbars_graph.coord_info.vbars_bg_rgba = this.custom_css['-timepp-vbar-bg-color'][1];
+        this.vbars_graph.coord_info.rulers_rgba   = this.custom_css['-timepp-rulers-color'][1];
+
 
         //
         // sum stats card
@@ -410,7 +416,6 @@ var StatsView = class StatsView extends FULLSCREEN.Fullscreen {
         this.graph_interval_icon.connect('clicked', () => this._toggle_show_intervals());
         this.range_btn.connect('clicked', () => this.range_menu.toggle());
         this.type_btn.connect('clicked', () => this.type_menu.toggle());
-        this.ext.connect('custom-css-changed', () => this._on_custom_css_updated());
         this.date_picker.connect('date-changed', (_, ...args) => this._on_date_picker_changed(...args));
     }
 
@@ -1431,28 +1436,12 @@ var StatsView = class StatsView extends FULLSCREEN.Fullscreen {
 
         if (this.current_mode.name === StatsMode.GLOBAL) {
             this.show_mode__global(date);
-        }
-        else if (this.current_mode.name === StatsMode.SINGLE) {
+        } else if (this.current_mode.name === StatsMode.SINGLE) {
             let [year, month, day] = date.split('-');
-
             this.current_mode.args[0] = +(year);
             this.current_mode.args[1] = +(month) - 1;
-
             this.show_mode__single(...this.current_mode.args);
         }
-    }
-
-    _on_custom_css_updated () {
-        this.vbars_graph.draw_coord_system({
-            axes_rgba     : this.custom_css['-timepp-axes-color'][1],
-            y_label_rgba  : this.custom_css['-timepp-y-label-color'][1],
-            x_label_rgba  : this.custom_css['-timepp-x-label-color'][1],
-            vbars_bg_rgba : this.custom_css['-timepp-vbar-bg-color'][1],
-            rulers_rgba   : this.custom_css['-timepp-rulers-color'][1],
-        });
-
-        if (this.current_mode.name)
-            this.mode_func_map[this.current_mode.name](...this.current_mode.args);
     }
 
     _on_new_day_started (today) {

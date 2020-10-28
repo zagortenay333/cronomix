@@ -141,7 +141,7 @@ var TaskItem = class TaskItem {
         if (self_update) {
             this.check_recurrence();
             this.check_deferred_tasks();
-            this.update_dates_markup();
+            this.update_date_labels();
         }
     }
 
@@ -202,18 +202,6 @@ var TaskItem = class TaskItem {
         // They are set by the _parse_task_str() func.
         this.first_context = '';
         this.first_project = '';
-
-        // These vars are used by the update_body_markup() func to make it
-        // possible to update the context/project/url colors without having to
-        // re-parse the whole task_str.
-        // They are set by the _parse_task_str() func.
-        // this.description_markup is an array of marked up words that make up
-        // the 'description' part of the task_str sans any extensions.
-        // E.g., ['<span foreground="blue">@asdf</span>', ...].
-        this.description_markup = null;
-        this.context_indices    = [];
-        this.project_indices    = [];
-        this.link_indices       = [];
 
         this.hide_header_icons();
     }
@@ -302,19 +290,14 @@ var TaskItem = class TaskItem {
             if (inside_backticks) continue;
 
             if (REG.TODO_CONTEXT.test(word)) {
-                this.context_indices.push(i);
-                if (this.contexts.indexOf(word) === -1) {
-                    this.contexts.push(word);
-                }
+                if (this.contexts.indexOf(word) === -1) this.contexts.push(word);
                 words[i] = '`<span foreground="' + this.custom_css['-timepp-context-color'][0] + '"><b>' + word + '</b></span>`';
             }
             else if (REG.TODO_PROJ.test(word)) {
-                this.project_indices.push(i);
                 if (this.projects.indexOf(word) === -1) this.projects.push(word);
                 words[i] = '`<span foreground="' + this.custom_css['-timepp-project-color'][0] + '"><b>' + word + '</b></span>`';
             }
             else if (REG.URL.test(word) || REG.FILE_PATH.test(word)) {
-                this.link_indices.push(i);
                 words[i] = '`<span foreground="' + this.custom_css['-timepp-link-color'][0] + '"><u><b>' + word + '</b></u></span>`';
             }
             else if (REG.TODO_EXT.test(word)) {
@@ -400,8 +383,6 @@ var TaskItem = class TaskItem {
 
         if (this.contexts.length > 0) this.first_context = this.contexts[0];
         if (this.projects.length > 0) this.first_project = this.projects[0];
-
-        this.description_markup = words;
 
         words = words.join('');
         words = MISC.markdown_to_pango(words, this.ext.markdown_map);
@@ -553,8 +534,7 @@ var TaskItem = class TaskItem {
 
             res[0] = MISC.date_yyyymmdd(iter) === today && reference_date !== today;
 
-            if (res[0] || MISC.date_yyyymmdd(iter) === reference_date)
-                iter.setDate(iter.getDate() + increment);
+            if (res[0] || MISC.date_yyyymmdd(iter) === reference_date) iter.setDate(iter.getDate() + increment);
 
             res[1] = MISC.date_yyyymmdd(iter);
         }
@@ -562,36 +542,7 @@ var TaskItem = class TaskItem {
         return res;
     }
 
-    update_body_markup () {
-        this.msg.text = '';
-
-        for (let it of this.context_indices) {
-            this.description_markup[it] =
-                '`<span foreground="' +
-                this.custom_css['-timepp-context-color'][0] + '"' +
-                this.description_markup[it].slice(this.description_markup[it].indexOf('>'));
-        }
-
-        for (let it of this.project_indices) {
-            this.description_markup[it] =
-                '`<span foreground="' +
-                this.custom_css['-timepp-project-color'][0] + '"' +
-                this.description_markup[it].slice(this.description_markup[it].indexOf('>'));
-        }
-
-        for (let it of this.link_indices) {
-            this.description_markup[it] =
-                '`<span foreground="' +
-                this.custom_css['-timepp-link-color'][0] + '"' +
-                this.description_markup[it].slice(this.description_markup[it].indexOf('>'));
-        }
-
-        let markup = this.description_markup.join('');
-        markup     = MISC.markdown_to_pango(markup, this.ext.markdown_map);
-        this.msg.clutter_text.set_markup(markup);
-    }
-
-    update_dates_markup () {
+    update_date_labels () {
         let markup = '';
 
         if (this.rec_str) {

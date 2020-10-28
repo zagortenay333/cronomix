@@ -41,7 +41,6 @@ const PanelPosition = {
 // =====================================================================
 var Timepp = GObject.registerClass({
     Signals: {
-        'custom-css-changed': {},
         'start-time-tracking-by-id': { param_types: [GObject.TYPE_STRING, GObject.TYPE_STRING] },
         'stop-time-tracking-by-id':  { param_types: [GObject.TYPE_STRING, GObject.TYPE_STRING] }
     }
@@ -82,26 +81,26 @@ var Timepp = GObject.registerClass({
         ]);
 
         this.custom_css = {
-            ['-timepp-link-color']             : ['blue'    , [0, 0, 1, 1]],
-            ['-timepp-context-color']          : ['magenta' , [1, 0, 1, 1]],
-            ['-timepp-due-date-color']         : ['red'     , [1, 0, 0, 1]],
-            ['-timepp-project-color']          : ['green'   , [0, 1, 0, 1]],
-            ['-timepp-rec-date-color']         : ['tomato'  , [1, .38, .28, 1]],
-            ['-timepp-defer-date-color']       : ['violet'  , [.93, .51, .93, 1]],
-            ['-timepp-axes-color']             : ['white'   , [1, 1, 1, 1]],
-            ['-timepp-y-label-color']          : ['white'   , [1, 1, 1, 1]],
-            ['-timepp-x-label-color']          : ['white'   , [1, 1, 1, 1]],
-            ['-timepp-rulers-color']           : ['white'   , [1, 1, 1, 1]],
-            ['-timepp-proj-vbar-color']        : ['white'   , [1, 1, 1, 1]],
-            ['-timepp-task-vbar-color']        : ['white'   , [1, 1, 1, 1]],
-            ['-timepp-vbar-bg-color']          : ['white'   , [1, 1, 1, 1]],
-            ['-timepp-heatmap-color-A']        : ['white'   , [1, 1, 1, 1]],
-            ['-timepp-heatmap-color-B']        : ['white'   , [1, 1, 1, 1]],
-            ['-timepp-heatmap-color-C']        : ['white'   , [1, 1, 1, 1]],
-            ['-timepp-heatmap-color-D']        : ['white'   , [1, 1, 1, 1]],
-            ['-timepp-heatmap-color-E']        : ['white'   , [1, 1, 1, 1]],
-            ['-timepp-heatmap-color-F']        : ['white'   , [1, 1, 1, 1]],
-            ['-timepp-heatmap-selected-color'] : ['white', [1, 1, 1, 1]],
+            ['-timepp-link-color']             : ['white' , [1, 1, 1, 1]],
+            ['-timepp-context-color']          : ['white' , [1, 1, 1, 1]],
+            ['-timepp-due-date-color']         : ['white' , [1, 1, 1, 1]],
+            ['-timepp-project-color']          : ['white' , [1, 1, 1, 1]],
+            ['-timepp-rec-date-color']         : ['white' , [1, 1, 1, 1]],
+            ['-timepp-defer-date-color']       : ['white' , [1, 1, 1, 1]],
+            ['-timepp-axes-color']             : ['white' , [1, 1, 1, 1]],
+            ['-timepp-y-label-color']          : ['white' , [1, 1, 1, 1]],
+            ['-timepp-x-label-color']          : ['white' , [1, 1, 1, 1]],
+            ['-timepp-rulers-color']           : ['white' , [1, 1, 1, 1]],
+            ['-timepp-proj-vbar-color']        : ['white' , [1, 1, 1, 1]],
+            ['-timepp-task-vbar-color']        : ['white' , [1, 1, 1, 1]],
+            ['-timepp-vbar-bg-color']          : ['white' , [1, 1, 1, 1]],
+            ['-timepp-heatmap-color-A']        : ['white' , [1, 1, 1, 1]],
+            ['-timepp-heatmap-color-B']        : ['white' , [1, 1, 1, 1]],
+            ['-timepp-heatmap-color-C']        : ['white' , [1, 1, 1, 1]],
+            ['-timepp-heatmap-color-D']        : ['white' , [1, 1, 1, 1]],
+            ['-timepp-heatmap-color-E']        : ['white' , [1, 1, 1, 1]],
+            ['-timepp-heatmap-color-F']        : ['white' , [1, 1, 1, 1]],
+            ['-timepp-heatmap-selected-color'] : ['white' , [1, 1, 1, 1]],
         };
 
         // @key: string (a section name)
@@ -175,7 +174,6 @@ var Timepp = GObject.registerClass({
         });
         this.sigm.connect(this.settings, 'changed::sections', () => this._sync_sections_with_settings());
         this.sigm.connect(this.settings, 'changed::unicon-mode', () => this.update_panel_items());
-        this.sigm.connect(this.panel_item_box, 'style-changed', () => this._update_custom_css());
         this.sigm.connect(this.menu, 'open-state-changed', (_, state) => this._on_open_state_changed(state));
         this.sigm.connect(this.unicon_panel_item, 'left-click', () => this.toggle_menu());
         this.sigm.connect(this.unicon_panel_item, 'right-click', () => this.toggle_context_menu());
@@ -365,8 +363,7 @@ var Timepp = GObject.registerClass({
     }
 
     _update_custom_css () {
-        let update_needed = false;
-        let theme_node    = this.panel_item_box.get_theme_node();
+        let theme_node = this.panel_item_box.get_theme_node();
 
         for (let prop in this.custom_css) {
             if (! this.custom_css.hasOwnProperty(prop)) continue;
@@ -375,8 +372,6 @@ var Timepp = GObject.registerClass({
             let hex            = col.to_string();
 
             if (success && this.custom_css[prop][0] !== hex) {
-                update_needed = true;
-
                 this.custom_css[prop] = [hex, [
                     col.red   / 255,
                     col.green / 255,
@@ -385,8 +380,6 @@ var Timepp = GObject.registerClass({
                 ]];
             }
         }
-
-        if (update_needed) this.emit('custom-css-changed');
     }
 
     update_panel_items () {

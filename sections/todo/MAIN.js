@@ -168,7 +168,6 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
             if (t === '00:00') this._on_new_day_started();
         });
         this.sigm.connect(this.settings, 'changed::todo-panel-mode', () => this._toggle_panel_item_mode());
-        this.sigm.connect(this.ext, 'custom-css-changed', () => this._on_custom_css_changed());
 
         //
         // finally
@@ -339,7 +338,7 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
                 deferred_tasks++;
             }
 
-            task.update_dates_markup();
+            task.update_date_labels();
         }
 
         if (tasks_updated) {
@@ -357,13 +356,6 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
         }
 
         return tasks_updated;
-    }
-
-    _on_custom_css_changed () {
-        for (let task of this.tasks) {
-            task.update_body_markup();
-            task.update_dates_markup();
-        }
     }
 
     // The maps have the structure:
