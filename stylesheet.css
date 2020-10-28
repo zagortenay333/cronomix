@@ -691,11 +691,10 @@
     spacing: .3em;
 }
 
+.timepp-menu .todo-section .priority-label { font-weight: bold; }
 .timepp-menu .todo-section .description-label {}
 .timepp-menu .todo-section .date-label {}
-
-.timepp-menu .todo-section .priority-label { font-weight: bold; }
-.timepp-menu .todo-section .todotxt-extension-dates { color: #000; }
+.timepp-menu .todo-section .todotxt-extension-dates { font-weight: bold; }
 
 .timepp-menu .todo-section .delete-completed-tasks {
     font-weight: bold;

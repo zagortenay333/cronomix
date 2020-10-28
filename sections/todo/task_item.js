@@ -592,9 +592,6 @@ var TaskItem = class TaskItem {
     }
 
     update_dates_markup () {
-        //
-        // set the custom (todo.txt extension) dates
-        //
         let markup = '';
 
         if (this.rec_str) {
@@ -603,32 +600,25 @@ var TaskItem = class TaskItem {
             if (this.rec_type === 2 && !this.completed) {
                 let type = this.rec_str[this.rec_str.length - 1];
                 let num  = +(this.rec_str.slice(6, -1)) * (type === 'w' ? 7 : 1);
-                txt = _('recurrence') + ': ' +
-                      ngettext('%d day after completion', '%d days after completion', num).format(num);
+                txt = _('recurrence') + ': ' + ngettext('%d day after completion', '%d days after completion', num).format(num);
             } else {
                 txt = `${_('recurrence')}:&#160;${this.rec_next}&#160;(${MISC.date_delta_str(this.rec_next)})   `;
             }
 
-            markup +=
-                '<span font-weight="bold" foreground="' +
-                this.custom_css['-timepp-rec-date-color'][0] + '">' +
-                txt + '</span>';
+            // @HACK The '&#8203' character is the unicode zero-width space.
+            // For some reason there has to be some text in front of a <span>
+            // or else the markup doesn't work...
+            markup += '&#8203;<span foreground="' + this.custom_css['-timepp-rec-date-color'][0] + '">' + txt + '</span>';
         }
 
         if (this.due_date !== '9999-99-99') {
-            markup +=
-                '<span font-weight="bold" foreground="' +
-                this.custom_css['-timepp-due-date-color'][0] + '">' +
-                `${_('due')}:&#160;${this.due_date}&#160;(${MISC.date_delta_str(this.due_date)})   ` +
-                '</span>';
+            markup += '&#8203;<span foreground="' + this.custom_css['-timepp-due-date-color'][0] + '">' +
+                      `${_('due')}:&#160;${this.due_date}&#160;(${MISC.date_delta_str(this.due_date)})   </span>`;
         }
 
         if (this.is_deferred) {
-            markup +=
-                '<span font-weight="bold" foreground="' +
-                this.custom_css['-timepp-defer-date-color'][0] + '">' +
-                `${_('deferred')}:&#160;${this.defer_date}&#160;(${MISC.date_delta_str(this.defer_date)})   ` +
-                '</span>';
+            markup += '&#8203;<span foreground="' + this.custom_css['-timepp-defer-date-color'][0] + '">' +
+                      `${_('deferred')}:&#160;${this.defer_date}&#160;(${MISC.date_delta_str(this.defer_date)})   </span>`;
         }
 
         if (markup) {
