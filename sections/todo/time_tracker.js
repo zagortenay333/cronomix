@@ -296,39 +296,39 @@ var TimeTracker = class TimeTracker {
         return false;
     }
 
-    _enable_file_monitors (timeout = 100) {
-        if (! this.daily_csv_file_monitor) {
-            this.daily_csv_file_monitor = this.daily_csv_file.monitor(Gio.FileMonitorFlags.NONE, null);
-        }
+    _enable_file_monitors () {
+        if (! this.daily_csv_file_monitor)  this.daily_csv_file_monitor = this.daily_csv_file.monitor(Gio.FileMonitorFlags.NONE, null);
+        if (! this.yearly_csv_file_monitor) this.yearly_csv_file_monitor = this.yearly_csv_file.monitor(Gio.FileMonitorFlags.NONE, null);
+        if (! this.yearly_csv_dir_monitor)  this.yearly_csv_dir_monitor = this.yearly_csv_dir.monitor(Gio.FileMonitorFlags.NONE, null);
 
-        if (! this.yearly_csv_file_monitor) {
-            this.yearly_csv_file_monitor = this.yearly_csv_file.monitor(Gio.FileMonitorFlags.NONE, null);
-        }
-
-        if (! this.yearly_csv_dir_monitor) {
-            this.yearly_csv_dir_monitor = this.yearly_csv_dir.monitor(Gio.FileMonitorFlags.NONE, null);
-        }
-
-        this.daily_csv_file_monitor_id = this.daily_csv_file_monitor.connect('changed', (...args) => {
-            this._on_tracker_files_modified();
-        });
-        this.yearly_csv_file_monitor_id = this.yearly_csv_file_monitor.connect('changed', (...args) => {
-            this._on_tracker_files_modified();
-        });
-        this.yearly_csv_dir_monitor_id = this.yearly_csv_dir_monitor.connect('changed', (...args) => {
-            this._on_tracker_files_modified();
+        Mainloop.timeout_add(1000, () => {
+            this.daily_csv_file_monitor_id = this.daily_csv_file_monitor.connect('changed', (...args) => {
+                this._on_tracker_files_modified();
+            });
+            this.yearly_csv_file_monitor_id = this.yearly_csv_file_monitor.connect('changed', (...args) => {
+                this._on_tracker_files_modified();
+            });
+            this.yearly_csv_dir_monitor_id = this.yearly_csv_dir_monitor.connect('changed', (...args) => {
+                this._on_tracker_files_modified();
+            });
         });
     }
 
     _disable_file_monitors () {
-        if (this.daily_csv_file_monitor && this.daily_csv_file_monitor_id)
+        if (this.daily_csv_file_monitor && this.daily_csv_file_monitor_id) {
             this.daily_csv_file_monitor.disconnect(this.daily_csv_file_monitor_id);
+            this.daily_csv_file_monitor_id = 0;
+        }
 
-        if (this.yearly_csv_file_monitor && this.yearly_csv_file_monitor_id)
+        if (this.yearly_csv_file_monitor && this.yearly_csv_file_monitor_id) {
             this.yearly_csv_file_monitor.disconnect(this.yearly_csv_file_monitor_id);
+            this.yearly_csv_file_monitor_id = 0;
+        }
 
-        if (this.yearly_csv_dir_monitor && this.yearly_csv_dir_monitor_id)
+        if (this.yearly_csv_dir_monitor && this.yearly_csv_dir_monitor_id) {
             this.yearly_csv_dir_monitor.disconnect(this.yearly_csv_dir_monitor_id);
+            this.yearly_csv_dir_monitor_id = 0;
+        }
     }
 
     _tracker_tic (...args) {
