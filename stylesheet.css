@@ -678,13 +678,13 @@
 }
 
 .timepp-menu .todo-section .task-item.A { border-color: #e74f4f; }
-.timepp-menu .todo-section .task-item.B { border-color: #f47e00; }
-.timepp-menu .todo-section .task-item.C { border-color: #8b5bff; }
+.timepp-menu .todo-section .task-item.B { border-color: #D6740B; }
+.timepp-menu .todo-section .task-item.C { border-color: #5a94dc; }
 .timepp-menu .todo-section .task-item.D { border-color: #38ae72; }
 
 .timepp-menu .todo-section .task-item.A .priority-label { color: #e74f4f; }
-.timepp-menu .todo-section .task-item.B .priority-label { color: #f47e00; }
-.timepp-menu .todo-section .task-item.C .priority-label { color: #8b5bff; }
+.timepp-menu .todo-section .task-item.B .priority-label { color: #D6740B; }
+.timepp-menu .todo-section .task-item.C .priority-label { color: #5a94dc; }
 .timepp-menu .todo-section .task-item.D .priority-label { color: #38ae72; }
 
 .timepp-menu .todo-section .task-item-content {
