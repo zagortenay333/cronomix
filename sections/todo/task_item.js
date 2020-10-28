@@ -258,11 +258,13 @@ var TaskItem = class TaskItem {
 
                 if (len > 4 && REG.ISO_DATE.test(words[4]) && Date.parse(words[4])) {
                     this.creation_date = words[4];
-                    desc_pos           = 5;
+                    desc_pos = 5;
+                } else {
+                    desc_pos = 3;
                 }
-                else desc_pos = 3;
+            } else {
+                desc_pos = 1;
             }
-            else desc_pos = 1;
         }
         else if (REG.TODO_PRIO.test(words[0])) {
             this.actor.add_style_class_name(words[0][1]);
@@ -273,8 +275,9 @@ var TaskItem = class TaskItem {
             if (len > 2 && REG.ISO_DATE.test(words[2]) && Date.parse(words[2])) {
                 this.creation_date = words[2];
                 desc_pos           = 3;
+            } else {
+                desc_pos = 1;
             }
-            else desc_pos = 1;
         }
         else if (REG.ISO_DATE.test(words[0]) && Date.parse(words[0])) {
             this.creation_date = words[0];
@@ -303,27 +306,16 @@ var TaskItem = class TaskItem {
                 if (this.contexts.indexOf(word) === -1) {
                     this.contexts.push(word);
                 }
-                words[i] =
-                    '`<span foreground="' +
-                    this.custom_css['-timepp-context-color'][0] +
-                    '"><b>' + word + '</b></span>`';
+                words[i] = '`<span foreground="' + this.custom_css['-timepp-context-color'][0] + '"><b>' + word + '</b></span>`';
             }
             else if (REG.TODO_PROJ.test(word)) {
                 this.project_indices.push(i);
-                if (this.projects.indexOf(word) === -1) {
-                    this.projects.push(word);
-                }
-                words[i] =
-                    '`<span foreground="' +
-                    this.custom_css['-timepp-project-color'][0] +
-                    '"><b>' + word + '</b></span>`';
+                if (this.projects.indexOf(word) === -1) this.projects.push(word);
+                words[i] = '`<span foreground="' + this.custom_css['-timepp-project-color'][0] + '"><b>' + word + '</b></span>`';
             }
             else if (REG.URL.test(word) || REG.FILE_PATH.test(word)) {
                 this.link_indices.push(i);
-                words[i] =
-                    '`<span foreground="' +
-                    this.custom_css['-timepp-link-color'][0] +
-                    '"><u><b>' + word + '</b></u></span>`';
+                words[i] = '`<span foreground="' + this.custom_css['-timepp-link-color'][0] + '"><u><b>' + word + '</b></u></span>`';
             }
             else if (REG.TODO_EXT.test(word)) {
                 if (REG.TODO_KANBAN_EXT.test(word)) {
@@ -389,20 +381,15 @@ var TaskItem = class TaskItem {
                 }
                 else if (REG.TODO_HIDE_EXT.test(word)) {
                     let temp = this.kanban_boards; // don't reset kanban ext
-
                     this.reset_props();
-
                     this.kanban_boards = temp;
-
                     this.hidden = true;
-
                     this.completion_checkbox.hide();
                     this.prio_label.hide();
                     this.actor.add_style_class_name('hidden-task');
                     let icon_incognito_bin = new St.Button({ can_focus: true });
                     this.header.insert_child_at_index(icon_incognito_bin, 0);
                     icon_incognito_bin.add_actor(new St.Icon({ gicon : MISC.get_icon('timepp-hidden-symbolic') }));
-
                     words.splice(i, 1); i--; len--;
                 }
                 else if (REG.TODO_PRIO_EXT.test(word)) {
@@ -601,7 +588,6 @@ var TaskItem = class TaskItem {
 
         let markup = this.description_markup.join('');
         markup     = MISC.markdown_to_pango(markup, this.ext.markdown_map);
-
         this.msg.clutter_text.set_markup(markup);
     }
 
@@ -617,11 +603,8 @@ var TaskItem = class TaskItem {
             if (this.rec_type === 2 && !this.completed) {
                 let type = this.rec_str[this.rec_str.length - 1];
                 let num  = +(this.rec_str.slice(6, -1)) * (type === 'w' ? 7 : 1);
-
-                txt =
-                    _('recurrence') + ': ' +
-                    ngettext('%d day after completion',
-                             '%d days after completion', num).format(num);
+                txt = _('recurrence') + ': ' +
+                      ngettext('%d day after completion', '%d days after completion', num).format(num);
             } else {
                 txt = `${_('recurrence')}:&#160;${this.rec_next}&#160;(${MISC.date_delta_str(this.rec_next)})   `;
             }
@@ -658,8 +641,7 @@ var TaskItem = class TaskItem {
             }
 
             this.ext_date_labels.clutter_text.set_markup(markup);
-        }
-        else if (this.ext_date_labels) {
+        } else if (this.ext_date_labels) {
             this.ext_date_labels.destroy();
             this.ext_date_labels = null;
         }
@@ -680,16 +662,10 @@ var TaskItem = class TaskItem {
             }
 
             let markup = '';
-
-            if (has_creation)
-                markup += `${_('created')}:&#160;${this.creation_date}   `;
-
-            if (has_completion)
-                markup += `${_('completed')}:&#160;${this.completion_date}`;
-
+            if (has_creation) markup += `${_('created')}:&#160;${this.creation_date}   `;
+            if (has_completion) markup += `${_('completed')}:&#160;${this.completion_date}`;
             this.base_date_labels.clutter_text.set_markup(markup);
-        }
-        else if (this.base_date_labels) {
+        } else if (this.base_date_labels) {
             this.base_date_labels.destroy();
             this.base_date_labels = null;
         }
@@ -900,8 +876,8 @@ var TaskItem = class TaskItem {
 
         let i;
 
-        if      (direction === Clutter.ScrollDirection.UP)   i = 1;
-        else if (direction === Clutter.ScrollDirection.DOWN) i = -1;
+        if      (direction === Clutter.ScrollDirection.UP)   i = -1;
+        else if (direction === Clutter.ScrollDirection.DOWN) i = 1;
         else                                                 return;
 
         i = prios.indexOf(prio) + i;
