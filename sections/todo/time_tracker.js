@@ -52,9 +52,10 @@ var TimeTracker = class TimeTracker {
         this.yearly_csv_dir_monitor  = null;
         this.yearly_csv_file_monitor = null;
         this.daily_csv_file_monitor  = null;
-        this.yearly_csv_dir_monitor_id  = null;
-        this.yearly_csv_file_monitor_id = null;
-        this.daily_csv_file_monitor_id  = null;
+        this.yearly_csv_dir_monitor_id  = 0;
+        this.yearly_csv_file_monitor_id = 0;
+        this.daily_csv_file_monitor_id  = 0;
+        this.enable_file_monitors_timeout_id = 0;
 
         // @stats_data: Map
         //   - @key: string (date in 'yyyy-mm-dd' iso format)
@@ -131,22 +132,14 @@ var TimeTracker = class TimeTracker {
         let d = new Date();
 
         try {
-            // yearly dir
-            this.yearly_csv_dir = MISC_UTILS.file_new_for_path(
-                `${this.csv_dir}/YEARS__time_tracker`);
-            if (! this.yearly_csv_dir.query_exists(null))
-                this.yearly_csv_dir.make_directory_with_parents(null);
+            this.yearly_csv_dir = MISC_UTILS.file_new_for_path(`${this.csv_dir}/YEARS__time_tracker`);
+            if (! this.yearly_csv_dir.query_exists(null)) this.yearly_csv_dir.make_directory_with_parents(null);
 
-            // yearly file
-            this.yearly_csv_file = MISC_UTILS.file_new_for_path(
-                `${this.csv_dir}/${d.getFullYear()}__time_tracker.csv`);
-            if (! this.yearly_csv_file.query_exists(null))
-                this.yearly_csv_file.create(Gio.FileCreateFlags.NONE, null);
+            this.yearly_csv_file = MISC_UTILS.file_new_for_path(`${this.csv_dir}/${d.getFullYear()}__time_tracker.csv`);
+            if (! this.yearly_csv_file.query_exists(null)) this.yearly_csv_file.create(Gio.FileCreateFlags.NONE, null);
 
-            // daily file
             this.daily_csv_file = MISC_UTILS.file_new_for_path(`${this.csv_dir}/TODAY__time_tracker.csv`);
-            if (! this.daily_csv_file.query_exists(null))
-                this.daily_csv_file.create(Gio.FileCreateFlags.NONE, null);
+            if (! this.daily_csv_file.query_exists(null)) this.daily_csv_file.create(Gio.FileCreateFlags.NONE, null);
 
             this._enable_file_monitors();
         } catch (e) {
@@ -236,10 +229,11 @@ var TimeTracker = class TimeTracker {
         }
 
         this._disable_file_monitors();
+
         try {
-            this.daily_csv_file.replace_contents(projects + tasks, null, false,
-                Gio.FileCreateFlags.REPLACE_DESTINATION, null);
+            this.daily_csv_file.replace_contents(projects + tasks, null, false, Gio.FileCreateFlags.REPLACE_DESTINATION, null);
         } catch (e) { logError(e); }
+
         this._enable_file_monitors();
     }
 
@@ -301,16 +295,24 @@ var TimeTracker = class TimeTracker {
         if (! this.yearly_csv_file_monitor) this.yearly_csv_file_monitor = this.yearly_csv_file.monitor(Gio.FileMonitorFlags.NONE, null);
         if (! this.yearly_csv_dir_monitor)  this.yearly_csv_dir_monitor = this.yearly_csv_dir.monitor(Gio.FileMonitorFlags.NONE, null);
 
-        Mainloop.timeout_add(1000, () => {
-            this.daily_csv_file_monitor_id = this.daily_csv_file_monitor.connect('changed', (...args) => {
+        // @HACK I simply don't know how to disable the file monitors, write into
+        // a file and enable them without the monitors immediately going off upon
+        // reconnecting. So for now we just add a timeout before enabling them.
+        this.enable_file_monitors_timeout_id = Mainloop.timeout_add_seconds(1, () => {
+            this.daily_csv_file_monitor_id = this.daily_csv_file_monitor.connect('changed', (a, b, c, event) => {
+                if (event == Gio.FileMonitorEvent.CHANGED || event == Gio.FileMonitorEvent.CREATED) return;
                 this._on_tracker_files_modified();
             });
-            this.yearly_csv_file_monitor_id = this.yearly_csv_file_monitor.connect('changed', (...args) => {
+            this.yearly_csv_file_monitor_id = this.yearly_csv_file_monitor.connect('changed', (a, b, c, event) => {
+                if (event == Gio.FileMonitorEvent.CHANGED || event == Gio.FileMonitorEvent.CREATED) return;
                 this._on_tracker_files_modified();
             });
-            this.yearly_csv_dir_monitor_id = this.yearly_csv_dir_monitor.connect('changed', (...args) => {
+            this.yearly_csv_dir_monitor_id = this.yearly_csv_dir_monitor.connect('changed', (a, b, c, event) => {
+                if (event == Gio.FileMonitorEvent.CHANGED || event == Gio.FileMonitorEvent.CREATED) return;
                 this._on_tracker_files_modified();
             });
+
+            this.enable_file_monitors_timeout_id = 0;
         });
     }
 
@@ -343,16 +345,14 @@ var TimeTracker = class TimeTracker {
             }
         }
 
-        let seconds = args[0] || 30;
+        let seconds = args[0] || 0;
 
         if (seconds === 30) {
             seconds = 0;
             this._write_daily_csv_file();
         }
 
-        this.tic_mainloop_id = Mainloop.timeout_add_seconds(1, () => {
-            this._tracker_tic(seconds + 1);
-        });
+        this.tic_mainloop_id = Mainloop.timeout_add_seconds(1, () => this._tracker_tic(seconds + 1));
     }
 
     _on_new_day_started () {
@@ -544,6 +544,7 @@ var TimeTracker = class TimeTracker {
 
             if (val) {
                 val.tracked_children++;
+
                 if (!val.tracking) {
                     val.tracking = true;
                     val.start_time = start_time - val.time;
@@ -785,6 +786,11 @@ var TimeTracker = class TimeTracker {
 
     close () {
         this.stop_all_tracking(true, false);
+
+        if (this.enable_file_monitors_timeout_id) {
+            Mainloop.source_remove(this.enable_file_monitors_timeout_id);
+            this.enable_file_monitors_timeout_id = 0;
+        }
 
         if (this.daily_csv_file_monitor) {
             this.daily_csv_file_monitor.cancel();

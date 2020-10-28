@@ -763,7 +763,6 @@ var AlarmItem = class AlarmItem {
     }
 
     close () {
-        this.ext.disconnect(this.css_sig_id);
         this.actor.destroy();
     }
 }
