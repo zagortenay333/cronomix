@@ -58,8 +58,12 @@ var Timepp = GObject.registerClass({
         this.reactive    = false;
         this.menu.actor.add_style_class_name('timepp-menu');
 
-        this.panel_item_box = new St.BoxLayout({ style_class: 'timepp-panel-box timepp-custom-css-root'});
-        this.add_actor(this.panel_item_box);
+        {
+            let GioSSS = Gio.SettingsSchemaSource;
+            let schema = GioSSS.new_from_directory(ME.path + '/data/schemas', GioSSS.get_default(), false);
+            schema = schema.lookup('org.gnome.shell.extensions.timepp', false);
+            this.settings = new Gio.Settings({ settings_schema: schema });
+        }
 
         this.markdown_map = new Map([
             ['`'   , ['', '']],
@@ -78,36 +82,27 @@ var Timepp = GObject.registerClass({
         ]);
 
         this.custom_css = {
-            ['-timepp-link-color']       : ['blue'    , [0, 0, 1, 1]],
-            ['-timepp-context-color']    : ['magenta' , [1, 0, 1, 1]],
-            ['-timepp-due-date-color']   : ['red'     , [1, 0, 0, 1]],
-            ['-timepp-project-color']    : ['green'   , [0, 1, 0, 1]],
-            ['-timepp-rec-date-color']   : ['tomato'  , [1, .38, .28, 1]],
-            ['-timepp-defer-date-color'] : ['violet'  , [.93, .51, .93, 1]],
-            ['-timepp-axes-color']       : ['white'   , [1, 1, 1, 1]],
-            ['-timepp-y-label-color']    : ['white'   , [1, 1, 1, 1]],
-            ['-timepp-x-label-color']    : ['white'   , [1, 1, 1, 1]],
-            ['-timepp-rulers-color']     : ['white'   , [1, 1, 1, 1]],
-            ['-timepp-proj-vbar-color']  : ['white'   , [1, 1, 1, 1]],
-            ['-timepp-task-vbar-color']  : ['white'   , [1, 1, 1, 1]],
-            ['-timepp-vbar-bg-color']    : ['white'   , [1, 1, 1, 1]],
-            ['-timepp-heatmap-color-A']  : ['white'   , [1, 1, 1, 1]],
-            ['-timepp-heatmap-color-B']  : ['white'   , [1, 1, 1, 1]],
-            ['-timepp-heatmap-color-C']  : ['white'   , [1, 1, 1, 1]],
-            ['-timepp-heatmap-color-D']  : ['white'   , [1, 1, 1, 1]],
-            ['-timepp-heatmap-color-E']  : ['white'   , [1, 1, 1, 1]],
-            ['-timepp-heatmap-color-F']  : ['white'   , [1, 1, 1, 1]],
+            ['-timepp-link-color']             : ['blue'    , [0, 0, 1, 1]],
+            ['-timepp-context-color']          : ['magenta' , [1, 0, 1, 1]],
+            ['-timepp-due-date-color']         : ['red'     , [1, 0, 0, 1]],
+            ['-timepp-project-color']          : ['green'   , [0, 1, 0, 1]],
+            ['-timepp-rec-date-color']         : ['tomato'  , [1, .38, .28, 1]],
+            ['-timepp-defer-date-color']       : ['violet'  , [.93, .51, .93, 1]],
+            ['-timepp-axes-color']             : ['white'   , [1, 1, 1, 1]],
+            ['-timepp-y-label-color']          : ['white'   , [1, 1, 1, 1]],
+            ['-timepp-x-label-color']          : ['white'   , [1, 1, 1, 1]],
+            ['-timepp-rulers-color']           : ['white'   , [1, 1, 1, 1]],
+            ['-timepp-proj-vbar-color']        : ['white'   , [1, 1, 1, 1]],
+            ['-timepp-task-vbar-color']        : ['white'   , [1, 1, 1, 1]],
+            ['-timepp-vbar-bg-color']          : ['white'   , [1, 1, 1, 1]],
+            ['-timepp-heatmap-color-A']        : ['white'   , [1, 1, 1, 1]],
+            ['-timepp-heatmap-color-B']        : ['white'   , [1, 1, 1, 1]],
+            ['-timepp-heatmap-color-C']        : ['white'   , [1, 1, 1, 1]],
+            ['-timepp-heatmap-color-D']        : ['white'   , [1, 1, 1, 1]],
+            ['-timepp-heatmap-color-E']        : ['white'   , [1, 1, 1, 1]],
+            ['-timepp-heatmap-color-F']        : ['white'   , [1, 1, 1, 1]],
             ['-timepp-heatmap-selected-color'] : ['white', [1, 1, 1, 1]],
         };
-
-        {
-            let GioSSS = Gio.SettingsSchemaSource;
-            let schema = GioSSS.new_from_directory(
-                ME.path + '/data/schemas', GioSSS.get_default(), false);
-            schema = schema.lookup('org.gnome.shell.extensions.timepp', false);
-
-            this.settings = new Gio.Settings({ settings_schema: schema });
-        }
 
         // @key: string (a section name)
         // @val: object (an instantiated main section object)
@@ -119,16 +114,25 @@ var Timepp = GObject.registerClass({
         // @val: object (a PopupSeparatorMenuItem().actor)
         this.separators = new Map();
 
-        this.sigm                = new SIG_MANAGER.SignalManager();
+        this.sigm = new SIG_MANAGER.SignalManager();
         this.panel_item_position = this.settings.get_enum('panel-item-position');
 
         // ensure cache dir
         {
-            let dir = Gio.file_new_for_path(
-                `${GLib.get_home_dir()}/.cache/timepp_gnome_shell_extension`);
+            let dir = Gio.file_new_for_path(`${GLib.get_home_dir()}/.cache/timepp_gnome_shell_extension`);
+            if (!dir.query_exists(null)) dir.make_directory_with_parents(null);
+        }
 
-            if (!dir.query_exists(null))
-                dir.make_directory_with_parents(null);
+        //
+        // Panel box
+        //
+        this.panel_item_box = new St.BoxLayout({ style_class: 'timepp-panel-box timepp-custom-css-root'});
+        this.add_actor(this.panel_item_box);
+
+        switch (this.settings.get_enum('panel-item-position')) {
+        case PanelPosition.LEFT:   Main.panel.addToStatusArea('timepp', this, Main.panel._leftBox.get_n_children(), 'left'); break;
+        case PanelPosition.CENTER: Main.panel.addToStatusArea('timepp', this, Main.panel._centerBox.get_n_children(), 'center'); break;
+        case PanelPosition.RIGHT:  Main.panel.addToStatusArea('timepp', this, 0, 'right'); break;
         }
 
         //
@@ -136,12 +140,9 @@ var Timepp = GObject.registerClass({
         //
         this.unicon_panel_item = new PANEL_ITEM.PanelItem(this.menu);
         this.unicon_panel_item.icon.gicon = MISC_UTILS.get_icon('timepp-unicon-symbolic');
-
         this.unicon_panel_item.set_mode('icon');
         this.unicon_panel_item.actor.add_style_class_name('unicon-panel-item');
-
         if (! this.settings.get_boolean('unicon-mode')) this.unicon_panel_item.actor.hide();
-
         this.panel_item_box.add_child(this.unicon_panel_item.actor);
 
         //
@@ -161,8 +162,8 @@ var Timepp = GObject.registerClass({
         //
         // more init
         //
+        this._update_custom_css();
         this._sync_sections_with_settings();
-        this.update_panel_items();
 
         //
         // listen
@@ -280,9 +281,7 @@ var Timepp = GObject.registerClass({
             }
 
             for (let [, section] of this.sections) {
-                if (section_name === section.section_name ||
-                    !section.actor.visible) continue;
-
+                if (section_name === section.section_name || !section.actor.visible) continue;
                 hidden_sections.push(section);
                 section.actor.visible = false;
             }
@@ -477,7 +476,6 @@ var Timepp = GObject.registerClass({
     needs_scrollbar () {
         let [, nat_h] = this.menu.actor.get_preferred_height(-1);
         let max_h     = this.menu.actor.get_theme_node().get_max_height();
-
         return max_h >= 0 && nat_h >= max_h;
     }
 
@@ -487,12 +485,9 @@ var Timepp = GObject.registerClass({
         this._update_menu_arrow(this);
 
         for (let [, section] of this.sections) section.disable_section();
-
         this.sections.clear();
         this.separators.clear();
-
         this.sigm.clear();
-
         super._onDestroy();
     }
 })
@@ -504,21 +499,6 @@ let timepp;
 
 function enable () {
     timepp = new Timepp();
-
-    let pos;
-
-    switch (timepp.settings.get_enum('panel-item-position')) {
-      case PanelPosition.LEFT:
-        pos = Main.panel._leftBox.get_n_children();
-        Main.panel.addToStatusArea('timepp', timepp, pos, 'left');
-        break;
-      case PanelPosition.CENTER:
-        pos = Main.panel._centerBox.get_n_children();
-        Main.panel.addToStatusArea('timepp', timepp, pos, 'center');
-        break;
-      case PanelPosition.RIGHT:
-        Main.panel.addToStatusArea('timepp', timepp, 0, 'right');
-    }
 }
 
 function disable () {
