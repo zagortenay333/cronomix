@@ -105,9 +105,7 @@ var ViewFilters = class ViewFilters {
         let hidden_count_label = new St.Label({ y_align: Clutter.ActorAlign.CENTER, style_class: 'popup-inactive-menu-item', pseudo_class: 'insensitive' });
         this.show_hidden_tasks_item.add_child(hidden_count_label);
 
-        hidden_count_label.text =
-            ngettext('%d hidden task', '%d hidden tasks', this.delegate.stats.hidden)
-            .format(this.delegate.stats.hidden);
+        hidden_count_label.text = ngettext('%d hidden task', '%d hidden tasks', this.delegate.stats.hidden).format(this.delegate.stats.hidden);
 
         this.show_hidden_tasks_toggle_btn = new St.Button({ can_focus: true });
         this.show_hidden_tasks_item.add_actor(this.show_hidden_tasks_toggle_btn);
@@ -127,12 +125,9 @@ var ViewFilters = class ViewFilters {
         let recurring_count_label = new St.Label({ y_align: Clutter.ActorAlign.CENTER, style_class: 'popup-inactive-menu-item', pseudo_class: 'insensitive' });
         this.show_recurring_tasks_item.add_child(recurring_count_label);
 
-        let n_recurring = this.delegate.stats.recurring_completed +
-                          this.delegate.stats.recurring_incompleted;
+        let n_recurring = this.delegate.stats.recurring_completed + this.delegate.stats.recurring_incompleted;
 
-        recurring_count_label.text =
-            ngettext('%d recurring task', '%d recurring tasks', n_recurring)
-            .format(n_recurring);
+        recurring_count_label.text = ngettext('%d recurring task', '%d recurring tasks', n_recurring).format(n_recurring);
 
         this.show_recurring_tasks_toggle_btn = new St.Button({ can_focus: true });
         this.show_recurring_tasks_item.add_actor(this.show_recurring_tasks_toggle_btn);

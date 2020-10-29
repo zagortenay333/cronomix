@@ -50,9 +50,8 @@ var TaskItem = class TaskItem {
         this.task_str = task_str;
 
         //
-        // @NOTE
-        // If a var needs to be resettable, add it to the reset_props() method
-        // instead of the constructor() method.
+        // If a var needs to be resettable, add it to the reset_props()
+        // method instead of the constructor() method.
         //
 
         this.custom_css = this.ext.custom_css;
@@ -60,8 +59,7 @@ var TaskItem = class TaskItem {
         // Project/context/url below mouse pointer, null if none of those.
         this.current_keyword = null;
 
-        // Each time the task is added somewhere, these three props must be
-        // updated.
+        // Each time the task is added/removed, these three props must be updated.
         this.owner            = null; // js obj
         this.actor_parent     = null; // clutter actor containing this.actor
         this.actor_scrollview = null; // StScrollView (optional)

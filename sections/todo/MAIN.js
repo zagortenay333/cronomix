@@ -87,15 +87,10 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
 
                 this.cache = {
                     format_version: cache_format_version,
-
-                    // array [of G.TODO_RECORD]
-                    todo_files: [],
+                    todo_files: [], // array [of G.TODO_RECORD]
                 };
             }
-        } catch (e) {
-            logError(e);
-            return;
-        }
+        } catch (e) { logError(e); return; }
 
         this.create_tasks_mainloop_id = null;
 

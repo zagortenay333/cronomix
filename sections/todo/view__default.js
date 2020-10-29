@@ -162,8 +162,7 @@ var ViewDefault = class ViewDefault {
 
         this.tasks_added_to_menu = true;
 
-        for (let [,column] of this.kanban_columns)
-            column.tasks_scroll_content.remove_all_children();
+        this._remove_tasks_from_menu();
 
         let arr;
 
@@ -186,7 +185,6 @@ var ViewDefault = class ViewDefault {
                 this.add_tasks_to_menu_mainloop_id = null;
                 for (let [,col] of this.kanban_columns) col.set_title();
                 Mainloop.idle_add(() => this.update_scrollbars());
-
                 return;
             }
 
@@ -198,7 +196,7 @@ var ViewDefault = class ViewDefault {
             if (! column) continue;
 
             if (this.needs_filtering) {
-                if (!this._filter_test(it)) {
+                if (! this._filter_test(it)) {
                     n++;
                     continue;
                 }
@@ -206,7 +204,6 @@ var ViewDefault = class ViewDefault {
             }
 
             column.tasks_scroll_content.add_child(it.actor);
-
             it.owner            = column;
             it.actor_parent     = column.tasks_scroll_content;
             it.actor_scrollview = [[column.tasks_scroll], [this.columns_scroll]];
@@ -323,19 +320,18 @@ var ViewDefault = class ViewDefault {
         return false;
     }
 
-    _toggle_filters () {
+    toggle_filters () {
         let filters = this.delegate.get_current_todo_file().filters;
-
         filters.invert_filters = !filters.invert_filters;
-        this.filter_icon.gicon = MISC_UTILS.get_icon(
-                                    filters.invert_filters ?
-                                    'timepp-filter-inverted-symbolic' :
-                                    'timepp-filter-symbolic'
-                                )
+
+        if (filters.invert_filters) {
+            for (let [,col] of this.kanban_columns) col.filter_icon.gicon = MISC_UTILS.get_icon('timepp-filter-inverted-symbolic');
+        } else {
+            for (let [,col] of this.kanban_columns) col.filter_icon.gicon = MISC_UTILS.get_icon('timepp-filter-symbolic');
+        }
 
         this.needs_filtering = true;
         this._add_tasks_to_menu();
-
         this.delegate.store_cache();
     }
 
@@ -343,11 +339,9 @@ var ViewDefault = class ViewDefault {
         let state = !this.automatic_sort;
 
         if (state) {
-            for (let [,col] of this.kanban_columns)
-                col.sort_icon.add_style_class_name('active');
+            for (let [,col] of this.kanban_columns) col.sort_icon.add_style_class_name('active');
         } else {
-            for (let [,col] of this.kanban_columns)
-                col.sort_icon.remove_style_class_name('active');
+            for (let [,col] of this.kanban_columns) col.sort_icon.remove_style_class_name('active');
         }
 
         this.delegate.get_current_todo_file().automatic_sort = state;
@@ -600,7 +594,7 @@ var KanbanColumn = class KanbanColumn {
         this.sigm.connect_release(this.collapse_icon, Clutter.BUTTON_PRIMARY, true, () => this.toggle_collapse());
         this.sigm.connect_release(this.kanban_icon, Clutter.BUTTON_PRIMARY, true, () => this.delegate.show_view__kanban_switcher());
         this.sigm.connect_release(this.filter_icon, Clutter.BUTTON_PRIMARY, true, () => this.delegate.show_view__filters());
-        this.sigm.connect_on_button(this.filter_icon, Clutter.BUTTON_MIDDLE, () => this._toggle_filters());
+        this.sigm.connect_on_button(this.filter_icon, Clutter.BUTTON_MIDDLE, () => this.owner.toggle_filters());
         this.sigm.connect_release(this.file_switcher_icon, Clutter.BUTTON_PRIMARY, true, () => this.delegate.show_view__file_switcher());
         this.sigm.connect_release(this.search_icon, Clutter.BUTTON_PRIMARY, true, () => this.delegate.show_view__search());
         this.sigm.connect_release(this.stats_icon, Clutter.BUTTON_PRIMARY, true, () => this.delegate.show_view__time_tracker_stats());
