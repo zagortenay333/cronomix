@@ -84,7 +84,7 @@ var KanbanSwitcher = class KanbanSwitcher {
         // listen
         //
         this.help_label.connect('clicked', () => MISC_UTILS.open_web_uri(KAN_HELP_LINK));
-        this.items_scrollbox.connect('allocation-changed', () => {
+        this.items_scrollbox.connect('notify::allocation', () => {
             this.items_scrollview.vscrollbar_policy = Gtk.PolicyType.NEVER;
             if (ext.needs_scrollbar()) this.items_scrollview.vscrollbar_policy = Gtk.PolicyType.ALWAYS;
         });

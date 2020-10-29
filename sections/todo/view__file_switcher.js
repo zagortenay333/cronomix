@@ -94,7 +94,7 @@ var ViewFileSwitcher = class ViewFileSwitcher {
         //
         // listen
         //
-        this.file_items_scrollbox.connect('allocation-changed', () => {
+        this.file_items_scrollbox.connect('notify::allocation', () => {
             this.file_items_scrollview.vscrollbar_policy = Gtk.PolicyType.NEVER;
             if (ext.needs_scrollbar()) this.file_items_scrollview.vscrollbar_policy = Gtk.PolicyType.ALWAYS;
         });

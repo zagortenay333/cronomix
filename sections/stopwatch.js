@@ -200,7 +200,7 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
             this.panel_item.set_label(txt);
             this.fullscreen.set_banner_text(txt);
         });
-        this.sigm.connect(this.laps_string, 'allocation-changed', () => {
+        this.sigm.connect(this.laps_string, 'notify::allocation', () => {
             this.laps_scroll.vscrollbar_policy = Gtk.PolicyType.NEVER;
             if (ext.needs_scrollbar())
                 this.laps_scroll.vscrollbar_policy = Gtk.PolicyType.ALWAYS;

@@ -650,11 +650,11 @@ var TimerPresetsView = class TimerPresetsView {
         //
         // listen
         //
-        this.preset_items_scrollbox.connect('allocation-changed', () => {
+        this.preset_items_scrollbox.connect('notify::allocation', () => {
             this.preset_items_scrollview.vscrollbar_policy = Gtk.PolicyType.NEVER;
             if (ext.needs_scrollbar()) this.preset_items_scrollview.vscrollbar_policy = Gtk.PolicyType.ALWAYS;
         });
-        this.entry.entry.connect('allocation-changed', () => {
+        this.entry.entry.connect('notify::allocation', () => {
             this.entry.scroll_box.vscrollbar_policy = Gtk.PolicyType.NEVER;
             if (ext.needs_scrollbar()) this.entry.scroll_box.vscrollbar_policy = Gtk.PolicyType.ALWAYS;
         });
@@ -959,7 +959,7 @@ var TimerPresetEditor = class TimerPresetEditor {
         //
         // listen
         //
-        this.entry.entry.connect('allocation-changed', () => {
+        this.entry.entry.connect('notify::allocation', () => {
             this.entry.scroll_box.vscrollbar_policy = Gtk.PolicyType.NEVER;
             if (ext.needs_scrollbar()) this.entry.scroll_box.vscrollbar_policy = Gtk.PolicyType.ALWAYS;
         });

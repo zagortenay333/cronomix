@@ -1337,7 +1337,7 @@ var StatsView = class StatsView extends FULLSCREEN.Fullscreen {
                 item.label_actor = label;
                 label._delegate  = item;
 
-                label.connect('allocation-changed', () => {
+                label.connect('notify::allocation', () => {
                     if (type === '()') {
                         if (!this.task_results.scrollview.vscrollbar_visible) MISC_UTILS.resize_label(label);
                     } else if (!this.project_results.scrollview.vscrollbar_visible) {

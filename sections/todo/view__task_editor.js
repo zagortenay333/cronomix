@@ -213,7 +213,7 @@ var ViewTaskEditor = class ViewTaskEditor {
             if (event.type() === Clutter.EventType.KEY_RELEASE) this.actor.grab_key_focus();
             return Clutter.EVENT_STOP;
         });
-        this.content_box.connect('allocation-changed', () => {
+        this.content_box.connect('notify::allocation', () => {
             this.entry.scroll_box.vscrollbar_policy = Gtk.PolicyType.NEVER;
             this.preview_scrollview.vscrollbar_policy = Gtk.PolicyType.NEVER;
             this.preview_scrollview.hscrollbar_policy = Gtk.PolicyType.NEVER;

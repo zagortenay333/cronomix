@@ -208,7 +208,7 @@ var ViewFilters = class ViewFilters {
             this.filter_register.custom.push(item);
             this.entry.entry.text = '';
         });
-        this.filter_sectors_scroll_box.connect('allocation-changed', () => {
+        this.filter_sectors_scroll_box.connect('notify::allocation', () => {
             this.filter_sectors_scroll.vscrollbar_policy = Gtk.PolicyType.NEVER;
             if (this.ext.needs_scrollbar()) this.filter_sectors_scroll.vscrollbar_policy = Gtk.PolicyType.ALWAYS;
         });

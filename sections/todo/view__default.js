@@ -69,7 +69,7 @@ var ViewDefault = class ViewDefault {
             if (!this.tasks_added_to_menu) this._add_tasks_to_menu();
         });
         this.columns_scroll.connect('scroll-event', (_, event) => this.horiz_scroll(event));
-        this.content_box.connect('allocation-changed', () => {
+        this.content_box.connect('notify::allocation', () => {
             this.columns_scroll.hscrollbar_policy = Gtk.PolicyType.NEVER;
             let [, nat_w] = this.content_box.get_preferred_width(-1);
             let max_w = this.ext.menu_max_w;
@@ -632,7 +632,7 @@ var KanbanColumn = class KanbanColumn {
         this.header.set_pivot_point(0, 1);
         this.header.rotation_angle_z = 90;
         this.header_wrapper.set_layout_manager(new Clutter.FixedLayout());
-        this.rotate_id = this.header.connect('allocation-changed', () => {
+        this.rotate_id = this.header.connect('notify::allocation', () => {
             this.header_wrapper.set_width(this.header.get_height());
             this.header.set_width(Math.floor(this.actor.get_height() * 0.9));
             this.header.disconnect(this.rotate_id);

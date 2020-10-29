@@ -157,7 +157,7 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
             this.separate_menu = this.settings.get_boolean('alarms-separate-menu');
             this.ext.update_panel_items();
         });
-        this.sigm.connect(this.alarms_scroll_content, 'allocation-changed', () => {
+        this.sigm.connect(this.alarms_scroll_content, 'notify::allocation', () => {
             this.alarms_scroll.vscrollbar_policy = Gtk.PolicyType.NEVER;
             Mainloop.idle_add(() => {
                 if (ext.needs_scrollbar())
@@ -579,7 +579,7 @@ var AlarmEditor = class AlarmEditor {
         this.checkbox_item.connect('button-press-event', () => {
             this.sound_checkbox.checked = !this.sound_checkbox.checked;
         });
-        this.entry.entry.connect('allocation-changed', () => {
+        this.entry.entry.connect('notify::allocation', () => {
             this.entry.scroll_box.vscrollbar_policy = Gtk.PolicyType.NEVER;
 
             if (this.ext.needs_scrollbar())
@@ -902,7 +902,7 @@ var AlarmFullscreen = class AlarmFullscreen extends FULLSCREEN.Fullscreen {
                 [REG.FILE_PATH , MISC_UTILS.open_file_path],
             ]));
 
-            alarm_card.connect('allocation-changed', () => MISC_UTILS.resize_label(body));
+            alarm_card.connect('notify::allocation', () => MISC_UTILS.resize_label(body));
         }
     }
 }

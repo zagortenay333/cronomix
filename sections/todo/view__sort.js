@@ -102,7 +102,7 @@ var ViewSort = class ViewSort {
         //
         // listen
         //
-        this.sort_items_box.connect('allocation-changed', () => {
+        this.sort_items_box.connect('notify::allocation', () => {
             this.scrollview.vscrollbar_policy = Gtk.PolicyType.NEVER;
             if (this.ext.needs_scrollbar()) this.scrollview.vscrollbar_policy = Gtk.PolicyType.ALWAYS;
         });
