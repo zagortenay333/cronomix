@@ -182,7 +182,7 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
         //
         // settings window container
         //
-        this.timepicker_container = new St.Bin({ x_fill: true });
+        this.timepicker_container = new St.Bin();
         this.actor.add_child(this.timepicker_container);
 
         //

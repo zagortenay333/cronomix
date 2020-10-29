@@ -33,7 +33,7 @@ var ViewClearTasks = class ViewClearTasks {
         //
         // container
         //
-        this.actor = new St.Bin({ x_fill: true, style_class: 'view-clear-tasks view-box' });
+        this.actor = new St.Bin({ style_class: 'view-clear-tasks view-box' });
 
         this.content_box = new St.BoxLayout({ x_expand: true, vertical: true, style_class: 'view-box-content' });
         this.actor.add_actor(this.content_box);

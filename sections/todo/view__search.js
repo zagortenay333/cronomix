@@ -42,7 +42,7 @@ var ViewSearch = class ViewSearch {
         //
         // container
         //
-        this.actor = new St.Bin({ x_fill: true, style_class: 'view-search view-box' });
+        this.actor = new St.Bin({ style_class: 'view-search view-box' });
 
         this.content_box = new St.BoxLayout({ x_expand: true, vertical: true, style_class: 'view-box-content' });
         this.actor.add_actor(this.content_box);
@@ -70,7 +70,7 @@ var ViewSearch = class ViewSearch {
         //
         // task items box
         //
-        this.tasks_scroll = new St.ScrollView({ style_class: 'timepp-menu-item tasks-container vfade search-results', x_fill: true, y_align: St.Align.START});
+        this.tasks_scroll = new St.ScrollView({ style_class: 'timepp-menu-item tasks-container vfade search-results', y_align: St.Align.START});
         this.content_box.add(this.tasks_scroll);
         this.tasks_scroll.hscrollbar_policy = Gtk.PolicyType.NEVER;
 

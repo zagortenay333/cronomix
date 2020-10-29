@@ -182,7 +182,7 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
         //
         // settings container
         //
-        this.settings_container = new St.Bin({x_fill: true});
+        this.settings_container = new St.Bin();
         this.actor.add_actor(this.settings_container);
 
         //

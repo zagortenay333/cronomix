@@ -50,7 +50,7 @@ var ViewFilters = class ViewFilters {
         //
         // actor
         //
-        this.actor = new St.Bin({ x_fill: true, style_class: 'view-filters view-box' });
+        this.actor = new St.Bin({ style_class: 'view-filters view-box' });
 
         this.content_box = new St.BoxLayout({ x_expand: true, vertical: true, style_class: 'view-box-content' });
         this.actor.add_actor(this.content_box);

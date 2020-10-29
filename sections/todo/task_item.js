@@ -67,7 +67,7 @@ var TaskItem = class TaskItem {
         //
         // container
         //
-        this.actor = new St.Bin({ style: `width: ${delegate.settings.get_int('todo-task-width')}px;`, reactive: true, y_fill: true, x_fill: true, style_class: 'task-item' });
+        this.actor = new St.Bin({ style: `width: ${delegate.settings.get_int('todo-task-width')}px;`, reactive: true, style_class: 'task-item' });
         this.task_item_content = new St.BoxLayout({ vertical: true, style_class: 'task-item-content' });
         this.actor.add_actor(this.task_item_content);
 
