@@ -172,7 +172,7 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
         //
         // laps box
         //
-        this.laps_scroll = new St.ScrollView({ visible: false, style_class: 'timepp-menu-item laps-scrollview vfade', x_fill: true, y_fill: false, y_align: St.Align.START});
+        this.laps_scroll = new St.ScrollView({ visible: false, style_class: 'timepp-menu-item laps-scrollview vfade', y_align: St.Align.START});
         this.actor.add_actor(this.laps_scroll);
 
         this.laps_scroll.vscrollbar_policy = Gtk.PolicyType.NEVER;
@@ -533,7 +533,7 @@ var StopwatchFullscreen = class StopwatchFullscreen extends FULLSCREEN.Fullscree
         //
         // laps box
         //
-        this.laps_scroll = new St.ScrollView({ visible: false, style_class: 'timepp-menu-item laps-scrollview vfade', x_fill: true, y_fill: false, y_align: St.Align.START});
+        this.laps_scroll = new St.ScrollView({ visible: false, style_class: 'timepp-menu-item laps-scrollview vfade', y_align: St.Align.START});
         this.middle_box.add_child(this.laps_scroll);
 
         this.laps_scroll_bin = new St.BoxLayout({ vertical: true, style_class: 'laps-box' });
