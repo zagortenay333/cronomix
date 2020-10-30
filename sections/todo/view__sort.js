@@ -175,10 +175,10 @@ var SortItem = class SortItem {
         // listen
         //
         this.label.connect('enter-event', () => {
-            MISC.global_wrapper.display.set_cursor(Meta.Cursor.MOVE_OR_RESIZE_WINDOW);
+            global.display.set_cursor(Meta.Cursor.MOVE_OR_RESIZE_WINDOW);
         });
         this.label.connect('leave-event', () => {
-            MISC.global_wrapper.display.set_cursor(Meta.Cursor.DEFAULT);
+            global.display.set_cursor(Meta.Cursor.DEFAULT);
         });
         this.delegate.sigm.connect_press(this.sort_icon, Clutter.BUTTON_PRIMARY, true, () => {
             if (this.sort_order === G.SortOrder.ASCENDING) {

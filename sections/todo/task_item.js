@@ -116,10 +116,10 @@ var TaskItem = class TaskItem {
         //
         this.msg.connect('motion-event', (_, event) => {
             this.current_keyword = this._find_keyword(event);
-            if (this.current_keyword) MISC.global_wrapper.display.set_cursor(Meta.Cursor.POINTING_HAND);
-            else                      MISC.global_wrapper.display.set_cursor(Meta.Cursor.DEFAULT);
+            if (this.current_keyword) global.display.set_cursor(Meta.Cursor.POINTING_HAND);
+            else                      global.display.set_cursor(Meta.Cursor.DEFAULT);
         });
-        this.msg.connect('leave-event', () => MISC.global_wrapper.display.set_cursor(Meta.Cursor.DEFAULT));
+        this.msg.connect('leave-event', () => global.display.set_cursor(Meta.Cursor.DEFAULT));
         this.actor.connect('event', (actor, event) => this._on_event(actor, event));
         this.completion_checkbox.connect('clicked', () => this.toggle_task());
     }
@@ -891,7 +891,7 @@ var TaskItem = class TaskItem {
           case Clutter.EventType.ENTER: {
             let related = event.get_related();
             if (related && !this.actor.contains(related)) this.show_header_icons();
-            if (this.prio_label.has_pointer) MISC.global_wrapper.display.set_cursor(Meta.Cursor.POINTING_HAND);
+            if (this.prio_label.has_pointer) global.display.set_cursor(Meta.Cursor.POINTING_HAND);
           } break;
 
           case Clutter.EventType.LEAVE: {
@@ -903,7 +903,7 @@ var TaskItem = class TaskItem {
 
             if (this.finish_scrolling_priority) this._finish_scrolling_priority();
 
-            MISC.global_wrapper.display.set_cursor(Meta.Cursor.DEFAULT);
+            global.display.set_cursor(Meta.Cursor.DEFAULT);
           } break;
 
           case Clutter.EventType.KEY_RELEASE: {
