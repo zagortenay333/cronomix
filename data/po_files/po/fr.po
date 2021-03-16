@@ -3,6 +3,7 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # Luc Bournaud <luc.bournaud@hotmail.fr>, 2018.
+# Eddy Mercier <eddy.mercier@gmail.com>, 2021.
 #
 msgid ""
 msgstr ""
