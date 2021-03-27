@@ -11,26 +11,6 @@ time tracker, timer, stopwatch, pomodoro, and alarms [gnome-shell extension](htt
 
 ---
 
-<details>
-    <summary><b>Table of Contents</b></summary>
-
-* [Installation](#installation)
-* [Warnings](#warnings)
-* [Translations](#translations)
-* [Sections](#sections)
-* [Fullscreen Interface](#fullscreen-interface)
-* [Todo.txt Manager](#todotxt-manager)
-* [Todo.txt Syntax](#todotxt-syntax)
-* [Todo.txt Extensions](#todotxt-extensions)
-* [Time Tracker](#time-tracker)
-* [DBus API](#dbus-api)
-* [Keyboard Shortcuts](#keyboard-shortcuts)
-* [Preview](#preview)
-
-</details>
-
----
-
 ### Installation
 
 1. Download the extension:
