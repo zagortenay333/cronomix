@@ -67,7 +67,7 @@
                                               <object class="GtkLabel">
                                                 <property name="can_focus">0</property>
                                                 <property name="hexpand">1</property>
-                                                <property name="halign">1</property>
+                                                <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Show only 1 panel icon for joined menus</property>
                                               </object>
                                             </child>
@@ -95,7 +95,7 @@
                                               <object class="GtkLabel">
                                                 <property name="can_focus">0</property>
                                                 <property name="hexpand">1</property>
-                                                <property name="halign">1</property>
+                                                <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Position in the panel</property>
                                               </object>
                                             </child>
@@ -155,7 +155,7 @@
                                               <object class="GtkLabel">
                                                 <property name="can_focus">0</property>
                                                 <property name="hexpand">1</property>
-                                                <property name="halign">1</property>
+                                                <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Timer</property>
                                               </object>
                                             </child>
@@ -183,7 +183,7 @@
                                               <object class="GtkLabel">
                                                 <property name="can_focus">0</property>
                                                 <property name="hexpand">1</property>
-                                                <property name="halign">1</property>
+                                                <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Stopwatch</property>
                                               </object>
                                             </child>
@@ -211,7 +211,7 @@
                                               <object class="GtkLabel">
                                                 <property name="can_focus">0</property>
                                                 <property name="hexpand">1</property>
-                                                <property name="halign">1</property>
+                                                <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Pomodoro</property>
                                               </object>
                                             </child>
@@ -239,7 +239,7 @@
                                               <object class="GtkLabel">
                                                 <property name="can_focus">0</property>
                                                 <property name="hexpand">1</property>
-                                                <property name="halign">1</property>
+                                                <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Alarms</property>
                                               </object>
                                             </child>
@@ -267,7 +267,7 @@
                                               <object class="GtkLabel">
                                                 <property name="can_focus">0</property>
                                                 <property name="hexpand">1</property>
-                                                <property name="halign">1</property>
+                                                <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Todo and Time Tracker</property>
                                               </object>
                                             </child>
@@ -343,6 +343,8 @@
                                             <child>
                                               <object class="GtkLabel">
                                                 <property name="can_focus">0</property>
+                                                <property name="hexpand">1</property>
+                                                <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Show in separate menu</property>
                                               </object>
                                             </child>
@@ -369,6 +371,8 @@
                                             <child>
                                               <object class="GtkLabel">
                                                 <property name="can_focus">0</property>
+                                                <property name="hexpand">1</property>
+                                                <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Show seconds</property>
                                               </object>
                                             </child>
@@ -395,6 +399,8 @@
                                             <child>
                                               <object class="GtkLabel">
                                                 <property name="can_focus">0</property>
+                                                <property name="hexpand">1</property>
+                                                <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Panel Item Mode</property>
                                               </object>
                                             </child>
@@ -431,6 +437,8 @@
                                             <child>
                                               <object class="GtkLabel">
                                                 <property name="can_focus">0</property>
+                                                <property name="hexpand">1</property>
+                                                <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Notification sound</property>
                                               </object>
                                             </child>
@@ -466,6 +474,8 @@
                                             <child>
                                               <object class="GtkLabel">
                                                 <property name="can_focus">0</property>
+                                                <property name="hexpand">1</property>
+                                                <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Notification style</property>
                                               </object>
                                             </child>
@@ -525,6 +535,8 @@
                                             <child>
                                               <object class="GtkLabel">
                                                 <property name="can_focus">0</property>
+                                                <property name="hexpand">1</property>
+                                                <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Open popup menu</property>
                                               </object>
                                             </child>
@@ -558,6 +570,8 @@ F3</property>
                                             <child>
                                               <object class="GtkLabel">
                                                 <property name="can_focus">0</property>
+                                                <property name="hexpand">1</property>
+                                                <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Open in fullscreen</property>
                                               </object>
                                             </child>
@@ -591,6 +605,8 @@ F3</property>
                                             <child>
                                               <object class="GtkLabel">
                                                 <property name="can_focus">0</property>
+                                                <property name="hexpand">1</property>
+                                                <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Open popup menu and search presets</property>
                                               </object>
                                             </child>
@@ -673,6 +689,8 @@ F3</property>
                                             <child>
                                               <object class="GtkLabel">
                                                 <property name="can_focus">0</property>
+                                                <property name="hexpand">1</property>
+                                                <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Show in separate menu</property>
                                               </object>
                                             </child>
@@ -699,6 +717,8 @@ F3</property>
                                             <child>
                                               <object class="GtkLabel">
                                                 <property name="can_focus">0</property>
+                                                <property name="hexpand">1</property>
+                                                <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Format</property>
                                               </object>
                                             </child>
@@ -733,6 +753,8 @@ F3</property>
                                             <child>
                                               <object class="GtkLabel">
                                                 <property name="can_focus">0</property>
+                                                <property name="hexpand">1</property>
+                                                <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Panel Item Mode</property>
                                               </object>
                                             </child>
@@ -793,6 +815,8 @@ F3</property>
                                             <child>
                                               <object class="GtkLabel">
                                                 <property name="can_focus">0</property>
+                                                <property name="hexpand">1</property>
+                                                <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Open popup menu</property>
                                               </object>
                                             </child>
@@ -826,6 +850,8 @@ F3</property>
                                             <child>
                                               <object class="GtkLabel">
                                                 <property name="can_focus">0</property>
+                                                <property name="hexpand">1</property>
+                                                <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Open in fullscreen</property>
                                               </object>
                                             </child>
@@ -908,6 +934,8 @@ F3</property>
                                             <child>
                                               <object class="GtkLabel">
                                                 <property name="can_focus">0</property>
+                                                <property name="hexpand">1</property>
+                                                <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Show in separate menu</property>
                                               </object>
                                             </child>
@@ -934,6 +962,8 @@ F3</property>
                                             <child>
                                               <object class="GtkLabel">
                                                 <property name="can_focus">0</property>
+                                                <property name="hexpand">1</property>
+                                                <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Show seconds</property>
                                               </object>
                                             </child>
@@ -960,6 +990,8 @@ F3</property>
                                             <child>
                                               <object class="GtkLabel">
                                                 <property name="can_focus">0</property>
+                                                <property name="hexpand">1</property>
+                                                <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Panel Item Mode</property>
                                               </object>
                                             </child>
@@ -995,6 +1027,8 @@ F3</property>
                                             <child>
                                               <object class="GtkLabel">
                                                 <property name="can_focus">0</property>
+                                                <property name="hexpand">1</property>
+                                                <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Notification style</property>
                                               </object>
                                             </child>
@@ -1056,6 +1090,8 @@ F3</property>
                                             <child>
                                               <object class="GtkLabel">
                                                 <property name="can_focus">0</property>
+                                                <property name="hexpand">1</property>
+                                                <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Repeat notification sound?</property>
                                               </object>
                                             </child>
@@ -1083,6 +1119,8 @@ F3</property>
                                             <child>
                                               <object class="GtkLabel">
                                                 <property name="can_focus">0</property>
+                                                <property name="hexpand">1</property>
+                                                <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Pomodoro</property>
                                               </object>
                                             </child>
@@ -1119,6 +1157,8 @@ F3</property>
                                             <child>
                                               <object class="GtkLabel">
                                                 <property name="can_focus">0</property>
+                                                <property name="hexpand">1</property>
+                                                <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Short Break</property>
                                               </object>
                                             </child>
@@ -1155,6 +1195,8 @@ F3</property>
                                             <child>
                                               <object class="GtkLabel">
                                                 <property name="can_focus">0</property>
+                                                <property name="hexpand">1</property>
+                                                <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Long Break</property>
                                               </object>
                                             </child>
@@ -1215,6 +1257,8 @@ F3</property>
                                             <child>
                                               <object class="GtkLabel">
                                                 <property name="can_focus">0</property>
+                                                <property name="hexpand">1</property>
+                                                <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Open popup menu</property>
                                               </object>
                                             </child>
@@ -1248,6 +1292,8 @@ F3</property>
                                             <child>
                                               <object class="GtkLabel">
                                                 <property name="can_focus">0</property>
+                                                <property name="hexpand">1</property>
+                                                <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Open in fullscreen</property>
                                               </object>
                                             </child>
@@ -1330,6 +1376,8 @@ F3</property>
                                             <child>
                                               <object class="GtkLabel">
                                                 <property name="can_focus">0</property>
+                                                <property name="hexpand">1</property>
+                                                <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Show in separate menu</property>
                                               </object>
                                             </child>
@@ -1357,6 +1405,8 @@ F3</property>
                                             <child>
                                               <object class="GtkLabel">
                                                 <property name="can_focus">0</property>
+                                                <property name="hexpand">1</property>
+                                                <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Notification sound</property>
                                               </object>
                                             </child>
@@ -1392,6 +1442,8 @@ F3</property>
                                             <child>
                                               <object class="GtkLabel">
                                                 <property name="can_focus">0</property>
+                                                <property name="hexpand">1</property>
+                                                <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Notification style</property>
                                               </object>
                                             </child>
@@ -1451,6 +1503,8 @@ F3</property>
                                             <child>
                                               <object class="GtkLabel">
                                                 <property name="can_focus">0</property>
+                                                <property name="hexpand">1</property>
+                                                <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Open popup menu</property>
                                               </object>
                                             </child>
@@ -1534,6 +1588,8 @@ F3</property>
                                             <child>
                                               <object class="GtkLabel">
                                                 <property name="can_focus">0</property>
+                                                <property name="hexpand">1</property>
+                                                <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Show in separate menu</property>
                                               </object>
                                             </child>
@@ -1560,6 +1616,8 @@ F3</property>
                                             <child>
                                               <object class="GtkLabel">
                                                 <property name="can_focus">0</property>
+                                                <property name="hexpand">1</property>
+                                                <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Panel Item Mode</property>
                                               </object>
                                             </child>
@@ -1592,18 +1650,20 @@ F3</property>
                                             <property name="margin_top">10</property>
                                             <property name="margin_bottom">10</property>
                                             <child>
+                                              <object class="GtkLabel">
+                                                <property name="can_focus">0</property>
+                                                <property name="hexpand">1</property>
+                                                <property name="halign">start</property>
+                                                <property name="label" translatable="yes">Task width (px)</property>
+                                              </object>
+                                            </child>
+                                            <child>
                                               <object class="GtkSpinButton" id="todo-task-width-spin">
                                                 <property name="text">0</property>
                                                 <property name="adjustment">todo-width-spin-adjustment</property>
                                                 <property name="climb_rate">1</property>
                                                 <property name="numeric">1</property>
                                                 <property name="value">200</property>
-                                              </object>
-                                            </child>
-                                            <child>
-                                              <object class="GtkLabel">
-                                                <property name="can_focus">0</property>
-                                                <property name="label" translatable="yes">Task width (px)</property>
                                               </object>
                                             </child>
                                           </object>
@@ -1626,6 +1686,8 @@ F3</property>
                                             <child>
                                               <object class="GtkLabel">
                                                 <property name="can_focus">0</property>
+                                                <property name="hexpand">1</property>
+                                                <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Resume tracking after abrupt restart?</property>
                                               </object>
                                             </child>
@@ -1681,6 +1743,8 @@ F3</property>
                                             <child>
                                               <object class="GtkLabel">
                                                 <property name="can_focus">0</property>
+                                                <property name="hexpand">1</property>
+                                                <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Open popup menu</property>
                                               </object>
                                             </child>
@@ -1714,6 +1778,8 @@ F3</property>
                                             <child>
                                               <object class="GtkLabel">
                                                 <property name="can_focus">0</property>
+                                                <property name="hexpand">1</property>
+                                                <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Open popup menu and add task</property>
                                               </object>
                                             </child>
@@ -1745,6 +1811,14 @@ F3</property>
                                             <property name="margin_top">10</property>
                                             <property name="margin_bottom">10</property>
                                             <child>
+                                              <object class="GtkLabel">
+                                                <property name="can_focus">0</property>
+                                                <property name="hexpand">1</property>
+                                                <property name="halign">start</property>
+                                                <property name="label" translatable="yes">Open popup menu and search tasks</property>
+                                              </object>
+                                            </child>
+                                            <child>
                                               <object class="GtkEntry" id="todo-keybinding-open-to-search">
                                                 <property name="tooltip_text" translatable="yes">Examples:
 &lt;super&gt;&lt;ctrl&gt;&lt;alt&gt;&lt;shift&gt;t
@@ -1752,12 +1826,6 @@ F3</property>
 F3</property>
                                                 <property name="truncate_multiline">1</property>
                                                 <property name="placeholder_text" translatable="yes">not set</property>
-                                              </object>
-                                            </child>
-                                            <child>
-                                              <object class="GtkLabel">
-                                                <property name="can_focus">0</property>
-                                                <property name="label" translatable="yes">Open popup menu and search tasks</property>
                                               </object>
                                             </child>
                                           </object>
@@ -1784,6 +1852,14 @@ F3</property>
                                                 <property name="margin_top">10</property>
                                                 <property name="margin_bottom">10</property>
                                                 <child>
+                                                  <object class="GtkLabel">
+                                                    <property name="can_focus">0</property>
+                                                    <property name="hexpand">1</property>
+                                                    <property name="halign">start</property>
+                                                    <property name="label" translatable="yes">Open popup menu and switch todo files</property>
+                                                  </object>
+                                                </child>
+                                                <child>
                                                   <object class="GtkEntry" id="todo-keybinding-open-to-switch-files">
                                                     <property name="tooltip_text" translatable="yes">Examples:
 &lt;super&gt;&lt;ctrl&gt;&lt;alt&gt;&lt;shift&gt;t
@@ -1791,12 +1867,6 @@ F3</property>
 F3</property>
                                                     <property name="truncate_multiline">1</property>
                                                     <property name="placeholder_text" translatable="yes">not set</property>
-                                                  </object>
-                                                </child>
-                                                <child>
-                                                  <object class="GtkLabel">
-                                                    <property name="can_focus">0</property>
-                                                    <property name="label" translatable="yes">Open popup menu and switch todo files</property>
                                                   </object>
                                                 </child>
                                               </object>
@@ -1819,6 +1889,14 @@ F3</property>
                                             <property name="margin_top">10</property>
                                             <property name="margin_bottom">10</property>
                                             <child>
+                                              <object class="GtkLabel">
+                                                <property name="can_focus">0</property>
+                                                <property name="hexpand">1</property>
+                                                <property name="halign">start</property>
+                                                <property name="label" translatable="yes">Open stats view</property>
+                                              </object>
+                                            </child>
+                                            <child>
                                               <object class="GtkEntry" id="todo-keybinding-open-to-stats">
                                                 <property name="tooltip_text" translatable="yes">Examples:
 &lt;super&gt;&lt;ctrl&gt;&lt;alt&gt;&lt;shift&gt;t
@@ -1826,12 +1904,6 @@ F3</property>
 F3</property>
                                                 <property name="truncate_multiline">1</property>
                                                 <property name="placeholder_text" translatable="yes">not set</property>
-                                              </object>
-                                            </child>
-                                            <child>
-                                              <object class="GtkLabel">
-                                                <property name="can_focus">0</property>
-                                                <property name="label" translatable="yes">Open stats view</property>
                                               </object>
                                             </child>
                                           </object>
@@ -1854,6 +1926,8 @@ F3</property>
                                             <child>
                                               <object class="GtkLabel">
                                                 <property name="can_focus">0</property>
+                                                <property name="hexpand">1</property>
+                                                <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Open current todo.txt file</property>
                                               </object>
                                             </child>
