@@ -66,6 +66,8 @@
                                             <child>
                                               <object class="GtkLabel">
                                                 <property name="can_focus">0</property>
+                                                <property name="hexpand">1</property>
+                                                <property name="halign">1</property>
                                                 <property name="label" translatable="yes">Show only 1 panel icon for joined menus</property>
                                               </object>
                                             </child>
@@ -92,6 +94,8 @@
                                             <child>
                                               <object class="GtkLabel">
                                                 <property name="can_focus">0</property>
+                                                <property name="hexpand">1</property>
+                                                <property name="halign">1</property>
                                                 <property name="label" translatable="yes">Position in the panel</property>
                                               </object>
                                             </child>
@@ -150,6 +154,8 @@
                                             <child>
                                               <object class="GtkLabel">
                                                 <property name="can_focus">0</property>
+                                                <property name="hexpand">1</property>
+                                                <property name="halign">1</property>
                                                 <property name="label" translatable="yes">Timer</property>
                                               </object>
                                             </child>
@@ -176,6 +182,8 @@
                                             <child>
                                               <object class="GtkLabel">
                                                 <property name="can_focus">0</property>
+                                                <property name="hexpand">1</property>
+                                                <property name="halign">1</property>
                                                 <property name="label" translatable="yes">Stopwatch</property>
                                               </object>
                                             </child>
@@ -202,6 +210,8 @@
                                             <child>
                                               <object class="GtkLabel">
                                                 <property name="can_focus">0</property>
+                                                <property name="hexpand">1</property>
+                                                <property name="halign">1</property>
                                                 <property name="label" translatable="yes">Pomodoro</property>
                                               </object>
                                             </child>
@@ -228,6 +238,8 @@
                                             <child>
                                               <object class="GtkLabel">
                                                 <property name="can_focus">0</property>
+                                                <property name="hexpand">1</property>
+                                                <property name="halign">1</property>
                                                 <property name="label" translatable="yes">Alarms</property>
                                               </object>
                                             </child>
@@ -254,6 +266,8 @@
                                             <child>
                                               <object class="GtkLabel">
                                                 <property name="can_focus">0</property>
+                                                <property name="hexpand">1</property>
+                                                <property name="halign">1</property>
                                                 <property name="label" translatable="yes">Todo and Time Tracker</property>
                                               </object>
                                             </child>
