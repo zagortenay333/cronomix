@@ -1647,7 +1647,6 @@ F3</property>
                                 <property name="valign">center</property>
                                 <property name="can_focus">0</property>
                                 <property name="margin_bottom">12</property>
-                                <property name="label_yalign">0</property>
                                 <property name="child">
                                   <object class="GtkListBox">
                                     <property name="can_focus">0</property>
