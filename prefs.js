@@ -112,7 +112,7 @@ class Settings {
             this.settings.set_string('timer-sound-file-path', GLib.filename_to_uri(ME.path + '/data/sounds/beeps.ogg', null));
         }
 
-        widget = this.builder.get_object('timer-sound-chooser');
+        widget = this.builder.get_object('timer-sound-button');
         widget.set_uri(this.settings.get_string('timer-sound-file-path'));
         widget.connect('selection-changed', (widget) => {
             this.settings.set_string('timer-sound-file-path', widget.get_uri());
@@ -291,19 +291,19 @@ class Settings {
             this.settings.set_string('pomodoro-sound-file-path-long-break', GLib.filename_to_uri(ME.path + '/data/sounds/beeps.ogg', null));
         }
 
-        widget = this.builder.get_object('pomodoro-sound-chooser-pomo');
+        widget = this.builder.get_object('pomodoro-sound-button-pomo');
         widget.set_uri(this.settings.get_string('pomodoro-sound-file-path-pomo'));
         widget.connect('selection-changed', (widget) => {
             this.settings.set_string('pomodoro-sound-file-path-pomo', widget.get_uri());
         });
 
-        widget = this.builder.get_object('pomodoro-sound-chooser-short-break');
+        widget = this.builder.get_object('pomodoro-sound-button-short-break');
         widget.set_uri(this.settings.get_string('pomodoro-sound-file-path-short-break'));
         widget.connect('selection-changed', (widget) => {
             this.settings.set_string('pomodoro-sound-file-path-short-break', widget.get_uri());
         });
 
-        widget = this.builder.get_object('pomodoro-sound-chooser-long-break');
+        widget = this.builder.get_object('pomodoro-sound-button-long-break');
         widget.set_uri(this.settings.get_string('pomodoro-sound-file-path-long-break'));
         widget.connect('selection-changed', (widget) => {
             this.settings.set_string('pomodoro-sound-file-path-long-break', widget.get_uri());
@@ -378,7 +378,7 @@ class Settings {
             this.settings.set_string('alarms-sound-file-path', GLib.filename_to_uri(ME.path + '/data/sounds/beeps.ogg', null));
         }
 
-        widget = this.builder.get_object('alarms-sound-chooser');
+        widget = this.builder.get_object('alarms-sound-button');
         widget.set_uri(this.settings.get_string('alarms-sound-file-path'));
         widget.connect('selection-changed', (widget) => {
             this.settings.set_string('alarms-sound-file-path', widget.get_uri());
