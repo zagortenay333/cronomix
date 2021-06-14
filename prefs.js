@@ -32,7 +32,7 @@ class Settings {
         {
             let GioSSS = Gio.SettingsSchemaSource;
             let schema = GioSSS.new_from_directory(
-                ME.path + '/data/schemas', GioSSS.get_default(), false);
+                ME.dir.get_path() + '/data/schemas', GioSSS.get_default(), false);
             schema = schema.lookup('org.gnome.shell.extensions.timepp', false);
 
             this.settings = new Gio.Settings({ settings_schema: schema });
@@ -130,7 +130,7 @@ class Settings {
         });
 
         if (! this.settings.get_string('timer-sound-file-path')) {
-            this.settings.set_string('timer-sound-file-path', GLib.filename_to_uri(ME.path + '/data/sounds/beeps.ogg', null));
+            this.settings.set_string('timer-sound-file-path', GLib.filename_to_uri(ME.dir.get_path() + '/data/sounds/beeps.ogg', null));
         }
 
         widget = this.builder.get_object('timer-sound-button');
@@ -304,15 +304,15 @@ class Settings {
             Gio.SettingsBindFlags.DEFAULT);
 
         if (! this.settings.get_string('pomodoro-sound-file-path-pomo')) {
-            this.settings.set_string('pomodoro-sound-file-path-pomo', GLib.filename_to_uri(ME.path + '/data/sounds/beeps.ogg', null));
+            this.settings.set_string('pomodoro-sound-file-path-pomo', GLib.filename_to_uri(ME.dir.get_path() + '/data/sounds/beeps.ogg', null));
         }
 
         if (! this.settings.get_string('pomodoro-sound-file-path-short-break')) {
-            this.settings.set_string('pomodoro-sound-file-path-short-break', GLib.filename_to_uri(ME.path + '/data/sounds/beeps.ogg', null));
+            this.settings.set_string('pomodoro-sound-file-path-short-break', GLib.filename_to_uri(ME.dir.get_path() + '/data/sounds/beeps.ogg', null));
         }
 
         if (!  this.settings.get_string('pomodoro-sound-file-path-long-break')) {
-            this.settings.set_string('pomodoro-sound-file-path-long-break', GLib.filename_to_uri(ME.path + '/data/sounds/beeps.ogg', null));
+            this.settings.set_string('pomodoro-sound-file-path-long-break', GLib.filename_to_uri(ME.dir.get_path() + '/data/sounds/beeps.ogg', null));
         }
 
         widget = this.builder.get_object('pomodoro-sound-button-pomo');
@@ -408,7 +408,7 @@ class Settings {
             Gio.SettingsBindFlags.DEFAULT);
 
         if (! this.settings.get_string('alarms-sound-file-path')) {
-            this.settings.set_string('alarms-sound-file-path', GLib.filename_to_uri(ME.path + '/data/sounds/beeps.ogg', null));
+            this.settings.set_string('alarms-sound-file-path', GLib.filename_to_uri(ME.dir.get_path() + '/data/sounds/beeps.ogg', null));
         }
 
         widget = this.builder.get_object('alarms-sound-button');
