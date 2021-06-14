@@ -285,7 +285,6 @@
           <object class="GtkStackPage">
             <property name="name">page1</property>
             <property name="title" translatable="yes">Timer</property>
-            <property name="position">1</property>
             <property name="child">
               <object class="GtkBox">
                 <property name="can_focus">0</property>
@@ -618,7 +617,6 @@ F3</property>
           <object class="GtkStackPage">
             <property name="name">page2</property>
             <property name="title" translatable="yes">Stopwatch</property>
-            <property name="position">2</property>
             <property name="child">
               <object class="GtkBox">
                 <property name="can_focus">0</property>
@@ -854,7 +852,6 @@ F3</property>
           <object class="GtkStackPage">
             <property name="name">page3</property>
             <property name="title" translatable="yes">Pomodoro</property>
-            <property name="position">3</property>
             <property name="child">
               <object class="GtkBox">
                 <property name="can_focus">0</property>
@@ -1283,7 +1280,6 @@ F3</property>
           <object class="GtkStackPage">
             <property name="name">page4</property>
             <property name="title" translatable="yes">Alarms</property>
-            <property name="position">4</property>
             <property name="child">
               <object class="GtkBox">
                 <property name="can_focus">0</property>
@@ -1489,7 +1485,6 @@ F3</property>
           <object class="GtkStackPage">
             <property name="name">page5</property>
             <property name="title" translatable="yes">Todo / Time Tracker</property>
-            <property name="position">5</property>
             <property name="child">
               <object class="GtkBox">
                 <property name="can_focus">0</property>
