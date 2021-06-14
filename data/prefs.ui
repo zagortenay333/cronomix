@@ -1965,4 +1965,11 @@ F3</property>
       </object>
     </child>
   </object>
+  <object class="GtkFileChooserNative" id="file_chooser">
+        <property name="title" translatable="yes">Choose File</property>
+        <property name="select-multiple">0</property>
+        <property name="action">open</property>
+        <property name="modal">1</property>
+        <signal name="response" handler="on_file_chooser_response" swapped="no"/>
+    </object>
 </interface>
