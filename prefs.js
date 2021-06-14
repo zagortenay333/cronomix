@@ -604,7 +604,6 @@ function buildPrefsWidget () {
         return false;
     });
 
-    widget.show_all();
     return widget;
 }
 
