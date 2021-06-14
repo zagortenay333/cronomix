@@ -450,7 +450,7 @@
                                                 <property name="can_focus">0</property>
                                                 <property name="halign">center</property>
                                                 <property name="valign">center</property>
-                                                <property name="label" translatable="yes"></property>
+                                                <property name="label" translatable="yes">Open</property>
                                                 <signal name="clicked" handler="on_btn_click" swapped="no"/>
                                               </object>
                                             </child>
@@ -1132,7 +1132,7 @@ F3</property>
                                                 <property name="can_focus">0</property>
                                                 <property name="halign">center</property>
                                                 <property name="valign">center</property>
-                                                <property name="label" translatable="yes"></property>
+                                                <property name="label" translatable="yes">Open</property>
                                                 <signal name="clicked" handler="on_btn_click" swapped="no"/>
                                               </object>
                                             </child>
@@ -1170,7 +1170,7 @@ F3</property>
                                                 <property name="can_focus">0</property>
                                                 <property name="halign">center</property>
                                                 <property name="valign">center</property>
-                                                <property name="label" translatable="yes"></property>
+                                                <property name="label" translatable="yes">Open</property>
                                                 <signal name="clicked" handler="on_btn_click" swapped="no"/>
                                               </object>
                                             </child>
@@ -1208,7 +1208,7 @@ F3</property>
                                                 <property name="can_focus">0</property>
                                                 <property name="halign">center</property>
                                                 <property name="valign">center</property>
-                                                <property name="label" translatable="yes"></property>
+                                                <property name="label" translatable="yes">Open</property>
                                                 <signal name="clicked" handler="on_btn_click" swapped="no"/>
                                               </object>
                                             </child>
@@ -1418,7 +1418,7 @@ F3</property>
                                                 <property name="can_focus">0</property>
                                                 <property name="halign">center</property>
                                                 <property name="valign">center</property>
-                                                <property name="label" translatable="yes"></property>
+                                                <property name="label" translatable="yes">Open</property>
                                                 <signal name="clicked" handler="on_btn_click" swapped="no"/>
                                               </object>
                                             </child>
