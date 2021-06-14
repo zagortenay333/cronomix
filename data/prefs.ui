@@ -430,7 +430,7 @@
                                                 <property name="halign">center</property>
                                                 <property name="valign">center</property>
                                                 <property name="label" translatable="yes"></property>
-                                                <signal name="clicked" handler="_onBtnClicked" swapped="no"/>
+                                                <signal name="clicked" handler="on_button_click" swapped="no"/>
                                               </object>
                                             </child>
                                           </object>
@@ -1083,7 +1083,7 @@ F3</property>
                                                 <property name="halign">center</property>
                                                 <property name="valign">center</property>
                                                 <property name="label" translatable="yes"></property>
-                                                <signal name="clicked" handler="_onBtnClicked" swapped="no"/>
+                                                <signal name="clicked" handler="on_button_click" swapped="no"/>
                                               </object>
                                             </child>
                                           </object>
@@ -1120,7 +1120,7 @@ F3</property>
                                                 <property name="halign">center</property>
                                                 <property name="valign">center</property>
                                                 <property name="label" translatable="yes"></property>
-                                                <signal name="clicked" handler="_onBtnClicked" swapped="no"/>
+                                                <signal name="clicked" handler="on_button_click" swapped="no"/>
                                               </object>
                                             </child>
                                           </object>
@@ -1157,7 +1157,7 @@ F3</property>
                                                 <property name="halign">center</property>
                                                 <property name="valign">center</property>
                                                 <property name="label" translatable="yes"></property>
-                                                <signal name="clicked" handler="_onBtnClicked" swapped="no"/>
+                                                <signal name="clicked" handler="on_button_click" swapped="no"/>
                                               </object>
                                             </child>
                                           </object>
@@ -1360,7 +1360,7 @@ F3</property>
                                                 <property name="halign">center</property>
                                                 <property name="valign">center</property>
                                                 <property name="label" translatable="yes"></property>
-                                                <signal name="clicked" handler="_onBtnClicked" swapped="no"/>
+                                                <signal name="clicked" handler="on_button_click" swapped="no"/>
                                               </object>
                                             </child>
                                           </object>

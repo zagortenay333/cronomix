@@ -1,11 +1,31 @@
 const Gio            = imports.gi.Gio;
 const Gtk            = imports.gi.Gtk;
 const GLib           = imports.gi.GLib;
+const GObject        = imports.gi.GObject;
 const Mainloop       = imports.mainloop;
 const ExtensionUtils = imports.misc.extensionUtils;
 
 const ME = ExtensionUtils.getCurrentExtension();
 const _  = imports.gettext.domain('timepp').gettext;
+
+const TimePpBuilderScope = GObject.registerClass({
+    Implements: [Gtk.BuilderScope],
+}, class TimePpBuilderScope extends GObject.Object {
+
+    vfunc_create_closure(builder, handlerName, flags, connectObject) {
+        if (flags & Gtk.BuilderClosureFlags.SWAPPED)
+            throw new Error('Unsupported template signal flag "swapped"');
+        
+        if (typeof this[handlerName] === 'undefined')
+            throw new Error(`${handlerName} is undefined`);
+        
+        return this[handlerName].bind(connectObject || this);
+    }
+    
+    on_btn_click(connectObject) {
+        connectObject.set_label("Clicked");
+    }
+});
 
 class Settings {
     constructor () {
@@ -19,8 +39,9 @@ class Settings {
         }
 
         this.builder = new Gtk.Builder();
+        this.builder.set_scope(new TimePpBuilderScope());
         this.builder.set_translation_domain('timepp');
-        this.builder.add_from_file(ME.path + '/data/prefs.ui');
+        this.builder.add_from_file(ME.dir.get_path() + '/data/prefs.ui');
 
         this.widget = this.builder.get_object('settings_widget');
         this.switcher = new Gtk.StackSwitcher({ visible: true, stack: this.builder.get_object('settings_stack'), halign: Gtk.Align.CENTER, });
@@ -113,10 +134,13 @@ class Settings {
         }
 
         widget = this.builder.get_object('timer-sound-button');
-        widget.set_uri(this.settings.get_string('timer-sound-file-path'));
-        widget.connect('selection-changed', (widget) => {
-            this.settings.set_string('timer-sound-file-path', widget.get_uri());
-        });
+        // widget.set_file(Gio.File.new_from_uri(this.settings.get_string('timer-sound-file-path')));
+        // widget.prototype._onFileChooserResponse = (widget, response) => {
+        //     if (response !== Gtk.ResponseType.ACCEPT) {
+        //         return;
+        //     }
+        //     this.settings.set_string('timer-sound-file-path', widget.get_file().get_uri());
+        // };
 
         widget = this.builder.get_object('timer-notif-style-combo');
         widget.set_active(this.settings.get_enum('timer-notif-style'));
@@ -292,22 +316,31 @@ class Settings {
         }
 
         widget = this.builder.get_object('pomodoro-sound-button-pomo');
-        widget.set_uri(this.settings.get_string('pomodoro-sound-file-path-pomo'));
-        widget.connect('selection-changed', (widget) => {
-            this.settings.set_string('pomodoro-sound-file-path-pomo', widget.get_uri());
-        });
+        // widget.set_file(Gio.File.new_from_uri(this.settings.get_string('pomodoro-sound-file-path-pomo')));
+        // widget.prototype._onFileChooserResponse = (widget, response) => {
+        //     if (response !== Gtk.ResponseType.ACCEPT) {
+        //         return;
+        //     }
+        //     this.settings.set_string('pomodoro-sound-file-path-pomo', widget.get_file().get_uri());
+        // };
 
         widget = this.builder.get_object('pomodoro-sound-button-short-break');
-        widget.set_uri(this.settings.get_string('pomodoro-sound-file-path-short-break'));
-        widget.connect('selection-changed', (widget) => {
-            this.settings.set_string('pomodoro-sound-file-path-short-break', widget.get_uri());
-        });
+        // widget.set_file(Gio.File.new_from_uri(this.settings.get_string('pomodoro-sound-file-path-short-break')));
+        // widget.prototype._onFileChooserResponse = (widget, response) => {
+        //     if (response !== Gtk.ResponseType.ACCEPT) {
+        //         return;
+        //     }
+        //     this.settings.set_string('pomodoro-sound-file-path-short-break', widget.get_file().get_uri());
+        // };
 
         widget = this.builder.get_object('pomodoro-sound-button-long-break');
-        widget.set_uri(this.settings.get_string('pomodoro-sound-file-path-long-break'));
-        widget.connect('selection-changed', (widget) => {
-            this.settings.set_string('pomodoro-sound-file-path-long-break', widget.get_uri());
-        });
+        // widget.set_file(Gio.File.new_from_uri(this.settings.get_string('pomodoro-sound-file-path-long-break')));
+        // widget.prototype._onFileChooserResponse = (widget, response) => {
+        //     if (response !== Gtk.ResponseType.ACCEPT) {
+        //         return;
+        //     }
+        //     this.settings.set_string('pomodoro-sound-file-path-long-break', widget.get_file().get_uri());
+        // };
 
         this.settings.bind(
             'pomodoro-play-sound-pomo',
@@ -379,10 +412,13 @@ class Settings {
         }
 
         widget = this.builder.get_object('alarms-sound-button');
-        widget.set_uri(this.settings.get_string('alarms-sound-file-path'));
-        widget.connect('selection-changed', (widget) => {
-            this.settings.set_string('alarms-sound-file-path', widget.get_uri());
-        });
+        // widget.set_file(Gio.File.new_from_uri(this.settings.get_string('alarms-sound-file-path')));
+        // widget.prototype._onFileChooserResponse = (widget, response) => {
+        //     if (response !== Gtk.ResponseType.ACCEPT) {
+        //         return;
+        //     }
+        //     this.settings.set_string('alarms-sound-file-path', widget.get_file().get_uri());
+        // };
 
         widget = this.builder.get_object('alarms-notif-style-combo');
         widget.set_active(this.settings.get_enum('alarms-notif-style'));
