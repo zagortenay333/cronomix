@@ -443,7 +443,9 @@
                                               </object>
                                             </child>
                                             <child>
-                                              <object class="GtkSwitch" id="timer-play-sound-switch"/>
+                                              <object class="GtkSwitch" id="timer-play-sound-switch">
+                                                <property name="valign">center</property>
+                                              </object>
                                             </child>
                                             <child>
                                               <object class="GtkButton" id="timer-sound-button">
@@ -1125,7 +1127,9 @@ F3</property>
                                               </object>
                                             </child>
                                             <child>
-                                              <object class="GtkSwitch" id="pomodoro-play-sound-switch-pomo"/>
+                                              <object class="GtkSwitch" id="pomodoro-play-sound-switch-pomo">
+                                                <property name="valign">center</property>
+                                              </object>
                                             </child>
                                             <child>
                                               <object class="GtkButton" id="pomodoro-sound-button-pomo">
@@ -1163,7 +1167,9 @@ F3</property>
                                               </object>
                                             </child>
                                             <child>
-                                              <object class="GtkSwitch" id="pomodoro-play-sound-switch-short-break"/>
+                                              <object class="GtkSwitch" id="pomodoro-play-sound-switch-short-break">
+                                                <property name="valign">center</property>
+                                              </object>
                                             </child>
                                             <child>
                                               <object class="GtkButton" id="pomodoro-sound-button-short-break">
@@ -1201,7 +1207,9 @@ F3</property>
                                               </object>
                                             </child>
                                             <child>
-                                              <object class="GtkSwitch" id="pomodoro-play-sound-switch-long-break"/>
+                                              <object class="GtkSwitch" id="pomodoro-play-sound-switch-long-break">
+                                                <property name="valign">center</property>
+                                              </object>
                                             </child>
                                             <child>
                                               <object class="GtkButton" id="pomodoro-sound-button-long-break">
@@ -1411,7 +1419,9 @@ F3</property>
                                               </object>
                                             </child>
                                             <child>
-                                              <object class="GtkSwitch" id="alarms-play-sound-switch"/>
+                                              <object class="GtkSwitch" id="alarms-play-sound-switch">
+                                                <property name="valign">center</property>
+                                              </object>
                                             </child>
                                             <child>
                                               <object class="GtkButton" id="alarms-sound-button">
