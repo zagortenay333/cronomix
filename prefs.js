@@ -1,7 +1,6 @@
 const Gio            = imports.gi.Gio;
 const Gtk            = imports.gi.Gtk;
 const GLib           = imports.gi.GLib;
-const Mainloop       = imports.mainloop;
 const ExtensionUtils = imports.misc.extensionUtils;
 
 const ME = ExtensionUtils.getCurrentExtension();
