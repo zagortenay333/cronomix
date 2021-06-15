@@ -10,11 +10,9 @@
   <object class="GtkBox" id="settings_widget">
     <property name="width_request">800</property>
     <property name="height_request">500</property>
-    <property name="can_focus">0</property>
     <property name="orientation">vertical</property>
     <child>
       <object class="GtkStack" id="settings_stack">
-        <property name="can_focus">0</property>
         <property name="vexpand">1</property>
         <property name="transition_type">slide-left-right</property>
         <property name="interpolate_size">1</property>
@@ -24,7 +22,6 @@
             <property name="title" translatable="yes">General</property>
             <property name="child">
               <object class="GtkBox">
-                <property name="can_focus">0</property>
                 <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkScrolledWindow">
@@ -32,10 +29,8 @@
                     <property name="vexpand">1</property>
                     <property name="child">
                       <object class="GtkViewport">
-                        <property name="can_focus">0</property>
                         <property name="child">
                           <object class="GtkBox">
-                            <property name="can_focus">0</property>
                             <property name="margin-start">100</property>
                             <property name="margin-end">100</property>
                             <property name="margin_top">20</property>
@@ -45,11 +40,9 @@
                             <child>
                               <object class="GtkFrame">
                                 <property name="valign">center</property>
-                                <property name="can_focus">0</property>
                                 <property name="margin_bottom">12</property>
                                 <property name="child">
                                   <object class="GtkListBox">
-                                    <property name="can_focus">0</property>
                                     <child>
                                       <object class="GtkListBoxRow">
                                         <property name="width_request">100</property>
@@ -58,14 +51,12 @@
                                         <property name="selectable">0</property>
                                         <property name="child">
                                           <object class="GtkBox">
-                                            <property name="can_focus">0</property>
                                             <property name="margin-start">10</property>
                                             <property name="margin-end">10</property>
                                             <property name="margin_top">10</property>
                                             <property name="margin_bottom">10</property>
                                             <child>
                                               <object class="GtkLabel">
-                                                <property name="can_focus">0</property>
                                                 <property name="hexpand">1</property>
                                                 <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Show only 1 panel icon for joined menus</property>
@@ -86,14 +77,12 @@
                                         <property name="selectable">0</property>
                                         <property name="child">
                                           <object class="GtkBox">
-                                            <property name="can_focus">0</property>
                                             <property name="margin-start">10</property>
                                             <property name="margin-end">10</property>
                                             <property name="margin_top">10</property>
                                             <property name="margin_bottom">10</property>
                                             <child>
                                               <object class="GtkLabel">
-                                                <property name="can_focus">0</property>
                                                 <property name="hexpand">1</property>
                                                 <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Position in the panel</property>
@@ -101,7 +90,6 @@
                                             </child>
                                             <child>
                                               <object class="GtkComboBoxText" id="panel-item-position-combo">
-                                                <property name="can_focus">0</property>
                                                 <property name="active">2</property>
                                                 <items>
                                                   <item translatable="yes">Left</item>
@@ -123,7 +111,6 @@
                             </child>
                             <child>
                               <object class="GtkLabel">
-                                <property name="can_focus">0</property>
                                 <property name="halign">start</property>
                                 <property name="valign">baseline</property>
                                 <property name="label" translatable="yes">Enabled Sections</property>
@@ -134,10 +121,8 @@
                             </child>
                             <child>
                               <object class="GtkFrame">
-                                <property name="can_focus">0</property>
                                 <property name="child">
                                   <object class="GtkListBox">
-                                    <property name="can_focus">0</property>
                                     <child>
                                       <object class="GtkListBoxRow">
                                         <property name="width_request">100</property>
@@ -146,14 +131,12 @@
                                         <property name="selectable">0</property>
                                         <property name="child">
                                           <object class="GtkBox">
-                                            <property name="can_focus">0</property>
                                             <property name="margin-start">10</property>
                                             <property name="margin-end">10</property>
                                             <property name="margin_top">10</property>
                                             <property name="margin_bottom">10</property>
                                             <child>
                                               <object class="GtkLabel">
-                                                <property name="can_focus">0</property>
                                                 <property name="hexpand">1</property>
                                                 <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Timer</property>
@@ -174,14 +157,12 @@
                                         <property name="selectable">0</property>
                                         <property name="child">
                                           <object class="GtkBox">
-                                            <property name="can_focus">0</property>
                                             <property name="margin-start">10</property>
                                             <property name="margin-end">10</property>
                                             <property name="margin_top">10</property>
                                             <property name="margin_bottom">10</property>
                                             <child>
                                               <object class="GtkLabel">
-                                                <property name="can_focus">0</property>
                                                 <property name="hexpand">1</property>
                                                 <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Stopwatch</property>
@@ -202,14 +183,12 @@
                                         <property name="selectable">0</property>
                                         <property name="child">
                                           <object class="GtkBox">
-                                            <property name="can_focus">0</property>
                                             <property name="margin-start">10</property>
                                             <property name="margin-end">10</property>
                                             <property name="margin_top">10</property>
                                             <property name="margin_bottom">10</property>
                                             <child>
                                               <object class="GtkLabel">
-                                                <property name="can_focus">0</property>
                                                 <property name="hexpand">1</property>
                                                 <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Pomodoro</property>
@@ -230,14 +209,12 @@
                                         <property name="selectable">0</property>
                                         <property name="child">
                                           <object class="GtkBox">
-                                            <property name="can_focus">0</property>
                                             <property name="margin-start">10</property>
                                             <property name="margin-end">10</property>
                                             <property name="margin_top">10</property>
                                             <property name="margin_bottom">10</property>
                                             <child>
                                               <object class="GtkLabel">
-                                                <property name="can_focus">0</property>
                                                 <property name="hexpand">1</property>
                                                 <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Alarms</property>
@@ -258,14 +235,12 @@
                                         <property name="selectable">0</property>
                                         <property name="child">
                                           <object class="GtkBox">
-                                            <property name="can_focus">0</property>
                                             <property name="margin-start">10</property>
                                             <property name="margin-end">10</property>
                                             <property name="margin_top">10</property>
                                             <property name="margin_bottom">10</property>
                                             <child>
                                               <object class="GtkLabel">
-                                                <property name="can_focus">0</property>
                                                 <property name="hexpand">1</property>
                                                 <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Todo and Time Tracker</property>
@@ -301,7 +276,6 @@
             <property name="title" translatable="yes">Timer</property>
             <property name="child">
               <object class="GtkBox">
-                <property name="can_focus">0</property>
                 <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkScrolledWindow">
@@ -309,10 +283,8 @@
                     <property name="vexpand">1</property>
                     <property name="child">
                       <object class="GtkViewport">
-                        <property name="can_focus">0</property>
                         <property name="child">
                           <object class="GtkBox">
-                            <property name="can_focus">0</property>
                             <property name="margin-start">100</property>
                             <property name="margin-end">100</property>
                             <property name="margin_top">20</property>
@@ -322,11 +294,9 @@
                             <child>
                               <object class="GtkFrame">
                                 <property name="valign">center</property>
-                                <property name="can_focus">0</property>
                                 <property name="margin_bottom">12</property>
                                 <property name="child">
                                   <object class="GtkListBox">
-                                    <property name="can_focus">0</property>
                                     <child>
                                       <object class="GtkListBoxRow">
                                         <property name="width_request">100</property>
@@ -335,14 +305,12 @@
                                         <property name="selectable">0</property>
                                         <property name="child">
                                           <object class="GtkBox">
-                                            <property name="can_focus">0</property>
                                             <property name="margin-start">10</property>
                                             <property name="margin-end">10</property>
                                             <property name="margin_top">10</property>
                                             <property name="margin_bottom">10</property>
                                             <child>
                                               <object class="GtkLabel">
-                                                <property name="can_focus">0</property>
                                                 <property name="hexpand">1</property>
                                                 <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Show in separate menu</property>
@@ -363,14 +331,12 @@
                                         <property name="selectable">0</property>
                                         <property name="child">
                                           <object class="GtkBox">
-                                            <property name="can_focus">0</property>
                                             <property name="margin-start">10</property>
                                             <property name="margin-end">10</property>
                                             <property name="margin_top">10</property>
                                             <property name="margin_bottom">10</property>
                                             <child>
                                               <object class="GtkLabel">
-                                                <property name="can_focus">0</property>
                                                 <property name="hexpand">1</property>
                                                 <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Show seconds</property>
@@ -391,14 +357,12 @@
                                         <property name="selectable">0</property>
                                         <property name="child">
                                           <object class="GtkBox">
-                                            <property name="can_focus">0</property>
                                             <property name="margin-start">10</property>
                                             <property name="margin-end">10</property>
                                             <property name="margin_top">10</property>
                                             <property name="margin_bottom">10</property>
                                             <child>
                                               <object class="GtkLabel">
-                                                <property name="can_focus">0</property>
                                                 <property name="hexpand">1</property>
                                                 <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Panel Item Mode</property>
@@ -406,7 +370,6 @@
                                             </child>
                                             <child>
                                               <object class="GtkComboBoxText" id="timer-panel-mode-combo">
-                                                <property name="can_focus">0</property>
                                                 <property name="active">0</property>
                                                 <items>
                                                   <item translatable="yes">Icon only</item>
@@ -428,7 +391,6 @@
                                         <property name="selectable">0</property>
                                         <property name="child">
                                           <object class="GtkBox">
-                                            <property name="can_focus">0</property>
                                             <property name="margin-start">10</property>
                                             <property name="margin-end">10</property>
                                             <property name="margin_top">10</property>
@@ -436,7 +398,6 @@
                                             <property name="spacing">16</property>
                                             <child>
                                               <object class="GtkLabel">
-                                                <property name="can_focus">0</property>
                                                 <property name="hexpand">1</property>
                                                 <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Notification sound</property>
@@ -449,7 +410,6 @@
                                             </child>
                                             <child>
                                               <object class="GtkButton" id="timer-sound-button">
-                                                <property name="can_focus">0</property>
                                                 <property name="halign">center</property>
                                                 <property name="valign">center</property>
                                                 <property name="label" translatable="yes">Open</property>
@@ -467,14 +427,12 @@
                                         <property name="selectable">0</property>
                                         <property name="child">
                                           <object class="GtkBox">
-                                            <property name="can_focus">0</property>
                                             <property name="margin-start">10</property>
                                             <property name="margin-end">10</property>
                                             <property name="margin_top">10</property>
                                             <property name="margin_bottom">10</property>
                                             <child>
                                               <object class="GtkLabel">
-                                                <property name="can_focus">0</property>
                                                 <property name="hexpand">1</property>
                                                 <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Notification style</property>
@@ -482,7 +440,6 @@
                                             </child>
                                             <child>
                                               <object class="GtkComboBoxText" id="timer-notif-style-combo">
-                                                <property name="can_focus">0</property>
                                                 <property name="active">0</property>
                                                 <items>
                                                   <item translatable="yes">Standard</item>
@@ -504,7 +461,6 @@
                             </child>
                             <child>
                               <object class="GtkLabel">
-                                <property name="can_focus">0</property>
                                 <property name="halign">start</property>
                                 <property name="valign">baseline</property>
                                 <property name="label" translatable="yes">Keyboard shortcuts</property>
@@ -516,10 +472,8 @@
                             <child>
                               <object class="GtkFrame">
                                 <property name="valign">center</property>
-                                <property name="can_focus">0</property>
                                 <property name="child">
                                   <object class="GtkListBox">
-                                    <property name="can_focus">0</property>
                                     <child>
                                       <object class="GtkListBoxRow">
                                         <property name="width_request">100</property>
@@ -528,14 +482,12 @@
                                         <property name="selectable">0</property>
                                         <property name="child">
                                           <object class="GtkBox">
-                                            <property name="can_focus">0</property>
                                             <property name="margin-start">10</property>
                                             <property name="margin-end">10</property>
                                             <property name="margin_top">10</property>
                                             <property name="margin_bottom">10</property>
                                             <child>
                                               <object class="GtkLabel">
-                                                <property name="can_focus">0</property>
                                                 <property name="hexpand">1</property>
                                                 <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Open popup menu</property>
@@ -563,14 +515,12 @@ F3</property>
                                         <property name="selectable">0</property>
                                         <property name="child">
                                           <object class="GtkBox">
-                                            <property name="can_focus">0</property>
                                             <property name="margin-start">10</property>
                                             <property name="margin-end">10</property>
                                             <property name="margin_top">10</property>
                                             <property name="margin_bottom">10</property>
                                             <child>
                                               <object class="GtkLabel">
-                                                <property name="can_focus">0</property>
                                                 <property name="hexpand">1</property>
                                                 <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Open in fullscreen</property>
@@ -598,14 +548,12 @@ F3</property>
                                         <property name="selectable">0</property>
                                         <property name="child">
                                           <object class="GtkBox">
-                                            <property name="can_focus">0</property>
                                             <property name="margin-start">10</property>
                                             <property name="margin-end">10</property>
                                             <property name="margin_top">10</property>
                                             <property name="margin_bottom">10</property>
                                             <child>
                                               <object class="GtkLabel">
-                                                <property name="can_focus">0</property>
                                                 <property name="hexpand">1</property>
                                                 <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Open popup menu and search presets</property>
@@ -648,7 +596,6 @@ F3</property>
             <property name="title" translatable="yes">Stopwatch</property>
             <property name="child">
               <object class="GtkBox">
-                <property name="can_focus">0</property>
                 <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkScrolledWindow">
@@ -656,10 +603,8 @@ F3</property>
                     <property name="vexpand">1</property>
                     <property name="child">
                       <object class="GtkViewport">
-                        <property name="can_focus">0</property>
                         <property name="child">
                           <object class="GtkBox">
-                            <property name="can_focus">0</property>
                             <property name="margin-start">100</property>
                             <property name="margin-end">100</property>
                             <property name="margin_top">20</property>
@@ -669,11 +614,9 @@ F3</property>
                             <child>
                               <object class="GtkFrame">
                                 <property name="valign">center</property>
-                                <property name="can_focus">0</property>
                                 <property name="margin_bottom">12</property>
                                 <property name="child">
                                   <object class="GtkListBox">
-                                    <property name="can_focus">0</property>
                                     <child>
                                       <object class="GtkListBoxRow">
                                         <property name="width_request">100</property>
@@ -682,14 +625,12 @@ F3</property>
                                         <property name="selectable">0</property>
                                         <property name="child">
                                           <object class="GtkBox">
-                                            <property name="can_focus">0</property>
                                             <property name="margin-start">10</property>
                                             <property name="margin-end">10</property>
                                             <property name="margin_top">10</property>
                                             <property name="margin_bottom">10</property>
                                             <child>
                                               <object class="GtkLabel">
-                                                <property name="can_focus">0</property>
                                                 <property name="hexpand">1</property>
                                                 <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Show in separate menu</property>
@@ -710,14 +651,12 @@ F3</property>
                                         <property name="selectable">0</property>
                                         <property name="child">
                                           <object class="GtkBox">
-                                            <property name="can_focus">0</property>
                                             <property name="margin-start">10</property>
                                             <property name="margin-end">10</property>
                                             <property name="margin_top">10</property>
                                             <property name="margin_bottom">10</property>
                                             <child>
                                               <object class="GtkLabel">
-                                                <property name="can_focus">0</property>
                                                 <property name="hexpand">1</property>
                                                 <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Format</property>
@@ -725,7 +664,6 @@ F3</property>
                                             </child>
                                             <child>
                                               <object class="GtkComboBoxText" id="stopwatch-clock-format-combo">
-                                                <property name="can_focus">0</property>
                                                 <property name="active">0</property>
                                                 <items>
                                                   <item translatable="yes">hours:min</item>
@@ -746,14 +684,12 @@ F3</property>
                                         <property name="selectable">0</property>
                                         <property name="child">
                                           <object class="GtkBox">
-                                            <property name="can_focus">0</property>
                                             <property name="margin-start">10</property>
                                             <property name="margin-end">10</property>
                                             <property name="margin_top">10</property>
                                             <property name="margin_bottom">10</property>
                                             <child>
                                               <object class="GtkLabel">
-                                                <property name="can_focus">0</property>
                                                 <property name="hexpand">1</property>
                                                 <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Panel Item Mode</property>
@@ -761,7 +697,6 @@ F3</property>
                                             </child>
                                             <child>
                                               <object class="GtkComboBoxText" id="stopwatch-panel-mode-combo">
-                                                <property name="can_focus">0</property>
                                                 <property name="active">0</property>
                                                 <items>
                                                   <item translatable="yes">Icon only</item>
@@ -784,7 +719,6 @@ F3</property>
                             </child>
                             <child>
                               <object class="GtkLabel">
-                                <property name="can_focus">0</property>
                                 <property name="halign">start</property>
                                 <property name="valign">baseline</property>
                                 <property name="label" translatable="yes">Keyboard shortcuts</property>
@@ -796,10 +730,8 @@ F3</property>
                             <child>
                               <object class="GtkFrame">
                                 <property name="valign">center</property>
-                                <property name="can_focus">0</property>
                                 <property name="child">
                                   <object class="GtkListBox">
-                                    <property name="can_focus">0</property>
                                     <child>
                                       <object class="GtkListBoxRow">
                                         <property name="width_request">100</property>
@@ -808,14 +740,12 @@ F3</property>
                                         <property name="selectable">0</property>
                                         <property name="child">
                                           <object class="GtkBox">
-                                            <property name="can_focus">0</property>
                                             <property name="margin-start">10</property>
                                             <property name="margin-end">10</property>
                                             <property name="margin_top">10</property>
                                             <property name="margin_bottom">10</property>
                                             <child>
                                               <object class="GtkLabel">
-                                                <property name="can_focus">0</property>
                                                 <property name="hexpand">1</property>
                                                 <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Open popup menu</property>
@@ -843,14 +773,12 @@ F3</property>
                                         <property name="selectable">0</property>
                                         <property name="child">
                                           <object class="GtkBox">
-                                            <property name="can_focus">0</property>
                                             <property name="margin-start">10</property>
                                             <property name="margin-end">10</property>
                                             <property name="margin_top">10</property>
                                             <property name="margin_bottom">10</property>
                                             <child>
                                               <object class="GtkLabel">
-                                                <property name="can_focus">0</property>
                                                 <property name="hexpand">1</property>
                                                 <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Open in fullscreen</property>
@@ -893,7 +821,6 @@ F3</property>
             <property name="title" translatable="yes">Pomodoro</property>
             <property name="child">
               <object class="GtkBox">
-                <property name="can_focus">0</property>
                 <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkScrolledWindow">
@@ -901,10 +828,8 @@ F3</property>
                     <property name="vexpand">1</property>
                     <property name="child">
                       <object class="GtkViewport">
-                        <property name="can_focus">0</property>
                         <property name="child">
                           <object class="GtkBox">
-                            <property name="can_focus">0</property>
                             <property name="margin-start">100</property>
                             <property name="margin-end">100</property>
                             <property name="margin_top">20</property>
@@ -914,11 +839,9 @@ F3</property>
                             <child>
                               <object class="GtkFrame">
                                 <property name="valign">center</property>
-                                <property name="can_focus">0</property>
                                 <property name="margin_bottom">12</property>
                                 <property name="child">
                                   <object class="GtkListBox">
-                                    <property name="can_focus">0</property>
                                     <child>
                                       <object class="GtkListBoxRow">
                                         <property name="width_request">100</property>
@@ -927,14 +850,12 @@ F3</property>
                                         <property name="selectable">0</property>
                                         <property name="child">
                                           <object class="GtkBox">
-                                            <property name="can_focus">0</property>
                                             <property name="margin-start">10</property>
                                             <property name="margin-end">10</property>
                                             <property name="margin_top">10</property>
                                             <property name="margin_bottom">10</property>
                                             <child>
                                               <object class="GtkLabel">
-                                                <property name="can_focus">0</property>
                                                 <property name="hexpand">1</property>
                                                 <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Show in separate menu</property>
@@ -955,14 +876,12 @@ F3</property>
                                         <property name="selectable">0</property>
                                         <property name="child">
                                           <object class="GtkBox">
-                                            <property name="can_focus">0</property>
                                             <property name="margin-start">10</property>
                                             <property name="margin-end">10</property>
                                             <property name="margin_top">10</property>
                                             <property name="margin_bottom">10</property>
                                             <child>
                                               <object class="GtkLabel">
-                                                <property name="can_focus">0</property>
                                                 <property name="hexpand">1</property>
                                                 <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Show seconds</property>
@@ -983,14 +902,12 @@ F3</property>
                                         <property name="selectable">0</property>
                                         <property name="child">
                                           <object class="GtkBox">
-                                            <property name="can_focus">0</property>
                                             <property name="margin-start">10</property>
                                             <property name="margin-end">10</property>
                                             <property name="margin_top">10</property>
                                             <property name="margin_bottom">10</property>
                                             <child>
                                               <object class="GtkLabel">
-                                                <property name="can_focus">0</property>
                                                 <property name="hexpand">1</property>
                                                 <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Panel Item Mode</property>
@@ -998,7 +915,6 @@ F3</property>
                                             </child>
                                             <child>
                                               <object class="GtkComboBoxText" id="pomodoro-panel-mode-combo">
-                                                <property name="can_focus">0</property>
                                                 <property name="active">0</property>
                                                 <items>
                                                   <item translatable="yes">Icon only</item>
@@ -1020,14 +936,12 @@ F3</property>
                                         <property name="selectable">0</property>
                                         <property name="child">
                                           <object class="GtkBox">
-                                            <property name="can_focus">0</property>
                                             <property name="margin-start">10</property>
                                             <property name="margin-end">10</property>
                                             <property name="margin_top">10</property>
                                             <property name="margin_bottom">10</property>
                                             <child>
                                               <object class="GtkLabel">
-                                                <property name="can_focus">0</property>
                                                 <property name="hexpand">1</property>
                                                 <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Notification style</property>
@@ -1035,7 +949,6 @@ F3</property>
                                             </child>
                                             <child>
                                               <object class="GtkComboBoxText" id="pomodoro-notif-style-combo">
-                                                <property name="can_focus">0</property>
                                                 <property name="active">0</property>
                                                 <items>
                                                   <item translatable="yes">Standard</item>
@@ -1057,7 +970,6 @@ F3</property>
                             </child>
                             <child>
                               <object class="GtkLabel">
-                                <property name="can_focus">0</property>
                                 <property name="halign">start</property>
                                 <property name="valign">baseline</property>
                                 <property name="label" translatable="yes">Notification Sounds</property>
@@ -1069,11 +981,9 @@ F3</property>
                             <child>
                               <object class="GtkFrame">
                                 <property name="valign">center</property>
-                                <property name="can_focus">0</property>
                                 <property name="margin_bottom">12</property>
                                 <property name="child">
                                   <object class="GtkListBox">
-                                    <property name="can_focus">0</property>
                                     <child>
                                       <object class="GtkListBoxRow">
                                         <property name="width_request">100</property>
@@ -1082,7 +992,6 @@ F3</property>
                                         <property name="selectable">0</property>
                                         <property name="child">
                                           <object class="GtkBox">
-                                            <property name="can_focus">0</property>
                                             <property name="margin-start">10</property>
                                             <property name="margin-end">10</property>
                                             <property name="margin_top">10</property>
@@ -1090,7 +999,6 @@ F3</property>
                                             <property name="spacing">16</property>
                                             <child>
                                               <object class="GtkLabel">
-                                                <property name="can_focus">0</property>
                                                 <property name="hexpand">1</property>
                                                 <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Repeat notification sound?</property>
@@ -1111,7 +1019,6 @@ F3</property>
                                         <property name="selectable">0</property>
                                         <property name="child">
                                           <object class="GtkBox">
-                                            <property name="can_focus">0</property>
                                             <property name="margin-start">10</property>
                                             <property name="margin-end">10</property>
                                             <property name="margin_top">10</property>
@@ -1119,7 +1026,6 @@ F3</property>
                                             <property name="spacing">16</property>
                                             <child>
                                               <object class="GtkLabel">
-                                                <property name="can_focus">0</property>
                                                 <property name="hexpand">1</property>
                                                 <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Pomodoro</property>
@@ -1132,7 +1038,6 @@ F3</property>
                                             </child>
                                             <child>
                                               <object class="GtkButton" id="pomodoro-sound-button-pomo">
-                                                <property name="can_focus">0</property>
                                                 <property name="halign">center</property>
                                                 <property name="valign">center</property>
                                                 <property name="label" translatable="yes">Open</property>
@@ -1150,7 +1055,6 @@ F3</property>
                                         <property name="selectable">0</property>
                                         <property name="child">
                                           <object class="GtkBox">
-                                            <property name="can_focus">0</property>
                                             <property name="margin-start">10</property>
                                             <property name="margin-end">10</property>
                                             <property name="margin_top">10</property>
@@ -1158,7 +1062,6 @@ F3</property>
                                             <property name="spacing">16</property>
                                             <child>
                                               <object class="GtkLabel">
-                                                <property name="can_focus">0</property>
                                                 <property name="hexpand">1</property>
                                                 <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Short Break</property>
@@ -1171,7 +1074,6 @@ F3</property>
                                             </child>
                                             <child>
                                               <object class="GtkButton" id="pomodoro-sound-button-short-break">
-                                                <property name="can_focus">0</property>
                                                 <property name="halign">center</property>
                                                 <property name="valign">center</property>
                                                 <property name="label" translatable="yes">Open</property>
@@ -1189,7 +1091,6 @@ F3</property>
                                         <property name="selectable">0</property>
                                         <property name="child">
                                           <object class="GtkBox">
-                                            <property name="can_focus">0</property>
                                             <property name="margin-start">10</property>
                                             <property name="margin-end">10</property>
                                             <property name="margin_top">10</property>
@@ -1197,7 +1098,6 @@ F3</property>
                                             <property name="spacing">16</property>
                                             <child>
                                               <object class="GtkLabel">
-                                                <property name="can_focus">0</property>
                                                 <property name="hexpand">1</property>
                                                 <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Long Break</property>
@@ -1210,7 +1110,6 @@ F3</property>
                                             </child>
                                             <child>
                                               <object class="GtkButton" id="pomodoro-sound-button-long-break">
-                                                <property name="can_focus">0</property>
                                                 <property name="halign">center</property>
                                                 <property name="valign">center</property>
                                                 <property name="label" translatable="yes">Open</property>
@@ -1229,7 +1128,6 @@ F3</property>
                             </child>
                             <child>
                               <object class="GtkLabel">
-                                <property name="can_focus">0</property>
                                 <property name="halign">start</property>
                                 <property name="valign">baseline</property>
                                 <property name="label" translatable="yes">Keyboard shortcuts</property>
@@ -1241,10 +1139,8 @@ F3</property>
                             <child>
                               <object class="GtkFrame">
                                 <property name="valign">center</property>
-                                <property name="can_focus">0</property>
                                 <property name="child">
                                   <object class="GtkListBox">
-                                    <property name="can_focus">0</property>
                                     <child>
                                       <object class="GtkListBoxRow">
                                         <property name="width_request">100</property>
@@ -1253,14 +1149,12 @@ F3</property>
                                         <property name="selectable">0</property>
                                         <property name="child">
                                           <object class="GtkBox">
-                                            <property name="can_focus">0</property>
                                             <property name="margin-start">10</property>
                                             <property name="margin-end">10</property>
                                             <property name="margin_top">10</property>
                                             <property name="margin_bottom">10</property>
                                             <child>
                                               <object class="GtkLabel">
-                                                <property name="can_focus">0</property>
                                                 <property name="hexpand">1</property>
                                                 <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Open popup menu</property>
@@ -1288,14 +1182,12 @@ F3</property>
                                         <property name="selectable">0</property>
                                         <property name="child">
                                           <object class="GtkBox">
-                                            <property name="can_focus">0</property>
                                             <property name="margin-start">10</property>
                                             <property name="margin-end">10</property>
                                             <property name="margin_top">10</property>
                                             <property name="margin_bottom">10</property>
                                             <child>
                                               <object class="GtkLabel">
-                                                <property name="can_focus">0</property>
                                                 <property name="hexpand">1</property>
                                                 <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Open in fullscreen</property>
@@ -1338,7 +1230,6 @@ F3</property>
             <property name="title" translatable="yes">Alarms</property>
             <property name="child">
               <object class="GtkBox">
-                <property name="can_focus">0</property>
                 <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkScrolledWindow">
@@ -1346,10 +1237,8 @@ F3</property>
                     <property name="vexpand">1</property>
                     <property name="child">
                       <object class="GtkViewport">
-                        <property name="can_focus">0</property>
                         <property name="child">
                           <object class="GtkBox">
-                            <property name="can_focus">0</property>
                             <property name="margin-start">100</property>
                             <property name="margin-end">100</property>
                             <property name="margin_top">20</property>
@@ -1359,11 +1248,9 @@ F3</property>
                             <child>
                               <object class="GtkFrame">
                                 <property name="valign">center</property>
-                                <property name="can_focus">0</property>
                                 <property name="margin_bottom">12</property>
                                 <property name="child">
                                   <object class="GtkListBox">
-                                    <property name="can_focus">0</property>
                                     <child>
                                       <object class="GtkListBoxRow">
                                         <property name="width_request">100</property>
@@ -1372,14 +1259,12 @@ F3</property>
                                         <property name="selectable">0</property>
                                         <property name="child">
                                           <object class="GtkBox">
-                                            <property name="can_focus">0</property>
                                             <property name="margin-start">10</property>
                                             <property name="margin-end">10</property>
                                             <property name="margin_top">10</property>
                                             <property name="margin_bottom">10</property>
                                             <child>
                                               <object class="GtkLabel">
-                                                <property name="can_focus">0</property>
                                                 <property name="hexpand">1</property>
                                                 <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Show in separate menu</property>
@@ -1400,7 +1285,6 @@ F3</property>
                                         <property name="selectable">0</property>
                                         <property name="child">
                                           <object class="GtkBox">
-                                            <property name="can_focus">0</property>
                                             <property name="margin-start">10</property>
                                             <property name="margin-end">10</property>
                                             <property name="margin_top">10</property>
@@ -1408,7 +1292,6 @@ F3</property>
                                             <property name="spacing">16</property>
                                             <child>
                                               <object class="GtkLabel">
-                                                <property name="can_focus">0</property>
                                                 <property name="hexpand">1</property>
                                                 <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Notification sound</property>
@@ -1421,7 +1304,6 @@ F3</property>
                                             </child>
                                             <child>
                                               <object class="GtkButton" id="alarms-sound-button">
-                                                <property name="can_focus">0</property>
                                                 <property name="halign">center</property>
                                                 <property name="valign">center</property>
                                                 <property name="label" translatable="yes">Open</property>
@@ -1439,14 +1321,12 @@ F3</property>
                                         <property name="selectable">0</property>
                                         <property name="child">
                                           <object class="GtkBox">
-                                            <property name="can_focus">0</property>
                                             <property name="margin-start">10</property>
                                             <property name="margin-end">10</property>
                                             <property name="margin_top">10</property>
                                             <property name="margin_bottom">10</property>
                                             <child>
                                               <object class="GtkLabel">
-                                                <property name="can_focus">0</property>
                                                 <property name="hexpand">1</property>
                                                 <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Notification style</property>
@@ -1454,7 +1334,6 @@ F3</property>
                                             </child>
                                             <child>
                                               <object class="GtkComboBoxText" id="alarms-notif-style-combo">
-                                                <property name="can_focus">0</property>
                                                 <property name="active">0</property>
                                                 <items>
                                                   <item translatable="yes">Standard</item>
@@ -1476,7 +1355,6 @@ F3</property>
                             </child>
                             <child>
                               <object class="GtkLabel">
-                                <property name="can_focus">0</property>
                                 <property name="halign">start</property>
                                 <property name="valign">baseline</property>
                                 <property name="label" translatable="yes">Keyboard shortcuts</property>
@@ -1488,10 +1366,8 @@ F3</property>
                             <child>
                               <object class="GtkFrame">
                                 <property name="valign">center</property>
-                                <property name="can_focus">0</property>
                                 <property name="child">
                                   <object class="GtkListBox">
-                                    <property name="can_focus">0</property>
                                     <child>
                                       <object class="GtkListBoxRow">
                                         <property name="width_request">100</property>
@@ -1500,14 +1376,12 @@ F3</property>
                                         <property name="selectable">0</property>
                                         <property name="child">
                                           <object class="GtkBox">
-                                            <property name="can_focus">0</property>
                                             <property name="margin-start">10</property>
                                             <property name="margin-end">10</property>
                                             <property name="margin_top">10</property>
                                             <property name="margin_bottom">10</property>
                                             <child>
                                               <object class="GtkLabel">
-                                                <property name="can_focus">0</property>
                                                 <property name="hexpand">1</property>
                                                 <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Open popup menu</property>
@@ -1550,7 +1424,6 @@ F3</property>
             <property name="title" translatable="yes">Todo / Time Tracker</property>
             <property name="child">
               <object class="GtkBox">
-                <property name="can_focus">0</property>
                 <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkScrolledWindow">
@@ -1558,10 +1431,8 @@ F3</property>
                     <property name="vexpand">1</property>
                     <property name="child">
                       <object class="GtkViewport">
-                        <property name="can_focus">0</property>
                         <property name="child">
                           <object class="GtkBox">
-                            <property name="can_focus">0</property>
                             <property name="margin-start">100</property>
                             <property name="margin-end">100</property>
                             <property name="margin_top">20</property>
@@ -1571,11 +1442,9 @@ F3</property>
                             <child>
                               <object class="GtkFrame">
                                 <property name="valign">center</property>
-                                <property name="can_focus">0</property>
                                 <property name="margin_bottom">12</property>
                                 <property name="child">
                                   <object class="GtkListBox">
-                                    <property name="can_focus">0</property>
                                     <property name="activate_on_single_click">0</property>
                                     <child>
                                       <object class="GtkListBoxRow">
@@ -1585,14 +1454,12 @@ F3</property>
                                         <property name="selectable">0</property>
                                         <property name="child">
                                           <object class="GtkBox">
-                                            <property name="can_focus">0</property>
                                             <property name="margin-start">10</property>
                                             <property name="margin-end">10</property>
                                             <property name="margin_top">10</property>
                                             <property name="margin_bottom">10</property>
                                             <child>
                                               <object class="GtkLabel">
-                                                <property name="can_focus">0</property>
                                                 <property name="hexpand">1</property>
                                                 <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Show in separate menu</property>
@@ -1613,14 +1480,12 @@ F3</property>
                                         <property name="selectable">0</property>
                                         <property name="child">
                                           <object class="GtkBox">
-                                            <property name="can_focus">0</property>
                                             <property name="margin-start">10</property>
                                             <property name="margin-end">10</property>
                                             <property name="margin_top">10</property>
                                             <property name="margin_bottom">10</property>
                                             <child>
                                               <object class="GtkLabel">
-                                                <property name="can_focus">0</property>
                                                 <property name="hexpand">1</property>
                                                 <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Panel Item Mode</property>
@@ -1628,7 +1493,6 @@ F3</property>
                                             </child>
                                             <child>
                                               <object class="GtkComboBoxText" id="todo-panel-mode-combo">
-                                                <property name="can_focus">0</property>
                                                 <property name="active">0</property>
                                                 <items>
                                                   <item translatable="yes">Icon only</item>
@@ -1649,14 +1513,12 @@ F3</property>
                                         <property name="selectable">0</property>
                                         <property name="child">
                                           <object class="GtkBox">
-                                            <property name="can_focus">0</property>
                                             <property name="margin-start">10</property>
                                             <property name="margin-end">10</property>
                                             <property name="margin_top">10</property>
                                             <property name="margin_bottom">10</property>
                                             <child>
                                               <object class="GtkLabel">
-                                                <property name="can_focus">0</property>
                                                 <property name="hexpand">1</property>
                                                 <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Task width (px)</property>
@@ -1683,14 +1545,12 @@ F3</property>
                                         <property name="selectable">0</property>
                                         <property name="child">
                                           <object class="GtkBox">
-                                            <property name="can_focus">0</property>
                                             <property name="margin-start">10</property>
                                             <property name="margin-end">10</property>
                                             <property name="margin_top">10</property>
                                             <property name="margin_bottom">10</property>
                                             <child>
                                               <object class="GtkLabel">
-                                                <property name="can_focus">0</property>
                                                 <property name="hexpand">1</property>
                                                 <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Resume tracking after abrupt restart?</property>
@@ -1714,7 +1574,6 @@ F3</property>
                             </child>
                             <child>
                               <object class="GtkLabel">
-                                <property name="can_focus">0</property>
                                 <property name="halign">start</property>
                                 <property name="valign">baseline</property>
                                 <property name="label" translatable="yes">Keyboard shortcuts</property>
@@ -1726,11 +1585,9 @@ F3</property>
                             <child>
                               <object class="GtkFrame">
                                 <property name="valign">center</property>
-                                <property name="can_focus">0</property>
                                 <property name="margin_bottom">12</property>
                                 <property name="child">
                                   <object class="GtkListBox">
-                                    <property name="can_focus">0</property>
                                     <property name="activate_on_single_click">0</property>
                                     <child>
                                       <object class="GtkListBoxRow">
@@ -1740,14 +1597,12 @@ F3</property>
                                         <property name="selectable">0</property>
                                         <property name="child">
                                           <object class="GtkBox">
-                                            <property name="can_focus">0</property>
                                             <property name="margin-start">10</property>
                                             <property name="margin-end">10</property>
                                             <property name="margin_top">10</property>
                                             <property name="margin_bottom">10</property>
                                             <child>
                                               <object class="GtkLabel">
-                                                <property name="can_focus">0</property>
                                                 <property name="hexpand">1</property>
                                                 <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Open popup menu</property>
@@ -1775,14 +1630,12 @@ F3</property>
                                         <property name="selectable">0</property>
                                         <property name="child">
                                           <object class="GtkBox">
-                                            <property name="can_focus">0</property>
                                             <property name="margin-start">10</property>
                                             <property name="margin-end">10</property>
                                             <property name="margin_top">10</property>
                                             <property name="margin_bottom">10</property>
                                             <child>
                                               <object class="GtkLabel">
-                                                <property name="can_focus">0</property>
                                                 <property name="hexpand">1</property>
                                                 <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Open popup menu and add task</property>
@@ -1810,14 +1663,12 @@ F3</property>
                                         <property name="selectable">0</property>
                                         <property name="child">
                                           <object class="GtkBox">
-                                            <property name="can_focus">0</property>
                                             <property name="margin-start">10</property>
                                             <property name="margin-end">10</property>
                                             <property name="margin_top">10</property>
                                             <property name="margin_bottom">10</property>
                                             <child>
                                               <object class="GtkLabel">
-                                                <property name="can_focus">0</property>
                                                 <property name="hexpand">1</property>
                                                 <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Open popup menu and search tasks</property>
@@ -1851,14 +1702,12 @@ F3</property>
                                             <property name="selectable">0</property>
                                             <property name="child">
                                               <object class="GtkBox">
-                                                <property name="can_focus">0</property>
                                                 <property name="margin-start">10</property>
                                                 <property name="margin-end">10</property>
                                                 <property name="margin_top">10</property>
                                                 <property name="margin_bottom">10</property>
                                                 <child>
                                                   <object class="GtkLabel">
-                                                    <property name="can_focus">0</property>
                                                     <property name="hexpand">1</property>
                                                     <property name="halign">start</property>
                                                     <property name="label" translatable="yes">Open popup menu and switch todo files</property>
@@ -1888,14 +1737,12 @@ F3</property>
                                         <property name="selectable">0</property>
                                         <property name="child">
                                           <object class="GtkBox">
-                                            <property name="can_focus">0</property>
                                             <property name="margin-start">10</property>
                                             <property name="margin-end">10</property>
                                             <property name="margin_top">10</property>
                                             <property name="margin_bottom">10</property>
                                             <child>
                                               <object class="GtkLabel">
-                                                <property name="can_focus">0</property>
                                                 <property name="hexpand">1</property>
                                                 <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Open stats view</property>
@@ -1923,14 +1770,12 @@ F3</property>
                                         <property name="selectable">0</property>
                                         <property name="child">
                                           <object class="GtkBox">
-                                            <property name="can_focus">0</property>
                                             <property name="margin-start">10</property>
                                             <property name="margin-end">10</property>
                                             <property name="margin_top">10</property>
                                             <property name="margin_bottom">10</property>
                                             <child>
                                               <object class="GtkLabel">
-                                                <property name="can_focus">0</property>
                                                 <property name="hexpand">1</property>
                                                 <property name="halign">start</property>
                                                 <property name="label" translatable="yes">Open current todo.txt file</property>
