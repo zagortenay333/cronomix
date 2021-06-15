@@ -131,9 +131,9 @@ class Settings {
         widget = this.builder.get_object('timer-keybinding-open');
         widget.set_text(this.settings.get_strv('timer-keybinding-open')[0]);
         widget.connect('changed', (entry) => {
-            let [key, mods] = Gtk.accelerator_parse(entry.get_text());
+            let [ok, key, mods] = Gtk.accelerator_parse(entry.get_text());
 
-            if (Gtk.accelerator_valid(key, mods)) {
+            if (ok) {
                 entry["secondary-icon-name"] = null;
                 let shortcut = Gtk.accelerator_name(key, mods);
                 this.settings.set_strv('timer-keybinding-open', [shortcut]);
@@ -150,9 +150,9 @@ class Settings {
         widget = this.builder.get_object('timer-keybinding-open-fullscreen');
         widget.set_text(this.settings.get_strv('timer-keybinding-open-fullscreen')[0]);
         widget.connect('changed', (entry) => {
-            let [key, mods] = Gtk.accelerator_parse(entry.get_text());
+            let [ok, key, mods] = Gtk.accelerator_parse(entry.get_text());
 
-                if (Gtk.accelerator_valid(key, mods)) {
+                if (ok) {
                     entry["secondary-icon-name"] = null;
                     let shortcut = Gtk.accelerator_name(key, mods);
                     this.settings.set_strv('timer-keybinding-open-fullscreen', [shortcut]);
@@ -169,9 +169,9 @@ class Settings {
         widget = this.builder.get_object('timer-keybinding-open-to-search-presets');
         widget.set_text(this.settings.get_strv('timer-keybinding-open-to-search-presets')[0]);
         widget.connect('changed', (entry) => {
-            let [key, mods] = Gtk.accelerator_parse(entry.get_text());
+            let [ok, key, mods] = Gtk.accelerator_parse(entry.get_text());
 
-            if (Gtk.accelerator_valid(key, mods)) {
+            if (ok) {
                 entry["secondary-icon-name"] = null;
                 let shortcut = Gtk.accelerator_name(key, mods);
                 this.settings.set_strv('timer-keybinding-open-to-search-presets', [shortcut]);
@@ -209,9 +209,9 @@ class Settings {
         widget = this.builder.get_object('stopwatch-keybinding-open');
         widget.set_text(this.settings.get_strv('stopwatch-keybinding-open')[0]);
         widget.connect('changed', (entry) => {
-            let [key, mods] = Gtk.accelerator_parse(entry.get_text());
+            let [ok, key, mods] = Gtk.accelerator_parse(entry.get_text());
 
-            if (Gtk.accelerator_valid(key, mods)) {
+            if (ok) {
                 entry["secondary-icon-name"] = null;
                 let shortcut = Gtk.accelerator_name(key, mods);
                 this.settings.set_strv('stopwatch-keybinding-open', [shortcut]);
@@ -228,9 +228,9 @@ class Settings {
         widget = this.builder.get_object('stopwatch-keybinding-open-fullscreen');
         widget.set_text(this.settings.get_strv('stopwatch-keybinding-open-fullscreen')[0]);
         widget.connect('changed', (entry) => {
-            let [key, mods] = Gtk.accelerator_parse(entry.get_text());
+            let [ok, key, mods] = Gtk.accelerator_parse(entry.get_text());
 
-            if (Gtk.accelerator_valid(key, mods)) {
+            if (ok) {
                 entry["secondary-icon-name"] = null;
                 let shortcut = Gtk.accelerator_name(key, mods);
                 this.settings.set_strv('stopwatch-keybinding-open-fullscreen', [shortcut]);
@@ -319,9 +319,9 @@ class Settings {
         widget = this.builder.get_object('pomodoro-keybinding-open');
         widget.set_text(this.settings.get_strv('pomodoro-keybinding-open')[0]);
         widget.connect('changed', (entry) => {
-            let [key, mods] = Gtk.accelerator_parse(entry.get_text());
+            let [ok, key, mods] = Gtk.accelerator_parse(entry.get_text());
 
-                if (Gtk.accelerator_valid(key, mods)) {
+                if (ok) {
                     entry["secondary-icon-name"] = null;
                     let shortcut = Gtk.accelerator_name(key, mods);
                     this.settings.set_strv('pomodoro-keybinding-open', [shortcut]);
@@ -338,9 +338,9 @@ class Settings {
         widget = this.builder.get_object('pomodoro-keybinding-open-fullscreen');
         widget.set_text(this.settings.get_strv('pomodoro-keybinding-open-fullscreen')[0]);
         widget.connect('changed', (entry) => {
-            let [key, mods] = Gtk.accelerator_parse(entry.get_text());
+            let [ok, key, mods] = Gtk.accelerator_parse(entry.get_text());
 
-            if (Gtk.accelerator_valid(key, mods)) {
+            if (ok) {
                 entry["secondary-icon-name"] = null;
                 let shortcut = Gtk.accelerator_name(key, mods);
                 this.settings.set_strv('pomodoro-keybinding-open-fullscreen', [shortcut]);
@@ -385,9 +385,9 @@ class Settings {
         widget = this.builder.get_object('alarms-keybinding-open');
         widget.set_text(this.settings.get_strv('alarms-keybinding-open')[0]);
         widget.connect('changed', (entry) => {
-            let [key, mods] = Gtk.accelerator_parse(entry.get_text());
+            let [ok, key, mods] = Gtk.accelerator_parse(entry.get_text());
 
-            if (Gtk.accelerator_valid(key, mods)) {
+            if (ok) {
                 entry["secondary-icon-name"] = null;
                 let shortcut = Gtk.accelerator_name(key, mods);
                 this.settings.set_strv('alarms-keybinding-open', [shortcut]);
@@ -431,9 +431,9 @@ class Settings {
         widget = this.builder.get_object('todo-keybinding-open');
         widget.set_text(this.settings.get_strv('todo-keybinding-open')[0]);
         widget.connect('changed', (entry) => {
-            let [key, mods] = Gtk.accelerator_parse(entry.get_text());
+            let [ok, key, mods] = Gtk.accelerator_parse(entry.get_text());
 
-            if (Gtk.accelerator_valid(key, mods)) {
+            if (ok) {
                 entry["secondary-icon-name"] = null;
                 let shortcut = Gtk.accelerator_name(key, mods);
                 this.settings.set_strv('todo-keybinding-open', [shortcut]);
@@ -450,9 +450,9 @@ class Settings {
         widget = this.builder.get_object('todo-keybinding-open-to-add');
         widget.set_text(this.settings.get_strv('todo-keybinding-open-to-add')[0]);
         widget.connect('changed', (entry) => {
-            let [key, mods] = Gtk.accelerator_parse(entry.get_text());
+            let [ok, key, mods] = Gtk.accelerator_parse(entry.get_text());
 
-            if (Gtk.accelerator_valid(key, mods)) {
+            if (ok) {
                 entry["secondary-icon-name"] = null;
                 let shortcut = Gtk.accelerator_name(key, mods);
                 this.settings.set_strv('todo-keybinding-open-to-add', [shortcut]);
@@ -469,9 +469,9 @@ class Settings {
         widget = this.builder.get_object('todo-keybinding-open-to-search');
         widget.set_text(this.settings.get_strv('todo-keybinding-open-to-search')[0]);
         widget.connect('changed', (entry) => {
-            let [key, mods] = Gtk.accelerator_parse(entry.get_text());
+            let [ok, key, mods] = Gtk.accelerator_parse(entry.get_text());
 
-            if (Gtk.accelerator_valid(key, mods)) {
+            if (ok) {
                 entry["secondary-icon-name"] = null;
                 let shortcut = Gtk.accelerator_name(key, mods);
                 this.settings.set_strv('todo-keybinding-open-to-search', [shortcut]);
@@ -488,9 +488,9 @@ class Settings {
         widget = this.builder.get_object('todo-keybinding-open-to-stats');
         widget.set_text(this.settings.get_strv('todo-keybinding-open-to-stats')[0]);
         widget.connect('changed', (entry) => {
-            let [key, mods] = Gtk.accelerator_parse(entry.get_text());
+            let [ok, key, mods] = Gtk.accelerator_parse(entry.get_text());
 
-            if (Gtk.accelerator_valid(key, mods)) {
+            if (ok) {
                 entry["secondary-icon-name"] = null;
                 let shortcut = Gtk.accelerator_name(key, mods);
                 this.settings.set_strv('todo-keybinding-open-to-stats', [shortcut]);
@@ -507,9 +507,9 @@ class Settings {
         widget = this.builder.get_object('todo-keybinding-open-to-switch-files');
         widget.set_text(this.settings.get_strv('todo-keybinding-open-to-switch-files')[0]);
         widget.connect('changed', (entry) => {
-            let [key, mods] = Gtk.accelerator_parse(entry.get_text());
+            let [ok, key, mods] = Gtk.accelerator_parse(entry.get_text());
 
-            if (Gtk.accelerator_valid(key, mods)) {
+            if (ok) {
                 entry["secondary-icon-name"] = null;
                 let shortcut = Gtk.accelerator_name(key, mods);
                 this.settings.set_strv('todo-keybinding-open-to-switch-files', [shortcut]);
@@ -526,9 +526,9 @@ class Settings {
         widget = this.builder.get_object('todo-keybinding-open-todotxt-file');
         widget.set_text(this.settings.get_strv('todo-keybinding-open-todotxt-file')[0]);
         widget.connect('changed', (entry) => {
-            let [key, mods] = Gtk.accelerator_parse(entry.get_text());
+            let [ok, key, mods] = Gtk.accelerator_parse(entry.get_text());
 
-            if (Gtk.accelerator_valid(key, mods)) {
+            if (ok) {
                 entry["secondary-icon-name"] = null;
                 let shortcut = Gtk.accelerator_name(key, mods);
                 this.settings.set_strv('todo-keybinding-open-todotxt-file', [shortcut]);
