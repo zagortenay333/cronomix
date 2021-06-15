@@ -1,54 +1,13 @@
 const Gio            = imports.gi.Gio;
 const Gtk            = imports.gi.Gtk;
 const GLib           = imports.gi.GLib;
-const GObject        = imports.gi.GObject;
 const Mainloop       = imports.mainloop;
 const ExtensionUtils = imports.misc.extensionUtils;
 
 const ME = ExtensionUtils.getCurrentExtension();
 const _  = imports.gettext.domain('timepp').gettext;
 
-const TimePpBuilderScope = GObject.registerClass({
-    Implements: [Gtk.BuilderScope],
-}, class TimePpBuilderScope extends GObject.Object {
-
-    _init(params = {}) {
-        this.prefsWidget = params.prefsWidget;
-        delete params.prefsWidget;
-
-        super._init(params);
-    }
-
-    vfunc_create_closure(builder, handlerName, flags, connectObject) {
-        if (flags & Gtk.BuilderClosureFlags.SWAPPED)
-            throw new Error('Unsupported template signal flag "swapped"');
-        
-        if (typeof this[handlerName] === 'undefined')
-            throw new Error(`${handlerName} is undefined`);
-        
-        return this[handlerName].bind(connectObject || this);
-    }
-    
-    on_btn_click(widget) {
-        let parent = widget.get_root();
-        let file_chooser = this.prefsWidget.get_file_chooser();
-
-        this.file_chooser_path_key = this.prefsWidget.get_btn_file_chooser_map()[widget.get_buildable_id()];
-
-        file_chooser.set_transient_for(parent);
-        file_chooser.set_file(Gio.File.new_for_uri(this.prefsWidget.settings.get_string(this.file_chooser_path_key)));
-        file_chooser.show();
-    }
-
-    on_file_chooser_response(widget, response) {
-        if (response !== Gtk.ResponseType.ACCEPT) {
-            return;
-        }
-        this.prefsWidget.settings.set_string(this.file_chooser_path_key, widget.get_file().get_uri());
-    }
-});
-
-class PrefsWidget {
+class Settings {
     constructor () {
         {
             let GioSSS = Gio.SettingsSchemaSource;
@@ -60,14 +19,12 @@ class PrefsWidget {
         }
 
         this.builder = new Gtk.Builder();
-        this.builder.set_scope(new TimePpBuilderScope({prefsWidget: this}));
         this.builder.set_translation_domain('timepp');
-        this.builder.add_from_file(ME.dir.get_path() + '/data/prefs.ui');
+        this.builder.add_from_file(ME.path + '/data/prefs.ui');
 
         this.widget = this.builder.get_object('settings_widget');
         this.file_chooser = this.builder.get_object('file_chooser');
         this.switcher = new Gtk.StackSwitcher({ visible: true, stack: this.builder.get_object('settings_stack'), halign: Gtk.Align.CENTER, });
-        this.btn_file_chooser_map = {};
 
         this._bind_settings();
         this._set_headerbar();
@@ -158,7 +115,10 @@ class PrefsWidget {
         }
 
         widget = this.builder.get_object('timer-sound-button');
-        this.btn_file_chooser_map[widget.get_buildable_id()] = 'timer-sound-file-path';
+        widget.set_uri(this.settings.get_string('timer-sound-file-path'));
+        widget.connect('selection-changed', (widget) => {
+            this.settings.set_string('timer-sound-file-path', widget.get_uri());
+        });
 
         widget = this.builder.get_object('timer-notif-style-combo');
         widget.set_active(this.settings.get_enum('timer-notif-style'));
@@ -334,13 +294,22 @@ class PrefsWidget {
         }
 
         widget = this.builder.get_object('pomodoro-sound-button-pomo');
-        this.btn_file_chooser_map[widget.get_buildable_id()] = 'pomodoro-sound-file-path-pomo';
+        widget.set_uri(this.settings.get_string('pomodoro-sound-file-path-pomo'));
+        widget.connect('selection-changed', (widget) => {
+            this.settings.set_string('pomodoro-sound-file-path-pomo', widget.get_uri());
+        });
 
         widget = this.builder.get_object('pomodoro-sound-button-short-break');
-        this.btn_file_chooser_map[widget.get_buildable_id()] = 'pomodoro-sound-file-path-short-break';
+        widget.set_uri(this.settings.get_string('pomodoro-sound-file-path-short-break'));
+        widget.connect('selection-changed', (widget) => {
+            this.settings.set_string('pomodoro-sound-file-path-short-break', widget.get_uri());
+        });
 
         widget = this.builder.get_object('pomodoro-sound-button-long-break');
-        this.btn_file_chooser_map[widget.get_buildable_id()] = 'pomodoro-sound-file-path-long-break';
+        widget.set_uri(this.settings.get_string('pomodoro-sound-file-path-long-break'));
+        widget.connect('selection-changed', (widget) => {
+            this.settings.set_string('pomodoro-sound-file-path-long-break', widget.get_uri());
+        });
 
         this.settings.bind(
             'pomodoro-play-sound-pomo',
@@ -412,7 +381,10 @@ class PrefsWidget {
         }
 
         widget = this.builder.get_object('alarms-sound-button');
-        this.btn_file_chooser_map[widget.get_buildable_id()] = 'alarms-sound-file-path';
+        widget.set_uri(this.settings.get_string('alarms-sound-file-path'));
+        widget.connect('selection-changed', (widget) => {
+            this.settings.set_string('alarms-sound-file-path', widget.get_uri());
+        });
 
         widget = this.builder.get_object('alarms-notif-style-combo');
         widget.set_active(this.settings.get_enum('alarms-notif-style'));
@@ -596,18 +568,10 @@ class PrefsWidget {
             return false;
         });
     }
-
-    get_file_chooser() {
-        return this.file_chooser;
-    }
-
-    get_btn_file_chooser_map() {
-        return this.btn_file_chooser_map;
-    }
 }
 
 function buildPrefsWidget () {
-    let settings = new PrefsWidget();
+    let settings = new Settings();
     return settings.widget;
 }
 

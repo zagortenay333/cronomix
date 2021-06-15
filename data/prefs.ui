@@ -453,7 +453,6 @@
                                                 <property name="halign">center</property>
                                                 <property name="valign">center</property>
                                                 <property name="label" translatable="yes">Open</property>
-                                                <signal name="clicked" handler="on_btn_click" swapped="no"/>
                                               </object>
                                             </child>
                                           </object>
@@ -1137,7 +1136,6 @@ F3</property>
                                                 <property name="halign">center</property>
                                                 <property name="valign">center</property>
                                                 <property name="label" translatable="yes">Open</property>
-                                                <signal name="clicked" handler="on_btn_click" swapped="no"/>
                                               </object>
                                             </child>
                                           </object>
@@ -1177,7 +1175,6 @@ F3</property>
                                                 <property name="halign">center</property>
                                                 <property name="valign">center</property>
                                                 <property name="label" translatable="yes">Open</property>
-                                                <signal name="clicked" handler="on_btn_click" swapped="no"/>
                                               </object>
                                             </child>
                                           </object>
@@ -1217,7 +1214,6 @@ F3</property>
                                                 <property name="halign">center</property>
                                                 <property name="valign">center</property>
                                                 <property name="label" translatable="yes">Open</property>
-                                                <signal name="clicked" handler="on_btn_click" swapped="no"/>
                                               </object>
                                             </child>
                                           </object>
@@ -1429,7 +1425,6 @@ F3</property>
                                                 <property name="halign">center</property>
                                                 <property name="valign">center</property>
                                                 <property name="label" translatable="yes">Open</property>
-                                                <signal name="clicked" handler="on_btn_click" swapped="no"/>
                                               </object>
                                             </child>
                                           </object>
@@ -1976,10 +1971,9 @@ F3</property>
     </child>
   </object>
   <object class="GtkFileChooserNative" id="file_chooser">
-        <property name="title" translatable="yes">Choose File</property>
-        <property name="select-multiple">0</property>
-        <property name="action">open</property>
-        <property name="modal">1</property>
-        <signal name="response" handler="on_file_chooser_response" swapped="no"/>
-    </object>
+    <property name="title" translatable="yes">Choose File</property>
+    <property name="select-multiple">0</property>
+    <property name="action">open</property>
+    <property name="modal">1</property>
+  </object>
 </interface>
