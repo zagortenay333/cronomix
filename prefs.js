@@ -23,7 +23,6 @@ class Settings {
         this.builder.add_from_file(ME.path + '/data/prefs.ui');
 
         this.widget = this.builder.get_object('settings_widget');
-        this.file_chooser = this.builder.get_object('file_chooser');
         this.switcher = new Gtk.StackSwitcher({ visible: true, stack: this.builder.get_object('settings_stack'), halign: Gtk.Align.CENTER, });
 
         this._bind_settings();
@@ -115,10 +114,8 @@ class Settings {
         }
 
         widget = this.builder.get_object('timer-sound-button');
-        widget.set_uri(this.settings.get_string('timer-sound-file-path'));
-        widget.connect('selection-changed', (widget) => {
-            this.settings.set_string('timer-sound-file-path', widget.get_uri());
-        });
+        widget.connect('clicked', (widget) => this._open_file_chooser(widget, 'timer-sound-file-path'));
+        
 
         widget = this.builder.get_object('timer-notif-style-combo');
         widget.set_active(this.settings.get_enum('timer-notif-style'));
@@ -294,22 +291,13 @@ class Settings {
         }
 
         widget = this.builder.get_object('pomodoro-sound-button-pomo');
-        widget.set_uri(this.settings.get_string('pomodoro-sound-file-path-pomo'));
-        widget.connect('selection-changed', (widget) => {
-            this.settings.set_string('pomodoro-sound-file-path-pomo', widget.get_uri());
-        });
+        widget.connect('clicked', (widget) => this._open_file_chooser(widget, 'pomodoro-sound-file-path-pomo'));
 
         widget = this.builder.get_object('pomodoro-sound-button-short-break');
-        widget.set_uri(this.settings.get_string('pomodoro-sound-file-path-short-break'));
-        widget.connect('selection-changed', (widget) => {
-            this.settings.set_string('pomodoro-sound-file-path-short-break', widget.get_uri());
-        });
+        widget.connect('clicked', (widget) => this._open_file_chooser(widget, 'pomodoro-sound-file-path-short-break'));
 
         widget = this.builder.get_object('pomodoro-sound-button-long-break');
-        widget.set_uri(this.settings.get_string('pomodoro-sound-file-path-long-break'));
-        widget.connect('selection-changed', (widget) => {
-            this.settings.set_string('pomodoro-sound-file-path-long-break', widget.get_uri());
-        });
+        widget.connect('clicked', (widget) => this._open_file_chooser(widget, 'pomodoro-sound-file-path-long-break'));
 
         this.settings.bind(
             'pomodoro-play-sound-pomo',
@@ -381,10 +369,7 @@ class Settings {
         }
 
         widget = this.builder.get_object('alarms-sound-button');
-        widget.set_uri(this.settings.get_string('alarms-sound-file-path'));
-        widget.connect('selection-changed', (widget) => {
-            this.settings.set_string('alarms-sound-file-path', widget.get_uri());
-        });
+        widget.connect('clicked', (widget) => this._open_file_chooser(widget, 'alarms-sound-file-path'));
 
         widget = this.builder.get_object('alarms-notif-style-combo');
         widget.set_active(this.settings.get_enum('alarms-notif-style'));
@@ -567,6 +552,26 @@ class Settings {
             window.set_titlebar(headerBar);
             return false;
         });
+    }
+
+    _open_file_chooser(widget, settingsKey) {
+        let parent = widget.get_root();
+        let file_chooser = new Gtk.FileChooserNative({
+            title: "Choose file",
+            action: Gtk.FileChooserAction.OPEN
+        });
+
+        file_chooser.set_transient_for(parent);
+        file_chooser.set_select_multiple(false);
+        file_chooser.set_modal(true);
+        file_chooser.set_file(Gio.File.new_for_uri(this.settings.get_string(settingsKey)));
+        file_chooser.connect('response', (widget, response) => {
+            if (response !== Gtk.ResponseType.ACCEPT) {
+                return;
+            }
+            this.settings.set_string(settingsKey, widget.get_file().get_uri());
+        });
+        file_chooser.show();
     }
 }
 
