@@ -45,6 +45,7 @@
                                   <object class="GtkListBox">
                                     <child>
                                       <object class="GtkListBoxRow">
+                                        <property name="focusable">0</property>
                                         <property name="width_request">100</property>
                                         <property name="height_request">40</property>
                                         <property name="activatable">0</property>
@@ -71,6 +72,7 @@
                                     </child>
                                     <child>
                                       <object class="GtkListBoxRow">
+                                        <property name="focusable">0</property>
                                         <property name="width_request">100</property>
                                         <property name="height_request">40</property>
                                         <property name="activatable">0</property>
@@ -125,6 +127,7 @@
                                   <object class="GtkListBox">
                                     <child>
                                       <object class="GtkListBoxRow">
+                                        <property name="focusable">0</property>
                                         <property name="width_request">100</property>
                                         <property name="height_request">40</property>
                                         <property name="activatable">0</property>
@@ -151,6 +154,7 @@
                                     </child>
                                     <child>
                                       <object class="GtkListBoxRow">
+                                        <property name="focusable">0</property>
                                         <property name="width_request">100</property>
                                         <property name="height_request">40</property>
                                         <property name="activatable">0</property>
@@ -177,6 +181,7 @@
                                     </child>
                                     <child>
                                       <object class="GtkListBoxRow">
+                                        <property name="focusable">0</property>
                                         <property name="width_request">100</property>
                                         <property name="height_request">40</property>
                                         <property name="activatable">0</property>
@@ -203,6 +208,7 @@
                                     </child>
                                     <child>
                                       <object class="GtkListBoxRow">
+                                        <property name="focusable">0</property>
                                         <property name="width_request">100</property>
                                         <property name="height_request">40</property>
                                         <property name="activatable">0</property>
@@ -229,6 +235,7 @@
                                     </child>
                                     <child>
                                       <object class="GtkListBoxRow">
+                                        <property name="focusable">0</property>
                                         <property name="width_request">100</property>
                                         <property name="height_request">40</property>
                                         <property name="activatable">0</property>
@@ -299,6 +306,7 @@
                                   <object class="GtkListBox">
                                     <child>
                                       <object class="GtkListBoxRow">
+                                        <property name="focusable">0</property>
                                         <property name="width_request">100</property>
                                         <property name="height_request">40</property>
                                         <property name="activatable">0</property>
@@ -325,6 +333,7 @@
                                     </child>
                                     <child>
                                       <object class="GtkListBoxRow">
+                                        <property name="focusable">0</property>
                                         <property name="width_request">100</property>
                                         <property name="height_request">40</property>
                                         <property name="activatable">0</property>
@@ -351,6 +360,7 @@
                                     </child>
                                     <child>
                                       <object class="GtkListBoxRow">
+                                        <property name="focusable">0</property>
                                         <property name="width_request">100</property>
                                         <property name="height_request">40</property>
                                         <property name="activatable">0</property>
@@ -385,6 +395,7 @@
                                     </child>
                                     <child>
                                       <object class="GtkListBoxRow">
+                                        <property name="focusable">0</property>
                                         <property name="width_request">100</property>
                                         <property name="height_request">40</property>
                                         <property name="activatable">0</property>
@@ -421,6 +432,7 @@
                                     </child>
                                     <child>
                                       <object class="GtkListBoxRow">
+                                        <property name="focusable">0</property>
                                         <property name="width_request">100</property>
                                         <property name="height_request">40</property>
                                         <property name="activatable">0</property>
@@ -476,6 +488,7 @@
                                   <object class="GtkListBox">
                                     <child>
                                       <object class="GtkListBoxRow">
+                                        <property name="focusable">0</property>
                                         <property name="width_request">100</property>
                                         <property name="height_request">40</property>
                                         <property name="activatable">0</property>
@@ -509,6 +522,7 @@ F3</property>
                                     </child>
                                     <child>
                                       <object class="GtkListBoxRow">
+                                        <property name="focusable">0</property>
                                         <property name="width_request">100</property>
                                         <property name="height_request">40</property>
                                         <property name="activatable">0</property>
@@ -542,6 +556,7 @@ F3</property>
                                     </child>
                                     <child>
                                       <object class="GtkListBoxRow">
+                                        <property name="focusable">0</property>
                                         <property name="width_request">100</property>
                                         <property name="height_request">40</property>
                                         <property name="activatable">0</property>
@@ -619,6 +634,7 @@ F3</property>
                                   <object class="GtkListBox">
                                     <child>
                                       <object class="GtkListBoxRow">
+                                        <property name="focusable">0</property>
                                         <property name="width_request">100</property>
                                         <property name="height_request">40</property>
                                         <property name="activatable">0</property>
@@ -645,6 +661,7 @@ F3</property>
                                     </child>
                                     <child>
                                       <object class="GtkListBoxRow">
+                                        <property name="focusable">0</property>
                                         <property name="width_request">100</property>
                                         <property name="height_request">40</property>
                                         <property name="activatable">0</property>
@@ -678,6 +695,7 @@ F3</property>
                                     </child>
                                     <child>
                                       <object class="GtkListBoxRow">
+                                        <property name="focusable">0</property>
                                         <property name="width_request">100</property>
                                         <property name="height_request">40</property>
                                         <property name="activatable">0</property>
@@ -734,6 +752,7 @@ F3</property>
                                   <object class="GtkListBox">
                                     <child>
                                       <object class="GtkListBoxRow">
+                                        <property name="focusable">0</property>
                                         <property name="width_request">100</property>
                                         <property name="height_request">40</property>
                                         <property name="activatable">0</property>
@@ -767,6 +786,7 @@ F3</property>
                                     </child>
                                     <child>
                                       <object class="GtkListBoxRow">
+                                        <property name="focusable">0</property>
                                         <property name="width_request">100</property>
                                         <property name="height_request">40</property>
                                         <property name="activatable">0</property>
@@ -844,6 +864,7 @@ F3</property>
                                   <object class="GtkListBox">
                                     <child>
                                       <object class="GtkListBoxRow">
+                                        <property name="focusable">0</property>
                                         <property name="width_request">100</property>
                                         <property name="height_request">40</property>
                                         <property name="activatable">0</property>
@@ -870,6 +891,7 @@ F3</property>
                                     </child>
                                     <child>
                                       <object class="GtkListBoxRow">
+                                        <property name="focusable">0</property>
                                         <property name="width_request">100</property>
                                         <property name="height_request">40</property>
                                         <property name="activatable">0</property>
@@ -896,6 +918,7 @@ F3</property>
                                     </child>
                                     <child>
                                       <object class="GtkListBoxRow">
+                                        <property name="focusable">0</property>
                                         <property name="width_request">100</property>
                                         <property name="height_request">40</property>
                                         <property name="activatable">0</property>
@@ -930,6 +953,7 @@ F3</property>
                                     </child>
                                     <child>
                                       <object class="GtkListBoxRow">
+                                        <property name="focusable">0</property>
                                         <property name="width_request">100</property>
                                         <property name="height_request">40</property>
                                         <property name="activatable">0</property>
@@ -986,6 +1010,7 @@ F3</property>
                                   <object class="GtkListBox">
                                     <child>
                                       <object class="GtkListBoxRow">
+                                        <property name="focusable">0</property>
                                         <property name="width_request">100</property>
                                         <property name="height_request">40</property>
                                         <property name="activatable">0</property>
@@ -1013,6 +1038,7 @@ F3</property>
                                     </child>
                                     <child>
                                       <object class="GtkListBoxRow">
+                                        <property name="focusable">0</property>
                                         <property name="width_request">100</property>
                                         <property name="height_request">40</property>
                                         <property name="activatable">0</property>
@@ -1049,6 +1075,7 @@ F3</property>
                                     </child>
                                     <child>
                                       <object class="GtkListBoxRow">
+                                        <property name="focusable">0</property>
                                         <property name="width_request">100</property>
                                         <property name="height_request">40</property>
                                         <property name="activatable">0</property>
@@ -1085,6 +1112,7 @@ F3</property>
                                     </child>
                                     <child>
                                       <object class="GtkListBoxRow">
+                                        <property name="focusable">0</property>
                                         <property name="width_request">100</property>
                                         <property name="height_request">40</property>
                                         <property name="activatable">0</property>
@@ -1143,6 +1171,7 @@ F3</property>
                                   <object class="GtkListBox">
                                     <child>
                                       <object class="GtkListBoxRow">
+                                        <property name="focusable">0</property>
                                         <property name="width_request">100</property>
                                         <property name="height_request">40</property>
                                         <property name="activatable">0</property>
@@ -1176,6 +1205,7 @@ F3</property>
                                     </child>
                                     <child>
                                       <object class="GtkListBoxRow">
+                                        <property name="focusable">0</property>
                                         <property name="width_request">100</property>
                                         <property name="height_request">40</property>
                                         <property name="activatable">0</property>
@@ -1253,6 +1283,7 @@ F3</property>
                                   <object class="GtkListBox">
                                     <child>
                                       <object class="GtkListBoxRow">
+                                        <property name="focusable">0</property>
                                         <property name="width_request">100</property>
                                         <property name="height_request">40</property>
                                         <property name="activatable">0</property>
@@ -1279,6 +1310,7 @@ F3</property>
                                     </child>
                                     <child>
                                       <object class="GtkListBoxRow">
+                                        <property name="focusable">0</property>
                                         <property name="width_request">100</property>
                                         <property name="height_request">40</property>
                                         <property name="activatable">0</property>
@@ -1315,6 +1347,7 @@ F3</property>
                                     </child>
                                     <child>
                                       <object class="GtkListBoxRow">
+                                        <property name="focusable">0</property>
                                         <property name="width_request">100</property>
                                         <property name="height_request">40</property>
                                         <property name="activatable">0</property>
@@ -1370,6 +1403,7 @@ F3</property>
                                   <object class="GtkListBox">
                                     <child>
                                       <object class="GtkListBoxRow">
+                                        <property name="focusable">0</property>
                                         <property name="width_request">100</property>
                                         <property name="height_request">40</property>
                                         <property name="activatable">0</property>
@@ -1448,6 +1482,7 @@ F3</property>
                                     <property name="activate_on_single_click">0</property>
                                     <child>
                                       <object class="GtkListBoxRow">
+                                        <property name="focusable">0</property>
                                         <property name="width_request">100</property>
                                         <property name="height_request">40</property>
                                         <property name="activatable">0</property>
@@ -1474,6 +1509,7 @@ F3</property>
                                     </child>
                                     <child>
                                       <object class="GtkListBoxRow">
+                                        <property name="focusable">0</property>
                                         <property name="width_request">100</property>
                                         <property name="height_request">40</property>
                                         <property name="activatable">0</property>
@@ -1507,6 +1543,7 @@ F3</property>
                                     </child>
                                     <child>
                                       <object class="GtkListBoxRow">
+                                        <property name="focusable">0</property>
                                         <property name="width_request">100</property>
                                         <property name="height_request">40</property>
                                         <property name="activatable">0</property>
@@ -1539,6 +1576,7 @@ F3</property>
                                     </child>
                                     <child>
                                       <object class="GtkListBoxRow">
+                                        <property name="focusable">0</property>
                                         <property name="width_request">100</property>
                                         <property name="height_request">40</property>
                                         <property name="activatable">0</property>
@@ -1591,6 +1629,7 @@ F3</property>
                                     <property name="activate_on_single_click">0</property>
                                     <child>
                                       <object class="GtkListBoxRow">
+                                        <property name="focusable">0</property>
                                         <property name="width_request">100</property>
                                         <property name="height_request">40</property>
                                         <property name="activatable">0</property>
@@ -1624,6 +1663,7 @@ F3</property>
                                     </child>
                                     <child>
                                       <object class="GtkListBoxRow">
+                                        <property name="focusable">0</property>
                                         <property name="width_request">100</property>
                                         <property name="height_request">40</property>
                                         <property name="activatable">0</property>
@@ -1657,6 +1697,7 @@ F3</property>
                                     </child>
                                     <child>
                                       <object class="GtkListBoxRow">
+                                        <property name="focusable">0</property>
                                         <property name="width_request">100</property>
                                         <property name="height_request">40</property>
                                         <property name="activatable">0</property>
@@ -1690,12 +1731,14 @@ F3</property>
                                     </child>
                                     <child>
                                       <object class="GtkListBoxRow">
+                                        <property name="focusable">0</property>
                                         <property name="width_request">100</property>
                                         <property name="height_request">40</property>
                                         <property name="activatable">0</property>
                                         <property name="selectable">0</property>
                                         <property name="child">
                                           <object class="GtkListBoxRow">
+                                        <property name="focusable">0</property>
                                             <property name="width_request">100</property>
                                             <property name="height_request">40</property>
                                             <property name="activatable">0</property>
@@ -1731,6 +1774,7 @@ F3</property>
                                     </child>
                                     <child>
                                       <object class="GtkListBoxRow">
+                                        <property name="focusable">0</property>
                                         <property name="width_request">100</property>
                                         <property name="height_request">40</property>
                                         <property name="activatable">0</property>
@@ -1764,6 +1808,7 @@ F3</property>
                                     </child>
                                     <child>
                                       <object class="GtkListBoxRow">
+                                        <property name="focusable">0</property>
                                         <property name="width_request">100</property>
                                         <property name="height_request">40</property>
                                         <property name="activatable">0</property>
