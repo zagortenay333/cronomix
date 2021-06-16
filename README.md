@@ -14,7 +14,7 @@ time tracker, timer, stopwatch, pomodoro, and alarms [gnome-shell extension](htt
 ### Installation
 
 1. Download the extension:
-   * [The latest version](https://github.com/zagortenay333/timepp__gnome/archive/master.zip) supports gnome-shell `3.36` and `3.38` (`master-branch`).
+   * [The latest version](https://github.com/zagortenay333/timepp__gnome/archive/master.zip) supports gnome-shell `40` (`master-branch`).
    * For older versions go to [releases](../../releases).
 2. Extract and rename the downloaded folder to `timepp@zagortenay333` and move it into  
    `/home/YOUR_USER_NAME/.local/share/gnome-shell/extensions/`.
