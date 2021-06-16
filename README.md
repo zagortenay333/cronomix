@@ -1,70 +1,87 @@
-<div align="center">
+# Time ++
 
-### Time ++
+**A [todo.txt manager](https://github.com/todotxt/todotxt/), time tracker, timer, stopwatch, pomodoro, and alarms [gnome-shell extension](https://extensions.gnome.org/about/).**
 
-<img vspace="70" src="data/img/logo.png"></img>
+![preview](./data/img/preview.png)
 
-**A [todo.txt manager](https://github.com/todotxt/todotxt/),
-time tracker, timer, stopwatch, pomodoro, and alarms [gnome-shell extension](https://extensions.gnome.org/about/).**
+## Warning
 
-</div>
+1. This extension is in low maintenance mode. *Don't make feature requests*.
+2. Mild to severe operating system instability can be caused in case of a bug.
+3. Alarms, timers, and similar will not work when the screen is locked because all extensions are disabled then.
 
----
-
-### Installation
+Installation
+------------
 
 1. Download the extension:
-   * [The latest version](https://github.com/zagortenay333/timepp__gnome/archive/master.zip) supports gnome-shell `40` (`master-branch`).
-   * For older versions go to [releases](../../releases).
-2. Extract and rename the downloaded folder to `timepp@zagortenay333` and move it into  
-   `/home/YOUR_USER_NAME/.local/share/gnome-shell/extensions/`.
-3. Restart your desktop shell by typing <kbd>Alt</kbd>+<kbd>F2</kbd>, then <kbd>r</kbd>, then <kbd>Enter</kbd>.
-4. Enable the extension via the `gnome tweak tool` program.
+   * [The latest version](https://github.com/zagortenay333/timepp__gnome/archive/master.zip) supports gnome-shell version `40`.
+   * For older versions see [releases](../../releases).
+2. Extract and rename the downloaded folder to `timepp@zagortenay333` and move it into `/home/YOUR_USER_NAME/.local/share/gnome-shell/extensions/`.
+3. Log in and out or restart gnome shell by typing `Alt F2`, then `r`, then `Enter`.
+4. Enable the extension via the gnome extensions app.
 
----
+Sections
+--------
 
-### Warnings :bangbang:
+This is a modular extension consisting of several sections: timer, stopwatch, alarms, etc.
 
-1. This extension is in very low-maintenance mode (don't make feature requests).
-2. In case of a bug, this extension can freeze your OS, which could require significant effort on your part to solve.
-3. All gnome-shell extensions get disabled in the lock screen. Alarms, timers, etc will not work.
+The sections can be individually disabled if you don't use them.
 
----
+Each section can open as a separate menu when it's icon is clicked, or it can appear together with other sections in one menu.
 
-### Translations
+Right-clicking on the panel icons will open a context section with some useful links.
 
-If you want to help out with translations, check out the instructions in the
-[po_files](data/po_files) dir.
+Fullscreen
+----------
 
----
+This extension has a fullscreen interface, which can be used to control a corresponding section as well as replace regular notifications.
 
-### Sections
+The interface has multi-monitor support, and it can be opened via a keyboard shortcut.
 
-This is a modular extension consisting of several sections (timer, stopwatch, alarms..)
+Text Markup
+-----------
 
-Each section can open as a separate menu when it's icon is clicked, or it
-can appear together with other sections in one menu.
+Simple text markup is available in places like todo.txt tasks, timer messages, etc...
 
-Individual sections can be disabled if you don't need them.
+* Parts of text can be highlighted:
+  ```
+  `     escape other markdown
+  ``    monospace and escape other markdown
+  *     bold
+  **    italic
+  ***   bold with a red bg
+  __    italic
+  ___   underscore
+  ~~    strikethrough
+  #     xx-large
+  ##    x-large
+  ###   large
 
-Right-clicking on the panel icons will open a context section with
-some useful links.
+  For example, *bold*, and ##extra large##, and ``monospaced``, and
+  ***this __one__ is nested***, etc...
+  ```
 
----
+* File paths and web links in various forms are highlighted (and can be clicked):
+  ```
+  https://www.google.com
+  www.google.com
+  /home/user/Documents
+  ~/Documents
+  ~/Documents/img.png
+  ~/Documents/file\ with\ spaces.png
+  ```
 
-### Fullscreen Interface
+* There is multiline support in todo.txt tasks with the use of `\n`:
+  ```
+  Line 1.\nLine 2.\nLine 3.
+  ```
+  
+Todo.txt
+--------
 
-This extension has a fullscreen interface, which can be used to control a
-corresponding section as well as replace regular notifications.
+The todo.txt format is specified here: https://github.com/todotxt/todo.txt
 
-The interface has multi-monitor support, and it can be opened _(and brought into
-focus)_ via a keyboard shortcut.
-
----
-
-### Todo.txt Manager
-
-Some of the features of the todo.txt manager are:
+Some of the features of the todo.txt section are:
 
 * Kanban boards.
 * Fuzzy task searching.
@@ -73,63 +90,15 @@ Some of the features of the todo.txt manager are:
 * Support for multiple todo files and corresponding done files and csv dirs.
 * Compound sorting by priority, due date, completion date, creation date, etc...
 * Fuzzy autocompletion for contexts and projects when inline editing a task.
-* Autoupdating when the todo.txt file changes.
+* Auto-updating when the todo.txt file changes.
 * Deleting all completed tasks and optionally storing them into a done.txt file.
 * Switching between different views via keyboard shortcuts.
 * Browse your todo time tracker data in a fullscreen view.
 
----
+Todo.txt Extensions
+-------------------
 
-### Todo.txt Syntax
-
-* The todo.txt format is specified here: https://github.com/todotxt/todo.txt
-
-* In various places throughout this extension (todo.txt, alarms, timer) there is
-support for a simple markup language:
-
-    * Simple text formatting:
-        ```
-        `     escape other markdown
-        ``    monospace and escape other markdown
-
-        *     bold
-        **    italic
-        ***   bold with a red bg
-
-        __    italic
-        ___   underscore
-
-        ~~    strikethrough
-
-        #     xx-large
-        ##    x-large
-        ###   large
-
-        For example, *bold*, and ##extra large##, and ``monospaced``, and
-        ***this __one__ is nested***, etc...
-        ```
-
-    * File paths and web links:
-        ```
-        https://www.google.com
-        www.google.com
-
-        /home/user/Documents
-        ~/Documents
-        ~/Documents/img.png
-        ~/Documents/file\ with\ spaces.png
-        ```
-
-    * Multiple lines can be used by adding `\n` to represent a newline:
-        ```
-        (A) A task with\nmultiline\n@support \n +asdf
-        ```
----
-
-### Todo.txt Extensions
-
-A todo.txt extension is just a `key:val` string you type into your todo.txt
-file.
+A todo.txt extension is just a `key:val` string you type into your todo.txt file.
 
 The following extensions are supported:
 
@@ -171,17 +140,13 @@ The following extensions are supported:
     <tr>
         <td valign="top"><code>tracker_id:string</code></td>
         <td>
-            Used to identify a task when starting/stopping
-            the time-tracker via the dbus cli or using pomodoro.<br>
-            Multiple tasks can have the same tracker_id.
+            Used to identify a task when starting/stopping the time-tracker via the dbus cli or using pomodoro.<br>Multiple tasks can have the same tracker_id.
         </td>
     </tr>
     <tr>
         <td valign="top"><code>pin:1</code></td>
         <td>
-            Pins a task. A task that is pinned is always visible no matter what
-            filters are on. Also, one can sort pinned tasks (for example, always
-            on top.)
+            Pins a task. A task that is pinned is always visible no matter what filters are on. Also, one can sort pinned tasks (for example, always on top.)
         </td>
     </tr>
     <tr>
@@ -193,10 +158,9 @@ The following extensions are supported:
     <tr>
         <td valign="top"><code>h:1</code></td>
         <td>
-            <b>This extension disables all other extensions except the <code>kan</code> extension.</b><br><br>
+            <b>This extension disables all other extensions except the <code>kan</code> extension.</b><br>
             Hides a task.<br>
-            Among other things, can be used to populate the todo manager<br>
-            with context/project keywords for autocompletion.<br>
+            Among other things, this can be used to populate the todo manager with context/project keywords for autocompletion.
         </td>
     </tr>
     <tr>
@@ -218,84 +182,52 @@ The following extensions are supported:
             Used to automatically reopen a task after a given amount of
 time.<br><br>
             <i>Each time a task recurs, it's creation date is updated.<br>
-            If a task is already open on the date of the recursion, it's
-creation date will be updated anyway.</i><br><br>
+            If a task is already open on the date of the recursion, it's creation date will be updated anyway.</i><br><br>
             The <i>recurrence_string</i> can be in one of 3 diff forms:<br>
-            <i>&nbsp;&nbsp&nbsp;&nbsp;(n=natural number, d=days, w=weeks,
-m=months)</i><br><br>
+            <i>&nbsp;&nbsp&nbsp;&nbsp;(n=natural number, d=days, w=weeks, m=months)</i><br><br>
             <ol>
             <li>
             <code>rec:n(d|w)</code><br>
-                This means that the task will recur n days/weeks after the
-creation date.<br>
+                This means that the task will recur n days/weeks after the creation date.<br>
                 <i>- This rec type requires a creation date.</i><br>
                 Examples:<br>
                 <ul>
                 <li>
-                <code>x 2000-01-01 2000-01-01 rec:12d</code> means that the task
-will reopen<br>
-every 12 days starting from <code>2000-01-01</code>. After 12 days it will
-look like<br>
-                <code>2000-01-13 rec:12d</code>, and 12 days after that it will
-look like<br>
+                <code>x 2000-01-01 2000-01-01 rec:12d</code> means that the task will reopen<br>every 12 days starting from <code>2000-01-01</code>. After 12 days it will look like<br>
+                <code>2000-01-13 rec:12d</code>, and 12 days after that it will look like<br>
                 <code>2000-01-25 rec:12d</code>, and so on...
                 </li>
                 </ul>
             </li><br>
             <li>
                 <code>rec:x-n(d|w)</code><br>
-                This means that the task will recur n days/weeks after the
-completion date.<br>
-                <i>- This rec type requires a completion date if the task is
-complete.</i><br>
+                This means that the task will recur n days/weeks after the completion date.<br>
+                <i>- This rec type requires a completion date if the task is complete.</i><br>
                 Examples:<br>
                 <ul>
-                <li><code>x 2000-01-01 rec:x-12d</code> recurs 12 days after
-<code>2000-01-01</code>.</li>
-                <li><code>(A) rec:x-3w</code> recurs 3 weeks after completion
-date.</li>
+                <li><code>x 2000-01-01 rec:x-12d</code> recurs 12 days after <code>2000-01-01</code>.</li>
+                <li><code>(A) rec:x-3w</code> recurs 3 weeks after completion date.</li>
                 </ul>
             </li><br>
             <li>
                 <code>rec:nd-nm</code><br>
-                This means that the task will recur on the n-th day of every
-n-th month starting<br>
+                This means that the task will recur on the n-th day of every n-th month starting<br>
                 from the month of creation.<br>
                 <i>- This rec type requires a creation date.</i><br>
-                <i>- 'Month of creation' here refers to the month written into
-the todo.txt file.<br>
-                - If a month doesn't have the particular n-th day, the last day
-of
-that month will be used instead.</i><br>
+                <i>- 'Month of creation' here refers to the month written into the todo.txt file.<br>
+                - If a month doesn't have the particular n-th day, the last day of that month will be used instead.</i><br>
                 Examples:<br>
                 <ul>
-                <li><code>(A) 2000-01-01 rec:12d-1m</code> recurs on the 12th
-day of each
-month.</li>
-                <li><code>(A) 2000-01-01 rec:1d-1m</code> recurs on the first
-day of each
-month.</li>
-                <li><code>(A) 2000-01-01 rec:31d-1m</code> recurs on the last
-day of each
-month.</li>
-                <li><code>(A) 2000-01-01 rec:64d-1m</code> also recurs on the
-last day of each
-month.</li>
-                <li><code>(A) 2000-01-01 rec:29d-1m</code> recurs on the 29th
-day of each
-month, and in<br>
-                the case of February, on the 28th if it doesn't have 29
-days.</li>
-                <li><code>(A) 2000-02-02 rec:12d-2m</code> recurs on the 12th
-day every 2 months starting from February.<br>
-                If the actual current date is <code>2000-02-08</code>, the task
-recurs on <code>2000-02-12</code>.<br>
-                If the actual current date is <code>2000-02-16</code>, the task
-recurs on <code>2000-04-12</code>.<br>
-                <li><code>(A) 2000-01-01 rec:1d-12m</code> recurs on the first
-day of every year.</li>
-                <li><code>(A) 2000-02-01 rec:29d-24m</code> recurs on the last
-day of February every 2 years starting from 2000.</li>
+                <li><code>(A) 2000-01-01 rec:12d-1m</code> recurs on the 12th day of each month.</li>
+                <li><code>(A) 2000-01-01 rec:1d-1m</code> recurs on the first day of each month.</li>
+                <li><code>(A) 2000-01-01 rec:31d-1m</code> recurs on the last day of each month.</li>
+                <li><code>(A) 2000-01-01 rec:64d-1m</code> also recurs on the last day of each month.</li>
+                <li><code>(A) 2000-01-01 rec:29d-1m</code> recurs on the 29th day of each month, and in<br>the case of February, on the 28th if it doesn't have 29 days.</li>
+                <li><code>(A) 2000-02-02 rec:12d-2m</code> recurs on the 12th day every 2 months starting from February.<br>
+                If the actual current date is <code>2000-02-08</code>, the task recurs on <code>2000-02-12</code>.<br>
+                If the actual current date is <code>2000-02-16</code>, the task recurs on <code>2000-04-12</code>.<br>
+                <li><code>(A) 2000-01-01 rec:1d-12m</code> recurs on the first day of every year.</li>
+                <li><code>(A) 2000-02-01 rec:29d-24m</code> recurs on the last day of February every 2 years starting from 2000.</li>
                 </ul>
             </li>
             </ol>
@@ -303,31 +235,17 @@ day of February every 2 years starting from 2000.</li>
     </tr>
 </table>
 
----
+Time Tracker
+------------
 
-### Time Tracker
+You can start time tracking by pressing the play button on a todo card. When you do that, the task as well as all projects in that task will be tracked.
 
-You can start time tracking by pressing the play button on a todo card. When you do that,
-the task as well as all projects in that task will be tracked.
+Time tracking data is stored in csv files. The directory structure of the tracker and the csv specification can be found [here](data/tracker_spec.md).
 
-Time tracking data is stored in csv files. The directory structure of the tracker and the
-csv specification can be found [here](data/tracker_spec.md).
+When a task that has been tracked is edited, only the corresponding entry in the daily csv file will be updated; the yearly csv file will not be changed.
 
-When a task that has been tracked is edited, only the corresponding entry
-in the daily csv file will be updated; the yearly csv file will not be changed.
-
----
-
-### DBus API
-
-There is a pretty comprehensive dbus api. Check out the [dbus dir](dbus) for info on
-what you can do.
-
-There are also some example scripts that might come in handy. :smile:
-
----
-
-### Keyboard Shortcuts
+Keyboard Shortcuts
+------------------
 
 <table>
     <th align="left" colspan="2">Any fullscreen view</th>
@@ -459,10 +377,14 @@ There are also some example scripts that might come in handy. :smile:
     </tr>
 </table>
 
----
+DBus API
+--------
 
-### Preview
+There is a pretty comprehensive dbus api. Check out the [dbus dir](dbus) for info on what you can do.
 
-<b><sub> [Gnome-Shell theme](https://github.com/zagortenay333/ciliora-tertia-shell), [Wallpaper](https://i.imgur.com/raHVKVk.jpg)</sub></b>
+There are also some example scripts that might come in handy. :smile:
 
-![preview](./data/img/preview.png)
+Translations
+------------
+
+If you want to help out with translations, check out the instructions in the [po_files](data/po_files) dir.
