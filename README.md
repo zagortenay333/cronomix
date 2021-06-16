@@ -380,9 +380,9 @@ Keyboard Shortcuts
 DBus API
 --------
 
-There is a pretty comprehensive dbus api. Check out the [dbus dir](dbus) for info on what you can do.
+There is a decent dbus api. Check out the [dbus dir](dbus) for info on what you can do.
 
-There are also some example scripts that might come in handy. :smile:
+There are also some example scripts that might come in handy.
 
 Translations
 ------------
