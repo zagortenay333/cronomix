@@ -255,7 +255,7 @@ var TimeTracker = class TimeTracker {
             }
 
             append_stream.write_all(contents, null);
-            this.daily_csv_file.replace_contents('', null, false, Gio.FileCreateFlags.REPLACE_DESTINATION, null);
+            this.daily_csv_file.replace_contents('\n', null, false, Gio.FileCreateFlags.REPLACE_DESTINATION, null);
         } catch (e) { logError(e); }
 
         this._enable_file_monitors();
