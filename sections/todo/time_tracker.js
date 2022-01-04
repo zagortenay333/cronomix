@@ -231,7 +231,8 @@ var TimeTracker = class TimeTracker {
         this._disable_file_monitors();
 
         try {
-            this.daily_csv_file.replace_contents(projects + tasks, null, false, Gio.FileCreateFlags.REPLACE_DESTINATION, null);
+            let content = (projects + tasks) || '\n';
+            this.daily_csv_file.replace_contents(content, null, false, Gio.FileCreateFlags.REPLACE_DESTINATION, null);
         } catch (e) { logError(e); }
 
         this._enable_file_monitors();

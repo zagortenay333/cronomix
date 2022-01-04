@@ -301,7 +301,7 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
         let content = '';
         for (let it of this.tasks) content += it.task_str + '\n';
 
-        this.todo_txt_file.replace_contents(content, null, false,
+        this.todo_txt_file.replace_contents(content || '\n', null, false,
             Gio.FileCreateFlags.REPLACE_DESTINATION, null);
 
         this._enable_todo_file_monitor();
