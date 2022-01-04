@@ -321,16 +321,22 @@ var TimeTracker = class TimeTracker {
         if (this.daily_csv_file_monitor && this.daily_csv_file_monitor_id) {
             this.daily_csv_file_monitor.disconnect(this.daily_csv_file_monitor_id);
             this.daily_csv_file_monitor_id = 0;
+            this.daily_csv_file_monitor.cancel();
+            this.daily_csv_file_monitor = null;
         }
 
         if (this.yearly_csv_file_monitor && this.yearly_csv_file_monitor_id) {
             this.yearly_csv_file_monitor.disconnect(this.yearly_csv_file_monitor_id);
             this.yearly_csv_file_monitor_id = 0;
+            this.yearly_csv_file_monitor.cancel();
+            this.yearly_csv_file_monitor = null;
         }
 
         if (this.yearly_csv_dir_monitor && this.yearly_csv_dir_monitor_id) {
             this.yearly_csv_dir_monitor.disconnect(this.yearly_csv_dir_monitor_id);
             this.yearly_csv_dir_monitor_id = 0;
+            this.yearly_csv_dir_monitor.cancel();
+            this.yearly_csv_dir_monitor = null;
         }
     }
 
@@ -793,20 +799,7 @@ var TimeTracker = class TimeTracker {
             this.enable_file_monitors_timeout_id = 0;
         }
 
-        if (this.daily_csv_file_monitor) {
-            this.daily_csv_file_monitor.cancel();
-            this.daily_csv_file_monitor = null;
-        }
-
-        if (this.yearly_csv_file_monitor) {
-            this.yearly_csv_file_monitor.cancel();
-            this.yearly_csv_file_monitor = null;
-        }
-
-        if (this.yearly_csv_dir_monitor) {
-            this.yearly_csv_dir_monitor.cancel();
-            this.yearly_csv_dir_monitor = null;
-        }
+        this._disable_file_monitors();
 
         if (this.new_day_sig_id) this.delegate.disconnect(this.new_day_sig_id);
         if (this.todo_current_sig_id) this.delegate.settings.disconnect(this.todo_current_sig_id);
