@@ -8,7 +8,7 @@
     "translations_url" : "https://github.com/zagortenay333/timepp__gnome/tree/master/data/po_files",
     "gettext-domain"   : "timepp",
     "version"          : -1,
-    "shell-version"    : ["40", "41"],
+    "shell-version"    : ["40", "41", "42"],
     "cache-file-format-version" : {
         "timer"     : 3,
         "stopwatch" : 4,
