@@ -12,6 +12,9 @@
     <property name="height_request">500</property>
     <property name="orientation">vertical</property>
     <child>
+      <object class="GtkHeaderBar" id="header_bar"/>
+    </child>
+    <child>
       <object class="GtkStack" id="settings_stack">
         <property name="vexpand">1</property>
         <property name="transition_type">slide-left-right</property>
