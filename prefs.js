@@ -546,11 +546,8 @@ class Settings {
     _set_headerbar() {
             this.widget.connect('realize', () => {
             let window = this.widget.get_root();
-            //let headerBar = new Gtk.HeaderBar();
             let headerBar = this.builder.get_object('header_bar');
             headerBar.set_title_widget(this.switcher);
-            //window.set_title("testing");
-            //window.set_titlebar(headerBar);
             return false;
         });
     }
