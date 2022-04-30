@@ -165,8 +165,9 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
         this.start_pause_icon = new St.Icon({ visible: false, reactive: true, can_focus: true, track_hover: true, gicon : MISC_UTILS.get_icon('timepp-pause-symbolic'), style_class: 'pause-icon' });
         this.icon_box.add_actor(this.start_pause_icon);
 
-        this.fullscreen_icon = new St.Icon({ reactive: true, can_focus: true, track_hover: true, gicon : MISC_UTILS.get_icon('timepp-fullscreen-symbolic'), style_class: 'fullscreen-icon' });
-        this.icon_box.add_actor(this.fullscreen_icon);
+        // LANDEGT: REMOVING FULLSCREEN ICON BECAUSE OF BUGS
+        // this.fullscreen_icon = new St.Icon({ reactive: true, can_focus: true, track_hover: true, gicon : MISC_UTILS.get_icon('timepp-fullscreen-symbolic'), style_class: 'fullscreen-icon' });
+        // this.icon_box.add_actor(this.fullscreen_icon);
 
         this.settings_icon = new St.Icon({ reactive: true, can_focus: true, track_hover: true, gicon : MISC_UTILS.get_icon('timepp-settings-symbolic'), style_class: 'settings-icon' });
         this.icon_box.add(this.settings_icon);
@@ -199,7 +200,8 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
         this.sigm.connect(this.settings, 'changed::timer-panel-mode', () => this._toggle_panel_item_mode());
         this.sigm.connect(this.panel_item, 'middle-click', () => this.toggle_timer());
         this.sigm.connect_release(this.start_pause_icon, Clutter.BUTTON_PRIMARY, true, () => this.toggle_timer());
-        this.sigm.connect_release(this.fullscreen_icon, Clutter.BUTTON_PRIMARY, true, () => this.show_fullscreen());
+        // LANDEGT: REMOVING FULLSCREEN ICON BECAUSE OF BUGS
+        // this.sigm.connect_release(this.fullscreen_icon, Clutter.BUTTON_PRIMARY, true, () => this.show_fullscreen());
         this.sigm.connect_release(this.settings_icon, Clutter.BUTTON_PRIMARY, true, () => this._show_presets());
         this.sigm.connect(this.slider, 'notify::value', () => this.slider_changed(this.slider.value));
         this.sigm.connect(this.slider, 'drag-end', () => this.slider_released());

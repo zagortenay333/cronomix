@@ -157,8 +157,9 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
         this.icon_box = new St.BoxLayout({ y_align: Clutter.ActorAlign.CENTER, x_align: Clutter.ActorAlign.END, style_class: 'icon-box' });
         this.header.add_actor(this.icon_box);
 
-        this.fullscreen_icon = new St.Icon({ reactive: true, can_focus: true, track_hover: true, gicon : MISC_UTILS.get_icon('timepp-fullscreen-symbolic'), style_class: 'fullscreen-icon' });
-        this.icon_box.add_actor(this.fullscreen_icon);
+        // LANDEGT: REMOVING FULLSCREEN ICON BECAUSE OF BUGS
+        // this.fullscreen_icon = new St.Icon({ reactive: true, can_focus: true, track_hover: true, gicon : MISC_UTILS.get_icon('timepp-fullscreen-symbolic'), style_class: 'fullscreen-icon' });
+        // this.icon_box.add_actor(this.fullscreen_icon);
 
         this.settings_icon = new St.Icon({ reactive: true, can_focus: true, track_hover: true, gicon : MISC_UTILS.get_icon('timepp-settings-symbolic'), style_class: 'settings-icon' });
         this.icon_box.add_actor(this.settings_icon);
@@ -199,7 +200,8 @@ var SectionMain = class SectionMain extends ME.imports.sections.section_base.Sec
         this.sigm.connect(this.settings, 'changed::pomodoro-panel-mode', () => this._toggle_panel_mode());
         this.sigm.connect(this.panel_item, 'middle-click', () => this.timer_toggle());
         this.sigm.connect_release(this.settings_icon, Clutter.BUTTON_PRIMARY, true, () => this._show_settings());
-        this.sigm.connect_release(this.fullscreen_icon, Clutter.BUTTON_PRIMARY, true, () => this.show_fullscreen());
+        // LANDEGT: REMOVING ACTION FROM FULLSCREEN ICON
+        // this.sigm.connect_release(this.fullscreen_icon, Clutter.BUTTON_PRIMARY, true, () => this.show_fullscreen());
         this.sigm.connect_release(this.button_continue, Clutter.BUTTON_PRIMARY, true, () => this.start_pomo());
         this.sigm.connect_release(this.button_stop, Clutter.BUTTON_PRIMARY, true, () => this.stop());
         this.sigm.connect_release(this.button_new_pomo, Clutter.BUTTON_PRIMARY, true, () => this.start_new_pomo());

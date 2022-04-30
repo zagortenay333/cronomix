@@ -114,7 +114,7 @@ class Settings {
 
         widget = this.builder.get_object('timer-sound-button');
         widget.connect('clicked', (widget) => this._open_file_chooser(widget, 'timer-sound-file-path'));
-        
+
 
         widget = this.builder.get_object('timer-notif-style-combo');
         widget.set_active(this.settings.get_enum('timer-notif-style'));
@@ -544,11 +544,12 @@ class Settings {
     }
 
     _set_headerbar() {
-        this.widget.connect('realize', () => {
+            this.widget.connect('realize', () => {
             let window = this.widget.get_root();
             let headerBar = new Gtk.HeaderBar();
             headerBar.set_title_widget(this.switcher);
-            window.set_titlebar(headerBar);
+            window.set_title("testing");
+            //window.set_titlebar(headerBar);
             return false;
         });
     }
