@@ -25,7 +25,6 @@ class Settings {
         this.switcher = new Gtk.StackSwitcher({ visible: true, stack: this.builder.get_object('settings_stack'), halign: Gtk.Align.CENTER, });
 
         this._bind_settings();
-        this._set_headerbar();
     }
 
     // Bind the gtk window to the schema settings
@@ -114,7 +113,7 @@ class Settings {
 
         widget = this.builder.get_object('timer-sound-button');
         widget.connect('clicked', (widget) => this._open_file_chooser(widget, 'timer-sound-file-path'));
-        
+
 
         widget = this.builder.get_object('timer-notif-style-combo');
         widget.set_active(this.settings.get_enum('timer-notif-style'));
@@ -540,16 +539,6 @@ class Settings {
                     entry["secondary-icon-name"] = "";
                 this.settings.set_strv('todo-keybinding-open-todotxt-file', ['']);
             }
-        });
-    }
-
-    _set_headerbar() {
-        this.widget.connect('realize', () => {
-            let window = this.widget.get_root();
-            let headerBar = new Gtk.HeaderBar();
-            headerBar.set_title_widget(this.switcher);
-            window.set_titlebar(headerBar);
-            return false;
         });
     }
 
