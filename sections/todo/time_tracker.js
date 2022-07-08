@@ -276,18 +276,18 @@ var TimeTracker = class TimeTracker {
     // Returns bool (true = we archived the yearly file)
     _archive_yearly_csv_file () {
         if (! this.csv_dir) return;
-
+        
         let d = new Date();
         let prev_f = `${this.csv_dir}/${d.getFullYear() - 1}__time_tracker.csv`;
 
+        this._disable_file_monitors();
         if (GLib.file_test(prev_f, GLib.FileTest.EXISTS)) {
-            this._disable_file_monitors();
             let dir = `${this.csv_dir}/YEARS__time_tracker`;
             Util.spawnCommandLine(`mv ${prev_f} ${dir}`);
             this._enable_file_monitors();
             return true;
         }
-
+        this._enable_file_monitors();
         return false;
     }
 
