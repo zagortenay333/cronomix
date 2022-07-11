@@ -14,7 +14,7 @@ Installation
 ------------
 
 1. Download the extension:
-   * [The latest version](https://github.com/zagortenay333/timepp__gnome/archive/master.zip) supports gnome-shell version `40`.
+   * [The latest version](https://github.com/zagortenay333/timepp__gnome/archive/master.zip) supports gnome-shell version `42`.
    * For older versions see [releases](../../releases).
 2. Extract and rename the downloaded folder to `timepp@zagortenay333` and move it into `/home/YOUR_USER_NAME/.local/share/gnome-shell/extensions/`.
 3. Log in and out or restart gnome shell by typing `Alt F2`, then `r`, then `Enter`.
