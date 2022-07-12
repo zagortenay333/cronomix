@@ -15,7 +15,7 @@ Installation
 
 1. Download the extension:
    * [The latest version](https://github.com/zagortenay333/timepp__gnome/archive/master.zip) supports gnome-shell version `42`.
-   * For older versions see [releases](../../releases).
+   * For older versions go [here](../../tags).
 2. Extract and rename the downloaded folder to `timepp@zagortenay333` and move it into `/home/YOUR_USER_NAME/.local/share/gnome-shell/extensions/`.
 3. Log in and out or restart gnome shell by typing `Alt F2`, then `r`, then `Enter`.
 4. Enable the extension via the gnome extensions app.
@@ -75,7 +75,7 @@ Simple text markup is available in places like todo.txt tasks, timer messages, e
   ```
   Line 1.\nLine 2.\nLine 3.
   ```
-  
+
 Todo.txt
 --------
 
