@@ -2,6 +2,8 @@
 
 **A [todo.txt manager](https://github.com/todotxt/todotxt/), time tracker, timer, stopwatch, pomodoro, and alarms [gnome-shell extension](https://extensions.gnome.org/about/).**
 
+[<img src="https://raw.githubusercontent.com/andyholmes/gnome-shell-extensions-badge/master/get-it-on-ego.svg?sanitize=true" alt="Get it on GNOME Extensions" height="100" align="middle">][gextension]
+
 ![preview](./data/img/preview.png)
 
 ## Warning
@@ -388,3 +390,6 @@ Translations
 ------------
 
 If you want to help out with translations, check out the instructions in the [po_files](data/po_files) dir.
+
+
+[gextension]: https://extensions.gnome.org/extension/1238/time/
