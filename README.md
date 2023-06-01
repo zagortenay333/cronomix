@@ -10,7 +10,7 @@
 - The latest version supports gnome-shell 42, 43, 44.
 - The extension can be installed from the [gnome website](https://extensions.gnome.org/extension/1238/time/).
 - The latest version can also be installed manually:
-    - [Download the extension](https://github.com/zagortenay333/cronomix/data/cronomix@zagortenay333).
+    - [Download the extension](https://github.com/zagortenay333/cronomix/tree/master/data/cronomix@zagortenay333.zip).
     - Extract into `~/.local/share/gnome-shell/extensions/`.
     - Restart gnome-shell by logging out/in.
     - Enable the extension via an extensions app.
