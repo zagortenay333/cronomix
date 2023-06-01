@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-01 12:57+0200\n"
+"POT-Creation-Date: 2023-06-01 13:46+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,66 +17,133 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-msgid ""
-"Tasks are sorted by the first attribute in this list.\n"
-"In case of a tie, by the second attribute, and so on..."
+msgid "Panel position"
+msgstr ""
+
+msgid "Notification sound"
+msgstr ""
+
+msgid "Open"
+msgstr ""
+
+msgid "Add Alarm"
+msgstr ""
+
+msgid "Time"
+msgstr ""
+
+msgid "Snooze n minutes"
 msgstr ""
 
 msgid "Ok"
 msgstr ""
 
-msgid "Ascending"
+msgid "Cancel"
 msgstr ""
 
-msgid "Descending"
+msgid "Alarm"
 msgstr ""
 
-msgid "Time Tracker"
+msgid "Snooze"
 msgstr ""
 
-msgid "Select time tracker file"
+msgid "Dismiss"
 msgstr ""
 
-msgid "Close"
+msgid "Left"
 msgstr ""
 
-msgid "Currently Tracking"
+msgid "Center"
 msgstr ""
 
-msgid "Stop"
+msgid "Right"
 msgstr ""
 
-msgid "Search Data"
+msgid "Settings"
 msgstr ""
 
-msgid "Filter expression"
+msgid "Website"
 msgstr ""
 
-msgid "Date (e.g., 2000-01-01)"
+msgid "Pomodoro"
 msgstr ""
 
-msgid "Since"
+msgid "Long Break"
 msgstr ""
 
-msgid "Until"
+msgid "Short Break"
+msgstr ""
+
+msgid "Show time in panel"
+msgstr ""
+
+msgid "Clock size (set to 0 for default size)"
+msgstr ""
+
+msgid "Show presets"
+msgstr ""
+
+msgid "Phase"
+msgstr ""
+
+msgid "Completed pomodoros"
+msgstr ""
+
+msgid "Pomodoros until long break"
+msgstr ""
+
+msgid "Start"
+msgstr ""
+
+msgid "Pause"
+msgstr ""
+
+msgid "Add Preset"
+msgstr ""
+
+msgid "Pomodoro length"
+msgstr ""
+
+msgid "Short break length"
+msgstr ""
+
+msgid "Long break length"
+msgstr ""
+
+msgid "Long break every n pomodoros"
+msgstr ""
+
+msgid "Resume"
+msgstr ""
+
+msgid "Reset"
+msgstr ""
+
+msgid "Lap"
 msgstr ""
 
 msgid "Copy"
 msgstr ""
 
-msgid "Totals"
+msgid "Lap Time"
 msgstr ""
 
-msgid "Search results copied to clipboard!"
+msgid "Overall Time"
 msgstr ""
 
-msgid "All Time"
+msgid "Lap Times"
 msgstr ""
 
-msgid "Per Slot Totals"
+msgid "Laps table copied to clipboard!"
 msgstr ""
 
-msgid "Task text copied to clipboard!"
+msgid "Invalid time selected."
+msgstr ""
+
+msgid "Timer Elapsed!"
+msgstr ""
+
+msgid "Restart"
 msgstr ""
 
 msgid "Add Task"
@@ -104,12 +171,6 @@ msgid "Title"
 msgstr ""
 
 msgid "Comma separated list of filters."
-msgstr ""
-
-msgid "Panel position"
-msgstr ""
-
-msgid "Open"
 msgstr ""
 
 msgid "Add task"
@@ -142,6 +203,12 @@ msgstr ""
 msgid "Hide"
 msgstr ""
 
+msgid "Ascending"
+msgstr ""
+
+msgid "Descending"
+msgstr ""
+
 msgid "You must select a todo file."
 msgstr ""
 
@@ -149,6 +216,9 @@ msgid "A todo file is a text file containing markup."
 msgstr ""
 
 msgid "To learn about the markup, open the built-in editor and press F1."
+msgstr ""
+
+msgid "Filter expression"
 msgstr ""
 
 msgid "Delete selected tasks"
@@ -170,6 +240,11 @@ msgid "Add"
 msgstr ""
 
 msgid "Apply"
+msgstr ""
+
+msgid ""
+"Tasks are sorted by the first attribute in this list.\n"
+"In case of a tie, by the second attribute, and so on..."
 msgstr ""
 
 msgid "No time tracker file selected."
@@ -208,121 +283,64 @@ msgstr ""
 msgid "Start tracking"
 msgstr ""
 
-msgid "Cancel"
+msgid "Time Tracker"
 msgstr ""
 
-msgid "Left"
+msgid "Select time tracker file"
 msgstr ""
 
-msgid "Center"
+msgid "Close"
 msgstr ""
 
-msgid "Right"
+msgid "Currently Tracking"
 msgstr ""
 
-msgid "Settings"
+msgid "Stop"
 msgstr ""
 
-msgid "Website"
+msgid "Search Data"
 msgstr ""
 
-msgid "Show time in panel"
+msgid "Date (e.g., 2000-01-01)"
 msgstr ""
 
-msgid "Clock size (set to 0 for default size)"
+msgid "Since"
 msgstr ""
 
-msgid "Notification sound"
+msgid "Until"
 msgstr ""
 
-msgid "Show presets"
+msgid "Totals"
 msgstr ""
 
-msgid "Start"
+msgid "Search results copied to clipboard!"
 msgstr ""
 
-msgid "Pause"
+msgid "All Time"
 msgstr ""
 
-msgid "Reset"
+msgid "Per Slot Totals"
 msgstr ""
 
-msgid "Add Preset"
+msgid "Task text copied to clipboard!"
 msgstr ""
 
-msgid "Time"
+msgid "Todo"
 msgstr ""
 
-msgid "Invalid time selected."
+msgid "Timer"
 msgstr ""
 
-msgid "Timer Elapsed!"
+msgid "Stopwatch"
 msgstr ""
 
-msgid "Dismiss"
+msgid "Theme css (empty for auto selection)"
 msgstr ""
 
-msgid "Restart"
+msgid "Lazy list page size"
 msgstr ""
 
-msgid "Resume"
-msgstr ""
-
-msgid "Lap"
-msgstr ""
-
-msgid "Lap Time"
-msgstr ""
-
-msgid "Overall Time"
-msgstr ""
-
-msgid "Lap Times"
-msgstr ""
-
-msgid "Laps table copied to clipboard!"
-msgstr ""
-
-msgid "Add Alarm"
-msgstr ""
-
-msgid "Snooze n minutes"
-msgstr ""
-
-msgid "Alarm"
-msgstr ""
-
-msgid "Snooze"
-msgstr ""
-
-msgid "Pomodoro"
-msgstr ""
-
-msgid "Long Break"
-msgstr ""
-
-msgid "Short Break"
-msgstr ""
-
-msgid "Phase"
-msgstr ""
-
-msgid "Completed pomodoros"
-msgstr ""
-
-msgid "Pomodoros until long break"
-msgstr ""
-
-msgid "Pomodoro length"
-msgstr ""
-
-msgid "Short break length"
-msgstr ""
-
-msgid "Long break length"
-msgstr ""
-
-msgid "Long break every n pomodoros"
+msgid "Image not found"
 msgstr ""
 
 msgid "Set shortcut"
@@ -343,10 +361,20 @@ msgstr ""
 msgid "Important"
 msgstr ""
 
-msgid "Image not found"
+msgid "Select folder"
+msgstr ""
+
+msgid "Select file"
+msgstr ""
+
+msgid "Confirm"
 msgstr ""
 
 msgid "Show more"
+msgstr ""
+
+msgid ""
+"Right click any of the extension panel items to access the global settings."
 msgstr ""
 
 msgid "Sun"
@@ -380,32 +408,4 @@ msgid "Month"
 msgstr ""
 
 msgid "Year"
-msgstr ""
-
-msgid ""
-"Right click any of the extension panel items to access the global settings."
-msgstr ""
-
-msgid "Select folder"
-msgstr ""
-
-msgid "Select file"
-msgstr ""
-
-msgid "Confirm"
-msgstr ""
-
-msgid "Todo"
-msgstr ""
-
-msgid "Timer"
-msgstr ""
-
-msgid "Stopwatch"
-msgstr ""
-
-msgid "Theme css (empty for auto selection)"
-msgstr ""
-
-msgid "Lazy list page size"
 msgstr ""

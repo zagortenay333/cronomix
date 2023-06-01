@@ -3,7 +3,7 @@
 **All-in-one timer, stopwatch, pomodoro, alarm, todo and time tracker gnome-shell extension**
 
 ![preview](./data/images/screenshots/todo.png)
-![More screenshots](https://github.com/zagortenay333/cronomix/data/images/screenshots)
+![More screenshots](https://github.com/zagortenay333/cronomix/tree/master/data/images/screenshots)
 
 ## Installation
 
