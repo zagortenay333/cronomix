@@ -1,0 +1,186 @@
+## Cronomix Markup Language
+
+This document describes the markup language used throughout
+this extension: the tasks in the todo applet, presets in the
+timers, alarm messages, etc...
+
+*This document is also written in this markup language.
+
+For starters:
+
+1. The language is made of *blocks*: paragraphs, tables, etc...
+2. Blocks nest within other blocks by indenting with 2 spaces.
+3. Paragraphs contain *inline* elements: links, emphasis, etc...
+
+## Paragraphs
+
+A paragraph is a consecutive sequence of lines. Paragraphs can
+contain inline elements which will be described later.
+
+## Headers
+
+A header is a paragraph that begins with 1 or more hashes (#).
+The number of hashes indicates the size of the header with 1
+hash being the biggest h1 header.
+
+## Unordered Lists
+
+Unordered lists start with a single dash character:
+
+- Orange
+  - Apple
+- Banana
+
+## Ordered Lists
+
+Ordered lists start with digit followed by a dot:
+
+1. Square
+  1. Triangle
+2. Circle
+
+## Separators
+
+Separators start with 3 or more equals characters. Everything
+after the 3 equals on the line is ignored.
+
+## Tables
+
+Tables look like bullet lists but start with a pipe character (|).
+This makes it easier to write multi-line cells with the downside
+being that the table in the raw text looks somewhat weird.
+
+More precisely:
+
+- A table is a sequence of cells and row separators.
+- Cells start with a pipe character.
+- Row separators start with a pipe and 1 or more dashes.
+- Opening and closing row separators are optional.
+- The first row determines the number of columns.
+- Extra columns are ignored, missing columns are added.
+
+Here is a 2x2 table:
+
+| Row 1 Column 1
+| Row 1 Column 2
+|-
+| Row 2 Column 1
+| Row 2 Column 2
+
+Tables nest just like bullet lists:
+
+| Foo
+  - Here is a list within a table cell.
+| Bar
+  | Here is a table...
+  |-
+  | ...within a table
+
+Some attributes can be attached to cells by placing them within
+square brackets immediately after the pipe character.
+
+You can use the *width:height* attribute to specify how a cell
+should span rows and columns. The width and height are either
+integers or the asterisk character (\*) which means 'span all
+the way to the end'. For example:
+
+|----------------------------
+|[1:2] Spanning vertically
+| Hi there
+|----------------------------
+| Invisible
+| Hi there
+|----------------------------
+|[2:1] Spanning horizontally
+| Invisible
+|----------------------------
+
+|[#]
+  You can make cell backgrounds
+  invisible by placing a single
+  hash within the brackets.
+|[#]
+  This lets you use tables for
+  complex layouts like this.
+
+## Meta Blocks
+
+Meta blocks are used to make the markup language extendable.
+They begin with a pair of square brackets within which one
+can place various attributes. The content of the brackets
+can be spread across multiple lines.
+
+### Admonitions
+
+Meta blocks are used to create admonitions. The available
+keywords are: tip, note, warning, important. For example:
+
+[tip]
+  [note]
+    [warning]
+      [important] Meta blocks can nest too.
+
+### Images
+
+Meta blocks are used to load images by placing the keyword
+image at the start followed by an optional image width and
+the image path:
+
+> [image width ~/path/to/image]
+
+## Raw Blocks
+
+A raw block starts with 1 arrow (>). Text within a raw block
+is not treated as markup. For example:
+
+> | This will not be treated as a table.
+  | foo bar baz
+
+## Inline Elements
+
+Parts of paragraphs and headers can be marked up to change
+the style of the text or create links and tags, etc...
+These regions of text are called inline elements.
+
+Most inline elements have an opening and closing delimiter.
+If the closing delimiter is omitted, then the element will
+end at the end of the paragraph. The exception to this are
+subscripts/supscripts which would end at the end of the line.
+
+Most inline elements can be nested within other inlines.
+
+|-------------------------------------------------
+| Markup
+| Explanation
+|-------------------------------------------------
+| *foo* **bar** ***baz***
+| Emphasize text with 1, 2, or 3 asterisks.
+|-------------------------------------------------
+| foo^bar^
+| Use a caret for supscripts.
+|-------------------------------------------------
+| foo~bar~
+| Use a tilde for subscripts.
+|-------------------------------------------------
+| ~~foo bar baz~~
+| Use 2 tildes for strikethrough.
+|-------------------------------------------------
+| <www.google.com>
+  <www.google.com; Link Alias>
+  <www.google.com; \;\>>
+| Use open close arrows <> for links.
+  A semicolon separates the alias and link.
+  The alias cannot contain markup.
+  A backslash can escape characters.
+|-------------------------------------------------
+| @foo @bar_baz
+| An @ followed by words and underscores
+  is a tag reference. Only works in todo applet.
+|-------------------------------------------------
+| `*foo*` ``~bar~``
+| Use 1 or 2 backticks to escape markup.
+  A 2 backtick delimiter also emphasizes.
+|-------------------------------------------------
+| \*not bold
+| Use a backslash to escape special characters.
+|-------------------------------------------------

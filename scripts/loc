@@ -1,0 +1,5 @@
+#!/bin/bash
+set -u
+
+cd "${BASH_SOURCE%/*}/.."
+find 'src' -iname "*.ts" | xargs wc -l | sort -g -r

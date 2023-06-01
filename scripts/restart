@@ -1,0 +1,8 @@
+#!/bin/bash
+
+if [ "$XDG_SESSION_TYPE" == "wayland" ]; then
+    echo "This script only works on Xorg."
+else
+    # The HUP flag causes gnome-shell to restart quicker.
+    pkill -HUP gnome-shell
+fi

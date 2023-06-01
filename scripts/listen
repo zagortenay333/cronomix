@@ -1,0 +1,2 @@
+#!/bin/bash
+journalctl -o cat -n 0 -f "$(which gnome-shell)" | grep -v warning

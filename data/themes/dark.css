@@ -1,0 +1,454 @@
+/* ==========================================================================
+ * To avoid a dependency on some CSS preprocessor we define
+ * the basic variables in this comment:
+ *
+ * red           #FF7163
+ * blue          #73C2FE
+ * green         #7DD481
+ * yellow        #FFAB42
+ * padding       8px
+ * spacing       8px
+ * border-radius 10px
+ * dark_bg       rgba(0, 0, 0, .3)
+ * light_bg      rgba(255, 255, 255, .08)
+ * yellow_bg     rgba(252, 186, 3, .2)
+ * ========================================================================== */
+
+/* ==========================================================================
+ * These custom properties only work on this selector.
+ * ========================================================================== */
+.cronomix-custom-css {
+    -cronomix-link-color: #73C2FE;
+    -cronomix-tag-ref-color: #FFAB42;
+    -cronomix-markup-raw-fg: white;
+    -cronomix-markup-raw-bg: rgba(0, 0, 0, .3);
+    -cronomix-markup-highlight-bg: #FFAB42;
+    -cronomix-markup-highlight-fg: rgba(0, 0, 0, .85);
+}
+
+/* ==========================================================================
+ * Utility classes
+ * ========================================================================== */
+.cronomix-red     { color: #FF7163; }
+.cronomix-blue    { color: #73C2FE; }
+.cronomix-green   { color: #7DD481; }
+.cronomix-yellow  { color: #FFAB42; }
+.cronomix-spacing { spacing: 10px;  }
+
+/* ==========================================================================
+ * Panel button
+ * ========================================================================== */
+.cronomix-panel-button * {
+    padding: 0;
+}
+
+/* ==========================================================================
+ * Popup menu
+ * ========================================================================== */
+.cronomix-menu {
+    min-width: 256px;
+    padding: 10px;
+}
+
+/* ==========================================================================
+ * Button
+ * ========================================================================== */
+.cronomix-button {
+    spacing: 2px;
+    padding: 6px;
+    font-weight: bold;
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, .08);
+}
+
+.cronomix-button:focus,
+.cronomix-button:hover {
+    background-color: rgba(255, 255, 255, .2);
+}
+
+.cronomix-button:checked {
+    color: #73C2FE;
+    background-color: rgba(50, 200, 255, .2);
+}
+
+.cronomix-button:focus:checked {
+    background-color: rgba(255, 255, 255, .3);
+}
+
+.cronomix-button StLabel {
+    text-align: center;
+    font-weight: bold;
+}
+
+.cronomix-button StIcon {
+    icon-size: 16px;
+    -st-icon-style: symbolic;
+}
+
+/* ==========================================================================
+ * Checkbox
+ * ========================================================================== */
+.cronomix-checkbox {
+    padding: 0;
+    background-color: transparent !important;
+    border: 2px solid transparent;
+    min-height: 28px;
+}
+
+/* ==========================================================================
+ * Toggle
+ * ========================================================================== */
+.cronomix-toggle {
+    padding: 0;
+    border-radius: 99px;
+    background-color: transparent;
+}
+
+.cronomix-toggle:focus,
+.cronomix-toggle:hover {
+    box-shadow: 0 0 0 2px inset rgba(255, 255, 255, .3);
+    background-color: transparent;
+}
+
+.cronomix-toggle:checked {
+    background-color: transparent;
+}
+
+/* ==========================================================================
+ * Floating button
+ * ========================================================================== */
+.cronomix-floating-button {
+    background: transparent;
+}
+
+.cronomix-floating-button:focus,
+.cronomix-floating-button:hover {
+    background-color: rgba(255, 255, 255, .2);
+}
+
+/* ==========================================================================
+ * Menu button
+ * ========================================================================== */
+.cronomix-menu-button {
+    spacing: 6px;
+    font-weight: 500;
+    background: transparent;
+}
+
+.cronomix-menu-button:focus,
+.cronomix-menu-button:hover {
+    background-color: rgba(255, 255, 255, .08);
+}
+
+.cronomix-menu-button StLabel {
+    font-weight: 500;
+    text-align: left;
+}
+
+/* ==========================================================================
+ * Tag Button
+ * ========================================================================== */
+.cronomix-tag-button {
+    padding-top: 1px;
+    padding-bottom: 1px;
+    border-radius: 99px;
+    background-color: rgba(0, 0, 0, .3);
+}
+
+/* ==========================================================================
+ * Button box
+ * ========================================================================== */
+.cronomix-button-box {
+    spacing: 1px;
+}
+
+.cronomix-button-box .cronomix-button {
+    border-radius: 0;
+}
+
+.cronomix-button-box .cronomix-button:first-child {
+    border-radius: 10px 0 0 10px;
+}
+
+.cronomix-button-box .cronomix-button:last-child {
+    border-radius: 0 10px 10px 0;
+}
+
+.cronomix-button-box .cronomix-button:first-child:last-child {
+    border-radius: 10px;
+}
+
+/* ==========================================================================
+ * Entry
+ * ========================================================================== */
+.cronomix-entry {
+    background-color: rgba(255, 255, 255, .08);
+    border-radius: 10px;
+    padding: 4px 6px;
+    color: inherit;
+    border: 0;
+    max-width: 500px;
+}
+
+.cronomix-entry:focus {
+    background-color: rgba(255, 255, 255, .2);
+    border: 0;
+    box-shadow: none;
+}
+
+/* ==========================================================================
+ * Headered Entry
+ * ========================================================================== */
+.cronomix-headered-entry {
+    spacing: 1px;
+}
+
+.cronomix-headered-entry > *:last-child .cronomix-entry {
+    border-radius: 0 0 10px 10px;
+}
+
+.cronomix-headered-entry > *:first-child:last-child .cronomix-entry {
+    border-radius: 10px;
+}
+
+.cronomix-headered-entry > .header {
+    background-color: rgba(255, 255, 255, .08);
+    border-radius: 10px 10px 0 0;
+}
+
+.cronomix-headered-entry > .header .cronomix-button {
+    border-radius: 0;
+    background: transparent;
+}
+
+.cronomix-headered-entry > .header .cronomix-button:checked {
+    border-radius: 0;
+    color: #73C2FE;
+    background-color: rgba(50, 200, 255, .2);
+}
+
+.cronomix-headered-entry > .header .cronomix-button:focus,
+.cronomix-headered-entry > .header .cronomix-button:hover {
+    border-radius: 0;
+    background: rgba(255, 255, 255, .08);
+}
+
+.cronomix-headered-entry > .header .cronomix-button:first-child {
+    border-radius: 10px 0 0 0;
+}
+
+.cronomix-headered-entry > .header .cronomix-button:last-child {
+    border-radius: 0 10px 0 0;
+}
+
+/* ==========================================================================
+ * File picker
+ * ========================================================================== */
+.cronomix-file-picker {
+    spacing: 1px;
+    min-width: 100px;
+    max-width: 220px;
+}
+
+.cronomix-file-picker StEntry {
+    padding: 4px 6px;
+    border-radius: 10px 0 0 10px;
+}
+
+.cronomix-file-picker .cronomix-button {
+    border-radius: 0 10px 10px 0;
+}
+
+/* ==========================================================================
+ * Int picker
+ * ========================================================================== */
+.cronomix-int-picker {
+    spacing: 1px;
+    min-height: 28px;
+    font-weight: bold;
+}
+
+.cronomix-int-picker * { font-weight: bold; }
+.cronomix-int-picker.invalid { color: #FF7163; }
+.cronomix-int-picker.invalid StEntry  { border-radius: 10px 0 0 10px; }
+.cronomix-int-picker .cronomix-button { border-radius: 0 10px 10px 0; }
+
+/* ==========================================================================
+ * Keymap picker
+ * ========================================================================== */
+.cronomix-keymap-picker StLabel { font-weight: bold; }
+.cronomix-keymap-picker.unset StLabel { font-weight: 500; }
+.cronomix-keymap-picker.unset { color: rgba(255, 255, 255, .7); }
+
+.cronomix-keymap-picker.waiting {
+    color: #73C2FE;
+    background-color: rgba(50, 200, 255, .2);
+}
+
+/* ==========================================================================
+ * Time picker
+ * ========================================================================== */
+.cronomix-time-picker {
+    spacing: 2px;
+    font-weight: bold;
+}
+
+/* ==========================================================================
+ * Markup
+ * ========================================================================== */
+.cronomix-markup,
+.cronomix-markup .block {
+    spacing: 10px;
+}
+
+.cronomix-markup .list,
+.cronomix-markup .ordered-list {
+    spacing: 4px;
+    padding-left: 14px;
+}
+
+.cronomix-markup .list .bullet {
+    padding-right: 6px;
+}
+
+.cronomix-markup .ordered-list .bullet {
+    font-weight: bold;
+    padding-right: 4px;
+}
+
+.cronomix-markup .raw-block {
+    padding: 8px;
+    color: #93a1a1;
+    border-radius: 10px;
+    background: #002b36;
+    font-family: monospace;
+}
+
+.cronomix-markup .paragraph {
+    padding-left: 2px;
+    padding-right: 2px;
+}
+
+.cronomix-markup .separator {
+    height: 2px;
+    background: rgba(255, 255, 255, .12);
+}
+
+.cronomix-markup .admonition { spacing: 1px; }
+.cronomix-markup .admonition > * { background-color: rgba(0, 0, 0, .3); }
+.cronomix-markup .admonition > .header { font-weight: bold; }
+.cronomix-markup .admonition.tip > .header { color: #73C2FE; }
+.cronomix-markup .admonition.note > .header { color: #7DD481; }
+.cronomix-markup .admonition.warning > .header { color: #FFAB42; }
+.cronomix-markup .admonition.important > .header { color: #FF7163; }
+
+.cronomix-markup .table .cell {
+    padding: 8px;
+    border-radius: 0;
+    background: rgba(0, 0, 0, .3);
+    border: 1px rgba(0, 0, 0, 0);
+    border-right-width: 0;
+    border-bottom-width: 0;
+    margin-right: 1px;
+    margin-bottom: 1px;
+}
+
+.cronomix-markup.floating .table .cell { background: rgba(255, 255, 255, .08); }
+.cronomix-markup .table .cell.last-col { margin-right: 0; border-right-width: 1px; }
+.cronomix-markup .table .cell.last-row { margin-bottom: 0; border-bottom-width: 1px; }
+
+.cronomix-markup .table .cell.first-row.first-col { border-radius-topleft: 10px; }
+.cronomix-markup .table .cell.first-row.last-col  { border-radius-topright: 10px; }
+.cronomix-markup .table .cell.last-row.first-col  { border-radius-bottomleft: 10px; }
+.cronomix-markup .table .cell.last-row.last-col   { border-radius-bottomright: 10px; }
+
+.cronomix-markup .table .cell.invisible.no-top-border  { border-top-width: 0; }
+.cronomix-markup .table .cell.invisible.no-left-border { border-left-width: 0; }
+.cronomix-markup .table .cell.invisible.last-col       { border-right-width: 0; }
+.cronomix-markup .table .cell.invisible.last-row       { border-bottom-width: 0; }
+.cronomix-markup .table .cell.invisible                { background: transparent; }
+
+.cronomix-markup .header    { font-weight: 600; }
+.cronomix-markup .header.h1 { font-size: 2em; }
+.cronomix-markup .header.h2 { font-size: 1.5em; }
+.cronomix-markup .header.h3 { font-size: 1.25em; }
+
+.cronomix-markup .header.h1,
+.cronomix-markup .header.h2 {
+    padding-top: .2em;
+    padding-bottom: .2em;
+    border: 0 solid rgba(255, 255, 255, .12);
+    border-bottom-width: 1px;
+}
+
+.cronomix-markup .highlight {
+    border-radius: 10px;
+    background: rgba(252, 186, 3, .25) !important;
+}
+
+.cronomix-markup-editor-entry {
+    font-family: monospace;
+    font-size: .95em;
+}
+
+/* ==========================================================================
+ * Card
+ * ========================================================================== */
+.cronomix-card > .header {
+    spacing: 2px;
+    min-height: 32px;
+}
+
+/* ==========================================================================
+ * Box
+ * ========================================================================== */
+.cronomix-box {
+    padding: 8px;
+    spacing: 8px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, .08);
+}
+
+/* ==========================================================================
+ * Scrollbox
+ * ========================================================================== */
+.cronomix-scrollbox.vertical   > StScrollBar { padding-left: 6px; }
+.cronomix-scrollbox.horizontal > StScrollBar { padding-top: 6px; }
+
+/* ==========================================================================
+ * A list of items arranged vertically
+ * ========================================================================== */
+.cronomix-group {
+    spacing: 1px;
+}
+
+.cronomix-group > * {
+    padding: 8px;
+    border-radius: 0;
+    background-color: rgba(255, 255, 255, .08);
+}
+
+.cronomix-group > *:first-child { border-radius: 10px 10px 0 0; }
+.cronomix-group > *:last-child { border-radius: 0 0 10px 10px; }
+.cronomix-group > *:first-child:last-child { border-radius: 10px; }
+
+/* ==========================================================================
+ * Time tracker
+ * ========================================================================== */
+.cronomix-time-tracker-task-card {
+    padding: 0;
+    spacing: 0;
+}
+
+.cronomix-time-tracker-task-card .header {
+    padding: 8px;
+}
+
+.cronomix-time-tracker-task-card .body {
+    padding: 8px;
+    color: #93a1a1;
+    background: #002b36;
+    font-family: monospace;
+    border-radius-bottomleft: 8px;
+    border-radius-bottomright: 8px;
+}

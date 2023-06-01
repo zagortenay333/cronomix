@@ -1,0 +1,99 @@
+#!/bin/bash
+set -u
+
+# ==============================================================================
+#
+# Dependencies: typescript, gettext and sed.
+#
+# Compilation happens in 2 steps:
+#
+#   1. The typescript compiler will be invoked if the directory './.build'
+#      doesn't exist and compile the ts files into it. Further compilations
+#      happen via 'tsc --watch' (see workflow steps below).
+#
+#   2. The js files from '.build' are copied together with the data files
+#      into: '~/.local/share/gnome-shell/extensions/cronomix@zagortenay333'.
+#      The copied js files will be post-processed to replace import/export
+#      stuff with gnome js native stuff by using sed.
+#
+# The smoothest workflow for developing the extension is:
+#
+#   1. Log into the Xorg version of gnome-shell to enable shell restarts.
+#   2. In a terminal run './scripts/listen' to listen for runtime errors.
+#   3. In a terminal run 'tsc --watch' for typechecking and recompilation.
+#   4. Modify some files.
+#   5. Run this script to recompile the 'cronomix@zagortenay333' folder.
+#   6. Run './scripts/restart' to restart gnome-shell (only on Xorg).
+#
+# ==============================================================================
+
+cd "${BASH_SOURCE%/*}/.."
+
+uuid="cronomix@zagortenay333"
+build_dir=".build"
+ext_dir=~/".local/share/gnome-shell/extensions/${uuid}"
+
+#
+# Only call typescript if build_dir doesn't exist.
+# Use 'tsc --watch' for recompilations.
+#
+if [ ! -d "$build_dir" ]; then
+    tsc
+    wait
+fi
+
+#
+# Build data
+#
+rm -rf "$ext_dir"
+mkdir -p "$ext_dir/data"
+
+cp -r "data/docs" "$ext_dir/data/docs"
+cp -r "data/sounds" "$ext_dir/data/sounds"
+cp -r "data/themes" "$ext_dir/data/themes"
+cp -r "data/images/icons" "$ext_dir/data/icons"
+cp -r "data/metadata.json" "$ext_dir/metadata.json"
+
+#
+# Build translation files
+#
+mo_dir="$ext_dir/locale"
+po_dir="data/translations"
+po_files=$(find "$po_dir" -name "*.po")
+template="data/translations/template.pot"
+
+find "src" -type f -name "*.ts" |
+    xgettext --no-location --language=JavaScript --from-code=UTF-8 --add-comments="TRANSLATORS:" -o "$template" -f -
+
+for po_file in $po_files; do
+    msgmerge --quiet -U "$po_file" --backup="none" "$template"
+    msgattrib --output-file="$po_file" --no-obsolete "$po_file"
+    lang=${po_file##*/}
+    lang=${lang%.*}
+    mkdir -p "$mo_dir/$lang/LC_MESSAGES/"
+	msgfmt "$po_dir/$lang.po" -o "$mo_dir/$lang/LC_MESSAGES/cronomix.mo"
+done
+
+#
+# Do a post pass on all the files that typescript outputs.
+# Gnome JS doesn't support import/export stuff so we have
+# to compile those into gnome native stuff...
+#
+for input in $(find . -name '*.js'); do
+    output="$ext_dir/$(echo "$input" | sed "s|\./$build_dir/||g")"
+    mkdir -p $(dirname "$output")
+    touch "$output"
+    sed -E\
+        -e '1i const _ME = imports.misc.extensionUtils.getCurrentExtension();\n'\
+        -e 's/export var/var/g'\
+        -e 's/export const/var/g'\
+        -e 's/export function/function/g'\
+        -e 's/export class (\w+)/var \1 = class \1/g'\
+        -e '/import/ s/(\w+) as (\w+)/\1: \2/g'\
+        -e "s/import ['\"](.+)['\"]/_ME.imports.\1/g"\
+        -e "s/import (\{.*\}) from '(.+)'/const \1 = _ME.imports.\2/g"\
+        -e "s/import \* as (\w+) from ['\"](.+)['\"]/const \1 = _ME.imports.\2/g"\
+        -e 's/_ME\.imports\.imports\./imports\./g'\
+        -e '/_ME\.imports\./ s|/|.|g'\
+        "$input" > "$output"
+done

@@ -1,5 +1,0 @@
-#!/bin/bash
-
-zip -r timepp@zagortenay333.zip . -x "*.git*"
-mv timepp@zagortenay333.zip ..
-

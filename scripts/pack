@@ -1,0 +1,13 @@
+#!/bin/bash
+set -u
+
+cd "${BASH_SOURCE%/*}/.."
+
+uuid="cronomix@zagortenay333"
+proj_dir=$(pwd)
+ext_dir=~/".local/share/gnome-shell/extensions/${uuid}"
+
+./scripts/build
+
+cd "$ext_dir"
+zip -q -r "$proj_dir/data/$uuid.zip" .
