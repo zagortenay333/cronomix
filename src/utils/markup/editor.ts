@@ -1,5 +1,6 @@
 import * as St from 'imports.gi.St';
-import * as Mainloop from 'imports.mainloop';import * as Clutter from 'imports.gi.Clutter';
+import * as Mainloop from 'imports.mainloop';
+import * as Clutter from 'imports.gi.Clutter';
 import * as Graphene from 'imports.gi.Graphene';
 
 import { _ } from 'utils/misc';

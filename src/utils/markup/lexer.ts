@@ -36,8 +36,7 @@ export class Token {
 const MAX_TOKEN_LOOKAHEAD = 16;
 
 // The max number of times you can peek without eating a
-// token before we throw. This guards against an infinite
-// loop which would lock up all of gnome-shell.
+// token before we throw. It's an infinite loop guard.
 const MAX_TOKEN_PEEK_COUNT = 100;
 
 export class Lexer {
