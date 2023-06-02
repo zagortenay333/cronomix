@@ -25,8 +25,6 @@ export class DayPicker {
 
     constructor (selection = new DaySelection()) {
         this.selection = selection;
-        // const button_box = new ButtonBox();
-        // this.actor = button_box.actor;
         this.actor = new St.BoxLayout({ style: 'spacing: 3px;' });
         this.actor.layout_manager.homogeneous = true;
 
