@@ -3,11 +3,48 @@ set -u
 
 cd "${BASH_SOURCE%/*}/.."
 
-uuid="cronomix@zagortenay333"
 proj_dir=$(pwd)
+uuid="cronomix@zagortenay333"
 ext_dir=~/".local/share/gnome-shell/extensions/${uuid}"
 
+#
+# In order to preserve blank lines in the emitted
+# js files, we replace blanks in the typescript
+# files with a special comment before we invoke
+# the compiler.
+#
+# The compiler preserves comments even though it
+# apparently can't to the same with newlines...
+#
+for input in $(find src -name '*.ts'); do
+    sed -z -i 's;\n\n;\n/\*BLANK\*/\n;g' $input
+done
+
+#
+# Compile.
+#
+rm -rf .build
 ./scripts/build
 
+#
+# Now replace the special comment with a blank line
+# both in the typescript and the emitted js files.
+#
+for input in $(find src -name '*.ts'); do
+    sed -i 's;/\*BLANK\*/;;g' $input
+done
+
+for input in $(find $ext_dir -name '*.js'); do
+    sed -i 's;/\*BLANK\*/;;g' $input
+done
+
+#
+# Get rid of .build dir.
+#
+# rm -rf .build
+
+#
+# Create the zip file.
+#
 cd "$ext_dir"
 zip -q -r "$proj_dir/data/$uuid.zip" .

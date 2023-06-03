@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-02 20:19+0200\n"
+"POT-Creation-Date: 2023-06-03 13:25+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,136 +17,10 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-msgid "Panel position"
-msgstr ""
-
-msgid "Notification sound"
-msgstr ""
-
-msgid "Open"
-msgstr ""
-
-msgid "Add Alarm"
-msgstr ""
-
-msgid "Time"
-msgstr ""
-
-msgid "Snooze n minutes"
+msgid "Add Task"
 msgstr ""
 
 msgid "Ok"
-msgstr ""
-
-msgid "Cancel"
-msgstr ""
-
-msgid "Alarm"
-msgstr ""
-
-msgid "Snooze"
-msgstr ""
-
-msgid "Dismiss"
-msgstr ""
-
-msgid "Left"
-msgstr ""
-
-msgid "Center"
-msgstr ""
-
-msgid "Right"
-msgstr ""
-
-msgid "Settings"
-msgstr ""
-
-msgid "Website"
-msgstr ""
-
-msgid "Pomodoro"
-msgstr ""
-
-msgid "Long Break"
-msgstr ""
-
-msgid "Short Break"
-msgstr ""
-
-msgid "Show time in panel"
-msgstr ""
-
-msgid "Clock size (set to 0 for default size)"
-msgstr ""
-
-msgid "Show presets"
-msgstr ""
-
-msgid "Phase"
-msgstr ""
-
-msgid "Completed pomodoros"
-msgstr ""
-
-msgid "Pomodoros until long break"
-msgstr ""
-
-msgid "Start"
-msgstr ""
-
-msgid "Pause"
-msgstr ""
-
-msgid "Add Preset"
-msgstr ""
-
-msgid "Pomodoro length"
-msgstr ""
-
-msgid "Short break length"
-msgstr ""
-
-msgid "Long break length"
-msgstr ""
-
-msgid "Long break every n pomodoros"
-msgstr ""
-
-msgid "Resume"
-msgstr ""
-
-msgid "Reset"
-msgstr ""
-
-msgid "Lap"
-msgstr ""
-
-msgid "Copy"
-msgstr ""
-
-msgid "Lap Time"
-msgstr ""
-
-msgid "Overall Time"
-msgstr ""
-
-msgid "Lap Times"
-msgstr ""
-
-msgid "Laps table copied to clipboard!"
-msgstr ""
-
-msgid "Invalid time selected."
-msgstr ""
-
-msgid "Timer Elapsed!"
-msgstr ""
-
-msgid "Restart"
-msgstr ""
-
-msgid "Add Task"
 msgstr ""
 
 msgid "Add Filter"
@@ -171,6 +45,12 @@ msgid "Title"
 msgstr ""
 
 msgid "Comma separated list of filters."
+msgstr ""
+
+msgid "Panel position"
+msgstr ""
+
+msgid "Open"
 msgstr ""
 
 msgid "Add task"
@@ -283,6 +163,9 @@ msgstr ""
 msgid "Start tracking"
 msgstr ""
 
+msgid "Cancel"
+msgstr ""
+
 msgid "Time Tracker"
 msgstr ""
 
@@ -310,6 +193,9 @@ msgstr ""
 msgid "Until"
 msgstr ""
 
+msgid "Copy"
+msgstr ""
+
 msgid "Totals"
 msgstr ""
 
@@ -325,28 +211,118 @@ msgstr ""
 msgid "Task text copied to clipboard!"
 msgstr ""
 
-msgid "Todo"
+msgid "Notification sound"
 msgstr ""
 
-msgid "Timer"
+msgid "Add Alarm"
 msgstr ""
 
-msgid "Stopwatch"
+msgid "Time"
 msgstr ""
 
-msgid "Theme css (empty for auto selection)"
+msgid "Snooze n minutes"
 msgstr ""
 
-msgid "Lazy list page size"
+msgid "Alarm"
 msgstr ""
 
-msgid "Image not found"
+msgid "Snooze"
 msgstr ""
 
-msgid "Set shortcut"
+msgid "Dismiss"
 msgstr ""
 
-msgid "Type shortcut (backspace to reset)"
+msgid "Left"
+msgstr ""
+
+msgid "Center"
+msgstr ""
+
+msgid "Right"
+msgstr ""
+
+msgid "Settings"
+msgstr ""
+
+msgid "Website"
+msgstr ""
+
+msgid "Pomodoro"
+msgstr ""
+
+msgid "Long Break"
+msgstr ""
+
+msgid "Short Break"
+msgstr ""
+
+msgid "Show time in panel"
+msgstr ""
+
+msgid "Clock size (set to 0 for default size)"
+msgstr ""
+
+msgid "Show presets"
+msgstr ""
+
+msgid "Phase"
+msgstr ""
+
+msgid "Completed pomodoros"
+msgstr ""
+
+msgid "Pomodoros until long break"
+msgstr ""
+
+msgid "Start"
+msgstr ""
+
+msgid "Pause"
+msgstr ""
+
+msgid "Add Preset"
+msgstr ""
+
+msgid "Pomodoro length"
+msgstr ""
+
+msgid "Short break length"
+msgstr ""
+
+msgid "Long break length"
+msgstr ""
+
+msgid "Long break every n pomodoros"
+msgstr ""
+
+msgid "Resume"
+msgstr ""
+
+msgid "Reset"
+msgstr ""
+
+msgid "Lap"
+msgstr ""
+
+msgid "Lap Time"
+msgstr ""
+
+msgid "Overall Time"
+msgstr ""
+
+msgid "Lap Times"
+msgstr ""
+
+msgid "Laps table copied to clipboard!"
+msgstr ""
+
+msgid "Invalid time selected."
+msgstr ""
+
+msgid "Timer Elapsed!"
+msgstr ""
+
+msgid "Restart"
 msgstr ""
 
 msgid "Tip"
@@ -359,6 +335,21 @@ msgid "Warning"
 msgstr ""
 
 msgid "Important"
+msgstr ""
+
+msgid "Image not found"
+msgstr ""
+
+msgid "Set shortcut"
+msgstr ""
+
+msgid "Type shortcut (backspace to reset)"
+msgstr ""
+
+msgid "Select folder"
+msgstr ""
+
+msgid "Select file"
 msgstr ""
 
 msgid "Confirm"
@@ -404,8 +395,17 @@ msgstr ""
 msgid "Year"
 msgstr ""
 
-msgid "Select folder"
+msgid "Todo"
 msgstr ""
 
-msgid "Select file"
+msgid "Timer"
+msgstr ""
+
+msgid "Stopwatch"
+msgstr ""
+
+msgid "Theme css (empty for auto selection)"
+msgstr ""
+
+msgid "Lazy list page size"
 msgstr ""
