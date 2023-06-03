@@ -87,6 +87,7 @@ export class TimerApplet extends Applet<Events> {
     }
 
     destroy () {
+        this.pause();
         this.storage.destroy();
         super.destroy();
     }

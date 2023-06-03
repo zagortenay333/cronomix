@@ -75,6 +75,7 @@ export class StopwatchApplet extends Applet<Events> {
     }
 
     destroy () {
+        this.pause();
         this.storage.destroy();
         super.destroy();
     }

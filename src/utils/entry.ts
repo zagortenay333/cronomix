@@ -62,6 +62,7 @@ export class Entry {
                 Misc.adjust_height(this.entry, this.entry.clutter_text);
             });
         });
+        this.entry.connect('destroy', () => { if (id) Mainloop.source_remove(id); });
         entry_container.connect('button-press-event', () => this.entry.grab_key_focus());
         this.entry.connect('key-press-event', (_:unknown, event: Clutter.Event) => this.#maybe_resize_with_keyboard(event));
         this.entry.clutter_text.buffer.connect('inserted-text', (_:unknown, start: number, text: string) => {

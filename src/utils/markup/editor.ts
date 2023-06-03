@@ -29,8 +29,8 @@ export class Editor {
     on_cursor_changed?: () => void; // user supplied
     get_completions?: (ref: string) => string[]; // user supplied
 
-    #sid_text_change   = 0;
-    #sid_cursor_change = 0;
+    #text_change_sig   = 0;
+    #cursor_change_sig = 0;
 
     #completion_menu: Popup;
     #completion_menu_selected_entry = 0;
@@ -90,6 +90,10 @@ export class Editor {
         //
         // listen
         //
+        this.actor.connect('destroy', () => {
+            if (this.#cursor_change_sig) Mainloop.source_remove(this.#cursor_change_sig);
+            if (this.#text_change_sig) Mainloop.source_remove(this.#text_change_sig);
+        });
         this.preview.actor.connect('captured-event', (_:unknown, event: Clutter.Event) => {
             const t = event.type();
 
@@ -103,17 +107,17 @@ export class Editor {
             }
         });
         this.entry.entry.clutter_text.connect('text-changed', () => {
-            if (this.#sid_text_change) Mainloop.source_remove(this.#sid_text_change);
+            if (this.#text_change_sig) Mainloop.source_remove(this.#text_change_sig);
 
-            this.#sid_text_change = Mainloop.timeout_add(200, () => {
-                this.#sid_text_change = 0;
+            this.#text_change_sig = Mainloop.timeout_add(200, () => {
+                this.#text_change_sig = 0;
                 this.#on_text_changed();
             });
         });
         this.entry.entry.clutter_text.connect('cursor-changed', () => {
-            if (!this.#sid_text_change && !this.#sid_cursor_change) {
-                this.#sid_cursor_change = Mainloop.timeout_add(60, () => {
-                    this.#sid_cursor_change = 0;
+            if (!this.#text_change_sig && !this.#cursor_change_sig) {
+                this.#cursor_change_sig = Mainloop.timeout_add(60, () => {
+                    this.#cursor_change_sig = 0;
                     this.#on_cursor_changed();
                 });
             }

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-03 13:31+0200\n"
+"POT-Creation-Date: 2023-06-03 14:21+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -247,52 +247,16 @@ msgstr ""
 msgid "Website"
 msgstr ""
 
-msgid "Pomodoro"
-msgstr ""
-
-msgid "Long Break"
-msgstr ""
-
-msgid "Short Break"
-msgstr ""
-
 msgid "Show time in panel"
 msgstr ""
 
 msgid "Clock size (set to 0 for default size)"
 msgstr ""
 
-msgid "Show presets"
-msgstr ""
-
-msgid "Phase"
-msgstr ""
-
-msgid "Completed pomodoros"
-msgstr ""
-
-msgid "Pomodoros until long break"
-msgstr ""
-
 msgid "Start"
 msgstr ""
 
 msgid "Pause"
-msgstr ""
-
-msgid "Add Preset"
-msgstr ""
-
-msgid "Pomodoro length"
-msgstr ""
-
-msgid "Short break length"
-msgstr ""
-
-msgid "Long break length"
-msgstr ""
-
-msgid "Long break every n pomodoros"
 msgstr ""
 
 msgid "Resume"
@@ -314,6 +278,42 @@ msgid "Lap Times"
 msgstr ""
 
 msgid "Laps table copied to clipboard!"
+msgstr ""
+
+msgid "Pomodoro"
+msgstr ""
+
+msgid "Long Break"
+msgstr ""
+
+msgid "Short Break"
+msgstr ""
+
+msgid "Show presets"
+msgstr ""
+
+msgid "Phase"
+msgstr ""
+
+msgid "Completed pomodoros"
+msgstr ""
+
+msgid "Pomodoros until long break"
+msgstr ""
+
+msgid "Add Preset"
+msgstr ""
+
+msgid "Pomodoro length"
+msgstr ""
+
+msgid "Short break length"
+msgstr ""
+
+msgid "Long break length"
+msgstr ""
+
+msgid "Long break every n pomodoros"
 msgstr ""
 
 msgid "Invalid time selected."
