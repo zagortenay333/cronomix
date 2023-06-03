@@ -41,7 +41,7 @@ done
 #
 # Get rid of .build dir.
 #
-# rm -rf .build
+rm -rf .build
 
 #
 # Create the zip file.
