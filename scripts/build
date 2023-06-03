@@ -34,6 +34,15 @@ build_dir=".build"
 ext_dir=~/".local/share/gnome-shell/extensions/${uuid}"
 
 #
+# Only call typescript if build_dir doesn't exist.
+# Use 'tsc --watch' for recompilations.
+#
+if [ ! -d "$build_dir" ]; then
+    tsc
+    wait
+fi
+
+#
 # Build data
 #
 rm -rf "$ext_dir"
@@ -64,15 +73,6 @@ for po_file in $po_files; do
     mkdir -p "$mo_dir/$lang/LC_MESSAGES/"
 	msgfmt "$po_dir/$lang.po" -o "$mo_dir/$lang/LC_MESSAGES/cronomix.mo"
 done
-
-#
-# Only call typescript if build_dir doesn't exist.
-# Use 'tsc --watch' for recompilations.
-#
-if [ ! -d "$build_dir" ]; then
-    tsc
-    wait
-fi
 
 #
 # Do a post pass on all the files that typescript outputs.
