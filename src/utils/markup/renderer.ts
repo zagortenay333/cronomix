@@ -257,12 +257,15 @@ export class Markup {
         // the current one are visible or not.
         const visible = new Uint8Array(col_count);
 
+        const dummy_cell  = new P.AstTableCell();
+        dummy_cell.config = new P.AstTableCellConfig();
+
         for (const [row_idx, row] of table.children.entries()) {
             const remaining_rows = row_count - row_idx;
 
             // Add missing cells in this row in the form of dummy cells:
             const prev_row_length = row.children.length;
-            while (row.children.length < col_count) row.children.push(DUMMY_CELL);
+            while (row.children.length < col_count) row.children.push(dummy_cell);
 
             // Render the cells of this row:
             for (const [col_idx, cell] of row.children.entries()) {
@@ -535,6 +538,3 @@ type Clickable = {
     start: number;
     end: number;
 }
-
-const DUMMY_CELL  = new P.AstTableCell();
-DUMMY_CELL.config = P.DEFAULT_TABLE_CELL_CONFIG;

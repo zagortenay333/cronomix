@@ -105,8 +105,6 @@ export class AstTableCellConfig {
     invisible = false;
 }
 
-export const DEFAULT_TABLE_CELL_CONFIG = new AstTableCellConfig() as Immutable<AstTableCellConfig>;
-
 export class Parser {
     #lex: Lexer;
     #text: string;
@@ -120,6 +118,7 @@ export class Parser {
     #inside_raw_text_region = false;
     #stop_parsing_inline_at_newline = 0;
     #stop_parsing_inline_at = new Array<TokenTag[]>();
+    #default_table_cell_config = new AstTableCellConfig();
 
     constructor (text: string) {
         this.#text = text;
@@ -141,7 +140,7 @@ export class Parser {
             switch (parselet) {
             case 'eof':      break loop;
             case 'unindent': break loop;
-            case 'blank':    this.#eat_blank_line(); break; 
+            case 'blank':    this.#eat_blank_line(); break;
 
             default: {
                 const start = this.#lex.peek_token().start;
@@ -657,7 +656,7 @@ export class Parser {
     #parse_table_cell_config (): Immutable<AstTableCellConfig> {
         if (! this.#lex.try_eat_token('[')) {
             this.#lex.try_eat_token('spaces');
-            return DEFAULT_TABLE_CELL_CONFIG;
+            return this.#default_table_cell_config;
         }
 
         const result = new AstTableCellConfig();
