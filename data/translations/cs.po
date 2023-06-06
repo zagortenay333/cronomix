@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-06 11:24+0200\n"
+"POT-Creation-Date: 2023-06-06 12:55+0200\n"
 "PO-Revision-Date: 2023-06-05 16:07+0200\n"
 "Last-Translator: Ludek Vydra <lvtran@u.k2.cz>\n"
 "Language-Team: \n"
@@ -17,137 +17,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 3.3.1\n"
 
-msgid "Panel position"
-msgstr "Pozice panelu"
-
-msgid "Notification sound"
-msgstr "Zvuk upozornění"
-
-msgid "Open"
-msgstr "Otevři"
-
-msgid "Add Alarm"
-msgstr "Přidej nový budík"
-
-msgid "Time"
-msgstr "Čas"
-
-msgid "Snooze n minutes"
-msgstr "Odložit n minut"
+msgid "Add Task"
+msgstr "Přidej úkol"
 
 msgid "Ok"
 msgstr "Ok"
-
-msgid "Cancel"
-msgstr "Zruš"
-
-msgid "Alarm"
-msgstr "Budík"
-
-msgid "Snooze"
-msgstr "Odložit"
-
-msgid "Dismiss"
-msgstr "Odvolat"
-
-msgid "Left"
-msgstr "Vlevo"
-
-msgid "Center"
-msgstr "Střed"
-
-msgid "Right"
-msgstr "Vpravo"
-
-msgid "Settings"
-msgstr "Nastavení"
-
-msgid "Website"
-msgstr "Webové stránky"
-
-msgid "Pomodoro"
-msgstr "Pomodoro"
-
-msgid "Long Break"
-msgstr "Dlouhá pauza"
-
-msgid "Short Break"
-msgstr "Krátká pauza"
-
-msgid "Show time in panel"
-msgstr "Zobrazit čas v panelu"
-
-msgid "Clock size (set to 0 for default size)"
-msgstr "Velikost hodin (pro výchozí nastaveno 0)"
-
-msgid "Show presets"
-msgstr "Předvolby"
-
-msgid "Phase"
-msgstr "Fáze"
-
-msgid "Completed pomodoros"
-msgstr "Dokončených Pomodor"
-
-msgid "Pomodoros until long break"
-msgstr "Pomodor do dlouhé přestávky"
-
-msgid "Start"
-msgstr "Start"
-
-msgid "Pause"
-msgstr "Pauza"
-
-msgid "Add Preset"
-msgstr "Přidat předvolbu"
-
-msgid "Pomodoro length"
-msgstr "Délka Pomodoro"
-
-msgid "Short break length"
-msgstr "Délka krátké pauzy"
-
-msgid "Long break length"
-msgstr "Délka dlouhé pauzy"
-
-msgid "Long break every n pomodoros"
-msgstr "Dlouhá pauza každý n pomodor"
-
-msgid "Resume"
-msgstr "Obnovení"
-
-msgid "Reset"
-msgstr "Reset"
-
-msgid "Lap"
-msgstr "Kolo"
-
-msgid "Copy"
-msgstr "Kopírovat"
-
-msgid "Lap Time"
-msgstr "Čas kola"
-
-msgid "Overall Time"
-msgstr "Celkový čas"
-
-msgid "Lap Times"
-msgstr "Čas kol"
-
-msgid "Laps table copied to clipboard!"
-msgstr "Tabulka kol zkopírována do schránky!"
-
-msgid "Invalid time selected."
-msgstr "Zvolen neplatný čas."
-
-msgid "Timer Elapsed!"
-msgstr "Časovač vypršel!"
-
-msgid "Restart"
-msgstr "Restart"
-
-msgid "Add Task"
-msgstr "Přidej úkol"
 
 msgid "Add Filter"
 msgstr "Přidej filtr"
@@ -174,6 +48,12 @@ msgstr "Název"
 
 msgid "Comma separated list of filters."
 msgstr "Seznam filtrů oddělených čárkou."
+
+msgid "Panel position"
+msgstr "Pozice panelu"
+
+msgid "Open"
+msgstr "Otevři"
 
 msgid "Add task"
 msgstr "Přidej úkol"
@@ -289,6 +169,9 @@ msgstr "Statistiky"
 msgid "Start tracking"
 msgstr "Start sledování"
 
+msgid "Cancel"
+msgstr "Zruš"
+
 msgid "Time Tracker"
 msgstr "Sledovač času"
 
@@ -316,6 +199,9 @@ msgstr "Od"
 msgid "Until"
 msgstr "Do"
 
+msgid "Copy"
+msgstr "Kopírovat"
+
 msgid "Totals"
 msgstr "Celkem"
 
@@ -331,29 +217,119 @@ msgstr "Celkové součty na slot"
 msgid "Task text copied to clipboard!"
 msgstr "Text úlohy zkopírován do schránky!"
 
-msgid "Todo"
-msgstr "Todo"
+msgid "Notification sound"
+msgstr "Zvuk upozornění"
 
-msgid "Timer"
-msgstr "Časovač"
+msgid "Add Alarm"
+msgstr "Přidej nový budík"
 
-msgid "Stopwatch"
-msgstr "Stopky"
+msgid "Time"
+msgstr "Čas"
 
-msgid "Theme css (empty for auto selection)"
-msgstr "Motiv css (prázdný pro automatický výběr)"
+msgid "Snooze n minutes"
+msgstr "Odložit n minut"
 
-msgid "Lazy list page size"
-msgstr "Velikost stránky lazy listu"
+msgid "Alarm"
+msgstr "Budík"
 
-msgid "Image not found"
-msgstr "Obrázek nenalezen"
+msgid "Snooze"
+msgstr "Odložit"
 
-msgid "Set shortcut"
-msgstr "Nastav klávesovou zkratku"
+msgid "Dismiss"
+msgstr "Odvolat"
 
-msgid "Type shortcut (backspace to reset)"
-msgstr "Stikni klávesovou zkratku (backspace pro resetování)"
+msgid "Left"
+msgstr "Vlevo"
+
+msgid "Center"
+msgstr "Střed"
+
+msgid "Right"
+msgstr "Vpravo"
+
+msgid "Settings"
+msgstr "Nastavení"
+
+msgid "Website"
+msgstr "Webové stránky"
+
+msgid "Show time in panel"
+msgstr "Zobrazit čas v panelu"
+
+msgid "Clock size (set to 0 for default size)"
+msgstr "Velikost hodin (pro výchozí nastaveno 0)"
+
+msgid "Start"
+msgstr "Start"
+
+msgid "Pause"
+msgstr "Pauza"
+
+msgid "Resume"
+msgstr "Obnovení"
+
+msgid "Reset"
+msgstr "Reset"
+
+msgid "Lap"
+msgstr "Kolo"
+
+msgid "Lap Time"
+msgstr "Čas kola"
+
+msgid "Overall Time"
+msgstr "Celkový čas"
+
+msgid "Lap Times"
+msgstr "Čas kol"
+
+msgid "Laps table copied to clipboard!"
+msgstr "Tabulka kol zkopírována do schránky!"
+
+msgid "Pomodoro"
+msgstr "Pomodoro"
+
+msgid "Long Break"
+msgstr "Dlouhá pauza"
+
+msgid "Short Break"
+msgstr "Krátká pauza"
+
+msgid "Show presets"
+msgstr "Předvolby"
+
+msgid "Phase"
+msgstr "Fáze"
+
+msgid "Completed pomodoros"
+msgstr "Dokončených Pomodor"
+
+msgid "Pomodoros until long break"
+msgstr "Pomodor do dlouhé přestávky"
+
+msgid "Add Preset"
+msgstr "Přidat předvolbu"
+
+msgid "Pomodoro length"
+msgstr "Délka Pomodoro"
+
+msgid "Short break length"
+msgstr "Délka krátké pauzy"
+
+msgid "Long break length"
+msgstr "Délka dlouhé pauzy"
+
+msgid "Long break every n pomodoros"
+msgstr "Dlouhá pauza každý n pomodor"
+
+msgid "Invalid time selected."
+msgstr "Zvolen neplatný čas."
+
+msgid "Timer Elapsed!"
+msgstr "Časovač vypršel!"
+
+msgid "Restart"
+msgstr "Restart"
 
 msgid "Tip"
 msgstr "Tip"
@@ -366,6 +342,15 @@ msgstr "Varování"
 
 msgid "Important"
 msgstr "Důležité"
+
+msgid "Image not found"
+msgstr "Obrázek nenalezen"
+
+msgid "Set shortcut"
+msgstr "Nastav klávesovou zkratku"
+
+msgid "Type shortcut (backspace to reset)"
+msgstr "Stikni klávesovou zkratku (backspace pro resetování)"
 
 msgid "Select folder"
 msgstr "Vyber adresář"
@@ -417,3 +402,18 @@ msgstr "Měsíc"
 
 msgid "Year"
 msgstr "Rok"
+
+msgid "Todo"
+msgstr "Todo"
+
+msgid "Timer"
+msgstr "Časovač"
+
+msgid "Stopwatch"
+msgstr "Stopky"
+
+msgid "Theme css (empty for auto selection)"
+msgstr "Motiv css (prázdný pro automatický výběr)"
+
+msgid "Lazy list page size"
+msgstr "Velikost stránky lazy listu"
