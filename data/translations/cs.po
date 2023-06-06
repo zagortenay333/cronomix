@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-06 12:55+0200\n"
+"POT-Creation-Date: 2023-06-06 12:57+0200\n"
 "PO-Revision-Date: 2023-06-05 16:07+0200\n"
 "Last-Translator: Ludek Vydra <lvtran@u.k2.cz>\n"
 "Language-Team: \n"
@@ -190,7 +190,8 @@ msgstr "Stop"
 msgid "Search Data"
 msgstr "Hledání"
 
-msgid "Date (e.g., 2000-01-01)"
+#, fuzzy
+msgid "Date (e.g., 2000-01-24)"
 msgstr "Datum (například 2023-12-24)"
 
 msgid "Since"

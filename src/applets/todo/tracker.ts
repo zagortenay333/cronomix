@@ -297,11 +297,11 @@ export class TimeTrackerView {
 
         this.#query_info_button = new Button({ parent: sdc_filter_row, icon: 'cronomix-question-symbolic' });
 
-        this.#query_since_entry = new Entry(_('Date (e.g., 2000-01-01)'));
+        this.#query_since_entry = new Entry(_('Date (e.g., 2000-01-24)'));
         new Misc.Row(_('Since'), this.#query_since_entry.actor, query_card);
         this.#query_since_entry.set_text(saved_query.since);
 
-        this.#query_until_entry = new Entry(_('Date (e.g., 2000-01-01)'));
+        this.#query_until_entry = new Entry(_('Date (e.g., 2000-01-24)'));
         new Misc.Row(_('Until'), this.#query_until_entry.actor, query_card);
         this.#query_until_entry.set_text(saved_query.until);
 
