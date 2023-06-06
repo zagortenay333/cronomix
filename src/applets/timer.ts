@@ -310,8 +310,8 @@ class Presets {
 
         Misc.focus_when_mapped(ok_button.actor);
 
-        ok_button.subscribe('left_click', () => applet.show_main_view());
         add_button.subscribe('left_click', () => applet.show_preset_editor());
+        ok_button.subscribe('left_click', () => applet.show_main_view());
     }
 
     destroy () {
@@ -337,7 +337,12 @@ class PresetCard extends Misc.Card {
 
         edit_button.subscribe('left_click', () => applet.show_preset_editor(preset));
         delete_button.subscribe('left_click', () => show_confirm_popup(delete_button, () => { applet.delete_preset(preset_idx); applet.show_presets(); }));
-        checkbox.subscribe('left_click', () => { applet.set_preset(checkbox.checked ? preset_idx : -1); applet.show_presets(); });
+        checkbox.subscribe('left_click', () => {
+            const preset = checkbox.checked ? preset_idx : -1;
+            if (applet.state === State.RESET) applet.reset(preset);
+            else                              applet.set_preset(preset);
+            applet.show_presets();
+        });
     }
 }
 
