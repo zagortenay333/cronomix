@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-06 12:57+0200\n"
+"POT-Creation-Date: 2023-06-07 12:57+0200\n"
 "PO-Revision-Date: 2023-06-05 16:07+0200\n"
 "Last-Translator: Ludek Vydra <lvtran@u.k2.cz>\n"
 "Language-Team: \n"
@@ -133,45 +133,6 @@ msgstr ""
 "Úlohy jsou v tomto seznamu seřazeny podle prvního atributu.\n"
 "V případě rovnosti prvního, podle druhého atributu atd..."
 
-msgid "No time tracker file selected."
-msgstr "Není vybrán soubor sledování času."
-
-msgid "Open time tracker settings"
-msgstr "Otevřít nastavení sledování času"
-
-msgid "The text of the corresponding tracker slot does not match this task."
-msgstr "Text příslušného slotu pro sledování neodpovídá tomuto úkolu."
-
-msgid "Here is what the text in the slot currently looks like:"
-msgstr "V současné době vypadá text ve slotu takto:"
-
-msgid "You can do one of the following:"
-msgstr "Můžete udělat jednu z následujících akcí:"
-
-msgid "Create a new slot leaving the old one in the tracker."
-msgstr "Vytvoření nového slotu s ponecháním starého."
-
-msgid "Update the current slot to match with this task."
-msgstr "Aktualizujte aktuální slot tak, aby odpovídal tomuto úkolu."
-
-msgid "Create new slot"
-msgstr "Vytvořte nový slot"
-
-msgid "Update current slot"
-msgstr "Aktualizujte aktuální slot"
-
-msgid "Stop tracking"
-msgstr "Stop sledování"
-
-msgid "Stats"
-msgstr "Statistiky"
-
-msgid "Start tracking"
-msgstr "Start sledování"
-
-msgid "Cancel"
-msgstr "Zruš"
-
 msgid "Time Tracker"
 msgstr "Sledovač času"
 
@@ -217,6 +178,48 @@ msgstr "Celkové součty na slot"
 
 msgid "Task text copied to clipboard!"
 msgstr "Text úlohy zkopírován do schránky!"
+
+msgid "Created"
+msgstr ""
+
+msgid "No time tracker file selected."
+msgstr "Není vybrán soubor sledování času."
+
+msgid "Open time tracker settings"
+msgstr "Otevřít nastavení sledování času"
+
+msgid "The text of the corresponding tracker slot does not match this task."
+msgstr "Text příslušného slotu pro sledování neodpovídá tomuto úkolu."
+
+msgid "Here is what the text in the slot currently looks like:"
+msgstr "V současné době vypadá text ve slotu takto:"
+
+msgid "You can do one of the following:"
+msgstr "Můžete udělat jednu z následujících akcí:"
+
+msgid "Create a new slot leaving the old one in the tracker."
+msgstr "Vytvoření nového slotu s ponecháním starého."
+
+msgid "Update the current slot to match with this task."
+msgstr "Aktualizujte aktuální slot tak, aby odpovídal tomuto úkolu."
+
+msgid "Create new slot"
+msgstr "Vytvořte nový slot"
+
+msgid "Update current slot"
+msgstr "Aktualizujte aktuální slot"
+
+msgid "Stop tracking"
+msgstr "Stop sledování"
+
+msgid "Stats"
+msgstr "Statistiky"
+
+msgid "Start tracking"
+msgstr "Start sledování"
+
+msgid "Cancel"
+msgstr "Zruš"
 
 msgid "Notification sound"
 msgstr "Zvuk upozornění"

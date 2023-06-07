@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-06 12:57+0200\n"
+"POT-Creation-Date: 2023-06-07 13:10+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -127,45 +127,6 @@ msgid ""
 "In case of a tie, by the second attribute, and so on..."
 msgstr ""
 
-msgid "No time tracker file selected."
-msgstr ""
-
-msgid "Open time tracker settings"
-msgstr ""
-
-msgid "The text of the corresponding tracker slot does not match this task."
-msgstr ""
-
-msgid "Here is what the text in the slot currently looks like:"
-msgstr ""
-
-msgid "You can do one of the following:"
-msgstr ""
-
-msgid "Create a new slot leaving the old one in the tracker."
-msgstr ""
-
-msgid "Update the current slot to match with this task."
-msgstr ""
-
-msgid "Create new slot"
-msgstr ""
-
-msgid "Update current slot"
-msgstr ""
-
-msgid "Stop tracking"
-msgstr ""
-
-msgid "Stats"
-msgstr ""
-
-msgid "Start tracking"
-msgstr ""
-
-msgid "Cancel"
-msgstr ""
-
 msgid "Time Tracker"
 msgstr ""
 
@@ -209,6 +170,48 @@ msgid "Per Slot Totals"
 msgstr ""
 
 msgid "Task text copied to clipboard!"
+msgstr ""
+
+msgid "Created"
+msgstr ""
+
+msgid "No time tracker file selected."
+msgstr ""
+
+msgid "Open time tracker settings"
+msgstr ""
+
+msgid "The text of the corresponding tracker slot does not match this task."
+msgstr ""
+
+msgid "Here is what the text in the slot currently looks like:"
+msgstr ""
+
+msgid "You can do one of the following:"
+msgstr ""
+
+msgid "Create a new slot leaving the old one in the tracker."
+msgstr ""
+
+msgid "Update the current slot to match with this task."
+msgstr ""
+
+msgid "Create new slot"
+msgstr ""
+
+msgid "Update current slot"
+msgstr ""
+
+msgid "Stop tracking"
+msgstr ""
+
+msgid "Stats"
+msgstr ""
+
+msgid "Start tracking"
+msgstr ""
+
+msgid "Cancel"
 msgstr ""
 
 msgid "Notification sound"

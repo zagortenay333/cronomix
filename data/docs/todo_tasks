@@ -10,7 +10,8 @@ to it and an explanation of what they mean:
     hide
     @foo
     track:3
-    due:2000-01-01
+    due:2000-01-24
+    created:2000-01-24
   ]
     The task body.
 
@@ -31,9 +32,12 @@ to it and an explanation of what they mean:
 | Task has an entry in the time tracker that
   is identified by the number 3.
 |-------------------------------------------------
-| due:2000-01-01
+| due:2000-01-24
 | Task has a due date. The date format follows
   the ISO 8601 spec: year-month-day.
+|-------------------------------------------------
+| created:2000-01-24
+| Date of creation in ISO format.
 |-------------------------------------------------
 | hide
 | Only these filter expressions can evaluate to

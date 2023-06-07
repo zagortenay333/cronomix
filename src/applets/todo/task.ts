@@ -1,8 +1,10 @@
 import * as St from 'imports.gi.St';
+import * as Clutter from 'imports.gi.Clutter';
 
 import * as Misc from 'utils/misc';
 import { Popup } from 'utils/popup';
 import * as P from 'utils/markup/parser';
+import { get_iso_date } from 'utils/time';
 import { _, unreachable } from 'utils/misc';
 import { Markup } from 'utils/markup/renderer';
 import { TodoApplet } from 'applets/todo/main';
@@ -138,7 +140,10 @@ export class TaskCard extends Misc.Card {
 
         const config = task.ast.config;
 
+        this.left_header_box.add_style_class_name('cronomix-spacing');
+
         const checkbox        = new CheckBox({ parent: this.left_header_box, checked: !!config.done });
+        if (config.created)   this.left_header_box.add_actor(new St.Label({ text: _('Created') + ' ' + config.created, y_align: Clutter.ActorAlign.CENTER, style: 'font-weight: bold', style_class: 'cronomix-green' }));
         const due_button      = !config.due ? null : new Button({ parent: this.left_header_box, label: _('Due') + ' ' + config.due, style_class: 'cronomix-floating-button cronomix-red' });
         const delete_button   = new Button({ parent: this.autohide_box, icon: 'cronomix-trash-symbolic' , style_class: 'cronomix-floating-button'});
         const edit_button     = new Button({ parent: this.autohide_box, icon: 'cronomix-edit-symbolic', style_class: 'cronomix-floating-button' });
@@ -294,7 +299,8 @@ export class TaskEditor extends EditorView {
         this.#applet = applet;
         if (task) this.#task = task;
 
-        this.main_view.entry.set_text(task?.text ?? '[] ', false);
+        const initial_text = task?.text ?? `[created:${get_iso_date()}] `;
+        this.main_view.entry.set_text(initial_text, false);
 
         this.main_view.get_completions = ref => {
             if (! this.#tags) {

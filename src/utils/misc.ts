@@ -301,14 +301,14 @@ export class Card {
         this.left_header_box = new St.BoxLayout({ y_align: Clutter.ActorAlign.CENTER, reactive: true, x_expand: true });
         this.header.add_actor(this.left_header_box);
 
-        this.autohide_box = new St.BoxLayout({ visible: false });
+        this.autohide_box = new St.BoxLayout({ opacity: 0 });
         this.header.add_actor(this.autohide_box);
 
         const focus_tracker = new FocusTracker(this.actor);
-        focus_tracker.subscribe('focus_enter', () => { scroll_to_widget(this.actor); this.autohide_box.show(); });
-        focus_tracker.subscribe('focus_leave', (has_pointer) => this.autohide_box.visible = has_pointer);
-        focus_tracker.subscribe('pointer_enter', () => this.autohide_box.show());
-        focus_tracker.subscribe('pointer_leave', (has_focus) => this.autohide_box.visible = has_focus);
+        focus_tracker.subscribe('focus_enter', () => { scroll_to_widget(this.actor); this.autohide_box.opacity = 255; });
+        focus_tracker.subscribe('focus_leave', (has_pointer) => this.autohide_box.opacity = has_pointer ? 255 : 0);
+        focus_tracker.subscribe('pointer_enter', () => this.autohide_box.opacity = 255);
+        focus_tracker.subscribe('pointer_leave', (has_focus) => this.autohide_box.opacity = has_focus ? 255 : 0);
     }
 }
 

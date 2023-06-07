@@ -90,6 +90,7 @@ export type Admonition = 'tip' | 'note' | 'warning' | 'important';
 export class AstMetaConfig {
     priority?:   number;
     track?:      number;
+    created?:    string;
     due?:        string;
     pin?:        boolean;
     done?:       boolean;
@@ -310,12 +311,13 @@ export class Parser {
         } else if (txt === 'pin') {
             if (! this.#try_peek_meta_config_delimiter()) return false;
             config.pin = true;
-        } else if (txt === 'due') {
+        } else if (txt === 'due' || txt === 'created') {
             if (! this.#lex.try_eat_token(':')) return false;
             this.#lex.try_eat_token('spaces');
             const date = this.#try_parse_date();
             if (! date) return false;
-            config.due = date;
+            if (txt === 'due') config.due = date;
+            else               config.created = date;
         } else if (txt === 'track') {
             if (! this.#lex.try_eat_token(':')) return false;
             this.#lex.try_eat_token('spaces');
