@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-07 13:35+0200\n"
+"POT-Creation-Date: 2023-06-07 13:52+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,36 +16,6 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
-
-msgid "Add Task"
-msgstr ""
-
-msgid "Ok"
-msgstr ""
-
-msgid "Add Filter"
-msgstr ""
-
-msgid "## Filter Groups"
-msgstr ""
-
-msgid "Each filter in a group creates a column of tasks in the main view."
-msgstr ""
-
-msgid "If no group is selected, then a group with 1 ``*`` filter is created."
-msgstr ""
-
-msgid "Tasks go into the first column from the left whose filter they pass."
-msgstr ""
-
-msgid "Hidden tasks only pass filters of the form ``hide`` or ``hide & expr``."
-msgstr ""
-
-msgid "Title"
-msgstr ""
-
-msgid "Comma separated list of filters."
-msgstr ""
 
 msgid "Panel position"
 msgstr ""
@@ -127,6 +97,78 @@ msgid ""
 "In case of a tie, by the second attribute, and so on..."
 msgstr ""
 
+msgid "Ok"
+msgstr ""
+
+msgid "Created"
+msgstr ""
+
+msgid "No time tracker file selected."
+msgstr ""
+
+msgid "Open time tracker settings"
+msgstr ""
+
+msgid "The text of the corresponding tracker slot does not match this task."
+msgstr ""
+
+msgid "Here is what the text in the slot currently looks like:"
+msgstr ""
+
+msgid "You can do one of the following:"
+msgstr ""
+
+msgid "Create a new slot leaving the old one in the tracker."
+msgstr ""
+
+msgid "Update the current slot to match with this task."
+msgstr ""
+
+msgid "Create new slot"
+msgstr ""
+
+msgid "Update current slot"
+msgstr ""
+
+msgid "Stop tracking"
+msgstr ""
+
+msgid "Stats"
+msgstr ""
+
+msgid "Start tracking"
+msgstr ""
+
+msgid "Cancel"
+msgstr ""
+
+msgid "Add Task"
+msgstr ""
+
+msgid "Add Filter"
+msgstr ""
+
+msgid "## Filter Groups"
+msgstr ""
+
+msgid "Each filter in a group creates a column of tasks in the main view."
+msgstr ""
+
+msgid "If no group is selected, then a group with 1 ``*`` filter is created."
+msgstr ""
+
+msgid "Tasks go into the first column from the left whose filter they pass."
+msgstr ""
+
+msgid "Hidden tasks only pass filters of the form ``hide`` or ``hide & expr``."
+msgstr ""
+
+msgid "Title"
+msgstr ""
+
+msgid "Comma separated list of filters."
+msgstr ""
+
 msgid "Time Tracker"
 msgstr ""
 
@@ -170,48 +212,6 @@ msgid "Per Slot Totals"
 msgstr ""
 
 msgid "Task text copied to clipboard!"
-msgstr ""
-
-msgid "Created"
-msgstr ""
-
-msgid "No time tracker file selected."
-msgstr ""
-
-msgid "Open time tracker settings"
-msgstr ""
-
-msgid "The text of the corresponding tracker slot does not match this task."
-msgstr ""
-
-msgid "Here is what the text in the slot currently looks like:"
-msgstr ""
-
-msgid "You can do one of the following:"
-msgstr ""
-
-msgid "Create a new slot leaving the old one in the tracker."
-msgstr ""
-
-msgid "Update the current slot to match with this task."
-msgstr ""
-
-msgid "Create new slot"
-msgstr ""
-
-msgid "Update current slot"
-msgstr ""
-
-msgid "Stop tracking"
-msgstr ""
-
-msgid "Stats"
-msgstr ""
-
-msgid "Start tracking"
-msgstr ""
-
-msgid "Cancel"
 msgstr ""
 
 msgid "Notification sound"

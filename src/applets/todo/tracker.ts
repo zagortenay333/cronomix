@@ -136,6 +136,8 @@ export class TimeTracker extends PubSub<TrackerEvents> {
         this.stop();
         this.tracked_slot = slot;
         this.#tic();
+        this.#applet.panel_label.show();
+        this.#applet.panel_item.add_style_class_name('cronomix-yellow');
         this.publish('start', null);
     }
 
@@ -145,6 +147,8 @@ export class TimeTracker extends PubSub<TrackerEvents> {
         this.tic = 0;
         this.time = new T.Time(0);
         this.flush();
+        this.#applet.panel_label.hide();
+        this.#applet.panel_item.remove_style_class_name('cronomix-yellow');
         this.publish('stop', null);
     }
 
@@ -199,6 +203,7 @@ export class TimeTracker extends PubSub<TrackerEvents> {
         }
 
         this.tic = Mainloop.timeout_add_seconds(1, () => this.#tic(now, count + 1));
+        this.#applet.set_panel_label(this.time.fmt_hms());
         this.publish('tic', null);
     }
 }
