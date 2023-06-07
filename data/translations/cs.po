@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-07 12:57+0200\n"
+"POT-Creation-Date: 2023-06-07 13:35+0200\n"
 "PO-Revision-Date: 2023-06-05 16:07+0200\n"
 "Last-Translator: Ludek Vydra <lvtran@u.k2.cz>\n"
 "Language-Team: \n"
@@ -362,9 +362,6 @@ msgstr "Vyber adresář"
 msgid "Select file"
 msgstr "Vyber soubor"
 
-msgid "Confirm"
-msgstr "Potvrď"
-
 msgid "Show more"
 msgstr "Zobrazit více"
 
@@ -406,6 +403,9 @@ msgstr "Měsíc"
 
 msgid "Year"
 msgstr "Rok"
+
+msgid "Confirm"
+msgstr "Potvrď"
 
 msgid "Todo"
 msgstr "Todo"

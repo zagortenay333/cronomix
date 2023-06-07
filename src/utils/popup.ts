@@ -98,11 +98,12 @@ export class Popup {
         Main.layoutManager.setDummyCursorGeometry(x, y, anchor_width, anchor_height);
         Main.layoutManager.uiGroup.set_child_above_sibling(this.boxpointer, null);
 
-        const area = Misc.get_monitor_work_area(this.scrollbox.actor);
-        const maxw = Math.max(x, area.width - x);
-        const maxh = Math.max(y, area.height - y);
+        const scale = St.ThemeContext.get_for_stage(global.stage).scale_factor;
+        const area  = Misc.get_monitor_work_area(this.scrollbox.actor);
+        const maxw  = Math.max(x, area.width - x);
+        const maxh  = Math.max(y, area.height - y);
 
-        this.boxpointer.style = `max-width: ${maxw - 6}px; max-height: ${maxh - 6}px`;
+        this.boxpointer.style = `max-width: ${(maxw - 6) / scale}px; max-height: ${(maxh - 6) / scale}px`;
         this.boxpointer.updateArrowSide(y === maxh ? St.Side.BOTTOM : St.Side.TOP);
 
         this.#grab_helper.grab({ actor: this.#focus_actor, onUngrab: () => this.close(false) });
