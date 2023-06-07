@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-07 13:52+0200\n"
+"POT-Creation-Date: 2023-06-07 16:51+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,6 +16,36 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
+
+msgid "Add Task"
+msgstr ""
+
+msgid "Ok"
+msgstr ""
+
+msgid "Add Filter"
+msgstr ""
+
+msgid "## Filter Groups"
+msgstr ""
+
+msgid "Each filter in a group creates a column of tasks in the main view."
+msgstr ""
+
+msgid "If no group is selected, then a group with 1 ``*`` filter is created."
+msgstr ""
+
+msgid "Tasks go into the first column from the left whose filter they pass."
+msgstr ""
+
+msgid "Hidden tasks only pass filters of the form ``hide`` or ``hide & expr``."
+msgstr ""
+
+msgid "Title"
+msgstr ""
+
+msgid "Comma separated list of filters."
+msgstr ""
 
 msgid "Panel position"
 msgstr ""
@@ -97,9 +127,6 @@ msgid ""
 "In case of a tie, by the second attribute, and so on..."
 msgstr ""
 
-msgid "Ok"
-msgstr ""
-
 msgid "Created"
 msgstr ""
 
@@ -140,33 +167,6 @@ msgid "Start tracking"
 msgstr ""
 
 msgid "Cancel"
-msgstr ""
-
-msgid "Add Task"
-msgstr ""
-
-msgid "Add Filter"
-msgstr ""
-
-msgid "## Filter Groups"
-msgstr ""
-
-msgid "Each filter in a group creates a column of tasks in the main view."
-msgstr ""
-
-msgid "If no group is selected, then a group with 1 ``*`` filter is created."
-msgstr ""
-
-msgid "Tasks go into the first column from the left whose filter they pass."
-msgstr ""
-
-msgid "Hidden tasks only pass filters of the form ``hide`` or ``hide & expr``."
-msgstr ""
-
-msgid "Title"
-msgstr ""
-
-msgid "Comma separated list of filters."
 msgstr ""
 
 msgid "Time Tracker"
@@ -250,16 +250,52 @@ msgstr ""
 msgid "Website"
 msgstr ""
 
+msgid "Pomodoro"
+msgstr ""
+
+msgid "Long Break"
+msgstr ""
+
+msgid "Short Break"
+msgstr ""
+
 msgid "Show time in panel"
 msgstr ""
 
 msgid "Clock size (set to 0 for default size)"
 msgstr ""
 
+msgid "Show presets"
+msgstr ""
+
+msgid "Phase"
+msgstr ""
+
+msgid "Completed pomodoros"
+msgstr ""
+
+msgid "Pomodoros until long break"
+msgstr ""
+
 msgid "Start"
 msgstr ""
 
 msgid "Pause"
+msgstr ""
+
+msgid "Add Preset"
+msgstr ""
+
+msgid "Pomodoro length"
+msgstr ""
+
+msgid "Short break length"
+msgstr ""
+
+msgid "Long break length"
+msgstr ""
+
+msgid "Long break every n pomodoros"
 msgstr ""
 
 msgid "Resume"
@@ -281,42 +317,6 @@ msgid "Lap Times"
 msgstr ""
 
 msgid "Laps table copied to clipboard!"
-msgstr ""
-
-msgid "Pomodoro"
-msgstr ""
-
-msgid "Long Break"
-msgstr ""
-
-msgid "Short Break"
-msgstr ""
-
-msgid "Show presets"
-msgstr ""
-
-msgid "Phase"
-msgstr ""
-
-msgid "Completed pomodoros"
-msgstr ""
-
-msgid "Pomodoros until long break"
-msgstr ""
-
-msgid "Add Preset"
-msgstr ""
-
-msgid "Pomodoro length"
-msgstr ""
-
-msgid "Short break length"
-msgstr ""
-
-msgid "Long break length"
-msgstr ""
-
-msgid "Long break every n pomodoros"
 msgstr ""
 
 msgid "Invalid time selected."
@@ -353,6 +353,9 @@ msgid "Select folder"
 msgstr ""
 
 msgid "Select file"
+msgstr ""
+
+msgid "Confirm"
 msgstr ""
 
 msgid "Show more"
@@ -393,9 +396,6 @@ msgid "Month"
 msgstr ""
 
 msgid "Year"
-msgstr ""
-
-msgid "Confirm"
 msgstr ""
 
 msgid "Todo"

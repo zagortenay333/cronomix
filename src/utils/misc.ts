@@ -28,7 +28,7 @@ type Extension = Immutable<{
 
 export const [shell_version] = imports.misc.config.PACKAGE_VERSION.split('.').map((x:unknown) => Number(x));
 export const Me: Extension = imports.misc.extensionUtils.getCurrentExtension();
-export const _: (str: string) => string = imports.gettext.domain(Me.metadata.uuid).gettext;
+export const _: (str: string) => string = imports.gettext.domain('cronomix').gettext;
 
 import * as Fs from 'utils/fs';
 import { FocusTracker } from 'utils/focus';

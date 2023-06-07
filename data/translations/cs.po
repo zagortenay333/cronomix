@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-07 13:48+0200\n"
+"POT-Creation-Date: 2023-06-07 16:51+0200\n"
 "PO-Revision-Date: 2023-06-05 16:07+0200\n"
 "Last-Translator: Ludek Vydra <lvtran@u.k2.cz>\n"
 "Language-Team: \n"
@@ -16,6 +16,38 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 3.3.1\n"
+
+msgid "Add Task"
+msgstr "Přidej úkol"
+
+msgid "Ok"
+msgstr "Ok"
+
+msgid "Add Filter"
+msgstr "Přidej filtr"
+
+msgid "## Filter Groups"
+msgstr "## Skupina filtrů"
+
+msgid "Each filter in a group creates a column of tasks in the main view."
+msgstr "Každý filtr ve skupině vytvoří sloupec úloh v hlavním zobrazení."
+
+msgid "If no group is selected, then a group with 1 ``*`` filter is created."
+msgstr ""
+"Pokud není vybrána žádná skupina, vytvoří se skupina s 1 filtrem ``*``."
+
+msgid "Tasks go into the first column from the left whose filter they pass."
+msgstr "Úkoly jsou zařazeny do prvního sloupce zleva, jehož filtrem prošly."
+
+msgid "Hidden tasks only pass filters of the form ``hide`` or ``hide & expr``."
+msgstr ""
+"Jen skryté úkoly se vyfiltrují výrazy tvaru ``hide`` nebo ``hide & expr``."
+
+msgid "Title"
+msgstr "Název"
+
+msgid "Comma separated list of filters."
+msgstr "Seznam filtrů oddělených čárkou."
 
 msgid "Panel position"
 msgstr "Pozice panelu"
@@ -101,9 +133,6 @@ msgstr ""
 "Úlohy jsou v tomto seznamu seřazeny podle prvního atributu.\n"
 "V případě rovnosti prvního, podle druhého atributu atd..."
 
-msgid "Ok"
-msgstr "Ok"
-
 msgid "Created"
 msgstr ""
 
@@ -145,35 +174,6 @@ msgstr "Start sledování"
 
 msgid "Cancel"
 msgstr "Zruš"
-
-msgid "Add Task"
-msgstr "Přidej úkol"
-
-msgid "Add Filter"
-msgstr "Přidej filtr"
-
-msgid "## Filter Groups"
-msgstr "## Skupina filtrů"
-
-msgid "Each filter in a group creates a column of tasks in the main view."
-msgstr "Každý filtr ve skupině vytvoří sloupec úloh v hlavním zobrazení."
-
-msgid "If no group is selected, then a group with 1 ``*`` filter is created."
-msgstr ""
-"Pokud není vybrána žádná skupina, vytvoří se skupina s 1 filtrem ``*``."
-
-msgid "Tasks go into the first column from the left whose filter they pass."
-msgstr "Úkoly jsou zařazeny do prvního sloupce zleva, jehož filtrem prošly."
-
-msgid "Hidden tasks only pass filters of the form ``hide`` or ``hide & expr``."
-msgstr ""
-"Jen skryté úkoly se vyfiltrují výrazy tvaru ``hide`` nebo ``hide & expr``."
-
-msgid "Title"
-msgstr "Název"
-
-msgid "Comma separated list of filters."
-msgstr "Seznam filtrů oddělených čárkou."
 
 msgid "Time Tracker"
 msgstr "Sledovač času"
@@ -257,17 +257,53 @@ msgstr "Nastavení"
 msgid "Website"
 msgstr "Webové stránky"
 
+msgid "Pomodoro"
+msgstr "Pomodoro"
+
+msgid "Long Break"
+msgstr "Dlouhá pauza"
+
+msgid "Short Break"
+msgstr "Krátká pauza"
+
 msgid "Show time in panel"
 msgstr "Zobrazit čas v panelu"
 
 msgid "Clock size (set to 0 for default size)"
 msgstr "Velikost hodin (pro výchozí nastaveno 0)"
 
+msgid "Show presets"
+msgstr "Předvolby"
+
+msgid "Phase"
+msgstr "Fáze"
+
+msgid "Completed pomodoros"
+msgstr "Dokončených Pomodor"
+
+msgid "Pomodoros until long break"
+msgstr "Pomodor do dlouhé přestávky"
+
 msgid "Start"
 msgstr "Start"
 
 msgid "Pause"
 msgstr "Pauza"
+
+msgid "Add Preset"
+msgstr "Přidat předvolbu"
+
+msgid "Pomodoro length"
+msgstr "Délka Pomodoro"
+
+msgid "Short break length"
+msgstr "Délka krátké pauzy"
+
+msgid "Long break length"
+msgstr "Délka dlouhé pauzy"
+
+msgid "Long break every n pomodoros"
+msgstr "Dlouhá pauza každý n pomodor"
 
 msgid "Resume"
 msgstr "Obnovení"
@@ -289,42 +325,6 @@ msgstr "Čas kol"
 
 msgid "Laps table copied to clipboard!"
 msgstr "Tabulka kol zkopírována do schránky!"
-
-msgid "Pomodoro"
-msgstr "Pomodoro"
-
-msgid "Long Break"
-msgstr "Dlouhá pauza"
-
-msgid "Short Break"
-msgstr "Krátká pauza"
-
-msgid "Show presets"
-msgstr "Předvolby"
-
-msgid "Phase"
-msgstr "Fáze"
-
-msgid "Completed pomodoros"
-msgstr "Dokončených Pomodor"
-
-msgid "Pomodoros until long break"
-msgstr "Pomodor do dlouhé přestávky"
-
-msgid "Add Preset"
-msgstr "Přidat předvolbu"
-
-msgid "Pomodoro length"
-msgstr "Délka Pomodoro"
-
-msgid "Short break length"
-msgstr "Délka krátké pauzy"
-
-msgid "Long break length"
-msgstr "Délka dlouhé pauzy"
-
-msgid "Long break every n pomodoros"
-msgstr "Dlouhá pauza každý n pomodor"
 
 msgid "Invalid time selected."
 msgstr "Zvolen neplatný čas."
@@ -361,6 +361,9 @@ msgstr "Vyber adresář"
 
 msgid "Select file"
 msgstr "Vyber soubor"
+
+msgid "Confirm"
+msgstr "Potvrď"
 
 msgid "Show more"
 msgstr "Zobrazit více"
@@ -403,9 +406,6 @@ msgstr "Měsíc"
 
 msgid "Year"
 msgstr "Rok"
-
-msgid "Confirm"
-msgstr "Potvrď"
 
 msgid "Todo"
 msgstr "Todo"
