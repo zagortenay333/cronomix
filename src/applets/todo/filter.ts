@@ -163,7 +163,7 @@ export class FilterView {
         const help_msg =
             _('## Filter Groups') + '\n\n' +
             _('Each filter in a group creates a column of tasks in the main view.') + '\n' +
-            _('If no group is selected, then a group with 1 ``*`` filter is created.') + '\n' +
+            _('If no group is selected, a group with 1 ``* & !hide`` filter is created.') + '\n' +
             _('Tasks go into the first column from the left whose filter they pass.') + '\n' +
             _('Hidden tasks only pass filters of the form ``hide`` or ``hide & expr``.') + '\n' +
             Fs.read_entire_file(Misc.Me.path + '/data/docs/filters') ?? '';
