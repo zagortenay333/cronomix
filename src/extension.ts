@@ -1,6 +1,10 @@
+// Call initTranslations() before loading any other modules
+// so that we can call the gettext functions in global scope.
+import { initTranslations } from 'imports.misc.extensionUtils';
+initTranslations('cronomix');
+
 import * as St from 'imports.gi.St';
 import * as Main from 'imports.ui.main';
-import { initTranslations } from 'imports.misc.extensionUtils';
 
 import * as Fs from 'utils/fs';
 import { Applet } from 'applets/applet';
@@ -186,6 +190,6 @@ export const colors: Record<string, string> = {
 };
 
 let extension: Extension|null = null;
-export function init    () { initTranslations('cronomix'); }
 export function enable  () { extension = new Extension(); }
 export function disable () { extension?.destroy(); extension = null; }
+export function init    () { }
