@@ -1,7 +1,25 @@
+//
 // This file is handwritten. It contains only the
 // definitions we need, and we are not being too
 // strict in how we define stuff.
-
+//
+// Note that the gnome API is spread into modules
+// where each moodule has a name of the form:
+//
+//    "imports.REST OF PATH"
+//
+// It's important to keep this because during the
+// build step we will search/replace these names
+// by simply removing the quotes. For example:
+//
+//   import foo from 'imports.bar.baz'
+//   import { a, b } from 'imports.bar.baz'
+//
+// becomes:
+//
+//   const foo = imports.bar.baz;
+//   const { a, b } = imports.bar.baz;
+//
 declare const global: any;
 declare const log: (msg: any) => void;
 declare const logError: (err: unknown) => void;
