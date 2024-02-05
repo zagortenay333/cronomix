@@ -1,21 +1,21 @@
-import * as St from 'imports.gi.St';
-import * as Mainloop from 'imports.mainloop';
+import * as St from 'gi://St';
+import * as GLib from 'gi://GLib';
 
-import { _ } from 'utils/misc';
-import * as Fs from 'utils/fs';
-import * as T from 'utils/time';
-import * as Pop from 'utils/popup';
-import * as Misc from 'utils/misc';
-import { Entry } from 'utils/entry';
-import { Seconds } from 'utils/time';
-import { PubSub } from 'utils/pubsub';
-import * as P from 'utils/markup/parser';
-import { Task } from 'applets/todo/task';
-import { LazyScrollBox } from 'utils/scroll';
-import { Markup } from 'utils/markup/renderer';
-import { TodoApplet } from 'applets/todo/main';
-import { Button, ButtonBox } from 'utils/button';
-import { FilePicker, Dropdown } from 'utils/pickers';
+import { Task } from './task.js';
+import { TodoApplet } from './main.js';
+import { _ } from './../../utils/misc.js';
+import * as Fs from './../../utils/fs.js';
+import * as T from './../../utils/time.js';
+import * as Pop from './../../utils/popup.js';
+import * as Misc from './../../utils/misc.js';
+import { Entry } from './../../utils/entry.js';
+import { Seconds } from './../../utils/time.js';
+import { PubSub } from './../../utils/pubsub.js';
+import * as P from './../../utils/markup/parser.js';
+import { LazyScrollBox } from './../../utils/scroll.js';
+import { Markup } from './../../utils/markup/renderer.js';
+import { Button, ButtonBox } from './../../utils/button.js';
+import { FilePicker, Dropdown } from './../../utils/pickers.js';
 
 export type TrackerSlot = {
     // This is not a task that belongs to the todo file,
@@ -143,7 +143,7 @@ export class TimeTracker extends PubSub<TrackerEvents> {
 
     stop () {
         if (this.tic === 0) return;
-        Mainloop.source_remove(this.tic);
+        GLib.source_remove(this.tic);
         this.tic = 0;
         this.time = new T.Time(0);
         this.flush();
@@ -202,7 +202,7 @@ export class TimeTracker extends PubSub<TrackerEvents> {
             this.flush();
         }
 
-        this.tic = Mainloop.timeout_add_seconds(1, () => this.#tic(now, count + 1));
+        this.tic = GLib.timeout_add_seconds(GLib.PRIORITY_DEFAULT, 1, () => this.#tic(now, count + 1));
         this.#applet.set_panel_label(this.time.fmt_hms());
         this.publish('tic', null);
     }
@@ -234,9 +234,9 @@ export class TimeTrackerView {
 
         const tracker               = applet.tracker;
         const saved_query           = applet.storage.read.tracker_query.value;
-        const filter_format         = Fs.read_entire_file(Misc.Me.path + '/data/docs/filters') ?? '';
-        const tracker_file_format   = Fs.read_entire_file(Misc.Me.path + '/data/docs/tracker') ?? '';
-        const tracker_query_format  = Fs.read_entire_file(Misc.Me.path + '/data/docs/tracker_query') ?? '';
+        const filter_format         = Fs.read_entire_file(Misc.ext.path + '/data/docs/filters') ?? '';
+        const tracker_file_format   = Fs.read_entire_file(Misc.ext.path + '/data/docs/tracker') ?? '';
+        const tracker_query_format  = Fs.read_entire_file(Misc.ext.path + '/data/docs/tracker_query') ?? '';
         const card_title_top_margin = 8;
 
         //

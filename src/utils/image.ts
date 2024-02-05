@@ -1,14 +1,14 @@
-import * as St from 'imports.gi.St';
-import * as Cogl from 'imports.gi.Cogl';
-import * as Meta from 'imports.gi.Meta';
-import * as GLib from 'imports.gi.GLib';
-import * as Clutter from 'imports.gi.Clutter';
-import { Pixbuf } from 'imports.gi.GdkPixbuf';
+import * as St from 'gi://St';
+import * as Cogl from 'gi://Cogl';
+import * as Meta from 'gi://Meta';
+import * as GLib from 'gi://GLib';
+import * as Clutter from 'gi://Clutter';
+import * as GdkPixbuf from 'gi://GdkPixbuf';
 
-import * as Fs from 'utils/fs';
-import { _ } from 'utils/misc';
-import { Button } from 'utils/button';
-import { show_info_popup } from 'utils/popup';
+import * as Fs from './fs.js';
+import { _ } from './misc.js';
+import { Button } from './button.js';
+import { show_info_popup } from './popup.js';
 
 export class Image {
     actor: St.Widget;
@@ -22,12 +22,12 @@ export class Image {
             if (fixed_width) {
                 width = fixed_width;
             } else {
-                [,width] = Pixbuf.get_file_info(path);
+                [,width] = GdkPixbuf.Pixbuf.get_file_info(path);
                 if (width === 0) throw 0;
                 if (width > default_width) width = default_width;
             }
 
-            const p       = Pixbuf.new_from_file_at_scale(path, width, -1, true);
+            const p       = GdkPixbuf.Pixbuf.new_from_file_at_scale(path, width, -1, true);
             const format  = p.get_has_alpha() ? Cogl.PixelFormat.RGBA_8888 : Cogl.PixelFormat.RGB_888;
             const content = St.ImageContent.new_with_preferred_size(p.width, p.height);
             content.set_bytes(p.read_pixel_bytes(), format, p.width, p.height, p.rowstride);

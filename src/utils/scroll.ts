@@ -1,10 +1,10 @@
-import * as St from 'imports.gi.St';
-import * as Clutter from 'imports.gi.Clutter';
-import * as Graphene from 'imports.gi.Graphene';
+import * as St from 'gi://St';
+import * as Clutter from 'gi://Clutter';
+import * as Graphene from 'gi://Graphene';
 
-import { Button } from 'utils/button';
-import { _, Rectangle } from 'utils/misc';
-import { FocusTracker } from 'utils/focus';
+import { Button } from './button.js';
+import { _, Rectangle } from './misc.js';
+import { FocusTracker } from './focus.js';
 
 export class ScrollBox {
     actor: St.ScrollView;

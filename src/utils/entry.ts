@@ -1,10 +1,10 @@
-import * as St from 'imports.gi.St';
-import * as Pango from 'imports.gi.Pango';
-import * as Mainloop from 'imports.mainloop';
-import * as Clutter from 'imports.gi.Clutter';
+import * as St from 'gi://St';
+import * as GLib from 'gi://GLib';
+import * as Pango from 'gi://Pango';
+import * as Clutter from 'gi://Clutter';
 
-import * as Misc from 'utils/misc';
-import { ScrollBox, scroll_to_widget } from 'utils/scroll';
+import * as Misc from './misc.js';
+import { ScrollBox, scroll_to_widget } from './scroll.js';
 
 export class Entry {
     actor: St.BoxLayout;
@@ -56,13 +56,13 @@ export class Entry {
         //
         let id = 0;
         this.entry.clutter_text.connect('text-changed', () => {
-            if (id) Mainloop.source_remove(id);
-            id = Mainloop.timeout_add(60, () => {
+            if (id) GLib.source_remove(id);
+            id = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 60, () => {
                 id = 0;
                 Misc.adjust_height(this.entry, this.entry.clutter_text);
             });
         });
-        this.entry.connect('destroy', () => { if (id) Mainloop.source_remove(id); });
+        this.entry.connect('destroy', () => { if (id) GLib.source_remove(id); });
         entry_container.connect('button-press-event', () => this.entry.grab_key_focus());
         this.entry.connect('key-press-event', (_:unknown, event: Clutter.Event) => this.#maybe_resize_with_keyboard(event));
         this.entry.clutter_text.buffer.connect('inserted-text', (_:unknown, start: number, text: string) => {

@@ -1,14 +1,14 @@
-import * as St from 'imports.gi.St';
-import * as Mainloop from 'imports.mainloop';
+import * as St from 'gi://St';
+import * as GLib from 'gi://GLib';
 
-import * as Fs from 'utils/fs';
-import * as Pop from 'utils/popup';
-import { PubSub } from 'utils/pubsub';
-import { ScrollBox } from 'utils/scroll';
-import { Button, CheckBox } from 'utils/button';
-import { KeyMap, KeyMapPicker } from 'utils/keymap';
-import { FilePicker, IntPicker, Dropdown } from 'utils/pickers';
-import { _, unreachable, Row, focus_when_mapped } from 'utils/misc';
+import * as Fs from './fs.js';
+import * as Pop from './popup.js';
+import { PubSub } from './pubsub.js';
+import { ScrollBox } from './scroll.js';
+import { Button, CheckBox } from './button.js';
+import { KeyMap, KeyMapPicker } from './keymap.js';
+import { FilePicker, IntPicker, Dropdown } from './pickers.js';
+import { _, unreachable, Row, focus_when_mapped } from './misc.js';
 
 export type Value =
     | { tag: 'custom';  value: unknown; }
@@ -44,7 +44,7 @@ export class Storage <
         this.keymap?.destroy();
 
         if (this.#flush_mainloop_id) {
-            Mainloop.source_remove(this.#flush_mainloop_id);
+            GLib.source_remove(this.#flush_mainloop_id);
             this.#flush_mainloop_id = 0;
             this.flush();
         }
@@ -72,7 +72,7 @@ export class Storage <
     schedule_flush () {
         if (this.#flush_mainloop_id) return;
 
-        this.#flush_mainloop_id = Mainloop.timeout_add_seconds(2, () => {
+        this.#flush_mainloop_id = GLib.timeout_add_seconds(GLib.PRIORITY_DEFAULT, 2, () => {
             this.flush();
             this.#flush_mainloop_id = 0;
         });

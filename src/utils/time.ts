@@ -1,9 +1,8 @@
-import * as GLib from 'imports.gi.GLib';
-import * as Shell  from 'imports.gi.Shell';
-import * as Mainloop from 'imports.mainloop';
+import * as GLib from 'gi://GLib';
+import * as Shell from 'gi://Shell';
 
-import { _ } from 'utils/misc';
-import { PubSub } from 'utils/pubsub';
+import { _ } from './misc.js';
+import { PubSub } from './pubsub.js';
 
 export const Days = [
     ['sun', _('Sun')],
@@ -125,7 +124,7 @@ export class WallClock extends PubSub<{ tic: Minutes }> {
         this.unsubscribe_all();
 
         if (this.#tic_id) {
-            Mainloop.source_remove(this.#tic_id);
+            GLib.source_remove(this.#tic_id);
             this.#tic_id = 0;
         }
     }
@@ -138,7 +137,7 @@ export class WallClock extends PubSub<{ tic: Minutes }> {
             this.publish('tic', this.time);
         }
 
-        this.#tic_id = Mainloop.timeout_add_seconds(1, () => this.#tic());
+        this.#tic_id = GLib.timeout_add_seconds(GLib.PRIORITY_DEFAULT, 1, () => this.#tic());
     }
 
     #get_time (): Minutes {

@@ -1,13 +1,13 @@
-import * as St from 'imports.gi.St';
-import * as Clutter from 'imports.gi.Clutter';
-import { PopupMenu } from 'imports.ui.popupMenu';
-import { BoxPointer } from 'imports.ui.boxpointer';
+import * as St from 'gi://St';
+import * as Clutter from 'gi://Clutter';
+import { PopupMenu } from 'resource:///org/gnome/shell/ui/popupMenu.js';
+import { BoxPointer } from 'resource:///org/gnome/shell/ui/boxpointer.js';
 
-import { _ } from 'utils/misc';
-import * as Fs from 'utils/fs';
-import * as Pop from 'utils/popup';
-import { Button } from 'utils/button';
-import { Day, Days, Time } from 'utils/time';
+import { _ } from './misc.js';
+import * as Fs from './fs.js';
+import * as Pop from './popup.js';
+import { Button } from './button.js';
+import { Day, Days, Time } from './time.js';
 
 export class DaySelection {
     mon = true;

@@ -1,17 +1,17 @@
-import * as St from 'imports.gi.St';
-import * as Mainloop from 'imports.mainloop';
-import * as Clutter from 'imports.gi.Clutter';
+import * as St from 'gi://St';
+import * as GLib from 'gi://GLib';
+import * as Clutter from 'gi://Clutter';
 
-import { _ } from 'utils/misc';
-import * as Misc from 'utils/misc';
-import { Extension } from 'extension';
-import { ButtonBox } from 'utils/button';
-import { ScrollBox } from 'utils/scroll';
-import { show_info_popup } from 'utils/popup';
-import { Time, get_time_ms } from 'utils/time';
-import { Markup } from 'utils/markup/renderer';
-import { Storage, StorageConfig } from 'utils/storage';
-import { Applet, PanelPosition, PanelPositionTr } from 'applets/applet';
+import { _ } from './../utils/misc.js';
+import * as Misc from './../utils/misc.js';
+import { Ext } from './../extension.js';
+import { ButtonBox } from './../utils/button.js';
+import { ScrollBox } from './../utils/scroll.js';
+import { show_info_popup } from './../utils/popup.js';
+import { Time, get_time_ms } from './../utils/time.js';
+import { Markup } from './../utils/markup/renderer.js';
+import { Storage, StorageConfig } from './../utils/storage.js';
+import { Applet, PanelPosition, PanelPositionTr } from './../applets/applet.js';
 
 const enum State {
     RUNNING,
@@ -64,7 +64,7 @@ export class StopwatchApplet extends Applet<Events> {
     #tic_id = 0;
     #current_view: null | { destroy: () => void } = null;
 
-    constructor (ext: Extension) {
+    constructor (ext: Ext) {
         super(ext, 'stopwatch');
         this.storage.init_keymap({ open: () => this.panel_item.menu.open() });
         this.set_panel_position(this.storage.read.panel_position.value);
@@ -88,7 +88,7 @@ export class StopwatchApplet extends Applet<Events> {
         this.lap_time = new Time(this.lap_time.total + dt);
 
         this.set_panel_label(this.time.fmt_hmsc());
-        this.#tic_id = Mainloop.timeout_add(60, () => this.#tic(now));
+        this.#tic_id = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 60, () => this.#tic(now));
         this.publish('tic', { total: this.time, lap: this.lap_time });
     }
 
@@ -105,13 +105,13 @@ export class StopwatchApplet extends Applet<Events> {
         this.lap_time = this.time;
         this.panel_label.hide();
         this.laps.length = 0;
-        if (this.#tic_id) { Mainloop.source_remove(this.#tic_id); this.#tic_id = 0; }
+        if (this.#tic_id) { GLib.source_remove(this.#tic_id); this.#tic_id = 0; }
         this.publish('state_change', this.state);
     }
 
     pause () {
         this.state = State.PAUSED;
-        if (this.#tic_id) { Mainloop.source_remove(this.#tic_id); this.#tic_id = 0; }
+        if (this.#tic_id) { GLib.source_remove(this.#tic_id); this.#tic_id = 0; }
         this.publish('state_change', this.state);
     }
 

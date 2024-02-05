@@ -1,15 +1,15 @@
-import * as St from 'imports.gi.St';
-import * as GLib from 'imports.gi.GLib';
-import * as Meta from 'imports.gi.Meta';
-import * as Pango from 'imports.gi.Pango';
-import * as Clutter from 'imports.gi.Clutter';
+import * as St from 'gi://St';
+import * as GLib from 'gi://GLib';
+import * as Meta from 'gi://Meta';
+import * as Pango from 'gi://Pango';
+import * as Clutter from 'gi://Clutter';
 
-import * as Fs from 'utils/fs';
-import * as Ext from 'extension';
-import * as Misc from 'utils/misc';
-import { Image } from 'utils/image';
-import * as P from 'utils/markup/parser';
-import { _, unreachable } from 'utils/misc';
+import * as P from './parser.js';
+import * as Fs from './../../utils/fs.js';
+import * as Ext from './../../extension.js';
+import * as Misc from './../../utils/misc.js';
+import { Image } from './../../utils/image.js';
+import { _, unreachable } from './../../utils/misc.js';
 
 export class MarkupPosition {
     idx!: number;

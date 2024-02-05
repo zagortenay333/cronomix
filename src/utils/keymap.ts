@@ -1,12 +1,12 @@
-import * as St from 'imports.gi.St';
-import * as Gtk from 'imports.gi.Gtk';
-import * as Meta from 'imports.gi.Meta';
-import * as Main from 'imports.ui.main';
-import * as Clutter from 'imports.gi.Clutter';
-import { ActionMode } from 'imports.gi.Shell';
+import * as St from 'gi://St';
+import * as Gtk from 'gi://Gtk';
+import * as Meta from 'gi://Meta';
+import * as Shell from 'gi://Shell';
+import * as Clutter from 'gi://Clutter';
+import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
-import { Button } from 'utils/button';
-import { _, shell_version } from 'utils/misc';
+import { _ } from './misc.js';
+import { Button } from './button.js';
 
 type Binding = {
     name:     string | null;
@@ -41,7 +41,7 @@ export class KeyMap {
 
         if (action) {
             const name = Meta.external_binding_name_for_action(action);
-            Main.wm.allowKeybinding(name, ActionMode.NORMAL | ActionMode.OVERVIEW | ActionMode.LOOKING_GLASS);
+            Main.wm.allowKeybinding(name, Shell.ActionMode.NORMAL | Shell.ActionMode.OVERVIEW | Shell.ActionMode.LOOKING_GLASS);
             this.#bindings.set(id, { action, name, callback });
         } else {
             this.#bindings.set(id, { action: 0, name: null, callback });
@@ -74,7 +74,7 @@ export class KeyMap {
     #disable (binding: Binding) {
         if (binding.name) {
             global.display.ungrab_accelerator(binding.action)
-            Main.wm.allowKeybinding(binding.name, ActionMode.NONE)
+            Main.wm.allowKeybinding(binding.name, Shell.ActionMode.NONE)
         }
     }
 
@@ -136,11 +136,7 @@ export class KeyMapPicker {
                 button.set_label(initial_msg);
                 button.actor.add_style_class_name('unset');
             } else {
-                if (shell_version >= '44') {
-                    this.#map = Meta.accelerator_name(e.get_state_full()[1], e.get_key_symbol());
-                } else {
-                    this.#map = Gtk.accelerator_name_with_keycode(null, e.get_key_symbol(), e.get_key_code(), e.get_state_full()[1]);
-                }
+                this.#map = Gtk.accelerator_name_with_keycode(null, e.get_key_symbol(), e.get_key_code(), e.get_state_full()[1]);
                 button.set_label(this.#map);
                 button.actor.remove_style_class_name('unset');
             }

@@ -1,19 +1,19 @@
-import * as St from 'imports.gi.St';
-import * as Mainloop from 'imports.mainloop';
-import * as Clutter from 'imports.gi.Clutter';
+import * as St from 'gi://St';
+import * as GLib from 'gi://GLib';
+import * as Clutter from 'gi://Clutter';
 
-import * as Misc from 'utils/misc';
-import { Extension } from 'extension';
-import { ScrollBox } from 'utils/scroll';
-import { TimePicker } from 'utils/pickers';
-import { _, unreachable } from 'utils/misc';
-import { Markup } from 'utils/markup/renderer';
-import { EditorView } from 'utils/markup/editor';
-import { Storage, StorageConfig } from 'utils/storage';
-import { Button, ButtonBox, CheckBox } from 'utils/button';
-import { Time, MiliSeconds, get_time_ms } from 'utils/time';
-import { show_confirm_popup, show_error_popup } from 'utils/popup';
-import { Applet, PanelPosition, PanelPositionTr } from 'applets/applet';
+import * as Misc from './../utils/misc.js';
+import { Ext } from './../extension.js';
+import { ScrollBox } from './../utils/scroll.js';
+import { TimePicker } from './../utils/pickers.js';
+import { _, unreachable } from './../utils/misc.js';
+import { Markup } from './../utils/markup/renderer.js';
+import { EditorView } from './../utils/markup/editor.js';
+import { Storage, StorageConfig } from './../utils/storage.js';
+import { Button, ButtonBox, CheckBox } from './../utils/button.js';
+import { Time, MiliSeconds, get_time_ms } from './../utils/time.js';
+import { show_confirm_popup, show_error_popup } from './../utils/popup.js';
+import { Applet, PanelPosition, PanelPositionTr } from './../applets/applet.js';
 
 class Preset {
     text = '';
@@ -27,7 +27,7 @@ const storage_config = {
         show_panel_label: { tag: 'boolean', value: true },
         panel_position:   { tag: 'enum',    value: PanelPosition.RIGHT, enum: Object.values(PanelPosition) },
         clock_size:       { tag: 'number',  value: 0, range: [0, 2000] },
-        notif_sound:      { tag: 'file',    value: Misc.Me.path + '/data/sounds/beeps.ogg', start: Misc.Me.path + '/data/sounds/' },
+        notif_sound:      { tag: 'file',    value: Misc.ext.path + '/data/sounds/beeps.ogg', start: Misc.ext.path + '/data/sounds/' },
         open:             { tag: 'keymap',  value: null },
         show_presets:     { tag: 'keymap',  value: null },
         current_preset:   { tag: 'custom',  value: -1 },
@@ -71,7 +71,7 @@ export class TimerApplet extends Applet<Events> {
     #tic_id = 0;
     #current_view: null | { destroy: () => void } = null;
 
-    constructor (ext: Extension) {
+    constructor (ext: Ext) {
         super(ext, 'timer');
 
         this.storage.init_keymap({
@@ -100,7 +100,7 @@ export class TimerApplet extends Applet<Events> {
         if (new_time > 0) {
             this.time = new Time(new_time);
             this.set_panel_label(this.time.fmt_hms(true));
-            this.#tic_id = Mainloop.timeout_add_seconds(1, () => this.#tic(now));
+            this.#tic_id = GLib.timeout_add_seconds(GLib.PRIORITY_DEFAULT, 1, () => this.#tic(now));
             this.publish('tic', this.time);
         } else {
             this.show_timer_elapsed();
@@ -118,7 +118,7 @@ export class TimerApplet extends Applet<Events> {
 
     pause () {
         this.state = State.PAUSED;
-        if (this.#tic_id) { Mainloop.source_remove(this.#tic_id); this.#tic_id = 0; }
+        if (this.#tic_id) { GLib.source_remove(this.#tic_id); this.#tic_id = 0; }
         this.publish('state_update', this.state);
     }
 
@@ -127,7 +127,7 @@ export class TimerApplet extends Applet<Events> {
         this.state = State.RESET;
         this.panel_label.hide();
         this.time = new Time(this.preset.time);
-        if (this.#tic_id) { Mainloop.source_remove(this.#tic_id); this.#tic_id = 0; }
+        if (this.#tic_id) { GLib.source_remove(this.#tic_id); this.#tic_id = 0; }
         this.publish('state_update', this.state);
     }
 

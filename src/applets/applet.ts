@@ -1,15 +1,14 @@
-import * as St from 'imports.gi.St';
-import * as Main from 'imports.ui.main';
-import * as Clutter from 'imports.gi.Clutter';
-import { Button as PanelButton } from 'imports.ui.panelMenu';
+import * as St from 'gi://St';
+import * as Main from 'resource:///org/gnome/shell/ui/main.js';
+import * as Clutter from 'gi://Clutter';
+import { Button as PanelButton } from 'resource:///org/gnome/shell/ui/panelMenu.js';
 
-import * as Fs from 'utils/fs';
-import { _ } from 'utils/misc';
-import * as Ext from 'extension';
-import * as Misc from 'utils/misc';
-import { PubSub } from 'utils/pubsub';
-import { Button } from 'utils/button';
-import { Extension } from 'extension';
+import * as Fs from './../utils/fs.js';
+import { _ } from './../utils/misc.js';
+import * as Misc from './../utils/misc.js';
+import { PubSub } from './../utils/pubsub.js';
+import { Button } from './../utils/button.js';
+import { Ext, applets } from './../extension.js';
 
 export enum PanelPosition {
     LEFT   = 'left',
@@ -25,13 +24,13 @@ export const PanelPositionTr = {
 
 export class Applet <E = {}> extends PubSub<E> {
     id: string;
-    ext: Extension;
+    ext: Ext;
     menu: St.BoxLayout;
     panel_icon: St.Icon;
     panel_label: St.Label;
     panel_item: PanelButton;
 
-    constructor (ext: Extension, id: string) {
+    constructor (ext: Ext, id: string) {
         super();
 
         this.id = id;
@@ -113,7 +112,7 @@ export class Applet <E = {}> extends PubSub<E> {
 export class ContextMenu {
     actor: St.BoxLayout;
 
-    constructor (ext: Extension) {
+    constructor (ext: Ext) {
         this.actor = new St.BoxLayout({ vertical: true, x_expand: true });
 
         const items_box = new St.BoxLayout({ vertical: true });
@@ -122,7 +121,7 @@ export class ContextMenu {
         const settings_button = new Button({ parent: items_box, icon: 'cronomix-wrench-symbolic', label: _('Settings'), style_class: 'cronomix-menu-button' });
         const website_button  = new Button({ parent: items_box, icon: 'cronomix-link-symbolic', label: _('Website'), style_class: 'cronomix-menu-button' });
 
-        website_button.subscribe('left_click', () => Fs.open_web_uri_in_default_app(Misc.Me.metadata.url));
+        website_button.subscribe('left_click', () => Fs.open_web_uri_in_default_app(Misc.ext.metadata.url));
         settings_button.subscribe('left_click', () => {
             let settings_view: St.Widget;
 
@@ -134,7 +133,7 @@ export class ContextMenu {
             const check_fn = () => {
                 let n_enabled = 0;
 
-                for (const [applet_name] of Ext.applets) {
+                for (const [applet_name] of applets) {
                     const enabled = ext.storage.read[applet_name].value;
                     if (enabled) n_enabled++;
                 }

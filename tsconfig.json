@@ -3,7 +3,7 @@
     "compilerOptions": {
         "target": "es2022",
         "lib": [ "es2022" ],
-        "outDir": "./.build",
+        "outDir": "/home/zagor/.local/share/gnome-shell/extensions/cronomix@zagortenay333",
         "strict": true,
         "pretty": true,
         "incremental": true,

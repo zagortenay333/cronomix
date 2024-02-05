@@ -1,10 +1,8 @@
-import * as St from 'imports.gi.St';
-import * as Gio from 'imports.gi.Gio';
-import * as Main from 'imports.ui.main';
-import * as Meta from 'imports.gi.Meta';
-import * as Clutter from 'imports.gi.Clutter';
-
-declare const imports: any;
+import * as St from 'gi://St';
+import * as Gio from 'gi://Gio';
+import * as Meta from 'gi://Meta';
+import * as Clutter from 'gi://Clutter';
+import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
 export type Rectangle = {
     x1: number;
@@ -13,33 +11,20 @@ export type Rectangle = {
     y2: number;
 }
 
-type Extension = Immutable<{
-    path: string,
+import * as Fs from './fs.js';
+import { FocusTracker } from './focus.js';
+import { scroll_to_widget } from './scroll.js';
+import { Extension, gettext as _ } from 'resource:///org/gnome/shell/extensions/extension.js';
 
-    metadata: {
-        url: string,
-        name: string,
-        uuid: string,
-        version: number,
-        description: string,
-        ['shell-version']: string[],
-    }
-}>;
-
-export const [shell_version] = imports.misc.config.PACKAGE_VERSION.split('.').map((x:unknown) => Number(x));
-export const Me: Extension = imports.misc.extensionUtils.getCurrentExtension();
-export const _: (str: string) => string = imports.gettext.domain('cronomix').gettext;
-
-import * as Fs from 'utils/fs';
-import { FocusTracker } from 'utils/focus';
-import { scroll_to_widget } from 'utils/scroll';
+export { _ }
+export const ext = Extension.lookupByUUID("cronomix@zagortenay333");
 
 export function unreachable (_: never): never {
     throw new Error('Unreachable.');
 }
 
 export function get_icon (str: string): Gio.Icon {
-    return Gio.Icon.new_for_string(Me.path + '/data/icons/' + str + '.svg');
+    return Gio.Icon.new_for_string(ext.path + '/data/icons/' + str + '.svg');
 }
 
 export function get_transformed_allocation (actor: Clutter.Actor): Rectangle {
@@ -75,12 +60,7 @@ export function get_line_box_at_idx (text: Clutter.Text, idx: number): Rectangle
 }
 
 export function run_before_redraw (fn: () => void) {
-    if (shell_version >= '44') {
-        const laters = global.compositor.get_laters();
-        laters.add(Meta.LaterType.BEFORE_REDRAW, () => { fn(); return false; });
-    } else {
-        Meta.later_add(Meta.LaterType.BEFORE_REDRAW, () => { fn(); return false; });
-    }
+    Meta.later_add(Meta.LaterType.BEFORE_REDRAW, () => { fn(); return false; });
 }
 
 export function run_when_mapped (actor: Clutter.Actor, fn: () => void, once = true) {

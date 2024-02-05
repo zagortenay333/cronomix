@@ -1,17 +1,17 @@
-import * as St from 'imports.gi.St';
+import * as St from 'gi://St';
 
-import * as Fs from 'utils/fs';
-import * as Pop from 'utils/popup';
-import * as Misc from 'utils/misc';
-import { Entry } from 'utils/entry';
-import { _, Row } from 'utils/misc';
-import * as P from 'utils/markup/parser';
-import { FilePicker } from 'utils/pickers';
-import { show_info_popup } from 'utils/popup';
-import { TodoApplet } from 'applets/todo/main';
-import { Button, CheckBox } from 'utils/button';
-import { Task, TaskCard } from 'applets/todo/task';
-import { ScrollBox, LazyScrollBox } from 'utils/scroll';
+import * as Fs from './../../utils/fs.js';
+import * as Pop from './../../utils/popup.js';
+import * as Misc from './../../utils/misc.js';
+import { Entry } from './../../utils/entry.js';
+import { _, Row } from './../../utils/misc.js';
+import * as P from './../../utils/markup/parser.js';
+import { FilePicker } from './../../utils/pickers.js';
+import { show_info_popup } from './../../utils/popup.js';
+import { TodoApplet } from './main.js';
+import { Button, CheckBox } from './../../utils/button.js';
+import { Task, TaskCard } from './task.js';
+import { ScrollBox, LazyScrollBox } from './../../utils/scroll.js';
 
 export class SearchView {
     actor: St.BoxLayout;
@@ -22,8 +22,8 @@ export class SearchView {
     constructor (applet: TodoApplet, query: string|Task = '') {
         this.actor = new St.BoxLayout({ reactive: true, style_class: 'cronomix-spacing' });
 
-        const filter_docs = Fs.read_entire_file(Misc.Me.path + '/data/docs/filters') ?? '';
-        const tasks_docs  = Fs.read_entire_file(Misc.Me.path + '/data/docs/todo_tasks') ?? '';
+        const filter_docs = Fs.read_entire_file(Misc.ext.path + '/data/docs/filters') ?? '';
+        const tasks_docs  = Fs.read_entire_file(Misc.ext.path + '/data/docs/todo_tasks') ?? '';
 
         //
         // left box

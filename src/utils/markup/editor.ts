@@ -1,17 +1,17 @@
-import * as St from 'imports.gi.St';
-import * as Mainloop from 'imports.mainloop';
-import * as Clutter from 'imports.gi.Clutter';
-import * as Graphene from 'imports.gi.Graphene';
+import * as St from 'gi://St';
+import * as GLib from 'gi://GLib';
+import * as Clutter from 'gi://Clutter';
+import * as Graphene from 'gi://Graphene';
 
-import { _ } from 'utils/misc';
-import * as Fs from 'utils/fs';
-import * as Misc from 'utils/misc';
-import { Popup } from 'utils/popup';
-import { Entry } from 'utils/entry';
-import { Button } from 'utils/button';
-import { ScrollBox, scroll_to_widget } from 'utils/scroll';
-import { Parser, AstBlock, idx_to_ast_path } from 'utils/markup/parser';
-import { Markup, MarkupPosition, RenderMetaFn } from 'utils/markup/renderer';
+import { _ } from './../../utils/misc.js';
+import * as Fs from './../../utils/fs.js';
+import * as Misc from './../../utils/misc.js';
+import { Popup } from './../../utils/popup.js';
+import { Entry } from './../../utils/entry.js';
+import { Button } from './../../utils/button.js';
+import { ScrollBox, scroll_to_widget } from './../../utils/scroll.js';
+import { Parser, AstBlock, idx_to_ast_path } from './parser.js';
+import { Markup, MarkupPosition, RenderMetaFn } from './renderer.js';
 
 export class Editor {
     actor: St.BoxLayout;
@@ -91,8 +91,8 @@ export class Editor {
         // listen
         //
         this.actor.connect('destroy', () => {
-            if (this.#cursor_change_sig) Mainloop.source_remove(this.#cursor_change_sig);
-            if (this.#text_change_sig) Mainloop.source_remove(this.#text_change_sig);
+            if (this.#cursor_change_sig) GLib.source_remove(this.#cursor_change_sig);
+            if (this.#text_change_sig) GLib.source_remove(this.#text_change_sig);
         });
         this.preview.actor.connect('captured-event', (_:unknown, event: Clutter.Event) => {
             const t = event.type();
@@ -107,16 +107,16 @@ export class Editor {
             }
         });
         this.entry.entry.clutter_text.connect('text-changed', () => {
-            if (this.#text_change_sig) Mainloop.source_remove(this.#text_change_sig);
+            if (this.#text_change_sig) GLib.source_remove(this.#text_change_sig);
 
-            this.#text_change_sig = Mainloop.timeout_add(200, () => {
+            this.#text_change_sig = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 200, () => {
                 this.#text_change_sig = 0;
                 this.#on_text_changed();
             });
         });
         this.entry.entry.clutter_text.connect('cursor-changed', () => {
             if (!this.#text_change_sig && !this.#cursor_change_sig) {
-                this.#cursor_change_sig = Mainloop.timeout_add(60, () => {
+                this.#cursor_change_sig = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 60, () => {
                     this.#cursor_change_sig = 0;
                     this.#on_cursor_changed();
                 });
@@ -311,9 +311,9 @@ export class EditorHelp extends Editor {
         const table_of_contents = new ScrollBox();
         this.actor.insert_child_at_index(table_of_contents.actor, 0);
 
-        const filters_docs = Fs.read_entire_file(Misc.Me.path + '/data/docs/filters') ?? '';
-        const markup_docs  = Fs.read_entire_file(Misc.Me.path + '/data/docs/markup') ?? '';
-        const tasks_docs   = Fs.read_entire_file(Misc.Me.path + '/data/docs/todo_tasks') ?? '';
+        const filters_docs = Fs.read_entire_file(Misc.ext.path + '/data/docs/filters') ?? '';
+        const markup_docs  = Fs.read_entire_file(Misc.ext.path + '/data/docs/markup') ?? '';
+        const tasks_docs   = Fs.read_entire_file(Misc.ext.path + '/data/docs/todo_tasks') ?? '';
 
         this.entry.set_text(markup_docs + '\n' + tasks_docs + '\n' + filters_docs, false);
         this.entry.set_cursor_pos(0);

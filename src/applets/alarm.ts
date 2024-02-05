@@ -1,18 +1,18 @@
-import * as St from 'imports.gi.St';
-import * as Clutter from 'imports.gi.Clutter';
+import * as St from 'gi://St';
+import * as Clutter from 'gi://Clutter';
 
-import { _ } from 'utils/misc';
-import * as T from 'utils/time';
-import * as Misc from 'utils/misc';
-import { Extension } from 'extension';
-import { ScrollBox } from 'utils/scroll';
-import { Markup } from 'utils/markup/renderer';
-import { EditorView } from 'utils/markup/editor';
-import { show_confirm_popup } from 'utils/popup';
-import { Storage, StorageConfig } from 'utils/storage';
-import { Button, ButtonBox, CheckBox } from 'utils/button';
-import { Applet, PanelPosition, PanelPositionTr } from 'applets/applet';
-import { DaySelection, DayPicker, IntPicker, TimePicker } from 'utils/pickers';
+import { _ } from './../utils/misc.js';
+import * as T from './../utils/time.js';
+import * as Misc from './../utils/misc.js';
+import { Ext } from './../extension.js';
+import { ScrollBox } from './../utils/scroll.js';
+import { Markup } from './../utils/markup/renderer.js';
+import { EditorView } from './../utils/markup/editor.js';
+import { show_confirm_popup } from './../utils/popup.js';
+import { Storage, StorageConfig } from './../utils/storage.js';
+import { Button, ButtonBox, CheckBox } from './../utils/button.js';
+import { Applet, PanelPosition, PanelPositionTr } from './applet.js';
+import { DaySelection, DayPicker, IntPicker, TimePicker } from './../utils/pickers.js';
 
 type Alarm = {
     msg: string;
@@ -27,7 +27,7 @@ const storage_config = {
 
     values: {
         panel_position: { tag: 'enum',    value: PanelPosition.RIGHT, enum: Object.values(PanelPosition) },
-        notif_sound:    { tag: 'file',    value: Misc.Me.path + '/data/sounds/beeps.ogg', start: Misc.Me.path + '/data/sounds/' },
+        notif_sound:    { tag: 'file',    value: Misc.ext.path + '/data/sounds/beeps.ogg', start: Misc.ext.path + '/data/sounds/' },
         open:           { tag: 'keymap',  value: null },
         add_alarm:      { tag: 'keymap',  value: null },
         alarms:         { tag: 'custom',  value: Array<Alarm>() },
@@ -53,7 +53,7 @@ export class AlarmApplet extends Applet {
     #snoozed = new Map<T.Minutes, Alarm[]>();
     #current_view: null | { destroy: () => void } = null;
 
-    constructor (ext: Extension) {
+    constructor (ext: Ext) {
         super(ext, 'alarm');
 
         this.storage.init_keymap({

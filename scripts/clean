@@ -1,0 +1,10 @@
+#!/bin/bash
+set -u
+
+cd "${BASH_SOURCE%/*}/.."
+
+uuid="cronomix@zagortenay333"
+ext_dir=~/".local/share/gnome-shell/extensions/${uuid}"
+
+rm tsconfig.json
+rm -rf $ext_dir

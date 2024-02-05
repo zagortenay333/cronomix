@@ -1,20 +1,16 @@
-// Call initTranslations() before loading any other modules
-// so that we can call the gettext functions in global scope.
-import { initTranslations } from 'imports.misc.extensionUtils';
-initTranslations('cronomix');
+import * as St from 'gi://St';
+import * as Main from 'resource:///org/gnome/shell/ui/main.js';
+import { Extension } from 'resource:///org/gnome/shell/extensions/extension.js';
 
-import * as St from 'imports.gi.St';
-import * as Main from 'imports.ui.main';
-
-import * as Fs from 'utils/fs';
-import { Applet } from 'applets/applet';
-import { TimerApplet } from 'applets/timer';
-import { AlarmApplet } from 'applets/alarm';
-import { TodoApplet } from 'applets/todo/main';
-import { _, Me, light_or_dark } from 'utils/misc';
-import { PomodoroApplet } from 'applets/pomodoro';
-import { StopwatchApplet } from 'applets/stopwatch';
-import { Storage, StorageConfig } from 'utils/storage';
+import * as Fs from './utils/fs.js';
+import { Applet } from './applets/applet.js';
+import { TimerApplet } from './applets/timer.js';
+import { AlarmApplet } from './applets/alarm.js';
+import { TodoApplet } from './applets/todo/main.js';
+import { PomodoroApplet } from './applets/pomodoro.js';
+import { ext, _, light_or_dark } from './utils/misc.js';
+import { StopwatchApplet } from './applets/stopwatch.js';
+import { Storage, StorageConfig } from './utils/storage.js';
 
 //
 // To register a new applet:
@@ -40,7 +36,7 @@ const storage_config = {
         timer:               { tag: 'boolean', value: true },
         pomodoro:            { tag: 'boolean', value: true },
         stopwatch:           { tag: 'boolean', value: true },
-        theme_file:          { tag: 'file',    value: '', start: Me.path + '/data/themes/' },
+        theme_file:          { tag: 'file',    value: '', start: ext.path + '/data/themes/' },
         lazy_list_page_size: { tag: 'number',  value: 20, range: [1, 100000] },
     },
 
@@ -60,7 +56,7 @@ const storage_config = {
     }
 } satisfies StorageConfig;
 
-export class Extension {
+export class Ext {
     storage = new Storage(storage_config);
     enabled_applets = new Map<string, Applet>();
 
@@ -137,7 +133,7 @@ export class Extension {
 
             const [ok, col] = theme_node.lookup_color('background-color', false);
             const style     = ok ? light_or_dark(col.red, col.green, col.blue) : 'dark';
-            stylesheet      = Me.path + '/data/themes/' + style + '.css';
+            stylesheet      = ext.path + '/data/themes/' + style + '.css';
 
             dummy.destroy();
         }
@@ -189,7 +185,8 @@ export const colors: Record<string, string> = {
     ['-cronomix-markup-highlight-bg']: '#FFAB42',
 };
 
-let extension: Extension|null = null;
-export function enable  () { extension = new Extension(); }
-export function disable () { extension?.destroy(); extension = null; }
-export function init    () { }
+export default class Cronomix extends Extension {
+    ext?: Ext;
+    enable  () { this.ext = new Ext(); }
+    disable () { this.ext?.destroy(); }
+}

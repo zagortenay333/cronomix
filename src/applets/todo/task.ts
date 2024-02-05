@@ -1,15 +1,15 @@
-import * as St from 'imports.gi.St';
-import * as Clutter from 'imports.gi.Clutter';
+import * as St from 'gi://St';
+import * as Clutter from 'gi://Clutter';
 
-import * as Misc from 'utils/misc';
-import { Popup } from 'utils/popup';
-import * as P from 'utils/markup/parser';
-import { get_iso_date } from 'utils/time';
-import { _, unreachable } from 'utils/misc';
-import { Markup } from 'utils/markup/renderer';
-import { TodoApplet } from 'applets/todo/main';
-import { EditorView } from 'utils/markup/editor';
-import { ButtonBox, Button, CheckBox } from 'utils/button';
+import * as Misc from './../../utils/misc.js';
+import { Popup } from './../../utils/popup.js';
+import * as P from './../../utils/markup/parser.js';
+import { get_iso_date } from './../../utils/time.js';
+import { _, unreachable } from './../../utils/misc.js';
+import { Markup } from './../../utils/markup/renderer.js';
+import { TodoApplet } from './main.js';
+import { EditorView } from './../../utils/markup/editor.js';
+import { ButtonBox, Button, CheckBox } from './../../utils/button.js';
 
 export class Task {
     text: string;

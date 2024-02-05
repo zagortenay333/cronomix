@@ -1,7 +1,7 @@
-import * as Gio from 'imports.gi.Gio';
-import * as GLib from 'imports.gi.GLib';
+import * as Gio from 'gi://Gio';
+import * as GLib from 'gi://GLib';
 
-import { _ } from 'utils/misc';
+import { _ } from './misc.js';
 
 export function decode_bytes (arr: unknown): string {
     const decoder = new TextDecoder();

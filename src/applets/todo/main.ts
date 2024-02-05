@@ -1,14 +1,14 @@
-import { _ } from 'utils/misc';
-import * as Fs from 'utils/fs';
-import { Extension } from 'extension';
-import * as P from 'utils/markup/parser';
-import { SearchView } from 'applets/todo/search';
-import { Task, TaskEditor } from 'applets/todo/task';
-import { Storage, StorageConfig } from 'utils/storage';
-import { SortView, SortSchema } from 'applets/todo/sort';
-import { Applet, PanelPosition, PanelPositionTr } from 'applets/applet';
-import { FilterGroup, FilterView, KanbanView } from 'applets/todo/filter';
-import { TimeTracker, TimeTrackerView, TrackerQuery } from 'applets/todo/tracker';
+import { SearchView } from './search.js';
+import { _ } from './../../utils/misc.js';
+import * as Fs from './../../utils/fs.js';
+import { Task, TaskEditor } from './task.js';
+import { Ext } from './../../extension.js';
+import { SortView, SortSchema } from './sort.js';
+import * as P from './../../utils/markup/parser.js';
+import { Storage, StorageConfig } from './../../utils/storage.js';
+import { FilterGroup, FilterView, KanbanView } from './filter.js';
+import { Applet, PanelPosition, PanelPositionTr } from './../applet.js';
+import { TimeTracker, TimeTrackerView, TrackerQuery } from './tracker.js';
 
 const storage_config = {
     file: '~/.config/cronomix/todo.json',
@@ -89,7 +89,7 @@ export class TodoApplet extends Applet {
     #current_view: null | { destroy: () => void } = null;
     #todo_file_monitor: Fs.FileMonitor | null = null;
 
-    constructor (ext: Extension) {
+    constructor (ext: Ext) {
         super(ext, 'todo');
 
         this.storage.init_keymap({

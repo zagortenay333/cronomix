@@ -1,11 +1,11 @@
-import * as St from 'imports.gi.St';
-import * as Clutter from 'imports.gi.Clutter';
+import * as St from 'gi://St';
+import * as Clutter from 'gi://Clutter';
 
-import { Button } from 'utils/button';
-import { Task } from 'applets/todo/task';
-import { show_info_popup } from 'utils/popup';
-import { TodoApplet } from 'applets/todo/main';
-import { _, unreachable, Card, focus_when_mapped } from 'utils/misc';
+import { Button } from './../../utils/button.js';
+import { Task } from './task.js';
+import { show_info_popup } from './../../utils/popup.js';
+import { TodoApplet } from './main.js';
+import { _, unreachable, Card, focus_when_mapped } from './../../utils/misc.js';
 
 export type SortSchema = Array<{
     direction: 'asc'|'desc'

@@ -1,4 +1,4 @@
-import * as Misc from 'utils/misc';
+import * as Misc from './misc.js';
 
 export class PubSub <Events> {
     #next_id  = 1;

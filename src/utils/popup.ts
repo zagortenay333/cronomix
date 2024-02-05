@@ -1,14 +1,14 @@
-import * as St from 'imports.gi.St';
-import * as Main from 'imports.ui.main';
-import * as Clutter from 'imports.gi.Clutter';
-import { GrabHelper } from 'imports.ui.grabHelper';
-import { BoxPointer, PopupAnimation } from 'imports.ui.boxpointer';
+import * as St from 'gi://St';
+import * as Main from 'resource:///org/gnome/shell/ui/main.js';
+import * as Clutter from 'gi://Clutter';
+import { GrabHelper } from 'resource:///org/gnome/shell/ui/grabHelper.js';
+import { BoxPointer, PopupAnimation } from 'resource:///org/gnome/shell/ui/boxpointer.js';
 
-import { _ } from 'utils/misc';
-import * as Misc from 'utils/misc';
-import { Button } from 'utils/button';
-import { ScrollBox } from 'utils/scroll';
-import { Markup } from 'utils/markup/renderer';
+import { _ } from './misc.js';
+import * as Misc from './misc.js';
+import { Button } from './button.js';
+import { ScrollBox } from './scroll.js';
+import { Markup } from './markup/renderer.js';
 
 export class Popup {
     is_open = false;

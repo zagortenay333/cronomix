@@ -3,26 +3,11 @@ set -u
 
 # ==============================================================================
 #
-# Dependencies: typescript, gettext and sed.
-#
-# Compilation happens in 2 steps:
-#
-#   1. The typescript compiler will be invoked if the directory './.build'
-#      doesn't exist and compile the ts files into it. Further compilations
-#      happen via 'tsc --watch' (see workflow steps below).
-#
-#   2. The js files from '.build' are copied together with the data files
-#      into: '~/.local/share/gnome-shell/extensions/cronomix@zagortenay333'.
-#      The copied js files will be post-processed to replace import/export
-#      stuff with gnome js native stuff by using sed.
-#
-# The smoothest workflow for developing the extension is:
-#
 #   1. Log into the Xorg version of gnome-shell to enable shell restarts.
-#   2. In a terminal run './scripts/listen' to listen for runtime errors.
-#   3. In a terminal run 'tsc --watch' for typechecking and recompilation.
-#   4. Modify some files.
-#   5. Run this script to recompile the 'cronomix@zagortenay333' folder.
+#   2. Run this script to compile the data folder and again later if you changed the data.
+#   3. In a terminal run './scripts/listen' to listen for runtime errors.
+#   4. In a terminal run 'tsc --watch' for typechecking and recompilation.
+#   5. Modify some files.
 #   6. Run './scripts/restart' to restart gnome-shell (only on Xorg).
 #
 # ==============================================================================
@@ -30,17 +15,31 @@ set -u
 cd "${BASH_SOURCE%/*}/.."
 
 uuid="cronomix@zagortenay333"
-build_dir=".build"
 ext_dir=~/".local/share/gnome-shell/extensions/${uuid}"
 
 #
-# Only call typescript if build_dir doesn't exist.
-# Use 'tsc --watch' for recompilations.
+# Build tsconfig.json file
 #
-if [ ! -d "$build_dir" ]; then
-    tsc
-    wait
-fi
+cat > "tsconfig.json" << EOF
+{
+    "include": [ "src/**/*" ],
+    "compilerOptions": {
+        "target": "es2022",
+        "lib": [ "es2022" ],
+        "outDir": "$ext_dir",
+        "strict": true,
+        "pretty": true,
+        "incremental": true,
+        "noUnusedLocals": true,
+        "noImplicitReturns": true,
+        "noUnusedParameters": true,
+        "downlevelIteration": true,
+        "skipDefaultLibCheck": true,
+        "exactOptionalPropertyTypes": true,
+        "forceConsistentCasingInFileNames": true
+    }
+}
+EOF
 
 #
 # Build data
@@ -72,28 +71,4 @@ for po_file in $po_files; do
     lang=${lang%.*}
     mkdir -p "$mo_dir/$lang/LC_MESSAGES/"
 	msgfmt "$po_dir/$lang.po" -o "$mo_dir/$lang/LC_MESSAGES/cronomix.mo"
-done
-
-#
-# Do a post pass on all the files that typescript outputs.
-# Gnome JS doesn't support import/export stuff so we have
-# to compile those into gnome native stuff...
-#
-for input in $(find . -name '*.js'); do
-    output="$ext_dir/$(echo "$input" | sed "s|\./$build_dir/||g")"
-    mkdir -p $(dirname "$output")
-    touch "$output"
-    sed -E\
-        -e '1i const _ME = imports.misc.extensionUtils.getCurrentExtension();\n'\
-        -e 's/export var/var/g'\
-        -e 's/export const/var/g'\
-        -e 's/export function/function/g'\
-        -e 's/export class (\w+)/var \1 = class \1/g'\
-        -e '/import/ s/(\w+) as (\w+)/\1: \2/g'\
-        -e "s/import ['\"](.+)['\"]/_ME.imports.\1/g"\
-        -e "s/import (\{.*\}) from '(.+)'/const \1 = _ME.imports.\2/g"\
-        -e "s/import \* as (\w+) from ['\"](.+)['\"]/const \1 = _ME.imports.\2/g"\
-        -e 's/_ME\.imports\.imports\./imports\./g'\
-        -e '/_ME\.imports\./ s|/|.|g'\
-        "$input" > "$output"
 done

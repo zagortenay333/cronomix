@@ -1,8 +1,8 @@
-import * as St from 'imports.gi.St';
-import * as Clutter from 'imports.gi.Clutter';
+import * as St from 'gi://St';
+import * as Clutter from 'gi://Clutter';
 
-import * as Misc from 'utils/misc';
-import { PubSub } from 'utils/pubsub';
+import * as Misc from './misc.js';
+import { PubSub } from './pubsub.js';
 
 export type Events = {
     focus_enter:   true;

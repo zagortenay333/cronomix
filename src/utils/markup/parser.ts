@@ -1,5 +1,5 @@
-import { unreachable } from 'utils/misc';
-import { Lexer, Token, TokenTag } from 'utils/markup/lexer';
+import { unreachable } from './../../utils/misc.js';
+import { Lexer, Token, TokenTag } from './../../utils/markup/lexer.js';
 
 export type Ast =
     | AstBlock

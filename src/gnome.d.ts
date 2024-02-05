@@ -1,33 +1,16 @@
 //
-// This file is handwritten. It contains only the
-// definitions we need, and we are not being too
-// strict in how we define stuff.
+// This file is handwritten. It only contains the
+// parts of the gnome API that this extension uses.
 //
-// Note that the gnome API is spread into modules
-// where each moodule has a name of the form:
-//
-//    "imports.REST OF PATH"
-//
-// It's important to keep this because during the
-// build step we will search/replace these names
-// by simply removing the quotes. For example:
-//
-//   import foo from 'imports.bar.baz'
-//   import { a, b } from 'imports.bar.baz'
-//
-// becomes:
-//
-//   const foo = imports.bar.baz;
-//   const { a, b } = imports.bar.baz;
-//
+
 declare const global: any;
 declare const log: (msg: any) => void;
 declare const logError: (err: unknown) => void;
 
-declare module 'imports.gi.St' {
-    import * as Gio from 'imports.gi.Gio';
-    import * as Clutter from 'imports.gi.Clutter';
-    import * as GObject from 'imports.gi.GObject';
+declare module 'gi://St' {
+    import * as Gio from 'gi://Gio';
+    import * as Clutter from 'gi://Clutter';
+    import * as GObject from 'gi://GObject';
 
     enum Align {
         START,
@@ -174,11 +157,11 @@ declare module 'imports.gi.St' {
     }
 }
 
-declare module 'imports.gi.Clutter' {
-    import * as St from 'imports.gi.St';
-    import * as Pango from 'imports.gi.Pango';
-    import * as GObject from 'imports.gi.GObject';
-    import * as Graphene from 'imports.gi.Graphene';
+declare module 'gi://Clutter' {
+    import * as St from 'gi://St';
+    import * as Pango from 'gi://Pango';
+    import * as GObject from 'gi://GObject';
+    import * as Graphene from 'gi://Graphene';
 
     // We don't list all key constants here since there's thousands of them.
     const KEY_space:     number,
@@ -429,9 +412,9 @@ declare module 'imports.gi.Clutter' {
     }
 }
 
-declare module 'imports.ui.boxpointer' {
-    import * as St from 'imports.gi.St';
-    import * as Clutter from 'imports.gi.Clutter';
+declare module 'resource:///org/gnome/shell/ui/boxpointer.js' {
+    import * as St from 'gi://St';
+    import * as Clutter from 'gi://Clutter';
 
     const enum PopupAnimation {
         NONE  = 0,
@@ -450,9 +433,9 @@ declare module 'imports.ui.boxpointer' {
     }
 }
 
-declare module 'imports.ui.popupMenu' {
-    import * as St from 'imports.gi.St';
-    import * as Clutter from 'imports.gi.Clutter';
+declare module 'resource:///org/gnome/shell/ui/popupMenu.js' {
+    import * as St from 'gi://St';
+    import * as Clutter from 'gi://Clutter';
 
     class PopupMenuManager {
         constructor (owner: Clutter.Actor, grab_params?: object);
@@ -469,18 +452,14 @@ declare module 'imports.ui.popupMenu' {
     }
 }
 
-declare module 'imports.ui.panelMenu' {
-    import * as St from 'imports.gi.St';
+declare module 'resource:///org/gnome/shell/ui/panelMenu.js' {
+    import * as St from 'gi://St';
     class ButtonBox extends St.Widget { container: St.Bin; }
     class Button extends ButtonBox { menu: any; }
 }
 
-declare module 'imports.misc.extensionUtils' {
-    function initTranslations(name: string): void;
-}
-
-declare module 'imports.ui.windowManager' {
-    import * as Shell from 'imports.gi.Shell';
+declare module 'resource:///org/gnome/shell/ui/windowManager.js' {
+    import * as Shell from 'gi://Shell';
     class WindowManager {
         allowKeybinding (name: string, modes: Shell.ActionMode): void;
     }
@@ -494,8 +473,8 @@ declare class TextEncoder {
     encode (input?: string): Uint8Array;
 }
 
-declare module 'imports.gi.Gio' {
-    import * as GObject from 'imports.gi.GObject';
+declare module 'gi://Gio' {
+    import * as GObject from 'gi://GObject';
 
     enum FileMonitorFlags {
         NONE             = 0,
@@ -644,12 +623,37 @@ declare module 'imports.gi.Gio' {
     }
 }
 
-declare module 'imports.gi.GLib' {
-    const SOURCE_REMOVE: number;
+declare module 'resource:///org/gnome/shell/extensions/extension.js' {
+    function gettext (msg: string): string;
+
+    class Ext {
+        path: string;
+        metadata: {
+            url: string,
+            name: string,
+            uuid: string,
+            description: string,
+            ['gettext-domain']: string,
+            ['shell-version']: string[],
+        };
+    }
+
+    class Extension {
+        static initTranslations (domain: string): void;
+        static lookupByUUID (id: string): Ext;
+    }
+}
+
+declare module 'gi://GLib' {
+    const PRIORITY_DEFAULT: number;
 
     abstract class Error {
         matches (domain: unknown, code: number): boolean;
     }
+
+    function source_remove       (id: number): true;
+    function timeout_add         (priority: number, timeout_ms: number, fn: Function): number;
+    function timeout_add_seconds (priority: number, timeout: number, fn: Function): number;
 
     function get_home_dir (): string;
     function get_monotonic_time (): number;
@@ -657,10 +661,10 @@ declare module 'imports.gi.GLib' {
     function filename_to_uri (filename: string, hostname: string | null): string;
 }
 
-declare module 'imports.ui.panel' {
-    import * as St from 'imports.gi.St';
-    import * as PopupMenu from 'imports.ui.popupMenu';
-    import * as PanelMenu from 'imports.ui.panelMenu';
+declare module 'resource:///org/gnome/shell/ui/panel.js' {
+    import * as St from 'gi://St';
+    import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
+    import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
 
     class Panel extends St.Widget {
         statusArea: { [key: string]: PanelMenu.Button };
@@ -669,7 +673,7 @@ declare module 'imports.ui.panel' {
     }
 }
 
-declare module 'imports.gi.Meta' {
+declare module 'gi://Meta' {
     class Rectangle {
         x:      number;
         y:      number;
@@ -715,11 +719,11 @@ declare module 'imports.gi.Meta' {
     function external_binding_name_for_action (action: number): string;
 }
 
-declare module 'imports.ui.layout' {
-    import * as St from 'imports.gi.St';
-    import * as Meta from 'imports.gi.Meta';
-    import * as Clutter from 'imports.gi.Clutter';
-    import * as GObject from 'imports.gi.GObject';
+declare module 'resource:///org/gnome/shell/ui/layout.js' {
+    import * as St from 'gi://St';
+    import * as Meta from 'gi://Meta';
+    import * as Clutter from 'gi://Clutter';
+    import * as GObject from 'gi://GObject';
 
     class Monitor {
         index: number;
@@ -741,14 +745,14 @@ declare module 'imports.ui.layout' {
     }
 }
 
-declare module 'imports.gi.Gtk' {
+declare module 'gi://Gtk' {
     function accelerator_name_with_keycode (d:null, key: number, keycode: number, modifiers: unknown): string;
 }
 
-declare module 'imports.ui.main' {
-    import * as Panel from 'imports.ui.panel';
-    import * as Layout from 'imports.ui.layout';
-    import { WindowManager } from 'imports.ui.windowManager';
+declare module 'resource:///org/gnome/shell/ui/main.js' {
+    import * as Panel from 'resource:///org/gnome/shell/ui/panel.js';
+    import * as Layout from 'resource:///org/gnome/shell/ui/layout.js';
+    import { WindowManager } from 'resource:///org/gnome/shell/ui/windowManager.js';
 
     const wm: WindowManager;
     const panel: Panel.Panel;
@@ -758,8 +762,8 @@ declare module 'imports.ui.main' {
     function loadTheme (): void;
 }
 
-declare module 'imports.ui.grabHelper' {
-    import * as Clutter from 'imports.gi.Clutter';
+declare module 'resource:///org/gnome/shell/ui/grabHelper.js' {
+    import * as Clutter from 'gi://Clutter';
 
     class GrabHelper {
         constructor (owner: Clutter.Actor);
@@ -768,14 +772,7 @@ declare module 'imports.ui.grabHelper' {
     }
 }
 
-declare module 'imports.mainloop' {
-    function idle_add            (fn: Function): number;
-    function source_remove       (id: number): true;
-    function timeout_add         (timeout_ms: number, fn: Function): number;
-    function timeout_add_seconds (timeout: number, fn: Function): number;
-}
-
-declare module 'imports.gi.GObject' {
+declare module 'gi://GObject' {
     class Object {
         constructor (...args: unknown[]);
         connect     (sig: string, callback: Function): number;
@@ -783,7 +780,7 @@ declare module 'imports.gi.GObject' {
     }
 }
 
-declare module 'imports.gi.Graphene' {
+declare module 'gi://Graphene' {
     class Point3D {
         x: number;
         y: number;
@@ -804,14 +801,14 @@ declare module 'imports.gi.Graphene' {
     }
 }
 
-declare module 'imports.gi.Cogl' {
+declare module 'gi://Cogl' {
     enum PixelFormat {
         RGB_888,
         RGBA_8888,
     }
 }
 
-declare module 'imports.gi.GdkPixbuf' {
+declare module 'gi://GdkPixbuf' {
     class Pixbuf {
         static new_from_file_at_scale (path: string, w: number, height: number, keep_ratio: boolean): Pixbuf;
         static get_file_info (path: string): [unknown, number, number];
@@ -823,8 +820,8 @@ declare module 'imports.gi.GdkPixbuf' {
     }
 }
 
-declare module 'imports.gi.Pango' {
-    import * as GObject from 'imports.gi.GObject';
+declare module 'gi://Pango' {
+    import * as GObject from 'gi://GObject';
 
     enum WrapMode {
         WORD,
@@ -846,7 +843,7 @@ declare module 'imports.gi.Pango' {
     }
 }
 
-declare module 'imports.gi.Shell' {
+declare module 'gi://Shell' {
     function util_get_week_start (): number;
 
     enum ActionMode {

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-09 13:27+0200\n"
+"POT-Creation-Date: 2024-02-05 08:09-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,81 +16,6 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
-
-msgid "Panel position"
-msgstr ""
-
-msgid "Open"
-msgstr ""
-
-msgid "Add task"
-msgstr ""
-
-msgid "Search tasks"
-msgstr ""
-
-msgid "Todo file"
-msgstr ""
-
-msgid "Open time tracker"
-msgstr ""
-
-msgid "Open todo file"
-msgstr ""
-
-msgid "Pin"
-msgstr ""
-
-msgid "Priority"
-msgstr ""
-
-msgid "Due"
-msgstr ""
-
-msgid "Done"
-msgstr ""
-
-msgid "Hide"
-msgstr ""
-
-msgid "Ascending"
-msgstr ""
-
-msgid "Descending"
-msgstr ""
-
-msgid "You must select a todo file."
-msgstr ""
-
-msgid "A todo file is a text file containing markup."
-msgstr ""
-
-msgid "To learn about the markup, open the built-in editor and press F1."
-msgstr ""
-
-msgid "Filter expression"
-msgstr ""
-
-msgid "Delete selected tasks"
-msgstr ""
-
-msgid "Copy selected tasks to file"
-msgstr ""
-
-msgid "Modify attributes of selected tasks"
-msgstr ""
-
-msgid "Space separated list of task attributes"
-msgstr ""
-
-msgid "Delete"
-msgstr ""
-
-msgid "Add"
-msgstr ""
-
-msgid "Apply"
-msgstr ""
 
 msgid ""
 "Tasks are sorted by the first attribute in this list.\n"
@@ -101,6 +26,9 @@ msgid "Ok"
 msgstr ""
 
 msgid "Created"
+msgstr ""
+
+msgid "Due"
 msgstr ""
 
 msgid "No time tracker file selected."
@@ -140,6 +68,64 @@ msgid "Start tracking"
 msgstr ""
 
 msgid "Cancel"
+msgstr ""
+
+msgid "Add Task"
+msgstr ""
+
+msgid "Add Filter"
+msgstr ""
+
+msgid "## Filter Groups"
+msgstr ""
+
+msgid "Each filter in a group creates a column of tasks in the main view."
+msgstr ""
+
+msgid ""
+"If no group is selected, a group with 1 ``* & !hide`` filter is created."
+msgstr ""
+
+msgid "Tasks go into the first column from the left whose filter they pass."
+msgstr ""
+
+msgid "Hidden tasks only pass filters of the form ``hide`` or ``hide & expr``."
+msgstr ""
+
+msgid "Title"
+msgstr ""
+
+msgid "Comma separated list of filters."
+msgstr ""
+
+msgid "Filter expression"
+msgstr ""
+
+msgid "Delete selected tasks"
+msgstr ""
+
+msgid "Copy selected tasks to file"
+msgstr ""
+
+msgid "Modify attributes of selected tasks"
+msgstr ""
+
+msgid "Space separated list of task attributes"
+msgstr ""
+
+msgid "Delete"
+msgstr ""
+
+msgid "Add"
+msgstr ""
+
+msgid "Apply"
+msgstr ""
+
+msgid "Ascending"
+msgstr ""
+
+msgid "Descending"
 msgstr ""
 
 msgid "Time Tracker"
@@ -187,53 +173,79 @@ msgstr ""
 msgid "Task text copied to clipboard!"
 msgstr ""
 
-msgid "Add Task"
+msgid "Panel position"
 msgstr ""
 
-msgid "Add Filter"
+msgid "Open"
 msgstr ""
 
-msgid "## Filter Groups"
+msgid "Add task"
 msgstr ""
 
-msgid "Each filter in a group creates a column of tasks in the main view."
+msgid "Search tasks"
 msgstr ""
 
-msgid ""
-"If no group is selected, a group with 1 ``* & !hide`` filter is created."
+msgid "Todo file"
 msgstr ""
 
-msgid "Tasks go into the first column from the left whose filter they pass."
+msgid "Open time tracker"
 msgstr ""
 
-msgid "Hidden tasks only pass filters of the form ``hide`` or ``hide & expr``."
+msgid "Open todo file"
 msgstr ""
 
-msgid "Title"
+msgid "Pin"
 msgstr ""
 
-msgid "Comma separated list of filters."
+msgid "Priority"
 msgstr ""
 
-msgid "Notification sound"
+msgid "Done"
 msgstr ""
 
-msgid "Add Alarm"
+msgid "Hide"
 msgstr ""
 
-msgid "Time"
+msgid "You must select a todo file."
 msgstr ""
 
-msgid "Snooze n minutes"
+msgid "A todo file is a text file containing markup."
 msgstr ""
 
-msgid "Alarm"
+msgid "To learn about the markup, open the built-in editor and press F1."
 msgstr ""
 
-msgid "Snooze"
+msgid "Show time in panel"
 msgstr ""
 
-msgid "Dismiss"
+msgid "Clock size (set to 0 for default size)"
+msgstr ""
+
+msgid "Start"
+msgstr ""
+
+msgid "Pause"
+msgstr ""
+
+msgid "Resume"
+msgstr ""
+
+msgid "Reset"
+msgstr ""
+
+msgid "Lap"
+msgstr ""
+
+msgid "Lap Time"
+msgstr ""
+
+msgid "Overall Time"
+msgstr ""
+
+msgid "Lap Times"
+msgstr ""
+
+msgid "Laps table copied to clipboard!"
 msgstr ""
 
 msgid "Left"
@@ -260,10 +272,7 @@ msgstr ""
 msgid "Short Break"
 msgstr ""
 
-msgid "Show time in panel"
-msgstr ""
-
-msgid "Clock size (set to 0 for default size)"
+msgid "Notification sound"
 msgstr ""
 
 msgid "Show presets"
@@ -276,12 +285,6 @@ msgid "Completed pomodoros"
 msgstr ""
 
 msgid "Pomodoros until long break"
-msgstr ""
-
-msgid "Start"
-msgstr ""
-
-msgid "Pause"
 msgstr ""
 
 msgid "Add Preset"
@@ -299,25 +302,7 @@ msgstr ""
 msgid "Long break every n pomodoros"
 msgstr ""
 
-msgid "Resume"
-msgstr ""
-
-msgid "Reset"
-msgstr ""
-
-msgid "Lap"
-msgstr ""
-
-msgid "Lap Time"
-msgstr ""
-
-msgid "Overall Time"
-msgstr ""
-
-msgid "Lap Times"
-msgstr ""
-
-msgid "Laps table copied to clipboard!"
+msgid "Time"
 msgstr ""
 
 msgid "Invalid time selected."
@@ -326,7 +311,22 @@ msgstr ""
 msgid "Timer Elapsed!"
 msgstr ""
 
+msgid "Dismiss"
+msgstr ""
+
 msgid "Restart"
+msgstr ""
+
+msgid "Add Alarm"
+msgstr ""
+
+msgid "Snooze n minutes"
+msgstr ""
+
+msgid "Alarm"
+msgstr ""
+
+msgid "Snooze"
 msgstr ""
 
 msgid "Tip"
@@ -344,12 +344,6 @@ msgstr ""
 msgid "Image not found"
 msgstr ""
 
-msgid "Set shortcut"
-msgstr ""
-
-msgid "Type shortcut (backspace to reset)"
-msgstr ""
-
 msgid "Select folder"
 msgstr ""
 
@@ -360,10 +354,6 @@ msgid "Confirm"
 msgstr ""
 
 msgid "Show more"
-msgstr ""
-
-msgid ""
-"Right click any of the extension panel items to access the global settings."
 msgstr ""
 
 msgid "Sun"
@@ -397,6 +387,16 @@ msgid "Month"
 msgstr ""
 
 msgid "Year"
+msgstr ""
+
+msgid ""
+"Right click any of the extension panel items to access the global settings."
+msgstr ""
+
+msgid "Set shortcut"
+msgstr ""
+
+msgid "Type shortcut (backspace to reset)"
 msgstr ""
 
 msgid "Todo"
