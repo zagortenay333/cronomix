@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-05 08:09-0500\n"
+"POT-Creation-Date: 2024-02-26 10:52-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -98,6 +98,54 @@ msgstr ""
 msgid "Comma separated list of filters."
 msgstr ""
 
+msgid "Panel position"
+msgstr ""
+
+msgid "Open"
+msgstr ""
+
+msgid "Add task"
+msgstr ""
+
+msgid "Search tasks"
+msgstr ""
+
+msgid "Todo file"
+msgstr ""
+
+msgid "Open time tracker"
+msgstr ""
+
+msgid "Open todo file"
+msgstr ""
+
+msgid "Pin"
+msgstr ""
+
+msgid "Priority"
+msgstr ""
+
+msgid "Done"
+msgstr ""
+
+msgid "Hide"
+msgstr ""
+
+msgid "Ascending"
+msgstr ""
+
+msgid "Descending"
+msgstr ""
+
+msgid "You must select a todo file."
+msgstr ""
+
+msgid "A todo file is a text file containing markup."
+msgstr ""
+
+msgid "To learn about the markup, open the built-in editor and press F1."
+msgstr ""
+
 msgid "Filter expression"
 msgstr ""
 
@@ -120,12 +168,6 @@ msgid "Add"
 msgstr ""
 
 msgid "Apply"
-msgstr ""
-
-msgid "Ascending"
-msgstr ""
-
-msgid "Descending"
 msgstr ""
 
 msgid "Time Tracker"
@@ -173,48 +215,6 @@ msgstr ""
 msgid "Task text copied to clipboard!"
 msgstr ""
 
-msgid "Panel position"
-msgstr ""
-
-msgid "Open"
-msgstr ""
-
-msgid "Add task"
-msgstr ""
-
-msgid "Search tasks"
-msgstr ""
-
-msgid "Todo file"
-msgstr ""
-
-msgid "Open time tracker"
-msgstr ""
-
-msgid "Open todo file"
-msgstr ""
-
-msgid "Pin"
-msgstr ""
-
-msgid "Priority"
-msgstr ""
-
-msgid "Done"
-msgstr ""
-
-msgid "Hide"
-msgstr ""
-
-msgid "You must select a todo file."
-msgstr ""
-
-msgid "A todo file is a text file containing markup."
-msgstr ""
-
-msgid "To learn about the markup, open the built-in editor and press F1."
-msgstr ""
-
 msgid "Show time in panel"
 msgstr ""
 
@@ -248,58 +248,13 @@ msgstr ""
 msgid "Laps table copied to clipboard!"
 msgstr ""
 
-msgid "Left"
-msgstr ""
-
-msgid "Center"
-msgstr ""
-
-msgid "Right"
-msgstr ""
-
-msgid "Settings"
-msgstr ""
-
-msgid "Website"
-msgstr ""
-
-msgid "Pomodoro"
-msgstr ""
-
-msgid "Long Break"
-msgstr ""
-
-msgid "Short Break"
-msgstr ""
-
 msgid "Notification sound"
 msgstr ""
 
 msgid "Show presets"
 msgstr ""
 
-msgid "Phase"
-msgstr ""
-
-msgid "Completed pomodoros"
-msgstr ""
-
-msgid "Pomodoros until long break"
-msgstr ""
-
 msgid "Add Preset"
-msgstr ""
-
-msgid "Pomodoro length"
-msgstr ""
-
-msgid "Short break length"
-msgstr ""
-
-msgid "Long break length"
-msgstr ""
-
-msgid "Long break every n pomodoros"
 msgstr ""
 
 msgid "Time"
@@ -329,6 +284,51 @@ msgstr ""
 msgid "Snooze"
 msgstr ""
 
+msgid "Left"
+msgstr ""
+
+msgid "Center"
+msgstr ""
+
+msgid "Right"
+msgstr ""
+
+msgid "Settings"
+msgstr ""
+
+msgid "Website"
+msgstr ""
+
+msgid "Pomodoro"
+msgstr ""
+
+msgid "Long Break"
+msgstr ""
+
+msgid "Short Break"
+msgstr ""
+
+msgid "Phase"
+msgstr ""
+
+msgid "Completed pomodoros"
+msgstr ""
+
+msgid "Pomodoros until long break"
+msgstr ""
+
+msgid "Pomodoro length"
+msgstr ""
+
+msgid "Short break length"
+msgstr ""
+
+msgid "Long break length"
+msgstr ""
+
+msgid "Long break every n pomodoros"
+msgstr ""
+
 msgid "Tip"
 msgstr ""
 
@@ -344,16 +344,20 @@ msgstr ""
 msgid "Image not found"
 msgstr ""
 
-msgid "Select folder"
+msgid "Set shortcut"
 msgstr ""
 
-msgid "Select file"
-msgstr ""
-
-msgid "Confirm"
+msgid "Type shortcut (backspace to reset)"
 msgstr ""
 
 msgid "Show more"
+msgstr ""
+
+msgid ""
+"Right click any of the extension panel items to access the global settings."
+msgstr ""
+
+msgid "Confirm"
 msgstr ""
 
 msgid "Sun"
@@ -389,14 +393,10 @@ msgstr ""
 msgid "Year"
 msgstr ""
 
-msgid ""
-"Right click any of the extension panel items to access the global settings."
+msgid "Select folder"
 msgstr ""
 
-msgid "Set shortcut"
-msgstr ""
-
-msgid "Type shortcut (backspace to reset)"
+msgid "Select file"
 msgstr ""
 
 msgid "Todo"

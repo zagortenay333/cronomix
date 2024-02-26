@@ -1,8 +1,13 @@
-import * as St from 'gi://St';
-import * as Gio from 'gi://Gio';
-import * as Meta from 'gi://Meta';
-import * as Clutter from 'gi://Clutter';
+import St from 'gi://St';
+import Gio from 'gi://Gio';
+import Meta from 'gi://Meta';
+import Clutter from 'gi://Clutter';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
+import { Extension, gettext as _ } from 'resource:///org/gnome/shell/extensions/extension.js';
+
+import * as Fs from './fs.js';
+import { FocusTracker } from './focus.js';
+import { scroll_to_widget } from './scroll.js';
 
 export type Rectangle = {
     x1: number;
@@ -11,20 +16,16 @@ export type Rectangle = {
     y2: number;
 }
 
-import * as Fs from './fs.js';
-import { FocusTracker } from './focus.js';
-import { scroll_to_widget } from './scroll.js';
-import { Extension, gettext as _ } from 'resource:///org/gnome/shell/extensions/extension.js';
-
-export { _ }
-export const ext = Extension.lookupByUUID("cronomix@zagortenay333");
+export function ext () {
+    return Extension.lookupByUUID("cronomix@zagortenay333");
+}
 
 export function unreachable (_: never): never {
     throw new Error('Unreachable.');
 }
 
 export function get_icon (str: string): Gio.Icon {
-    return Gio.Icon.new_for_string(ext.path + '/data/icons/' + str + '.svg');
+    return Gio.Icon.new_for_string(ext().path + '/data/icons/' + str + '.svg');
 }
 
 export function get_transformed_allocation (actor: Clutter.Actor): Rectangle {
@@ -59,8 +60,13 @@ export function get_line_box_at_idx (text: Clutter.Text, idx: number): Rectangle
     };
 }
 
+export function later_add (fn: () => boolean) {
+    const laters = global.compositor.get_laters();
+    laters.add(Meta.LaterType.BEFORE_REDRAW, fn);
+}
+
 export function run_before_redraw (fn: () => void) {
-    Meta.later_add(Meta.LaterType.BEFORE_REDRAW, () => { fn(); return false; });
+    later_add(() => { fn(); return false; });
 }
 
 export function run_when_mapped (actor: Clutter.Actor, fn: () => void, once = true) {
@@ -140,12 +146,13 @@ export function get_cell_box (widget: St.Widget): St.Widget {
     return table;
 }
 
-export function play_sound (sound_file: string|null) {
-    if (sound_file) {
-        const player = global.display.get_sound_player();
-        const file = Fs.file_new_for_path(sound_file);
-        player.play_from_file(file, '', null);
-    }
+export function play_sound (sound_file: string|null): Gio.Cancellable | null {
+    if (! sound_file) return null;
+    const cancel = new Gio.Cancellable();
+    const player = global.display.get_sound_player();
+    const file = Fs.file_new_for_path(sound_file);
+    player.play_from_file(file, '', cancel);
+    return cancel;
 }
 
 export function light_or_dark (r: number, g: number, b: number): 'light'|'dark' {

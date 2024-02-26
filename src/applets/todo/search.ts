@@ -1,16 +1,17 @@
-import * as St from 'gi://St';
+import St from 'gi://St';
+import { gettext as _ } from 'resource:///org/gnome/shell/extensions/extension.js';
 
+import { TodoApplet } from './main.js';
 import * as Fs from './../../utils/fs.js';
+import { Task, TaskCard } from './task.js';
+import { Row } from './../../utils/misc.js';
 import * as Pop from './../../utils/popup.js';
 import * as Misc from './../../utils/misc.js';
 import { Entry } from './../../utils/entry.js';
-import { _, Row } from './../../utils/misc.js';
 import * as P from './../../utils/markup/parser.js';
 import { FilePicker } from './../../utils/pickers.js';
 import { show_info_popup } from './../../utils/popup.js';
-import { TodoApplet } from './main.js';
 import { Button, CheckBox } from './../../utils/button.js';
-import { Task, TaskCard } from './task.js';
 import { ScrollBox, LazyScrollBox } from './../../utils/scroll.js';
 
 export class SearchView {
@@ -22,8 +23,8 @@ export class SearchView {
     constructor (applet: TodoApplet, query: string|Task = '') {
         this.actor = new St.BoxLayout({ reactive: true, style_class: 'cronomix-spacing' });
 
-        const filter_docs = Fs.read_entire_file(Misc.ext.path + '/data/docs/filters') ?? '';
-        const tasks_docs  = Fs.read_entire_file(Misc.ext.path + '/data/docs/todo_tasks') ?? '';
+        const filter_docs = Fs.read_entire_file(Misc.ext().path + '/data/docs/filters') ?? '';
+        const tasks_docs  = Fs.read_entire_file(Misc.ext().path + '/data/docs/todo_tasks') ?? '';
 
         //
         // left box

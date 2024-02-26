@@ -2,23 +2,22 @@
 set -u
 
 # ==============================================================================
+# Use the following workflow:
 #
 #   1. Log into the Xorg version of gnome-shell to enable shell restarts.
-#   2. Run this script to compile the data folder and again later if you changed the data.
-#   3. In a terminal run './scripts/listen' to listen for runtime errors.
-#   4. In a terminal run 'tsc --watch' for typechecking and recompilation.
-#   5. Modify some files.
-#   6. Run './scripts/restart' to restart gnome-shell (only on Xorg).
-#
+#   2. Run this script at least once and each time you edit the data files.
+#   3. Run './scripts/listen' to listen for runtime errors.
+#   4. Run 'tsc --watch' for typechecking and recompilation.
+#   6. Run './scripts/restart' after modifiying source files.
 # ==============================================================================
-
 cd "${BASH_SOURCE%/*}/.."
 
 uuid="cronomix@zagortenay333"
 ext_dir=~/".local/share/gnome-shell/extensions/${uuid}"
 
-#
+# ==============================================================================
 # Build tsconfig.json file
+# ==============================================================================
 #
 cat > "tsconfig.json" << EOF
 {
@@ -41,9 +40,9 @@ cat > "tsconfig.json" << EOF
 }
 EOF
 
-#
+# ==============================================================================
 # Build data
-#
+# ==============================================================================
 rm -rf "$ext_dir"
 mkdir -p "$ext_dir/data"
 
@@ -53,9 +52,9 @@ cp -r "data/themes" "$ext_dir/data/themes"
 cp -r "data/images/icons" "$ext_dir/data/icons"
 cp -r "data/metadata.json" "$ext_dir/metadata.json"
 
-#
+# ==============================================================================
 # Build translation files
-#
+# ==============================================================================
 mo_dir="$ext_dir/locale"
 po_dir="data/translations"
 po_files=$(find "$po_dir" -name "*.po")

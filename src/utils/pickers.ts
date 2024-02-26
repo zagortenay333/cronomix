@@ -1,9 +1,9 @@
-import * as St from 'gi://St';
-import * as Clutter from 'gi://Clutter';
+import St from 'gi://St';
+import Clutter from 'gi://Clutter';
 import { PopupMenu } from 'resource:///org/gnome/shell/ui/popupMenu.js';
 import { BoxPointer } from 'resource:///org/gnome/shell/ui/boxpointer.js';
+import { gettext as _ } from 'resource:///org/gnome/shell/extensions/extension.js';
 
-import { _ } from './misc.js';
 import * as Fs from './fs.js';
 import * as Pop from './popup.js';
 import { Button } from './button.js';
@@ -29,7 +29,7 @@ export class DayPicker {
         this.actor.layout_manager.homogeneous = true;
 
         for (const [day, translation] of Days) {
-            const button = new Button({ parent: this.actor, wide: true, label: translation, style_class: 'cronomix-floating-button' });
+            const button = new Button({ parent: this.actor, wide: true, label: translation(), style_class: 'cronomix-floating-button' });
             button.checked = this.selection[day as Day];
             button.subscribe('left_click', () => this.selection[day as Day] = button.checked);
         }

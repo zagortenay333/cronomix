@@ -1,5 +1,6 @@
-import * as St from 'gi://St';
-import * as GLib from 'gi://GLib';
+import St from 'gi://St';
+import GLib from 'gi://GLib';
+import { gettext as _ } from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import * as Fs from './fs.js';
 import * as Pop from './popup.js';
@@ -8,7 +9,7 @@ import { ScrollBox } from './scroll.js';
 import { Button, CheckBox } from './button.js';
 import { KeyMap, KeyMapPicker } from './keymap.js';
 import { FilePicker, IntPicker, Dropdown } from './pickers.js';
-import { _, unreachable, Row, focus_when_mapped } from './misc.js';
+import { unreachable, Row, focus_when_mapped } from './misc.js';
 
 export type Value =
     | { tag: 'custom';  value: unknown; }

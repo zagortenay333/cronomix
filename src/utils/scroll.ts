@@ -1,9 +1,10 @@
-import * as St from 'gi://St';
-import * as Clutter from 'gi://Clutter';
-import * as Graphene from 'gi://Graphene';
+import St from 'gi://St';
+import Clutter from 'gi://Clutter';
+import Graphene from 'gi://Graphene';
+import { gettext as _ } from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import { Button } from './button.js';
-import { _, Rectangle } from './misc.js';
+import { Rectangle } from './misc.js';
 import { FocusTracker } from './focus.js';
 
 export class ScrollBox {

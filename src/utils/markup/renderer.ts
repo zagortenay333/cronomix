@@ -1,15 +1,16 @@
-import * as St from 'gi://St';
-import * as GLib from 'gi://GLib';
-import * as Meta from 'gi://Meta';
-import * as Pango from 'gi://Pango';
-import * as Clutter from 'gi://Clutter';
+import St from 'gi://St';
+import GLib from 'gi://GLib';
+import Meta from 'gi://Meta';
+import Pango from 'gi://Pango';
+import Clutter from 'gi://Clutter';
+import { gettext as _ } from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import * as P from './parser.js';
 import * as Fs from './../../utils/fs.js';
 import * as Ext from './../../extension.js';
 import * as Misc from './../../utils/misc.js';
 import { Image } from './../../utils/image.js';
-import { _, unreachable } from './../../utils/misc.js';
+import { unreachable } from './../../utils/misc.js';
 
 export class MarkupPosition {
     idx!: number;
@@ -527,10 +528,10 @@ export class Markup {
 }
 
 const Admonition: Record<P.Admonition, string> = {
-    tip: _('Tip'),
-    note: _('Note'),
-    warning: _('Warning'),
-    important: _('Important'),
+    get tip () { return _('Tip'); },
+    get note () { return _('Note'); },
+    get warning () { return _('Warning'); },
+    get important () { return _('Important'); },
 };
 
 type Clickable = {

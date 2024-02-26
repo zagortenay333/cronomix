@@ -1,5 +1,5 @@
-import * as St from 'gi://St';
-import * as Clutter from 'gi://Clutter';
+import St from 'gi://St';
+import Clutter from 'gi://Clutter';
 
 import * as Misc from './misc.js';
 import { PubSub } from './pubsub.js';

@@ -1,7 +1,6 @@
-import * as Gio from 'gi://Gio';
-import * as GLib from 'gi://GLib';
-
-import { _ } from './misc.js';
+import Gio from 'gi://Gio';
+import GLib from 'gi://GLib';
+import { gettext as _ } from 'resource:///org/gnome/shell/extensions/extension.js';
 
 export function decode_bytes (arr: unknown): string {
     const decoder = new TextDecoder();

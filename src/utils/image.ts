@@ -1,12 +1,12 @@
-import * as St from 'gi://St';
-import * as Cogl from 'gi://Cogl';
-import * as Meta from 'gi://Meta';
-import * as GLib from 'gi://GLib';
-import * as Clutter from 'gi://Clutter';
-import * as GdkPixbuf from 'gi://GdkPixbuf';
+import St from 'gi://St';
+import Cogl from 'gi://Cogl';
+import Meta from 'gi://Meta';
+import GLib from 'gi://GLib';
+import Clutter from 'gi://Clutter';
+import GdkPixbuf from 'gi://GdkPixbuf';
+import { gettext as _ } from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import * as Fs from './fs.js';
-import { _ } from './misc.js';
 import { Button } from './button.js';
 import { show_info_popup } from './popup.js';
 

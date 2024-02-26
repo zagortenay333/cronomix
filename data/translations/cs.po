@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-05 08:09-0500\n"
+"POT-Creation-Date: 2024-02-26 10:51-0500\n"
 "PO-Revision-Date: 2023-06-05 16:07+0200\n"
 "Last-Translator: Ludek Vydra <lvtran@u.k2.cz>\n"
 "Language-Team: \n"
@@ -103,6 +103,56 @@ msgstr "Název"
 msgid "Comma separated list of filters."
 msgstr "Seznam filtrů oddělených čárkou."
 
+msgid "Panel position"
+msgstr "Pozice panelu"
+
+msgid "Open"
+msgstr "Otevři"
+
+msgid "Add task"
+msgstr "Přidej úkol"
+
+msgid "Search tasks"
+msgstr "Prohledej úkoly"
+
+msgid "Todo file"
+msgstr "Todo soubor"
+
+msgid "Open time tracker"
+msgstr "Otevři sledování času"
+
+msgid "Open todo file"
+msgstr "Otevři Todo soubor"
+
+msgid "Pin"
+msgstr "Připni"
+
+msgid "Priority"
+msgstr "Priorita"
+
+msgid "Done"
+msgstr "Hotovo"
+
+msgid "Hide"
+msgstr "Skryj"
+
+msgid "Ascending"
+msgstr "Vzestupně"
+
+msgid "Descending"
+msgstr "Sestupně"
+
+msgid "You must select a todo file."
+msgstr "Musíte vybrat soubor Todo."
+
+msgid "A todo file is a text file containing markup."
+msgstr "Soubor Todo je textový soubor obsahující značky."
+
+msgid "To learn about the markup, open the built-in editor and press F1."
+msgstr ""
+"Chcete-li se seznámit se značkami, otevřete vestavěný editor a stiskněte "
+"klávesu F1."
+
 msgid "Filter expression"
 msgstr "Výraz filtru"
 
@@ -126,12 +176,6 @@ msgstr "Přidej"
 
 msgid "Apply"
 msgstr "Proveď"
-
-msgid "Ascending"
-msgstr "Vzestupně"
-
-msgid "Descending"
-msgstr "Sestupně"
 
 msgid "Time Tracker"
 msgstr "Sledovač času"
@@ -179,50 +223,6 @@ msgstr "Celkové součty na slot"
 msgid "Task text copied to clipboard!"
 msgstr "Text úlohy zkopírován do schránky!"
 
-msgid "Panel position"
-msgstr "Pozice panelu"
-
-msgid "Open"
-msgstr "Otevři"
-
-msgid "Add task"
-msgstr "Přidej úkol"
-
-msgid "Search tasks"
-msgstr "Prohledej úkoly"
-
-msgid "Todo file"
-msgstr "Todo soubor"
-
-msgid "Open time tracker"
-msgstr "Otevři sledování času"
-
-msgid "Open todo file"
-msgstr "Otevři Todo soubor"
-
-msgid "Pin"
-msgstr "Připni"
-
-msgid "Priority"
-msgstr "Priorita"
-
-msgid "Done"
-msgstr "Hotovo"
-
-msgid "Hide"
-msgstr "Skryj"
-
-msgid "You must select a todo file."
-msgstr "Musíte vybrat soubor Todo."
-
-msgid "A todo file is a text file containing markup."
-msgstr "Soubor Todo je textový soubor obsahující značky."
-
-msgid "To learn about the markup, open the built-in editor and press F1."
-msgstr ""
-"Chcete-li se seznámit se značkami, otevřete vestavěný editor a stiskněte "
-"klávesu F1."
-
 msgid "Show time in panel"
 msgstr "Zobrazit čas v panelu"
 
@@ -256,59 +256,14 @@ msgstr "Čas kol"
 msgid "Laps table copied to clipboard!"
 msgstr "Tabulka kol zkopírována do schránky!"
 
-msgid "Left"
-msgstr "Vlevo"
-
-msgid "Center"
-msgstr "Střed"
-
-msgid "Right"
-msgstr "Vpravo"
-
-msgid "Settings"
-msgstr "Nastavení"
-
-msgid "Website"
-msgstr "Webové stránky"
-
-msgid "Pomodoro"
-msgstr "Pomodoro"
-
-msgid "Long Break"
-msgstr "Dlouhá pauza"
-
-msgid "Short Break"
-msgstr "Krátká pauza"
-
 msgid "Notification sound"
 msgstr "Zvuk upozornění"
 
 msgid "Show presets"
 msgstr "Předvolby"
 
-msgid "Phase"
-msgstr "Fáze"
-
-msgid "Completed pomodoros"
-msgstr "Dokončených Pomodor"
-
-msgid "Pomodoros until long break"
-msgstr "Pomodor do dlouhé přestávky"
-
 msgid "Add Preset"
 msgstr "Přidat předvolbu"
-
-msgid "Pomodoro length"
-msgstr "Délka Pomodoro"
-
-msgid "Short break length"
-msgstr "Délka krátké pauzy"
-
-msgid "Long break length"
-msgstr "Délka dlouhé pauzy"
-
-msgid "Long break every n pomodoros"
-msgstr "Dlouhá pauza každý n pomodor"
 
 msgid "Time"
 msgstr "Čas"
@@ -337,6 +292,51 @@ msgstr "Budík"
 msgid "Snooze"
 msgstr "Odložit"
 
+msgid "Left"
+msgstr "Vlevo"
+
+msgid "Center"
+msgstr "Střed"
+
+msgid "Right"
+msgstr "Vpravo"
+
+msgid "Settings"
+msgstr "Nastavení"
+
+msgid "Website"
+msgstr "Webové stránky"
+
+msgid "Pomodoro"
+msgstr "Pomodoro"
+
+msgid "Long Break"
+msgstr "Dlouhá pauza"
+
+msgid "Short Break"
+msgstr "Krátká pauza"
+
+msgid "Phase"
+msgstr "Fáze"
+
+msgid "Completed pomodoros"
+msgstr "Dokončených Pomodor"
+
+msgid "Pomodoros until long break"
+msgstr "Pomodor do dlouhé přestávky"
+
+msgid "Pomodoro length"
+msgstr "Délka Pomodoro"
+
+msgid "Short break length"
+msgstr "Délka krátké pauzy"
+
+msgid "Long break length"
+msgstr "Délka dlouhé pauzy"
+
+msgid "Long break every n pomodoros"
+msgstr "Dlouhá pauza každý n pomodor"
+
 msgid "Tip"
 msgstr "Tip"
 
@@ -353,17 +353,23 @@ msgstr "Důležité"
 msgid "Image not found"
 msgstr "Obrázek nenalezen"
 
-msgid "Select folder"
-msgstr "Vyber adresář"
+msgid "Set shortcut"
+msgstr "Nastav klávesovou zkratku"
 
-msgid "Select file"
-msgstr "Vyber soubor"
-
-msgid "Confirm"
-msgstr "Potvrď"
+msgid "Type shortcut (backspace to reset)"
+msgstr "Stikni klávesovou zkratku (backspace pro resetování)"
 
 msgid "Show more"
 msgstr "Zobrazit více"
+
+msgid ""
+"Right click any of the extension panel items to access the global settings."
+msgstr ""
+"Kliknutím pravým tlačítkem na položku panelu rozšíření získáte přístup ke "
+"globálním nastavením."
+
+msgid "Confirm"
+msgstr "Potvrď"
 
 msgid "Sun"
 msgstr "Ne"
@@ -398,17 +404,11 @@ msgstr "Měsíc"
 msgid "Year"
 msgstr "Rok"
 
-msgid ""
-"Right click any of the extension panel items to access the global settings."
-msgstr ""
-"Kliknutím pravým tlačítkem na položku panelu rozšíření získáte přístup ke "
-"globálním nastavením."
+msgid "Select folder"
+msgstr "Vyber adresář"
 
-msgid "Set shortcut"
-msgstr "Nastav klávesovou zkratku"
-
-msgid "Type shortcut (backspace to reset)"
-msgstr "Stikni klávesovou zkratku (backspace pro resetování)"
+msgid "Select file"
+msgstr "Vyber soubor"
 
 msgid "Todo"
 msgstr "Todo"

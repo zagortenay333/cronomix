@@ -1,10 +1,10 @@
-import * as St from 'gi://St';
+import St from 'gi://St';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
-import * as Clutter from 'gi://Clutter';
+import Clutter from 'gi://Clutter';
 import { GrabHelper } from 'resource:///org/gnome/shell/ui/grabHelper.js';
 import { BoxPointer, PopupAnimation } from 'resource:///org/gnome/shell/ui/boxpointer.js';
+import { gettext as _ } from 'resource:///org/gnome/shell/extensions/extension.js';
 
-import { _ } from './misc.js';
 import * as Misc from './misc.js';
 import { Button } from './button.js';
 import { ScrollBox } from './scroll.js';

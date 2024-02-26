@@ -1,16 +1,16 @@
-import * as St from 'gi://St';
+import St from 'gi://St';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
-import { Extension } from 'resource:///org/gnome/shell/extensions/extension.js';
+import { Extension, gettext as _ } from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import * as Fs from './utils/fs.js';
+import { Storage } from './utils/storage.js';
 import { Applet } from './applets/applet.js';
 import { TimerApplet } from './applets/timer.js';
 import { AlarmApplet } from './applets/alarm.js';
 import { TodoApplet } from './applets/todo/main.js';
+import { ext, light_or_dark } from './utils/misc.js';
 import { PomodoroApplet } from './applets/pomodoro.js';
-import { ext, _, light_or_dark } from './utils/misc.js';
 import { StopwatchApplet } from './applets/stopwatch.js';
-import { Storage, StorageConfig } from './utils/storage.js';
 
 //
 // To register a new applet:
@@ -27,37 +27,36 @@ export const applets = [
     [ 'stopwatch', StopwatchApplet ],
 ] as const;
 
-const storage_config = {
-    file: '~/.config/cronomix/global.json',
-
-    values: {
-        todo:                { tag: 'boolean', value: true },
-        alarm:               { tag: 'boolean', value: true },
-        timer:               { tag: 'boolean', value: true },
-        pomodoro:            { tag: 'boolean', value: true },
-        stopwatch:           { tag: 'boolean', value: true },
-        theme_file:          { tag: 'file',    value: '', start: ext.path + '/data/themes/' },
-        lazy_list_page_size: { tag: 'number',  value: 20, range: [1, 100000] },
-    },
-
-    groups: [
-        ['todo', 'alarm', 'timer', 'pomodoro', 'stopwatch'],
-        ['theme_file', 'lazy_list_page_size'],
-    ],
-
-    translations: {
-        todo: _('Todo'),
-        alarm: _('Alarm'),
-        timer: _('Timer'),
-        pomodoro: _('Pomodoro'),
-        stopwatch: _('Stopwatch'),
-        theme_file: _('Theme css (empty for auto selection)'),
-        lazy_list_page_size: _('Lazy list page size'),
-    }
-} satisfies StorageConfig;
-
 export class Ext {
-    storage = new Storage(storage_config);
+    storage = new Storage({
+        file: '~/.config/cronomix/global.json',
+
+        values: {
+            todo:                { tag: 'boolean', value: true },
+            alarm:               { tag: 'boolean', value: true },
+            timer:               { tag: 'boolean', value: true },
+            pomodoro:            { tag: 'boolean', value: true },
+            stopwatch:           { tag: 'boolean', value: true },
+            theme_file:          { tag: 'file',    value: '', start: ext().path + '/data/themes/' },
+            lazy_list_page_size: { tag: 'number',  value: 20, range: [1, 100000] },
+        },
+
+        groups: [
+            ['todo', 'alarm', 'timer', 'pomodoro', 'stopwatch'],
+            ['theme_file', 'lazy_list_page_size'],
+        ],
+
+        translations: {
+            todo: _('Todo'),
+            alarm: _('Alarm'),
+            timer: _('Timer'),
+            pomodoro: _('Pomodoro'),
+            stopwatch: _('Stopwatch'),
+            theme_file: _('Theme css (empty for auto selection)'),
+            lazy_list_page_size: _('Lazy list page size'),
+        }
+    });
+
     enabled_applets = new Map<string, Applet>();
 
     #stylesheet?: string;
@@ -133,7 +132,7 @@ export class Ext {
 
             const [ok, col] = theme_node.lookup_color('background-color', false);
             const style     = ok ? light_or_dark(col.red, col.green, col.blue) : 'dark';
-            stylesheet      = ext.path + '/data/themes/' + style + '.css';
+            stylesheet      = ext().path + '/data/themes/' + style + '.css';
 
             dummy.destroy();
         }

@@ -1,24 +1,24 @@
-import * as GLib from 'gi://GLib';
-import * as Shell from 'gi://Shell';
+import GLib from 'gi://GLib';
+import Shell from 'gi://Shell';
+import { gettext as _ } from 'resource:///org/gnome/shell/extensions/extension.js';
 
-import { _ } from './misc.js';
 import { PubSub } from './pubsub.js';
 
 export const Days = [
-    ['sun', _('Sun')],
-    ['mon', _('Mon')],
-    ['tue', _('Tue')],
-    ['wed', _('Wed')],
-    ['thu', _('Thu')],
-    ['fri', _('Fri')],
-    ['sat', _('Sat')],
+    ['sun', () => _('Sun')],
+    ['mon', () => _('Mon')],
+    ['tue', () => _('Tue')],
+    ['wed', () => _('Wed')],
+    ['thu', () => _('Thu')],
+    ['fri', () => _('Fri')],
+    ['sat', () => _('Sat')],
 ] as const;
 
 export const SpecialDatesTr = {
-    today: _('Today'),
-    week:  _('Week'),
-    month: _('Month'),
-    year:  _('Year'),
+    get today () { return _('Today'); },
+    get week () { return  _('Week'); },
+    get month () { return _('Month'); },
+    get year () { return  _('Year'); },
 } as const;
 
 export class SpecialDates {

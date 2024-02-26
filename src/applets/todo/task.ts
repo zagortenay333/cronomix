@@ -1,13 +1,14 @@
-import * as St from 'gi://St';
-import * as Clutter from 'gi://Clutter';
+import St from 'gi://St';
+import Clutter from 'gi://Clutter';
+import { gettext as _ } from 'resource:///org/gnome/shell/extensions/extension.js';
 
+import { TodoApplet } from './main.js';
 import * as Misc from './../../utils/misc.js';
 import { Popup } from './../../utils/popup.js';
+import { unreachable } from './../../utils/misc.js';
 import * as P from './../../utils/markup/parser.js';
 import { get_iso_date } from './../../utils/time.js';
-import { _, unreachable } from './../../utils/misc.js';
 import { Markup } from './../../utils/markup/renderer.js';
-import { TodoApplet } from './main.js';
 import { EditorView } from './../../utils/markup/editor.js';
 import { ButtonBox, Button, CheckBox } from './../../utils/button.js';
 

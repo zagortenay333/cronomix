@@ -1,9 +1,9 @@
-import * as St from 'gi://St';
-import * as GLib from 'gi://GLib';
+import St from 'gi://St';
+import GLib from 'gi://GLib';
+import { gettext as _ } from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import { Task } from './task.js';
 import { TodoApplet } from './main.js';
-import { _ } from './../../utils/misc.js';
 import * as Fs from './../../utils/fs.js';
 import * as T from './../../utils/time.js';
 import * as Pop from './../../utils/popup.js';
@@ -42,8 +42,8 @@ export class TrackerStats {
 }
 
 export const TrackerSort = {
-    asc:  _('Ascending'),
-    desc: _('Descending'),
+    get asc () { return  _('Ascending'); },
+    get desc () { return _('Descending'); },
 } as const;
 
 export type TrackerSort = keyof typeof TrackerSort;
@@ -234,9 +234,9 @@ export class TimeTrackerView {
 
         const tracker               = applet.tracker;
         const saved_query           = applet.storage.read.tracker_query.value;
-        const filter_format         = Fs.read_entire_file(Misc.ext.path + '/data/docs/filters') ?? '';
-        const tracker_file_format   = Fs.read_entire_file(Misc.ext.path + '/data/docs/tracker') ?? '';
-        const tracker_query_format  = Fs.read_entire_file(Misc.ext.path + '/data/docs/tracker_query') ?? '';
+        const filter_format         = Fs.read_entire_file(Misc.ext().path + '/data/docs/filters') ?? '';
+        const tracker_file_format   = Fs.read_entire_file(Misc.ext().path + '/data/docs/tracker') ?? '';
+        const tracker_query_format  = Fs.read_entire_file(Misc.ext().path + '/data/docs/tracker_query') ?? '';
         const card_title_top_margin = 8;
 
         //

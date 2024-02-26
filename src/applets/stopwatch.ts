@@ -1,16 +1,16 @@
-import * as St from 'gi://St';
-import * as GLib from 'gi://GLib';
-import * as Clutter from 'gi://Clutter';
+import St from 'gi://St';
+import GLib from 'gi://GLib';
+import Clutter from 'gi://Clutter';
+import { gettext as _ } from 'resource:///org/gnome/shell/extensions/extension.js';
 
-import { _ } from './../utils/misc.js';
-import * as Misc from './../utils/misc.js';
 import { Ext } from './../extension.js';
+import * as Misc from './../utils/misc.js';
+import { Storage } from './../utils/storage.js';
 import { ButtonBox } from './../utils/button.js';
 import { ScrollBox } from './../utils/scroll.js';
 import { show_info_popup } from './../utils/popup.js';
 import { Time, get_time_ms } from './../utils/time.js';
 import { Markup } from './../utils/markup/renderer.js';
-import { Storage, StorageConfig } from './../utils/storage.js';
 import { Applet, PanelPosition, PanelPositionTr } from './../applets/applet.js';
 
 const enum State {
@@ -30,36 +30,35 @@ type Events = {
     state_change: State;
 }
 
-const storage_config = {
-    file: '~/.config/cronomix/stopwatch.json',
-
-    values: {
-        panel_position:   { tag: 'enum',    value: PanelPosition.RIGHT, enum: Object.values(PanelPosition) },
-        show_panel_label: { tag: 'boolean', value: true },
-        clock_size:       { tag: 'number',  value: 0, range: [0, 2000] },
-        open:             { tag: 'keymap',  value: null },
-    },
-
-    groups: [
-        ['panel_position', 'show_panel_label', 'clock_size'],
-        ['open'],
-    ],
-
-    translations: {
-        show_panel_label: _('Show time in panel'),
-        panel_position: _('Panel position'),
-        clock_size: _('Clock size (set to 0 for default size)'),
-        open: _('Open'),
-        ...PanelPositionTr,
-    }
-} satisfies StorageConfig;
-
 export class StopwatchApplet extends Applet<Events> {
+    storage = new Storage({
+        file: '~/.config/cronomix/stopwatch.json',
+
+        values: {
+            panel_position:   { tag: 'enum',    value: PanelPosition.RIGHT, enum: Object.values(PanelPosition) },
+            show_panel_label: { tag: 'boolean', value: true },
+            clock_size:       { tag: 'number',  value: 0, range: [0, 2000] },
+            open:             { tag: 'keymap',  value: null },
+        },
+
+        groups: [
+            ['panel_position', 'show_panel_label', 'clock_size'],
+            ['open'],
+        ],
+
+        translations: {
+            show_panel_label: _('Show time in panel'),
+            panel_position: _('Panel position'),
+            clock_size: _('Clock size (set to 0 for default size)'),
+            open: _('Open'),
+            ...PanelPositionTr,
+        }
+    });
+
     state = State.RESET;
     time!: Time;
     lap_time!: Time;
     laps = new Array<Lap>();
-    storage = new Storage(storage_config);
 
     #tic_id = 0;
     #current_view: null | { destroy: () => void } = null;

@@ -1,15 +1,16 @@
-import * as St from 'gi://St';
-import * as GLib from 'gi://GLib';
-import * as Clutter from 'gi://Clutter';
+import St from 'gi://St';
+import GLib from 'gi://GLib';
+import Clutter from 'gi://Clutter';
+import { gettext as _ } from 'resource:///org/gnome/shell/extensions/extension.js';
 
-import * as Misc from './../utils/misc.js';
 import { Ext } from './../extension.js';
+import * as Misc from './../utils/misc.js';
+import { Storage } from './../utils/storage.js';
 import { ScrollBox } from './../utils/scroll.js';
 import { Markup} from './../utils/markup/renderer.js';
 import { EditorView } from './../utils/markup/editor.js';
 import { show_confirm_popup } from './../utils/popup.js';
-import { _, Row, unreachable, ext } from './../utils/misc.js';
-import { Storage, StorageConfig } from './../utils/storage.js';
+import { Row, unreachable, ext } from './../utils/misc.js';
 import { Button, ButtonBox, CheckBox } from './../utils/button.js';
 import { MiliSeconds, Time, get_time_ms } from './../utils/time.js';
 import { TimePicker, IntPicker, Dropdown } from './../utils/pickers.js';
@@ -24,9 +25,9 @@ class Preset {
 }
 
 const Phase = {
-    pomodoro: _('Pomodoro'),
-    long_break: _('Long Break'),
-    short_break: _('Short Break'),
+    get pomodoro () { return _('Pomodoro'); },
+    get long_break () { return _('Long Break'); },
+    get short_break () { return _('Short Break'); },
 } as const;
 
 type Phase = keyof typeof Phase;
@@ -37,42 +38,41 @@ type Events = {
     timer_state_changed: boolean, // running or not
 }
 
-const storage_config = {
-    file: '~/.config/cronomix/pomodoro.json',
-
-    values: {
-        show_panel_label:       { tag: 'boolean', value: true },
-        panel_position:         { tag: 'enum',    value: PanelPosition.RIGHT, enum: Object.values(PanelPosition) },
-        notif_sound:            { tag: 'file',    value: ext.path + '/data/sounds/beeps.ogg', start: ext.path + '/data/sounds/' },
-        clock_size:             { tag: 'number',  value: 0, range: [0, 2000] },
-        open:                   { tag: 'keymap',  value: null },
-        show_presets:           { tag: 'keymap',  value: null },
-        pomos_until_long_break: { tag: 'custom',  value: 4 },
-        completed_pomodoros:    { tag: 'custom',  value: 0 },
-        presets:                { tag: 'custom',  value: Array<Preset>() },
-    },
-
-    groups: [
-        ['show_panel_label', 'panel_position', 'clock_size', 'notif_sound'],
-        ['open', 'show_presets'],
-    ],
-
-    translations: {
-        show_panel_label: _('Show time in panel'),
-        panel_position: _('Panel position'),
-        clock_size: _('Clock size (set to 0 for default size)'),
-        notif_sound: _('Notification sound'),
-        open: _('Open'),
-        show_presets: _('Show presets'),
-        ...PanelPositionTr,
-    }
-} satisfies StorageConfig;
-
 export class PomodoroApplet extends Applet<Events> {
+    storage = new Storage({
+        file: '~/.config/cronomix/pomodoro.json',
+
+        values: {
+            show_panel_label:       { tag: 'boolean', value: true },
+            panel_position:         { tag: 'enum',    value: PanelPosition.RIGHT, enum: Object.values(PanelPosition) },
+            notif_sound:            { tag: 'file',    value: ext().path + '/data/sounds/beeps.ogg', start: ext().path + '/data/sounds/' },
+            clock_size:             { tag: 'number',  value: 0, range: [0, 2000] },
+            open:                   { tag: 'keymap',  value: null },
+            show_presets:           { tag: 'keymap',  value: null },
+            pomos_until_long_break: { tag: 'custom',  value: 4 },
+            completed_pomodoros:    { tag: 'custom',  value: 0 },
+            presets:                { tag: 'custom',  value: Array<Preset>() },
+        },
+
+        groups: [
+            ['show_panel_label', 'panel_position', 'clock_size', 'notif_sound'],
+            ['open', 'show_presets'],
+        ],
+
+        translations: {
+            show_panel_label: _('Show time in panel'),
+            panel_position: _('Panel position'),
+            clock_size: _('Clock size (set to 0 for default size)'),
+            notif_sound: _('Notification sound'),
+            open: _('Open'),
+            show_presets: _('Show presets'),
+            ...PanelPositionTr,
+        }
+    });
+
     time!: Time;
     preset!: Preset;
     phase: Phase = 'pomodoro';
-    storage = new Storage(storage_config);
 
     #tic_id = 0;
     #current_view: null | { destroy: () => void } = null;
@@ -126,12 +126,14 @@ export class PomodoroApplet extends Applet<Events> {
     }
 
     pause () {
+        this.sound_cancel?.cancel();
         this.panel_label.hide();
         if (this.#tic_id) { GLib.source_remove(this.#tic_id); this.#tic_id = 0; }
         this.publish('timer_state_changed', false);
     }
 
     set_phase (phase: Phase, pause = true) {
+        this.sound_cancel?.cancel();
         if (pause) this.pause();
 
         this.phase = phase;
@@ -162,8 +164,7 @@ export class PomodoroApplet extends Applet<Events> {
         }
 
         this.set_phase(next_phase, false);
-        const sound_file = this.storage.read.notif_sound.value;
-        if (sound_file) Misc.play_sound(sound_file);
+        this.sound_cancel = Misc.play_sound(this.storage.read.notif_sound.value);
     }
 
     set_preset (preset?: Preset) {
@@ -372,7 +373,7 @@ class PresetEditor extends EditorView {
         const lbreak_picker = new TimePicker(new Time(preset?.long_break_length ?? 15 * 60000));
         new Row(_('Long break length'), lbreak_picker.actor, group);
 
-        const cycles = new IntPicker(1, Number.MAX_SAFE_INTEGER, 4);
+        const cycles = new IntPicker(1, Number.MAX_SAFE_INTEGER, preset ? preset.long_break_after_n_pomos : 4);
         new Row(_('Long break every n pomodoros'), cycles.actor, group);
 
         const button_box    = new ButtonBox(this.main_view.left_box);

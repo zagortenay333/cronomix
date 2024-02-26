@@ -1,11 +1,11 @@
-import * as St from 'gi://St';
-import * as Gtk from 'gi://Gtk';
-import * as Meta from 'gi://Meta';
-import * as Shell from 'gi://Shell';
-import * as Clutter from 'gi://Clutter';
+import St from 'gi://St';
+import Gtk from 'gi://Gtk';
+import Meta from 'gi://Meta';
+import Shell from 'gi://Shell';
+import Clutter from 'gi://Clutter';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
+import { gettext as _ } from 'resource:///org/gnome/shell/extensions/extension.js';
 
-import { _ } from './misc.js';
 import { Button } from './button.js';
 
 type Binding = {
@@ -136,7 +136,7 @@ export class KeyMapPicker {
                 button.set_label(initial_msg);
                 button.actor.add_style_class_name('unset');
             } else {
-                this.#map = Gtk.accelerator_name_with_keycode(null, e.get_key_symbol(), e.get_key_code(), e.get_state_full()[1]);
+                this.#map = Gtk.accelerator_name_with_keycode(null, e.get_key_symbol(), e.get_key_code(), e.get_state());
                 button.set_label(this.#map);
                 button.actor.remove_style_class_name('unset');
             }

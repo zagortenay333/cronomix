@@ -1,10 +1,11 @@
-import * as St from 'gi://St';
+import St from 'gi://St';
+import Gio from 'gi://Gio';
+import Clutter from 'gi://Clutter';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
-import * as Clutter from 'gi://Clutter';
 import { Button as PanelButton } from 'resource:///org/gnome/shell/ui/panelMenu.js';
+import { gettext as _ } from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import * as Fs from './../utils/fs.js';
-import { _ } from './../utils/misc.js';
 import * as Misc from './../utils/misc.js';
 import { PubSub } from './../utils/pubsub.js';
 import { Button } from './../utils/button.js';
@@ -17,9 +18,9 @@ export enum PanelPosition {
 }
 
 export const PanelPositionTr = {
-    'left':   _('Left'),
-    'center': _('Center'),
-    'right':  _('Right'),
+    get left ()   { return _('Left'); },
+    get center () { return _('Center'); },
+    get right ()  { return _('Right'); },
 }
 
 export class Applet <E = {}> extends PubSub<E> {
@@ -29,6 +30,7 @@ export class Applet <E = {}> extends PubSub<E> {
     panel_icon: St.Icon;
     panel_label: St.Label;
     panel_item: PanelButton;
+    sound_cancel: Gio.Cancellable | null = null;
 
     constructor (ext: Ext, id: string) {
         super();
@@ -121,7 +123,7 @@ export class ContextMenu {
         const settings_button = new Button({ parent: items_box, icon: 'cronomix-wrench-symbolic', label: _('Settings'), style_class: 'cronomix-menu-button' });
         const website_button  = new Button({ parent: items_box, icon: 'cronomix-link-symbolic', label: _('Website'), style_class: 'cronomix-menu-button' });
 
-        website_button.subscribe('left_click', () => Fs.open_web_uri_in_default_app(Misc.ext.metadata.url));
+        website_button.subscribe('left_click', () => Fs.open_web_uri_in_default_app(Misc.ext().metadata.url));
         settings_button.subscribe('left_click', () => {
             let settings_view: St.Widget;
 

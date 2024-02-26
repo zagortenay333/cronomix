@@ -1,68 +1,67 @@
+import { gettext as _ } from 'resource:///org/gnome/shell/extensions/extension.js';
+
 import { SearchView } from './search.js';
-import { _ } from './../../utils/misc.js';
 import * as Fs from './../../utils/fs.js';
-import { Task, TaskEditor } from './task.js';
 import { Ext } from './../../extension.js';
+import { Task, TaskEditor } from './task.js';
 import { SortView, SortSchema } from './sort.js';
+import { Storage } from './../../utils/storage.js';
 import * as P from './../../utils/markup/parser.js';
-import { Storage, StorageConfig } from './../../utils/storage.js';
 import { FilterGroup, FilterView, KanbanView } from './filter.js';
 import { Applet, PanelPosition, PanelPositionTr } from './../applet.js';
 import { TimeTracker, TimeTrackerView, TrackerQuery } from './tracker.js';
 
-const storage_config = {
-    file: '~/.config/cronomix/todo.json',
-
-    values: {
-        panel_position: { tag: 'enum',   value: PanelPosition.RIGHT, enum: Object.values(PanelPosition) },
-        open:           { tag: 'keymap', value: null },
-        add_task:       { tag: 'keymap', value: null },
-        search:         { tag: 'keymap', value: null },
-        open_tracker:   { tag: 'keymap', value: null },
-        open_todo_file: { tag: 'keymap', value: null },
-        todo_file:      { tag: 'file',   value: null },
-        active_filter:  { tag: 'custom', value: -1 },
-        filters:        { tag: 'custom', value: Array<FilterGroup>() },
-        tracker_file:   { tag: 'custom', value: '' },
-        tracker_query:  { tag: 'custom', value: new TrackerQuery() },
-        sort: {
-            tag: 'custom',
-            value: [
-                { by: 'pin',      direction: 'desc' },
-                { by: 'priority', direction: 'asc'  },
-                { by: 'due',      direction: 'asc'  },
-                { by: 'done',     direction: 'asc'  },
-                { by: 'hide',     direction: 'asc'  },
-            ] satisfies SortSchema
-        }
-    },
-
-    groups: [
-        ['todo_file', 'panel_position'],
-        ['open', 'add_task', 'search', 'open_tracker', 'open_todo_file'],
-    ],
-
-    translations: {
-        panel_position: _('Panel position'),
-        open: _('Open'),
-        add_task: _('Add task'),
-        search: _('Search tasks'),
-        todo_file: _('Todo file'),
-        open_tracker: _('Open time tracker'),
-        open_todo_file: _('Open todo file'),
-        pin: _('Pin'),
-        priority: _('Priority'),
-        due: _('Due'),
-        done: _('Done'),
-        hide: _('Hide'),
-        asc: _('Ascending'),
-        desc: _('Descending'),
-        ...PanelPositionTr,
-    }
-} satisfies StorageConfig;
-
 export class TodoApplet extends Applet {
-    storage = new Storage(storage_config);
+    storage = new Storage({
+        file: '~/.config/cronomix/todo.json',
+
+        values: {
+            panel_position: { tag: 'enum',   value: PanelPosition.RIGHT, enum: Object.values(PanelPosition) },
+            open:           { tag: 'keymap', value: null },
+            add_task:       { tag: 'keymap', value: null },
+            search:         { tag: 'keymap', value: null },
+            open_tracker:   { tag: 'keymap', value: null },
+            open_todo_file: { tag: 'keymap', value: null },
+            todo_file:      { tag: 'file',   value: null },
+            active_filter:  { tag: 'custom', value: -1 },
+            filters:        { tag: 'custom', value: Array<FilterGroup>() },
+            tracker_file:   { tag: 'custom', value: '' },
+            tracker_query:  { tag: 'custom', value: new TrackerQuery() },
+            sort: {
+                tag: 'custom',
+                value: [
+                    { by: 'pin',      direction: 'desc' },
+                    { by: 'priority', direction: 'asc'  },
+                    { by: 'due',      direction: 'asc'  },
+                    { by: 'done',     direction: 'asc'  },
+                    { by: 'hide',     direction: 'asc'  },
+                ] satisfies SortSchema
+            }
+        },
+
+        groups: [
+            ['todo_file', 'panel_position'],
+            ['open', 'add_task', 'search', 'open_tracker', 'open_todo_file'],
+        ],
+
+        translations: {
+            panel_position: _('Panel position'),
+            open: _('Open'),
+            add_task: _('Add task'),
+            search: _('Search tasks'),
+            todo_file: _('Todo file'),
+            open_tracker: _('Open time tracker'),
+            open_todo_file: _('Open todo file'),
+            pin: _('Pin'),
+            priority: _('Priority'),
+            due: _('Due'),
+            done: _('Done'),
+            hide: _('Hide'),
+            asc: _('Ascending'),
+            desc: _('Descending'),
+            ...PanelPositionTr,
+        }
+    });
 
     // These data structures maintain state about
     // the current todo file. If you edit tasks

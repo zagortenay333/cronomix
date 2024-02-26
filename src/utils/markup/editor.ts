@@ -1,9 +1,9 @@
-import * as St from 'gi://St';
-import * as GLib from 'gi://GLib';
-import * as Clutter from 'gi://Clutter';
-import * as Graphene from 'gi://Graphene';
+import St from 'gi://St';
+import GLib from 'gi://GLib';
+import Clutter from 'gi://Clutter';
+import Graphene from 'gi://Graphene';
+import { gettext as _ } from 'resource:///org/gnome/shell/extensions/extension.js';
 
-import { _ } from './../../utils/misc.js';
 import * as Fs from './../../utils/fs.js';
 import * as Misc from './../../utils/misc.js';
 import { Popup } from './../../utils/popup.js';
@@ -311,9 +311,9 @@ export class EditorHelp extends Editor {
         const table_of_contents = new ScrollBox();
         this.actor.insert_child_at_index(table_of_contents.actor, 0);
 
-        const filters_docs = Fs.read_entire_file(Misc.ext.path + '/data/docs/filters') ?? '';
-        const markup_docs  = Fs.read_entire_file(Misc.ext.path + '/data/docs/markup') ?? '';
-        const tasks_docs   = Fs.read_entire_file(Misc.ext.path + '/data/docs/todo_tasks') ?? '';
+        const filters_docs = Fs.read_entire_file(Misc.ext().path + '/data/docs/filters') ?? '';
+        const markup_docs  = Fs.read_entire_file(Misc.ext().path + '/data/docs/markup') ?? '';
+        const tasks_docs   = Fs.read_entire_file(Misc.ext().path + '/data/docs/todo_tasks') ?? '';
 
         this.entry.set_text(markup_docs + '\n' + tasks_docs + '\n' + filters_docs, false);
         this.entry.set_cursor_pos(0);

@@ -1,15 +1,16 @@
-import * as St from 'gi://St';
-import * as GLib from 'gi://GLib';
-import * as Clutter from 'gi://Clutter';
+import St from 'gi://St';
+import GLib from 'gi://GLib';
+import Clutter from 'gi://Clutter';
+import { gettext as _ } from 'resource:///org/gnome/shell/extensions/extension.js';
 
-import * as Misc from './../utils/misc.js';
 import { Ext } from './../extension.js';
+import * as Misc from './../utils/misc.js';
+import { Storage } from './../utils/storage.js';
+import { unreachable } from './../utils/misc.js';
 import { ScrollBox } from './../utils/scroll.js';
 import { TimePicker } from './../utils/pickers.js';
-import { _, unreachable } from './../utils/misc.js';
 import { Markup } from './../utils/markup/renderer.js';
 import { EditorView } from './../utils/markup/editor.js';
-import { Storage, StorageConfig } from './../utils/storage.js';
 import { Button, ButtonBox, CheckBox } from './../utils/button.js';
 import { Time, MiliSeconds, get_time_ms } from './../utils/time.js';
 import { show_confirm_popup, show_error_popup } from './../utils/popup.js';
@@ -19,37 +20,6 @@ class Preset {
     text = '';
     time = 5*60000 as MiliSeconds;
 }
-
-const storage_config = {
-    file: '~/.config/cronomix/timer.json',
-
-    values: {
-        show_panel_label: { tag: 'boolean', value: true },
-        panel_position:   { tag: 'enum',    value: PanelPosition.RIGHT, enum: Object.values(PanelPosition) },
-        clock_size:       { tag: 'number',  value: 0, range: [0, 2000] },
-        notif_sound:      { tag: 'file',    value: Misc.ext.path + '/data/sounds/beeps.ogg', start: Misc.ext.path + '/data/sounds/' },
-        open:             { tag: 'keymap',  value: null },
-        show_presets:     { tag: 'keymap',  value: null },
-        current_preset:   { tag: 'custom',  value: -1 },
-        default_preset:   { tag: 'custom',  value: new Preset() },
-        presets:          { tag: 'custom',  value: Array<Preset>() },
-    },
-
-    groups: [
-        ['show_panel_label', 'panel_position', 'clock_size', 'notif_sound'],
-        ['open', 'show_presets'],
-    ],
-
-    translations: {
-        show_panel_label: _('Show time in panel'),
-        panel_position: _('Panel position'),
-        clock_size: _('Clock size (set to 0 for default size)'),
-        notif_sound: _('Notification sound'),
-        open: _('Open'),
-        show_presets: _('Show presets'),
-        ...PanelPositionTr,
-    }
-} satisfies StorageConfig;
 
 const enum State {
     RUNNING,
@@ -63,10 +33,40 @@ type Events = {
 }
 
 export class TimerApplet extends Applet<Events> {
+    storage = new Storage({
+        file: '~/.config/cronomix/timer.json',
+
+        values: {
+            show_panel_label: { tag: 'boolean', value: true },
+            panel_position:   { tag: 'enum',    value: PanelPosition.RIGHT, enum: Object.values(PanelPosition) },
+            clock_size:       { tag: 'number',  value: 0, range: [0, 2000] },
+            notif_sound:      { tag: 'file',    value: Misc.ext().path + '/data/sounds/beeps.ogg', start: Misc.ext().path + '/data/sounds/' },
+            open:             { tag: 'keymap',  value: null },
+            show_presets:     { tag: 'keymap',  value: null },
+            current_preset:   { tag: 'custom',  value: -1 },
+            default_preset:   { tag: 'custom',  value: new Preset() },
+            presets:          { tag: 'custom',  value: Array<Preset>() },
+        },
+
+        groups: [
+            ['show_panel_label', 'panel_position', 'clock_size', 'notif_sound'],
+            ['open', 'show_presets'],
+        ],
+
+        translations: {
+            show_panel_label: _('Show time in panel'),
+            panel_position: _('Panel position'),
+            clock_size: _('Clock size (set to 0 for default size)'),
+            notif_sound: _('Notification sound'),
+            open: _('Open'),
+            show_presets: _('Show presets'),
+            ...PanelPositionTr,
+        }
+    });
+
     time!: Time;
     state!: State;
     preset!: Preset;
-    storage = new Storage(storage_config);
 
     #tic_id = 0;
     #current_view: null | { destroy: () => void } = null;
@@ -176,8 +176,7 @@ export class TimerApplet extends Applet<Events> {
         const view = new TimerElapsedView(this, this.preset);
         this.#current_view = view;
         this.menu.add_actor(view.actor);
-        const sound_file = this.storage.read.notif_sound.value;
-        if (sound_file) Misc.play_sound(sound_file);
+        this.sound_cancel = Misc.play_sound(this.storage.read.notif_sound.value);
     }
 }
 
@@ -408,8 +407,8 @@ class TimerElapsedView {
 
         Misc.focus_when_mapped(dismiss_button.actor);
 
-        dismiss_button.subscribe('left_click', () => applet.show_main_view());
-        restart_button.subscribe('left_click', () => { applet.show_main_view(); applet.start(); });
+        dismiss_button.subscribe('left_click', () => { applet.sound_cancel?.cancel(); applet.show_main_view(); });
+        restart_button.subscribe('left_click', () => { applet.sound_cancel?.cancel(); applet.show_main_view(); applet.start(); });
     }
 
     destroy () {

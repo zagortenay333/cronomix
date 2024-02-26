@@ -1,15 +1,15 @@
-import * as St from 'gi://St';
-import * as Clutter from 'gi://Clutter';
+import St from 'gi://St';
+import Clutter from 'gi://Clutter';
+import { gettext as _ } from 'resource:///org/gnome/shell/extensions/extension.js';
 
-import { _ } from './../utils/misc.js';
+import { Ext } from './../extension.js';
 import * as T from './../utils/time.js';
 import * as Misc from './../utils/misc.js';
-import { Ext } from './../extension.js';
+import { Storage } from './../utils/storage.js';
 import { ScrollBox } from './../utils/scroll.js';
 import { Markup } from './../utils/markup/renderer.js';
 import { EditorView } from './../utils/markup/editor.js';
 import { show_confirm_popup } from './../utils/popup.js';
-import { Storage, StorageConfig } from './../utils/storage.js';
 import { Button, ButtonBox, CheckBox } from './../utils/button.js';
 import { Applet, PanelPosition, PanelPositionTr } from './applet.js';
 import { DaySelection, DayPicker, IntPicker, TimePicker } from './../utils/pickers.js';
@@ -22,34 +22,34 @@ type Alarm = {
     days: DaySelection;
 }
 
-const storage_config = {
-    file: '~/.config/cronomix/alarms.json',
-
-    values: {
-        panel_position: { tag: 'enum',    value: PanelPosition.RIGHT, enum: Object.values(PanelPosition) },
-        notif_sound:    { tag: 'file',    value: Misc.ext.path + '/data/sounds/beeps.ogg', start: Misc.ext.path + '/data/sounds/' },
-        open:           { tag: 'keymap',  value: null },
-        add_alarm:      { tag: 'keymap',  value: null },
-        alarms:         { tag: 'custom',  value: Array<Alarm>() },
-    },
-
-    groups: [
-        ['panel_position', 'notif_sound'],
-        ['open', 'add_alarm'],
-    ],
-
-    translations: {
-        panel_position: _('Panel position'),
-        notif_sound: _('Notification sound'),
-        open: _('Open'),
-        add_alarm: _('Add Alarm'),
-        ...PanelPositionTr,
-    }
-} satisfies StorageConfig;
-
 export class AlarmApplet extends Applet {
+    storage = new Storage({
+        file: '~/.config/cronomix/alarms.json',
+
+        values: {
+            panel_position: { tag: 'enum',    value: PanelPosition.RIGHT, enum: Object.values(PanelPosition) },
+            notif_sound:    { tag: 'file',    value: Misc.ext().path + '/data/sounds/beeps.ogg', start: Misc.ext().path + '/data/sounds/' },
+            open:           { tag: 'keymap',  value: null },
+            add_alarm:      { tag: 'keymap',  value: null },
+            alarms:         { tag: 'custom',  value: Array<Alarm>() },
+        },
+
+        groups: [
+            ['panel_position', 'notif_sound'],
+            ['open', 'add_alarm'],
+        ],
+
+        translations: {
+            panel_position: _('Panel position'),
+            notif_sound: _('Notification sound'),
+            open: _('Open'),
+            add_alarm: _('Add Alarm'),
+            ...PanelPositionTr,
+        }
+    });
+
     wallclock: T.WallClock;
-    storage = new Storage(storage_config);
+
     #snoozed = new Map<T.Minutes, Alarm[]>();
     #current_view: null | { destroy: () => void } = null;
 
@@ -138,8 +138,7 @@ export class AlarmApplet extends Applet {
         }
 
         view.push(alarm);
-        const sound_file = this.storage.read.notif_sound.value;
-        if (sound_file) Misc.play_sound(sound_file);
+        this.sound_cancel = Misc.play_sound(this.storage.read.notif_sound.value);
     }
 
     show_settings () {
@@ -291,6 +290,7 @@ class NotificationView {
     }
 
     destroy () {
+        this.#applet.sound_cancel?.cancel();
         this.actor.actor.destroy();
     }
 
@@ -298,7 +298,7 @@ class NotificationView {
         const n = new Notification(alarm);
         this.actor.box.add_actor(n.actor);
 
-        n.snooze_button.subscribe('left_click', () => { this.#applet.snooze_alarm(alarm); n.actor.destroy(); });
+        n.snooze_button.subscribe('left_click', () => { this.#applet.snooze_alarm(alarm); n.actor.destroy(); this.#applet.show_main_view(); });
         n.dismiss_button.subscribe('left_click', () => {
             if (this.actor.box.get_n_children() === 1) {
                 this.#applet.show_main_view();

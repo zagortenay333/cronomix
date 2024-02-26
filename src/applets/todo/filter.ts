@@ -1,15 +1,15 @@
-import * as St from 'gi://St';
-import * as Clutter from 'gi://Clutter';
+import St from 'gi://St';
+import Clutter from 'gi://Clutter';
+import { gettext as _ } from 'resource:///org/gnome/shell/extensions/extension.js';
 
+import { TodoApplet } from './main.js';
+import { compare_tasks } from './sort.js';
+import { Task, TaskCard } from './task.js';
 import * as Fs from './../../utils/fs.js';
-import { _ } from './../../utils/misc.js';
 import * as Misc from './../../utils/misc.js';
 import { Entry } from './../../utils/entry.js';
 import * as P from './../../utils/markup/parser.js';
 import { show_info_popup } from './../../utils/popup.js';
-import { TodoApplet } from './main.js';
-import { compare_tasks } from './sort.js';
-import { Task, TaskCard } from './task.js';
 import { ScrollBox, LazyScrollBox } from './../../utils/scroll.js';
 import { Button, CheckBox, ButtonBox } from './../../utils/button.js';
 
@@ -166,7 +166,7 @@ export class FilterView {
             _('If no group is selected, a group with 1 ``* & !hide`` filter is created.') + '\n' +
             _('Tasks go into the first column from the left whose filter they pass.') + '\n' +
             _('Hidden tasks only pass filters of the form ``hide`` or ``hide & expr``.') + '\n' +
-            Fs.read_entire_file(Misc.ext.path + '/data/docs/filters') ?? '';
+            Fs.read_entire_file(Misc.ext().path + '/data/docs/filters') ?? '';
 
         button_add.subscribe('left_click', () => this.#add_card(new FilterGroup()));
         button_help.subscribe('left_click', () => show_info_popup(button_help, help_msg));

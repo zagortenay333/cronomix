@@ -1,7 +1,7 @@
-import * as St from 'gi://St';
-import * as GLib from 'gi://GLib';
-import * as Pango from 'gi://Pango';
-import * as Clutter from 'gi://Clutter';
+import St from 'gi://St';
+import GLib from 'gi://GLib';
+import Pango from 'gi://Pango';
+import Clutter from 'gi://Clutter';
 
 import * as Misc from './misc.js';
 import { ScrollBox, scroll_to_widget } from './scroll.js';
@@ -22,7 +22,7 @@ export class Entry {
         if (scrollable) {
             const scroll = new ScrollBox();
             this.actor.add_actor(scroll.actor);
-            scroll.actor.y_align = St.Align.START;
+            scroll.actor.y_align = Clutter.ActorAlign.START;
             scroll.box.add_actor(entry_container);
             scroll.actor.overlay_scrollbars = true;
         } else {
