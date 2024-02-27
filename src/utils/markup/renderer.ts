@@ -7,9 +7,9 @@ import { gettext as _ } from 'resource:///org/gnome/shell/extensions/extension.j
 
 import * as P from './parser.js';
 import * as Fs from './../../utils/fs.js';
-import * as Ext from './../../extension.js';
 import * as Misc from './../../utils/misc.js';
 import { Image } from './../../utils/image.js';
+import * as Cronomix from './../../extension.js';
 import { unreachable } from './../../utils/misc.js';
 
 export class MarkupPosition {
@@ -455,8 +455,8 @@ export class Markup {
         }
 
         case 'AstHighlight': {
-            const fg = Ext.colors['-cronomix-markup-highlight-fg'];
-            const bg = Ext.colors['-cronomix-markup-highlight-bg'];
+            const fg = Cronomix.colors['-cronomix-markup-highlight-fg'];
+            const bg = Cronomix.colors['-cronomix-markup-highlight-bg'];
 
             this.#paragraph_length++; // for the space we prepend
             let result = `<b><span color="${fg}" bgcolor="${bg}"> `;
@@ -474,8 +474,8 @@ export class Markup {
             let result = '';
 
             if (node.monospace) {
-                const fg = Ext.colors['-cronomix-markup-raw-fg'];
-                const bg = Ext.colors['-cronomix-markup-raw-bg'];
+                const fg = Cronomix.colors['-cronomix-markup-raw-fg'];
+                const bg = Cronomix.colors['-cronomix-markup-raw-bg'];
 
                 result = `<span color="${fg}" bgcolor="${bg}"> `;
                 this.#paragraph_length++;
@@ -494,7 +494,7 @@ export class Markup {
         }
 
         case 'AstLink': {
-            let result = `<b><span foreground="${Ext.colors['-cronomix-link-color']}">`;
+            let result = `<b><span foreground="${Cronomix.colors['-cronomix-link-color']}">`;
 
             const start = this.#paragraph_length;
             this.#inline_clutter_idx.set(node, start);
@@ -514,7 +514,7 @@ export class Markup {
         }
 
         case 'AstTagRef': {
-            let result = `<b><span foreground="${Ext.colors['-cronomix-tag-ref-color']}">`;
+            let result = `<b><span foreground="${Cronomix.colors['-cronomix-tag-ref-color']}">`;
             const start = this.#paragraph_length;
             result += this.#render_inline(node.child);
             result += '</span></b>';

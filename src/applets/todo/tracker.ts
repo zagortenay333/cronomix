@@ -5,6 +5,7 @@ import { gettext as _ } from 'resource:///org/gnome/shell/extensions/extension.j
 import { Task } from './task.js';
 import { TodoApplet } from './main.js';
 import * as Fs from './../../utils/fs.js';
+import { ext } from './../../extension.js';
 import * as T from './../../utils/time.js';
 import * as Pop from './../../utils/popup.js';
 import * as Misc from './../../utils/misc.js';
@@ -234,9 +235,9 @@ export class TimeTrackerView {
 
         const tracker               = applet.tracker;
         const saved_query           = applet.storage.read.tracker_query.value;
-        const filter_format         = Fs.read_entire_file(Misc.ext().path + '/data/docs/filters') ?? '';
-        const tracker_file_format   = Fs.read_entire_file(Misc.ext().path + '/data/docs/tracker') ?? '';
-        const tracker_query_format  = Fs.read_entire_file(Misc.ext().path + '/data/docs/tracker_query') ?? '';
+        const filter_format         = Fs.read_entire_file(ext.path + '/data/docs/filters') ?? '';
+        const tracker_file_format   = Fs.read_entire_file(ext.path + '/data/docs/tracker') ?? '';
+        const tracker_query_format  = Fs.read_entire_file(ext.path + '/data/docs/tracker_query') ?? '';
         const card_title_top_margin = 8;
 
         //

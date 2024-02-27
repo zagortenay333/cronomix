@@ -5,10 +5,10 @@ import { Extension, gettext as _ } from 'resource:///org/gnome/shell/extensions/
 import * as Fs from './utils/fs.js';
 import { Storage } from './utils/storage.js';
 import { Applet } from './applets/applet.js';
+import { light_or_dark } from './utils/misc.js';
 import { TimerApplet } from './applets/timer.js';
 import { AlarmApplet } from './applets/alarm.js';
 import { TodoApplet } from './applets/todo/main.js';
-import { ext, light_or_dark } from './utils/misc.js';
 import { PomodoroApplet } from './applets/pomodoro.js';
 import { StopwatchApplet } from './applets/stopwatch.js';
 
@@ -27,7 +27,7 @@ export const applets = [
     [ 'stopwatch', StopwatchApplet ],
 ] as const;
 
-export class Ext {
+export class Cronomix {
     storage = new Storage({
         file: '~/.config/cronomix/global.json',
 
@@ -37,7 +37,7 @@ export class Ext {
             timer:               { tag: 'boolean', value: true },
             pomodoro:            { tag: 'boolean', value: true },
             stopwatch:           { tag: 'boolean', value: true },
-            theme_file:          { tag: 'file',    value: '', start: ext().path + '/data/themes/' },
+            theme_file:          { tag: 'file',    value: '', start: ext.path + '/data/themes/' },
             lazy_list_page_size: { tag: 'number',  value: 20, range: [1, 100000] },
         },
 
@@ -132,7 +132,7 @@ export class Ext {
 
             const [ok, col] = theme_node.lookup_color('background-color', false);
             const style     = ok ? light_or_dark(col.red, col.green, col.blue) : 'dark';
-            stylesheet      = ext().path + '/data/themes/' + style + '.css';
+            stylesheet      = ext.path + '/data/themes/' + style + '.css';
 
             dummy.destroy();
         }
@@ -184,8 +184,9 @@ export const colors: Record<string, string> = {
     ['-cronomix-markup-highlight-bg']: '#FFAB42',
 };
 
-export default class Cronomix extends Extension {
-    ext?: Ext;
-    enable  () { this.ext = new Ext(); }
-    disable () { this.ext?.destroy(); }
+export var ext: Extension;
+export default class E extends Extension {
+    cronomix: Cronomix | null = null;
+    enable  () { ext = this; this.cronomix = new Cronomix(); }
+    disable () { this.cronomix?.destroy(); this.cronomix = null; ext = null!; }
 }

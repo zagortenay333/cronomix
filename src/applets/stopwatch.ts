@@ -3,8 +3,8 @@ import GLib from 'gi://GLib';
 import Clutter from 'gi://Clutter';
 import { gettext as _ } from 'resource:///org/gnome/shell/extensions/extension.js';
 
-import { Ext } from './../extension.js';
 import * as Misc from './../utils/misc.js';
+import { Cronomix } from './../extension.js';
 import { Storage } from './../utils/storage.js';
 import { ButtonBox } from './../utils/button.js';
 import { ScrollBox } from './../utils/scroll.js';
@@ -63,7 +63,7 @@ export class StopwatchApplet extends Applet<Events> {
     #tic_id = 0;
     #current_view: null | { destroy: () => void } = null;
 
-    constructor (ext: Ext) {
+    constructor (ext: Cronomix) {
         super(ext, 'stopwatch');
         this.storage.init_keymap({ open: () => this.panel_item.menu.open() });
         this.set_panel_position(this.storage.read.panel_position.value);

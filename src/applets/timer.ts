@@ -3,11 +3,11 @@ import GLib from 'gi://GLib';
 import Clutter from 'gi://Clutter';
 import { gettext as _ } from 'resource:///org/gnome/shell/extensions/extension.js';
 
-import { Ext } from './../extension.js';
 import * as Misc from './../utils/misc.js';
 import { Storage } from './../utils/storage.js';
 import { unreachable } from './../utils/misc.js';
 import { ScrollBox } from './../utils/scroll.js';
+import { ext, Cronomix } from './../extension.js';
 import { TimePicker } from './../utils/pickers.js';
 import { Markup } from './../utils/markup/renderer.js';
 import { EditorView } from './../utils/markup/editor.js';
@@ -40,7 +40,7 @@ export class TimerApplet extends Applet<Events> {
             show_panel_label: { tag: 'boolean', value: true },
             panel_position:   { tag: 'enum',    value: PanelPosition.RIGHT, enum: Object.values(PanelPosition) },
             clock_size:       { tag: 'number',  value: 0, range: [0, 2000] },
-            notif_sound:      { tag: 'file',    value: Misc.ext().path + '/data/sounds/beeps.ogg', start: Misc.ext().path + '/data/sounds/' },
+            notif_sound:      { tag: 'file',    value: ext.path + '/data/sounds/beeps.ogg', start: ext.path + '/data/sounds/' },
             open:             { tag: 'keymap',  value: null },
             show_presets:     { tag: 'keymap',  value: null },
             current_preset:   { tag: 'custom',  value: -1 },
@@ -71,7 +71,7 @@ export class TimerApplet extends Applet<Events> {
     #tic_id = 0;
     #current_view: null | { destroy: () => void } = null;
 
-    constructor (ext: Ext) {
+    constructor (ext: Cronomix) {
         super(ext, 'timer');
 
         this.storage.init_keymap({

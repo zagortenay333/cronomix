@@ -1,5 +1,4 @@
 import St from 'gi://St';
-import Gtk from 'gi://Gtk';
 import Meta from 'gi://Meta';
 import Shell from 'gi://Shell';
 import Clutter from 'gi://Clutter';
@@ -136,7 +135,7 @@ export class KeyMapPicker {
                 button.set_label(initial_msg);
                 button.actor.add_style_class_name('unset');
             } else {
-                this.#map = Gtk.accelerator_name_with_keycode(null, e.get_key_symbol(), e.get_key_code(), e.get_state());
+                this.#map = Meta.accelerator_name(e.get_state(), e.get_key_symbol());
                 button.set_label(this.#map);
                 button.actor.remove_style_class_name('unset');
             }

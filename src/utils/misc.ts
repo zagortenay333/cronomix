@@ -3,9 +3,10 @@ import Gio from 'gi://Gio';
 import Meta from 'gi://Meta';
 import Clutter from 'gi://Clutter';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
-import { Extension, gettext as _ } from 'resource:///org/gnome/shell/extensions/extension.js';
+import { gettext as _ } from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import * as Fs from './fs.js';
+import { ext } from '../extension.js';
 import { FocusTracker } from './focus.js';
 import { scroll_to_widget } from './scroll.js';
 
@@ -16,16 +17,12 @@ export type Rectangle = {
     y2: number;
 }
 
-export function ext () {
-    return Extension.lookupByUUID("cronomix@zagortenay333");
-}
-
 export function unreachable (_: never): never {
     throw new Error('Unreachable.');
 }
 
 export function get_icon (str: string): Gio.Icon {
-    return Gio.Icon.new_for_string(ext().path + '/data/icons/' + str + '.svg');
+    return Gio.Icon.new_for_string(ext.path + '/data/icons/' + str + '.svg');
 }
 
 export function get_transformed_allocation (actor: Clutter.Actor): Rectangle {

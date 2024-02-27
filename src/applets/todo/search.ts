@@ -3,6 +3,7 @@ import { gettext as _ } from 'resource:///org/gnome/shell/extensions/extension.j
 
 import { TodoApplet } from './main.js';
 import * as Fs from './../../utils/fs.js';
+import { ext } from './../../extension.js';
 import { Task, TaskCard } from './task.js';
 import { Row } from './../../utils/misc.js';
 import * as Pop from './../../utils/popup.js';
@@ -23,8 +24,8 @@ export class SearchView {
     constructor (applet: TodoApplet, query: string|Task = '') {
         this.actor = new St.BoxLayout({ reactive: true, style_class: 'cronomix-spacing' });
 
-        const filter_docs = Fs.read_entire_file(Misc.ext().path + '/data/docs/filters') ?? '';
-        const tasks_docs  = Fs.read_entire_file(Misc.ext().path + '/data/docs/todo_tasks') ?? '';
+        const filter_docs = Fs.read_entire_file(ext.path + '/data/docs/filters') ?? '';
+        const tasks_docs  = Fs.read_entire_file(ext.path + '/data/docs/todo_tasks') ?? '';
 
         //
         // left box

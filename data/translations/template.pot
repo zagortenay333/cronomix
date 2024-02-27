@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-26 10:54-0500\n"
+"POT-Creation-Date: 2024-02-27 05:40-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -70,34 +70,6 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-msgid "Add Task"
-msgstr ""
-
-msgid "Add Filter"
-msgstr ""
-
-msgid "## Filter Groups"
-msgstr ""
-
-msgid "Each filter in a group creates a column of tasks in the main view."
-msgstr ""
-
-msgid ""
-"If no group is selected, a group with 1 ``* & !hide`` filter is created."
-msgstr ""
-
-msgid "Tasks go into the first column from the left whose filter they pass."
-msgstr ""
-
-msgid "Hidden tasks only pass filters of the form ``hide`` or ``hide & expr``."
-msgstr ""
-
-msgid "Title"
-msgstr ""
-
-msgid "Comma separated list of filters."
-msgstr ""
-
 msgid "Panel position"
 msgstr ""
 
@@ -144,6 +116,34 @@ msgid "A todo file is a text file containing markup."
 msgstr ""
 
 msgid "To learn about the markup, open the built-in editor and press F1."
+msgstr ""
+
+msgid "Add Task"
+msgstr ""
+
+msgid "Add Filter"
+msgstr ""
+
+msgid "## Filter Groups"
+msgstr ""
+
+msgid "Each filter in a group creates a column of tasks in the main view."
+msgstr ""
+
+msgid ""
+"If no group is selected, a group with 1 ``* & !hide`` filter is created."
+msgstr ""
+
+msgid "Tasks go into the first column from the left whose filter they pass."
+msgstr ""
+
+msgid "Hidden tasks only pass filters of the form ``hide`` or ``hide & expr``."
+msgstr ""
+
+msgid "Title"
+msgstr ""
+
+msgid "Comma separated list of filters."
 msgstr ""
 
 msgid "Filter expression"
@@ -251,28 +251,10 @@ msgstr ""
 msgid "Notification sound"
 msgstr ""
 
-msgid "Show presets"
-msgstr ""
-
-msgid "Add Preset"
+msgid "Add Alarm"
 msgstr ""
 
 msgid "Time"
-msgstr ""
-
-msgid "Invalid time selected."
-msgstr ""
-
-msgid "Timer Elapsed!"
-msgstr ""
-
-msgid "Dismiss"
-msgstr ""
-
-msgid "Restart"
-msgstr ""
-
-msgid "Add Alarm"
 msgstr ""
 
 msgid "Snooze n minutes"
@@ -282,6 +264,9 @@ msgid "Alarm"
 msgstr ""
 
 msgid "Snooze"
+msgstr ""
+
+msgid "Dismiss"
 msgstr ""
 
 msgid "Left"
@@ -308,6 +293,9 @@ msgstr ""
 msgid "Short Break"
 msgstr ""
 
+msgid "Show presets"
+msgstr ""
+
 msgid "Phase"
 msgstr ""
 
@@ -315,6 +303,9 @@ msgid "Completed pomodoros"
 msgstr ""
 
 msgid "Pomodoros until long break"
+msgstr ""
+
+msgid "Add Preset"
 msgstr ""
 
 msgid "Pomodoro length"
@@ -327,6 +318,15 @@ msgid "Long break length"
 msgstr ""
 
 msgid "Long break every n pomodoros"
+msgstr ""
+
+msgid "Invalid time selected."
+msgstr ""
+
+msgid "Timer Elapsed!"
+msgstr ""
+
+msgid "Restart"
 msgstr ""
 
 msgid "Tip"
@@ -342,12 +342,6 @@ msgid "Important"
 msgstr ""
 
 msgid "Image not found"
-msgstr ""
-
-msgid "Set shortcut"
-msgstr ""
-
-msgid "Type shortcut (backspace to reset)"
 msgstr ""
 
 msgid "Show more"
@@ -397,6 +391,12 @@ msgid "Select folder"
 msgstr ""
 
 msgid "Select file"
+msgstr ""
+
+msgid "Set shortcut"
+msgstr ""
+
+msgid "Type shortcut (backspace to reset)"
 msgstr ""
 
 msgid "Todo"

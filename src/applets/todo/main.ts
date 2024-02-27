@@ -2,8 +2,8 @@ import { gettext as _ } from 'resource:///org/gnome/shell/extensions/extension.j
 
 import { SearchView } from './search.js';
 import * as Fs from './../../utils/fs.js';
-import { Ext } from './../../extension.js';
 import { Task, TaskEditor } from './task.js';
+import { Cronomix } from './../../extension.js';
 import { SortView, SortSchema } from './sort.js';
 import { Storage } from './../../utils/storage.js';
 import * as P from './../../utils/markup/parser.js';
@@ -88,7 +88,7 @@ export class TodoApplet extends Applet {
     #current_view: null | { destroy: () => void } = null;
     #todo_file_monitor: Fs.FileMonitor | null = null;
 
-    constructor (ext: Ext) {
+    constructor (ext: Cronomix) {
         super(ext, 'todo');
 
         this.storage.init_keymap({

@@ -151,7 +151,7 @@ declare module 'gi://St' {
             vscroll: ScrollBar;
         }
     }
-    
+
     export default St;
 }
 
@@ -636,8 +636,9 @@ declare module 'gi://Gio' {
 declare module 'resource:///org/gnome/shell/extensions/extension.js' {
     function gettext (msg: string): string;
 
-    class Ext {
+    class Extension {
         path: string;
+
         metadata: {
             url: string,
             name: string,
@@ -646,11 +647,6 @@ declare module 'resource:///org/gnome/shell/extensions/extension.js' {
             ['gettext-domain']: string,
             ['shell-version']: string[],
         };
-    }
-
-    class Extension {
-        static initTranslations (domain: string): void;
-        static lookupByUUID (id: string): Ext;
     }
 }
 
@@ -670,7 +666,7 @@ declare module 'gi://GLib' {
         function get_monotonic_time (): number;
         function markup_escape_text (text: string, length: number): string;
         function filename_to_uri (filename: string, hostname: string | null): string;
-    } 
+    }
 
     export default GLib;
 }
@@ -760,14 +756,6 @@ declare module 'resource:///org/gnome/shell/ui/layout.js' {
         getWorkAreaForMonitor  (monitor_idx: number): Meta.Rectangle;
         setDummyCursorGeometry (x: number, y: number, width: number, height: number): void;
     }
-}
-
-declare module 'gi://Gtk' {
-    namespace Gtk {
-        function accelerator_name_with_keycode (d:null, key: number, keycode: number, modifiers: unknown): string;
-    }
-
-    export default Gtk;
 }
 
 declare module 'resource:///org/gnome/shell/ui/main.js' {

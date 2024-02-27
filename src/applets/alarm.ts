@@ -2,11 +2,11 @@ import St from 'gi://St';
 import Clutter from 'gi://Clutter';
 import { gettext as _ } from 'resource:///org/gnome/shell/extensions/extension.js';
 
-import { Ext } from './../extension.js';
 import * as T from './../utils/time.js';
 import * as Misc from './../utils/misc.js';
 import { Storage } from './../utils/storage.js';
 import { ScrollBox } from './../utils/scroll.js';
+import { ext, Cronomix } from './../extension.js';
 import { Markup } from './../utils/markup/renderer.js';
 import { EditorView } from './../utils/markup/editor.js';
 import { show_confirm_popup } from './../utils/popup.js';
@@ -28,7 +28,7 @@ export class AlarmApplet extends Applet {
 
         values: {
             panel_position: { tag: 'enum',    value: PanelPosition.RIGHT, enum: Object.values(PanelPosition) },
-            notif_sound:    { tag: 'file',    value: Misc.ext().path + '/data/sounds/beeps.ogg', start: Misc.ext().path + '/data/sounds/' },
+            notif_sound:    { tag: 'file',    value: ext.path + '/data/sounds/beeps.ogg', start: ext.path + '/data/sounds/' },
             open:           { tag: 'keymap',  value: null },
             add_alarm:      { tag: 'keymap',  value: null },
             alarms:         { tag: 'custom',  value: Array<Alarm>() },
@@ -53,7 +53,7 @@ export class AlarmApplet extends Applet {
     #snoozed = new Map<T.Minutes, Alarm[]>();
     #current_view: null | { destroy: () => void } = null;
 
-    constructor (ext: Ext) {
+    constructor (ext: Cronomix) {
         super(ext, 'alarm');
 
         this.storage.init_keymap({
