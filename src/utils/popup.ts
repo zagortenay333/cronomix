@@ -13,7 +13,7 @@ import { Markup } from './markup/renderer.js';
 export class Popup {
     is_open = false;
     scrollbox: ScrollBox;
-    on_close?: () => void;
+    on_close?(): void {};
     destroy_on_close: boolean;
     boxpointer: BoxPointer;
 
