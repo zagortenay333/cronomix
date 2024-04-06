@@ -346,7 +346,7 @@ declare module 'gi://Clutter' {
             insert_child_at_index (child: Actor, idx: number): void;
             insert_child_above (child: Actor, sibling: Actor | null): void;
             set_child_above_sibling (child: Actor, sibling: Actor | null): void;
-            add_actor (child: Actor): void;
+            add_child (child: Actor): void;
             remove_child (child: Actor): void;
             destroy_all_children (): void;
             remove_all_children(): void;

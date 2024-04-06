@@ -244,18 +244,18 @@ export class TimeTrackerView {
         // left column
         //
         const left_column = new St.BoxLayout({ vertical: true, x_expand: true, style: 'min-width: 256px;', style_class: 'cronomix-spacing' });
-        this.actor.add_actor(left_column);
+        this.actor.add_child(left_column);
 
         //
         // file selection card
         //
-        left_column.add_actor(new St.Label({ text: _('Time Tracker'), style: 'font-weight: bold;' }));
+        left_column.add_child(new St.Label({ text: _('Time Tracker'), style: 'font-weight: bold;' }));
 
         const file_selection_card = new St.BoxLayout({ vertical: true, style_class: 'cronomix-group' });
-        left_column.add_actor(file_selection_card);
+        left_column.add_child(file_selection_card);
 
         const fsc_row1 = new St.BoxLayout({ style_class: 'cronomix-spacing' });
-        file_selection_card.add_actor(fsc_row1);
+        file_selection_card.add_child(fsc_row1);
 
         const fsc_file_picker = new FilePicker({ parent: fsc_row1, hint_text: _('Select time tracker file') });
         fsc_file_picker.entry.text = applet.storage.read.tracker_file.value;
@@ -270,10 +270,10 @@ export class TimeTrackerView {
         // currently tracking card
         //
         this.#tracking_card_title = new St.Label({ text: _('Currently Tracking'), style: `font-weight: bold; margin-top: ${card_title_top_margin}px;` });
-        left_column.add_actor(this.#tracking_card_title);
+        left_column.add_child(this.#tracking_card_title);
 
         this.#tracking_card = new St.BoxLayout({ vertical: true, x_expand: true, style_class: 'cronomix-group' });
-        left_column.add_actor(this.#tracking_card);
+        left_column.add_child(this.#tracking_card);
 
         const ctc_preview_button = new Button({ icon: 'cronomix-eye-symbolic' });
 
@@ -288,16 +288,16 @@ export class TimeTrackerView {
         //
         // search data card
         //
-        left_column.add_actor(new St.Label({ text: _('Search Data'), style: `font-weight: bold; margin-top: ${card_title_top_margin}px;` }));
+        left_column.add_child(new St.Label({ text: _('Search Data'), style: `font-weight: bold; margin-top: ${card_title_top_margin}px;` }));
 
         const query_card = new St.BoxLayout({ vertical: true, x_expand: true, style_class: 'cronomix-group' });
-        left_column.add_actor(query_card);
+        left_column.add_child(query_card);
 
         const sdc_filter_row = new St.BoxLayout({ x_expand: true, style_class: 'cronomix-spacing' });
-        query_card.add_actor(sdc_filter_row);
+        query_card.add_child(sdc_filter_row);
 
         this.#query_filter_entry = new Entry(_('Filter expression'));
-        sdc_filter_row.add_actor(this.#query_filter_entry.actor);
+        sdc_filter_row.add_child(this.#query_filter_entry.actor);
         const track = task_to_query?.ast.config.track;
         this.#query_filter_entry.set_text((track !== undefined) ? ('track:' + track) : saved_query.filter);
 
@@ -312,10 +312,10 @@ export class TimeTrackerView {
         this.#query_until_entry.set_text(saved_query.until);
 
         const sdc_button_row = new St.BoxLayout({ x_expand: true, style_class: 'cronomix-spacing' });
-        query_card.add_actor(sdc_button_row);
+        query_card.add_child(sdc_button_row);
 
         this.#query_sort = new Dropdown(saved_query.sort, Object.keys(TrackerSort), Object.values(TrackerSort));
-        sdc_button_row.add_actor(this.#query_sort.actor.actor);
+        sdc_button_row.add_child(this.#query_sort.actor.actor);
 
         const sdc_copy_button = new Button({ parent: sdc_button_row, wide: true, label: _('Copy') });
 
@@ -323,25 +323,25 @@ export class TimeTrackerView {
         // right column
         //
         const right_column = new St.BoxLayout({ vertical: true, x_expand: true, style: 'min-width: 256px;', style_class: 'cronomix-spacing' });
-        this.actor.add_actor(right_column);
+        this.actor.add_child(right_column);
 
         //
         // totals times table
         //
-        right_column.add_actor(new St.Label({ text: _('Totals'), style: 'font-weight: bold;' }));
+        right_column.add_child(new St.Label({ text: _('Totals'), style: 'font-weight: bold;' }));
 
         this.#query_markup = new Markup('');
-        right_column.add_actor(this.#query_markup.actor);
+        right_column.add_child(this.#query_markup.actor);
         this.#query_markup.actor.add_style_class_name('floating');
 
         //
         // per slot totals in custom range
         //
         this.#per_task_query_title = new St.Label({ style: `font-weight: bold; margin-top: ${card_title_top_margin}px;` })
-        right_column.add_actor(this.#per_task_query_title);
+        right_column.add_child(this.#per_task_query_title);
 
         this.#query_tasks_scroll = new LazyScrollBox(applet.ext.storage.read.lazy_list_page_size.value);
-        right_column.add_actor(this.#query_tasks_scroll.actor);
+        right_column.add_child(this.#query_tasks_scroll.actor);
 
         //
         // listen
@@ -513,7 +513,7 @@ export class TimeTrackerView {
             card.actor.add_style_class_name('cronomix-time-tracker-task-card');
 
             const time_label = new St.Label({ text: new T.Time(entry.total * 1000).fmt_hms(), style: 'font-weight: bold;' });
-            card.left_header_box.add_actor(time_label);
+            card.left_header_box.add_child(time_label);
 
             const copy_button = new Button({ parent: card.header, wide: false, label: _('Copy') });
             copy_button.subscribe('left_click', () => {
@@ -523,7 +523,7 @@ export class TimeTrackerView {
 
             const txt = entry.slot.task.text;
             const task_label = new St.Label({ text: txt.endsWith('\n') ? txt.substring(0, txt.length - 1) : txt, style_class: 'body' });
-            card.actor.add_actor(task_label);
+            card.actor.add_child(task_label);
 
             yield card.actor;
         }

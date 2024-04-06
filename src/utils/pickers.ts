@@ -64,7 +64,7 @@ export class IntPicker {
         this.actor = new St.BoxLayout({ reactive: true, style_class: 'cronomix-int-picker' });
 
         this.#entry = new St.Entry({ can_focus: true, style_class: 'cronomix-entry' });
-        this.actor.add_actor(this.#entry);
+        this.actor.add_child(this.#entry);
         this.#entry.clutter_text.single_line_mode = false; // TODO(GNOME_BUG): Removes the warning 'clutter_input_focus_is_focused (focus)'.
 
         this.#error_button = new Button({ parent: this.actor, icon: 'cronomix-issue-symbolic' });
@@ -140,17 +140,17 @@ export class TimePicker {
         this.actor = new St.BoxLayout({ style_class: 'cronomix-time-picker' });
 
         this.#hours = new IntPicker(0, as_wallclock ? 23 : Number.MAX_SAFE_INTEGER, time?.hours ?? 0, 2, () => this.on_change?.(this.get_time()));
-        this.actor.add_actor(this.#hours.actor);
+        this.actor.add_child(this.#hours.actor);
 
-        this.actor.add_actor(new St.Label({ text: ':', y_align: Clutter.ActorAlign.CENTER }));
+        this.actor.add_child(new St.Label({ text: ':', y_align: Clutter.ActorAlign.CENTER }));
 
         this.#minutes = new IntPicker(0, 59, time?.minutes ?? 0, 2, () => this.on_change?.(this.get_time()));
-        this.actor.add_actor(this.#minutes.actor);
+        this.actor.add_child(this.#minutes.actor);
 
         if (! as_wallclock) {
-            this.actor.add_actor(new St.Label({ text: ':', y_align: Clutter.ActorAlign.CENTER  }));
+            this.actor.add_child(new St.Label({ text: ':', y_align: Clutter.ActorAlign.CENTER  }));
             this.#seconds = new IntPicker(0, 59, time?.seconds ?? 0, 2, () => this.on_change?.(this.get_time()));
-            this.actor.add_actor(this.#seconds.actor);
+            this.actor.add_child(this.#seconds.actor);
         }
     }
 
@@ -188,10 +188,10 @@ export class FilePicker {
         if (! hint_text) hint_text = select_dirs ? _('Select folder') : _('Select file');
 
         this.actor = new St.BoxLayout({ x_expand: true, style_class: 'cronomix-file-picker' });
-        parent?.add_actor(this.actor);
+        parent?.add_child(this.actor);
 
         this.entry = new St.Entry({ x_expand: true, can_focus: true, style_class: 'cronomix-entry', hint_text: hint_text });
-        this.actor.add_actor(this.entry);
+        this.actor.add_child(this.entry);
         if (path) this.entry.set_text(path);
 
         const find_button = new Button({ parent: this.actor, icon: 'cronomix-search-symbolic' });
@@ -251,7 +251,7 @@ export class Dropdown {
 
         const icon = this.actor.icon!;
         this.actor.actor.remove_child(icon);
-        this.actor.actor.add_actor(icon);
+        this.actor.actor.add_child(icon);
 
         this.actor.subscribe('left_click', () => {
             const popup = Pop.show_transient_popup(this.actor);

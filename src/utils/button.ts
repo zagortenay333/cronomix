@@ -9,7 +9,7 @@ export class ButtonBox {
 
     constructor (parent?: St.Widget, homogeneous = true) {
         this.actor = new St.BoxLayout({ style_class: 'cronomix-button-box' });
-        parent?.add_actor(this.actor);
+        parent?.add_child(this.actor);
         this.actor.layout_manager.homogeneous = homogeneous;
     }
 
@@ -44,7 +44,7 @@ export class Button extends PubSub<ButtonEvents> {
         super();
 
         this.actor = new St.BoxLayout({ reactive: true, can_focus: true, track_hover: true, style_class: 'cronomix-button' });
-        parent?.add_actor(this.actor);
+        parent?.add_child(this.actor);
 
         this.actor.x_expand = wide;
         if (centered) this.actor.x_align = Clutter.ActorAlign.CENTER;
@@ -78,7 +78,7 @@ export class Button extends PubSub<ButtonEvents> {
             this.label.set_text(label);
         } else {
             this.label = new St.Label({ x_expand: true, text: label, y_align: Clutter.ActorAlign.CENTER });
-            this.actor.add_actor(this.label);
+            this.actor.add_child(this.label);
         }
     }
 

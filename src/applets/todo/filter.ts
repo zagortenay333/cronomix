@@ -34,12 +34,12 @@ export class KanbanView {
         // Header
         //
         const header = new St.BoxLayout();
-        this.actor.add_actor(header);
+        this.actor.add_child(header);
 
         const add_task_button = new Button({ parent: header, style_class: 'bg', icon: 'cronomix-plus-symbolic', label: _('Add Task') });
         Misc.focus_when_mapped(add_task_button.actor);
 
-        header.add_actor(new St.Widget({ x_expand: true, style: 'min-width: 20px;' }));
+        header.add_child(new St.Widget({ x_expand: true, style: 'min-width: 20px;' }));
 
         const button_box      = new ButtonBox(header, false);
         const search_button   = button_box.add({ icon: 'cronomix-search-symbolic' });
@@ -54,7 +54,7 @@ export class KanbanView {
         // columns
         //
         const columns_scroll = new ScrollBox(false);
-        this.actor.add_actor(columns_scroll.actor);
+        this.actor.add_child(columns_scroll.actor);
         columns_scroll.actor.visible = applet.tasks.length > 0;
 
         const current_filter = applet.storage.read.active_filter.value;
@@ -67,7 +67,7 @@ export class KanbanView {
 
             if (filter_node) {
                 const column = new KanbanColumn(applet, filter_node, !!filters);
-                columns_scroll.box.add_actor(column.actor);
+                columns_scroll.box.add_child(column.actor);
                 columns.push(column);
             }
         }
@@ -126,11 +126,11 @@ class KanbanColumn {
 
         if (show_filter_header) {
             const header = new St.Label({ y_align: Clutter.ActorAlign.CENTER, text: P.filter_to_string(filter), style: 'min-width: 300px; font-weight: bold;', style_class: 'cronomix-box' });
-            this.actor.add_actor(header);
+            this.actor.add_child(header);
         }
 
         this.tasks_scroll = new LazyScrollBox(applet.ext.storage.read.lazy_list_page_size.value);
-        this.actor.add_actor(this.tasks_scroll.actor);
+        this.actor.add_child(this.tasks_scroll.actor);
     }
 }
 
@@ -147,12 +147,12 @@ export class FilterView {
         this.actor = new St.BoxLayout({ x_expand: true, vertical: true, style_class: 'cronomix-spacing' });
 
         this.#cards_scroll = new ScrollBox();
-        this.actor.add_actor(this.#cards_scroll.actor);
+        this.actor.add_child(this.#cards_scroll.actor);
         for (const filter of applet.storage.read.filters.value) this.#add_card(filter);
         this.#cards_scroll.actor.visible = this.#cards_scroll.box.get_n_children() > 0;
 
         const buttons = new St.BoxLayout({ style_class: 'cronomix-spacing' });
-        this.actor.add_actor(buttons);
+        this.actor.add_child(buttons);
 
         const button_box  = new ButtonBox(buttons);
         const button_ok   = button_box.add({ wide: true, label: _('Ok') });
@@ -193,7 +193,7 @@ export class FilterView {
 
     #add_card (group: Immutable<FilterGroup>) {
         const card = new FilterCard(group);
-        this.#cards_scroll.box.add_actor(card.actor);
+        this.#cards_scroll.box.add_child(card.actor);
         this.#cards_scroll.actor.visible = true;
         this.#cards.push(card);
         this.#check(card);
@@ -250,11 +250,11 @@ class FilterCard extends Misc.Card {
         this.delete_button = new Button({ parent: this.autohide_box, icon: 'cronomix-trash-symbolic', style_class: 'cronomix-floating-button' });
 
         this.title = new Entry(_('Title'));
-        this.actor.add_actor(this.title.actor);
+        this.actor.add_child(this.title.actor);
         this.title.set_text(filter.title);
 
         this.filters = new Entry(_('Comma separated list of filters.'));
-        this.actor.add_actor(this.filters.actor);
+        this.actor.add_child(this.filters.actor);
         this.filters.set_text(filter.filters);
     }
 }

@@ -36,7 +36,7 @@ export class Popup {
         // boxpointer
         //
         this.boxpointer = new BoxPointer(arrow_side);
-        Main.layoutManager.uiGroup.add_actor(this.boxpointer);
+        Main.layoutManager.uiGroup.add_child(this.boxpointer);
 
         this.boxpointer.hide();
         this.boxpointer.reactive = true;
@@ -137,13 +137,13 @@ export function show_transient_popup (at: St.Widget|Button): Popup {
 export function show_error_popup (at: St.Widget|Button, msg: string) {
     const popup  = show_transient_popup(at);
     const markup = new Markup(msg);
-    popup.scrollbox.box.add_actor(markup.actor);
+    popup.scrollbox.box.add_child(markup.actor);
 }
 
 export function show_info_popup (at: St.Widget|Button, msg: string) {
     const popup  = show_transient_popup(at);
     const markup = new Markup(msg);
-    popup.scrollbox.box.add_actor(markup.actor);
+    popup.scrollbox.box.add_child(markup.actor);
 }
 
 export function show_confirm_popup (at: St.Widget|Button, on_confirm: () => void) {

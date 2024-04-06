@@ -144,7 +144,7 @@ export class TaskCard extends Misc.Card {
         this.left_header_box.add_style_class_name('cronomix-spacing');
 
         const checkbox        = new CheckBox({ parent: this.left_header_box, checked: !!config.done });
-        if (config.created)   this.left_header_box.add_actor(new St.Label({ text: _('Created') + ' ' + config.created, y_align: Clutter.ActorAlign.CENTER, style: 'font-weight: bold', style_class: 'cronomix-green' }));
+        if (config.created)   this.left_header_box.add_child(new St.Label({ text: _('Created') + ' ' + config.created, y_align: Clutter.ActorAlign.CENTER, style: 'font-weight: bold', style_class: 'cronomix-green' }));
         const due_button      = !config.due ? null : new Button({ parent: this.left_header_box, label: _('Due') + ' ' + config.due, style_class: 'cronomix-floating-button cronomix-red' });
         const delete_button   = new Button({ parent: this.autohide_box, icon: 'cronomix-trash-symbolic' , style_class: 'cronomix-floating-button'});
         const edit_button     = new Button({ parent: this.autohide_box, icon: 'cronomix-edit-symbolic', style_class: 'cronomix-floating-button' });
@@ -169,10 +169,10 @@ export class TaskCard extends Misc.Card {
         }
 
         if (body) {
-            this.actor.add_actor(body);
+            this.actor.add_child(body);
         } else {
             const markup = new Markup(task.text, task.ast.children);
-            this.actor.add_actor(markup.actor);
+            this.actor.add_child(markup.actor);
             markup.on_tag_clicked = node => applet.show_search_view(task.text.substring(node.start, node.end));
         }
 
@@ -225,7 +225,7 @@ class TimeTrackerPopup extends Popup {
 
         if (! slot) {
             const label = new St.Label({ text: _('No time tracker file selected.') });
-            box.add_actor(label);
+            box.add_child(label);
             const button = new Button({ parent: box, wide: true, label: _('Open time tracker settings') });
             Misc.focus_when_mapped(button.actor);
             button.subscribe('left_click', () => {
@@ -239,7 +239,7 @@ class TimeTrackerPopup extends Popup {
                         _('You can do one of the following:') + '\n' +
                         '-  ' + _('Create a new slot leaving the old one in the tracker.') + '\n' +
                         '-  ' + _('Update the current slot to match with this task.');
-            box.add_actor(new Markup(msg).actor);
+            box.add_child(new Markup(msg).actor);
 
             const button_box    = new ButtonBox(box);
             const insert_button = button_box.add({ wide: true, label: _('Create new slot') });
@@ -258,7 +258,7 @@ class TimeTrackerPopup extends Popup {
             });
         } else if (tracker.tic && tracker.tracked_slot === slot) {
             const time_label = new St.Label({ text: tracker.time.fmt_hms(), style: 'font-weight: bold;', style_class: 'cronomix-yellow' });
-            box.add_actor(time_label);
+            box.add_child(time_label);
 
             const buttons      = new ButtonBox(box);
             const ctrl_button  = buttons.add({ wide: true, label: _('Stop tracking') });

@@ -119,9 +119,9 @@ export class Markup {
         this.#content = new St.BoxLayout({ reactive: true, vertical: true, x_expand: true, style_class: 'cronomix-spacing' });
 
         this.actor.remove_all_children();
-        this.actor.add_actor(this.#content);
+        this.actor.add_child(this.#content);
 
-        for (const block of this.#ast) this.#content.add_actor(this.#render_block(block));
+        for (const block of this.#ast) this.#content.add_child(this.#render_block(block));
 
         // Get rid of unused widgets.
         prev_content?.destroy();
@@ -163,29 +163,29 @@ export class Markup {
 
             for (const [idx, child] of block.children.entries()) {
                 const item = new St.BoxLayout();
-                result.add_actor(item);
+                result.add_child(item);
                 this.#ast_to_widget.set(child, item);
 
                 const bullet = new St.Label({ text: ordered ? (idx + 1) + '.' : '•', style_class: 'bullet' });
-                item.add_actor(bullet);
+                item.add_child(bullet);
 
                 const content = new St.BoxLayout({ vertical: true, x_expand: true, style_class: 'block cronomix-spacing' });
-                item.add_actor(content);
+                item.add_child(content);
 
-                for (const c of child.children) content.add_actor(this.#render_block(c));
+                for (const c of child.children) content.add_child(this.#render_block(c));
             }
         } break;
 
         case 'AstHeader': {
             result = this.#widget(block, () => new St.BoxLayout());
             result.style_class = 'header h' + block.size;
-            result.add_actor(this.#render_block(block.child));
+            result.add_child(this.#render_block(block.child));
             result;
         } break;
 
         case 'AstRawBlock': {
             result = this.#widget(block, () => new St.BoxLayout({ vertical: true, reactive: true, style_class: 'raw-block' }));
-            for (const child of block.children) result.add_actor(this.#render_block(child));
+            for (const child of block.children) result.add_child(this.#render_block(child));
             result;
         } break;
 
@@ -210,7 +210,7 @@ export class Markup {
 
     #render_meta (meta: P.AstMeta): St.Widget {
         const body = new St.BoxLayout({ reactive: true, vertical: true, style_class: 'block cronomix-spacing' });
-        for (const child of meta.children) body.add_actor(this.#render_block(child));
+        for (const child of meta.children) body.add_child(this.#render_block(child));
 
         if (this.#custom_render_meta) {
             const result = this.#custom_render_meta(this.#text, meta, body);
@@ -225,12 +225,12 @@ export class Markup {
             admonition.style_class = `admonition ${meta.config.admonition} cronomix-group`;
 
             const header = new St.BoxLayout({ style_class: 'header' });
-            admonition.add_actor(header);
+            admonition.add_child(header);
 
             const label = new St.Label({ text: Admonition[meta.config.admonition] });
-            header.add_actor(label);
+            header.add_child(label);
 
-            admonition.add_actor(body);
+            admonition.add_child(body);
             return admonition;
         } else {
             return body;
@@ -308,7 +308,7 @@ export class Markup {
                     if (col_idx === 0) cell_widget.add_style_class_name('first-col');
                     if (col_idx + final_width === col_count) cell_widget.add_style_class_name('last-col');
 
-                    if (cell.children) for (const child of cell.children) cell_widget.add_actor(this.#render_block(child));
+                    if (cell.children) for (const child of cell.children) cell_widget.add_child(this.#render_block(child));
                     layout.attach(cell_widget, col_idx, row_idx, final_width, final_height);
                 }
             }

@@ -15,7 +15,7 @@ export class ScrollBox {
         this.actor = new St.ScrollView({ x_expand: true, overlay_scrollbars: true, style_class: 'cronomix-scrollbox' });
 
         this.box = new St.BoxLayout({ vertical, x_expand: true, style_class: 'cronomix-spacing' });
-        this.actor.add_actor(this.box);
+        this.actor.add_child(this.box);
 
         if (vertical) {
             this.actor.add_style_class_name('vertical');
@@ -81,7 +81,7 @@ export class LazyScrollBox extends ScrollBox {
         const p = this.#show_more_button.actor.get_parent();
         if (p) p.remove_child(this.#show_more_button.actor);
         this.box.destroy_all_children();
-        this.box.add_actor(this.#show_more_button.actor);
+        this.box.add_child(this.#show_more_button.actor);
         this.#children = children;
         this.#n_children = n_children;
         this.#show_more(false);
@@ -101,7 +101,7 @@ export class LazyScrollBox extends ScrollBox {
             const result = this.#children.next();
             if (! first_child) first_child = result.value;
             if (result.done) break;
-            this.box.add_actor(result.value);
+            this.box.add_child(result.value);
             n--;
         }
 
@@ -118,7 +118,7 @@ export class LazyScrollBox extends ScrollBox {
         if (n > 0) {
             this.#children = null;
         } else if (this.#n_children === -1 || this.box.get_n_children() < this.#n_children) {
-            this.box.add_actor(this.#show_more_button.actor);
+            this.box.add_child(this.#show_more_button.actor);
         }
     }
 }

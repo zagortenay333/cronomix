@@ -130,14 +130,14 @@ export class StopwatchApplet extends Applet<Events> {
         this.#current_view?.destroy();
         const view = new MainView(this);
         this.#current_view = view;
-        this.menu.add_actor(view.actor);
+        this.menu.add_child(view.actor);
     }
 
     show_settings () {
         this.#current_view?.destroy();
         const view = this.storage.render(() => this.show_main_view());
         this.#current_view = { destroy: () => view.destroy() };
-        this.menu.add_actor(view);
+        this.menu.add_child(view);
     }
 }
 
@@ -180,7 +180,7 @@ class MainView {
         // laps table
         //
         const laps_scroll = new ScrollBox();
-        this.actor.add_actor(laps_scroll.actor);
+        this.actor.add_child(laps_scroll.actor);
 
         //
         // update state
@@ -195,7 +195,7 @@ class MainView {
                 laps_scroll.box.destroy_all_children();
                 const markup_widget = new Markup(markup).actor;
                 markup_widget.add_style_class_name('floating');
-                laps_scroll.box.add_actor(markup_widget);
+                laps_scroll.box.add_child(markup_widget);
 
                 laps_scroll.actor.show();
             } else {

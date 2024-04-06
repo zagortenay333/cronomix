@@ -133,7 +133,7 @@ export class Storage <
 
         for (const group of groups) {
             const rows_box = new St.BoxLayout({ vertical: true, style_class: 'cronomix-group' });
-            scrollbox.box.add_actor(rows_box);
+            scrollbox.box.add_child(rows_box);
 
             for (const key of group) {
                 const value = this.config.values[key];
@@ -201,7 +201,7 @@ export class Storage <
         // buttons
         //
         const box = new St.BoxLayout({ style_class: 'cronomix-spacing' });
-        scrollbox.box.add_actor(box);
+        scrollbox.box.add_child(box);
 
         const done_button = new Button({ parent: box, wide: true, label: _('Ok') });
         const info_button = new Button({ parent: box, icon: 'cronomix-question-symbolic' });
