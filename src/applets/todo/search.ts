@@ -31,40 +31,40 @@ export class SearchView {
         // left box
         //
         const left_box = new ScrollBox(false);
-        this.actor.add_actor(left_box.actor);
+        this.actor.add_child(left_box.actor);
         left_box.box.vertical = true;
 
         //
         // entry
         //
         const entry_box = new St.BoxLayout({ vertical: true, style_class: 'cronomix-headered-entry' });
-        left_box.box.add_actor(entry_box);
+        left_box.box.add_child(entry_box);
 
         const header = new St.BoxLayout({ style: 'min-width: 256px;', style_class: 'header' });
-        entry_box.add_actor(header);
+        entry_box.add_child(header);
 
         const close_button = new Button({ parent: header, icon: 'cronomix-close-symbolic' });
-        header.add_actor(new St.Widget({ x_expand: true }));
+        header.add_child(new St.Widget({ x_expand: true }));
         const help_button = new Button({ parent: header, icon: 'cronomix-question-symbolic' });
 
         this.entry = new Entry(_('Filter expression'));
-        entry_box.add_actor(this.entry.actor);
+        entry_box.add_child(this.entry.actor);
         Misc.focus_when_mapped(this.entry.entry);
 
         //
         // tasks container
         //
         const tasks_scroll = new LazyScrollBox(applet.ext.storage.read.lazy_list_page_size.value);
-        left_box.box.add_actor(tasks_scroll.actor);
+        left_box.box.add_child(tasks_scroll.actor);
 
         //
         // bulk edit menu
         //
         const bulk_edit_menu = new St.BoxLayout({ vertical: true, style_class: 'cronomix-spacing' });
-        this.actor.add_actor(bulk_edit_menu);
+        this.actor.add_child(bulk_edit_menu);
 
         const bem_card0 = new St.BoxLayout({ vertical: true, style_class: 'cronomix-group' });
-        bulk_edit_menu.add_actor(bem_card0);
+        bulk_edit_menu.add_child(bem_card0);
 
         const bem_delete_checkbox = new CheckBox();
         const del_row = new Row(_('Delete selected tasks'), bem_delete_checkbox.actor, bem_card0);
@@ -73,13 +73,13 @@ export class SearchView {
         del_row.label.style_class = 'cronomix-red';
 
         const bem_card1 = new St.BoxLayout({ vertical: true, style_class: 'cronomix-group' });
-        bulk_edit_menu.add_actor(bem_card1);
+        bulk_edit_menu.add_child(bem_card1);
 
         const bem_export_picker = new FilePicker();
         new Row(_('Copy selected tasks to file'), bem_export_picker.actor, bem_card1);
 
         const bem_card2 = new St.BoxLayout({ vertical: true, style_class: 'cronomix-group' });
-        bulk_edit_menu.add_actor(bem_card2);
+        bulk_edit_menu.add_child(bem_card2);
 
         const bem_card_info_button = new Button({ icon: 'cronomix-question-symbolic' });
         new Row(_('Modify attributes of selected tasks'), bem_card_info_button.actor, bem_card2);

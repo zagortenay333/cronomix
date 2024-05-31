@@ -184,28 +184,28 @@ export class PomodoroApplet extends Applet<Events> {
         this.#current_view?.destroy();
         const view = new MainView(this);
         this.#current_view = view;
-        this.menu.add_actor(view.actor);
+        this.menu.add_child(view.actor);
     }
 
     show_presets () {
         this.#current_view?.destroy();
         const view = new PresetsView(this);
         this.#current_view = view;
-        this.menu.add_actor(view.actor);
+        this.menu.add_child(view.actor);
     }
 
     show_preset_editor (preset?: Preset) {
         this.#current_view?.destroy();
         const view = new PresetEditor(this, preset);
         this.#current_view = view;
-        this.menu.add_actor(view.actor);
+        this.menu.add_child(view.actor);
     }
 
     show_settings () {
         this.#current_view?.destroy();
         const view = this.storage.render(() => this.show_main_view());
         this.#current_view = view;
-        this.menu.add_actor(view);
+        this.menu.add_child(view);
     }
 }
 
@@ -239,7 +239,7 @@ class MainView {
         // phase info box
         //
         const phase_info = new St.BoxLayout({ vertical: true, style_class: 'cronomix-group' });
-        this.actor.add_actor(phase_info);
+        this.actor.add_child(phase_info);
 
         const phase_dropdown = new Dropdown(applet.phase, Object.keys(Phase), Object.values(Phase));
         new Row(_('Phase'), phase_dropdown.actor.actor, phase_info);
@@ -318,8 +318,8 @@ class PresetsView {
 
         if (presets.length) {
             const scrollbox = new ScrollBox();
-            this.actor.add_actor(scrollbox.actor);
-            for (const preset of presets) scrollbox.box.add_actor(new PresetCard(applet, preset).actor);
+            this.actor.add_child(scrollbox.actor);
+            for (const preset of presets) scrollbox.box.add_child(new PresetCard(applet, preset).actor);
         }
 
         const button_box = new ButtonBox(this.actor);
@@ -345,7 +345,7 @@ class PresetCard extends Misc.Card {
         const edit_button   = new Button({ parent: this.autohide_box, icon: 'cronomix-edit-symbolic', style_class: 'cronomix-floating-button' });
         const delete_button = new Button({ parent: this.autohide_box, icon: 'cronomix-trash-symbolic', style_class: 'cronomix-floating-button' });
 
-        if (preset.text) this.actor.add_actor(new Markup(preset.text).actor);
+        if (preset.text) this.actor.add_child(new Markup(preset.text).actor);
 
         edit_button.subscribe('left_click', () => applet.show_preset_editor(preset));
         checkbox.subscribe('left_click', () => { applet.set_preset(preset); applet.show_main_view(); });
@@ -362,7 +362,7 @@ class PresetEditor extends EditorView {
         this.main_view.entry.entry.set_text(preset?.text ?? '');
 
         const group = new St.BoxLayout({ vertical: true, style_class: 'cronomix-group' });
-        this.main_view.left_box.add_actor(group);
+        this.main_view.left_box.add_child(group);
 
         const pomo_picker = new TimePicker(new Time(preset?.pomodoro_length ?? 25 * 60000));
         new Row(_('Pomodoro length'), pomo_picker.actor, group);

@@ -139,7 +139,7 @@ export function get_cell_box (widget: St.Widget): St.Widget {
     const table  = new St.Widget({ x_expand: true, layout_manager: layout });
     const cell   = new St.BoxLayout({ x_expand: true, vertical: true });
     layout.attach(cell, 0, 0, 1, 1);
-    cell.add_actor(widget);
+    cell.add_child(widget);
     return table;
 }
 
@@ -250,13 +250,13 @@ export class Row <Widget extends St.Widget> {
 
     constructor (title: string|null, widget: Widget, parent?: St.Widget) {
         this.actor = new St.BoxLayout({ style_class: 'cronomix-row' });
-        parent?.add_actor(this.actor);
+        parent?.add_child(this.actor);
 
         this.label = new St.Label({ y_align: Clutter.ActorAlign.CENTER });
-        this.actor.add_actor(this.label);
+        this.actor.add_child(this.label);
 
         this.widget = widget;
-        this.actor.add_actor(widget);
+        this.actor.add_child(widget);
 
         if (title !== null) {
             this.label.text      = title;
@@ -280,13 +280,13 @@ export class Card {
         this.actor = new St.BoxLayout({ reactive: true, vertical: true, x_expand: true, style_class: 'cronomix-card cronomix-box' });
 
         this.header = new St.BoxLayout({ style_class: 'header' });
-        this.actor.add_actor(this.header);
+        this.actor.add_child(this.header);
 
         this.left_header_box = new St.BoxLayout({ y_align: Clutter.ActorAlign.CENTER, reactive: true, x_expand: true });
-        this.header.add_actor(this.left_header_box);
+        this.header.add_child(this.left_header_box);
 
         this.autohide_box = new St.BoxLayout({ opacity: 0 });
-        this.header.add_actor(this.autohide_box);
+        this.header.add_child(this.autohide_box);
 
         const focus_tracker = new FocusTracker(this.actor);
         focus_tracker.subscribe('focus_enter', () => { scroll_to_widget(this.actor); this.autohide_box.opacity = 255; });
@@ -310,7 +310,7 @@ export class CellBox {
 
         layout.attach(this.cell, 0, 0, 1, 1);
 
-        if (parent) parent.add_actor(this.table);
-        if (child) this.cell.add_actor(child);
+        if (parent) parent.add_child(this.table);
+        if (child) this.cell.add_child(child);
     }
 }

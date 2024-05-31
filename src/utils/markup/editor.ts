@@ -44,25 +44,25 @@ export class Editor {
         // box containing the entry
         //
         this.left_box = new St.BoxLayout({ vertical: true, x_expand: true, style_class: 'cronomix-spacing' });
-        this.actor.add_actor(this.left_box);
+        this.actor.add_child(this.left_box);
 
         //
         // headered entry
         //
         this.header_entry = new St.BoxLayout({ x_expand: true, style_class: 'cronomix-headered-entry', vertical: true });
-        this.left_box.add_actor(this.header_entry);
+        this.left_box.add_child(this.header_entry);
 
         //
         // entry header
         //
         this.entry_header = new St.BoxLayout({ x_expand: true, style: 'min-width: 256px;', style_class: 'header' });
-        this.header_entry.add_actor(this.entry_header);
+        this.header_entry.add_child(this.entry_header);
 
         //
         // entry
         //
         this.entry = new Entry();
-        this.header_entry.add_actor(this.entry.actor);
+        this.header_entry.add_child(this.entry.actor);
         Misc.focus_when_mapped(this.entry.entry);
         this.entry.entry.add_style_class_name('cronomix-markup-editor-entry');
         Misc.run_when_mapped(this.entry.entry, () => Misc.adjust_width(this.entry.entry, this.entry.entry.clutter_text));
@@ -71,14 +71,14 @@ export class Editor {
         // preview
         //
         const preview_wrapper = new ScrollBox(false);
-        this.actor.add_actor(preview_wrapper.actor);
+        this.actor.add_child(preview_wrapper.actor);
         preview_wrapper.actor.style = 'min-width: 256px;';
 
         this.preview_scrollbox = new ScrollBox();
-        preview_wrapper.box.add_actor(this.preview_scrollbox.actor);
+        preview_wrapper.box.add_child(this.preview_scrollbox.actor);
 
         this.preview = new Markup(this.entry.entry.text, this.ast, render_meta);
-        this.preview_scrollbox.box.add_actor(this.preview.actor);
+        this.preview_scrollbox.box.add_child(this.preview.actor);
         this.preview.actor.reactive = true;
 
         this.#sync_scroll();
@@ -307,7 +307,7 @@ export class EditorHelp extends Editor {
         super();
 
         this.close_button = new Button({ parent: this.entry_header, icon: 'cronomix-close-symbolic' });
-        this.entry_header.add_actor(new St.Widget({ x_expand: true }));
+        this.entry_header.add_child(new St.Widget({ x_expand: true }));
 
         const table_of_contents = new ScrollBox();
         this.actor.insert_child_at_index(table_of_contents.actor, 0);
@@ -370,9 +370,9 @@ export class EditorView {
         this.actor = new St.BoxLayout({ reactive: true });
 
         this.main_view = new Editor(render_meta);
-        this.actor.add_actor(this.main_view.actor);
+        this.actor.add_child(this.main_view.actor);
 
-        this.main_view.entry_header.add_actor(new St.Widget({ x_expand: true }));
+        this.main_view.entry_header.add_child(new St.Widget({ x_expand: true }));
         const show_help_button = new Button({ parent: this.main_view.entry_header, icon: 'cronomix-question-symbolic' });
 
         show_help_button.subscribe('left_click', () => this.#toggle_help_view());
@@ -394,7 +394,7 @@ export class EditorView {
             this.help_view.actor.visible = true;
         } else {
             this.help_view = new EditorHelp();
-            this.actor.add_actor(this.help_view.actor);
+            this.actor.add_child(this.help_view.actor);
             this.help_view.close_button.subscribe('left_click', () => this.#toggle_help_view());
             this.main_view.actor.visible = false;
         }

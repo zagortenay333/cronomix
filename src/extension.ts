@@ -127,7 +127,7 @@ export class Cronomix {
         // Pick a stylesheet automatically:
         if (! stylesheet) {
             const dummy = new St.Widget({ visible: false, style_class: 'popup-menu-content' });
-            global.stage.add_actor(dummy);
+            global.stage.add_child(dummy);
             const theme_node = dummy.get_theme_node();
 
             const [ok, col] = theme_node.lookup_color('background-color', false);
@@ -158,7 +158,7 @@ export class Cronomix {
 
         { // Load colors:
             const dummy = new St.Widget({ visible: false, style_class: 'cronomix-custom-css' });
-            global.stage.add_actor(dummy);
+            global.stage.add_child(dummy);
 
             const theme_node = dummy.get_theme_node();
 

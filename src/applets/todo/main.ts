@@ -173,7 +173,7 @@ export class TodoApplet extends Applet {
     show_main_view () {
         this.#current_view?.destroy();
         const view = new KanbanView(this);
-        this.menu.add_actor(view.actor);
+        this.menu.add_child(view.actor);
         this.#current_view = view;
     }
 
@@ -181,35 +181,35 @@ export class TodoApplet extends Applet {
         this.#current_view?.destroy();
         const view = new TaskEditor(this, task ?? undefined);
         this.#current_view = view;
-        this.menu.add_actor(view.actor);
+        this.menu.add_child(view.actor);
     }
 
     show_search_view (query?: string|Task) {
         this.#current_view?.destroy();
         const view = new SearchView(this, query);
         this.#current_view = view;
-        this.menu.add_actor(view.actor);
+        this.menu.add_child(view.actor);
     }
 
     show_sort_view () {
         this.#current_view?.destroy();
         const view = new SortView(this);
         this.#current_view = view;
-        this.menu.add_actor(view.actor);
+        this.menu.add_child(view.actor);
     }
 
     show_filter_view () {
         this.#current_view?.destroy();
         const view = new FilterView(this);
         this.#current_view = view;
-        this.menu.add_actor(view.actor);
+        this.menu.add_child(view.actor);
     }
 
     show_tracker_view (task_to_query?: Task) {
         this.#current_view?.destroy();
         const view = new TimeTrackerView(this, task_to_query);
         this.#current_view = view;
-        this.menu.add_actor(view.actor);
+        this.menu.add_child(view.actor);
     }
 
     show_settings () {
@@ -225,6 +225,6 @@ export class TodoApplet extends Applet {
         );
 
         this.#current_view = view;
-        this.menu.add_actor(view);
+        this.menu.add_child(view);
     }
 }

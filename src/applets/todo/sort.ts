@@ -57,18 +57,18 @@ export class SortView {
         this.actor = new St.BoxLayout({ vertical: true, style_class: 'cronomix-spacing' });
 
         const box = new St.BoxLayout({ vertical: true, style_class: 'cronomix-group' });
-        this.actor.add_actor(box);
+        this.actor.add_child(box);
 
         for (const [idx, entry] of applet.storage.read.sort.value.entries()) {
             const item = new SortViewItem(applet, entry, idx);
-            box.add_actor(item.actor);
+            box.add_child(item.actor);
         }
 
         const hint_msg = _('Tasks are sorted by the first attribute in this list.\n' +
                            'In case of a tie, by the second attribute, and so on...');
 
         const button_box = new St.BoxLayout({ style_class: 'cronomix-spacing' });
-        this.actor.add_actor(button_box);
+        this.actor.add_child(button_box);
 
         const ok_button   = new Button({ parent: button_box, wide: true, label: _('Ok') });
         const help_button = new Button({ parent: button_box, icon: 'cronomix-question-symbolic' });
@@ -89,7 +89,7 @@ class SortViewItem extends Card {
         super();
 
         const title = new St.Label({ y_align: Clutter.ActorAlign.CENTER, text: applet.storage.config.translations[entry.by] });
-        this.left_header_box.add_actor(title);
+        this.left_header_box.add_child(title);
 
         const icon = (entry.direction === 'asc') ? 'cronomix-sort-ascending-symbolic' : 'cronomix-sort-descending-symbolic';
         const direction_button = new Button({ icon: icon, style_class: 'cronomix-floating-button' });

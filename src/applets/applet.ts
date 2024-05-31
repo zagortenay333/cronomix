@@ -45,13 +45,13 @@ export class Applet <E = {}> extends PubSub<E> {
         this.panel_item.add_style_class_name('cronomix-panel-button');
 
         const box = new St.BoxLayout();
-        this.panel_item.add_actor(box);
+        this.panel_item.add_child(box);
 
         this.panel_icon = new St.Icon({ style_class: 'system-status-icon' });
-        box.add_actor(this.panel_icon);
+        box.add_child(this.panel_icon);
 
         this.panel_label = new St.Label({ visible: false, y_align: Clutter.ActorAlign.CENTER });
-        box.add_actor(this.panel_label);
+        box.add_child(this.panel_label);
 
         this.set_panel_icon(`cronomix-${id}-symbolic`);
 
@@ -61,7 +61,7 @@ export class Applet <E = {}> extends PubSub<E> {
         const wrapper = new Misc.CellBox(this.panel_item.menu.box);
 
         this.menu = new St.BoxLayout({ vertical: true });
-        wrapper.cell.add_actor(this.menu);
+        wrapper.cell.add_child(this.menu);
 
         this.panel_item.menu.box.add_style_class_name('cronomix-menu');
         let context_menu: ContextMenu|null = null;
@@ -75,7 +75,7 @@ export class Applet <E = {}> extends PubSub<E> {
                     this.menu.hide();
                     if (! context_menu) {
                         context_menu = new ContextMenu(this.ext);
-                        wrapper.cell.add_actor(context_menu.actor);
+                        wrapper.cell.add_child(context_menu.actor);
                     }
                 } else {
                     context_menu?.actor.destroy();
@@ -118,7 +118,7 @@ export class ContextMenu {
         this.actor = new St.BoxLayout({ vertical: true, x_expand: true });
 
         const items_box = new St.BoxLayout({ vertical: true });
-        this.actor.add_actor(items_box);
+        this.actor.add_child(items_box);
 
         const settings_button = new Button({ parent: items_box, icon: 'cronomix-wrench-symbolic', label: _('Settings'), style_class: 'cronomix-menu-button' });
         const website_button  = new Button({ parent: items_box, icon: 'cronomix-link-symbolic', label: _('Website'), style_class: 'cronomix-menu-button' });
@@ -144,7 +144,7 @@ export class ContextMenu {
             };
 
             settings_view = ext.storage.render(done_fn, check_fn);
-            this.actor.add_actor(settings_view);
+            this.actor.add_child(settings_view);
             items_box.hide();
         });
     }

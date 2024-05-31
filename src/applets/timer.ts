@@ -147,35 +147,35 @@ export class TimerApplet extends Applet<Events> {
         this.#current_view?.destroy();
         const view = new MainView(this);
         this.#current_view = view;
-        this.menu.add_actor(view.actor);
+        this.menu.add_child(view.actor);
     }
 
     show_settings () {
         this.#current_view?.destroy();
         const view = this.storage.render(() => this.show_main_view());
         this.#current_view = view;
-        this.menu.add_actor(view);
+        this.menu.add_child(view);
     }
 
     show_presets () {
         this.#current_view?.destroy();
         const view = new Presets(this);
         this.#current_view = view;
-        this.menu.add_actor(view.actor);
+        this.menu.add_child(view.actor);
     }
 
     show_preset_editor (preset?: Preset) {
         this.#current_view?.destroy();
         const view = new PresetEditor(this, preset);
         this.#current_view = view;
-        this.menu.add_actor(view.actor);
+        this.menu.add_child(view.actor);
     }
 
     show_timer_elapsed () {
         this.#current_view?.destroy();
         const view = new TimerElapsedView(this, this.preset);
         this.#current_view = view;
-        this.menu.add_actor(view.actor);
+        this.menu.add_child(view.actor);
         this.sound_cancel = Misc.play_sound(this.storage.read.notif_sound.value);
     }
 }
@@ -195,17 +195,17 @@ class MainView {
         // Header
         //
         const header = new St.BoxLayout();
-        this.actor.add_actor(header);
+        this.actor.add_child(header);
 
         const time_picker = new TimePicker();
-        header.add_actor(time_picker.actor);
+        header.add_child(time_picker.actor);
 
         const time_label = new St.Label({ style: 'font-weight: bold;', y_align: Clutter.ActorAlign.CENTER });
         const clock_size = applet.storage.read.clock_size.value;
         if (clock_size > 0) time_label.style += `font-family: monospace; font-size: ${clock_size}px;`;
-        header.add_actor(time_label);
+        header.add_child(time_label);
 
-        header.add_actor(new St.Widget({ x_expand: true, style: 'min-width: 40px;' }));
+        header.add_child(new St.Widget({ x_expand: true, style: 'min-width: 40px;' }));
 
         const header_buttons  = new ButtonBox(header);
         const presets_button  = header_buttons.add({ icon: 'cronomix-hamburger-symbolic' });
@@ -299,8 +299,8 @@ class Presets {
 
         if (presets.length) {
             const scrollbox = new ScrollBox();
-            this.actor.add_actor(scrollbox.actor);
-            for (const [idx, preset] of presets.entries()) scrollbox.box.add_actor(new PresetCard(applet, preset, idx).actor);
+            this.actor.add_child(scrollbox.actor);
+            for (const [idx, preset] of presets.entries()) scrollbox.box.add_child(new PresetCard(applet, preset, idx).actor);
         }
 
         const button_box = new ButtonBox(this.actor);
@@ -327,12 +327,12 @@ class PresetCard extends Misc.Card {
 
         const time = new Time(preset.time);
         const time_label = new St.Label({ text: time.fmt_hms(true), x_expand: true, style: 'font-weight: bold;', y_align: Clutter.ActorAlign.CENTER });
-        this.left_header_box.add_actor(time_label);
+        this.left_header_box.add_child(time_label);
 
         const edit_button   = new Button({ parent: this.autohide_box, icon: 'cronomix-edit-symbolic', style_class: 'cronomix-floating-button' });
         const delete_button = new Button({ parent: this.autohide_box, icon: 'cronomix-trash-symbolic', style_class: 'cronomix-floating-button' });
 
-        if (preset.text) this.actor.add_actor(new Markup(preset.text).actor);
+        if (preset.text) this.actor.add_child(new Markup(preset.text).actor);
 
         edit_button.subscribe('left_click', () => applet.show_preset_editor(preset));
         delete_button.subscribe('left_click', () => show_confirm_popup(delete_button, () => { applet.delete_preset(preset_idx); applet.show_presets(); }));
@@ -350,7 +350,7 @@ class PresetEditor extends EditorView {
         super();
 
         const group = new St.BoxLayout({ vertical: true, style_class: 'cronomix-group' });
-        this.main_view.left_box.add_actor(group);
+        this.main_view.left_box.add_child(group);
 
         const time_picker = new TimePicker();
         if (preset) time_picker.set_time(new Time(preset.time));
@@ -396,10 +396,10 @@ class TimerElapsedView {
         this.actor = new St.BoxLayout({ vertical: true, style_class: 'cronomix-spacing' });
 
         const scrollbox = new ScrollBox();
-        this.actor.add_actor(scrollbox.actor);
+        this.actor.add_child(scrollbox.actor);
 
         const markup = new Markup('##' + _('Timer Elapsed!') + '\n\n' + preset.text);
-        scrollbox.box.add_actor(markup.actor);
+        scrollbox.box.add_child(markup.actor);
 
         const button_box     = new ButtonBox(this.actor);
         const dismiss_button = button_box.add({ wide: true, label: _('Dismiss') });

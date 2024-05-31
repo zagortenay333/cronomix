@@ -21,19 +21,19 @@ export class Entry {
 
         if (scrollable) {
             const scroll = new ScrollBox();
-            this.actor.add_actor(scroll.actor);
+            this.actor.add_child(scroll.actor);
             scroll.actor.y_align = Clutter.ActorAlign.START;
-            scroll.box.add_actor(entry_container);
+            scroll.box.add_child(entry_container);
             scroll.actor.overlay_scrollbars = true;
         } else {
-            this.actor.add_actor(entry_container);
+            this.actor.add_child(entry_container);
         }
 
         //
         // entry
         //
         this.entry = new St.Entry({ style_class: 'cronomix-entry', can_focus: true, hint_text: hint_text });
-        entry_container.add_actor(this.entry);
+        entry_container.add_child(this.entry);
 
         this.entry.clutter_text.activatable      = false;
         this.entry.clutter_text.single_line_mode = false;
