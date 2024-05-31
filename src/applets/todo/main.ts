@@ -154,7 +154,7 @@ export class TodoApplet extends Applet {
 
         this.#disable_file_monitor();
         const file = this.storage.read.todo_file.value!;
-        Fs.write_entire_file(file, content);
+        Fs.write_entire_file(file, content || '\n');
         this.#enable_file_monitor();
     }
 

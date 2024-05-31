@@ -150,17 +150,12 @@ export class SearchView {
             const filter = parser.try_parse_filter();
 
             if (filter) {
-                const gen = function * (tasks: Task[]) {
-                    for (const task of applet.tasks) {
-                        if (task.satisfies_filter(filter)) {
-                            tasks.push(task);
-                            yield new TaskCard(applet, task).actor;
-                        }
-                    }
-                };
-
                 this.#filtered_tasks = [];
-                tasks_scroll.set_children(-1, gen(this.#filtered_tasks));
+                for (const task of applet.tasks) if (task.satisfies_filter(filter)) this.#filtered_tasks.push(task);
+
+                const lazy_gen = function * (tasks: Task[]) { for (const task of tasks) yield new TaskCard(applet, task).actor; };
+                tasks_scroll.set_children(-1, lazy_gen(this.#filtered_tasks));
+
                 help_button.actor.remove_style_class_name('cronomix-red');
                 help_button.set_icon('cronomix-question-symbolic');
                 this.entry.entry.remove_style_class_name('cronomix-red');
