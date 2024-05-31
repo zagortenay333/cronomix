@@ -45,9 +45,9 @@ export class ScrollBox {
         //
         // Make the scrollbar autohide
         //
-        const bar = vertical ? 'vscroll' : 'hscroll';
-        this.actor[bar].opacity = 0;
-        const set_bar_opacity = (opacity: number) => { if (this.actor[bar]) this.actor[bar].opacity = opacity; }
+        const bar = vertical ? this.actor.get_vscroll_bar() : this.actor.get_hscroll_bar();
+        bar.opacity = 0;
+        const set_bar_opacity = (opacity: number) => { if (bar) bar.opacity = opacity; }
 
         const tracker = new FocusTracker(this.actor);
         tracker.subscribe('focus_enter', () => set_bar_opacity(130));
@@ -168,7 +168,7 @@ export function scroll_to_widget (widget: Clutter.Actor, box?: Rectangle, scroll
                 const [, nat_w_adjusted] = n.adjust_preferred_width(min_w, nat_w);
                 hpadding                += nat_w_adjusted - nat_w;
 
-                const bar_box = scrollview.hscroll.get_allocation_box();
+                const bar_box = scrollview.get_hscroll_bar().get_allocation_box();
                 hpadding += bar_box.y2 - bar_box.y1;
             }
 
@@ -178,7 +178,7 @@ export function scroll_to_widget (widget: Clutter.Actor, box?: Rectangle, scroll
                 const [, nat_h_adjusted] = n.adjust_preferred_height(min_h, nat_h);
                 vpadding                += nat_h_adjusted - nat_h;
 
-                const bar_box = scrollview.vscroll.get_allocation_box();
+                const bar_box = scrollview.get_vscroll_bar().get_allocation_box();
                 vpadding += bar_box.x2 - bar_box.x1;
             }
         }

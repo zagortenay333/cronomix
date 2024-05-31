@@ -7,8 +7,9 @@
 
 ## Installation
 
-- The latest version supports gnome-shell 45.
-- The extension can be installed from the [gnome website](https://extensions.gnome.org/extension/6003/cronomix/).
+- The latest version supports gnome-shell 46.
+- The latest and older versions of the extension can be installed from
+  the [gnome website](https://extensions.gnome.org/extension/6003/cronomix/).
 - The latest version can also be installed manually:
     - [Download the extension](https://github.com/zagortenay333/cronomix/tree/master/data/cronomix@zagortenay333.zip).
     - Extract into `~/.local/share/gnome-shell/extensions/`.
@@ -18,5 +19,5 @@
 ## Contributing
 
 - Please avoid making feature requests.
-- Before opening a bug report check that you have the correct version of gnome-shell.
-- If you want to build the project, read the top comment in `scripts/build` to get started.
+- Before reporting a bug, check you have the right gnome-shell version.
+- If you want to build the project, read the comment in `scripts/build`.

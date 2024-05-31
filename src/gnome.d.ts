@@ -147,8 +147,6 @@ declare module 'gi://St' {
             get_hscroll_bar (): ScrollBar;
             get_vscroll_bar (): ScrollBar;
             overlay_scrollbars: boolean;
-            hscroll: ScrollBar;
-            vscroll: ScrollBar;
         }
     }
 

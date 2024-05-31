@@ -8,7 +8,7 @@ set -u
 #   2. Run this script at least once and each time you edit the data files.
 #   3. Run './scripts/listen' to listen for runtime errors.
 #   4. Run 'tsc --watch' for typechecking and recompilation.
-#   6. Run './scripts/restart' after modifiying source files.
+#   6. Run './scripts/restart' after modifying source files to reload ext.
 # ==============================================================================
 cd "${BASH_SOURCE%/*}/.."
 
@@ -18,7 +18,6 @@ ext_dir=~/".local/share/gnome-shell/extensions/${uuid}"
 # ==============================================================================
 # Build tsconfig.json file
 # ==============================================================================
-#
 cat > "tsconfig.json" << EOF
 {
     "include": [ "src/**/*" ],
