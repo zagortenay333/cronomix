@@ -136,7 +136,8 @@ export class CheckBox extends Button {
     } = {}) {
         super({ parent, label, style_class });
         const bin = new St.Bin();
-        this.actor.insert_child_at_index(bin, 0);
+        this.actor.add_child(bin);
+        bin.set_child(new St.Icon({ icon_name: 'check-symbolic' }));
         this.actor.add_style_class_name(as_toggle ? 'cronomix-toggle toggle-switch' : 'cronomix-checkbox check-box');
         this.checked = checked;
     }

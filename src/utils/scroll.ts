@@ -5,14 +5,13 @@ import { gettext as _ } from 'resource:///org/gnome/shell/extensions/extension.j
 
 import { Button } from './button.js';
 import { Rectangle } from './misc.js';
-import { FocusTracker } from './focus.js';
 
 export class ScrollBox {
     actor: St.ScrollView;
     box: St.BoxLayout;
 
     constructor (vertical = true) {
-        this.actor = new St.ScrollView({ x_expand: true, overlay_scrollbars: true, style_class: 'cronomix-scrollbox' });
+        this.actor = new St.ScrollView({ x_expand: true, style_class: 'cronomix-scrollbox' });
 
         this.box = new St.BoxLayout({ vertical, x_expand: true, style_class: 'cronomix-spacing' });
         this.actor.add_child(this.box);
@@ -30,7 +29,7 @@ export class ScrollBox {
                 if (event.type() !== Clutter.EventType.SCROLL) return Clutter.EVENT_PROPAGATE;
 
                 const direction  = event.get_scroll_direction();
-                const adjustment = this.actor.get_hscroll_bar()!.get_adjustment();
+                const adjustment = this.actor.get_vadjustment();
 
                 if (direction === Clutter.ScrollDirection.UP) {
                     adjustment.value -= adjustment.stepIncrement;
@@ -41,19 +40,6 @@ export class ScrollBox {
                 return Clutter.EVENT_STOP;
             });
         }
-
-        //
-        // Make the scrollbar autohide
-        //
-        const bar = vertical ? this.actor.get_vscroll_bar() : this.actor.get_hscroll_bar();
-        bar.opacity = 0;
-        const set_bar_opacity = (opacity: number) => { if (bar) bar.opacity = opacity; }
-
-        const tracker = new FocusTracker(this.actor);
-        tracker.subscribe('focus_enter', () => set_bar_opacity(130));
-        tracker.subscribe('focus_leave', (has_pointer) => set_bar_opacity(has_pointer ? 130 : 0));
-        tracker.subscribe('pointer_enter', () => set_bar_opacity(130));
-        tracker.subscribe('pointer_leave', (has_focus) => set_bar_opacity(has_focus ? 130 : 0));
     }
 }
 
@@ -74,7 +60,7 @@ export class LazyScrollBox extends ScrollBox {
     // Set n_children to -1 if you don't know how many there are.
     set_children (n_children: number, children: IterableIterator<St.Widget>) {
         if (this.actor.vscrollbar_visible) {
-            const adjust = this.actor.get_vscroll_bar()!.get_adjustment();
+            const adjust = this.actor.get_vadjustment();
             adjust.set_value(0);
         }
 
@@ -167,9 +153,6 @@ export function scroll_to_widget (widget: Clutter.Actor, box?: Rectangle, scroll
                 const [min_w, nat_w]     = scrollview.get_preferred_width(h);
                 const [, nat_w_adjusted] = n.adjust_preferred_width(min_w, nat_w);
                 hpadding                += nat_w_adjusted - nat_w;
-
-                const bar_box = scrollview.get_hscroll_bar().get_allocation_box();
-                hpadding += bar_box.y2 - bar_box.y1;
             }
 
             if (scrollview.vscrollbar_policy !== St.PolicyType.NEVER) {
@@ -177,9 +160,6 @@ export function scroll_to_widget (widget: Clutter.Actor, box?: Rectangle, scroll
                 const [min_h, nat_h]     = scrollview.get_preferred_height(w);
                 const [, nat_h_adjusted] = n.adjust_preferred_height(min_h, nat_h);
                 vpadding                += nat_h_adjusted - nat_h;
-
-                const bar_box = scrollview.get_vscroll_bar().get_allocation_box();
-                vpadding += bar_box.x2 - bar_box.x1;
             }
         }
 
@@ -211,8 +191,7 @@ export function scroll_to_widget (widget: Clutter.Actor, box?: Rectangle, scroll
             p2      = descendant.get_parent()!.apply_relative_transform_to_point(scrollbox, p2);
 
             if (scrollview.hscrollbar_visible) {
-                const bar    = scrollview.get_hscroll_bar()!;
-                const adjust = bar.get_adjustment();
+                const adjust = scrollview.get_hadjustment();
                 const sa     = scrollview.get_allocation_box();
                 const pos    = adjust.get_value();
                 const low    = p1.x - hpadding;
@@ -224,8 +203,7 @@ export function scroll_to_widget (widget: Clutter.Actor, box?: Rectangle, scroll
             }
 
             if (scrollview.vscrollbar_visible) {
-                const bar    = scrollview.get_vscroll_bar()!;
-                const adjust = bar.get_adjustment();
+                const adjust = scrollview.get_vadjustment();
                 const sa     = scrollview.get_allocation_box();
                 const pos    = adjust.get_value();
                 const low    = p1.y - vpadding;

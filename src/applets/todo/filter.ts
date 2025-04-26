@@ -167,7 +167,7 @@ export class FilterView {
             _('If no group is selected, a group with 1 ``* & !hide`` filter is created.') + '\n' +
             _('Tasks go into the first column from the left whose filter they pass.') + '\n' +
             _('Hidden tasks only pass filters of the form ``hide`` or ``hide & expr``.') + '\n' +
-            Fs.read_entire_file(ext.path + '/data/docs/filters') ?? '';
+            (Fs.read_entire_file(ext.path + '/data/docs/filters') ?? '');
 
         button_add.subscribe('left_click', () => this.#add_card(new FilterGroup()));
         button_help.subscribe('left_click', () => show_info_popup(button_help, help_msg));

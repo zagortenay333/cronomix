@@ -91,6 +91,7 @@ declare module 'gi://St' {
 
         class Bin extends Widget {
             get_child (): Clutter.Actor | null;
+            set_child (child: Clutter.Actor): void;
         }
 
         class Label extends Widget {
@@ -144,8 +145,10 @@ declare module 'gi://St' {
             vscrollbar_policy: PolicyType;
             hscrollbar_policy: PolicyType;
             constructor (...args: unknown[]);
-            get_hscroll_bar (): ScrollBar;
-            get_vscroll_bar (): ScrollBar;
+            get_hscrollbar_visible (): boolean;
+            get_vscrollbar_visible (): boolean;
+            get_vadjustment (): Adjustment;
+            get_hadjustment (): Adjustment;
             overlay_scrollbars: boolean;
         }
     }

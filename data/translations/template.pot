@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-12 10:40-0500\n"
+"POT-Creation-Date: 2025-04-26 20:40+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,35 +17,79 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-msgid "Add Task"
+msgid "Panel position"
 msgstr ""
 
-msgid "Ok"
+msgid "Open"
 msgstr ""
 
-msgid "Add Filter"
+msgid "Add task"
 msgstr ""
 
-msgid "## Filter Groups"
+msgid "Search tasks"
 msgstr ""
 
-msgid "Each filter in a group creates a column of tasks in the main view."
+msgid "Todo file"
 msgstr ""
 
-msgid ""
-"If no group is selected, a group with 1 ``* & !hide`` filter is created."
+msgid "Open time tracker"
 msgstr ""
 
-msgid "Tasks go into the first column from the left whose filter they pass."
+msgid "Open todo file"
 msgstr ""
 
-msgid "Hidden tasks only pass filters of the form ``hide`` or ``hide & expr``."
+msgid "Pin"
 msgstr ""
 
-msgid "Title"
+msgid "Priority"
 msgstr ""
 
-msgid "Comma separated list of filters."
+msgid "Due"
+msgstr ""
+
+msgid "Done"
+msgstr ""
+
+msgid "Hide"
+msgstr ""
+
+msgid "Ascending"
+msgstr ""
+
+msgid "Descending"
+msgstr ""
+
+msgid "You must select a todo file."
+msgstr ""
+
+msgid "A todo file is a text file containing markup."
+msgstr ""
+
+msgid "To learn about the markup, open the built-in editor and press F1."
+msgstr ""
+
+msgid "Filter expression"
+msgstr ""
+
+msgid "Delete selected tasks"
+msgstr ""
+
+msgid "Copy selected tasks to file"
+msgstr ""
+
+msgid "Modify attributes of selected tasks"
+msgstr ""
+
+msgid "Space separated list of task attributes"
+msgstr ""
+
+msgid "Delete"
+msgstr ""
+
+msgid "Add"
+msgstr ""
+
+msgid "Apply"
 msgstr ""
 
 msgid ""
@@ -53,10 +97,10 @@ msgid ""
 "In case of a tie, by the second attribute, and so on..."
 msgstr ""
 
-msgid "Created"
+msgid "Ok"
 msgstr ""
 
-msgid "Due"
+msgid "Created"
 msgstr ""
 
 msgid "No time tracker file selected."
@@ -98,12 +142,6 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-msgid "Ascending"
-msgstr ""
-
-msgid "Descending"
-msgstr ""
-
 msgid "Time Tracker"
 msgstr ""
 
@@ -120,9 +158,6 @@ msgid "Stop"
 msgstr ""
 
 msgid "Search Data"
-msgstr ""
-
-msgid "Filter expression"
 msgstr ""
 
 msgid "Date (e.g., 2000-01-24)"
@@ -152,67 +187,32 @@ msgstr ""
 msgid "Task text copied to clipboard!"
 msgstr ""
 
-msgid "Delete selected tasks"
+msgid "Add Task"
 msgstr ""
 
-msgid "Copy selected tasks to file"
+msgid "Add Filter"
 msgstr ""
 
-msgid "Modify attributes of selected tasks"
+msgid "## Filter Groups"
 msgstr ""
 
-msgid "Space separated list of task attributes"
+msgid "Each filter in a group creates a column of tasks in the main view."
 msgstr ""
 
-msgid "Delete"
+msgid ""
+"If no group is selected, a group with 1 ``* & !hide`` filter is created."
 msgstr ""
 
-msgid "Add"
+msgid "Tasks go into the first column from the left whose filter they pass."
 msgstr ""
 
-msgid "Apply"
+msgid "Hidden tasks only pass filters of the form ``hide`` or ``hide & expr``."
 msgstr ""
 
-msgid "Panel position"
+msgid "Title"
 msgstr ""
 
-msgid "Open"
-msgstr ""
-
-msgid "Add task"
-msgstr ""
-
-msgid "Search tasks"
-msgstr ""
-
-msgid "Todo file"
-msgstr ""
-
-msgid "Open time tracker"
-msgstr ""
-
-msgid "Open todo file"
-msgstr ""
-
-msgid "Pin"
-msgstr ""
-
-msgid "Priority"
-msgstr ""
-
-msgid "Done"
-msgstr ""
-
-msgid "Hide"
-msgstr ""
-
-msgid "You must select a todo file."
-msgstr ""
-
-msgid "A todo file is a text file containing markup."
-msgstr ""
-
-msgid "To learn about the markup, open the built-in editor and press F1."
+msgid "Comma separated list of filters."
 msgstr ""
 
 msgid "Notification sound"
@@ -350,6 +350,19 @@ msgstr ""
 msgid "Type shortcut (backspace to reset)"
 msgstr ""
 
+msgid "Select folder"
+msgstr ""
+
+msgid "Select file"
+msgstr ""
+
+msgid "Confirm"
+msgstr ""
+
+msgid ""
+"Right click any of the extension panel items to access the global settings."
+msgstr ""
+
 msgid "Sun"
 msgstr ""
 
@@ -381,19 +394,6 @@ msgid "Month"
 msgstr ""
 
 msgid "Year"
-msgstr ""
-
-msgid "Select folder"
-msgstr ""
-
-msgid "Select file"
-msgstr ""
-
-msgid "Confirm"
-msgstr ""
-
-msgid ""
-"Right click any of the extension panel items to access the global settings."
 msgstr ""
 
 msgid "Show more"
