@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-04-25 20:06+0200\n"
+"POT-Creation-Date: 2025-05-04 20:19+0200\n"
 "PO-Revision-Date: 2023-06-05 16:07+0200\n"
 "Last-Translator: Ludek Vydra <lvtran@u.k2.cz>\n"
 "Language-Team: \n"
@@ -350,9 +350,6 @@ msgstr "Varování"
 msgid "Important"
 msgstr "Důležité"
 
-msgid "Image not found"
-msgstr "Obrázek nenalezen"
-
 msgid "Set shortcut"
 msgstr "Nastav klávesovou zkratku"
 
@@ -409,6 +406,9 @@ msgstr "Rok"
 
 msgid "Show more"
 msgstr "Zobrazit více"
+
+msgid "Image not found"
+msgstr "Obrázek nenalezen"
 
 msgid "Todo"
 msgstr "Todo"

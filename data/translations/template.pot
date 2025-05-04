@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-04-26 20:40+0200\n"
+"POT-Creation-Date: 2025-05-04 20:19+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -341,9 +341,6 @@ msgstr ""
 msgid "Important"
 msgstr ""
 
-msgid "Image not found"
-msgstr ""
-
 msgid "Set shortcut"
 msgstr ""
 
@@ -397,6 +394,9 @@ msgid "Year"
 msgstr ""
 
 msgid "Show more"
+msgstr ""
+
+msgid "Image not found"
 msgstr ""
 
 msgid "Todo"

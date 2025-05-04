@@ -1,6 +1,5 @@
 import St from 'gi://St';
 import Cogl from 'gi://Cogl';
-import Meta from 'gi://Meta';
 import GLib from 'gi://GLib';
 import Clutter from 'gi://Clutter';
 import GdkPixbuf from 'gi://GdkPixbuf';
@@ -37,8 +36,8 @@ export class Image {
             this.actor.set_content_gravity(Clutter.ContentGravity.CENTER);
             this.actor.reactive = true;
             this.actor.connect('button-press-event', () => Fs.open_file_in_default_app(path));
-            this.actor.connect('enter-event', () => global.display.set_cursor(Meta.Cursor.POINTING_HAND));
-            this.actor.connect('leave-event', () => global.display.set_cursor(Meta.Cursor.DEFAULT));
+            this.actor.connect('enter-event', () => global.display.set_cursor(5));
+            this.actor.connect('leave-event', () => global.display.set_cursor(2));
         } catch (e) {
             const button = new Button({ icon: 'cronomix-issue-symbolic', label: _('Image not found'), style_class: 'cronomix-red' });
             button.subscribe('left_click', () => show_info_popup(button, '' + e));

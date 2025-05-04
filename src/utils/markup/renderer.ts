@@ -1,6 +1,5 @@
 import St from 'gi://St';
 import GLib from 'gi://GLib';
-import Meta from 'gi://Meta';
 import Pango from 'gi://Pango';
 import Clutter from 'gi://Clutter';
 import { gettext as _ } from 'resource:///org/gnome/shell/extensions/extension.js';
@@ -366,7 +365,7 @@ export class Markup {
                 if (idx !== -1) {
                     for (const clickable of clickables) {
                         if (idx >= clickable.start && idx < clickable.end) {
-                            global.display.set_cursor(Meta.Cursor.POINTING_HAND);
+                            global.display.set_cursor(5);
                             hovered_clickable = clickable;
                             return Clutter.EVENT_PROPAGATE;
                         }
@@ -374,13 +373,13 @@ export class Markup {
                 }
 
                 hovered_clickable = null;
-                global.display.set_cursor(Meta.Cursor.DEFAULT);
+                global.display.set_cursor(2);
                 return Clutter.EVENT_PROPAGATE;
             });
 
             result.connect('leave-event', () => {
                 hovered_clickable = null;
-                global.display.set_cursor(Meta.Cursor.DEFAULT);
+                global.display.set_cursor(2);
             });
 
             result.connect('button-release-event', () => {
