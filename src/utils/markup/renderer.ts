@@ -1,5 +1,6 @@
 import St from 'gi://St';
 import GLib from 'gi://GLib';
+import Meta from 'gi://Meta';
 import Pango from 'gi://Pango';
 import Clutter from 'gi://Clutter';
 import { gettext as _ } from 'resource:///org/gnome/shell/extensions/extension.js';
@@ -382,16 +383,17 @@ export class Markup {
                 global.display.set_cursor(2);
             });
 
-            result.connect('button-release-event', () => {
+            const fn = () => {
                 if (hovered_clickable) {
                     if (hovered_clickable.node.tag === 'AstLink') {
                         Fs.open_web_uri_in_default_app(hovered_clickable.node.link);
                     } else if (hovered_clickable.node.tag === 'AstTagRef') {
                         this.on_tag_clicked?.(hovered_clickable.node);
                     }
-
                 }
-            });
+            };
+            result.connect('touch_event', () => { if (Meta.is_wayland_compositor()) fn(); });
+            result.connect('button-release-event', () => fn());
         }
 
         return result;
