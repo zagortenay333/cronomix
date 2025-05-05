@@ -726,6 +726,7 @@ declare module 'gi://Meta' {
             IDLE,
         }
 
+        function is_wayland_compositor (): boolean;
         function accelerator_name (state: unknown, sym: number): string;
         function external_binding_name_for_action (action: number): string;
     }
