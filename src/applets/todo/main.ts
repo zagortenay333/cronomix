@@ -2,31 +2,39 @@ import { gettext as _ } from 'resource:///org/gnome/shell/extensions/extension.j
 
 import { SearchView } from './search.js';
 import * as Fs from './../../utils/fs.js';
+import { ext } from './../../extension.js';
 import { Task, TaskEditor } from './task.js';
 import { Cronomix } from './../../extension.js';
 import { SortView, SortSchema } from './sort.js';
 import { Storage } from './../../utils/storage.js';
 import * as P from './../../utils/markup/parser.js';
+import { TodoTxtParser } from './../../utils/markup/todotxt.js';
 import { FilterGroup, FilterView, KanbanView } from './filter.js';
 import { Applet, PanelPosition, PanelPositionTr } from './../applet.js';
 import { TimeTracker, TimeTrackerView, TrackerQuery } from './tracker.js';
+
+export enum FileFormat {
+    CRONOMIX = 'Cronomix',
+    TODO_TXT = 'Todo.txt',
+}
 
 export class TodoApplet extends Applet {
     storage = new Storage({
         file: '~/.config/cronomix/todo.json',
 
         values: {
-            panel_position: { tag: 'enum',   value: PanelPosition.RIGHT, enum: Object.values(PanelPosition) },
-            open:           { tag: 'keymap', value: null },
-            add_task:       { tag: 'keymap', value: null },
-            search:         { tag: 'keymap', value: null },
-            open_tracker:   { tag: 'keymap', value: null },
-            open_todo_file: { tag: 'keymap', value: null },
-            todo_file:      { tag: 'file',   value: null },
-            active_filter:  { tag: 'custom', value: -1 },
-            filters:        { tag: 'custom', value: Array<FilterGroup>() },
-            tracker_file:   { tag: 'custom', value: '' },
-            tracker_query:  { tag: 'custom', value: new TrackerQuery() },
+            panel_position:   { tag: 'enum',   value: PanelPosition.RIGHT, enum: Object.values(PanelPosition) },
+            open:             { tag: 'keymap', value: null },
+            add_task:         { tag: 'keymap', value: null },
+            search:           { tag: 'keymap', value: null },
+            open_tracker:     { tag: 'keymap', value: null },
+            open_todo_file:   { tag: 'keymap', value: null },
+            todo_file:        { tag: 'file',   value: null },
+            todo_file_format: { tag: 'enum',   value: FileFormat.CRONOMIX, enum: Object.values(FileFormat) },
+            active_filter:    { tag: 'custom', value: -1 },
+            filters:          { tag: 'custom', value: Array<FilterGroup>() },
+            tracker_file:     { tag: 'custom', value: '' },
+            tracker_query:    { tag: 'custom', value: new TrackerQuery() },
             sort: {
                 tag: 'custom',
                 value: [
@@ -40,9 +48,14 @@ export class TodoApplet extends Applet {
         },
 
         groups: [
-            ['todo_file', 'panel_position'],
+            ['todo_file', 'todo_file_format'],
+            ['panel_position'],
             ['open', 'add_task', 'search', 'open_tracker', 'open_todo_file'],
         ],
+
+        infos: {
+            todo_file_format: Fs.read_entire_file(ext.path + '/data/docs/file_format') ?? '',
+        },
 
         translations: {
             panel_position: _('Panel position'),
@@ -50,6 +63,7 @@ export class TodoApplet extends Applet {
             add_task: _('Add task'),
             search: _('Search tasks'),
             todo_file: _('Todo file'),
+            todo_file_format: _('Todo file format'),
             open_tracker: _('Open time tracker'),
             open_todo_file: _('Open todo file'),
             pin: _('Pin'),
@@ -63,24 +77,24 @@ export class TodoApplet extends Applet {
         }
     });
 
-    // These data structures maintain state about
-    // the current todo file. If you edit tasks
-    // that belong to the current todo file, you
-    // must update these structures. You should
-    // eventually call flush_tasks().
+    // These data structures maintain state about the current todo file.
+    // If you edit tasks that belong to the current todo file, you must
+    // update these structures. You should eventually call flush_tasks().
     //
-    // The non_tasks array contains top level nodes
-    // from the todo file that are not AstMeta. They
-    // don't represent tasks, but we keep them in.
+    // The non_tasks array contains top level nodes from the todo file
+    // that are not AstMeta. They don't represent tasks, but we keep
+    // them in.
     //
-    // If you edit a task that is currently being
-    // tracked, you can employ different strategies:
+    // If you edit a task that is currently being tracked, you can use
+    // different strategies:
     //
-    //   1. You can update the corresponding tracker slot
-    //      using the update_slot() function.
-    //   2. You can stop the tracker. The next time the
-    //      user starts tracking the edited task a dialog
-    //      will be shown asking them to update the slot.
+    //     1. You can update the corresponding tracker slot using the
+    //        update_slot() function.
+    //
+    //     2. You can stop the tracker. The next time the user starts
+    //        tracking the edited task a dialog will be shown asking
+    //        them to update the slot.
+    //
     tracker: TimeTracker;
     tasks = new Array<Task>();
     non_tasks = new Array<string>();
@@ -125,8 +139,13 @@ export class TodoApplet extends Applet {
         Fs.create_file(file);
         this.#enable_file_monitor();
 
-        const markup = Fs.read_entire_file(file);
+        let markup = Fs.read_entire_file(file);
         if (markup === null) { this.show_settings(); return; }
+
+        if (this.storage.read.todo_file_format.value == FileFormat.TODO_TXT) {
+            const p = new TodoTxtParser(markup);
+            markup  = p.to_cronomix_markup();
+        }
 
         const parser = new P.Parser(markup);
         for (const [block_text, block_ast] of parser.parse_blocks_split()) {
