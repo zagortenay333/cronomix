@@ -1,28 +1,37 @@
+import * as P from './../../utils/markup/parser.js';
 import { Lexer } from './../../utils/markup/lexer.js';
 
 export class TodoTxtParser {
     #lex: Lexer;
     #text: string;
+    #markup!: string;
+
     #done!: boolean;
     #priority!: string|null;
     #creation_date!: string|null;
     #completion_date!: string|null;
-    #cronomix_markup!: string;
 
     constructor (text: string) {
         this.#lex = new Lexer(text);
         this.#text = text;
     }
 
+    from_cronomix_markup (ast: P.AstMeta): string {
+        const start = ast.children[0].start;
+        const end   = ast.end;
+        const body  = this.#text.substring(start, end).replaceAll('\n', '\\n');
+        return body + '\n';
+    }
+
     to_cronomix_markup (): string {
-        this.#cronomix_markup = '';
+        this.#markup = '';
 
         while (true) {
             if (this.#lex.peek_token().tag == 'eof') break;
             this.#parse_task();
         }
 
-        return this.#cronomix_markup;
+        return this.#markup;
     }
 
     #parse_task () {
@@ -57,26 +66,33 @@ export class TodoTxtParser {
             this.#creation_date = d;
         }
 
-        this.#lex.eat_whitespace();
-        const body_start = this.#lex.peek_token().start;
-        let body_end: number;
+        const map = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        this.#markup += "[";
+        if (this.#done) this.#markup += "x";
+        if (this.#priority !== null) this.#markup += " #" + (map.indexOf(this.#priority) + 1);
+        if (this.#completion_date !== null) {
+            this.#markup += " completed:" + this.#completion_date;
+            this.#markup += " created:" + this.#creation_date;
+        } else if (this.#creation_date !== null) {
+            this.#markup += " created:" + this.#creation_date;
+        }
+        this.#markup += "] ";
+
+        let cursor = this.#lex.peek_token().start;
         while (true) {
             const token = this.#lex.eat_token();
-            if (token.tag === '\n') { body_end = token.end; break; }
+
+            if (token.tag === '\\' && this.#lex.peek_token_text() === 'n') {
+                this.#markup += this.#text.substring(cursor, token.start);
+                this.#markup += '\n';
+                this.#lex.eat_token();
+                cursor = this.#lex.peek_token().start;
+            } else if (token.tag === '\n') {
+                this.#markup += this.#text.substring(cursor, token.end);
+                break;
+            }
         }
 
-        const map = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        this.#cronomix_markup += "[";
-        if (this.#done) this.#cronomix_markup += "x";
-        if (this.#priority !== null) this.#cronomix_markup += " #" + (map.indexOf(this.#priority) + 1);
-        if (this.#completion_date !== null) {
-            this.#cronomix_markup += " completed:" + this.#completion_date;
-            this.#cronomix_markup += " created:" + this.#creation_date;
-        } else if (this.#creation_date !== null) {
-            this.#cronomix_markup += " created:" + this.#creation_date;
-        }
-        this.#cronomix_markup += "] ";
-        this.#cronomix_markup += this.#text.substring(body_start, body_end);
     }
 
     #try_parse_date (): string|null {

@@ -8,7 +8,7 @@ import { Cronomix } from './../../extension.js';
 import { SortView, SortSchema } from './sort.js';
 import { Storage } from './../../utils/storage.js';
 import * as P from './../../utils/markup/parser.js';
-import { TodoTxtParser } from './../../utils/markup/todotxt.js';
+import { TodoTxtParser } from './../../utils/markup/todo_txt.js';
 import { FilterGroup, FilterView, KanbanView } from './filter.js';
 import { Applet, PanelPosition, PanelPositionTr } from './../applet.js';
 import { TimeTracker, TimeTrackerView, TrackerQuery } from './tracker.js';
@@ -162,14 +162,15 @@ export class TodoApplet extends Applet {
     flush_tasks () {
         let content = '';
 
-        for (const task of this.tasks) {
-            content += task.text;
-            if (! task.text.endsWith('\n\n')) content += task.text.endsWith('\n') ? '\n' : '\n\n';
+        if (this.storage.read.todo_file_format.value == FileFormat.TODO_TXT) {
+            for (const task of this.tasks) {
+                const p  = new TodoTxtParser(task.text);
+                content += p.from_cronomix_markup(task.ast);
+            }
+        } else {
+            for (const task of this.tasks) content += task.text;
+            for (const non_task of this.non_tasks) content += non_task;
         }
-
-        for (const non_task of this.non_tasks) content += non_task;
-
-        if (content.endsWith('\n\n')) content = content.substring(0, content.length - 1);
 
         this.#disable_file_monitor();
         const file = this.storage.read.todo_file.value!;
