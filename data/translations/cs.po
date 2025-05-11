@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-05 20:19+0200\n"
+"POT-Creation-Date: 2025-05-11 09:11+0200\n"
 "PO-Revision-Date: 2023-06-05 16:07+0200\n"
 "Last-Translator: Ludek Vydra <lvtran@u.k2.cz>\n"
 "Language-Team: \n"
@@ -16,59 +16,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 3.3.1\n"
-
-msgid "Panel position"
-msgstr "Pozice panelu"
-
-msgid "Open"
-msgstr "Otevři"
-
-msgid "Add task"
-msgstr "Přidej úkol"
-
-msgid "Search tasks"
-msgstr "Prohledej úkoly"
-
-msgid "Todo file"
-msgstr "Todo soubor"
-
-msgid "Open time tracker"
-msgstr "Otevři sledování času"
-
-msgid "Open todo file"
-msgstr "Otevři Todo soubor"
-
-msgid "Pin"
-msgstr "Připni"
-
-msgid "Priority"
-msgstr "Priorita"
-
-msgid "Due"
-msgstr "Do"
-
-msgid "Done"
-msgstr "Hotovo"
-
-msgid "Hide"
-msgstr "Skryj"
-
-msgid "Ascending"
-msgstr "Vzestupně"
-
-msgid "Descending"
-msgstr "Sestupně"
-
-msgid "You must select a todo file."
-msgstr "Musíte vybrat soubor Todo."
-
-msgid "A todo file is a text file containing markup."
-msgstr "Soubor Todo je textový soubor obsahující značky."
-
-msgid "To learn about the markup, open the built-in editor and press F1."
-msgstr ""
-"Chcete-li se seznámit se značkami, otevřete vestavěný editor a stiskněte "
-"klávesu F1."
 
 msgid "Filter expression"
 msgstr "Výraz filtru"
@@ -103,6 +50,88 @@ msgstr ""
 
 msgid "Ok"
 msgstr "Ok"
+
+msgid "Add Task"
+msgstr "Přidej úkol"
+
+msgid "Add Filter"
+msgstr "Přidej filtr"
+
+msgid "## Filter Groups"
+msgstr "## Skupina filtrů"
+
+msgid "Each filter in a group creates a column of tasks in the main view."
+msgstr "Každý filtr ve skupině vytvoří sloupec úloh v hlavním zobrazení."
+
+#, fuzzy
+msgid ""
+"If no group is selected, a group with 1 ``* & !hide`` filter is created."
+msgstr ""
+"Pokud není vybrána žádná skupina, vytvoří se skupina s 1 filtrem ``*``."
+
+msgid "Tasks go into the first column from the left whose filter they pass."
+msgstr "Úkoly jsou zařazeny do prvního sloupce zleva, jehož filtrem prošly."
+
+msgid "Hidden tasks only pass filters of the form ``hide`` or ``hide & expr``."
+msgstr ""
+"Jen skryté úkoly se vyfiltrují výrazy tvaru ``hide`` nebo ``hide & expr``."
+
+msgid "Title"
+msgstr "Název"
+
+msgid "Comma separated list of filters."
+msgstr "Seznam filtrů oddělených čárkou."
+
+msgid "Created"
+msgstr ""
+
+msgid "Due"
+msgstr "Do"
+
+msgid "No time tracker file selected."
+msgstr "Není vybrán soubor sledování času."
+
+msgid "Open time tracker settings"
+msgstr "Otevřít nastavení sledování času"
+
+msgid "The text of the corresponding tracker slot does not match this task."
+msgstr "Text příslušného slotu pro sledování neodpovídá tomuto úkolu."
+
+msgid "Here is what the text in the slot currently looks like:"
+msgstr "V současné době vypadá text ve slotu takto:"
+
+msgid "You can do one of the following:"
+msgstr "Můžete udělat jednu z následujících akcí:"
+
+msgid "Create a new slot leaving the old one in the tracker."
+msgstr "Vytvoření nového slotu s ponecháním starého."
+
+msgid "Update the current slot to match with this task."
+msgstr "Aktualizujte aktuální slot tak, aby odpovídal tomuto úkolu."
+
+msgid "Create new slot"
+msgstr "Vytvořte nový slot"
+
+msgid "Update current slot"
+msgstr "Aktualizujte aktuální slot"
+
+msgid "Stop tracking"
+msgstr "Stop sledování"
+
+msgid "Stats"
+msgstr "Statistiky"
+
+msgid "Start tracking"
+msgstr "Start sledování"
+
+msgid "Cancel"
+msgstr "Zruš"
+
+msgid "Ascending"
+msgstr "Vzestupně"
+
+msgid "Descending"
+msgstr "Sestupně"
 
 msgid "Time Tracker"
 msgstr "Sledovač času"
@@ -150,78 +179,49 @@ msgstr "Celkové součty na slot"
 msgid "Task text copied to clipboard!"
 msgstr "Text úlohy zkopírován do schránky!"
 
-msgid "Add Task"
+msgid "Panel position"
+msgstr "Pozice panelu"
+
+msgid "Open"
+msgstr "Otevři"
+
+msgid "Add task"
 msgstr "Přidej úkol"
 
-msgid "Add Filter"
-msgstr "Přidej filtr"
+msgid "Search tasks"
+msgstr "Prohledej úkoly"
 
-msgid "## Filter Groups"
-msgstr "## Skupina filtrů"
+msgid "Todo file"
+msgstr "Todo soubor"
 
-msgid "Each filter in a group creates a column of tasks in the main view."
-msgstr "Každý filtr ve skupině vytvoří sloupec úloh v hlavním zobrazení."
+msgid "Open time tracker"
+msgstr "Otevři sledování času"
 
-#, fuzzy
-msgid ""
-"If no group is selected, a group with 1 ``* & !hide`` filter is created."
+msgid "Open todo file"
+msgstr "Otevři Todo soubor"
+
+msgid "Pin"
+msgstr "Připni"
+
+msgid "Priority"
+msgstr "Priorita"
+
+msgid "Done"
+msgstr "Hotovo"
+
+msgid "Hide"
+msgstr "Skryj"
+
+msgid "You must select a todo file."
+msgstr "Musíte vybrat soubor Todo."
+
+msgid "A todo file is a text file containing markup."
+msgstr "Soubor Todo je textový soubor obsahující značky."
+
+msgid "To learn about the markup, open the built-in editor and press F1."
 msgstr ""
-"Pokud není vybrána žádná skupina, vytvoří se skupina s 1 filtrem ``*``."
-
-msgid "Tasks go into the first column from the left whose filter they pass."
-msgstr "Úkoly jsou zařazeny do prvního sloupce zleva, jehož filtrem prošly."
-
-msgid "Hidden tasks only pass filters of the form ``hide`` or ``hide & expr``."
-msgstr ""
-"Jen skryté úkoly se vyfiltrují výrazy tvaru ``hide`` nebo ``hide & expr``."
-
-msgid "Title"
-msgstr "Název"
-
-msgid "Comma separated list of filters."
-msgstr "Seznam filtrů oddělených čárkou."
-
-msgid "Created"
-msgstr ""
-
-msgid "No time tracker file selected."
-msgstr "Není vybrán soubor sledování času."
-
-msgid "Open time tracker settings"
-msgstr "Otevřít nastavení sledování času"
-
-msgid "The text of the corresponding tracker slot does not match this task."
-msgstr "Text příslušného slotu pro sledování neodpovídá tomuto úkolu."
-
-msgid "Here is what the text in the slot currently looks like:"
-msgstr "V současné době vypadá text ve slotu takto:"
-
-msgid "You can do one of the following:"
-msgstr "Můžete udělat jednu z následujících akcí:"
-
-msgid "Create a new slot leaving the old one in the tracker."
-msgstr "Vytvoření nového slotu s ponecháním starého."
-
-msgid "Update the current slot to match with this task."
-msgstr "Aktualizujte aktuální slot tak, aby odpovídal tomuto úkolu."
-
-msgid "Create new slot"
-msgstr "Vytvořte nový slot"
-
-msgid "Update current slot"
-msgstr "Aktualizujte aktuální slot"
-
-msgid "Stop tracking"
-msgstr "Stop sledování"
-
-msgid "Stats"
-msgstr "Statistiky"
-
-msgid "Start tracking"
-msgstr "Start sledování"
-
-msgid "Cancel"
-msgstr "Zruš"
+"Chcete-li se seznámit se značkami, otevřete vestavěný editor a stiskněte "
+"klávesu F1."
 
 msgid "Notification sound"
 msgstr "Zvuk upozornění"
@@ -365,12 +365,6 @@ msgstr "Vyber soubor"
 msgid "Confirm"
 msgstr "Potvrď"
 
-msgid ""
-"Right click any of the extension panel items to access the global settings."
-msgstr ""
-"Kliknutím pravým tlačítkem na položku panelu rozšíření získáte přístup ke "
-"globálním nastavením."
-
 msgid "Sun"
 msgstr "Ne"
 
@@ -409,6 +403,12 @@ msgstr "Zobrazit více"
 
 msgid "Image not found"
 msgstr "Obrázek nenalezen"
+
+msgid ""
+"Right click any of the extension panel items to access the global settings."
+msgstr ""
+"Kliknutím pravým tlačítkem na položku panelu rozšíření získáte přístup ke "
+"globálním nastavením."
 
 msgid "Todo"
 msgstr "Todo"

@@ -31,6 +31,7 @@ export class Applet <E = {}> extends PubSub<E> {
     panel_label: St.Label;
     panel_item: PanelButton;
     sound_cancel: Gio.Cancellable | null = null;
+    #session_signal_id: number;
 
     constructor (ext: Cronomix, id: string) {
         super();
@@ -90,6 +91,13 @@ export class Applet <E = {}> extends PubSub<E> {
                 this.panel_item.menu.actor.style = `max-width: ${area.width - 6}px; max-height: ${area.height - 6}px`;
             }
         });
+        this.#session_signal_id = Main.sessionMode.connect('updated', (s: any) => {
+            if (s.currentMode === 'user' || s.parentMode === 'user') {
+                this.panel_item.show();
+            } else if (s.currentMode === 'unlock-dialog') {
+                this.panel_item.hide();
+            }
+        });
     }
 
     set_panel_position (position: PanelPosition) {
@@ -107,6 +115,7 @@ export class Applet <E = {}> extends PubSub<E> {
     }
 
     destroy () {
+        Main.sessionMode.disconnect(this.#session_signal_id);
         this.panel_item.destroy();
     }
 }

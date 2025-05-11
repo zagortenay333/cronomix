@@ -765,6 +765,13 @@ declare module 'resource:///org/gnome/shell/ui/main.js' {
     import * as Layout from 'resource:///org/gnome/shell/ui/layout.js';
     import { WindowManager } from 'resource:///org/gnome/shell/ui/windowManager.js';
 
+    class SessionMode {
+        currentMode: string;
+        connect (sig: string, callback: Function): number;
+        disconnect  (id: number): void;
+    }
+
+    const sessionMode: SessionMode;
     const wm: WindowManager;
     const panel: Panel.Panel;
     const layoutManager: Layout.LayoutManager;

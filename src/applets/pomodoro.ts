@@ -1,6 +1,7 @@
 import St from 'gi://St';
 import GLib from 'gi://GLib';
 import Clutter from 'gi://Clutter';
+import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import { gettext as _ } from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import * as Misc from './../utils/misc.js';
@@ -106,7 +107,8 @@ export class PomodoroApplet extends Applet<Events> {
         if (new_time > 0) {
             this.time = new Time(new_time);
         } else {
-            this.panel_item.menu.open();
+            if (this.panel_item.visible) this.panel_item.menu.open();
+            else                         Main.notify(_("Pomodoro phase change."));
             this.set_next_phase();
         }
 

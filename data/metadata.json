@@ -4,5 +4,6 @@
     "url":            "https://github.com/zagortenay333/cronomix",
     "description":    "All-in-one timer, stopwatch, pomodoro, alarms and todos",
     "shell-version":  ["48"],
-    "gettext-domain": "cronomix"
+    "gettext-domain": "cronomix",
+    "session-modes": ["user", "unlock-dialog"]
 }

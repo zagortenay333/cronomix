@@ -1,6 +1,7 @@
 import St from 'gi://St';
 import GLib from 'gi://GLib';
 import Clutter from 'gi://Clutter';
+import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import { gettext as _ } from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import * as Misc from './../utils/misc.js';
@@ -103,8 +104,9 @@ export class TimerApplet extends Applet<Events> {
             this.#tic_id = GLib.timeout_add_seconds(GLib.PRIORITY_DEFAULT, 1, () => this.#tic(now));
             this.publish('tic', this.time);
         } else {
+            if (this.panel_item.visible) this.panel_item.menu.open();
+            else                         Main.notify(_("Timer elapsed."));
             this.show_timer_elapsed();
-            this.panel_item.menu.open();
             this.reset();
         }
     }
