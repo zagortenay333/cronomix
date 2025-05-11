@@ -15,9 +15,8 @@ import { StopwatchApplet } from './applets/stopwatch.js';
 //
 // To register a new applet:
 //
-//   1. Import the applet here.
-//   2. Add an entry to this map.
-//   3. Add an entry to the storage config.
+//     1. Add an entry to this map.
+//     2. Add an entry to the storage config.
 //
 export const applets = [
     [ 'todo', TodoApplet ],
