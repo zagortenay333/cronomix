@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-10 10:20+0200\n"
+"POT-Creation-Date: 2025-05-11 12:48+0200\n"
 "PO-Revision-Date: 2023-06-05 16:07+0200\n"
 "Last-Translator: Ludek Vydra <lvtran@u.k2.cz>\n"
 "Language-Team: \n"
@@ -194,10 +194,6 @@ msgstr "Prohledej úkoly"
 msgid "Todo file"
 msgstr "Todo soubor"
 
-#, fuzzy
-msgid "Todo file format"
-msgstr "Todo soubor"
-
 msgid "Open time tracker"
 msgstr "Otevři sledování času"
 
@@ -248,68 +244,17 @@ msgstr "Odložit"
 msgid "Dismiss"
 msgstr "Odvolat"
 
-msgid "Left"
-msgstr "Vlevo"
-
-msgid "Center"
-msgstr "Střed"
-
-msgid "Right"
-msgstr "Vpravo"
-
-msgid "Settings"
-msgstr "Nastavení"
-
-msgid "Website"
-msgstr "Webové stránky"
-
-msgid "Pomodoro"
-msgstr "Pomodoro"
-
-msgid "Long Break"
-msgstr "Dlouhá pauza"
-
-msgid "Short Break"
-msgstr "Krátká pauza"
-
 msgid "Show time in panel"
 msgstr "Zobrazit čas v panelu"
 
 msgid "Clock size (set to 0 for default size)"
 msgstr "Velikost hodin (pro výchozí nastaveno 0)"
 
-msgid "Show presets"
-msgstr "Předvolby"
-
-msgid "Phase"
-msgstr "Fáze"
-
-msgid "Completed pomodoros"
-msgstr "Dokončených Pomodor"
-
-msgid "Pomodoros until long break"
-msgstr "Pomodor do dlouhé přestávky"
-
 msgid "Start"
 msgstr "Start"
 
 msgid "Pause"
 msgstr "Pauza"
-
-msgid "Add Preset"
-msgstr "Přidat předvolbu"
-
-msgid "Pomodoro length"
-msgstr "Délka Pomodoro"
-
-msgid "Short break length"
-msgstr "Délka krátké pauzy"
-
-msgid "Long break length"
-msgstr "Délka dlouhé pauzy"
-
-msgid "Long break every n pomodoros"
-msgstr "Dlouhá pauza každý n pomodor"
 
 msgid "Resume"
 msgstr "Obnovení"
@@ -332,6 +277,31 @@ msgstr "Čas kol"
 msgid "Laps table copied to clipboard!"
 msgstr "Tabulka kol zkopírována do schránky!"
 
+msgid "Left"
+msgstr "Vlevo"
+
+msgid "Center"
+msgstr "Střed"
+
+msgid "Right"
+msgstr "Vpravo"
+
+msgid "Settings"
+msgstr "Nastavení"
+
+msgid "Website"
+msgstr "Webové stránky"
+
+msgid "Show presets"
+msgstr "Předvolby"
+
+#, fuzzy
+msgid "Timer elapsed."
+msgstr "Časovač vypršel!"
+
+msgid "Add Preset"
+msgstr "Přidat předvolbu"
+
 msgid "Invalid time selected."
 msgstr "Zvolen neplatný čas."
 
@@ -340,6 +310,40 @@ msgstr "Časovač vypršel!"
 
 msgid "Restart"
 msgstr "Restart"
+
+msgid "Pomodoro"
+msgstr "Pomodoro"
+
+msgid "Long Break"
+msgstr "Dlouhá pauza"
+
+msgid "Short Break"
+msgstr "Krátká pauza"
+
+#, fuzzy
+msgid "Pomodoro phase change."
+msgstr "Délka Pomodoro"
+
+msgid "Phase"
+msgstr "Fáze"
+
+msgid "Completed pomodoros"
+msgstr "Dokončených Pomodor"
+
+msgid "Pomodoros until long break"
+msgstr "Pomodor do dlouhé přestávky"
+
+msgid "Pomodoro length"
+msgstr "Délka Pomodoro"
+
+msgid "Short break length"
+msgstr "Délka krátké pauzy"
+
+msgid "Long break length"
+msgstr "Délka dlouhé pauzy"
+
+msgid "Long break every n pomodoros"
+msgstr "Dlouhá pauza každý n pomodor"
 
 msgid "Tip"
 msgstr "Tip"
@@ -402,9 +406,6 @@ msgstr "Měsíc"
 msgid "Year"
 msgstr "Rok"
 
-msgid "Show more"
-msgstr "Zobrazit více"
-
 msgid "Image not found"
 msgstr "Obrázek nenalezen"
 
@@ -413,6 +414,9 @@ msgid ""
 msgstr ""
 "Kliknutím pravým tlačítkem na položku panelu rozšíření získáte přístup ke "
 "globálním nastavením."
+
+msgid "Show more"
+msgstr "Zobrazit více"
 
 msgid "Todo"
 msgstr "Todo"
