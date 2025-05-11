@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-11 10:02+0200\n"
+"POT-Creation-Date: 2025-05-11 12:48+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -395,14 +395,14 @@ msgstr ""
 msgid "Year"
 msgstr ""
 
-msgid "Show more"
-msgstr ""
-
 msgid "Image not found"
 msgstr ""
 
 msgid ""
 "Right click any of the extension panel items to access the global settings."
+msgstr ""
+
+msgid "Show more"
 msgstr ""
 
 msgid "Todo"

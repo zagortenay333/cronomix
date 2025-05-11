@@ -15,13 +15,13 @@ export class ScrollBox {
 
         this.box = new St.BoxLayout({ vertical, x_expand: true, style_class: 'cronomix-spacing' });
         this.actor.add_child(this.box);
+        this.actor.vscrollbar_policy = St.PolicyType.AUTOMATIC;
+        this.actor.hscrollbar_policy = St.PolicyType.AUTOMATIC;
 
         if (vertical) {
             this.actor.add_style_class_name('vertical');
-            this.actor.hscrollbar_policy = St.PolicyType.NEVER;
         } else {
             this.actor.add_style_class_name('horizontal');
-            this.actor.vscrollbar_policy = St.PolicyType.NEVER;
 
             // Scroll horizontally if the user holds the control key while scrolling.
             this.actor.connect('captured-event', (_:unknown, event: Clutter.Event) => {
@@ -29,7 +29,7 @@ export class ScrollBox {
                 if (event.type() !== Clutter.EventType.SCROLL) return Clutter.EVENT_PROPAGATE;
 
                 const direction  = event.get_scroll_direction();
-                const adjustment = this.actor.get_vadjustment();
+                const adjustment = this.actor.get_hadjustment();
 
                 if (direction === Clutter.ScrollDirection.UP) {
                     adjustment.value -= adjustment.stepIncrement;
