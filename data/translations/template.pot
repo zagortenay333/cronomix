@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-11 09:13+0200\n"
+"POT-Creation-Date: 2025-05-11 10:02+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -236,67 +236,16 @@ msgstr ""
 msgid "Dismiss"
 msgstr ""
 
-msgid "Left"
-msgstr ""
-
-msgid "Center"
-msgstr ""
-
-msgid "Right"
-msgstr ""
-
-msgid "Settings"
-msgstr ""
-
-msgid "Website"
-msgstr ""
-
-msgid "Pomodoro"
-msgstr ""
-
-msgid "Long Break"
-msgstr ""
-
-msgid "Short Break"
-msgstr ""
-
 msgid "Show time in panel"
 msgstr ""
 
 msgid "Clock size (set to 0 for default size)"
 msgstr ""
 
-msgid "Show presets"
-msgstr ""
-
-msgid "Phase"
-msgstr ""
-
-msgid "Completed pomodoros"
-msgstr ""
-
-msgid "Pomodoros until long break"
-msgstr ""
-
 msgid "Start"
 msgstr ""
 
 msgid "Pause"
-msgstr ""
-
-msgid "Add Preset"
-msgstr ""
-
-msgid "Pomodoro length"
-msgstr ""
-
-msgid "Short break length"
-msgstr ""
-
-msgid "Long break length"
-msgstr ""
-
-msgid "Long break every n pomodoros"
 msgstr ""
 
 msgid "Resume"
@@ -320,6 +269,30 @@ msgstr ""
 msgid "Laps table copied to clipboard!"
 msgstr ""
 
+msgid "Left"
+msgstr ""
+
+msgid "Center"
+msgstr ""
+
+msgid "Right"
+msgstr ""
+
+msgid "Settings"
+msgstr ""
+
+msgid "Website"
+msgstr ""
+
+msgid "Show presets"
+msgstr ""
+
+msgid "Timer elapsed."
+msgstr ""
+
+msgid "Add Preset"
+msgstr ""
+
 msgid "Invalid time selected."
 msgstr ""
 
@@ -327,6 +300,39 @@ msgid "Timer Elapsed!"
 msgstr ""
 
 msgid "Restart"
+msgstr ""
+
+msgid "Pomodoro"
+msgstr ""
+
+msgid "Long Break"
+msgstr ""
+
+msgid "Short Break"
+msgstr ""
+
+msgid "Pomodoro phase change."
+msgstr ""
+
+msgid "Phase"
+msgstr ""
+
+msgid "Completed pomodoros"
+msgstr ""
+
+msgid "Pomodoros until long break"
+msgstr ""
+
+msgid "Pomodoro length"
+msgstr ""
+
+msgid "Short break length"
+msgstr ""
+
+msgid "Long break length"
+msgstr ""
+
+msgid "Long break every n pomodoros"
 msgstr ""
 
 msgid "Tip"
