@@ -35,9 +35,13 @@ for input in $(find src -name '*.ts'); do
     sed -i 's;/\*234h1764d7482a3a\*/;;g' $input
 done
 
+wait
+
 for input in $(find $ext_dir -name '*.js'); do
     sed -i 's;/\*234h1764d7482a3a\*/;;g' $input
 done
+
+wait
 
 # ==============================================================================
 # Finish up.
