@@ -1,6 +1,7 @@
 import St from 'gi://St';
 import Meta from 'gi://Meta';
 import Clutter from 'gi://Clutter';
+import { Switch } from 'resource:///org/gnome/shell/ui/popupMenu.js';
 
 import * as Misc from './misc.js';
 import { PubSub } from './pubsub.js';
@@ -128,9 +129,25 @@ export class Button extends PubSub<ButtonEvents> {
     }
 }
 
+export class SwitchButton extends Button {
+    constructor ({
+        parent      = null as St.Widget|null,
+        label       = '',
+        style_class = '',
+        checked     = false,
+    } = {}) {
+        super({ parent, label, style_class });
+        const s = new Switch(checked);
+        s.reactive = false;
+        this.actor.add_child(s);
+        this.actor.add_style_class_name('cronomix-toggle');
+        this.checked = checked;
+        this.subscribe('left_click', () => s.state = this.checked);
+    }
+}
+
 export class CheckBox extends Button {
     constructor ({
-        as_toggle   = false,
         parent      = null as St.Widget|null,
         label       = '',
         style_class = '',
@@ -140,7 +157,7 @@ export class CheckBox extends Button {
         const bin = new St.Bin();
         this.actor.add_child(bin);
         bin.set_child(new St.Icon({ icon_name: 'check-symbolic' }));
-        this.actor.add_style_class_name(as_toggle ? 'cronomix-toggle toggle-switch' : 'cronomix-checkbox check-box');
+        this.actor.add_style_class_name('cronomix-checkbox check-box');
         this.checked = checked;
     }
 }

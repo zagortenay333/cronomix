@@ -1,5 +1,6 @@
 import St from 'gi://St';
 import Clutter from 'gi://Clutter';
+import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import { gettext as _ } from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import * as T from './../utils/time.js';
@@ -10,7 +11,7 @@ import { ext, Cronomix } from './../extension.js';
 import { Markup } from './../utils/markup/renderer.js';
 import { EditorView } from './../utils/markup/editor.js';
 import { show_confirm_popup } from './../utils/popup.js';
-import { Button, ButtonBox, CheckBox } from './../utils/button.js';
+import { Button, ButtonBox, SwitchButton } from './../utils/button.js';
 import { Applet, PanelPosition, PanelPositionTr } from './applet.js';
 import { DaySelection, DayPicker, IntPicker, TimePicker } from './../utils/pickers.js';
 
@@ -124,7 +125,8 @@ export class AlarmApplet extends Applet {
     }
 
     show_notification (alarm: Alarm) {
-        this.panel_item.menu.open();
+        if (this.panel_item.visible) this.panel_item.menu.open();
+        else                         Main.notify(_("Alarm."));
 
         let view: NotificationView;
 
@@ -204,8 +206,7 @@ class AlarmCard extends Misc.Card {
 
         const edit_button   = new Button({ parent: this.autohide_box, icon: 'cronomix-edit-symbolic', style_class: 'cronomix-floating-button' });
         const delete_button = new Button({ parent: this.autohide_box, icon: 'cronomix-trash-symbolic', style_class: 'cronomix-floating-button' });
-        const toggle        = new CheckBox({ parent: this.header, as_toggle: true, checked: alarm.enabled });
-        toggle.actor.style  = 'margin-left: 4px;';
+        const toggle        = new SwitchButton({ parent: this.header, checked: alarm.enabled });
 
         if (alarm.msg) this.actor.add_child((new Markup(alarm.msg)).actor);
 

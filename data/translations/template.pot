@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-11 13:05+0200\n"
+"POT-Creation-Date: 2025-05-12 10:58+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -47,34 +47,6 @@ msgid ""
 msgstr ""
 
 msgid "Ok"
-msgstr ""
-
-msgid "Add Task"
-msgstr ""
-
-msgid "Add Filter"
-msgstr ""
-
-msgid "## Filter Groups"
-msgstr ""
-
-msgid "Each filter in a group creates a column of tasks in the main view."
-msgstr ""
-
-msgid ""
-"If no group is selected, a group with 1 ``* & !hide`` filter is created."
-msgstr ""
-
-msgid "Tasks go into the first column from the left whose filter they pass."
-msgstr ""
-
-msgid "Hidden tasks only pass filters of the form ``hide`` or ``hide & expr``."
-msgstr ""
-
-msgid "Title"
-msgstr ""
-
-msgid "Comma separated list of filters."
 msgstr ""
 
 msgid "Created"
@@ -173,6 +145,34 @@ msgstr ""
 msgid "Task text copied to clipboard!"
 msgstr ""
 
+msgid "Add Task"
+msgstr ""
+
+msgid "Add Filter"
+msgstr ""
+
+msgid "## Filter Groups"
+msgstr ""
+
+msgid "Each filter in a group creates a column of tasks in the main view."
+msgstr ""
+
+msgid ""
+"If no group is selected, a group with 1 ``* & !hide`` filter is created."
+msgstr ""
+
+msgid "Tasks go into the first column from the left whose filter they pass."
+msgstr ""
+
+msgid "Hidden tasks only pass filters of the form ``hide`` or ``hide & expr``."
+msgstr ""
+
+msgid "Title"
+msgstr ""
+
+msgid "Comma separated list of filters."
+msgstr ""
+
 msgid "Panel position"
 msgstr ""
 
@@ -213,27 +213,6 @@ msgid "A todo file is a text file containing markup."
 msgstr ""
 
 msgid "To learn about the markup, open the built-in editor and press F1."
-msgstr ""
-
-msgid "Notification sound"
-msgstr ""
-
-msgid "Add Alarm"
-msgstr ""
-
-msgid "Time"
-msgstr ""
-
-msgid "Snooze n minutes"
-msgstr ""
-
-msgid "Alarm"
-msgstr ""
-
-msgid "Snooze"
-msgstr ""
-
-msgid "Dismiss"
 msgstr ""
 
 msgid "Show time in panel"
@@ -284,24 +263,6 @@ msgstr ""
 msgid "Website"
 msgstr ""
 
-msgid "Show presets"
-msgstr ""
-
-msgid "Timer elapsed."
-msgstr ""
-
-msgid "Add Preset"
-msgstr ""
-
-msgid "Invalid time selected."
-msgstr ""
-
-msgid "Timer Elapsed!"
-msgstr ""
-
-msgid "Restart"
-msgstr ""
-
 msgid "Pomodoro"
 msgstr ""
 
@@ -309,6 +270,12 @@ msgid "Long Break"
 msgstr ""
 
 msgid "Short Break"
+msgstr ""
+
+msgid "Notification sound"
+msgstr ""
+
+msgid "Show presets"
 msgstr ""
 
 msgid "Pomodoro phase change."
@@ -323,6 +290,9 @@ msgstr ""
 msgid "Pomodoros until long break"
 msgstr ""
 
+msgid "Add Preset"
+msgstr ""
+
 msgid "Pomodoro length"
 msgstr ""
 
@@ -333,6 +303,39 @@ msgid "Long break length"
 msgstr ""
 
 msgid "Long break every n pomodoros"
+msgstr ""
+
+msgid "Timer elapsed."
+msgstr ""
+
+msgid "Time"
+msgstr ""
+
+msgid "Invalid time selected."
+msgstr ""
+
+msgid "Timer Elapsed!"
+msgstr ""
+
+msgid "Dismiss"
+msgstr ""
+
+msgid "Restart"
+msgstr ""
+
+msgid "Add Alarm"
+msgstr ""
+
+msgid "Alarm."
+msgstr ""
+
+msgid "Snooze n minutes"
+msgstr ""
+
+msgid "Alarm"
+msgstr ""
+
+msgid "Snooze"
 msgstr ""
 
 msgid "Tip"
@@ -398,11 +401,11 @@ msgstr ""
 msgid "Image not found"
 msgstr ""
 
-msgid ""
-"Right click any of the extension panel items to access the global settings."
+msgid "Show more"
 msgstr ""
 
-msgid "Show more"
+msgid ""
+"Right click any of the extension panel items to access the global settings."
 msgstr ""
 
 msgid "Todo"

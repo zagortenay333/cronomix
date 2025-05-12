@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-11 12:48+0200\n"
+"POT-Creation-Date: 2025-05-12 10:08+0200\n"
 "PO-Revision-Date: 2023-06-05 16:07+0200\n"
 "Last-Translator: Ludek Vydra <lvtran@u.k2.cz>\n"
 "Language-Team: \n"
@@ -50,37 +50,6 @@ msgstr ""
 
 msgid "Ok"
 msgstr "Ok"
-
-msgid "Add Task"
-msgstr "Přidej úkol"
-
-msgid "Add Filter"
-msgstr "Přidej filtr"
-
-msgid "## Filter Groups"
-msgstr "## Skupina filtrů"
-
-msgid "Each filter in a group creates a column of tasks in the main view."
-msgstr "Každý filtr ve skupině vytvoří sloupec úloh v hlavním zobrazení."
-
-#, fuzzy
-msgid ""
-"If no group is selected, a group with 1 ``* & !hide`` filter is created."
-msgstr ""
-"Pokud není vybrána žádná skupina, vytvoří se skupina s 1 filtrem ``*``."
-
-msgid "Tasks go into the first column from the left whose filter they pass."
-msgstr "Úkoly jsou zařazeny do prvního sloupce zleva, jehož filtrem prošly."
-
-msgid "Hidden tasks only pass filters of the form ``hide`` or ``hide & expr``."
-msgstr ""
-"Jen skryté úkoly se vyfiltrují výrazy tvaru ``hide`` nebo ``hide & expr``."
-
-msgid "Title"
-msgstr "Název"
-
-msgid "Comma separated list of filters."
-msgstr "Seznam filtrů oddělených čárkou."
 
 msgid "Created"
 msgstr ""
@@ -179,6 +148,37 @@ msgstr "Celkové součty na slot"
 msgid "Task text copied to clipboard!"
 msgstr "Text úlohy zkopírován do schránky!"
 
+msgid "Add Task"
+msgstr "Přidej úkol"
+
+msgid "Add Filter"
+msgstr "Přidej filtr"
+
+msgid "## Filter Groups"
+msgstr "## Skupina filtrů"
+
+msgid "Each filter in a group creates a column of tasks in the main view."
+msgstr "Každý filtr ve skupině vytvoří sloupec úloh v hlavním zobrazení."
+
+#, fuzzy
+msgid ""
+"If no group is selected, a group with 1 ``* & !hide`` filter is created."
+msgstr ""
+"Pokud není vybrána žádná skupina, vytvoří se skupina s 1 filtrem ``*``."
+
+msgid "Tasks go into the first column from the left whose filter they pass."
+msgstr "Úkoly jsou zařazeny do prvního sloupce zleva, jehož filtrem prošly."
+
+msgid "Hidden tasks only pass filters of the form ``hide`` or ``hide & expr``."
+msgstr ""
+"Jen skryté úkoly se vyfiltrují výrazy tvaru ``hide`` nebo ``hide & expr``."
+
+msgid "Title"
+msgstr "Název"
+
+msgid "Comma separated list of filters."
+msgstr "Seznam filtrů oddělených čárkou."
+
 msgid "Panel position"
 msgstr "Pozice panelu"
 
@@ -222,27 +222,6 @@ msgid "To learn about the markup, open the built-in editor and press F1."
 msgstr ""
 "Chcete-li se seznámit se značkami, otevřete vestavěný editor a stiskněte "
 "klávesu F1."
-
-msgid "Notification sound"
-msgstr "Zvuk upozornění"
-
-msgid "Add Alarm"
-msgstr "Přidej nový budík"
-
-msgid "Time"
-msgstr "Čas"
-
-msgid "Snooze n minutes"
-msgstr "Odložit n minut"
-
-msgid "Alarm"
-msgstr "Budík"
-
-msgid "Snooze"
-msgstr "Odložit"
-
-msgid "Dismiss"
-msgstr "Odvolat"
 
 msgid "Show time in panel"
 msgstr "Zobrazit čas v panelu"
@@ -292,25 +271,6 @@ msgstr "Nastavení"
 msgid "Website"
 msgstr "Webové stránky"
 
-msgid "Show presets"
-msgstr "Předvolby"
-
-#, fuzzy
-msgid "Timer elapsed."
-msgstr "Časovač vypršel!"
-
-msgid "Add Preset"
-msgstr "Přidat předvolbu"
-
-msgid "Invalid time selected."
-msgstr "Zvolen neplatný čas."
-
-msgid "Timer Elapsed!"
-msgstr "Časovač vypršel!"
-
-msgid "Restart"
-msgstr "Restart"
-
 msgid "Pomodoro"
 msgstr "Pomodoro"
 
@@ -319,6 +279,12 @@ msgstr "Dlouhá pauza"
 
 msgid "Short Break"
 msgstr "Krátká pauza"
+
+msgid "Notification sound"
+msgstr "Zvuk upozornění"
+
+msgid "Show presets"
+msgstr "Předvolby"
 
 #, fuzzy
 msgid "Pomodoro phase change."
@@ -333,6 +299,9 @@ msgstr "Dokončených Pomodor"
 msgid "Pomodoros until long break"
 msgstr "Pomodor do dlouhé přestávky"
 
+msgid "Add Preset"
+msgstr "Přidat předvolbu"
+
 msgid "Pomodoro length"
 msgstr "Délka Pomodoro"
 
@@ -344,6 +313,41 @@ msgstr "Délka dlouhé pauzy"
 
 msgid "Long break every n pomodoros"
 msgstr "Dlouhá pauza každý n pomodor"
+
+#, fuzzy
+msgid "Timer elapsed."
+msgstr "Časovač vypršel!"
+
+msgid "Time"
+msgstr "Čas"
+
+msgid "Invalid time selected."
+msgstr "Zvolen neplatný čas."
+
+msgid "Timer Elapsed!"
+msgstr "Časovač vypršel!"
+
+msgid "Dismiss"
+msgstr "Odvolat"
+
+msgid "Restart"
+msgstr "Restart"
+
+msgid "Add Alarm"
+msgstr "Přidej nový budík"
+
+#, fuzzy
+msgid "Alarm."
+msgstr "Budík"
+
+msgid "Snooze n minutes"
+msgstr "Odložit n minut"
+
+msgid "Alarm"
+msgstr "Budík"
+
+msgid "Snooze"
+msgstr "Odložit"
 
 msgid "Tip"
 msgstr "Tip"
@@ -409,14 +413,14 @@ msgstr "Rok"
 msgid "Image not found"
 msgstr "Obrázek nenalezen"
 
+msgid "Show more"
+msgstr "Zobrazit více"
+
 msgid ""
 "Right click any of the extension panel items to access the global settings."
 msgstr ""
 "Kliknutím pravým tlačítkem na položku panelu rozšíření získáte přístup ke "
 "globálním nastavením."
-
-msgid "Show more"
-msgstr "Zobrazit více"
 
 msgid "Todo"
 msgstr "Todo"

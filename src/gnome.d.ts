@@ -439,6 +439,11 @@ declare module 'resource:///org/gnome/shell/ui/popupMenu.js' {
     import St from 'gi://St';
     import Clutter from 'gi://Clutter';
 
+    class Switch extends St.Widget {
+        constructor (state: boolean);
+        state: boolean;
+    }
+
     class PopupMenuManager {
         constructor (owner: Clutter.Actor, grab_params?: object);
         ignoreRelease (): void;

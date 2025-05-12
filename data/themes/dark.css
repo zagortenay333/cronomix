@@ -99,19 +99,18 @@
  * Toggle
  * ========================================================================== */
 .cronomix-toggle {
-    padding: 0;
+    padding: 3px;
     border-radius: 99px;
-    background-color: transparent;
-}
-
-.cronomix-toggle:focus,
-.cronomix-toggle:hover {
-    box-shadow: 0 0 0 2px inset rgba(255, 255, 255, .3);
     background-color: transparent;
 }
 
 .cronomix-toggle:checked {
     background-color: transparent;
+}
+
+.cronomix-toggle:focus,
+.cronomix-toggle:hover {
+    background-color: rgba(255, 255, 255, .2);
 }
 
 /* ==========================================================================
