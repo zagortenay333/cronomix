@@ -23,6 +23,7 @@ export type StorageConfig = {
     file:          string; // File path where the values are stored.
     values:        Record<string, Value>;
     groups?:       string[][]; // For grouping rows in the GUI. Strings are keyof values.
+    infos?:        Record<string, string>; // Helper popup: 'keyof values' -> 'help msg'.
     translations?: Record<string, string>; // For translating strings in the GUI.
 }
 
@@ -139,18 +140,20 @@ export class Storage <
                 const value = this.config.values[key];
                 if (! value) continue;
 
+                const info = this.config.infos ? this.config.infos[key] : undefined;
+
                 switch (value.tag) {
                 case 'boolean': {
                     const checkbox = new CheckBox();
                     checkbox.checked = value.value;
                     checkbox.subscribe('left_click', () => { changed_values.set(key, value); value.value = checkbox.checked; });
-                    new Row(this.#translate(key), checkbox.actor, rows_box);
+                    new Row(this.#translate(key), checkbox.actor, rows_box, info);
                 } break;
 
                 case 'number': {
                     const on_change = (val: number, valid: boolean) => { if (valid) { changed_values.set(key, value); value.value = val; } }
                     const picker = new IntPicker(...value.range, value.value, 0, on_change);
-                    new Row(this.#translate(key), picker.actor, rows_box);
+                    new Row(this.#translate(key), picker.actor, rows_box, info);
                 } break;
 
                 case 'keymap': {
@@ -167,7 +170,7 @@ export class Storage <
                         }
                     });
 
-                    new Row(this.#translate(key), picker.actor, rows_box);
+                    new Row(this.#translate(key), picker.actor, rows_box, info);
                 } break;
 
                 case 'enum': {
@@ -178,7 +181,7 @@ export class Storage <
                         changed_values.set(key, value);
                     });
 
-                    new Row(this.#translate(key), dropdown.actor.actor, rows_box);
+                    new Row(this.#translate(key), dropdown.actor.actor, rows_box, info);
                 } break;
 
                 case 'file': {
@@ -188,7 +191,7 @@ export class Storage <
                         on_change: (path) => { value.value = path; changed_values.set(key, value); }
                     });
 
-                    new Row(this.#translate(key), picker.actor, rows_box);
+                    new Row(this.#translate(key), picker.actor, rows_box, info);
                 } break;
 
                 case 'custom': break;
