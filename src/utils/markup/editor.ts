@@ -198,18 +198,13 @@ export class Editor {
             innermost_widget.remove_style_class_name('highlight');
         }
 
-        const pos  = this.#get_cursor_position();
+        const pos = this.#get_cursor_position();
         this.position_info = this.preview.get_position_info(pos);
 
         const innermost_widget = this.position_info.widget_path.at(-1)!;
         innermost_widget.add_style_class_name('highlight');
 
         scroll_to_widget(innermost_widget, undefined, scroll_to_top);
-
-        if (this.position_info.clutter_text) {
-            const line_box = Misc.get_line_box_at_idx(this.position_info.clutter_text, this.position_info.clutter_text_idx);
-            scroll_to_widget(this.position_info.clutter_text, line_box, scroll_to_top);
-        }
     }
 
     #update_preview () {

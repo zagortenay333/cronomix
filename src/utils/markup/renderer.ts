@@ -15,13 +15,8 @@ import { unreachable } from './../../utils/misc.js';
 export class MarkupPosition {
     idx!: number;
     text!: string;
-
     ast_path = Array<P.Ast>();
-    ast_paragraph?: P.AstParagraph;
     widget_path = Array<St.Widget>();
-
-    clutter_text_idx = 0;
-    clutter_text?: Clutter.Text;
 }
 
 // By default the widget will deal with AstMeta nodes
@@ -58,25 +53,10 @@ export class Markup {
     get_position_info (idx: number): MarkupPosition {
         if (idx < 0 || idx >= this.#text.length) idx = this.#text.length - 1;
 
-        const info      = new MarkupPosition();
-        info.idx        = idx;
-        info.text       = this.#text;
-        info.ast_path   = P.idx_to_ast_path(idx, this.#ast);
-        const innermost = info.ast_path.at(-1);
-
-        if (innermost?.tag === 'AstParagraph') {
-            info.ast_paragraph = innermost;
-
-            // Transform the markup index to the Clutter.Text relative index:
-            const label = this.#ast_to_widget.get(info.ast_paragraph) as St.Label;
-            if (label) {
-
-                const inline = info.ast_path.at(-1)!;
-                const inline_clutter_idx = this.#inline_clutter_idx.get(inline)!;
-                info.clutter_text_idx = inline_clutter_idx + (info.idx - inline.start);
-                info.clutter_text = label.clutter_text;
-            }
-        }
+        const info    = new MarkupPosition();
+        info.idx      = idx;
+        info.text     = this.#text;
+        info.ast_path = P.idx_to_ast_path(idx, this.#ast);
 
         // Build widget path:
         for (const node of info.ast_path) {
