@@ -7,7 +7,10 @@ export class TodoTxtParser {
     #markup!: string;
 
     #done!: boolean;
+    #pin!: boolean;
+    #hide!: boolean;
     #priority!: string|null;
+    #due_date!: string|null;
     #creation_date!: string|null;
     #completion_date!: string|null;
 
@@ -35,9 +38,12 @@ export class TodoTxtParser {
     }
 
     #parse_task () {
-        this.#done = false;
-        this.#priority = null;
-        this.#creation_date = null;
+        this.#done            = false;
+        this.#pin             = false;
+        this.#hide            = false;
+        this.#priority        = null;
+        this.#due_date        = null;
+        this.#creation_date   = null;
         this.#completion_date = null;
 
         if (this.#lex.peek_token_text() === 'x') {
@@ -66,10 +72,64 @@ export class TodoTxtParser {
             this.#creation_date = d;
         }
 
+        let body   = '';
+        let cursor = this.#lex.peek_token().start;
+
+        while (true) {
+            const token = this.#lex.eat_token();
+
+            if (token.tag === '\\' && this.#lex.peek_token_text() === 'n') {
+                body += this.#text.substring(cursor, token.start);
+                this.#markup += '\n';
+                this.#lex.eat_token();
+                cursor = this.#lex.peek_token().start;
+            } else if (
+                this.#lex.get_token_text(token) === 'due' &&
+                this.#lex.peek_token().tag      === ':'
+            ) {
+                body += this.#text.substring(cursor, token.start);
+                this.#lex.eat_token();
+                const d = this.#try_parse_date();
+                if (d) {
+                    this.#due_date = d;
+                } else {
+                    body += "due:";
+                }
+                this.#lex.try_eat_token('spaces');
+                cursor = this.#lex.peek_token().start;
+            } else if (
+                this.#lex.get_token_text(token) === 'h' &&
+                this.#lex.peek_token().tag      === ':' &&
+                this.#lex.peek_token_text(1)    === '1'
+            ) {
+                body += this.#text.substring(cursor, token.start);
+                this.#lex.eat_tokens(2);
+                this.#hide = true;
+                this.#lex.try_eat_token('spaces');
+                cursor = this.#lex.peek_token().start;
+            } else if (
+                this.#lex.get_token_text(token) === 'pin' &&
+                this.#lex.peek_token().tag      === ':' &&
+                this.#lex.peek_token_text(1)    === '1'
+            ) {
+                body += this.#text.substring(cursor, token.start);
+                this.#lex.eat_tokens(2);
+                this.#pin = true;
+                this.#lex.try_eat_token('spaces');
+                cursor = this.#lex.peek_token().start;
+            } else if (token.tag === '\n') {
+                body += this.#text.substring(cursor, token.end);
+                break;
+            }
+        }
+
         const map = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
         this.#markup += "[";
         if (this.#done) this.#markup += "x";
+        if (this.#hide) this.#markup += " hide";
+        if (this.#pin) this.#markup += " pin";
         if (this.#priority !== null) this.#markup += " #" + (map.indexOf(this.#priority) + 1);
+        if (this.#due_date !== null) this.#markup += " due:" + this.#due_date;
         if (this.#completion_date !== null) {
             this.#markup += " completed:" + this.#completion_date;
             this.#markup += " created:" + this.#creation_date;
@@ -77,21 +137,7 @@ export class TodoTxtParser {
             this.#markup += " created:" + this.#creation_date;
         }
         this.#markup += "] ";
-
-        let cursor = this.#lex.peek_token().start;
-        while (true) {
-            const token = this.#lex.eat_token();
-
-            if (token.tag === '\\' && this.#lex.peek_token_text() === 'n') {
-                this.#markup += this.#text.substring(cursor, token.start);
-                this.#markup += '\n';
-                this.#lex.eat_token();
-                cursor = this.#lex.peek_token().start;
-            } else if (token.tag === '\n') {
-                this.#markup += this.#text.substring(cursor, token.end);
-                break;
-            }
-        }
+        this.#markup += body;
 
     }
 
