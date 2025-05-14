@@ -96,6 +96,7 @@ export class AstMetaConfig {
     done?:       boolean;
     hide?:       boolean;
     tags?:       Set<string>;
+    body_tags?:  Set<string>;
     image?:      { width?: number, path: string; }
     admonition?: Admonition;
 }
@@ -120,10 +121,12 @@ export class Parser {
     #stop_parsing_inline_at_newline = 0;
     #stop_parsing_inline_at = new Array<TokenTag[]>();
     #default_table_cell_config = new AstTableCellConfig();
+    #body_tags: Set<string>|null;
 
     constructor (text: string) {
         this.#text = text;
         this.#lex  = new Lexer(text);
+        this.#body_tags = null;
         this.#lex.on_token_eaten = this.#on_token_eaten.bind(this);
     }
 
@@ -283,7 +286,12 @@ export class Parser {
             }
         }
 
+        this.#body_tags ??= new Set();
         for (const b of this.parse_blocks()) result.children.push(b);
+        if (this.#body_tags.size > 0) {
+            result.config.body_tags = this.#body_tags;
+            this.#body_tags = null;
+        }
         return this.#complete_node(result);
     }
 
@@ -295,7 +303,7 @@ export class Parser {
             if (! this.#lex.try_peek_token('word')) return false;
             while (this.#lex.try_eat_token('word') || this.#lex.try_eat_token('_'));
             if (! this.#try_peek_meta_config_delimiter()) return false;
-            config.tags ??= new Set<string>();
+            config.tags ??= new Set();
             config.tags.add(this.#text.substring(token.start, this.#end_of_last_eaten_token));
         } else if (txt === '#') {
             const t = this.#lex.eat_token();
@@ -758,8 +766,12 @@ export class Parser {
                 if (repeats === 1) return this.#parse_sup;
             } else if (token.tag === '<') {
                 return this.#parse_link;
-            } else if (token.tag === '@') {
-                if (this.#start_of_word && this.#lex.try_peek_token('word', 1)) return this.#parse_tag_ref;
+            } else if (
+                token.tag === '@' &&
+                this.#start_of_word &&
+                (this.#lex.try_peek_token('word', 1) || this.#lex.try_peek_token('_', 1))
+            ) {
+                return this.#parse_tag_ref;
             }
         }
 
@@ -798,8 +810,9 @@ export class Parser {
     #parse_tag_ref (): AstTagRef {
         const result = this.#make_node(AstTagRef);
         result.child = this.#make_node(AstText);
-        this.#lex.eat_token();
+        const start = this.#lex.eat_token().start;
         while (this.#lex.try_eat_token('word') || this.#lex.try_eat_token('_'));
+        if (this.#body_tags) this.#body_tags.add(this.#text.substring(start, this.#end_of_last_eaten_token));
         this.#complete_node(result.child);
         return this.#complete_node(result);
     }
