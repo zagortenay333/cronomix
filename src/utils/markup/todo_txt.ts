@@ -51,7 +51,7 @@ export class TodoTxtParser {
             this.#lex.eat_token();
         }
 
-        this.#lex.eat_whitespace();
+        this.#lex.try_eat_token('spaces');
         if ((this.#lex.peek_token(0).tag === '(') &&
             (this.#lex.peek_token(2).tag === ')') &&
             /[A-Z]/.test(this.#lex.peek_token_text(1))
@@ -62,10 +62,10 @@ export class TodoTxtParser {
             this.#lex.eat_token();
         }
 
-        this.#lex.eat_whitespace();
+        this.#lex.try_eat_token('spaces');
         this.#creation_date = this.#try_parse_date();
 
-        this.#lex.eat_whitespace();
+        this.#lex.try_eat_token('spaces');
         const d = this.#try_parse_date();
         if ((this.#creation_date !== null) && (d !== null)) {
             this.#completion_date = this.#creation_date;
@@ -117,7 +117,7 @@ export class TodoTxtParser {
                 this.#pin = true;
                 this.#lex.try_eat_token('spaces');
                 cursor = this.#lex.peek_token().start;
-            } else if (token.tag === '\n') {
+            } else if (token.tag === '\n' || token.tag === 'eof') {
                 body += this.#text.substring(cursor, token.end);
                 break;
             }

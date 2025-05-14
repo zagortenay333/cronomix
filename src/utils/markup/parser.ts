@@ -95,8 +95,8 @@ export class AstMetaConfig {
     pin?:        boolean;
     done?:       boolean;
     hide?:       boolean;
-    tags?:       Set<string>;
-    body_tags?:  Set<string>;
+    tags?:       Set<string>; // Tags that appear in the header.
+    body_tags?:  Set<string>; // Tags that appear in the body.
     image?:      { width?: number, path: string; }
     admonition?: Admonition;
 }
