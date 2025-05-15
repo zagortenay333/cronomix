@@ -5,7 +5,6 @@ export class TodoTxtParser {
     #lex: Lexer;
     #text: string;
     #markup!: string;
-
     #done!: boolean;
     #pin!: boolean;
     #hide!: boolean;

@@ -1,5 +1,4 @@
 import St from 'gi://St';
-import Clutter from 'gi://Clutter';
 import { gettext as _ } from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import { TodoApplet } from './main.js';
@@ -144,8 +143,6 @@ export class TaskCard extends Misc.Card {
         this.left_header_box.add_style_class_name('cronomix-spacing');
 
         const checkbox        = new CheckBox({ parent: this.left_header_box, checked: !!config.done });
-        if (config.created)   this.left_header_box.add_child(new St.Label({ text: _('Created') + ' ' + config.created, y_align: Clutter.ActorAlign.CENTER, style: 'font-weight: bold', style_class: 'cronomix-green' }));
-        const due_button      = !config.due ? null : new Button({ parent: this.left_header_box, label: _('Due') + ' ' + config.due, style_class: 'cronomix-floating-button cronomix-red' });
         const delete_button   = new Button({ parent: this.autohide_box, icon: 'cronomix-trash-symbolic' , style_class: 'cronomix-floating-button'});
         const edit_button     = new Button({ parent: this.autohide_box, icon: 'cronomix-edit-symbolic', style_class: 'cronomix-floating-button' });
         const tracker_button  = new Button({ parent: this.autohide_box, icon: 'cronomix-time-tracker-symbolic' , style_class: 'cronomix-floating-button'});
@@ -153,17 +150,28 @@ export class TaskCard extends Misc.Card {
         const priority_button = !config.priority ? null : new Button({ parent: this.header, label: '#' + config.priority, style_class: 'cronomix-floating-button cronomix-red' });
         const hide_button     = !config.hide ? null : new Button({ parent: this.header, icon: 'cronomix-hidden-symbolic', style_class: 'cronomix-floating-button' });
 
-        if (config.tags) {
-            let box = new St.BoxLayout({ style_class: 'cronomix-spacing' });
-            this.actor.insert_child_above(box, this.header);
+        let tag_box = new St.BoxLayout({ style_class: 'cronomix-spacing' });
+        this.actor.insert_child_above(tag_box, this.header);
 
+        const due_button = !config.due ? null : new Button({ parent: tag_box, label: _('Due') + ' ' + config.due, style_class: 'cronomix-tag-button cronomix-red' });
+
+        if (config.created) {
+            const button = new Button({ parent: tag_box, label: _('Created') + ' ' + config.created, style_class: 'cronomix-tag-button cronomix-green' });
+            button.actor.reactive = false;
+        }
+
+        const old_box = tag_box;
+        tag_box = new St.BoxLayout({ style_class: 'cronomix-spacing' });
+        this.actor.insert_child_above(tag_box, old_box);
+
+        if (config.tags) {
             for (const tag of config.tags) {
-                const button = new Button({ parent: box, label: tag, style_class: 'cronomix-tag-button cronomix-yellow' });
+                const button = new Button({ parent: tag_box, label: tag, style_class: 'cronomix-tag-button cronomix-yellow' });
                 button.subscribe('left_click', () => applet.show_search_view(tag));
-                if (box.get_n_children() === 5) {
-                    const old_box = box;
-                    box = new St.BoxLayout({ style_class: 'cronomix-spacing' });
-                    this.actor.insert_child_above(box, old_box);
+                if (tag_box.get_n_children() === 5) {
+                    const old_box = tag_box;
+                    tag_box = new St.BoxLayout({ style_class: 'cronomix-spacing' });
+                    this.actor.insert_child_above(tag_box, old_box);
                 }
             }
         }
