@@ -66,6 +66,9 @@ export class TodoTxtParser {
             this.#creation_date   = null;
             this.#completion_date = null;
 
+            //
+            // Parse header:
+            //
             if (this.#lex.peek_token_text() === 'x') {
                 this.#done = true;
                 this.#lex.eat_token();
@@ -92,6 +95,9 @@ export class TodoTxtParser {
                 this.#creation_date = d;
             }
 
+            //
+            // Parse body:
+            //
             let body   = '';
             let cursor = this.#lex.peek_token().start;
 
@@ -109,12 +115,8 @@ export class TodoTxtParser {
                 ) {
                     body += this.#text.substring(cursor, token.start);
                     this.#lex.eat_token();
-                    const d = this.#try_parse_date();
-                    if (d) {
-                        this.#due_date = d;
-                    } else {
-                        body += "due:";
-                    }
+                    this.#due_date = this.#try_parse_date();
+                    if (! this.#due_date) body += 'due:';
                     this.#lex.try_eat_token('spaces');
                     cursor = this.#lex.peek_token().start;
                 } else if (
@@ -143,6 +145,9 @@ export class TodoTxtParser {
                 }
             }
 
+            //
+            // Generate the cronomix markup:
+            //
             const map = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
             this.#markup += "[";
             if (this.#done) this.#markup += "x";
@@ -177,10 +182,14 @@ export class TodoTxtParser {
         if (t3.tag !== '-')                         return null;
         if (t4.tag !== 'number' || t4.value > 99)   return null;
 
-        const text = this.#text.substring(t0.start, t4.end);
-        this.#lex.eat_tokens(5);
-
+        const text    = this.#text.substring(t0.start, t4.end);
         const invalid = Number.isNaN(new Date(text).valueOf());
-        return invalid ? null : text;
+
+        if (invalid) {
+            return null;
+        } else {
+            this.#lex.eat_tokens(5);
+            return text;
+        }
     }
 }
