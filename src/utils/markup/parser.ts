@@ -286,7 +286,7 @@ export class Parser {
             }
         }
 
-        this.#body_tags ??= new Set();
+        if (this.#body_tags === null) this.#body_tags = new Set();
         for (const b of this.parse_blocks()) result.children.push(b);
         if (this.#body_tags.size > 0) {
             result.config.body_tags = this.#body_tags;

@@ -36,7 +36,7 @@ export class TodoTxtParser {
         const body_end   = ast.end;
         result += this.#text.substring(body_start, body_end).replaceAll('\n', '\\n');
 
-        result += '  '; // Indent to keep the following as part of 1 task.
+        result += ' '; // Indent to keep the following as part of 1 task.
 
         if (c.tags) {
             for (const tag of c.tags) {
