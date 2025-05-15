@@ -165,7 +165,6 @@ export class TodoTxtParser {
             this.#markup += body;
         }
 
-        log(this.#markup);
         return this.#markup;
     }
 
@@ -182,14 +181,14 @@ export class TodoTxtParser {
         if (t3.tag !== '-')                         return null;
         if (t4.tag !== 'number' || t4.value > 99)   return null;
 
-        const text    = this.#text.substring(t0.start, t4.end);
-        const invalid = Number.isNaN(new Date(text).valueOf());
+        const text  = this.#text.substring(t0.start, t4.end);
+        const valid = (new Date(text)).toISOString().startsWith(text);
 
-        if (invalid) {
-            return null;
-        } else {
+        if (valid) {
             this.#lex.eat_tokens(5);
             return text;
+        } else {
+            return null;
         }
     }
 }
