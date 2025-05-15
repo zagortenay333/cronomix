@@ -100,6 +100,7 @@ export class TodoTxtParser {
             //
             let body   = '';
             let cursor = this.#lex.peek_token().start;
+            let tags   = new Set<string>();
 
             while (true) {
                 const token = this.#lex.eat_token();
@@ -109,6 +110,13 @@ export class TodoTxtParser {
                     body += '\n';
                     this.#lex.eat_token();
                     cursor = this.#lex.peek_token().start;
+                } else if (
+                    token.tag === '@' &&
+                    (this.#lex.try_peek_token('word') || this.#lex.try_peek_token('_'))
+                ) {
+                    const start = token.start;
+                    while (this.#lex.try_eat_token('word') || this.#lex.try_eat_token('_'));
+                    tags.add(this.#text.substring(start, this.#lex.peek_token().start));
                 } else if (
                     this.#lex.get_token_text(token) === 'due' &&
                     this.#lex.peek_token().tag      === ':'
@@ -155,6 +163,7 @@ export class TodoTxtParser {
             if (this.#pin) this.#markup += " pin";
             if (this.#priority !== null) this.#markup += " #" + (map.indexOf(this.#priority) + 1);
             if (this.#due_date !== null) this.#markup += " due:" + this.#due_date;
+            for (const tag of tags) this.#markup += " " + tag;
             if (this.#completion_date !== null) {
                 this.#markup += " completed:" + this.#completion_date;
                 this.#markup += " created:" + this.#creation_date;
