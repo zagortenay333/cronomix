@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-17 20:00+0200\n"
+"POT-Creation-Date: 2025-05-17 20:07+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -248,21 +248,6 @@ msgstr ""
 msgid "Laps table copied to clipboard!"
 msgstr ""
 
-msgid "Left"
-msgstr ""
-
-msgid "Center"
-msgstr ""
-
-msgid "Right"
-msgstr ""
-
-msgid "Settings"
-msgstr ""
-
-msgid "Website"
-msgstr ""
-
 msgid "Pomodoro"
 msgstr ""
 
@@ -336,6 +321,21 @@ msgid "Alarm"
 msgstr ""
 
 msgid "Snooze"
+msgstr ""
+
+msgid "Left"
+msgstr ""
+
+msgid "Center"
+msgstr ""
+
+msgid "Right"
+msgstr ""
+
+msgid "Settings"
+msgstr ""
+
+msgid "Website"
 msgstr ""
 
 msgid "Tip"

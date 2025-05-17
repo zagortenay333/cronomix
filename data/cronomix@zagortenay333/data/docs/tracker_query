@@ -1,0 +1,17 @@
+The tracker query result is JSON with the following schema:
+
+> File := {
+    today  := Seconds;
+    week   := Seconds;
+    month  := Seconds;
+    year   := Seconds;
+    custom := {
+      since: "" or Date,
+      until: "" or Date,
+      total: Seconds,
+      tasks: { slot:string, total:Seconds }[],
+    },
+  }
+
+  Date    := string in ISO form yyyy-mm-dd
+  Seconds := number

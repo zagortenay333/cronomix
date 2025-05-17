@@ -1,0 +1,75 @@
+## Filters
+
+Filters are made up of operators and operands.
+Given an input task they return true or false.
+
+Here are all the operators:
+
+|-------------------------------------------------
+| op1 & op2
+| The *and* operator evals to true if both
+  the left and right operands eval to true.
+|-------------------------------------------------
+| op1 \| op2
+| The *or* operator evals to true if either
+  the left or right operand evals to true.
+|-------------------------------------------------
+| ! op
+| The *not* operator evals to true if it's
+  operand evals to false.
+|-------------------------------------------------
+| ()
+| Use parens to change the evaluation order.
+|-------------------------------------------------
+
+Here are all the operands:
+
+|-------------------------------------------------
+| \*
+| Evals to true for all tasks.
+|-------------------------------------------------
+| \# \#1 \#2 ...
+| A hash without a number evals to true if the
+  task has a priority. With a number it evals
+  to true if the task has the exact priority.
+|-------------------------------------------------
+| \@ \@foo
+| A single @ evals to true if the task defines
+  at least 1 tag. An @ with a word evals to
+  true if the task defines the exact tag.
+|-------------------------------------------------
+| 'some text'
+| Text within single quotes evals to true
+  if the task contains the exact substring.
+|-------------------------------------------------
+| /some text/
+| Text within forward slashes evals to true
+  if the task contains the substring fuzzily.
+|-------------------------------------------------
+| hide
+| Evals to true if task has a *hide* attribute.
+  This filter only works if the entire filter
+  is of the form ``hide`` or ``hide & expr``.
+|-------------------------------------------------
+| x
+| Evals to true if task is completed.
+|-------------------------------------------------
+| due
+| Evals to true if task has a due date.
+|-------------------------------------------------
+| pin
+| Evals to true if task is pinned.
+|-------------------------------------------------
+
+Here are some examples:
+
+|-------------------------------------------------
+| `@foo & !#
+| True for tasks with a \@foo tag and no priority.
+|-------------------------------------------------
+| `due | #2
+| True for tasks with a due date or priority 2.
+|-------------------------------------------------
+| 'hello' & x
+| True for completed tasks that contain 'hello'.
+|-------------------------------------------------

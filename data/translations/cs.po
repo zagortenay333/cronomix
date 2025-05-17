@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-17 20:00+0200\n"
+"POT-Creation-Date: 2025-05-17 20:07+0200\n"
 "PO-Revision-Date: 2023-06-05 16:07+0200\n"
 "Last-Translator: Ludek Vydra <lvtran@u.k2.cz>\n"
 "Language-Team: \n"
@@ -256,21 +256,6 @@ msgstr "Čas kol"
 msgid "Laps table copied to clipboard!"
 msgstr "Tabulka kol zkopírována do schránky!"
 
-msgid "Left"
-msgstr "Vlevo"
-
-msgid "Center"
-msgstr "Střed"
-
-msgid "Right"
-msgstr "Vpravo"
-
-msgid "Settings"
-msgstr "Nastavení"
-
-msgid "Website"
-msgstr "Webové stránky"
-
 msgid "Pomodoro"
 msgstr "Pomodoro"
 
@@ -348,6 +333,21 @@ msgstr "Budík"
 
 msgid "Snooze"
 msgstr "Odložit"
+
+msgid "Left"
+msgstr "Vlevo"
+
+msgid "Center"
+msgstr "Střed"
+
+msgid "Right"
+msgstr "Vpravo"
+
+msgid "Settings"
+msgstr "Nastavení"
+
+msgid "Website"
+msgstr "Webové stránky"
 
 msgid "Tip"
 msgstr "Tip"

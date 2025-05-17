@@ -1,0 +1,49 @@
+## Todo Tasks
+
+Top level meta blocks are used to define tasks in the todo
+applet. Here is a task with all available attributes added
+to it and an explanation of what they mean:
+
+> [ x
+    #1
+    pin
+    hide
+    @foo
+    track:3
+    due:2000-01-24
+    created:2000-01-24
+  ]
+    The task body.
+
+|-------------------------------------------------
+| x
+| Task is marked as completed.
+|-------------------------------------------------
+| \#1
+| Task has priority 1.
+|-------------------------------------------------
+| pin
+| A marker used for sorting and filtering.
+|-------------------------------------------------
+| \@foo
+| Task has tag foo.
+|-------------------------------------------------
+| track:3
+| Task has an entry in the time tracker that
+  is identified by the number 3.
+|-------------------------------------------------
+| due:2000-01-24
+| Task has a due date. The date format follows
+  the ISO 8601 spec: year-month-day.
+|-------------------------------------------------
+| created:2000-01-24
+| Date of creation in ISO format.
+|-------------------------------------------------
+| hide
+| Only these filter expressions can evaluate to
+  true when applied to hidden tasks:
+
+  1. `*
+  2. `hide
+  3. `hide & expr
+|-------------------------------------------------
