@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-12 10:08+0200\n"
+"POT-Creation-Date: 2025-05-17 20:00+0200\n"
 "PO-Revision-Date: 2023-06-05 16:07+0200\n"
 "Last-Translator: Ludek Vydra <lvtran@u.k2.cz>\n"
 "Language-Team: \n"
@@ -16,30 +16,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 3.3.1\n"
-
-msgid "Filter expression"
-msgstr "Výraz filtru"
-
-msgid "Delete selected tasks"
-msgstr "Smaž vybrané úkoly"
-
-msgid "Copy selected tasks to file"
-msgstr "Zkopíruj vybrané úkoly"
-
-msgid "Modify attributes of selected tasks"
-msgstr "Změň atributy vybraných úkolů"
-
-msgid "Space separated list of task attributes"
-msgstr "Mezerou oddělený seznam atributů úkolů"
-
-msgid "Delete"
-msgstr "Smaž"
-
-msgid "Add"
-msgstr "Přidej"
-
-msgid "Apply"
-msgstr "Proveď"
 
 msgid ""
 "Tasks are sorted by the first attribute in this list.\n"
@@ -50,51 +26,6 @@ msgstr ""
 
 msgid "Ok"
 msgstr "Ok"
-
-msgid "Created"
-msgstr ""
-
-msgid "Due"
-msgstr "Do"
-
-msgid "No time tracker file selected."
-msgstr "Není vybrán soubor sledování času."
-
-msgid "Open time tracker settings"
-msgstr "Otevřít nastavení sledování času"
-
-msgid "The text of the corresponding tracker slot does not match this task."
-msgstr "Text příslušného slotu pro sledování neodpovídá tomuto úkolu."
-
-msgid "Here is what the text in the slot currently looks like:"
-msgstr "V současné době vypadá text ve slotu takto:"
-
-msgid "You can do one of the following:"
-msgstr "Můžete udělat jednu z následujících akcí:"
-
-msgid "Create a new slot leaving the old one in the tracker."
-msgstr "Vytvoření nového slotu s ponecháním starého."
-
-msgid "Update the current slot to match with this task."
-msgstr "Aktualizujte aktuální slot tak, aby odpovídal tomuto úkolu."
-
-msgid "Create new slot"
-msgstr "Vytvořte nový slot"
-
-msgid "Update current slot"
-msgstr "Aktualizujte aktuální slot"
-
-msgid "Stop tracking"
-msgstr "Stop sledování"
-
-msgid "Stats"
-msgstr "Statistiky"
-
-msgid "Start tracking"
-msgstr "Start sledování"
-
-msgid "Cancel"
-msgstr "Zruš"
 
 msgid "Ascending"
 msgstr "Vzestupně"
@@ -119,6 +50,9 @@ msgstr "Stop"
 
 msgid "Search Data"
 msgstr "Hledání"
+
+msgid "Filter expression"
+msgstr "Výraz filtru"
 
 #, fuzzy
 msgid "Date (e.g., 2000-01-24)"
@@ -179,6 +113,27 @@ msgstr "Název"
 msgid "Comma separated list of filters."
 msgstr "Seznam filtrů oddělených čárkou."
 
+msgid "Delete selected tasks"
+msgstr "Smaž vybrané úkoly"
+
+msgid "Copy selected tasks to file"
+msgstr "Zkopíruj vybrané úkoly"
+
+msgid "Modify attributes of selected tasks"
+msgstr "Změň atributy vybraných úkolů"
+
+msgid "Space separated list of task attributes"
+msgstr "Mezerou oddělený seznam atributů úkolů"
+
+msgid "Delete"
+msgstr "Smaž"
+
+msgid "Add"
+msgstr "Přidej"
+
+msgid "Apply"
+msgstr "Proveď"
+
 msgid "Panel position"
 msgstr "Pozice panelu"
 
@@ -206,6 +161,9 @@ msgstr "Připni"
 msgid "Priority"
 msgstr "Priorita"
 
+msgid "Due"
+msgstr "Do"
+
 msgid "Done"
 msgstr "Hotovo"
 
@@ -222,6 +180,48 @@ msgid "To learn about the markup, open the built-in editor and press F1."
 msgstr ""
 "Chcete-li se seznámit se značkami, otevřete vestavěný editor a stiskněte "
 "klávesu F1."
+
+msgid "Created"
+msgstr ""
+
+msgid "No time tracker file selected."
+msgstr "Není vybrán soubor sledování času."
+
+msgid "Open time tracker settings"
+msgstr "Otevřít nastavení sledování času"
+
+msgid "The text of the corresponding tracker slot does not match this task."
+msgstr "Text příslušného slotu pro sledování neodpovídá tomuto úkolu."
+
+msgid "Here is what the text in the slot currently looks like:"
+msgstr "V současné době vypadá text ve slotu takto:"
+
+msgid "You can do one of the following:"
+msgstr "Můžete udělat jednu z následujících akcí:"
+
+msgid "Create a new slot leaving the old one in the tracker."
+msgstr "Vytvoření nového slotu s ponecháním starého."
+
+msgid "Update the current slot to match with this task."
+msgstr "Aktualizujte aktuální slot tak, aby odpovídal tomuto úkolu."
+
+msgid "Create new slot"
+msgstr "Vytvořte nový slot"
+
+msgid "Update current slot"
+msgstr "Aktualizujte aktuální slot"
+
+msgid "Stop tracking"
+msgstr "Stop sledování"
+
+msgid "Stats"
+msgstr "Statistiky"
+
+msgid "Start tracking"
+msgstr "Start sledování"
+
+msgid "Cancel"
+msgstr "Zruš"
 
 msgid "Show time in panel"
 msgstr "Zobrazit čas v panelu"
@@ -421,6 +421,11 @@ msgid ""
 msgstr ""
 "Kliknutím pravým tlačítkem na položku panelu rozšíření získáte přístup ke "
 "globálním nastavením."
+
+msgid ""
+"Number of items shown each time you press \"show more\" in a scroll list.\n"
+"Making this number very large can cause performance issues."
+msgstr ""
 
 msgid "Todo"
 msgstr "Todo"

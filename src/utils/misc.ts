@@ -6,6 +6,8 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import { gettext as _ } from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import * as Fs from './fs.js';
+import * as Pop from './popup.js';
+import { Button } from './button.js';
 import { ext } from '../extension.js';
 import { FocusTracker } from './focus.js';
 import { scroll_to_widget } from './scroll.js';
@@ -248,25 +250,23 @@ export class Row <Widget extends St.Widget> {
     label: St.Label;
     widget: Widget;
 
-    constructor (title: string|null, widget: Widget, parent?: St.Widget) {
-        this.actor = new St.BoxLayout({ style_class: 'cronomix-row' });
+    constructor (title: string|null, widget: Widget, parent?: St.Widget, info?: string) {
+        this.actor = new St.BoxLayout({ style_class: 'cronomix-row cronomix-spacing' });
         parent?.add_child(this.actor);
 
         this.label = new St.Label({ y_align: Clutter.ActorAlign.CENTER });
         this.actor.add_child(this.label);
+        this.label.text     = title ?? '';
+        this.label.x_expand = true;
+        if (title === null) this.label.hide();
+
+        if (info) {
+            const info_button = new Button({ parent: this.actor, icon: 'cronomix-question-symbolic' });
+            info_button.subscribe('left_click', () => Pop.show_info_popup(info_button, info));
+        }
 
         this.widget = widget;
         this.actor.add_child(widget);
-
-        if (title !== null) {
-            this.label.text      = title;
-            this.widget.style  ??= '';
-            this.widget.x_expand = true;
-            this.widget.style   += 'margin-left: 20px;';
-            this.widget.x_align  = Clutter.ActorAlign.END;
-        } else {
-            this.label.hide();
-        }
     }
 }
 

@@ -46,6 +46,10 @@ export class Cronomix {
             ['theme_file', 'lazy_list_page_size'],
         ],
 
+        infos: {
+            lazy_list_page_size: _('Number of items shown each time you press "show more" in a scroll list.\nMaking this number very large can cause performance issues.')
+        },
+
         translations: {
             todo: _('Todo'),
             alarm: _('Alarm'),
