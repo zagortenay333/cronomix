@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-21 19:22+0200\n"
+"POT-Creation-Date: 2025-05-21 19:28+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -100,49 +100,7 @@ msgstr ""
 msgid "Apply"
 msgstr ""
 
-msgid "Panel position"
-msgstr ""
-
-msgid "Open"
-msgstr ""
-
-msgid "Add task"
-msgstr ""
-
-msgid "Search tasks"
-msgstr ""
-
-msgid "Todo file"
-msgstr ""
-
-msgid "Open time tracker"
-msgstr ""
-
-msgid "Open todo file"
-msgstr ""
-
-msgid "Pin"
-msgstr ""
-
-msgid "Priority"
-msgstr ""
-
 msgid "Due"
-msgstr ""
-
-msgid "Done"
-msgstr ""
-
-msgid "Hide"
-msgstr ""
-
-msgid "You must select a todo file."
-msgstr ""
-
-msgid "A todo file is a text file containing markup."
-msgstr ""
-
-msgid "To learn about the markup, open the built-in editor and press F1."
 msgstr ""
 
 msgid "Created"
@@ -190,21 +148,46 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-msgid "Import file"
+msgid "Panel position"
 msgstr ""
 
-msgid "Export file"
+msgid "Open"
 msgstr ""
 
-msgid ""
-"Import and/or export your tasks to the **``todo.txt``** format.\n"
-"\n"
-"The import/export files are optional and must be in the **``todo.txt``** "
-"format.\n"
-"\n"
-"First the tasks from the import file (if there is one) get appended to your "
-"todo file,\n"
-"then all tasks get exported to the export file (if there is one)."
+msgid "Add task"
+msgstr ""
+
+msgid "Search tasks"
+msgstr ""
+
+msgid "Todo file"
+msgstr ""
+
+msgid "Open time tracker"
+msgstr ""
+
+msgid "Open todo file"
+msgstr ""
+
+msgid "Pin"
+msgstr ""
+
+msgid "Priority"
+msgstr ""
+
+msgid "Done"
+msgstr ""
+
+msgid "Hide"
+msgstr ""
+
+msgid "You must select a todo file."
+msgstr ""
+
+msgid "A todo file is a text file containing markup."
+msgstr ""
+
+msgid "To learn about the markup, open the built-in editor and press F1."
 msgstr ""
 
 msgid "Add Task"
@@ -233,6 +216,23 @@ msgid "Title"
 msgstr ""
 
 msgid "Comma separated list of filters."
+msgstr ""
+
+msgid "Import file"
+msgstr ""
+
+msgid "Export file"
+msgstr ""
+
+msgid ""
+"Import and/or export your tasks to the **``todo.txt``** format.\n"
+"\n"
+"The import/export files are optional and must be in the **``todo.txt``** "
+"format.\n"
+"\n"
+"First the tasks from the import file (if there is one) get appended to your "
+"todo file,\n"
+"then all tasks get exported to the export file (if there is one)."
 msgstr ""
 
 msgid "Show time in panel"
