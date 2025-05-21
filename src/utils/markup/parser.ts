@@ -91,6 +91,7 @@ export class AstMetaConfig {
     priority?:   number;
     track?:      number;
     created?:    string;
+    completed?:  string;
     due?:        string;
     pin?:        boolean;
     done?:       boolean;
@@ -311,13 +312,14 @@ export class Parser {
         } else if (txt === 'pin') {
             if (! this.#try_peek_meta_config_delimiter()) return false;
             config.pin = true;
-        } else if (txt === 'due' || txt === 'created') {
+        } else if (txt === 'due' || txt === 'created' || txt === 'completed') {
             if (! this.#lex.try_eat_token(':')) return false;
             this.#lex.try_eat_token('spaces');
             const date = this.#try_parse_date();
             if (! date) return false;
-            if (txt === 'due') config.due = date;
-            else               config.created = date;
+            if (txt === 'due')          config.due = date;
+            else if (txt === 'created') config.created = date;
+            else                        config.completed = date;
         } else if (txt === 'track') {
             if (! this.#lex.try_eat_token(':')) return false;
             this.#lex.try_eat_token('spaces');

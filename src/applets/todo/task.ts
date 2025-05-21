@@ -61,13 +61,15 @@ export class Task {
 
         // Estimate length of header if it were on 1 line:
         let header_len = 2; // +2 for the brackets.
-        if (config.priority) header_len += 2;
-        if (config.done)     header_len += 2;
-        if (config.pin)      header_len += 4;
-        if (config.hide)     header_len += 5;
-        if (config.due)      header_len += 15;
+        if (config.priority)  header_len += 2;
+        if (config.done)      header_len += 2;
+        if (config.pin)       header_len += 4;
+        if (config.hide)      header_len += 5;
+        if (config.due)       header_len += 15;
+        if (config.created)   header_len += 19;
+        if (config.completed) header_len += 21;
         if (config.track !== undefined) header_len += 8;
-        if (config.tags)     for (const tag of config.tags) header_len += tag.length + 1;
+        if (config.tags)      for (const tag of config.tags) header_len += tag.length + 1;
 
         const idx = body_text.indexOf('\n');
         const is_single_line = idx === -1 || idx === body_text.length - 1;
@@ -96,13 +98,15 @@ export class Task {
         let result = '[';
         const config = this.ast.config;
 
-        if (config.done)     result += 'x ';
-        if (config.priority) result += '#' + config.priority + ' ';
-        if (config.due)      result += 'due:' + config.due + ' ';
-        if (config.pin)      result += 'pin ';
-        if (config.hide)     result += 'hide ';
+        if (config.done)      result += 'x ';
+        if (config.priority)  result += '#' + config.priority + ' ';
+        if (config.due)       result += 'due:' + config.due + ' ';
+        if (config.created)   result += 'created:' + config.created + ' ';
+        if (config.completed) result += 'completed:' + config.completed + ' ';
+        if (config.pin)       result += 'pin ';
+        if (config.hide)      result += 'hide ';
         if (config.track !== undefined) result += 'track:' + config.track + ' ';
-        if (config.tags)     for (const tag of config.tags) result += tag + ' ';
+        if (config.tags)      for (const tag of config.tags) result += tag + ' ';
 
         return result.trimRight() + '] ';
     }
@@ -121,13 +125,15 @@ export class Task {
         let result = '[ ';
         const config = this.ast.config;
 
-        if (config.done)     result += 'x\n  ';
-        if (config.priority) result += '#' + config.priority + '\n  ';
-        if (config.due)      result += 'due:' + config.due + '\n  ';
-        if (config.pin)      result += 'pin\n  ';
-        if (config.hide)     result += 'hide\n  ';
+        if (config.done)      result += 'x\n  ';
+        if (config.priority)  result += '#' + config.priority + '\n  ';
+        if (config.due)       result += 'due:' + config.due + '\n  ';
+        if (config.created)   result += 'created:' + config.created + '\n  ';
+        if (config.completed) result += 'completed:' + config.completed + '\n  ';
+        if (config.pin)       result += 'pin\n  ';
+        if (config.hide)      result += 'hide\n  ';
         if (config.track !== undefined) result += 'track:' + config.track + '\n  ';
-        if (config.tags)     for (const [tag, idx] of Misc.iter_set(config.tags)) result += tag + ' ' + ((idx+1)%6 ? '' : '\n  ');
+        if (config.tags)      for (const [tag, idx] of Misc.iter_set(config.tags)) result += tag + ' ' + ((idx+1)%6 ? '' : '\n  ');
 
         if (result.at(-1) !== '\n') result += '\n';
         return result + ']\n  ';
@@ -157,6 +163,11 @@ export class TaskCard extends Misc.Card {
 
         if (config.created) {
             const button = new Button({ parent: tag_box, label: _('Created') + ' ' + config.created, style_class: 'cronomix-tag-button cronomix-green' });
+            button.actor.reactive = false;
+        }
+
+        if (config.completed) {
+            const button = new Button({ parent: tag_box, label: _('Completed') + ' ' + config.completed, style_class: 'cronomix-tag-button cronomix-green' });
             button.actor.reactive = false;
         }
 
@@ -198,6 +209,11 @@ export class TaskCard extends Misc.Card {
         });
         checkbox.subscribe('left_click', () => {
             task.ast.config.done = !task.ast.config.done;
+            if (task.ast.config.done) {
+                task.ast.config.completed = get_iso_date();
+            } else {
+                delete task.ast.config.completed;
+            }
             task.serialize_header();
             applet.flush_tasks();
             applet.show_main_view();
