@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-17 20:07+0200\n"
+"POT-Creation-Date: 2025-05-21 12:03+0200\n"
 "PO-Revision-Date: 2023-06-05 16:07+0200\n"
 "Last-Translator: Ludek Vydra <lvtran@u.k2.cz>\n"
 "Language-Team: \n"
@@ -183,6 +183,10 @@ msgstr ""
 
 msgid "Created"
 msgstr ""
+
+#, fuzzy
+msgid "Completed"
+msgstr "Dokončených Pomodor"
 
 msgid "No time tracker file selected."
 msgstr "Není vybrán soubor sledování času."

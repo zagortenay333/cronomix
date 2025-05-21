@@ -1,0 +1,74 @@
+## Time Tracker File Format
+
+Data is stored in a JSON file with the following schema:
+
+> Root    := { slots: Slot[] }
+  Slot    := { task: string, time: Times }
+  Times   := { Day: Seconds, ... }
+  Day     := string in ISO form yyyy-mm-dd
+  Seconds := number
+
+For example:
+
+> {
+    "slots": [
+      {
+        "task": "[#1 track:0] Hi.",
+        "time": {
+          "2000-01-01": 256,
+          "2000-01-02": 10000,
+          "2000-04-14": 42000
+        }
+      }
+    ]
+  }
+
+## Tracker Slots
+
+- Time data is spread into slots.
+- You can only track 1 slot at a time.
+- The tracker refers to a slot by it's id which
+  is the index of the slot in the array.
+- If the ``task`` string in a slot doesn't have 
+  a ``track`` attribute with the value identical
+  to the index of the slot, it will be updated.
+- If the ``task`` string of a slot is not a valid
+  task, it will be turned into the body of a task
+  that has the correct ``track`` attribute.
+
+## Binding Tasks To Slots
+
+When you time track a todo task, you're really just
+tracking a slot that was assigned to the task.
+
+The task-slot binding is achieved with the task meta
+attribute ``track:id`` which is placed into your todo
+file. The id is the index of the slot in the JSON file.
+
+For example, given the todo file:
+
+> [track:0] Take trash out.
+  [track:1] Read that book.
+
+The corresponding tracker slots would be:
+
+> [
+    {
+      "task": "[track:0] Take trash out.",
+      "time": { "2000-01-01": 300 }
+    },
+    {
+      "task": "[track:1] Read that book.",
+      "time": { "2000-01-01": 10000 }
+    }
+  ]
+
+For the binding to work, the text in the slot must match
+the text of the task. If there is a mismatch at the point
+you start tracking a task, you will be asked if you want
+to update the slot's text to match the task or make a new
+slot while keeping the old one in the tracker.
+
+When you start tracking a task for the first time, a new
+slot will be added to the tracker file and the ``track``
+attribute will be added to your todo file automatically.
