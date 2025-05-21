@@ -45,6 +45,7 @@ export class KanbanView {
         const search_button   = button_box.add({ icon: 'cronomix-search-symbolic' });
         const sort_button     = button_box.add({ icon: 'cronomix-sort-ascending-symbolic' });
         const boards_button   = button_box.add({ icon: 'cronomix-filter-symbolic' });
+        const eximport_button = button_box.add({ icon: 'cronomix-import-export-symbolic' });
         const tracker_button  = button_box.add({ icon: 'cronomix-time-tracker-symbolic' });
         const settings_button = button_box.add({ icon: 'cronomix-wrench-symbolic' });
 
@@ -102,6 +103,7 @@ export class KanbanView {
         search_button.subscribe('left_click', () => applet.show_search_view());
         add_task_button.subscribe('left_click', () => applet.show_task_editor());
         tracker_button.subscribe('left_click', () => applet.show_tracker_view());
+        eximport_button.subscribe('left_click', () => applet.show_eximport_view());
         boards_button.subscribe('left_click', () => applet.show_filter_view());
         this.#tracker_id1 = applet.tracker.subscribe('stop', () => tracker_button.actor.remove_style_class_name('cronomix-yellow'));
         this.#tracker_id2 = applet.tracker.subscribe('tic', () => tracker_button.actor.add_style_class_name('cronomix-yellow'));

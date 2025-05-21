@@ -96,7 +96,8 @@ export class AstMetaConfig {
     pin?:        boolean;
     done?:       boolean;
     hide?:       boolean;
-    tags?:       Set<string>;
+    tags?:       Set<string>; // Tags that appear in the header.
+    body_tags?:  Set<string>; // Tags that appear in the body.
     image?:      { width?: number, path: string; }
     admonition?: Admonition;
 }
@@ -121,10 +122,12 @@ export class Parser {
     #stop_parsing_inline_at_newline = 0;
     #stop_parsing_inline_at = new Array<TokenTag[]>();
     #default_table_cell_config = new AstTableCellConfig();
+    #body_tags: Set<string>|null;
 
     constructor (text: string) {
         this.#text = text;
-        this.#lex  = new Lexer(text);
+        this.#lex = new Lexer(text);
+        this.#body_tags = null;
         this.#lex.on_token_eaten = this.#on_token_eaten.bind(this);
     }
 
@@ -284,7 +287,13 @@ export class Parser {
             }
         }
 
+        if (this.#body_tags === null) this.#body_tags = new Set();
         for (const b of this.parse_blocks()) result.children.push(b);
+        if (this.#body_tags.size > 0) {
+            result.config.body_tags = this.#body_tags;
+            this.#body_tags = null;
+        }
+
         return this.#complete_node(result);
     }
 
@@ -800,8 +809,9 @@ export class Parser {
     #parse_tag_ref (): AstTagRef {
         const result = this.#make_node(AstTagRef);
         result.child = this.#make_node(AstText);
-        this.#lex.eat_token();
+        const start = this.#lex.eat_token().start;
         while (this.#lex.try_eat_token('word') || this.#lex.try_eat_token('_'));
+        if (this.#body_tags) this.#body_tags.add(this.#text.substring(start, this.#end_of_last_eaten_token));
         this.#complete_node(result.child);
         return this.#complete_node(result);
     }

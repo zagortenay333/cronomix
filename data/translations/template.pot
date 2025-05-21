@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-21 12:03+0200\n"
+"POT-Creation-Date: 2025-05-21 19:22+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -77,34 +77,6 @@ msgid "Per Slot Totals"
 msgstr ""
 
 msgid "Task text copied to clipboard!"
-msgstr ""
-
-msgid "Add Task"
-msgstr ""
-
-msgid "Add Filter"
-msgstr ""
-
-msgid "## Filter Groups"
-msgstr ""
-
-msgid "Each filter in a group creates a column of tasks in the main view."
-msgstr ""
-
-msgid ""
-"If no group is selected, a group with 1 ``* & !hide`` filter is created."
-msgstr ""
-
-msgid "Tasks go into the first column from the left whose filter they pass."
-msgstr ""
-
-msgid "Hidden tasks only pass filters of the form ``hide`` or ``hide & expr``."
-msgstr ""
-
-msgid "Title"
-msgstr ""
-
-msgid "Comma separated list of filters."
 msgstr ""
 
 msgid "Delete selected tasks"
@@ -216,6 +188,51 @@ msgid "Start tracking"
 msgstr ""
 
 msgid "Cancel"
+msgstr ""
+
+msgid "Import file"
+msgstr ""
+
+msgid "Export file"
+msgstr ""
+
+msgid ""
+"Import and/or export your tasks to the **``todo.txt``** format.\n"
+"\n"
+"The import/export files are optional and must be in the **``todo.txt``** "
+"format.\n"
+"\n"
+"First the tasks from the import file (if there is one) get appended to your "
+"todo file,\n"
+"then all tasks get exported to the export file (if there is one)."
+msgstr ""
+
+msgid "Add Task"
+msgstr ""
+
+msgid "Add Filter"
+msgstr ""
+
+msgid "## Filter Groups"
+msgstr ""
+
+msgid "Each filter in a group creates a column of tasks in the main view."
+msgstr ""
+
+msgid ""
+"If no group is selected, a group with 1 ``* & !hide`` filter is created."
+msgstr ""
+
+msgid "Tasks go into the first column from the left whose filter they pass."
+msgstr ""
+
+msgid "Hidden tasks only pass filters of the form ``hide`` or ``hide & expr``."
+msgstr ""
+
+msgid "Title"
+msgstr ""
+
+msgid "Comma separated list of filters."
 msgstr ""
 
 msgid "Show time in panel"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-21 12:03+0200\n"
+"POT-Creation-Date: 2025-05-21 19:10+0200\n"
 "PO-Revision-Date: 2023-06-05 16:07+0200\n"
 "Last-Translator: Ludek Vydra <lvtran@u.k2.cz>\n"
 "Language-Team: \n"
@@ -81,37 +81,6 @@ msgstr "Celkové součty na slot"
 
 msgid "Task text copied to clipboard!"
 msgstr "Text úlohy zkopírován do schránky!"
-
-msgid "Add Task"
-msgstr "Přidej úkol"
-
-msgid "Add Filter"
-msgstr "Přidej filtr"
-
-msgid "## Filter Groups"
-msgstr "## Skupina filtrů"
-
-msgid "Each filter in a group creates a column of tasks in the main view."
-msgstr "Každý filtr ve skupině vytvoří sloupec úloh v hlavním zobrazení."
-
-#, fuzzy
-msgid ""
-"If no group is selected, a group with 1 ``* & !hide`` filter is created."
-msgstr ""
-"Pokud není vybrána žádná skupina, vytvoří se skupina s 1 filtrem ``*``."
-
-msgid "Tasks go into the first column from the left whose filter they pass."
-msgstr "Úkoly jsou zařazeny do prvního sloupce zleva, jehož filtrem prošly."
-
-msgid "Hidden tasks only pass filters of the form ``hide`` or ``hide & expr``."
-msgstr ""
-"Jen skryté úkoly se vyfiltrují výrazy tvaru ``hide`` nebo ``hide & expr``."
-
-msgid "Title"
-msgstr "Název"
-
-msgid "Comma separated list of filters."
-msgstr "Seznam filtrů oddělených čárkou."
 
 msgid "Delete selected tasks"
 msgstr "Smaž vybrané úkoly"
@@ -226,6 +195,56 @@ msgstr "Start sledování"
 
 msgid "Cancel"
 msgstr "Zruš"
+
+#, fuzzy
+msgid "Import file"
+msgstr "Důležité"
+
+#, fuzzy
+msgid "Export file"
+msgstr "Todo soubor"
+
+msgid ""
+"Import and/or export your tasks to the **``todo.txt``** format.\n"
+"\n"
+"The import/export files are optional and must be in the **``todo.txt``** "
+"format.\n"
+"\n"
+"First the tasks from the import file (if there is one) get appended to your "
+"todo file,\n"
+"then all tasks get exported to the export file (if there is one)."
+msgstr ""
+
+msgid "Add Task"
+msgstr "Přidej úkol"
+
+msgid "Add Filter"
+msgstr "Přidej filtr"
+
+msgid "## Filter Groups"
+msgstr "## Skupina filtrů"
+
+msgid "Each filter in a group creates a column of tasks in the main view."
+msgstr "Každý filtr ve skupině vytvoří sloupec úloh v hlavním zobrazení."
+
+#, fuzzy
+msgid ""
+"If no group is selected, a group with 1 ``* & !hide`` filter is created."
+msgstr ""
+"Pokud není vybrána žádná skupina, vytvoří se skupina s 1 filtrem ``*``."
+
+msgid "Tasks go into the first column from the left whose filter they pass."
+msgstr "Úkoly jsou zařazeny do prvního sloupce zleva, jehož filtrem prošly."
+
+msgid "Hidden tasks only pass filters of the form ``hide`` or ``hide & expr``."
+msgstr ""
+"Jen skryté úkoly se vyfiltrují výrazy tvaru ``hide`` nebo ``hide & expr``."
+
+msgid "Title"
+msgstr "Název"
+
+msgid "Comma separated list of filters."
+msgstr "Seznam filtrů oddělených čárkou."
 
 msgid "Show time in panel"
 msgstr "Zobrazit čas v panelu"

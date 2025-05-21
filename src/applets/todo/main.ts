@@ -7,6 +7,7 @@ import { Cronomix } from './../../extension.js';
 import { SortView, SortSchema } from './sort.js';
 import { Storage } from './../../utils/storage.js';
 import * as P from './../../utils/markup/parser.js';
+import { ImportExportView } from './import_export.js';
 import { FilterGroup, FilterView, KanbanView } from './filter.js';
 import { Applet, PanelPosition, PanelPositionTr } from './../applet.js';
 import { TimeTracker, TimeTrackerView, TrackerQuery } from './tracker.js';
@@ -201,6 +202,13 @@ export class TodoApplet extends Applet {
     show_filter_view () {
         this.#current_view?.destroy();
         const view = new FilterView(this);
+        this.#current_view = view;
+        this.menu.add_child(view.actor);
+    }
+
+    show_eximport_view () {
+        this.#current_view?.destroy();
+        const view = new ImportExportView(this);
         this.#current_view = view;
         this.menu.add_child(view.actor);
     }
