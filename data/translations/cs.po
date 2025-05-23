@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-21 19:28+0200\n"
+"POT-Creation-Date: 2025-05-23 19:11+0200\n"
 "PO-Revision-Date: 2023-06-05 16:07+0200\n"
 "Last-Translator: Ludek Vydra <lvtran@u.k2.cz>\n"
 "Language-Team: \n"
@@ -152,50 +152,6 @@ msgstr "Start sledování"
 msgid "Cancel"
 msgstr "Zruš"
 
-msgid "Panel position"
-msgstr "Pozice panelu"
-
-msgid "Open"
-msgstr "Otevři"
-
-msgid "Add task"
-msgstr "Přidej úkol"
-
-msgid "Search tasks"
-msgstr "Prohledej úkoly"
-
-msgid "Todo file"
-msgstr "Todo soubor"
-
-msgid "Open time tracker"
-msgstr "Otevři sledování času"
-
-msgid "Open todo file"
-msgstr "Otevři Todo soubor"
-
-msgid "Pin"
-msgstr "Připni"
-
-msgid "Priority"
-msgstr "Priorita"
-
-msgid "Done"
-msgstr "Hotovo"
-
-msgid "Hide"
-msgstr "Skryj"
-
-msgid "You must select a todo file."
-msgstr "Musíte vybrat soubor Todo."
-
-msgid "A todo file is a text file containing markup."
-msgstr "Soubor Todo je textový soubor obsahující značky."
-
-msgid "To learn about the markup, open the built-in editor and press F1."
-msgstr ""
-"Chcete-li se seznámit se značkami, otevřete vestavěný editor a stiskněte "
-"klávesu F1."
-
 msgid "Add Task"
 msgstr "Přidej úkol"
 
@@ -245,6 +201,50 @@ msgid ""
 "todo file,\n"
 "then all tasks get exported to the export file (if there is one)."
 msgstr ""
+
+msgid "Panel position"
+msgstr "Pozice panelu"
+
+msgid "Open"
+msgstr "Otevři"
+
+msgid "Add task"
+msgstr "Přidej úkol"
+
+msgid "Search tasks"
+msgstr "Prohledej úkoly"
+
+msgid "Todo file"
+msgstr "Todo soubor"
+
+msgid "Open time tracker"
+msgstr "Otevři sledování času"
+
+msgid "Open todo file"
+msgstr "Otevři Todo soubor"
+
+msgid "Pin"
+msgstr "Připni"
+
+msgid "Priority"
+msgstr "Priorita"
+
+msgid "Done"
+msgstr "Hotovo"
+
+msgid "Hide"
+msgstr "Skryj"
+
+msgid "You must select a todo file."
+msgstr "Musíte vybrat soubor Todo."
+
+msgid "A todo file is a text file containing markup."
+msgstr "Soubor Todo je textový soubor obsahující značky."
+
+msgid "To learn about the markup, open the built-in editor and press F1."
+msgstr ""
+"Chcete-li se seznámit se značkami, otevřete vestavěný editor a stiskněte "
+"klávesu F1."
 
 msgid "Show time in panel"
 msgstr "Zobrazit čas v panelu"
