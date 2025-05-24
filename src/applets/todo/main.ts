@@ -14,6 +14,7 @@ import { TimeTracker, TimeTrackerView, TrackerQuery } from './tracker.js';
 
 export class TodoApplet extends Applet {
     storage = new Storage({
+        version: 0,
         file: '~/.config/cronomix/todo.json',
 
         values: {

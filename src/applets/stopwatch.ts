@@ -32,6 +32,7 @@ type Events = {
 
 export class StopwatchApplet extends Applet<Events> {
     storage = new Storage({
+        version: 0,
         file: '~/.config/cronomix/stopwatch.json',
 
         values: {

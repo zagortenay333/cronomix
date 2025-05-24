@@ -20,6 +20,7 @@ export type Value =
     | { tag: 'number';  value: number; range: [number, number]; }
 
 export type StorageConfig = {
+    version:       number; // Version of the 'values' field.
     file:          string; // File path where the values are stored.
     values:        Record<string, Value>;
     groups?:       string[][]; // For grouping rows in the GUI. Strings are keyof values.
@@ -67,7 +68,7 @@ export class Storage <
     }
 
     flush () {
-        const content = JSON.stringify({ values: this.config.values }, null, 4);
+        const content = JSON.stringify({ version: this.config.version, values: this.config.values }, null, 4);
         Fs.write_entire_file(this.config.file, content);
     }
 
@@ -97,20 +98,7 @@ export class Storage <
 
         if (file) {
             const on_disk: any = JSON.parse(file);
-
-            for (const key of Object.keys(on_disk.values)) {
-                if (! this.config.values[key]) delete on_disk.values[key];
-            }
-
-            for (const key of Object.keys(this.config.values)) {
-                if (! on_disk.values[key]) on_disk.values[key] = this.config.values[key];
-            }
-
-            for (const [key, value] of Object.entries(this.config.values)) {
-                if (on_disk.values[key].tag !== value.tag) on_disk.values[key] = value;
-            }
-
-            this.config.values = on_disk.values;
+            if (on_disk.version === this.config.version) this.config.values = on_disk.values;
         }
 
         this.flush();

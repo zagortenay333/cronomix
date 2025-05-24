@@ -21,16 +21,17 @@ import { FlashcardsApplet } from './applets/flashcards.js';
 //   3. Add an entry to the storage config.
 //
 export const applets = [
-    [ 'flashcards', FlashcardsApplet ],
     [ 'todo', TodoApplet ],
     [ 'alarm', AlarmApplet ],
     [ 'timer', TimerApplet ],
     [ 'pomodoro', PomodoroApplet ],
     [ 'stopwatch', StopwatchApplet ],
+    [ 'flashcards', FlashcardsApplet ],
 ] as const;
 
 export class Cronomix {
     storage = new Storage({
+        version: 0,
         file: '~/.config/cronomix/global.json',
 
         values: {

@@ -25,6 +25,7 @@ type Alarm = {
 
 export class AlarmApplet extends Applet {
     storage = new Storage({
+        version: 0,
         file: '~/.config/cronomix/alarms.json',
 
         values: {

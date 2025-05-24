@@ -9,6 +9,7 @@ import { Applet, PanelPosition, PanelPositionTr } from './applet.js';
 
 export class FlashcardsApplet extends Applet {
     storage = new Storage({
+        version: 0,
         file: '~/.config/cronomix/alarms.json',
 
         values: {

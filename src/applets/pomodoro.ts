@@ -41,6 +41,7 @@ type Events = {
 
 export class PomodoroApplet extends Applet<Events> {
     storage = new Storage({
+        version: 0,
         file: '~/.config/cronomix/pomodoro.json',
 
         values: {

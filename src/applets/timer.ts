@@ -35,6 +35,7 @@ type Events = {
 
 export class TimerApplet extends Applet<Events> {
     storage = new Storage({
+        version: 0,
         file: '~/.config/cronomix/timer.json',
 
         values: {
