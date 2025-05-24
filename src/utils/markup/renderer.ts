@@ -366,7 +366,9 @@ export class Markup {
             const fn = () => {
                 if (hovered_clickable) {
                     if (hovered_clickable.node.tag === 'AstLink') {
-                        Fs.open_web_uri_in_default_app(hovered_clickable.node.link);
+                        const l = hovered_clickable.node.link;
+                        if (l.startsWith('/')) Fs.open_file_in_default_app(hovered_clickable.node.link);
+                        else                   Fs.open_web_uri_in_default_app(hovered_clickable.node.link);
                     } else if (hovered_clickable.node.tag === 'AstTagRef') {
                         this.on_tag_clicked?.(hovered_clickable.node);
                     }
