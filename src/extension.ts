@@ -11,6 +11,7 @@ import { AlarmApplet } from './applets/alarm.js';
 import { TodoApplet } from './applets/todo/main.js';
 import { PomodoroApplet } from './applets/pomodoro.js';
 import { StopwatchApplet } from './applets/stopwatch.js';
+import { FlashcardsApplet } from './applets/flashcards.js';
 
 //
 // To register a new applet:
@@ -20,6 +21,7 @@ import { StopwatchApplet } from './applets/stopwatch.js';
 //   3. Add an entry to the storage config.
 //
 export const applets = [
+    [ 'flashcards', FlashcardsApplet ],
     [ 'todo', TodoApplet ],
     [ 'alarm', AlarmApplet ],
     [ 'timer', TimerApplet ],
@@ -37,12 +39,13 @@ export class Cronomix {
             timer:               { tag: 'boolean', value: true },
             pomodoro:            { tag: 'boolean', value: true },
             stopwatch:           { tag: 'boolean', value: true },
+            flashcards:          { tag: 'boolean', value: true },
             theme_file:          { tag: 'file',    value: '', start: ext.path + '/data/themes/' },
             lazy_list_page_size: { tag: 'number',  value: 20, range: [1, 100000] },
         },
 
         groups: [
-            ['todo', 'alarm', 'timer', 'pomodoro', 'stopwatch'],
+            ['todo', 'alarm', 'timer', 'pomodoro', 'stopwatch', 'flashcards'],
             ['theme_file', 'lazy_list_page_size'],
         ],
 
@@ -56,6 +59,7 @@ export class Cronomix {
             timer: _('Timer'),
             pomodoro: _('Pomodoro'),
             stopwatch: _('Stopwatch'),
+            flashcards: _('Flashcards'),
             theme_file: _('Theme css (empty for auto selection)'),
             lazy_list_page_size: _('Lazy list page size'),
         }

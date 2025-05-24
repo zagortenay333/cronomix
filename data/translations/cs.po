@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-23 19:11+0200\n"
+"POT-Creation-Date: 2025-05-24 12:55+0200\n"
 "PO-Revision-Date: 2023-06-05 16:07+0200\n"
 "Last-Translator: Ludek Vydra <lvtran@u.k2.cz>\n"
 "Language-Team: \n"
@@ -372,6 +372,10 @@ msgstr "Nastavení"
 msgid "Website"
 msgstr "Webové stránky"
 
+#, fuzzy
+msgid "Add Deck"
+msgstr "Přidej úkol"
+
 msgid "Tip"
 msgstr "Tip"
 
@@ -458,6 +462,9 @@ msgstr "Časovač"
 
 msgid "Stopwatch"
 msgstr "Stopky"
+
+msgid "Flashcards"
+msgstr ""
 
 msgid "Theme css (empty for auto selection)"
 msgstr "Motiv css (prázdný pro automatický výběr)"

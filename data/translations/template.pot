@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-23 19:15+0200\n"
+"POT-Creation-Date: 2025-05-24 12:55+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -358,6 +358,9 @@ msgstr ""
 msgid "Website"
 msgstr ""
 
+msgid "Add Deck"
+msgstr ""
+
 msgid "Tip"
 msgstr ""
 
@@ -440,6 +443,9 @@ msgid "Timer"
 msgstr ""
 
 msgid "Stopwatch"
+msgstr ""
+
+msgid "Flashcards"
 msgstr ""
 
 msgid "Theme css (empty for auto selection)"
