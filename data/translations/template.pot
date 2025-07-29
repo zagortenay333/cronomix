@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-23 19:15+0200\n"
+"POT-Creation-Date: 2025-07-29 14:00+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -235,16 +235,94 @@ msgstr ""
 msgid "To learn about the markup, open the built-in editor and press F1."
 msgstr ""
 
+msgid "Left"
+msgstr ""
+
+msgid "Center"
+msgstr ""
+
+msgid "Right"
+msgstr ""
+
+msgid "Settings"
+msgstr ""
+
+msgid "Website"
+msgstr ""
+
+msgid "Notification sound"
+msgstr ""
+
+msgid "Add Alarm"
+msgstr ""
+
+msgid "Alarm."
+msgstr ""
+
+msgid "Time"
+msgstr ""
+
+msgid "Snooze n minutes"
+msgstr ""
+
+msgid "Alarm"
+msgstr ""
+
+msgid "Snooze"
+msgstr ""
+
+msgid "Dismiss"
+msgstr ""
+
+msgid "Pomodoro"
+msgstr ""
+
+msgid "Long Break"
+msgstr ""
+
+msgid "Short Break"
+msgstr ""
+
 msgid "Show time in panel"
 msgstr ""
 
 msgid "Clock size (set to 0 for default size)"
 msgstr ""
 
+msgid "Show presets"
+msgstr ""
+
+msgid "Pomodoro phase change."
+msgstr ""
+
+msgid "Phase"
+msgstr ""
+
+msgid "Completed pomodoros"
+msgstr ""
+
+msgid "Pomodoros until long break"
+msgstr ""
+
 msgid "Start"
 msgstr ""
 
 msgid "Pause"
+msgstr ""
+
+msgid "Add Preset"
+msgstr ""
+
+msgid "Pomodoro length"
+msgstr ""
+
+msgid "Short break length"
+msgstr ""
+
+msgid "Long break length"
+msgstr ""
+
+msgid "Long break every n pomodoros"
 msgstr ""
 
 msgid "Resume"
@@ -268,52 +346,7 @@ msgstr ""
 msgid "Laps table copied to clipboard!"
 msgstr ""
 
-msgid "Pomodoro"
-msgstr ""
-
-msgid "Long Break"
-msgstr ""
-
-msgid "Short Break"
-msgstr ""
-
-msgid "Notification sound"
-msgstr ""
-
-msgid "Show presets"
-msgstr ""
-
-msgid "Pomodoro phase change."
-msgstr ""
-
-msgid "Phase"
-msgstr ""
-
-msgid "Completed pomodoros"
-msgstr ""
-
-msgid "Pomodoros until long break"
-msgstr ""
-
-msgid "Add Preset"
-msgstr ""
-
-msgid "Pomodoro length"
-msgstr ""
-
-msgid "Short break length"
-msgstr ""
-
-msgid "Long break length"
-msgstr ""
-
-msgid "Long break every n pomodoros"
-msgstr ""
-
 msgid "Timer elapsed."
-msgstr ""
-
-msgid "Time"
 msgstr ""
 
 msgid "Invalid time selected."
@@ -322,40 +355,7 @@ msgstr ""
 msgid "Timer Elapsed!"
 msgstr ""
 
-msgid "Dismiss"
-msgstr ""
-
 msgid "Restart"
-msgstr ""
-
-msgid "Add Alarm"
-msgstr ""
-
-msgid "Alarm."
-msgstr ""
-
-msgid "Snooze n minutes"
-msgstr ""
-
-msgid "Alarm"
-msgstr ""
-
-msgid "Snooze"
-msgstr ""
-
-msgid "Left"
-msgstr ""
-
-msgid "Center"
-msgstr ""
-
-msgid "Right"
-msgstr ""
-
-msgid "Settings"
-msgstr ""
-
-msgid "Website"
 msgstr ""
 
 msgid "Tip"
