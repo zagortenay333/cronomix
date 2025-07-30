@@ -64,7 +64,7 @@ export class Applet <E = {}> extends PubSub<E> {
         this.menu = new St.BoxLayout({ vertical: true });
         wrapper.cell.add_child(this.menu);
 
-        this.panel_item.menu.box.add_style_class_name('cronomix-menu');
+        this.panel_item.menu.box.add_style_class_name(`cronomix-${id}-menu cronomix-menu`);
         let context_menu: ContextMenu|null = null;
 
         //

@@ -112,10 +112,6 @@ export class FlashcardsApplet extends Applet {
         if (path) Fs.write_entire_file(path, content);
     }
 
-    delete_card (card: Card) {
-        card;
-    }
-
     #enable_file_monitor () {
         const file = this.storage.read.deck.value!;
         this.#todo_file_monitor = new Fs.FileMonitor(file, () => this.load_deck());
@@ -143,10 +139,10 @@ export class FlashcardsApplet extends Applet {
     }
 
     show_exam_view () {
-        // this.#current_view?.destroy();
-        // const view = new ExamView(this);
-        // this.#current_view = view;
-        // this.menu.add_child(view.actor);
+        this.#current_view?.destroy();
+        const view = new ExamView(this);
+        this.#current_view = view;
+        this.menu.add_child(view.actor);
     }
 
     show_search_view () {
@@ -230,7 +226,8 @@ class CardWidget extends Misc.Card {
         delete_button.subscribe('left_click', () => {
             show_confirm_popup(delete_button, () => {
                 this.actor.destroy();
-                applet.delete_card(card);
+                Misc.array_remove(applet.deck.cards, card);
+                applet.flush_deck();
             });
         });
     }
@@ -282,6 +279,42 @@ export class CardEditor {
 
         question_editor.main_view.entry.entry.set_text(card?.question ?? '');
         answer_editor.main_view.entry.entry.set_text(card?.answer ?? '');
+    }
+
+    destroy () {
+        this.actor.destroy();
+    }
+}
+
+export class ExamView {
+    actor: St.BoxLayout;
+
+    constructor (applet: FlashcardsApplet) {
+        applet;
+        this.actor = new St.BoxLayout({ vertical: true, style_class: 'cronomix-spacing' });
+
+        const group = new St.BoxLayout({ vertical: true, style_class: 'cronomix-group' });
+        this.actor.add_child(group);
+
+        new Misc.Row(_('Session'), new St.Label({ style: "font-weight: bold;", text: '' + applet.deck.session }), group);
+
+        const remaining_cards_label = new St.Label({ style: "font-weight: bold;", text: '32' });
+        new Misc.Row(_('Remaining cards'), remaining_cards_label, group);
+
+        const button_box     = new ButtonBox(this.actor);
+        const correct_button = button_box.add({ wide: true, label: _('Correct') });
+        const wrong_button   = button_box.add({ wide: true, label: _('Wrong') });
+        const cancel_button  = button_box.add({ wide: true, label: _('Cancel') });
+        correct_button.actor.add_style_class_name('cronomix-green');
+        wrong_button.actor.add_style_class_name('cronomix-red');
+
+        const demo_card = new CardWidget(applet, applet.deck.cards[0]);
+        this.actor.add_child(demo_card.actor);
+        demo_card.autohide_box.visible = false;
+
+        correct_button.subscribe('left_click', () => {});
+        wrong_button.subscribe('left_click', () => {});
+        cancel_button.subscribe('left_click', () => applet.show_main_view());
     }
 
     destroy () {
