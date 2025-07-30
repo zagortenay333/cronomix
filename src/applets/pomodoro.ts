@@ -361,6 +361,8 @@ class PresetEditor extends EditorView {
     constructor (applet: PomodoroApplet, preset?: Preset) {
         super();
 
+        Misc.focus_when_mapped(this.main_view.entry.entry);
+
         this.main_view.entry.entry.set_text(preset?.text ?? '');
 
         const group = new St.BoxLayout({ vertical: true, style_class: 'cronomix-group' });

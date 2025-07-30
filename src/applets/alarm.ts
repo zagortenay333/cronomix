@@ -225,6 +225,8 @@ class AlarmEditor extends EditorView {
     constructor (applet: AlarmApplet, alarm?: Alarm) {
         super();
 
+        Misc.focus_when_mapped(this.main_view.entry.entry);
+
         //
         // configs
         //

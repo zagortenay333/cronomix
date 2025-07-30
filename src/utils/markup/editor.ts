@@ -38,7 +38,7 @@ export class Editor {
     #completion_entries: string[] | null = null;
 
     constructor (render_meta?: RenderMetaFn) {
-        this.actor = new St.BoxLayout({ style_class: 'cronomix-spacing' });
+        this.actor = new St.BoxLayout({ style_class: 'editor cronomix-spacing' });
 
         //
         // box containing the entry
@@ -63,7 +63,7 @@ export class Editor {
         //
         this.entry = new Entry();
         this.header_entry.add_child(this.entry.actor);
-        Misc.focus_when_mapped(this.entry.entry);
+        // Misc.focus_when_mapped(this.entry.entry);
         this.entry.entry.add_style_class_name('cronomix-markup-editor-entry');
         Misc.run_when_mapped(this.entry.entry, () => Misc.adjust_width(this.entry.entry, this.entry.entry.clutter_text));
 
@@ -344,7 +344,7 @@ export class EditorHelp extends Editor {
                 if (block.tag !== 'AstHeader') continue;
 
                 const label  = this.entry.entry.text.substring(block.child.start, block.child.end).trim();
-                const button = new Button({ label, parent: table_of_contents.box, style_class: 'cronomix-menu-button' });
+                const button = new Button({ label, centered: false, parent: table_of_contents.box, style_class: 'cronomix-menu-button' });
                 button.actor.style = `padding-top: 2px; padding-bottom: 2px; margin-left: ${block.size - biggest_header}em;`;
                 button.subscribe('left_click', () => this.goto_position(block.start));
             }
@@ -360,6 +360,7 @@ export class EditorView {
     actor:      St.BoxLayout;
     main_view:  Editor;
     help_view?: EditorHelp;
+    show_help_button: Button;
 
     constructor (render_meta?: RenderMetaFn) {
         this.actor = new St.BoxLayout({ reactive: true });
@@ -368,17 +369,17 @@ export class EditorView {
         this.actor.add_child(this.main_view.actor);
 
         this.main_view.entry_header.add_child(new St.Widget({ x_expand: true }));
-        const show_help_button = new Button({ parent: this.main_view.entry_header, icon: 'cronomix-question-symbolic' });
+        this.show_help_button = new Button({ parent: this.main_view.entry_header, icon: 'cronomix-question-symbolic' });
 
-        show_help_button.subscribe('left_click', () => this.#toggle_help_view());
+        this.show_help_button.subscribe('left_click', () => this.toggle_help_view());
         this.actor.connect('captured-event', (_:unknown, event: Clutter.Event) => {
             if (event.type() !== Clutter.EventType.KEY_PRESS) return Clutter.EVENT_PROPAGATE;
-            if (event.get_key_symbol() === Clutter.KEY_F1) { this.#toggle_help_view(); return Clutter.EVENT_STOP; }
+            if (event.get_key_symbol() === Clutter.KEY_F1) { this.toggle_help_view(); return Clutter.EVENT_STOP; }
             return Clutter.EVENT_PROPAGATE;
         });
     }
 
-    #toggle_help_view () {
+    toggle_help_view () {
         if (this.help_view?.actor.visible) {
             Misc.focus_when_mapped(this.main_view.entry.entry);
             this.main_view.actor.visible = true;
@@ -390,7 +391,7 @@ export class EditorView {
         } else {
             this.help_view = new EditorHelp();
             this.actor.add_child(this.help_view.actor);
-            this.help_view.close_button.subscribe('left_click', () => this.#toggle_help_view());
+            this.help_view.close_button.subscribe('left_click', () => this.toggle_help_view());
             this.main_view.actor.visible = false;
         }
     }

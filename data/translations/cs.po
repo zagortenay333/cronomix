@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-29 14:00+0200\n"
+"POT-Creation-Date: 2025-07-30 15:22+0200\n"
 "PO-Revision-Date: 2023-06-05 16:07+0200\n"
 "Last-Translator: Ludek Vydra <lvtran@u.k2.cz>\n"
 "Language-Team: \n"
@@ -261,31 +261,6 @@ msgstr "Nastavení"
 msgid "Website"
 msgstr "Webové stránky"
 
-msgid "Notification sound"
-msgstr "Zvuk upozornění"
-
-msgid "Add Alarm"
-msgstr "Přidej nový budík"
-
-#, fuzzy
-msgid "Alarm."
-msgstr "Budík"
-
-msgid "Time"
-msgstr "Čas"
-
-msgid "Snooze n minutes"
-msgstr "Odložit n minut"
-
-msgid "Alarm"
-msgstr "Budík"
-
-msgid "Snooze"
-msgstr "Odložit"
-
-msgid "Dismiss"
-msgstr "Odvolat"
-
 msgid "Pomodoro"
 msgstr "Pomodoro"
 
@@ -300,6 +275,9 @@ msgstr "Zobrazit čas v panelu"
 
 msgid "Clock size (set to 0 for default size)"
 msgstr "Velikost hodin (pro výchozí nastaveno 0)"
+
+msgid "Notification sound"
+msgstr "Zvuk upozornění"
 
 msgid "Show presets"
 msgstr "Předvolby"
@@ -363,14 +341,58 @@ msgstr "Tabulka kol zkopírována do schránky!"
 msgid "Timer elapsed."
 msgstr "Časovač vypršel!"
 
+msgid "Time"
+msgstr "Čas"
+
 msgid "Invalid time selected."
 msgstr "Zvolen neplatný čas."
 
 msgid "Timer Elapsed!"
 msgstr "Časovač vypršel!"
 
+msgid "Dismiss"
+msgstr "Odvolat"
+
 msgid "Restart"
 msgstr "Restart"
+
+msgid "Add Alarm"
+msgstr "Přidej nový budík"
+
+#, fuzzy
+msgid "Alarm."
+msgstr "Budík"
+
+msgid "Snooze n minutes"
+msgstr "Odložit n minut"
+
+msgid "Alarm"
+msgstr "Budík"
+
+msgid "Snooze"
+msgstr "Odložit"
+
+msgid "ASDFASDF"
+msgstr ""
+
+msgid "Deck"
+msgstr ""
+
+#, fuzzy
+msgid "Add Card"
+msgstr "Přidej nový budík"
+
+msgid "Bucket:"
+msgstr ""
+
+msgid "Hint"
+msgstr ""
+
+msgid "Answer"
+msgstr ""
+
+msgid "Question"
+msgstr ""
 
 msgid "Tip"
 msgstr "Tip"
@@ -458,6 +480,9 @@ msgstr "Časovač"
 
 msgid "Stopwatch"
 msgstr "Stopky"
+
+msgid "Flashcards"
+msgstr ""
 
 msgid "Theme css (empty for auto selection)"
 msgstr "Motiv css (prázdný pro automatický výběr)"

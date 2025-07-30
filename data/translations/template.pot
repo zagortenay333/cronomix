@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-29 14:00+0200\n"
+"POT-Creation-Date: 2025-07-30 15:43+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -250,30 +250,6 @@ msgstr ""
 msgid "Website"
 msgstr ""
 
-msgid "Notification sound"
-msgstr ""
-
-msgid "Add Alarm"
-msgstr ""
-
-msgid "Alarm."
-msgstr ""
-
-msgid "Time"
-msgstr ""
-
-msgid "Snooze n minutes"
-msgstr ""
-
-msgid "Alarm"
-msgstr ""
-
-msgid "Snooze"
-msgstr ""
-
-msgid "Dismiss"
-msgstr ""
-
 msgid "Pomodoro"
 msgstr ""
 
@@ -287,6 +263,9 @@ msgid "Show time in panel"
 msgstr ""
 
 msgid "Clock size (set to 0 for default size)"
+msgstr ""
+
+msgid "Notification sound"
 msgstr ""
 
 msgid "Show presets"
@@ -349,13 +328,55 @@ msgstr ""
 msgid "Timer elapsed."
 msgstr ""
 
+msgid "Time"
+msgstr ""
+
 msgid "Invalid time selected."
 msgstr ""
 
 msgid "Timer Elapsed!"
 msgstr ""
 
+msgid "Dismiss"
+msgstr ""
+
 msgid "Restart"
+msgstr ""
+
+msgid "Add Alarm"
+msgstr ""
+
+msgid "Alarm."
+msgstr ""
+
+msgid "Snooze n minutes"
+msgstr ""
+
+msgid "Alarm"
+msgstr ""
+
+msgid "Snooze"
+msgstr ""
+
+msgid "ASDFASDF"
+msgstr ""
+
+msgid "Deck"
+msgstr ""
+
+msgid "Add Card"
+msgstr ""
+
+msgid "Bucket:"
+msgstr ""
+
+msgid "Hint"
+msgstr ""
+
+msgid "Answer"
+msgstr ""
+
+msgid "Question"
 msgstr ""
 
 msgid "Tip"
@@ -440,6 +461,9 @@ msgid "Timer"
 msgstr ""
 
 msgid "Stopwatch"
+msgstr ""
+
+msgid "Flashcards"
 msgstr ""
 
 msgid "Theme css (empty for auto selection)"

@@ -354,6 +354,8 @@ class PresetEditor extends EditorView {
         const group = new St.BoxLayout({ vertical: true, style_class: 'cronomix-group' });
         this.main_view.left_box.add_child(group);
 
+        Misc.focus_when_mapped(this.main_view.entry.entry);
+
         const time_picker = new TimePicker();
         if (preset) time_picker.set_time(new Time(preset.time));
         new Misc.Row(_('Time'), time_picker.actor, group);

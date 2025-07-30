@@ -116,7 +116,9 @@ export function open_file_dialog (
         });
 
         return sp;
-    } catch { return null; }
+    } catch {
+        return null;
+    }
 }
 
 export class FileMonitor {

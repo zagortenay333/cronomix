@@ -296,6 +296,29 @@ export class Card {
     }
 }
 
+export class Dropdown {
+    actor: St.BoxLayout;
+    body: St.BoxLayout;
+
+    constructor (label: string) {
+        this.actor = new St.BoxLayout({ reactive: true, vertical: true, x_expand: true, style_class: 'cronomix-dropdown' });
+
+        const header = new St.BoxLayout({ style_class: 'header' });
+        this.actor.add_child(header);
+
+        const arrow = new Button({ parent: header, centered: false, icon_on_right: true, wide: true, label:label, icon: 'cronomix-pan-right-symbolic', style_class: 'cronomix-floating-button' });
+
+        this.body = new St.BoxLayout({ style_class: 'body' });
+        this.body.visible = false;
+        this.actor.add_child(this.body);
+
+        arrow.subscribe('left_click', () => {
+            this.body.visible = !this.body.visible;
+            arrow.set_icon(this.body.visible ? 'cronomix-pan-down-symbolic' : 'cronomix-pan-right-symbolic');
+        });
+    }
+}
+
 // TODO(GNOME_BUG): Wrap content in this grid cell to work
 // around a bug wherein a certain amount of padding appears
 // at the bottom. The bug seems related to the layout of text.

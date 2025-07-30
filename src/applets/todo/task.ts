@@ -321,6 +321,8 @@ export class TaskEditor extends EditorView {
             return card.actor;
         });
 
+        Misc.focus_when_mapped(this.main_view.entry.entry);
+
         this.#applet = applet;
         if (task) this.#task = task;
 

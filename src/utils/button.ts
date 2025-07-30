@@ -34,6 +34,8 @@ export class Button extends PubSub<ButtonEvents> {
     label?: St.Label|null;
 
     #checked?: boolean;
+    #icon_on_right: boolean;
+    #centered: boolean;
 
     constructor ({
         parent      = null as St.Widget|null,
@@ -41,15 +43,17 @@ export class Button extends PubSub<ButtonEvents> {
         label       = '',
         style_class = '',
         wide        = false,
-        centered    = false,
+        centered    = true,
+        icon_on_right = false,
     } = {}) {
         super();
 
         this.actor = new St.BoxLayout({ reactive: true, can_focus: true, track_hover: true, style_class: 'cronomix-button' });
         parent?.add_child(this.actor);
 
+        this.#icon_on_right = icon_on_right;
+        this.#centered = centered;
         this.actor.x_expand = wide;
-        if (centered) this.actor.x_align = Clutter.ActorAlign.CENTER;
         if (style_class) this.actor.add_style_class_name(style_class);
         if (icon) this.set_icon(icon);
         if (label) this.set_label(label);
@@ -69,7 +73,7 @@ export class Button extends PubSub<ButtonEvents> {
             this.icon.gicon = Misc.get_icon(icon);
         } else {
             this.icon = new St.Icon({ gicon: Misc.get_icon(icon) });
-            this.actor.insert_child_at_index(this.icon, 0);
+            this.actor.insert_child_at_index(this.icon, this.#icon_on_right ? 1 : 0);
         }
     }
 
@@ -81,7 +85,8 @@ export class Button extends PubSub<ButtonEvents> {
             this.label.set_text(label);
         } else {
             this.label = new St.Label({ x_expand: true, text: label, y_align: Clutter.ActorAlign.CENTER });
-            this.actor.add_child(this.label);
+            this.label.x_align = this.#centered ? Clutter.ActorAlign.CENTER : Clutter.ActorAlign.START;
+            this.actor.insert_child_at_index(this.label, this.#icon_on_right ? 0 : 1);
         }
     }
 
