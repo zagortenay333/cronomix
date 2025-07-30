@@ -322,10 +322,13 @@ export class ExamView {
         let card: CardWidget|null = null;
         const show_next_card = () => {
             card?.actor.destroy();
+            remaining_cards_label.text = '' + remaining_cards.length;
             if (remaining_cards.length) {
-                remaining_cards_label.text = '' + remaining_cards.length;
                 card = new CardWidget(applet, remaining_cards.pop()!);
                 this.actor.add_child(card.actor);
+            } else {
+                correct_button.actor.visible = false;
+                wrong_button.actor.visible = false;
             }
         };
 
