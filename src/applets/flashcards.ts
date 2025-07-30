@@ -254,7 +254,7 @@ export class CardEditor {
 
         Misc.focus_when_mapped(question_editor.main_view.entry.entry);
 
-        const bucket_picker = new IntPicker(1, 5, card?.bucket ?? 1);
+        const bucket_picker = new IntPicker(0, 5, card?.bucket ?? 1);
         new Misc.Row(_('Bucket'), bucket_picker.actor, group);
 
         const button_box    = new ButtonBox(answer_editor.main_view.left_box);
@@ -292,15 +292,15 @@ export class ExamView {
     actor: St.BoxLayout;
 
     constructor (applet: FlashcardsApplet) {
-        applet;
         this.actor = new St.BoxLayout({ vertical: true, style_class: 'cronomix-spacing' });
 
         const group = new St.BoxLayout({ vertical: true, style_class: 'cronomix-group' });
         this.actor.add_child(group);
 
-        new Misc.Row(_('Session'), new St.Label({ style: "font-weight: bold;", text: '' + applet.deck.session }), group);
+        const session_count_label = new St.Label({ style: "font-weight: bold;", text: '' + applet.deck.session });
+        new Misc.Row(_('Session'), session_count_label, group);
 
-        const remaining_cards_label = new St.Label({ style: "font-weight: bold;", text: '32' });
+        const remaining_cards_label = new St.Label({ style: "font-weight: bold;", text: '0' });
         new Misc.Row(_('Remaining cards'), remaining_cards_label, group);
 
         const button_box     = new ButtonBox(this.actor);
@@ -310,13 +310,42 @@ export class ExamView {
         correct_button.actor.add_style_class_name('cronomix-green');
         wrong_button.actor.add_style_class_name('cronomix-red');
 
-        const demo_card = new CardWidget(applet, applet.deck.cards[0]);
-        this.actor.add_child(demo_card.actor);
-        demo_card.autohide_box.visible = false;
+        const remaining_cards: Card[] = [];
+        for (const card of applet.deck.cards) {
+            const days = Math.pow(2, card.bucket);
+            if ((applet.deck.session % days) === 0) remaining_cards.push(card);
+        }
 
-        correct_button.subscribe('left_click', () => {});
-        wrong_button.subscribe('left_click', () => {});
-        cancel_button.subscribe('left_click', () => applet.show_main_view());
+        applet.deck.session++;
+        if (applet.deck.session > 32) applet.deck.session = 1;
+
+        let card: CardWidget|null = null;
+        const show_next_card = () => {
+            card?.actor.destroy();
+            if (remaining_cards.length) {
+                remaining_cards_label.text = '' + remaining_cards.length;
+                card = new CardWidget(applet, remaining_cards.pop()!);
+                this.actor.add_child(card.actor);
+            }
+        };
+
+        show_next_card();
+
+        correct_button.subscribe('left_click', () => {
+            if (card) {
+                card.card.bucket++;
+                if (card.card.bucket > 5) card.card.bucket = 5;
+            }
+            show_next_card();
+        });
+        wrong_button.subscribe('left_click', () => {
+            if (card) card.card.bucket = 1;
+            show_next_card();
+        });
+        cancel_button.subscribe('left_click', () => {
+            applet.flush_deck();
+            applet.show_main_view();
+        });
     }
 
     destroy () {
