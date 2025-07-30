@@ -6,6 +6,7 @@ import * as Fs from './../utils/fs.js';
 import * as Misc from './../utils/misc.js';
 import { Cronomix } from './../extension.js';
 import { Storage } from './../utils/storage.js';
+import { ScrollBox } from './../utils/scroll.js';
 import { IntPicker } from './../utils/pickers.js';
 import { LazyScrollBox } from './../utils/scroll.js';
 import { Markup } from './../utils/markup/renderer.js';
@@ -319,16 +320,20 @@ export class ExamView {
         applet.deck.session++;
         if (applet.deck.session > 32) applet.deck.session = 1;
 
+        const card_scrollbox = new ScrollBox();
+        this.actor.add_child(card_scrollbox.actor);
         let card: CardWidget|null = null;
         const show_next_card = () => {
             card?.actor.destroy();
             remaining_cards_label.text = '' + remaining_cards.length;
             if (remaining_cards.length) {
                 card = new CardWidget(applet, remaining_cards.pop()!);
-                this.actor.add_child(card.actor);
+                card_scrollbox.box.add_child(card.actor);
+                card.autohide_box.visible = false;
             } else {
+                card_scrollbox.actor.visible = false;
                 correct_button.actor.visible = false;
-                wrong_button.actor.visible = false;
+                wrong_button.actor.visible   = false;
             }
         };
 
@@ -342,7 +347,7 @@ export class ExamView {
             show_next_card();
         });
         wrong_button.subscribe('left_click', () => {
-            if (card) card.card.bucket = 1;
+            if (card) card.card.bucket = 0;
             show_next_card();
         });
         cancel_button.subscribe('left_click', () => {
