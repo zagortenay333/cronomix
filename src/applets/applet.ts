@@ -129,8 +129,8 @@ export class ContextMenu {
         const items_box = new St.BoxLayout({ vertical: true });
         this.actor.add_child(items_box);
 
-        const settings_button = new Button({ parent: items_box, icon: 'cronomix-wrench-symbolic', label: _('Settings'), style_class: 'cronomix-menu-button' });
-        const website_button  = new Button({ parent: items_box, icon: 'cronomix-link-symbolic', label: _('Website'), style_class: 'cronomix-menu-button' });
+        const settings_button = new Button({ parent: items_box, centered: false, icon: 'cronomix-wrench-symbolic', label: _('Settings'), style_class: 'cronomix-menu-button' });
+        const website_button  = new Button({ parent: items_box, centered: false, icon: 'cronomix-link-symbolic', label: _('Website'), style_class: 'cronomix-menu-button' });
 
         website_button.subscribe('left_click', () => Fs.open_web_uri_in_default_app(root.metadata.url));
         settings_button.subscribe('left_click', () => {

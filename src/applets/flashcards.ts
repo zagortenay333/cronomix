@@ -10,9 +10,9 @@ import { IntPicker } from './../utils/pickers.js';
 import { LazyScrollBox } from './../utils/scroll.js';
 import { Markup } from './../utils/markup/renderer.js';
 import { EditorView } from './../utils/markup/editor.js';
-import { show_confirm_popup } from './../utils/popup.js';
 import { Button, ButtonBox } from './../utils/button.js';
 import { Applet, PanelPosition, PanelPositionTr } from './applet.js';
+import { show_info_popup, show_confirm_popup } from './../utils/popup.js';
 
 export type Deck = {
     version: number;
@@ -174,11 +174,13 @@ class MainView {
         header.add_child(new St.BoxLayout({ x_expand: true }));
 
         const header_buttons  = new ButtonBox(header);
+        const help_button     = header_buttons.add({ icon: 'cronomix-question-symbolic' });
         const search_button   = header_buttons.add({ icon: 'cronomix-search-symbolic' });
         const exam_button     = header_buttons.add({ icon: 'cronomix-exam-symbolic' });
         const settings_button = header_buttons.add({ icon: 'cronomix-wrench-symbolic' });
 
         add_card_button.subscribe('left_click', () => applet.show_editor());
+        help_button.subscribe('left_click', () => show_info_popup(help_button.actor, 'asdfsadf'));
         search_button.subscribe('left_click', () => applet.show_search_view());
         exam_button.subscribe('left_click', () => applet.show_exam_view());
         settings_button.subscribe('left_click', () => applet.show_settings());
