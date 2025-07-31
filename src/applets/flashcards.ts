@@ -38,12 +38,14 @@ export class FlashcardsApplet extends Applet {
             panel_position: { tag: 'enum',   value: PanelPosition.RIGHT, enum: Object.values(PanelPosition) },
             open:           { tag: 'keymap', value: null },
             add_card:       { tag: 'keymap', value: null },
+            change_deck:    { tag: 'keymap', value: null },
+            start_exam:     { tag: 'keymap', value: null },
         },
 
         groups: [
             ['deck'],
             ['panel_position'],
-            ['open', 'add_card'],
+            ['open', 'add_card', 'change_deck', 'start_exam'],
         ],
 
         infos: {
@@ -54,7 +56,9 @@ export class FlashcardsApplet extends Applet {
             deck: _('Deck'),
             panel_position: _('Panel position'),
             open: _('Open'),
-            add_card: _('Add Card'),
+            add_card: _('Add card'),
+            change_deck: _('Change deck'),
+            start_exam: _('Start exam'),
             ...PanelPositionTr,
         }
     });
@@ -70,10 +74,14 @@ export class FlashcardsApplet extends Applet {
         this.storage.config.infos.deck = Fs.read_entire_file(ext.path + '/data/docs/flashcards_deck') ?? '';
 
         this.storage.init_keymap({
-            open: () => { this.panel_item.menu.open(); },
+            open:        () => { this.panel_item.menu.open(); },
+            add_card:    () => { this.panel_item.menu.open(); this.show_editor(); },
+            change_deck: () => { this.panel_item.menu.open(); this.show_settings(); },
+            start_exam:  () => { this.panel_item.menu.open(); this.show_exam_view(); },
         });
 
         this.set_panel_position(this.storage.read.panel_position.value);
+        this.storage.subscribe('deck', () => this.load_deck());
         this.storage.subscribe('panel_position', ({ value }) => this.set_panel_position(value));
         this.load_deck();
     }
@@ -87,13 +95,13 @@ export class FlashcardsApplet extends Applet {
         this.#disable_file_monitor();
 
         const file_path = this.storage.read.deck.value;
-        if (! file_path) { this.show_settings(); return; }
+        if (file_path.trim() === '') { this.show_settings(); return; }
 
         Fs.create_file(file_path);
         const file = Fs.read_entire_file(file_path);
         if (file == null) { this.show_settings(); return; }
 
-        if (file == '') {
+        if (file.trim() === '') {
             this.deck = { version: 1, session: 1, cards: [] };
             this.flush_deck();
         } else {
@@ -149,16 +157,9 @@ export class FlashcardsApplet extends Applet {
         this.menu.add_child(view.actor);
     }
 
-    show_search_view () {
-        // this.#current_view?.destroy();
-        // const view = new SearchView(this);
-        // this.#current_view = view;
-        // this.menu.add_child(view.actor);
-    }
-
     show_settings () {
         this.#current_view?.destroy();
-        const view = this.storage.render(() => this.show_main_view());
+        const view = this.storage.render((c) => c.get('deck') ?? this.show_main_view());
         this.#current_view = { destroy: () => view.destroy() };
         this.menu.add_child(view);
     }
@@ -179,13 +180,11 @@ class MainView {
 
         const header_buttons  = new ButtonBox(header);
         const help_button     = header_buttons.add({ icon: 'cronomix-question-symbolic' });
-        const search_button   = header_buttons.add({ icon: 'cronomix-search-symbolic' });
         const exam_button     = header_buttons.add({ icon: 'cronomix-exam-symbolic' });
         const settings_button = header_buttons.add({ icon: 'cronomix-wrench-symbolic' });
 
         add_card_button.subscribe('left_click', () => applet.show_editor());
         help_button.subscribe('left_click', () => show_info_popup(help_button.actor, Fs.read_entire_file(ext.path + '/data/docs/flashcards') ?? ''));
-        search_button.subscribe('left_click', () => applet.show_search_view());
         exam_button.subscribe('left_click', () => applet.show_exam_view());
         settings_button.subscribe('left_click', () => applet.show_settings());
 
