@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-31 11:56+0200\n"
+"POT-Creation-Date: 2025-07-31 15:04+0200\n"
 "PO-Revision-Date: 2023-06-05 16:07+0200\n"
 "Last-Translator: Ludek Vydra <lvtran@u.k2.cz>\n"
 "Language-Team: \n"
@@ -491,9 +491,6 @@ msgstr "Měsíc"
 msgid "Year"
 msgstr "Rok"
 
-msgid "Image not found"
-msgstr "Obrázek nenalezen"
-
 msgid "Show more"
 msgstr "Zobrazit více"
 
@@ -502,6 +499,9 @@ msgid ""
 msgstr ""
 "Kliknutím pravým tlačítkem na položku panelu rozšíření získáte přístup ke "
 "globálním nastavením."
+
+msgid "Image not found"
+msgstr "Obrázek nenalezen"
 
 msgid ""
 "Number of items shown each time you press \"show more\" in a scroll list.\n"

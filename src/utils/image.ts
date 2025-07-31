@@ -29,7 +29,8 @@ export class Image {
             const p       = GdkPixbuf.Pixbuf.new_from_file_at_scale(path, width, -1, true);
             const format  = p.get_has_alpha() ? Cogl.PixelFormat.RGBA_8888 : Cogl.PixelFormat.RGB_888;
             const content = St.ImageContent.new_with_preferred_size(p.width, p.height);
-            content.set_bytes(p.read_pixel_bytes(), format, p.width, p.height, p.rowstride);
+            const context = global.stage.context.get_backend().get_cogl_context();
+            content.set_bytes(context, p.read_pixel_bytes(), format, p.width, p.height, p.rowstride);
 
             this.actor = new St.Widget({ height: p.height, width: p.width });
             this.actor.set_content(content);
