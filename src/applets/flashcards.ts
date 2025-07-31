@@ -265,7 +265,7 @@ export class CardEditor {
 
         Misc.focus_when_mapped(question_editor.main_view.entry.entry);
 
-        const bucket_picker = new IntPicker(0, 5, card?.bucket ?? 1);
+        const bucket_picker = new IntPicker(0, 5, card?.bucket ?? 0);
         new Misc.Row(_('Bucket'), bucket_picker.actor, group);
 
         const button_box    = new ButtonBox(answer_editor.main_view.left_box);
