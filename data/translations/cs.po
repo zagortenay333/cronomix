@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-31 08:49+0200\n"
+"POT-Creation-Date: 2025-07-31 11:56+0200\n"
 "PO-Revision-Date: 2023-06-05 16:07+0200\n"
 "Last-Translator: Ludek Vydra <lvtran@u.k2.cz>\n"
 "Language-Team: \n"
@@ -282,37 +282,15 @@ msgstr "Tabulka kol zkopírována do schránky!"
 msgid "Notification sound"
 msgstr "Zvuk upozornění"
 
-msgid "Show presets"
-msgstr "Předvolby"
-
-#, fuzzy
-msgid "Timer elapsed."
-msgstr "Časovač vypršel!"
-
-msgid "Add Preset"
-msgstr "Přidat předvolbu"
-
-msgid "Time"
-msgstr "Čas"
-
-msgid "Invalid time selected."
-msgstr "Zvolen neplatný čas."
-
-msgid "Timer Elapsed!"
-msgstr "Časovač vypršel!"
-
-msgid "Dismiss"
-msgstr "Odvolat"
-
-msgid "Restart"
-msgstr "Restart"
-
 msgid "Add Alarm"
 msgstr "Přidej nový budík"
 
 #, fuzzy
 msgid "Alarm."
 msgstr "Budík"
+
+msgid "Time"
+msgstr "Čas"
 
 msgid "Snooze n minutes"
 msgstr "Odložit n minut"
@@ -323,39 +301,8 @@ msgstr "Budík"
 msgid "Snooze"
 msgstr "Odložit"
 
-msgid "Pomodoro"
-msgstr "Pomodoro"
-
-msgid "Long Break"
-msgstr "Dlouhá pauza"
-
-msgid "Short Break"
-msgstr "Krátká pauza"
-
-#, fuzzy
-msgid "Pomodoro phase change."
-msgstr "Délka Pomodoro"
-
-msgid "Phase"
-msgstr "Fáze"
-
-msgid "Completed pomodoros"
-msgstr "Dokončených Pomodor"
-
-msgid "Pomodoros until long break"
-msgstr "Pomodor do dlouhé přestávky"
-
-msgid "Pomodoro length"
-msgstr "Délka Pomodoro"
-
-msgid "Short break length"
-msgstr "Délka krátké pauzy"
-
-msgid "Long break length"
-msgstr "Délka dlouhé pauzy"
-
-msgid "Long break every n pomodoros"
-msgstr "Dlouhá pauza každý n pomodor"
+msgid "Dismiss"
+msgstr "Odvolat"
 
 msgid "Left"
 msgstr "Vlevo"
@@ -372,12 +319,95 @@ msgstr "Nastavení"
 msgid "Website"
 msgstr "Webové stránky"
 
+msgid "Pomodoro"
+msgstr "Pomodoro"
+
+msgid "Long Break"
+msgstr "Dlouhá pauza"
+
+msgid "Short Break"
+msgstr "Krátká pauza"
+
+msgid "Show presets"
+msgstr "Předvolby"
+
+#, fuzzy
+msgid "Pomodoro phase change."
+msgstr "Délka Pomodoro"
+
+msgid "Phase"
+msgstr "Fáze"
+
+msgid "Completed pomodoros"
+msgstr "Dokončených Pomodor"
+
+msgid "Pomodoros until long break"
+msgstr "Pomodor do dlouhé přestávky"
+
+msgid "Add Preset"
+msgstr "Přidat předvolbu"
+
+msgid "Pomodoro length"
+msgstr "Délka Pomodoro"
+
+msgid "Short break length"
+msgstr "Délka krátké pauzy"
+
+msgid "Long break length"
+msgstr "Délka dlouhé pauzy"
+
+msgid "Long break every n pomodoros"
+msgstr "Dlouhá pauza každý n pomodor"
+
+#, fuzzy
+msgid "Timer elapsed."
+msgstr "Časovač vypršel!"
+
+msgid "Invalid time selected."
+msgstr "Zvolen neplatný čas."
+
+msgid "Timer Elapsed!"
+msgstr "Časovač vypršel!"
+
+msgid "Restart"
+msgstr "Restart"
+
 msgid "Deck"
 msgstr ""
 
 #, fuzzy
+msgid "Add card"
+msgstr "Přidej nový budík"
+
+msgid "Change deck"
+msgstr ""
+
+#, fuzzy
+msgid "Start exam"
+msgstr "Start"
+
+#, fuzzy
 msgid "Add Card"
 msgstr "Přidej nový budík"
+
+#, fuzzy
+msgid "every session"
+msgstr "Výraz filtru"
+
+msgid "every 2 sessions"
+msgstr ""
+
+msgid "every 4 sessions"
+msgstr ""
+
+msgid "every 8 sessions"
+msgstr ""
+
+msgid "every 16 sessions"
+msgstr ""
+
+msgid "every 32 sessions"
+msgstr ""
 
 msgid "Answer"
 msgstr ""

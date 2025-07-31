@@ -94,7 +94,7 @@ export class FlashcardsApplet extends Applet {
     load_deck () {
         this.#disable_file_monitor();
 
-        const file_path = this.storage.read.deck.value;
+        const file_path = this.storage.read.deck.value ?? '';
         if (file_path.trim() === '') { this.show_settings(); return; }
 
         Fs.create_file(file_path);

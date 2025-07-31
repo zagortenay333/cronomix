@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-31 10:23+0200\n"
+"POT-Creation-Date: 2025-07-31 11:58+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -271,34 +271,13 @@ msgstr ""
 msgid "Notification sound"
 msgstr ""
 
-msgid "Show presets"
-msgstr ""
-
-msgid "Timer elapsed."
-msgstr ""
-
-msgid "Add Preset"
-msgstr ""
-
-msgid "Time"
-msgstr ""
-
-msgid "Invalid time selected."
-msgstr ""
-
-msgid "Timer Elapsed!"
-msgstr ""
-
-msgid "Dismiss"
-msgstr ""
-
-msgid "Restart"
-msgstr ""
-
 msgid "Add Alarm"
 msgstr ""
 
 msgid "Alarm."
+msgstr ""
+
+msgid "Time"
 msgstr ""
 
 msgid "Snooze n minutes"
@@ -310,37 +289,7 @@ msgstr ""
 msgid "Snooze"
 msgstr ""
 
-msgid "Pomodoro"
-msgstr ""
-
-msgid "Long Break"
-msgstr ""
-
-msgid "Short Break"
-msgstr ""
-
-msgid "Pomodoro phase change."
-msgstr ""
-
-msgid "Phase"
-msgstr ""
-
-msgid "Completed pomodoros"
-msgstr ""
-
-msgid "Pomodoros until long break"
-msgstr ""
-
-msgid "Pomodoro length"
-msgstr ""
-
-msgid "Short break length"
-msgstr ""
-
-msgid "Long break length"
-msgstr ""
-
-msgid "Long break every n pomodoros"
+msgid "Dismiss"
 msgstr ""
 
 msgid "Left"
@@ -358,10 +307,88 @@ msgstr ""
 msgid "Website"
 msgstr ""
 
+msgid "Pomodoro"
+msgstr ""
+
+msgid "Long Break"
+msgstr ""
+
+msgid "Short Break"
+msgstr ""
+
+msgid "Show presets"
+msgstr ""
+
+msgid "Pomodoro phase change."
+msgstr ""
+
+msgid "Phase"
+msgstr ""
+
+msgid "Completed pomodoros"
+msgstr ""
+
+msgid "Pomodoros until long break"
+msgstr ""
+
+msgid "Add Preset"
+msgstr ""
+
+msgid "Pomodoro length"
+msgstr ""
+
+msgid "Short break length"
+msgstr ""
+
+msgid "Long break length"
+msgstr ""
+
+msgid "Long break every n pomodoros"
+msgstr ""
+
+msgid "Timer elapsed."
+msgstr ""
+
+msgid "Invalid time selected."
+msgstr ""
+
+msgid "Timer Elapsed!"
+msgstr ""
+
+msgid "Restart"
+msgstr ""
+
 msgid "Deck"
 msgstr ""
 
+msgid "Add card"
+msgstr ""
+
+msgid "Change deck"
+msgstr ""
+
+msgid "Start exam"
+msgstr ""
+
 msgid "Add Card"
+msgstr ""
+
+msgid "every session"
+msgstr ""
+
+msgid "every 2 sessions"
+msgstr ""
+
+msgid "every 4 sessions"
+msgstr ""
+
+msgid "every 8 sessions"
+msgstr ""
+
+msgid "every 16 sessions"
+msgstr ""
+
+msgid "every 32 sessions"
 msgstr ""
 
 msgid "Answer"
