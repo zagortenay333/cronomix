@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-30 15:22+0200\n"
+"POT-Creation-Date: 2025-07-31 08:49+0200\n"
 "PO-Revision-Date: 2023-06-05 16:07+0200\n"
 "Last-Translator: Ludek Vydra <lvtran@u.k2.cz>\n"
 "Language-Team: \n"
@@ -103,55 +103,6 @@ msgstr "Přidej"
 msgid "Apply"
 msgstr "Proveď"
 
-msgid "Due"
-msgstr "Do"
-
-msgid "Created"
-msgstr ""
-
-#, fuzzy
-msgid "Completed"
-msgstr "Dokončených Pomodor"
-
-msgid "No time tracker file selected."
-msgstr "Není vybrán soubor sledování času."
-
-msgid "Open time tracker settings"
-msgstr "Otevřít nastavení sledování času"
-
-msgid "The text of the corresponding tracker slot does not match this task."
-msgstr "Text příslušného slotu pro sledování neodpovídá tomuto úkolu."
-
-msgid "Here is what the text in the slot currently looks like:"
-msgstr "V současné době vypadá text ve slotu takto:"
-
-msgid "You can do one of the following:"
-msgstr "Můžete udělat jednu z následujících akcí:"
-
-msgid "Create a new slot leaving the old one in the tracker."
-msgstr "Vytvoření nového slotu s ponecháním starého."
-
-msgid "Update the current slot to match with this task."
-msgstr "Aktualizujte aktuální slot tak, aby odpovídal tomuto úkolu."
-
-msgid "Create new slot"
-msgstr "Vytvořte nový slot"
-
-msgid "Update current slot"
-msgstr "Aktualizujte aktuální slot"
-
-msgid "Stop tracking"
-msgstr "Stop sledování"
-
-msgid "Stats"
-msgstr "Statistiky"
-
-msgid "Start tracking"
-msgstr "Start sledování"
-
-msgid "Cancel"
-msgstr "Zruš"
-
 msgid "Add Task"
 msgstr "Přidej úkol"
 
@@ -229,6 +180,9 @@ msgstr "Připni"
 msgid "Priority"
 msgstr "Priorita"
 
+msgid "Due"
+msgstr "Do"
+
 msgid "Done"
 msgstr "Hotovo"
 
@@ -246,29 +200,51 @@ msgstr ""
 "Chcete-li se seznámit se značkami, otevřete vestavěný editor a stiskněte "
 "klávesu F1."
 
-msgid "Left"
-msgstr "Vlevo"
+msgid "Created"
+msgstr ""
 
-msgid "Center"
-msgstr "Střed"
+#, fuzzy
+msgid "Completed"
+msgstr "Dokončených Pomodor"
 
-msgid "Right"
-msgstr "Vpravo"
+msgid "No time tracker file selected."
+msgstr "Není vybrán soubor sledování času."
 
-msgid "Settings"
-msgstr "Nastavení"
+msgid "Open time tracker settings"
+msgstr "Otevřít nastavení sledování času"
 
-msgid "Website"
-msgstr "Webové stránky"
+msgid "The text of the corresponding tracker slot does not match this task."
+msgstr "Text příslušného slotu pro sledování neodpovídá tomuto úkolu."
 
-msgid "Pomodoro"
-msgstr "Pomodoro"
+msgid "Here is what the text in the slot currently looks like:"
+msgstr "V současné době vypadá text ve slotu takto:"
 
-msgid "Long Break"
-msgstr "Dlouhá pauza"
+msgid "You can do one of the following:"
+msgstr "Můžete udělat jednu z následujících akcí:"
 
-msgid "Short Break"
-msgstr "Krátká pauza"
+msgid "Create a new slot leaving the old one in the tracker."
+msgstr "Vytvoření nového slotu s ponecháním starého."
+
+msgid "Update the current slot to match with this task."
+msgstr "Aktualizujte aktuální slot tak, aby odpovídal tomuto úkolu."
+
+msgid "Create new slot"
+msgstr "Vytvořte nový slot"
+
+msgid "Update current slot"
+msgstr "Aktualizujte aktuální slot"
+
+msgid "Stop tracking"
+msgstr "Stop sledování"
+
+msgid "Stats"
+msgstr "Statistiky"
+
+msgid "Start tracking"
+msgstr "Start sledování"
+
+msgid "Cancel"
+msgstr "Zruš"
 
 msgid "Show time in panel"
 msgstr "Zobrazit čas v panelu"
@@ -276,45 +252,11 @@ msgstr "Zobrazit čas v panelu"
 msgid "Clock size (set to 0 for default size)"
 msgstr "Velikost hodin (pro výchozí nastaveno 0)"
 
-msgid "Notification sound"
-msgstr "Zvuk upozornění"
-
-msgid "Show presets"
-msgstr "Předvolby"
-
-#, fuzzy
-msgid "Pomodoro phase change."
-msgstr "Délka Pomodoro"
-
-msgid "Phase"
-msgstr "Fáze"
-
-msgid "Completed pomodoros"
-msgstr "Dokončených Pomodor"
-
-msgid "Pomodoros until long break"
-msgstr "Pomodor do dlouhé přestávky"
-
 msgid "Start"
 msgstr "Start"
 
 msgid "Pause"
 msgstr "Pauza"
-
-msgid "Add Preset"
-msgstr "Přidat předvolbu"
-
-msgid "Pomodoro length"
-msgstr "Délka Pomodoro"
-
-msgid "Short break length"
-msgstr "Délka krátké pauzy"
-
-msgid "Long break length"
-msgstr "Délka dlouhé pauzy"
-
-msgid "Long break every n pomodoros"
-msgstr "Dlouhá pauza každý n pomodor"
 
 msgid "Resume"
 msgstr "Obnovení"
@@ -337,9 +279,18 @@ msgstr "Čas kol"
 msgid "Laps table copied to clipboard!"
 msgstr "Tabulka kol zkopírována do schránky!"
 
+msgid "Notification sound"
+msgstr "Zvuk upozornění"
+
+msgid "Show presets"
+msgstr "Předvolby"
+
 #, fuzzy
 msgid "Timer elapsed."
 msgstr "Časovač vypršel!"
+
+msgid "Add Preset"
+msgstr "Přidat předvolbu"
 
 msgid "Time"
 msgstr "Čas"
@@ -372,8 +323,54 @@ msgstr "Budík"
 msgid "Snooze"
 msgstr "Odložit"
 
-msgid "ASDFASDF"
-msgstr ""
+msgid "Pomodoro"
+msgstr "Pomodoro"
+
+msgid "Long Break"
+msgstr "Dlouhá pauza"
+
+msgid "Short Break"
+msgstr "Krátká pauza"
+
+#, fuzzy
+msgid "Pomodoro phase change."
+msgstr "Délka Pomodoro"
+
+msgid "Phase"
+msgstr "Fáze"
+
+msgid "Completed pomodoros"
+msgstr "Dokončených Pomodor"
+
+msgid "Pomodoros until long break"
+msgstr "Pomodor do dlouhé přestávky"
+
+msgid "Pomodoro length"
+msgstr "Délka Pomodoro"
+
+msgid "Short break length"
+msgstr "Délka krátké pauzy"
+
+msgid "Long break length"
+msgstr "Délka dlouhé pauzy"
+
+msgid "Long break every n pomodoros"
+msgstr "Dlouhá pauza každý n pomodor"
+
+msgid "Left"
+msgstr "Vlevo"
+
+msgid "Center"
+msgstr "Střed"
+
+msgid "Right"
+msgstr "Vpravo"
+
+msgid "Settings"
+msgstr "Nastavení"
+
+msgid "Website"
+msgstr "Webové stránky"
 
 msgid "Deck"
 msgstr ""
@@ -382,16 +379,25 @@ msgstr ""
 msgid "Add Card"
 msgstr "Přidej nový budík"
 
-msgid "Bucket:"
-msgstr ""
-
-msgid "Hint"
-msgstr ""
-
 msgid "Answer"
 msgstr ""
 
 msgid "Question"
+msgstr ""
+
+msgid "Bucket"
+msgstr ""
+
+msgid "Session"
+msgstr ""
+
+msgid "Remaining cards"
+msgstr ""
+
+msgid "Correct"
+msgstr ""
+
+msgid "Wrong"
 msgstr ""
 
 msgid "Tip"

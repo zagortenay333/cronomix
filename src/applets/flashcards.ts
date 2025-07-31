@@ -4,6 +4,7 @@ import { gettext as _ } from 'resource:///org/gnome/shell/extensions/extension.j
 
 import * as Fs from './../utils/fs.js';
 import * as Misc from './../utils/misc.js';
+import { ext } from './../extension.js';
 import { Cronomix } from './../extension.js';
 import { Storage } from './../utils/storage.js';
 import { ScrollBox } from './../utils/scroll.js';
@@ -46,7 +47,7 @@ export class FlashcardsApplet extends Applet {
         ],
 
         infos: {
-            deck: _('ASDFASDF')
+            deck: '' // Initted in the constructor.
         },
 
         translations: {
@@ -63,8 +64,10 @@ export class FlashcardsApplet extends Applet {
     #current_view: null | { destroy: () => void } = null;
     #todo_file_monitor: Fs.FileMonitor | null = null;
 
-    constructor (ext: Cronomix) {
-        super(ext, 'flashcards');
+    constructor (extension: Cronomix) {
+        super(extension, 'flashcards');
+
+        this.storage.config.infos.deck = Fs.read_entire_file(ext.path + '/data/docs/flashcards_deck') ?? '';
 
         this.storage.init_keymap({
             open: () => { this.panel_item.menu.open(); },
@@ -181,7 +184,7 @@ class MainView {
         const settings_button = header_buttons.add({ icon: 'cronomix-wrench-symbolic' });
 
         add_card_button.subscribe('left_click', () => applet.show_editor());
-        help_button.subscribe('left_click', () => show_info_popup(help_button.actor, 'asdfsadf'));
+        help_button.subscribe('left_click', () => show_info_popup(help_button.actor, Fs.read_entire_file(ext.path + '/data/docs/flashcards') ?? ''));
         search_button.subscribe('left_click', () => applet.show_search_view());
         exam_button.subscribe('left_click', () => applet.show_exam_view());
         settings_button.subscribe('left_click', () => applet.show_settings());

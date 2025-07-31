@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-30 15:43+0200\n"
+"POT-Creation-Date: 2025-07-31 10:23+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -100,54 +100,6 @@ msgstr ""
 msgid "Apply"
 msgstr ""
 
-msgid "Due"
-msgstr ""
-
-msgid "Created"
-msgstr ""
-
-msgid "Completed"
-msgstr ""
-
-msgid "No time tracker file selected."
-msgstr ""
-
-msgid "Open time tracker settings"
-msgstr ""
-
-msgid "The text of the corresponding tracker slot does not match this task."
-msgstr ""
-
-msgid "Here is what the text in the slot currently looks like:"
-msgstr ""
-
-msgid "You can do one of the following:"
-msgstr ""
-
-msgid "Create a new slot leaving the old one in the tracker."
-msgstr ""
-
-msgid "Update the current slot to match with this task."
-msgstr ""
-
-msgid "Create new slot"
-msgstr ""
-
-msgid "Update current slot"
-msgstr ""
-
-msgid "Stop tracking"
-msgstr ""
-
-msgid "Stats"
-msgstr ""
-
-msgid "Start tracking"
-msgstr ""
-
-msgid "Cancel"
-msgstr ""
-
 msgid "Add Task"
 msgstr ""
 
@@ -220,6 +172,9 @@ msgstr ""
 msgid "Priority"
 msgstr ""
 
+msgid "Due"
+msgstr ""
+
 msgid "Done"
 msgstr ""
 
@@ -235,28 +190,49 @@ msgstr ""
 msgid "To learn about the markup, open the built-in editor and press F1."
 msgstr ""
 
-msgid "Left"
+msgid "Created"
 msgstr ""
 
-msgid "Center"
+msgid "Completed"
 msgstr ""
 
-msgid "Right"
+msgid "No time tracker file selected."
 msgstr ""
 
-msgid "Settings"
+msgid "Open time tracker settings"
 msgstr ""
 
-msgid "Website"
+msgid "The text of the corresponding tracker slot does not match this task."
 msgstr ""
 
-msgid "Pomodoro"
+msgid "Here is what the text in the slot currently looks like:"
 msgstr ""
 
-msgid "Long Break"
+msgid "You can do one of the following:"
 msgstr ""
 
-msgid "Short Break"
+msgid "Create a new slot leaving the old one in the tracker."
+msgstr ""
+
+msgid "Update the current slot to match with this task."
+msgstr ""
+
+msgid "Create new slot"
+msgstr ""
+
+msgid "Update current slot"
+msgstr ""
+
+msgid "Stop tracking"
+msgstr ""
+
+msgid "Stats"
+msgstr ""
+
+msgid "Start tracking"
+msgstr ""
+
+msgid "Cancel"
 msgstr ""
 
 msgid "Show time in panel"
@@ -265,43 +241,10 @@ msgstr ""
 msgid "Clock size (set to 0 for default size)"
 msgstr ""
 
-msgid "Notification sound"
-msgstr ""
-
-msgid "Show presets"
-msgstr ""
-
-msgid "Pomodoro phase change."
-msgstr ""
-
-msgid "Phase"
-msgstr ""
-
-msgid "Completed pomodoros"
-msgstr ""
-
-msgid "Pomodoros until long break"
-msgstr ""
-
 msgid "Start"
 msgstr ""
 
 msgid "Pause"
-msgstr ""
-
-msgid "Add Preset"
-msgstr ""
-
-msgid "Pomodoro length"
-msgstr ""
-
-msgid "Short break length"
-msgstr ""
-
-msgid "Long break length"
-msgstr ""
-
-msgid "Long break every n pomodoros"
 msgstr ""
 
 msgid "Resume"
@@ -325,7 +268,16 @@ msgstr ""
 msgid "Laps table copied to clipboard!"
 msgstr ""
 
+msgid "Notification sound"
+msgstr ""
+
+msgid "Show presets"
+msgstr ""
+
 msgid "Timer elapsed."
+msgstr ""
+
+msgid "Add Preset"
 msgstr ""
 
 msgid "Time"
@@ -358,7 +310,52 @@ msgstr ""
 msgid "Snooze"
 msgstr ""
 
-msgid "ASDFASDF"
+msgid "Pomodoro"
+msgstr ""
+
+msgid "Long Break"
+msgstr ""
+
+msgid "Short Break"
+msgstr ""
+
+msgid "Pomodoro phase change."
+msgstr ""
+
+msgid "Phase"
+msgstr ""
+
+msgid "Completed pomodoros"
+msgstr ""
+
+msgid "Pomodoros until long break"
+msgstr ""
+
+msgid "Pomodoro length"
+msgstr ""
+
+msgid "Short break length"
+msgstr ""
+
+msgid "Long break length"
+msgstr ""
+
+msgid "Long break every n pomodoros"
+msgstr ""
+
+msgid "Left"
+msgstr ""
+
+msgid "Center"
+msgstr ""
+
+msgid "Right"
+msgstr ""
+
+msgid "Settings"
+msgstr ""
+
+msgid "Website"
 msgstr ""
 
 msgid "Deck"
@@ -367,16 +364,25 @@ msgstr ""
 msgid "Add Card"
 msgstr ""
 
-msgid "Bucket:"
-msgstr ""
-
-msgid "Hint"
-msgstr ""
-
 msgid "Answer"
 msgstr ""
 
 msgid "Question"
+msgstr ""
+
+msgid "Bucket"
+msgstr ""
+
+msgid "Session"
+msgstr ""
+
+msgid "Remaining cards"
+msgstr ""
+
+msgid "Correct"
+msgstr ""
+
+msgid "Wrong"
 msgstr ""
 
 msgid "Tip"

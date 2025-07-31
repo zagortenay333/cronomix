@@ -1,0 +1,15 @@
+A flashcards deck is a single JSON file with the following schema:
+
+> {
+      version: number,
+      session: number, // in range [1, 32]
+      cards: Card[],
+  }
+
+where ``Card`` is:
+
+> {
+      bucket: number, // in range [0, 5]
+      question: string,
+      answer: string,
+  }

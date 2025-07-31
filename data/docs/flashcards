@@ -1,0 +1,39 @@
+## Flashcards
+
+The flashcards applet is used to practise long term memorization
+using spaced repetition.
+
+You build a deck of cards (question-answer pairs), then you start an
+exam session where you will be shown 1 card after another, and you
+have to report whether you answered correctly or not.
+
+This is using the principle of spaced repetition meaning that those
+cards you answered incorrectly will appear more often than cards you
+answered correctly.
+
+## The Leitner System
+
+The method used in this applet is called the Leitner System.
+
+- Each card belongs to 1 of 6 buckets.
+- A correctly answered card is promoted to the next bucket.
+- A failed card gets demoted to the first bucket.
+- The higher the bucket the less frequently the card appears:
+
+  | bucket 0
+  | Appears every session.
+  |-
+  | bucket 1
+  | Appears every 2 sessions.
+  |-
+  | bucket 2
+  | Appears every 4 sessions.
+  |-
+  | bucket 3
+  | Appears every 8 sessions.
+  |-
+  | bucket 4
+  | Appears every 16 sessions.
+  |-
+  | bucket 5
+  | Appears every 32 sessions.
