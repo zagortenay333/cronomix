@@ -218,6 +218,14 @@ class CardWidget extends Misc.Card {
 
         const time_label = new St.Label({ text: '#' + card.bucket, y_align: Clutter.ActorAlign.CENTER, style: 'font-weight: bold;' });
         this.left_header_box.add_child(time_label);
+        switch (card.bucket) {
+        case 0: time_label.text += ' (' + _('every session') + ')'; break;
+        case 1: time_label.text += ' (' + _('every 2 sessions') + ')'; break;
+        case 2: time_label.text += ' (' + _('every 4 sessions') + ')'; break;
+        case 3: time_label.text += ' (' + _('every 8 sessions') + ')'; break;
+        case 4: time_label.text += ' (' + _('every 16 sessions') + ')'; break;
+        case 5: time_label.text += ' (' + _('every 32 sessions') + ')'; break;
+        }
 
         const edit_button   = new Button({ parent: this.autohide_box, icon: 'cronomix-edit-symbolic', style_class: 'cronomix-floating-button' });
         const delete_button = new Button({ parent: this.autohide_box, icon: 'cronomix-trash-symbolic', style_class: 'cronomix-floating-button' });
@@ -326,6 +334,7 @@ export class ExamView {
         const card_scrollbox = new ScrollBox();
         this.actor.add_child(card_scrollbox.actor);
         let card: CardWidget|null = null;
+
         const show_next_card = () => {
             card?.actor.destroy();
             remaining_cards_label.text = '' + remaining_cards.length;
@@ -355,7 +364,6 @@ export class ExamView {
         });
         cancel_button.subscribe('left_click', () => {
             applet.flush_deck();
-            applet.show_main_view();
         });
     }
 
