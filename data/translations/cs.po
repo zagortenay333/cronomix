@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-01 10:47+0200\n"
+"POT-Creation-Date: 2025-08-01 11:40+0200\n"
 "PO-Revision-Date: 2023-06-05 16:07+0200\n"
 "Last-Translator: Ludek Vydra <lvtran@u.k2.cz>\n"
 "Language-Team: \n"
@@ -26,61 +26,6 @@ msgstr ""
 
 msgid "Ok"
 msgstr "Ok"
-
-msgid "Ascending"
-msgstr "Vzestupně"
-
-msgid "Descending"
-msgstr "Sestupně"
-
-msgid "Time Tracker"
-msgstr "Sledovač času"
-
-msgid "Select time tracker file"
-msgstr "Zvol soubor sledování času"
-
-msgid "Close"
-msgstr "Zavřít"
-
-msgid "Currently Tracking"
-msgstr "Aktuálně sledované"
-
-msgid "Stop"
-msgstr "Stop"
-
-msgid "Search Data"
-msgstr "Hledání"
-
-msgid "Filter expression"
-msgstr "Výraz filtru"
-
-#, fuzzy
-msgid "Date (e.g., 2000-01-24)"
-msgstr "Datum (například 2023-12-24)"
-
-msgid "Since"
-msgstr "Od"
-
-msgid "Until"
-msgstr "Do"
-
-msgid "Copy"
-msgstr "Kopírovat"
-
-msgid "Totals"
-msgstr "Celkem"
-
-msgid "Search results copied to clipboard!"
-msgstr "Výsledek hledání zkopírován do schránky!"
-
-msgid "All Time"
-msgstr "Po celou dobu"
-
-msgid "Per Slot Totals"
-msgstr "Celkové součty na slot"
-
-msgid "Task text copied to clipboard!"
-msgstr "Text úlohy zkopírován do schránky!"
 
 msgid "Add Task"
 msgstr "Přidej úkol"
@@ -168,6 +113,12 @@ msgstr "Hotovo"
 msgid "Hide"
 msgstr "Skryj"
 
+msgid "Ascending"
+msgstr "Vzestupně"
+
+msgid "Descending"
+msgstr "Sestupně"
+
 msgid "You must select a todo file."
 msgstr "Musíte vybrat soubor Todo."
 
@@ -225,6 +176,9 @@ msgstr "Start sledování"
 msgid "Cancel"
 msgstr "Zruš"
 
+msgid "Filter expression"
+msgstr "Výraz filtru"
+
 msgid "Delete selected tasks"
 msgstr "Smaž vybrané úkoly"
 
@@ -245,6 +199,43 @@ msgstr "Přidej"
 
 msgid "Apply"
 msgstr "Proveď"
+
+msgid "Close"
+msgstr "Zavřít"
+
+msgid "Select time tracker file"
+msgstr "Zvol soubor sledování času"
+
+#, fuzzy
+msgid "Date (e.g., 2000-01-24)"
+msgstr "Datum (například 2023-12-24)"
+
+msgid "Since"
+msgstr "Od"
+
+msgid "Until"
+msgstr "Do"
+
+msgid "Copy"
+msgstr "Kopírovat"
+
+msgid "Stop"
+msgstr "Stop"
+
+msgid "Totals"
+msgstr "Celkem"
+
+msgid "Search results copied to clipboard!"
+msgstr "Výsledek hledání zkopírován do schránky!"
+
+msgid "All Time"
+msgstr "Po celou dobu"
+
+msgid "Per Slot Totals"
+msgstr "Celkové součty na slot"
+
+msgid "Task text copied to clipboard!"
+msgstr "Text úlohy zkopírován do schránky!"
 
 msgid "Show time in panel"
 msgstr "Zobrazit čas v panelu"

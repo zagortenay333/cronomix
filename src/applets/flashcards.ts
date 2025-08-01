@@ -184,7 +184,7 @@ class MainView {
         const settings_button = header_buttons.add({ icon: 'cronomix-wrench-symbolic' });
 
         add_card_button.subscribe('left_click', () => applet.show_editor());
-        help_button.subscribe('left_click', () => show_info_popup(help_button.actor, Fs.read_entire_file(ext.path + '/data/docs/flashcards') ?? ''));
+        help_button.subscribe('left_click', () => show_info_popup(help_button, Fs.read_entire_file(ext.path + '/data/docs/flashcards') ?? ''));
         exam_button.subscribe('left_click', () => applet.show_exam_view());
         settings_button.subscribe('left_click', () => applet.show_settings());
 

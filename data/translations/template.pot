@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-01 10:47+0200\n"
+"POT-Creation-Date: 2025-08-01 11:40+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -23,60 +23,6 @@ msgid ""
 msgstr ""
 
 msgid "Ok"
-msgstr ""
-
-msgid "Ascending"
-msgstr ""
-
-msgid "Descending"
-msgstr ""
-
-msgid "Time Tracker"
-msgstr ""
-
-msgid "Select time tracker file"
-msgstr ""
-
-msgid "Close"
-msgstr ""
-
-msgid "Currently Tracking"
-msgstr ""
-
-msgid "Stop"
-msgstr ""
-
-msgid "Search Data"
-msgstr ""
-
-msgid "Filter expression"
-msgstr ""
-
-msgid "Date (e.g., 2000-01-24)"
-msgstr ""
-
-msgid "Since"
-msgstr ""
-
-msgid "Until"
-msgstr ""
-
-msgid "Copy"
-msgstr ""
-
-msgid "Totals"
-msgstr ""
-
-msgid "Search results copied to clipboard!"
-msgstr ""
-
-msgid "All Time"
-msgstr ""
-
-msgid "Per Slot Totals"
-msgstr ""
-
-msgid "Task text copied to clipboard!"
 msgstr ""
 
 msgid "Add Task"
@@ -160,6 +106,12 @@ msgstr ""
 msgid "Hide"
 msgstr ""
 
+msgid "Ascending"
+msgstr ""
+
+msgid "Descending"
+msgstr ""
+
 msgid "You must select a todo file."
 msgstr ""
 
@@ -214,6 +166,9 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
+msgid "Filter expression"
+msgstr ""
+
 msgid "Delete selected tasks"
 msgstr ""
 
@@ -233,6 +188,42 @@ msgid "Add"
 msgstr ""
 
 msgid "Apply"
+msgstr ""
+
+msgid "Close"
+msgstr ""
+
+msgid "Select time tracker file"
+msgstr ""
+
+msgid "Date (e.g., 2000-01-24)"
+msgstr ""
+
+msgid "Since"
+msgstr ""
+
+msgid "Until"
+msgstr ""
+
+msgid "Copy"
+msgstr ""
+
+msgid "Stop"
+msgstr ""
+
+msgid "Totals"
+msgstr ""
+
+msgid "Search results copied to clipboard!"
+msgstr ""
+
+msgid "All Time"
+msgstr ""
+
+msgid "Per Slot Totals"
+msgstr ""
+
+msgid "Task text copied to clipboard!"
 msgstr ""
 
 msgid "Show time in panel"

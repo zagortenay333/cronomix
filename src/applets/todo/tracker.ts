@@ -217,7 +217,6 @@ export class TimeTrackerView {
 
     #tracked_slot_id = 0;
     #tracking_card: St.BoxLayout;
-    #tracking_card_title: St.Label;
 
     #query_filter_entry: Entry;
     #query_since_entry: Entry;
@@ -249,8 +248,6 @@ export class TimeTrackerView {
         //
         // file selection card
         //
-        left_column.add_child(new St.Label({ text: _('Time Tracker'), style: 'font-weight: bold;' }));
-
         const file_selection_card = new St.BoxLayout({ vertical: true, style_class: 'cronomix-group' });
         left_column.add_child(file_selection_card);
 
@@ -262,34 +259,9 @@ export class TimeTrackerView {
 
         const fsc_info_button = new Button({ parent: fsc_row1, icon: 'cronomix-question-symbolic' });
 
-        const fsc_row2 = new ButtonBox(file_selection_card);
-        const fsc_close_button = fsc_row2.add({ wide: true, label: _('Close') });
-        Misc.focus_when_mapped(fsc_close_button.actor);
-
-        //
-        // currently tracking card
-        //
-        this.#tracking_card_title = new St.Label({ text: _('Currently Tracking'), style: `font-weight: bold; margin-top: ${card_title_top_margin}px;` });
-        left_column.add_child(this.#tracking_card_title);
-
-        this.#tracking_card = new St.BoxLayout({ vertical: true, x_expand: true, style_class: 'cronomix-group' });
-        left_column.add_child(this.#tracking_card);
-
-        const ctc_preview_button = new Button({ icon: 'cronomix-eye-symbolic' });
-
-        const ctc_row1 = new Misc.Row(tracker.time.fmt_hms(), ctc_preview_button.actor, this.#tracking_card);
-        const ctc_time_label = ctc_row1.label;
-        ctc_time_label.style = 'font-weight: bold';
-        ctc_time_label.style_class = 'cronomix-yellow';
-
-        const ctc_row2 = new ButtonBox(this.#tracking_card);
-        const ctc_stop_button = ctc_row2.add({ wide: true, label: _('Stop') });
-
         //
         // search data card
         //
-        left_column.add_child(new St.Label({ text: _('Search Data'), style: `font-weight: bold; margin-top: ${card_title_top_margin}px;` }));
-
         const query_card = new St.BoxLayout({ vertical: true, x_expand: true, style_class: 'cronomix-group' });
         left_column.add_child(query_card);
 
@@ -318,6 +290,28 @@ export class TimeTrackerView {
         sdc_button_row.add_child(this.#query_sort.actor.actor);
 
         const sdc_copy_button = new Button({ parent: sdc_button_row, wide: true, label: _('Copy') });
+
+        //
+        // currently tracking card
+        //
+        this.#tracking_card = new St.BoxLayout({ vertical: true, x_expand: true, style_class: 'cronomix-group' });
+        left_column.add_child(this.#tracking_card);
+
+        const ctc_preview_button = new Button({ icon: 'cronomix-eye-symbolic' });
+
+        const ctc_row1 = new Misc.Row(tracker.time.fmt_hms(), ctc_preview_button.actor, this.#tracking_card);
+        const ctc_time_label = ctc_row1.label;
+        ctc_time_label.style = 'font-weight: bold';
+        ctc_time_label.style_class = 'cronomix-yellow';
+
+        const ctc_row2 = new ButtonBox(this.#tracking_card);
+        const ctc_stop_button = ctc_row2.add({ wide: true, label: _('Stop') });
+
+        //
+        // Close button
+        //
+        const fsc_close_button = new Button({ parent: left_column, wide: true, label: _('Close') });
+        Misc.focus_when_mapped(fsc_close_button.actor);
 
         //
         // right column
@@ -392,7 +386,6 @@ export class TimeTrackerView {
     #update_ui () {
         const tracker = this.#applet.tracker;
         this.#tracking_card.visible = !!tracker.tic;
-        this.#tracking_card_title.visible = !!tracker.tic;
         this.#update_query_column();
     }
 

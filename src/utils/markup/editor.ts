@@ -296,13 +296,11 @@ export class Editor {
 }
 
 export class EditorHelp extends Editor {
-    close_button: Button;
-
     constructor () {
         super();
 
-        this.close_button = new Button({ parent: this.entry_header, icon: 'cronomix-close-symbolic' });
-        this.entry_header.add_child(new St.Widget({ x_expand: true }));
+        this.header_entry.remove_style_class_name('cronomix-headered-entry');
+        this.entry_header.visible = false;
 
         const table_of_contents = new ScrollBox();
         this.actor.insert_child_at_index(table_of_contents.actor, 0);
@@ -360,6 +358,7 @@ export class EditorView {
     actor:      St.BoxLayout;
     main_view:  Editor;
     help_view?: EditorHelp;
+    popup?:     Popup;
     show_help_button: Button;
 
     constructor (render_meta?: RenderMetaFn) {
@@ -371,28 +370,22 @@ export class EditorView {
         this.main_view.entry_header.add_child(new St.Widget({ x_expand: true }));
         this.show_help_button = new Button({ parent: this.main_view.entry_header, icon: 'cronomix-question-symbolic' });
 
-        this.show_help_button.subscribe('left_click', () => this.toggle_help_view());
+        this.show_help_button.subscribe('left_click', () => this.show_help_popup());
         this.actor.connect('captured-event', (_:unknown, event: Clutter.Event) => {
             if (event.type() !== Clutter.EventType.KEY_PRESS) return Clutter.EVENT_PROPAGATE;
-            if (event.get_key_symbol() === Clutter.KEY_F1) { this.toggle_help_view(); return Clutter.EVENT_STOP; }
+            if (event.get_key_symbol() === Clutter.KEY_F1) { this.show_help_popup(); return Clutter.EVENT_STOP; }
             return Clutter.EVENT_PROPAGATE;
         });
     }
 
-    toggle_help_view () {
-        if (this.help_view?.actor.visible) {
-            Misc.focus_when_mapped(this.main_view.entry.entry);
-            this.main_view.actor.visible = true;
-            this.help_view.actor.visible = false;
-        } else if (this.help_view) {
-            Misc.focus_when_mapped(this.help_view.entry.entry);
-            this.main_view.actor.visible = false;
-            this.help_view.actor.visible = true;
-        } else {
+    show_help_popup () {
+        if (! this.popup) {
+            this.popup = new Popup(this.show_help_button.actor, undefined);
             this.help_view = new EditorHelp();
-            this.actor.add_child(this.help_view.actor);
-            this.help_view.close_button.subscribe('left_click', () => this.toggle_help_view());
-            this.main_view.actor.visible = false;
+            this.popup.scrollbox.box.add_child(this.help_view.actor);
         }
+
+        Misc.focus_when_mapped(this.help_view!.entry.entry);
+        this.popup.open_at_widget(this.show_help_button);
     }
 }

@@ -12,8 +12,8 @@ import { Entry } from './../../utils/entry.js';
 import * as P from './../../utils/markup/parser.js';
 import { FilePicker } from './../../utils/pickers.js';
 import { show_info_popup } from './../../utils/popup.js';
-import { Button, CheckBox } from './../../utils/button.js';
 import { ScrollBox, LazyScrollBox } from './../../utils/scroll.js';
+import { Button, ButtonBox, CheckBox } from './../../utils/button.js';
 
 export class SearchView {
     actor: St.BoxLayout;
@@ -43,7 +43,6 @@ export class SearchView {
         const header = new St.BoxLayout({ style: 'min-width: 256px;', style_class: 'header' });
         entry_box.add_child(header);
 
-        const close_button = new Button({ parent: header, icon: 'cronomix-close-symbolic' });
         header.add_child(new St.Widget({ x_expand: true }));
         const help_button = new Button({ parent: header, icon: 'cronomix-question-symbolic' });
 
@@ -84,7 +83,9 @@ export class SearchView {
         const bem_add_attributes_entry = new Entry(_('Space separated list of task attributes'));
         new Row(_('Add'), bem_add_attributes_entry.actor, bem_card2);
 
-        const bem_apply_button = new Button({ parent: bulk_edit_menu, wide: true, label: _('Apply') });
+        const bem_buttons      = new ButtonBox(bulk_edit_menu);
+        const bem_apply_button = bem_buttons.add({ wide: true, label: _('Apply') });
+        const bem_close_button = bem_buttons.add({ wide: true, label: _('Close') });
 
         const apply_edits = () => {
             if (bem_export_picker.path) {
@@ -142,8 +143,8 @@ export class SearchView {
         // listen
         //
         bem_apply_button.subscribe('left_click', () => Pop.show_confirm_popup(bem_apply_button, () => apply_edits()));
+        bem_close_button.subscribe('left_click', () => applet.show_main_view());
         bem_card_info_button.subscribe('left_click', () => Pop.show_info_popup(bem_card_info_button, tasks_docs));
-        close_button.subscribe('left_click', () => applet.show_main_view());
         help_button.subscribe('left_click', () => show_info_popup(help_button, filter_docs));
         this.entry.entry.clutter_text.connect('text-changed', () => {
             const parser = new P.Parser(this.entry.entry.text || '* & !hide');
