@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-31 20:52+0200\n"
+"POT-Creation-Date: 2025-08-01 10:47+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -77,27 +77,6 @@ msgid "Per Slot Totals"
 msgstr ""
 
 msgid "Task text copied to clipboard!"
-msgstr ""
-
-msgid "Delete selected tasks"
-msgstr ""
-
-msgid "Copy selected tasks to file"
-msgstr ""
-
-msgid "Modify attributes of selected tasks"
-msgstr ""
-
-msgid "Space separated list of task attributes"
-msgstr ""
-
-msgid "Delete"
-msgstr ""
-
-msgid "Add"
-msgstr ""
-
-msgid "Apply"
 msgstr ""
 
 msgid "Add Task"
@@ -233,6 +212,27 @@ msgid "Start tracking"
 msgstr ""
 
 msgid "Cancel"
+msgstr ""
+
+msgid "Delete selected tasks"
+msgstr ""
+
+msgid "Copy selected tasks to file"
+msgstr ""
+
+msgid "Modify attributes of selected tasks"
+msgstr ""
+
+msgid "Space separated list of task attributes"
+msgstr ""
+
+msgid "Delete"
+msgstr ""
+
+msgid "Add"
+msgstr ""
+
+msgid "Apply"
 msgstr ""
 
 msgid "Show time in panel"

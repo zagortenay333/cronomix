@@ -52,16 +52,10 @@ export class SearchView {
         Misc.focus_when_mapped(this.entry.entry);
 
         //
-        // tasks container
-        //
-        const tasks_scroll = new LazyScrollBox(applet.ext.storage.read.lazy_list_page_size.value);
-        left_box.box.add_child(tasks_scroll.actor);
-
-        //
         // bulk edit menu
         //
         const bulk_edit_menu = new St.BoxLayout({ vertical: true, style_class: 'cronomix-spacing' });
-        this.actor.add_child(bulk_edit_menu);
+        left_box.box.add_child(bulk_edit_menu);
 
         const bem_card0 = new St.BoxLayout({ vertical: true, style_class: 'cronomix-group' });
         bulk_edit_menu.add_child(bem_card0);
@@ -137,6 +131,12 @@ export class SearchView {
             applet.flush_tasks();
             applet.show_search_view(this.entry.entry.text);
         };
+
+        //
+        // tasks container
+        //
+        const tasks_scroll = new LazyScrollBox(applet.ext.storage.read.lazy_list_page_size.value);
+        this.actor.add_child(tasks_scroll.actor);
 
         //
         // listen

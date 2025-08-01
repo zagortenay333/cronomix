@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-31 15:04+0200\n"
+"POT-Creation-Date: 2025-08-01 10:47+0200\n"
 "PO-Revision-Date: 2023-06-05 16:07+0200\n"
 "Last-Translator: Ludek Vydra <lvtran@u.k2.cz>\n"
 "Language-Team: \n"
@@ -81,27 +81,6 @@ msgstr "Celkové součty na slot"
 
 msgid "Task text copied to clipboard!"
 msgstr "Text úlohy zkopírován do schránky!"
-
-msgid "Delete selected tasks"
-msgstr "Smaž vybrané úkoly"
-
-msgid "Copy selected tasks to file"
-msgstr "Zkopíruj vybrané úkoly"
-
-msgid "Modify attributes of selected tasks"
-msgstr "Změň atributy vybraných úkolů"
-
-msgid "Space separated list of task attributes"
-msgstr "Mezerou oddělený seznam atributů úkolů"
-
-msgid "Delete"
-msgstr "Smaž"
-
-msgid "Add"
-msgstr "Přidej"
-
-msgid "Apply"
-msgstr "Proveď"
 
 msgid "Add Task"
 msgstr "Přidej úkol"
@@ -245,6 +224,27 @@ msgstr "Start sledování"
 
 msgid "Cancel"
 msgstr "Zruš"
+
+msgid "Delete selected tasks"
+msgstr "Smaž vybrané úkoly"
+
+msgid "Copy selected tasks to file"
+msgstr "Zkopíruj vybrané úkoly"
+
+msgid "Modify attributes of selected tasks"
+msgstr "Změň atributy vybraných úkolů"
+
+msgid "Space separated list of task attributes"
+msgstr "Mezerou oddělený seznam atributů úkolů"
+
+msgid "Delete"
+msgstr "Smaž"
+
+msgid "Add"
+msgstr "Přidej"
+
+msgid "Apply"
+msgstr "Proveď"
 
 msgid "Show time in panel"
 msgstr "Zobrazit čas v panelu"
