@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-01 11:40+0200\n"
+"POT-Creation-Date: 2025-08-02 16:45+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -166,7 +166,43 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
+msgid "Select time tracker file"
+msgstr ""
+
 msgid "Filter expression"
+msgstr ""
+
+msgid "Date (e.g., 2000-01-24)"
+msgstr ""
+
+msgid "Since"
+msgstr ""
+
+msgid "Until"
+msgstr ""
+
+msgid "Copy"
+msgstr ""
+
+msgid "Stop"
+msgstr ""
+
+msgid "Close"
+msgstr ""
+
+msgid "Totals"
+msgstr ""
+
+msgid "Search results copied to clipboard!"
+msgstr ""
+
+msgid "All Time"
+msgstr ""
+
+msgid "Per Slot Totals"
+msgstr ""
+
+msgid "Task text copied to clipboard!"
 msgstr ""
 
 msgid "Delete selected tasks"
@@ -188,42 +224,6 @@ msgid "Add"
 msgstr ""
 
 msgid "Apply"
-msgstr ""
-
-msgid "Close"
-msgstr ""
-
-msgid "Select time tracker file"
-msgstr ""
-
-msgid "Date (e.g., 2000-01-24)"
-msgstr ""
-
-msgid "Since"
-msgstr ""
-
-msgid "Until"
-msgstr ""
-
-msgid "Copy"
-msgstr ""
-
-msgid "Stop"
-msgstr ""
-
-msgid "Totals"
-msgstr ""
-
-msgid "Search results copied to clipboard!"
-msgstr ""
-
-msgid "All Time"
-msgstr ""
-
-msgid "Per Slot Totals"
-msgstr ""
-
-msgid "Task text copied to clipboard!"
 msgstr ""
 
 msgid "Show time in panel"
@@ -283,21 +283,6 @@ msgstr ""
 msgid "Dismiss"
 msgstr ""
 
-msgid "Left"
-msgstr ""
-
-msgid "Center"
-msgstr ""
-
-msgid "Right"
-msgstr ""
-
-msgid "Settings"
-msgstr ""
-
-msgid "Website"
-msgstr ""
-
 msgid "Pomodoro"
 msgstr ""
 
@@ -349,6 +334,21 @@ msgstr ""
 msgid "Restart"
 msgstr ""
 
+msgid "Left"
+msgstr ""
+
+msgid "Center"
+msgstr ""
+
+msgid "Right"
+msgstr ""
+
+msgid "Settings"
+msgstr ""
+
+msgid "Website"
+msgstr ""
+
 msgid "Deck"
 msgstr ""
 
@@ -359,6 +359,9 @@ msgid "Change deck"
 msgstr ""
 
 msgid "Start exam"
+msgstr ""
+
+msgid "Search cards"
 msgstr ""
 
 msgid "Add Card"
@@ -415,12 +418,6 @@ msgstr ""
 msgid "Important"
 msgstr ""
 
-msgid "Set shortcut"
-msgstr ""
-
-msgid "Type shortcut (backspace to reset)"
-msgstr ""
-
 msgid "Select folder"
 msgstr ""
 
@@ -466,11 +463,17 @@ msgstr ""
 msgid "Show more"
 msgstr ""
 
+msgid "Image not found"
+msgstr ""
+
 msgid ""
 "Right click any of the extension panel items to access the global settings."
 msgstr ""
 
-msgid "Image not found"
+msgid "Set shortcut"
+msgstr ""
+
+msgid "Type shortcut (backspace to reset)"
 msgstr ""
 
 msgid ""

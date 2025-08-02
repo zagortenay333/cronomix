@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-01 11:40+0200\n"
+"POT-Creation-Date: 2025-08-02 15:36+0200\n"
 "PO-Revision-Date: 2023-06-05 16:07+0200\n"
 "Last-Translator: Ludek Vydra <lvtran@u.k2.cz>\n"
 "Language-Team: \n"
@@ -176,8 +176,45 @@ msgstr "Start sledování"
 msgid "Cancel"
 msgstr "Zruš"
 
+msgid "Select time tracker file"
+msgstr "Zvol soubor sledování času"
+
 msgid "Filter expression"
 msgstr "Výraz filtru"
+
+#, fuzzy
+msgid "Date (e.g., 2000-01-24)"
+msgstr "Datum (například 2023-12-24)"
+
+msgid "Since"
+msgstr "Od"
+
+msgid "Until"
+msgstr "Do"
+
+msgid "Copy"
+msgstr "Kopírovat"
+
+msgid "Stop"
+msgstr "Stop"
+
+msgid "Close"
+msgstr "Zavřít"
+
+msgid "Totals"
+msgstr "Celkem"
+
+msgid "Search results copied to clipboard!"
+msgstr "Výsledek hledání zkopírován do schránky!"
+
+msgid "All Time"
+msgstr "Po celou dobu"
+
+msgid "Per Slot Totals"
+msgstr "Celkové součty na slot"
+
+msgid "Task text copied to clipboard!"
+msgstr "Text úlohy zkopírován do schránky!"
 
 msgid "Delete selected tasks"
 msgstr "Smaž vybrané úkoly"
@@ -199,43 +236,6 @@ msgstr "Přidej"
 
 msgid "Apply"
 msgstr "Proveď"
-
-msgid "Close"
-msgstr "Zavřít"
-
-msgid "Select time tracker file"
-msgstr "Zvol soubor sledování času"
-
-#, fuzzy
-msgid "Date (e.g., 2000-01-24)"
-msgstr "Datum (například 2023-12-24)"
-
-msgid "Since"
-msgstr "Od"
-
-msgid "Until"
-msgstr "Do"
-
-msgid "Copy"
-msgstr "Kopírovat"
-
-msgid "Stop"
-msgstr "Stop"
-
-msgid "Totals"
-msgstr "Celkem"
-
-msgid "Search results copied to clipboard!"
-msgstr "Výsledek hledání zkopírován do schránky!"
-
-msgid "All Time"
-msgstr "Po celou dobu"
-
-msgid "Per Slot Totals"
-msgstr "Celkové součty na slot"
-
-msgid "Task text copied to clipboard!"
-msgstr "Text úlohy zkopírován do schránky!"
 
 msgid "Show time in panel"
 msgstr "Zobrazit čas v panelu"
@@ -295,21 +295,6 @@ msgstr "Odložit"
 msgid "Dismiss"
 msgstr "Odvolat"
 
-msgid "Left"
-msgstr "Vlevo"
-
-msgid "Center"
-msgstr "Střed"
-
-msgid "Right"
-msgstr "Vpravo"
-
-msgid "Settings"
-msgstr "Nastavení"
-
-msgid "Website"
-msgstr "Webové stránky"
-
 msgid "Pomodoro"
 msgstr "Pomodoro"
 
@@ -363,6 +348,21 @@ msgstr "Časovač vypršel!"
 msgid "Restart"
 msgstr "Restart"
 
+msgid "Left"
+msgstr "Vlevo"
+
+msgid "Center"
+msgstr "Střed"
+
+msgid "Right"
+msgstr "Vpravo"
+
+msgid "Settings"
+msgstr "Nastavení"
+
+msgid "Website"
+msgstr "Webové stránky"
+
 msgid "Deck"
 msgstr ""
 
@@ -376,6 +376,10 @@ msgstr ""
 #, fuzzy
 msgid "Start exam"
 msgstr "Start"
+
+#, fuzzy
+msgid "Search cards"
+msgstr "Prohledej úkoly"
 
 #, fuzzy
 msgid "Add Card"
@@ -434,12 +438,6 @@ msgstr "Varování"
 msgid "Important"
 msgstr "Důležité"
 
-msgid "Set shortcut"
-msgstr "Nastav klávesovou zkratku"
-
-msgid "Type shortcut (backspace to reset)"
-msgstr "Stikni klávesovou zkratku (backspace pro resetování)"
-
 msgid "Select folder"
 msgstr "Vyber adresář"
 
@@ -485,14 +483,20 @@ msgstr "Rok"
 msgid "Show more"
 msgstr "Zobrazit více"
 
+msgid "Image not found"
+msgstr "Obrázek nenalezen"
+
 msgid ""
 "Right click any of the extension panel items to access the global settings."
 msgstr ""
 "Kliknutím pravým tlačítkem na položku panelu rozšíření získáte přístup ke "
 "globálním nastavením."
 
-msgid "Image not found"
-msgstr "Obrázek nenalezen"
+msgid "Set shortcut"
+msgstr "Nastav klávesovou zkratku"
+
+msgid "Type shortcut (backspace to reset)"
+msgstr "Stikni klávesovou zkratku (backspace pro resetování)"
 
 msgid ""
 "Number of items shown each time you press \"show more\" in a scroll list.\n"

@@ -3,8 +3,9 @@ import Clutter from 'gi://Clutter';
 import { gettext as _ } from 'resource:///org/gnome/shell/extensions/extension.js';
 
 import * as Fs from './../utils/fs.js';
-import * as Misc from './../utils/misc.js';
 import { ext } from './../extension.js';
+import * as Misc from './../utils/misc.js';
+import { Entry } from './../utils/entry.js';
 import { Cronomix } from './../extension.js';
 import { Storage } from './../utils/storage.js';
 import { ScrollBox } from './../utils/scroll.js';
@@ -40,12 +41,13 @@ export class FlashcardsApplet extends Applet {
             add_card:       { tag: 'keymap', value: null },
             change_deck:    { tag: 'keymap', value: null },
             start_exam:     { tag: 'keymap', value: null },
+            search_cards:   { tag: 'keymap', value: null },
         },
 
         groups: [
             ['deck'],
             ['panel_position'],
-            ['open', 'add_card', 'change_deck', 'start_exam'],
+            ['open', 'add_card', 'change_deck', 'start_exam', 'search_cards'],
         ],
 
         infos: {
@@ -59,6 +61,7 @@ export class FlashcardsApplet extends Applet {
             add_card: _('Add card'),
             change_deck: _('Change deck'),
             start_exam: _('Start exam'),
+            search_cards: _('Search cards'),
             ...PanelPositionTr,
         }
     });
@@ -74,10 +77,11 @@ export class FlashcardsApplet extends Applet {
         this.storage.config.infos.deck = Fs.read_entire_file(ext.path + '/data/docs/flashcards_deck') ?? '';
 
         this.storage.init_keymap({
-            open:        () => { this.panel_item.menu.open(); },
-            add_card:    () => { this.panel_item.menu.open(); this.show_editor(); },
-            change_deck: () => { this.panel_item.menu.open(); this.show_settings(); },
-            start_exam:  () => { this.panel_item.menu.open(); this.show_exam_view(); },
+            open:         () => { this.panel_item.menu.open(); },
+            add_card:     () => { this.panel_item.menu.open(); this.show_editor(); },
+            change_deck:  () => { this.panel_item.menu.open(); this.show_settings(); },
+            start_exam:   () => { this.panel_item.menu.open(); this.show_exam_view(); },
+            search_cards: () => { this.panel_item.menu.open(); this.show_search_view(); },
         });
 
         this.set_panel_position(this.storage.read.panel_position.value);
@@ -137,13 +141,23 @@ export class FlashcardsApplet extends Applet {
     }
 
     show_main_view () {
+        if (this.#current_view instanceof MainView) return;
         this.#current_view?.destroy();
         const view = new MainView(this);
         this.#current_view = view;
         this.menu.add_child(view.actor);
     }
 
+    show_search_view () {
+        if (this.#current_view instanceof SearchView) return;
+        this.#current_view?.destroy();
+        const view = new SearchView(this);
+        this.#current_view = view;
+        this.menu.add_child(view.actor);
+    }
+
     show_editor (card?: Card) {
+        if (this.#current_view instanceof CardEditor) return;
         this.#current_view?.destroy();
         const view = new CardEditor(this, card);
         this.#current_view = view;
@@ -151,6 +165,7 @@ export class FlashcardsApplet extends Applet {
     }
 
     show_exam_view () {
+        if (this.#current_view instanceof ExamView) return;
         this.#current_view?.destroy();
         const view = new ExamView(this);
         this.#current_view = view;
@@ -180,11 +195,13 @@ class MainView {
 
         const header_buttons  = new ButtonBox(header);
         const help_button     = header_buttons.add({ icon: 'cronomix-question-symbolic' });
+        const search_button   = header_buttons.add({ icon: 'cronomix-search-symbolic' });
         const exam_button     = header_buttons.add({ icon: 'cronomix-exam-symbolic' });
         const settings_button = header_buttons.add({ icon: 'cronomix-wrench-symbolic' });
 
         add_card_button.subscribe('left_click', () => applet.show_editor());
         help_button.subscribe('left_click', () => show_info_popup(help_button, Fs.read_entire_file(ext.path + '/data/docs/flashcards') ?? ''));
+        search_button.subscribe('left_click', () => applet.show_search_view());
         exam_button.subscribe('left_click', () => applet.show_exam_view());
         settings_button.subscribe('left_click', () => applet.show_settings());
 
@@ -363,6 +380,77 @@ export class ExamView {
         });
         cancel_button.subscribe('left_click', () => {
             applet.flush_deck();
+        });
+    }
+
+    destroy () {
+        this.actor.destroy();
+    }
+}
+
+export class SearchView {
+    actor: St.BoxLayout;
+    entry: Entry;
+
+    constructor (applet: FlashcardsApplet) {
+        this.actor = new St.BoxLayout({ vertical: false, style_class: 'cronomix-spacing' });
+
+        //
+        // left box
+        //
+        const left_box = new ScrollBox(false);
+        this.actor.add_child(left_box.actor);
+        left_box.box.vertical = true;
+
+        //
+        // entry
+        //
+        this.entry = new Entry(_('Search cards'));
+        left_box.box.add_child(this.entry.actor);
+        this.entry.actor.style = 'min-width: 256px;'; 
+        Misc.focus_when_mapped(this.entry.entry);
+
+        //
+        // buttons
+        //
+        const bem_buttons      = new ButtonBox(left_box.box);
+        // const bem_apply_button = bem_buttons.add({ wide: true, label: _('Apply') });
+        const bem_close_button = bem_buttons.add({ wide: true, label: _('Close') });
+
+        //
+        // tasks container
+        //
+        const card_scroll = new LazyScrollBox(applet.ext.storage.read.lazy_list_page_size.value);
+        this.actor.add_child(card_scroll.actor);
+
+        bem_close_button.subscribe('left_click', () => applet.show_main_view());
+        this.entry.entry.clutter_text.connect('text-changed', () => {
+            card_scroll.box.remove_all_children();
+            const needle = this.entry.entry.text;
+
+            const cards_to_show: { score:number, card:Card }[] = [];
+
+            for (const card of applet.deck.cards) {
+                const q = Misc.fuzzy_search(needle, card.question);
+                const a = Misc.fuzzy_search(needle, card.answer);
+
+                if (q == null && a == null) {
+                    continue;
+                } else if (q != null && a != null) {
+                    cards_to_show.push({ score: Math.max(q, a), card: card });
+                } else if (q == null) {
+                    cards_to_show.push({ score: a!, card: card });
+                } else {
+                    cards_to_show.push({ score: q!, card: card });
+                }
+            }
+
+            cards_to_show.sort((a, b) => (a.score < b.score) ? 1 : 0);
+
+            for (const {card} of cards_to_show) {
+                const w = new CardWidget(applet, card);
+                card_scroll.box.add_child(w.actor);
+            }
         });
     }
 
