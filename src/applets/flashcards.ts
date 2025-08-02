@@ -407,14 +407,20 @@ export class SearchView {
         //
         this.entry = new Entry(_('Search cards'));
         left_box.box.add_child(this.entry.actor);
-        this.entry.actor.style = 'min-width: 256px;'; 
+        this.entry.actor.style = 'min-width: 256px;';
         Misc.focus_when_mapped(this.entry.entry);
 
         //
-        // buttons
+        // bulk edit menu
         //
+        const bem_group = new St.BoxLayout({ vertical: true, style_class: 'cronomix-group' });
+        left_box.box.add_child(bem_group);
+
+        const bucket_picker = new IntPicker(-1, 5, -1);
+        new Misc.Row(_('Move cards to bucket (-1 for no move)'), bucket_picker.actor, bem_group);
+
         const bem_buttons      = new ButtonBox(left_box.box);
-        // const bem_apply_button = bem_buttons.add({ wide: true, label: _('Apply') });
+        const bem_apply_button = bem_buttons.add({ wide: true, label: _('Apply') });
         const bem_close_button = bem_buttons.add({ wide: true, label: _('Close') });
 
         //
@@ -423,12 +429,13 @@ export class SearchView {
         const card_scroll = new LazyScrollBox(applet.ext.storage.read.lazy_list_page_size.value);
         this.actor.add_child(card_scroll.actor);
 
-        bem_close_button.subscribe('left_click', () => applet.show_main_view());
-        this.entry.entry.clutter_text.connect('text-changed', () => {
-            card_scroll.box.remove_all_children();
-            const needle = this.entry.entry.text;
+        const cards_to_show: { score:number, card:Card }[] = [];
 
-            const cards_to_show: { score:number, card:Card }[] = [];
+        const search_cards = () => {
+            card_scroll.box.remove_all_children();
+            cards_to_show.length = 0;
+
+            const needle = this.entry.entry.text;
 
             for (const card of applet.deck.cards) {
                 const q = Misc.fuzzy_search(needle, card.question);
@@ -451,7 +458,27 @@ export class SearchView {
                 const w = new CardWidget(applet, card);
                 card_scroll.box.add_child(w.actor);
             }
+        };
+
+        let flush_needed = false;
+
+        this.entry.entry.clutter_text.connect('text-changed', () => search_cards());
+        bem_close_button.subscribe('left_click', () => {
+            if (flush_needed) applet.flush_deck();
+            applet.show_main_view();
         });
+        bem_apply_button.subscribe('left_click', () => {
+            show_confirm_popup(bem_apply_button, () => {
+                const move_to_bucket = bucket_picker.get_value();
+                if (move_to_bucket !== -1) {
+                    for (const {card} of cards_to_show) card.bucket = move_to_bucket;
+                    flush_needed = true;
+                }
+                search_cards();
+            });
+        });
+
+        search_cards();
     }
 
     destroy () {
