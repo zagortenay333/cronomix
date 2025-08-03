@@ -430,6 +430,10 @@ export class SearchView {
         const bucket_picker = new IntPicker(-1, 5, -1);
         new Misc.Row(_('Move cards to bucket (-1 for no move)'), bucket_picker.actor, bem_group);
 
+        const delete_cards_check = new CheckBox();
+        const delete_cards_check_row = new Misc.Row(_('Delete selected cards'), delete_cards_check.actor, bem_group);
+        delete_cards_check_row.actor.add_style_class_name('cronomix-red');
+
         const bem_buttons      = new ButtonBox(left_box.box);
         const bem_apply_button = bem_buttons.add({ wide: true, label: _('Apply') });
         const bem_close_button = bem_buttons.add({ wide: true, label: _('Close') });
@@ -505,10 +509,15 @@ export class SearchView {
         });
         bem_apply_button.subscribe('left_click', () => {
             show_confirm_popup(bem_apply_button, () => {
-                const move_to_bucket = bucket_picker.get_value();
-                if (move_to_bucket !== -1) {
-                    for (const {card} of cards_to_show) card.bucket = move_to_bucket;
+                if (delete_cards_check.checked) {
+                    for (const {card} of cards_to_show) Misc.array_remove(applet.deck.cards, card);
                     flush_needed = true;
+                } else {
+                    const move_to_bucket = bucket_picker.get_value();
+                    if (move_to_bucket !== -1) {
+                        for (const {card} of cards_to_show) card.bucket = move_to_bucket;
+                        flush_needed = true;
+                    }
                 }
                 search_cards();
             });

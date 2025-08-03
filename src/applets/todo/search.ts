@@ -61,9 +61,7 @@ export class SearchView {
 
         const bem_delete_checkbox = new CheckBox();
         const del_row = new Row(_('Delete selected tasks'), bem_delete_checkbox.actor, bem_card0);
-
-        del_row.label.style = 'font-weight: bold;';
-        del_row.label.style_class = 'cronomix-red';
+        del_row.label.add_style_class_name('cronomix-red');
 
         const bem_card1 = new St.BoxLayout({ vertical: true, style_class: 'cronomix-group' });
         bulk_edit_menu.add_child(bem_card1);

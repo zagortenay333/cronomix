@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-03 19:26+0200\n"
+"POT-Creation-Date: 2025-08-03 20:20+0200\n"
 "PO-Revision-Date: 2023-06-05 16:07+0200\n"
 "Last-Translator: Ludek Vydra <lvtran@u.k2.cz>\n"
 "Language-Team: \n"
@@ -433,6 +433,10 @@ msgstr ""
 
 msgid "Move cards to bucket (-1 for no move)"
 msgstr ""
+
+#, fuzzy
+msgid "Delete selected cards"
+msgstr "Smaž vybrané úkoly"
 
 msgid "Tip"
 msgstr "Tip"
