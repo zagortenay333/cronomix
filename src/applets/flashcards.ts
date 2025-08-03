@@ -344,6 +344,8 @@ export class ExamView {
             if ((applet.deck.session % days) === 0) remaining_cards.push(card);
         }
 
+        remaining_cards.reverse();
+
         applet.deck.session++;
         if (applet.deck.session > 32) applet.deck.session = 1;
 
@@ -429,6 +431,9 @@ export class SearchView {
         const card_scroll = new LazyScrollBox(applet.ext.storage.read.lazy_list_page_size.value);
         this.actor.add_child(card_scroll.actor);
 
+        //
+        // Search
+        // 
         const cards_to_show: { score:number, card:Card }[] = [];
 
         const search_cards = () => {
@@ -454,14 +459,20 @@ export class SearchView {
 
             cards_to_show.sort((a, b) => (a.score < b.score) ? 1 : 0);
 
-            for (const {card} of cards_to_show) {
-                const w = new CardWidget(applet, card);
-                card_scroll.box.add_child(w.actor);
-            }
+            const gen = function * () {
+                for (const {card} of cards_to_show) {
+                    yield new CardWidget(applet, card).actor;
+                }
+            };
+
+            card_scroll.set_children(-1, gen());
         };
 
         let flush_needed = false;
 
+        //
+        // listen
+        //
         this.entry.entry.clutter_text.connect('text-changed', () => search_cards());
         bem_close_button.subscribe('left_click', () => {
             if (flush_needed) applet.flush_deck();

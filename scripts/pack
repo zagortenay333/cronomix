@@ -24,8 +24,10 @@ done
 # Compile.
 # ==============================================================================
 ./scripts/build
+
 tsc
 wait
+sleep 10
 
 # ==============================================================================
 # Now replace the special comment with a blank line
@@ -35,7 +37,6 @@ for input in $(find src -name '*.ts'); do
     sed -i 's;/\*234h1764d7482a3a\*/;;g' $input
 done
 
-sleep 10
 wait
 
 for input in $(find $ext_dir -name '*.js'); do

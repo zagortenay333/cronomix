@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-02 19:49+0200\n"
+"POT-Creation-Date: 2025-08-03 13:15+0200\n"
 "PO-Revision-Date: 2023-06-05 16:07+0200\n"
 "Last-Translator: Ludek Vydra <lvtran@u.k2.cz>\n"
 "Language-Team: \n"
@@ -335,19 +335,6 @@ msgstr "Délka dlouhé pauzy"
 msgid "Long break every n pomodoros"
 msgstr "Dlouhá pauza každý n pomodor"
 
-#, fuzzy
-msgid "Timer elapsed."
-msgstr "Časovač vypršel!"
-
-msgid "Invalid time selected."
-msgstr "Zvolen neplatný čas."
-
-msgid "Timer Elapsed!"
-msgstr "Časovač vypršel!"
-
-msgid "Restart"
-msgstr "Restart"
-
 msgid "Left"
 msgstr "Vlevo"
 
@@ -362,6 +349,19 @@ msgstr "Nastavení"
 
 msgid "Website"
 msgstr "Webové stránky"
+
+#, fuzzy
+msgid "Timer elapsed."
+msgstr "Časovač vypršel!"
+
+msgid "Invalid time selected."
+msgstr "Zvolen neplatný čas."
+
+msgid "Timer Elapsed!"
+msgstr "Časovač vypršel!"
+
+msgid "Restart"
+msgstr "Restart"
 
 msgid "Deck"
 msgstr ""
