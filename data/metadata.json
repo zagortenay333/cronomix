@@ -2,7 +2,7 @@
     "name":           "Cronomix",
     "uuid":           "cronomix@zagortenay333",
     "url":            "https://github.com/zagortenay333/cronomix",
-    "description":    "All-in-one timer, stopwatch, pomodoro, alarms and todos",
+    "description":    "All-in-one timer, stopwatch, pomodoro, alarm, todo, and flashcards extension",
     "shell-version":  ["48"],
     "gettext-domain": "cronomix"
 }
