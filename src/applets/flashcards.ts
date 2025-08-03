@@ -407,13 +407,13 @@ export class SearchView {
         //
         // entry
         //
-        this.entry = new Entry(_('Search cards'));
-        left_box.box.add_child(this.entry.actor);
-        this.entry.actor.style = 'min-width: 256px;';
-        Misc.focus_when_mapped(this.entry.entry);
-
         const entry_group = new St.BoxLayout({ vertical: true, style_class: 'cronomix-group' });
         left_box.box.add_child(entry_group);
+
+        this.entry = new Entry(_('Search cards'));
+        entry_group.add_child(this.entry.actor);
+        this.entry.actor.style = 'min-width: 256px;';
+        Misc.focus_when_mapped(this.entry.entry);
 
         const fuzzy_search_check = new CheckBox();
         new Misc.Row(_('Do fuzzy search'), fuzzy_search_check.actor, entry_group);
