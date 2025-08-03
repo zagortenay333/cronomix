@@ -13,7 +13,7 @@ import { IntPicker } from './../utils/pickers.js';
 import { LazyScrollBox } from './../utils/scroll.js';
 import { Markup } from './../utils/markup/renderer.js';
 import { EditorView } from './../utils/markup/editor.js';
-import { Button, ButtonBox } from './../utils/button.js';
+import { Button, ButtonBox, CheckBox } from './../utils/button.js';
 import { Applet, PanelPosition, PanelPositionTr } from './applet.js';
 import { show_info_popup, show_confirm_popup } from './../utils/popup.js';
 
@@ -412,8 +412,17 @@ export class SearchView {
         this.entry.actor.style = 'min-width: 256px;';
         Misc.focus_when_mapped(this.entry.entry);
 
+        const entry_group = new St.BoxLayout({ vertical: true, style_class: 'cronomix-group' });
+        left_box.box.add_child(entry_group);
+
+        const fuzzy_search_check = new CheckBox();
+        new Misc.Row(_('Do fuzzy search'), fuzzy_search_check.actor, entry_group);
+
+        const bucket_restriction = new IntPicker(-1, 5, -1);
+        new Misc.Row(_('Search in bucket (-1 for all buckets)'), bucket_restriction.actor, entry_group);
+
         //
-        // bulk edit menu
+        // bulk edit options
         //
         const bem_group = new St.BoxLayout({ vertical: true, style_class: 'cronomix-group' });
         left_box.box.add_child(bem_group);
@@ -430,10 +439,11 @@ export class SearchView {
         //
         const card_scroll = new LazyScrollBox(applet.ext.storage.read.lazy_list_page_size.value);
         this.actor.add_child(card_scroll.actor);
+        card_scroll.box.style = 'min-width: 256px;';
 
         //
         // Search
-        // 
+        //
         const cards_to_show: { score:number, card:Card }[] = [];
 
         const search_cards = () => {
@@ -441,23 +451,36 @@ export class SearchView {
             cards_to_show.length = 0;
 
             const needle = this.entry.entry.text;
+            const bucket = bucket_restriction.get_value();
 
-            for (const card of applet.deck.cards) {
-                const q = Misc.fuzzy_search(needle, card.question);
-                const a = Misc.fuzzy_search(needle, card.answer);
+            if (fuzzy_search_check.checked) {
+                for (const card of applet.deck.cards) {
+                    if ((bucket !== -1) && (card.bucket !== bucket)) continue;
 
-                if (q == null && a == null) {
-                    continue;
-                } else if (q != null && a != null) {
-                    cards_to_show.push({ score: Math.max(q, a), card: card });
-                } else if (q == null) {
-                    cards_to_show.push({ score: a!, card: card });
-                } else {
-                    cards_to_show.push({ score: q!, card: card });
+                    const q = Misc.fuzzy_search(needle, card.question);
+                    const a = Misc.fuzzy_search(needle, card.answer);
+
+                    if (q == null && a == null) {
+                        continue;
+                    } else if (q != null && a != null) {
+                        cards_to_show.push({ score: Math.max(q, a), card: card });
+                    } else if (q == null) {
+                        cards_to_show.push({ score: a!, card: card });
+                    } else {
+                        cards_to_show.push({ score: q!, card: card });
+                    }
+                }
+
+                cards_to_show.sort((a, b) => (a.score < b.score) ? 1 : 0);
+            } else {
+                for (const card of applet.deck.cards) {
+                    if ((bucket !== -1) && (card.bucket !== bucket)) {
+                        continue;
+                    } else if ((card.question.indexOf(needle) !== -1) || (card.answer.indexOf(needle) !== -1)) {
+                        cards_to_show.push({ score:0, card:card });
+                    }
                 }
             }
-
-            cards_to_show.sort((a, b) => (a.score < b.score) ? 1 : 0);
 
             const gen = function * () {
                 for (const {card} of cards_to_show) {
@@ -473,7 +496,9 @@ export class SearchView {
         //
         // listen
         //
+        bucket_restriction.on_change = () => search_cards();
         this.entry.entry.clutter_text.connect('text-changed', () => search_cards());
+        fuzzy_search_check.subscribe('left_click', () => search_cards());
         bem_close_button.subscribe('left_click', () => {
             if (flush_needed) applet.flush_deck();
             applet.show_main_view();

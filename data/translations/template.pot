@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-03 15:22+0200\n"
+"POT-Creation-Date: 2025-08-03 19:26+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -404,6 +404,12 @@ msgid "Correct"
 msgstr ""
 
 msgid "Wrong"
+msgstr ""
+
+msgid "Do fuzzy search"
+msgstr ""
+
+msgid "Search in bucket (-1 for all buckets)"
 msgstr ""
 
 msgid "Move cards to bucket (-1 for no move)"
