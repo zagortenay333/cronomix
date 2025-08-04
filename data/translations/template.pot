@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-03 21:36+0200\n"
+"POT-Creation-Date: 2025-08-04 15:06+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -226,39 +226,6 @@ msgstr ""
 msgid "Apply"
 msgstr ""
 
-msgid "Show time in panel"
-msgstr ""
-
-msgid "Clock size (set to 0 for default size)"
-msgstr ""
-
-msgid "Start"
-msgstr ""
-
-msgid "Pause"
-msgstr ""
-
-msgid "Resume"
-msgstr ""
-
-msgid "Reset"
-msgstr ""
-
-msgid "Lap"
-msgstr ""
-
-msgid "Lap Time"
-msgstr ""
-
-msgid "Overall Time"
-msgstr ""
-
-msgid "Lap Times"
-msgstr ""
-
-msgid "Laps table copied to clipboard!"
-msgstr ""
-
 msgid "Notification sound"
 msgstr ""
 
@@ -283,45 +250,6 @@ msgstr ""
 msgid "Dismiss"
 msgstr ""
 
-msgid "Pomodoro"
-msgstr ""
-
-msgid "Long Break"
-msgstr ""
-
-msgid "Short Break"
-msgstr ""
-
-msgid "Show presets"
-msgstr ""
-
-msgid "Pomodoro phase change."
-msgstr ""
-
-msgid "Phase"
-msgstr ""
-
-msgid "Completed pomodoros"
-msgstr ""
-
-msgid "Pomodoros until long break"
-msgstr ""
-
-msgid "Add Preset"
-msgstr ""
-
-msgid "Pomodoro length"
-msgstr ""
-
-msgid "Short break length"
-msgstr ""
-
-msgid "Long break length"
-msgstr ""
-
-msgid "Long break every n pomodoros"
-msgstr ""
-
 msgid "Left"
 msgstr ""
 
@@ -335,18 +263,6 @@ msgid "Settings"
 msgstr ""
 
 msgid "Website"
-msgstr ""
-
-msgid "Timer elapsed."
-msgstr ""
-
-msgid "Invalid time selected."
-msgstr ""
-
-msgid "Timer Elapsed!"
-msgstr ""
-
-msgid "Restart"
 msgstr ""
 
 msgid "Deck"
@@ -416,6 +332,96 @@ msgid "Move cards to bucket (-1 for no move)"
 msgstr ""
 
 msgid "Delete selected cards"
+msgstr ""
+
+msgid ""
+"Set to 0 for default font size.\n"
+"You can also adjust the font size by scrolling the mouse wheel over the "
+"clock label."
+msgstr ""
+
+msgid "Show time in panel"
+msgstr ""
+
+msgid "Clock size"
+msgstr ""
+
+msgid "Show presets"
+msgstr ""
+
+msgid "Timer elapsed."
+msgstr ""
+
+msgid "Start"
+msgstr ""
+
+msgid "Pause"
+msgstr ""
+
+msgid "Reset"
+msgstr ""
+
+msgid "Add Preset"
+msgstr ""
+
+msgid "Invalid time selected."
+msgstr ""
+
+msgid "Timer Elapsed!"
+msgstr ""
+
+msgid "Restart"
+msgstr ""
+
+msgid "Pomodoro"
+msgstr ""
+
+msgid "Long Break"
+msgstr ""
+
+msgid "Short Break"
+msgstr ""
+
+msgid "Pomodoro phase change."
+msgstr ""
+
+msgid "Phase"
+msgstr ""
+
+msgid "Completed pomodoros"
+msgstr ""
+
+msgid "Pomodoros until long break"
+msgstr ""
+
+msgid "Pomodoro length"
+msgstr ""
+
+msgid "Short break length"
+msgstr ""
+
+msgid "Long break length"
+msgstr ""
+
+msgid "Long break every n pomodoros"
+msgstr ""
+
+msgid "Resume"
+msgstr ""
+
+msgid "Lap"
+msgstr ""
+
+msgid "Lap Time"
+msgstr ""
+
+msgid "Overall Time"
+msgstr ""
+
+msgid "Lap Times"
+msgstr ""
+
+msgid "Laps table copied to clipboard!"
 msgstr ""
 
 msgid "Tip"

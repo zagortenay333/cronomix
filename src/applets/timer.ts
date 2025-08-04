@@ -54,10 +54,14 @@ export class TimerApplet extends Applet<Events> {
             ['open', 'show_presets'],
         ],
 
+        infos: {
+            clock_size: _('Set to 0 for default font size.\nYou can also adjust the font size by scrolling the mouse wheel over the clock label.')
+        },
+
         translations: {
             show_panel_label: _('Show time in panel'),
             panel_position: _('Panel position'),
-            clock_size: _('Clock size (set to 0 for default size)'),
+            clock_size: _('Clock size'),
             notif_sound: _('Notification sound'),
             open: _('Open'),
             show_presets: _('Show presets'),
@@ -202,9 +206,9 @@ class MainView {
         const time_picker = new TimePicker();
         header.add_child(time_picker.actor);
 
-        const time_label = new St.Label({ style: 'font-weight: bold;', y_align: Clutter.ActorAlign.CENTER });
+        const time_label = new St.Label({ reactive: true, style: 'font-weight: bold;', y_align: Clutter.ActorAlign.CENTER });
         const clock_size = applet.storage.read.clock_size.value;
-        if (clock_size > 0) time_label.style += `font-family: monospace; font-size: ${clock_size}px;`;
+        if (clock_size > 0) time_label.style += `font-size: ${clock_size}px;`;
         header.add_child(time_label);
 
         header.add_child(new St.Widget({ x_expand: true, style: 'min-width: 40px;' }));
@@ -282,6 +286,25 @@ class MainView {
             applet.reset(-1);
             block_ui_update = false;
         };
+        time_label.connect('scroll-event', (_:unknown, event: Clutter.Event) => {
+            const direction = event.get_scroll_direction();
+            let font_size = applet.storage.read.clock_size.value;
+
+            if (direction === Clutter.ScrollDirection.UP) {
+                font_size += 20;
+            } else if (direction === Clutter.ScrollDirection.DOWN) {
+                font_size -= 20;
+                if (font_size < 0) font_size = 0;
+            }
+
+            if (font_size > 0) {
+                time_label.style = `font-weight: bold; font-size: ${font_size}px;`;
+            } else {
+                time_label.style = 'font-weight: bold;';
+            }
+
+            applet.storage.modify('clock_size', (v) => v.value = font_size);
+        });
     }
 
     destroy () {

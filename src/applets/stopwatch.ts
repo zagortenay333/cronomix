@@ -46,10 +46,14 @@ export class StopwatchApplet extends Applet<Events> {
             ['open'],
         ],
 
+        infos: {
+            clock_size: _('Set to 0 for default font size.\nYou can also adjust the font size by scrolling the mouse wheel over the clock label.')
+        },
+
         translations: {
             show_panel_label: _('Show time in panel'),
             panel_position: _('Panel position'),
-            clock_size: _('Clock size (set to 0 for default size)'),
+            clock_size: _('Clock size'),
             open: _('Open'),
             ...PanelPositionTr,
         }
@@ -162,8 +166,9 @@ class MainView {
 
         header_buttons.actor.y_align = Clutter.ActorAlign.START;
         Misc.focus_when_mapped(settings_button.actor);
+        header.label.reactive = true;
         header.label.style = 'font-weight: bold;';
-        if (applet.storage.read.clock_size.value > 0) header.label.style += `font-family: monospace; font-size: ${applet.storage.read.clock_size.value}px;`;
+        if (applet.storage.read.clock_size.value > 0) header.label.style += `font-size: ${applet.storage.read.clock_size.value}px;`;
 
         //
         // buttons
@@ -249,6 +254,25 @@ class MainView {
         pause_button.subscribe('left_click', () => applet.pause());
         resume_button.subscribe('left_click', () => applet.resume());
         lap_button.subscribe('left_click', () => applet.lap());
+        header.label.connect('scroll-event', (_:unknown, event: Clutter.Event) => {
+            const direction = event.get_scroll_direction();
+            let font_size = applet.storage.read.clock_size.value;
+
+            if (direction === Clutter.ScrollDirection.UP) {
+                font_size += 20;
+            } else if (direction === Clutter.ScrollDirection.DOWN) {
+                font_size -= 20;
+                if (font_size < 0) font_size = 0;
+            }
+
+            if (font_size > 0) {
+                header.label.style = `font-weight: bold; font-size: ${font_size}px;`;
+            } else {
+                header.label.style = 'font-weight: bold;';
+            }
+
+            applet.storage.modify('clock_size', (v) => v.value = font_size);
+        });
         copy_button.subscribe('left_click', () => {
             const laps = this.#applet.laps;
             let result = '#, ' + _('Lap Times') + ', ' +_('Overall Time') + '\n';

@@ -60,10 +60,14 @@ export class PomodoroApplet extends Applet<Events> {
             ['open', 'show_presets'],
         ],
 
+        infos: {
+            clock_size: _('Set to 0 for default font size.\nYou can also adjust the font size by scrolling the mouse wheel over the clock label.')
+        },
+
         translations: {
             show_panel_label: _('Show time in panel'),
             panel_position: _('Panel position'),
-            clock_size: _('Clock size (set to 0 for default size)'),
+            clock_size: _('Clock size'),
             notif_sound: _('Notification sound'),
             open: _('Open'),
             show_presets: _('Show presets'),
@@ -233,9 +237,10 @@ class MainView {
 
         header_buttons.actor.y_align = Clutter.ActorAlign.START;
         Misc.focus_when_mapped(settings_button.actor);
-        header.label.style = 'font-weight: bold;';
         const clock_size = applet.storage.read.clock_size.value;
-        if (clock_size > 0) header.label.style += `font-family: monospace; font-size: ${clock_size}px;`
+        header.label.reactive = true;
+        header.label.style = 'font-weight: bold;';
+        if (clock_size > 0) header.label.style += `font-size: ${clock_size}px;`
 
         //
         // phase info box
@@ -300,6 +305,25 @@ class MainView {
         this.#sid2 = applet.subscribe('timer_state_changed', (running) => on_timer_state_changed(running));
         pomodoro_counter.on_change = (value, valid) => { if (valid) applet.storage.modify('completed_pomodoros', v => v.value = value); }
         long_break_counter.on_change = (value, valid) => { if (valid) applet.storage.modify('pomos_until_long_break', v => v.value = value); };
+        header.label.connect('scroll-event', (_:unknown, event: Clutter.Event) => {
+            const direction = event.get_scroll_direction();
+            let font_size = applet.storage.read.clock_size.value;
+
+            if (direction === Clutter.ScrollDirection.UP) {
+                font_size += 20;
+            } else if (direction === Clutter.ScrollDirection.DOWN) {
+                font_size -= 20;
+                if (font_size < 0) font_size = 0;
+            }
+
+            if (font_size > 0) {
+                header.label.style = `font-weight: bold; font-size: ${font_size}px;`;
+            } else {
+                header.label.style = 'font-weight: bold;';
+            }
+
+            applet.storage.modify('clock_size', (v) => v.value = font_size);
+        });
     }
 
     destroy () {
