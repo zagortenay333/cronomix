@@ -9,10 +9,10 @@ import { Entry } from './../utils/entry.js';
 import { Cronomix } from './../extension.js';
 import { Storage } from './../utils/storage.js';
 import { ScrollBox } from './../utils/scroll.js';
-import { IntPicker } from './../utils/pickers.js';
 import { LazyScrollBox } from './../utils/scroll.js';
 import { Markup } from './../utils/markup/renderer.js';
 import { EditorView } from './../utils/markup/editor.js';
+import { FilePicker, IntPicker } from './../utils/pickers.js';
 import { Button, ButtonBox, CheckBox } from './../utils/button.js';
 import { Applet, PanelPosition, PanelPositionTr } from './applet.js';
 import { show_info_popup, show_confirm_popup } from './../utils/popup.js';
@@ -29,33 +29,32 @@ export type Card = {
     answer: string;
 }
 
+export type DeckPath = {
+    active: boolean;
+    path: string;
+}
+
 export class FlashcardsApplet extends Applet {
     storage = new Storage({
         version: 0,
         file: '~/.config/cronomix/flashcards.json',
 
         values: {
-            deck:           { tag: 'file',   value: null },
             panel_position: { tag: 'enum',   value: PanelPosition.RIGHT, enum: Object.values(PanelPosition) },
             open:           { tag: 'keymap', value: null },
             add_card:       { tag: 'keymap', value: null },
             change_deck:    { tag: 'keymap', value: null },
             start_exam:     { tag: 'keymap', value: null },
             search_cards:   { tag: 'keymap', value: null },
+            decks:          { tag: 'custom', value: []/*of DeckPath*/ },
         },
 
         groups: [
-            ['deck'],
             ['panel_position'],
             ['open', 'add_card', 'change_deck', 'start_exam', 'search_cards'],
         ],
 
-        infos: {
-            deck: '' // Initted in the constructor.
-        },
-
         translations: {
-            deck: _('Deck'),
             panel_position: _('Panel position'),
             open: _('Open'),
             add_card: _('Add card'),
@@ -74,8 +73,6 @@ export class FlashcardsApplet extends Applet {
     constructor (extension: Cronomix) {
         super(extension, 'flashcards');
 
-        this.storage.config.infos.deck = Fs.read_entire_file(ext.path + '/data/docs/flashcards_deck') ?? '';
-
         this.storage.init_keymap({
             open:         () => { this.panel_item.menu.open(); },
             add_card:     () => { this.panel_item.menu.open(); this.show_editor(); },
@@ -85,7 +82,6 @@ export class FlashcardsApplet extends Applet {
         });
 
         this.set_panel_position(this.storage.read.panel_position.value);
-        this.storage.subscribe('deck', () => this.load_deck());
         this.storage.subscribe('panel_position', ({ value }) => this.set_panel_position(value));
         this.load_deck();
     }
@@ -95,15 +91,23 @@ export class FlashcardsApplet extends Applet {
         super.destroy();
     }
 
+    #get_active_file_path (): string | null {
+        for (const p of this.storage.read.decks.value) {
+            if ((p as DeckPath).active) return (p as DeckPath).path;
+        }
+
+        return null;
+    }
+
     load_deck () {
         this.#disable_file_monitor();
 
-        const file_path = this.storage.read.deck.value ?? '';
-        if (file_path.trim() === '') { this.show_settings(); return; }
+        const file_path = this.#get_active_file_path();
+        if (file_path === null) { this.show_deck_view(); return; }
 
         Fs.create_file(file_path);
         const file = Fs.read_entire_file(file_path);
-        if (file == null) { this.show_settings(); return; }
+        if (file == null) { this.show_deck_view(); return; }
 
         if (file.trim() === '') {
             this.deck = { version: 1, session: 1, cards: [] };
@@ -113,7 +117,7 @@ export class FlashcardsApplet extends Applet {
                 this.deck = JSON.parse(file);
             } catch (e) {
                 logError(e);
-                this.show_settings();
+                this.show_deck_view();
                 return;
             }
         }
@@ -124,13 +128,13 @@ export class FlashcardsApplet extends Applet {
 
     flush_deck () {
         const content = JSON.stringify(this.deck, null, 4);
-        const path = this.storage.read.deck.value;
+        const path = this.#get_active_file_path();
         if (path) Fs.write_entire_file(path, content);
     }
 
     #enable_file_monitor () {
-        const file = this.storage.read.deck.value!;
-        this.#todo_file_monitor = new Fs.FileMonitor(file, () => this.load_deck());
+        const path = this.#get_active_file_path();
+        if (path) this.#todo_file_monitor = new Fs.FileMonitor(path, () => this.load_deck());
     }
 
     #disable_file_monitor () {
@@ -152,6 +156,14 @@ export class FlashcardsApplet extends Applet {
         if (this.#current_view instanceof SearchView) return;
         this.#current_view?.destroy();
         const view = new SearchView(this);
+        this.#current_view = view;
+        this.menu.add_child(view.actor);
+    }
+
+    show_deck_view () {
+        if (this.#current_view instanceof DeckView) return;
+        this.#current_view?.destroy();
+        const view = new DeckView(this);
         this.#current_view = view;
         this.menu.add_child(view.actor);
     }
@@ -196,12 +208,14 @@ class MainView {
         const header_buttons  = new ButtonBox(header);
         const help_button     = header_buttons.add({ icon: 'cronomix-question-symbolic' });
         const search_button   = header_buttons.add({ icon: 'cronomix-search-symbolic' });
+        const decks_button    = header_buttons.add({ icon: 'cronomix-folder-symbolic' });
         const exam_button     = header_buttons.add({ icon: 'cronomix-exam-symbolic' });
         const settings_button = header_buttons.add({ icon: 'cronomix-wrench-symbolic' });
 
         add_card_button.subscribe('left_click', () => applet.show_editor());
         help_button.subscribe('left_click', () => show_info_popup(help_button, Fs.read_entire_file(ext.path + '/data/docs/flashcards') ?? ''));
         search_button.subscribe('left_click', () => applet.show_search_view());
+        decks_button.subscribe('left_click', () => applet.show_deck_view());
         exam_button.subscribe('left_click', () => applet.show_exam_view());
         settings_button.subscribe('left_click', () => applet.show_settings());
 
@@ -414,7 +428,6 @@ export class ExamView {
 
 export class SearchView {
     actor: St.BoxLayout;
-    entry: Entry;
 
     constructor (applet: FlashcardsApplet) {
         this.actor = new St.BoxLayout({ vertical: false, style_class: 'cronomix-spacing' });
@@ -432,10 +445,10 @@ export class SearchView {
         const entry_group = new St.BoxLayout({ vertical: true, style_class: 'cronomix-group' });
         left_box.box.add_child(entry_group);
 
-        this.entry = new Entry(_('Search cards'));
-        entry_group.add_child(this.entry.actor);
-        this.entry.actor.style = 'min-width: 256px;';
-        Misc.focus_when_mapped(this.entry.entry);
+        const entry = new Entry(_('Search cards'));
+        entry_group.add_child(entry.actor);
+        entry.actor.style = 'min-width: 256px;';
+        Misc.focus_when_mapped(entry.entry);
 
         const fuzzy_search_check = new CheckBox();
         new Misc.Row(_('Do fuzzy search'), fuzzy_search_check.actor, entry_group);
@@ -476,7 +489,7 @@ export class SearchView {
             card_scroll.box.remove_all_children();
             cards_to_show.length = 0;
 
-            const needle = this.entry.entry.text;
+            const needle = entry.entry.text;
             const bucket = bucket_restriction.get_value();
 
             if (fuzzy_search_check.checked) {
@@ -523,7 +536,7 @@ export class SearchView {
         // listen
         //
         bucket_restriction.on_change = () => search_cards();
-        this.entry.entry.clutter_text.connect('text-changed', () => search_cards());
+        entry.entry.clutter_text.connect('text-changed', () => search_cards());
         fuzzy_search_check.subscribe('left_click', () => search_cards());
         bem_close_button.subscribe('left_click', () => {
             if (flush_needed) applet.flush_deck();
@@ -550,5 +563,97 @@ export class SearchView {
 
     destroy () {
         this.actor.destroy();
+    }
+}
+
+export class DeckView {
+    actor: St.BoxLayout;
+
+    constructor (applet: FlashcardsApplet) {
+        this.actor = new St.BoxLayout({ vertical: true, style_class: 'cronomix-spacing' });
+
+        const button_row = new St.BoxLayout({ style_class: 'cronomix-spacing' });
+        this.actor.add_child(button_row);
+
+        const linked_buttons = new ButtonBox(button_row);
+        const ok_button      = linked_buttons.add({ wide: true, label: _('Ok') });
+        const add_button     = linked_buttons.add({ wide: true, label: _('Add Deck') });
+        const help_button    = new Button({ parent: button_row, icon: 'cronomix-question-symbolic' });
+
+        Misc.focus_when_mapped(add_button.actor);
+
+        const deck_scroll = new ScrollBox();
+        this.actor.add_child(deck_scroll.actor);
+
+        for (const deck_path of applet.storage.read.decks.value) {
+            const w = new DeckViewCard(applet, deck_path);
+
+            if ((deck_path as DeckPath).active) {
+                deck_scroll.box.insert_child_at_index(w.actor, 0);
+            } else {
+                deck_scroll.box.add_child(w.actor);
+            }
+        }
+
+        const help_text = Fs.read_entire_file(ext.path + '/data/docs/flashcards_deck') ?? '';
+
+        help_button.subscribe('left_click', () => show_info_popup(help_button, help_text));
+        ok_button.subscribe('left_click', () => {
+            let found_active = false;
+            for (const p of applet.storage.read.decks.value) {
+                if ((p as DeckPath).active) {
+                    found_active = true;
+                    break;
+                }
+            }
+
+            if (!found_active && applet.storage.read.decks.value.length) {
+                applet.storage.modify('decks', (v) => (v.value as DeckPath[])[0].active = true);
+            }
+
+            applet.load_deck();
+        });
+        add_button.subscribe('left_click', () => {
+            applet.panel_item.menu.close();
+
+            Fs.open_file_dialog(false, null, (path: string) => {
+                applet.panel_item.menu.open();
+                const deck_path = {active:false, path:path};
+                applet.storage.modify('decks', (v) => (v.value as DeckPath[]).push(deck_path));
+                const w = new DeckViewCard(applet, deck_path);
+                deck_scroll.box.add_child(w.actor);
+            });
+        });
+    }
+
+    destroy () {
+        this.actor.destroy();
+    }
+}
+
+export class DeckViewCard extends Misc.Card {
+    constructor (applet: FlashcardsApplet, path: DeckPath) {
+        super();
+
+        const checkbox = new CheckBox({ checked: path.active });
+        this.left_header_box.add_child(checkbox.actor);
+
+        const delete_button = new Button({ parent: this.autohide_box, icon: 'cronomix-trash-symbolic', style_class: 'cronomix-floating-button' });
+        const file_picker = new FilePicker({ parent: this.actor, path: path.path });
+
+        file_picker.on_change = (p) => {
+            applet.storage.modify('decks', () => path.path = p ?? '');
+        };
+        checkbox.subscribe('left_click', () => {
+            applet.storage.modify('decks', (v) => {
+                path.active = true;
+                for (const p of v.value) if (p !== path) (p as DeckPath).active = false;
+            });
+            applet.load_deck();
+        });
+        delete_button.subscribe('left_click', () => {
+            applet.storage.modify('decks', (v) => Misc.array_remove(v.value, path));
+            this.actor.destroy();
+        });
     }
 }

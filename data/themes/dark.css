@@ -183,7 +183,7 @@
 .cronomix-entry {
     background-color: rgba(255, 255, 255, .08);
     border-radius: 10px;
-    padding: 4px 6px;
+    padding: 6px;
     color: inherit;
     border: 0;
     max-width: 500px;
@@ -276,7 +276,6 @@
 }
 
 .cronomix-file-picker StEntry {
-    padding: 4px 6px;
     border-radius: 10px 0 0 10px;
 }
 

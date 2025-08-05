@@ -1,3 +1,5 @@
+## Deck format
+
 A flashcards deck is a single JSON file with the following schema:
 
 > {

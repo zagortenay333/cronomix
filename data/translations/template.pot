@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-04 15:06+0200\n"
+"POT-Creation-Date: 2025-08-05 19:01+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -265,75 +265,6 @@ msgstr ""
 msgid "Website"
 msgstr ""
 
-msgid "Deck"
-msgstr ""
-
-msgid "Add card"
-msgstr ""
-
-msgid "Change deck"
-msgstr ""
-
-msgid "Start exam"
-msgstr ""
-
-msgid "Search cards"
-msgstr ""
-
-msgid "Add Card"
-msgstr ""
-
-msgid "every session"
-msgstr ""
-
-msgid "every 2 sessions"
-msgstr ""
-
-msgid "every 4 sessions"
-msgstr ""
-
-msgid "every 8 sessions"
-msgstr ""
-
-msgid "every 16 sessions"
-msgstr ""
-
-msgid "every 32 sessions"
-msgstr ""
-
-msgid "Answer"
-msgstr ""
-
-msgid "Question"
-msgstr ""
-
-msgid "Bucket"
-msgstr ""
-
-msgid "Session"
-msgstr ""
-
-msgid "Remaining cards"
-msgstr ""
-
-msgid "Correct"
-msgstr ""
-
-msgid "Wrong"
-msgstr ""
-
-msgid "Do fuzzy search"
-msgstr ""
-
-msgid "Search in bucket (-1 for all buckets)"
-msgstr ""
-
-msgid "Move cards to bucket (-1 for no move)"
-msgstr ""
-
-msgid "Delete selected cards"
-msgstr ""
-
 msgid ""
 "Set to 0 for default font size.\n"
 "You can also adjust the font size by scrolling the mouse wheel over the "
@@ -424,6 +355,75 @@ msgstr ""
 msgid "Laps table copied to clipboard!"
 msgstr ""
 
+msgid "Add card"
+msgstr ""
+
+msgid "Change deck"
+msgstr ""
+
+msgid "Start exam"
+msgstr ""
+
+msgid "Search cards"
+msgstr ""
+
+msgid "Add Card"
+msgstr ""
+
+msgid "every session"
+msgstr ""
+
+msgid "every 2 sessions"
+msgstr ""
+
+msgid "every 4 sessions"
+msgstr ""
+
+msgid "every 8 sessions"
+msgstr ""
+
+msgid "every 16 sessions"
+msgstr ""
+
+msgid "every 32 sessions"
+msgstr ""
+
+msgid "Answer"
+msgstr ""
+
+msgid "Question"
+msgstr ""
+
+msgid "Bucket"
+msgstr ""
+
+msgid "Session"
+msgstr ""
+
+msgid "Remaining cards"
+msgstr ""
+
+msgid "Correct"
+msgstr ""
+
+msgid "Wrong"
+msgstr ""
+
+msgid "Do fuzzy search"
+msgstr ""
+
+msgid "Search in bucket (-1 for all buckets)"
+msgstr ""
+
+msgid "Move cards to bucket (-1 for no move)"
+msgstr ""
+
+msgid "Delete selected cards"
+msgstr ""
+
+msgid "Add Deck"
+msgstr ""
+
 msgid "Tip"
 msgstr ""
 
@@ -434,12 +434,6 @@ msgid "Warning"
 msgstr ""
 
 msgid "Important"
-msgstr ""
-
-msgid "Select folder"
-msgstr ""
-
-msgid "Select file"
 msgstr ""
 
 msgid "Confirm"
@@ -492,6 +486,12 @@ msgid "Set shortcut"
 msgstr ""
 
 msgid "Type shortcut (backspace to reset)"
+msgstr ""
+
+msgid "Select folder"
+msgstr ""
+
+msgid "Select file"
 msgstr ""
 
 msgid ""

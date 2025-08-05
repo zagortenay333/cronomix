@@ -9,7 +9,7 @@
    id="svg11300"
    sodipodi:version="0.32"
    inkscape:version="1.4.2 (ebf0e940d0, 2025-05-08)"
-   sodipodi:docname="cronomix-file-symbolic.svg"
+   sodipodi:docname="cronomix-folder-symbolic.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
    version="1.0"
    style="display:inline;enable-background:new"
@@ -138,24 +138,6 @@
      inkscape:label="Base"
      id="layer1"
      transform="translate(0,-284)">
-    <path
-       style="color:#000000;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:medium;line-height:normal;font-family:Sans;-inkscape-font-specification:Sans;text-indent:0;text-align:start;text-decoration:none;text-decoration-line:none;letter-spacing:normal;word-spacing:normal;text-transform:none;writing-mode:lr-tb;direction:ltr;baseline-shift:baseline;text-anchor:start;display:inline;overflow:visible;visibility:visible;fill:#bebebe;fill-opacity:1;stroke:none;stroke-width:2;marker:none;enable-background:accumulate"
-       d="m 5,290 v 1 h 3 v -1 z"
-       id="path4497" />
-    <path
-       style="color:#000000;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:medium;line-height:normal;font-family:Sans;-inkscape-font-specification:Sans;text-indent:0;text-align:start;text-decoration:none;text-decoration-line:none;letter-spacing:normal;word-spacing:normal;text-transform:none;writing-mode:lr-tb;direction:ltr;baseline-shift:baseline;text-anchor:start;display:inline;overflow:visible;visibility:visible;fill:#bebebe;fill-opacity:1;stroke:none;stroke-width:2.44949;marker:none;enable-background:accumulate"
-       d="m 5,292 v 1 h 6 v -1 z"
-       id="path4493" />
-    <path
-       style="color:#000000;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:medium;line-height:normal;font-family:Sans;-inkscape-font-specification:Sans;text-indent:0;text-align:start;text-decoration:none;text-decoration-line:none;letter-spacing:normal;word-spacing:normal;text-transform:none;writing-mode:lr-tb;direction:ltr;baseline-shift:baseline;text-anchor:start;display:inline;overflow:visible;visibility:visible;fill:#bebebe;fill-opacity:1;stroke:none;stroke-width:2.44949;marker:none;enable-background:accumulate"
-       d="m 5,294 v 1 h 6 v -1 z"
-       id="path1234" />
-    <path
-       style="fill:#bebebe;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="m 2,285 v 14 h 12 v -9.586 L 9.5625,285 Z m 2,2 h 5 v 3 h 3 v 7 H 4 Z"
-       id="path4484"
-       inkscape:connector-curvature="0"
-       sodipodi:nodetypes="ccccccccccccc" />
     <g
        style="display:inline;enable-background:new"
        id="g4530"
@@ -166,5 +148,10 @@
          inkscape:label="Base"
          style="display:inline" />
     </g>
+    <path
+       id="rect15"
+       style="fill:#bebebe;stroke-width:1.08183"
+       d="m 3,285 c -1.108,0 -2,0.892 -2,2 v 2 7 c 0,1.108 0.8919996,2 2,2 h 3 7.044922 c 1.108,0 2,-0.892 2,-2 v -7 c 0,-1.108 -0.892,-2 -2,-2 H 8 c 0,-1.108 -0.892,-2 -2,-2 z m 0,2 h 4 v 1 H 3 Z m 1.1992188,2 H 11.800781 C 12.465581,289 13,289.53442 13,290.19922 v 4.60156 C 13,295.46558 12.465581,296 11.800781,296 H 4.1992188 C 3.5344188,296 3,295.46558 3,294.80078 v -4.60156 C 3,289.53442 3.5344188,289 4.1992188,289 Z"
+       sodipodi:nodetypes="sscsscsssscsscccccsssssssss" />
   </g>
 </svg>

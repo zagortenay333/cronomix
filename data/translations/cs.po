@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-04 15:06+0200\n"
+"POT-Creation-Date: 2025-08-05 19:00+0200\n"
 "PO-Revision-Date: 2023-06-05 16:07+0200\n"
 "Last-Translator: Ludek Vydra <lvtran@u.k2.cz>\n"
 "Language-Team: \n"
@@ -277,81 +277,6 @@ msgstr "Nastavení"
 msgid "Website"
 msgstr "Webové stránky"
 
-msgid "Deck"
-msgstr ""
-
-#, fuzzy
-msgid "Add card"
-msgstr "Přidej nový budík"
-
-msgid "Change deck"
-msgstr ""
-
-#, fuzzy
-msgid "Start exam"
-msgstr "Start"
-
-#, fuzzy
-msgid "Search cards"
-msgstr "Prohledej úkoly"
-
-#, fuzzy
-msgid "Add Card"
-msgstr "Přidej nový budík"
-
-#, fuzzy
-msgid "every session"
-msgstr "Výraz filtru"
-
-msgid "every 2 sessions"
-msgstr ""
-
-msgid "every 4 sessions"
-msgstr ""
-
-msgid "every 8 sessions"
-msgstr ""
-
-msgid "every 16 sessions"
-msgstr ""
-
-msgid "every 32 sessions"
-msgstr ""
-
-msgid "Answer"
-msgstr ""
-
-msgid "Question"
-msgstr ""
-
-msgid "Bucket"
-msgstr ""
-
-msgid "Session"
-msgstr ""
-
-msgid "Remaining cards"
-msgstr ""
-
-msgid "Correct"
-msgstr ""
-
-msgid "Wrong"
-msgstr ""
-
-msgid "Do fuzzy search"
-msgstr ""
-
-msgid "Search in bucket (-1 for all buckets)"
-msgstr ""
-
-msgid "Move cards to bucket (-1 for no move)"
-msgstr ""
-
-#, fuzzy
-msgid "Delete selected cards"
-msgstr "Smaž vybrané úkoly"
-
 msgid ""
 "Set to 0 for default font size.\n"
 "You can also adjust the font size by scrolling the mouse wheel over the "
@@ -444,6 +369,82 @@ msgstr "Čas kol"
 msgid "Laps table copied to clipboard!"
 msgstr "Tabulka kol zkopírována do schránky!"
 
+#, fuzzy
+msgid "Add card"
+msgstr "Přidej nový budík"
+
+msgid "Change deck"
+msgstr ""
+
+#, fuzzy
+msgid "Start exam"
+msgstr "Start"
+
+#, fuzzy
+msgid "Search cards"
+msgstr "Prohledej úkoly"
+
+#, fuzzy
+msgid "Add Card"
+msgstr "Přidej nový budík"
+
+#, fuzzy
+msgid "every session"
+msgstr "Výraz filtru"
+
+msgid "every 2 sessions"
+msgstr ""
+
+msgid "every 4 sessions"
+msgstr ""
+
+msgid "every 8 sessions"
+msgstr ""
+
+msgid "every 16 sessions"
+msgstr ""
+
+msgid "every 32 sessions"
+msgstr ""
+
+msgid "Answer"
+msgstr ""
+
+msgid "Question"
+msgstr ""
+
+msgid "Bucket"
+msgstr ""
+
+msgid "Session"
+msgstr ""
+
+msgid "Remaining cards"
+msgstr ""
+
+msgid "Correct"
+msgstr ""
+
+msgid "Wrong"
+msgstr ""
+
+msgid "Do fuzzy search"
+msgstr ""
+
+msgid "Search in bucket (-1 for all buckets)"
+msgstr ""
+
+msgid "Move cards to bucket (-1 for no move)"
+msgstr ""
+
+#, fuzzy
+msgid "Delete selected cards"
+msgstr "Smaž vybrané úkoly"
+
+#, fuzzy
+msgid "Add Deck"
+msgstr "Přidej úkol"
+
 msgid "Tip"
 msgstr "Tip"
 
@@ -456,12 +457,6 @@ msgstr "Varování"
 #, fuzzy
 msgid "Important"
 msgstr "Důležité"
-
-msgid "Select folder"
-msgstr "Vyber adresář"
-
-msgid "Select file"
-msgstr "Vyber soubor"
 
 msgid "Confirm"
 msgstr "Potvrď"
@@ -516,6 +511,12 @@ msgstr "Nastav klávesovou zkratku"
 
 msgid "Type shortcut (backspace to reset)"
 msgstr "Stikni klávesovou zkratku (backspace pro resetování)"
+
+msgid "Select folder"
+msgstr "Vyber adresář"
+
+msgid "Select file"
+msgstr "Vyber soubor"
 
 msgid ""
 "Number of items shown each time you press \"show more\" in a scroll list.\n"
