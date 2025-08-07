@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-07 17:23+0200\n"
+"POT-Creation-Date: 2025-08-07 20:14+0200\n"
 "PO-Revision-Date: 2023-06-05 16:07+0200\n"
 "Last-Translator: Ludek Vydra <lvtran@u.k2.cz>\n"
 "Language-Team: \n"
@@ -442,8 +442,15 @@ msgid "Delete selected cards"
 msgstr "Smaž vybrané úkoly"
 
 #, fuzzy
+msgid "Search decks"
+msgstr "Prohledej úkoly"
+
+#, fuzzy
 msgid "Add Deck"
 msgstr "Přidej úkol"
+
+msgid "You can select the first deck by pressing ``Ctrl`` + ``Enter``."
+msgstr ""
 
 msgid "Tip"
 msgstr "Tip"

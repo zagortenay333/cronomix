@@ -569,32 +569,75 @@ export class DeckView {
     constructor (applet: FlashcardsApplet) {
         this.actor = new St.BoxLayout({ vertical: true, style_class: 'cronomix-spacing' });
 
+        const entry = new Entry(_('Search decks'));
+        this.actor.add_child(entry.actor);
+        Misc.focus_when_mapped(entry.entry);
+
         const button_row = new St.BoxLayout({ style_class: 'cronomix-spacing' });
         this.actor.add_child(button_row);
 
         const linked_buttons = new ButtonBox(button_row);
         const ok_button      = linked_buttons.add({ wide: true, label: _('Ok') });
         const add_button     = linked_buttons.add({ wide: true, label: _('Add Deck') });
-        const help_button    = new Button({ parent: button_row, icon: 'cronomix-question-symbolic' });
 
-        Misc.focus_when_mapped(add_button.actor);
+        const help_button = new Button({ parent: button_row, icon: 'cronomix-question-symbolic' });
 
         const deck_scroll = new ScrollBox();
         this.actor.add_child(deck_scroll.actor);
 
-        for (const deck_path of applet.storage.read.decks.value) {
-            const w = new DeckViewCard(applet, deck_path);
+        //
+        // search
+        //
+        const decks_to_show: { score:number, path:DeckPath }[] = [];
 
-            if ((deck_path as DeckPath).active) {
-                deck_scroll.box.insert_child_at_index(w.actor, 0);
-            } else {
-                deck_scroll.box.add_child(w.actor);
+        const search_decks = () => {
+            deck_scroll.box.remove_all_children();
+            decks_to_show.length = 0;
+
+            const needle = entry.entry.text;
+
+            for (const path of applet.storage.read.decks.value) {
+                const score = Misc.fuzzy_search(needle, (path as DeckPath).path);
+                if (score !== null) decks_to_show.push({ score, path });
             }
-        }
 
-        const help_text = Fs.read_entire_file(ext.path + '/data/docs/flashcards_deck') ?? '';
+            decks_to_show.sort((a, b) => (a.score < b.score) ? 1 : 0);
 
-        help_button.subscribe('left_click', () => show_info_popup(help_button, help_text));
+            for (const {path} of decks_to_show) {
+                const w = new DeckViewCard(applet, path);
+
+                if (path.active) {
+                    deck_scroll.box.insert_child_at_index(w.actor, 0);
+                } else {
+                    deck_scroll.box.add_child(w.actor);
+                }
+            }
+        };
+
+        search_decks();
+
+        //
+        // listen
+        //
+        help_button.subscribe('left_click', () => {
+            let help_text = "[note] " + _('You can select the first deck by pressing ``Ctrl`` + ``Enter``.');
+            help_text    += "\n" + (Fs.read_entire_file(ext.path + '/data/docs/flashcards_deck') ?? '');
+            show_info_popup(help_button, help_text);
+        });
+        entry.entry.clutter_text.connect('text-changed', () => search_decks());
+        entry.entry.connect('key-release-event', (_:unknown, e: Clutter.Event) => {
+            const s = e.get_key_symbol();
+            if (decks_to_show.length && e.has_control_modifier() && ((s === Clutter.KEY_Return) || (s === Clutter.KEY_KP_Enter))) {
+                applet.storage.modify('decks', (v) => {
+                    const first = decks_to_show[0].path;
+                    first.active = true;
+                    for (const p of v.value) if (p !== first) (p as DeckPath).active = false;
+                });
+                applet.load_deck();
+                return Clutter.EVENT_STOP;
+            }
+            return Clutter.EVENT_PROPAGATE;
+        });
         ok_button.subscribe('left_click', () => {
             let found_active = false;
             for (const p of applet.storage.read.decks.value) {
@@ -617,8 +660,7 @@ export class DeckView {
                 applet.panel_item.menu.open();
                 const deck_path = {active:false, path:path};
                 applet.storage.modify('decks', (v) => (v.value as DeckPath[]).push(deck_path));
-                const w = new DeckViewCard(applet, deck_path);
-                deck_scroll.box.add_child(w.actor);
+                search_decks();
             });
         });
     }
