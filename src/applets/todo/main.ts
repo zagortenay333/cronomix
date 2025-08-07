@@ -95,7 +95,7 @@ export class TodoApplet extends Applet {
         this.storage.init_keymap({
             open:           () => { this.panel_item.menu.open(); },
             search:         () => { this.panel_item.menu.open(); this.show_search_view(); },
-            add_task:       () => { this.panel_item.menu.open(); this.show_task_editor(); },
+            add_task:       () => { this.panel_item.menu.open(); if (! (this.#current_view instanceof TaskEditor)) this.show_task_editor(); },
             open_tracker:   () => { this.panel_item.menu.open(); this.show_tracker_view(); },
             open_todo_file: () => { Fs.open_file_in_default_app(this.storage.read.todo_file.value ?? ''); },
         });

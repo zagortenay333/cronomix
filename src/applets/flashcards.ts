@@ -75,8 +75,8 @@ export class FlashcardsApplet extends Applet {
 
         this.storage.init_keymap({
             open:         () => { this.panel_item.menu.open(); },
-            add_card:     () => { this.panel_item.menu.open(); this.show_editor(); },
-            change_deck:  () => { this.panel_item.menu.open(); this.show_settings(); },
+            add_card:     () => { this.panel_item.menu.open(); if (! (this.#current_view instanceof CardEditor)) this.show_editor(); },
+            change_deck:  () => { this.panel_item.menu.open(); this.show_deck_view(); },
             start_exam:   () => { this.panel_item.menu.open(); this.show_exam_view(); },
             search_cards: () => { this.panel_item.menu.open(); this.show_search_view(); },
         });
@@ -134,7 +134,9 @@ export class FlashcardsApplet extends Applet {
 
     #enable_file_monitor () {
         const path = this.#get_active_file_path();
-        if (path) this.#todo_file_monitor = new Fs.FileMonitor(path, () => this.load_deck());
+        if (path) {
+            this.#todo_file_monitor = new Fs.FileMonitor(path, () => this.load_deck());
+        }
     }
 
     #disable_file_monitor () {
@@ -145,7 +147,6 @@ export class FlashcardsApplet extends Applet {
     }
 
     show_main_view () {
-        if (this.#current_view instanceof MainView) return;
         this.#current_view?.destroy();
         const view = new MainView(this);
         this.#current_view = view;
@@ -153,7 +154,6 @@ export class FlashcardsApplet extends Applet {
     }
 
     show_search_view () {
-        if (this.#current_view instanceof SearchView) return;
         this.#current_view?.destroy();
         const view = new SearchView(this);
         this.#current_view = view;
@@ -161,7 +161,6 @@ export class FlashcardsApplet extends Applet {
     }
 
     show_deck_view () {
-        if (this.#current_view instanceof DeckView) return;
         this.#current_view?.destroy();
         const view = new DeckView(this);
         this.#current_view = view;
@@ -169,7 +168,6 @@ export class FlashcardsApplet extends Applet {
     }
 
     show_editor (card?: Card) {
-        if (this.#current_view instanceof CardEditor) return;
         this.#current_view?.destroy();
         const view = new CardEditor(this, card);
         this.#current_view = view;
@@ -177,7 +175,6 @@ export class FlashcardsApplet extends Applet {
     }
 
     show_exam_view () {
-        if (this.#current_view instanceof ExamView) return;
         this.#current_view?.destroy();
         const view = new ExamView(this);
         this.#current_view = view;
@@ -652,8 +649,10 @@ export class DeckViewCard extends Misc.Card {
             applet.load_deck();
         });
         delete_button.subscribe('left_click', () => {
-            applet.storage.modify('decks', (v) => Misc.array_remove(v.value, path));
-            this.actor.destroy();
+            show_confirm_popup(delete_button, () => {
+                applet.storage.modify('decks', (v) => Misc.array_remove(v.value, path));
+                this.actor.destroy();
+            });
         });
     }
 }
