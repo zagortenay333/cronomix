@@ -365,6 +365,7 @@
 .cronomix-markup .admonition.note > .header { color: #7DD481; }
 .cronomix-markup .admonition.warning > .header { color: #FFAB42; }
 .cronomix-markup .admonition.important > .header { color: #FF7163; }
+.cronomix-markup .admonition > .header StIcon { icon-size: 16px; -st-icon-style: symbolic; }
 
 .cronomix-markup .table .cell {
     padding: 8px;

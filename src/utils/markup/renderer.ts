@@ -204,8 +204,11 @@ export class Markup {
             const admonition = this.#widget(meta, () => new St.BoxLayout({ vertical: true }));
             admonition.style_class = `admonition ${meta.config.admonition} cronomix-group`;
 
-            const header = new St.BoxLayout({ style_class: 'header' });
+            const header = new St.BoxLayout({ style_class: 'header cronomix-spacing' });
             admonition.add_child(header);
+
+            const icon = new St.Icon({ gicon: Misc.get_icon('cronomix-issue-symbolic') });
+            header.add_child(icon);
 
             const label = new St.Label({ text: Admonition[meta.config.admonition] });
             header.add_child(label);
