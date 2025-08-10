@@ -605,6 +605,16 @@ export class DeckView {
         const export_help_button = new Button({ parent: export_row, icon: 'cronomix-question-symbolic' });
 
         //
+        // delete row
+        //
+        const delete_row = new St.BoxLayout({ vertical: true, style_class: 'cronomix-group' });
+        left_box.add_child(delete_row);
+
+        const delete_decks_checkbox = new CheckBox();
+        const delete_decks_check_row = new Misc.Row(_('Remove selected decks'), delete_decks_checkbox.actor, delete_row);
+        delete_decks_check_row.actor.add_style_class_name('cronomix-red');
+
+        //
         // buttons
         //
         const button_row = new St.BoxLayout({ style_class: 'cronomix-spacing' });
@@ -660,6 +670,7 @@ export class DeckView {
         entry.entry.connect('key-release-event', (_:unknown, e: Clutter.Event) => {
             search_decks();
             const s = e.get_key_symbol();
+
             if (decks_to_show.length && e.has_control_modifier() && ((s === Clutter.KEY_Return) || (s === Clutter.KEY_KP_Enter))) {
                 applet.storage.modify('decks', (v) => {
                     const first = decks_to_show[0].path;
@@ -669,11 +680,22 @@ export class DeckView {
                 applet.load_deck();
                 return Clutter.EVENT_STOP;
             }
+
             return Clutter.EVENT_PROPAGATE;
         });
         apply_button.subscribe('left_click', () => {
             show_confirm_popup(apply_button, () => {
                 search_decks();
+
+                if (delete_decks_checkbox.checked) {
+                    applet.storage.modify('decks', (v) => {
+                        for (const {path} of decks_to_show) {
+                            Misc.array_remove(v.value, path);
+                        }
+                    });
+                    delete_decks_checkbox.checked = false;
+                    search_decks();
+                }
 
                 if (import_picker.path) {
                     applet.storage.modify('decks', (v) => {
