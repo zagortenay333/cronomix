@@ -88,7 +88,7 @@ export class Applet <E = {}> extends PubSub<E> {
         this.panel_item.menu.connect('open-state-changed', (_:unknown, state: boolean) => {
             if (state) {
                 const area = Misc.get_monitor_work_area(this.panel_item.menu.actor);
-                this.panel_item.menu.actor.style = `max-width: ${area.width - 6}px; max-height: ${area.height - 6}px`;
+                this.panel_item.menu.actor.style = `max-width: ${area.width - 6}px; max-height: ${area.height - 32}px`;
             }
         });
         this.#session_signal_id = Main.sessionMode.connect('updated', (s: any) => {

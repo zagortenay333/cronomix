@@ -567,21 +567,56 @@ export class DeckView {
     actor: St.BoxLayout;
 
     constructor (applet: FlashcardsApplet) {
-        this.actor = new St.BoxLayout({ vertical: true, style_class: 'cronomix-spacing' });
+        this.actor = new St.BoxLayout({ style_class: 'cronomix-spacing' });
 
+        const left_box = new St.BoxLayout({ vertical: true, style_class: 'cronomix-spacing' });
+        this.actor.add_child(left_box);
+
+        //
+        // entry
+        //
         const entry = new Entry(_('Search decks'));
-        this.actor.add_child(entry.actor);
+        left_box.add_child(entry.actor);
+        entry.actor.style = 'min-width: 256px;';
         Misc.focus_when_mapped(entry.entry);
 
+        //
+        // import/export group
+        //
+        const import_export_group = new St.BoxLayout({ vertical: true, style_class: 'cronomix-group' });
+        left_box.add_child(import_export_group);
+
+        //
+        // import row
+        //
+        const import_row = new St.BoxLayout({ style_class: 'cronomix-spacing' });
+        import_export_group.add_child(import_row);
+
+        const import_picker = new FilePicker({ parent: import_row, hint_text: _('Import deck') });
+        const import_help_button = new Button({ parent: import_row, icon: 'cronomix-question-symbolic' });
+
+        //
+        // export row
+        //
+        const export_row = new St.BoxLayout({ style_class: 'cronomix-spacing' });
+        import_export_group.add_child(export_row);
+
+        const export_picker = new FilePicker({ parent: export_row, select_dirs: true, hint_text: _('Export decks to csv') });
+        const export_help_button = new Button({ parent: export_row, icon: 'cronomix-question-symbolic' });
+
+        //
+        // buttons
+        //
         const button_row = new St.BoxLayout({ style_class: 'cronomix-spacing' });
-        this.actor.add_child(button_row);
+        left_box.add_child(button_row);
 
         const linked_buttons = new ButtonBox(button_row);
-        const ok_button      = linked_buttons.add({ wide: true, label: _('Ok') });
-        const add_button     = linked_buttons.add({ wide: true, label: _('Add Deck') });
+        const apply_button   = linked_buttons.add({ wide: true, label: _('Apply') });
+        const close_button   = linked_buttons.add({ wide: true, label: _('Close') });
 
-        const help_button = new Button({ parent: button_row, icon: 'cronomix-question-symbolic' });
-
+        //
+        // decks
+        //
         const deck_scroll = new ScrollBox();
         this.actor.add_child(deck_scroll.actor);
 
@@ -619,13 +654,11 @@ export class DeckView {
         //
         // listen
         //
-        help_button.subscribe('left_click', () => {
-            let help_text = "[note] " + _('You can select the first deck by pressing ``Ctrl`` + ``Enter``.');
-            help_text    += "\n" + (Fs.read_entire_file(ext.path + '/data/docs/flashcards_deck') ?? '');
-            show_info_popup(help_button, help_text);
-        });
+        export_help_button.subscribe('left_click', () => show_info_popup(export_help_button, Fs.read_entire_file(ext.path + '/data/docs/flashcards_csv') ?? ''));
+        import_help_button.subscribe('left_click', () => show_info_popup(import_help_button, Fs.read_entire_file(ext.path + '/data/docs/flashcards_deck') ?? ''));
         entry.entry.clutter_text.connect('text-changed', () => search_decks());
         entry.entry.connect('key-release-event', (_:unknown, e: Clutter.Event) => {
+            search_decks();
             const s = e.get_key_symbol();
             if (decks_to_show.length && e.has_control_modifier() && ((s === Clutter.KEY_Return) || (s === Clutter.KEY_KP_Enter))) {
                 applet.storage.modify('decks', (v) => {
@@ -638,7 +671,26 @@ export class DeckView {
             }
             return Clutter.EVENT_PROPAGATE;
         });
-        ok_button.subscribe('left_click', () => {
+        apply_button.subscribe('left_click', () => {
+            show_confirm_popup(apply_button, () => {
+                search_decks();
+
+                if (import_picker.path) {
+                    const deck_path = {active:false, path:import_picker.path};
+                    applet.storage.modify('decks', (v) => (v.value as DeckPath[]).push(deck_path));
+                    import_picker.entry.text = '';
+                    import_picker.path = null;
+                    search_decks();
+                }
+
+                if (export_picker.path) {
+                    for (const {path} of decks_to_show) this.#export_deck(path.path, export_picker.path);
+                    export_picker.entry.text = '';
+                    export_picker.path = null;
+                }
+            });
+        });
+        close_button.subscribe('left_click', () => {
             let found_active = false;
             for (const p of applet.storage.read.decks.value) {
                 if ((p as DeckPath).active) {
@@ -653,20 +705,45 @@ export class DeckView {
 
             applet.load_deck();
         });
-        add_button.subscribe('left_click', () => {
-            applet.panel_item.menu.close();
-
-            Fs.open_file_dialog(false, null, (path: string) => {
-                applet.panel_item.menu.open();
-                const deck_path = {active:false, path:path};
-                applet.storage.modify('decks', (v) => (v.value as DeckPath[]).push(deck_path));
-                search_decks();
-            });
-        });
     }
 
     destroy () {
         this.actor.destroy();
+    }
+
+    #export_deck (deck_path: string, export_dir_path: string) {
+        const file = Fs.read_entire_file(deck_path);
+        if ((file == null) || (file.trim() === '')) return;
+
+        let deck: Deck;
+        try {
+            deck = JSON.parse(file);
+        } catch (e) {
+            logError(e);
+            return;
+        }
+
+        let export_path = deck_path.substring(deck_path.lastIndexOf('/') + 1);
+        {
+            if (export_path.endsWith('.json')) {
+                export_path = export_path.replace(/json$/, 'csv');
+            } else {
+                export_path += '.csv';
+            }
+
+            export_path = export_dir_path + '/' + export_path;
+        }
+
+        let csv = '';
+        for (const card of deck.cards) {
+            csv += '"';
+            csv += card.question.replaceAll('"', '""');
+            csv += '","';
+            csv += card.answer.replaceAll('"', '""');
+            csv += '"\n';
+        }
+
+        Fs.write_entire_file(export_path, csv);
     }
 }
 

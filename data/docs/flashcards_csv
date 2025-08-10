@@ -1,0 +1,16 @@
+## Csv format
+
+The csv format of a flashcards deck looks like this:
+
+> "question1","answer1"
+  "question2","answer2"
+  "question3","answer3"
+  ...
+
+Double quotes are escaped by replacing them with 2 double quotes,
+and newlines appear raw:
+
+> "question with a "" in it","answer on
+  two lines"
+
+This format can be imported into the Anki program.

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-07 20:34+0200\n"
+"POT-Creation-Date: 2025-08-10 14:35+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -250,21 +250,6 @@ msgstr ""
 msgid "Dismiss"
 msgstr ""
 
-msgid "Left"
-msgstr ""
-
-msgid "Center"
-msgstr ""
-
-msgid "Right"
-msgstr ""
-
-msgid "Settings"
-msgstr ""
-
-msgid "Website"
-msgstr ""
-
 msgid ""
 "Set to 0 for default font size.\n"
 "You can also adjust the font size by scrolling the mouse wheel over the "
@@ -355,6 +340,21 @@ msgstr ""
 msgid "Laps table copied to clipboard!"
 msgstr ""
 
+msgid "Left"
+msgstr ""
+
+msgid "Center"
+msgstr ""
+
+msgid "Right"
+msgstr ""
+
+msgid "Settings"
+msgstr ""
+
+msgid "Website"
+msgstr ""
+
 msgid "Add card"
 msgstr ""
 
@@ -424,10 +424,10 @@ msgstr ""
 msgid "Search decks"
 msgstr ""
 
-msgid "Add Deck"
+msgid "Import deck"
 msgstr ""
 
-msgid "You can select the first deck by pressing ``Ctrl`` + ``Enter``."
+msgid "Export decks to csv"
 msgstr ""
 
 msgid "Tip"
