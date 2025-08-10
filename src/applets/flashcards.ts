@@ -592,7 +592,7 @@ export class DeckView {
         const import_row = new St.BoxLayout({ style_class: 'cronomix-spacing' });
         import_export_group.add_child(import_row);
 
-        const import_picker = new FilePicker({ parent: import_row, hint_text: _('Import deck') });
+        const import_picker = new FilePicker({ parent: import_row, multiple: true, hint_text: _('Import multiple decks') });
         const import_help_button = new Button({ parent: import_row, icon: 'cronomix-question-symbolic' });
 
         //
@@ -676,8 +676,11 @@ export class DeckView {
                 search_decks();
 
                 if (import_picker.path) {
-                    const deck_path = {active:false, path:import_picker.path};
-                    applet.storage.modify('decks', (v) => (v.value as DeckPath[]).push(deck_path));
+                    applet.storage.modify('decks', (v) => {
+                        for (const path of import_picker.path!.split('|')) {
+                            (v.value as DeckPath[]).push({ active:false, path:path });
+                        }
+                    });
                     import_picker.entry.text = '';
                     import_picker.path = null;
                     search_decks();

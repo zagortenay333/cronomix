@@ -181,6 +181,7 @@ export class FilePicker {
         start       = null as string|null,
         select_dirs = false,
         hint_text   = null as string|null,
+        multiple    = false,
         on_change   = null as null | ((path: string|null) => void),
     } = {}) {
         this.path = path;
@@ -204,7 +205,7 @@ export class FilePicker {
             const popup = this.#try_get_popup();
             popup?.close();
 
-            Fs.open_file_dialog(select_dirs, start, (path: string) => {
+            Fs.open_file_dialog(select_dirs, multiple, start, (path: string) => {
                 popup?.open();
                 this.entry.grab_key_focus();
                 this.entry.set_text(path);

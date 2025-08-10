@@ -97,12 +97,13 @@ export function open_file_in_default_app (path: string) {
 
 export function open_file_dialog (
     select_dirs: boolean,
+    multiple: boolean,
     start: string|null,
     callback: (result: string) => void
 ): Gio.Subprocess | null {
     try {
         start ??= GLib.get_home_dir() + '/';
-        const argv = ['zenity', '--file-selection', (select_dirs ? '--directory' : ''), `--filename=${start}`];
+        const argv = ['zenity', '--file-selection', (multiple ? '--multiple' : ''), (select_dirs ? '--directory' : ''), `--filename=${start}`];
         const sp   = Gio.Subprocess.new(argv, Gio.SubprocessFlags.STDOUT_PIPE);
 
         sp?.wait_check_async(null, (_, result) => {
