@@ -258,7 +258,7 @@ export class Dropdown {
             const popup = Pop.show_transient_popup(this.actor);
 
             for (const [idx, display_value] of display_values.entries()) {
-                const button = new Button({ parent: popup.scrollbox.box, label: display_value, style_class: 'cronomix-menu-button' });
+                const button = new Button({ parent: popup.scrollbox.box, centered: false, label: display_value, style_class: 'cronomix-menu-button' });
                 if (display_value === this.actor.label?.text) button.actor.grab_key_focus();
 
                 button.subscribe('left_click', () => {
