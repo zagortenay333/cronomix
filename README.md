@@ -1,4 +1,4 @@
-# Cronomix
+# <img height=44 src="./data/images/cronomix.png"> <sup>Cronomix<sup/>
 
 **All-in-one timer, stopwatch, pomodoro, alarm, todo, time tracker and flashcards gnome-shell extension**
 
