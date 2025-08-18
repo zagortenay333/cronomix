@@ -128,6 +128,12 @@ the image path:
 
 > [image width ~/path/to/image]
 
+### Dropdown
+
+You can place content inside a dropdown widget.
+
+[spoiler: this\ is\ hidden] Hello :)
+
 ## Raw Blocks
 
 A raw block starts with 1 arrow (>). Text within a raw block

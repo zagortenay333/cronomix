@@ -215,6 +215,10 @@ export class Markup {
 
             admonition.add_child(body);
             return admonition;
+        } else if (meta.config.spoiler !== undefined) {
+            const dropdown = new Misc.Dropdown(meta.config.spoiler);
+            dropdown.body.add_child(body);
+            return dropdown.actor;
         } else {
             return body;
         }

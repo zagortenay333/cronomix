@@ -96,6 +96,7 @@ export class AstMetaConfig {
     pin?:        boolean;
     done?:       boolean;
     hide?:       boolean;
+    spoiler?:    string;
     tags?:       Set<string>; // Tags that appear in the header.
     body_tags?:  Set<string>; // Tags that appear in the body.
     image?:      { width?: number, path: string; }
@@ -343,6 +344,10 @@ export class Parser {
             if (width > 0) config.image.width = width;
         } else if (txt === 'tip' || txt === 'note' || txt === 'warning' || txt === 'important') {
             config.admonition = txt;
+        } else if (txt === 'spoiler') {
+            if (! this.#lex.try_eat_token(':')) return false;
+            this.#lex.try_eat_token('spaces');
+            config.spoiler = this.#parse_text_until(this.#is_meta_config_delimiter);
         }
 
         return true;
