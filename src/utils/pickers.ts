@@ -263,7 +263,12 @@ export class Dropdown {
 
                 button.subscribe('left_click', () => {
                     this.actor.set_label(display_value);
-                    popup.close();
+                    try{
+                        popup.close();
+                    }catch(e){
+                        //- The popup might have already been destroyed because it lost focus
+                        // logError(e);
+                    }
                     this.on_change?.(values[idx]);
                 });
             }
