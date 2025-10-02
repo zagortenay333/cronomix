@@ -172,9 +172,9 @@ Most inline elements can be nested within other inlines.
 | Use 2 tildes for strikethrough.
 |-------------------------------------------------
 | <www.google.com>
-  <www.google.com; Link Alias>
-  <www.google.com; \;\>>
-| Use open close arrows <> for links.
+  <www.google.com;      Link Alias>
+  <www.google.com;      \;\>>
+| Use open close arrows \<> for links.
   A semicolon separates the alias and link.
   The alias cannot contain markup.
   A backslash can escape characters.

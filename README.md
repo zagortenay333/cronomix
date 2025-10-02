@@ -5,6 +5,10 @@
 ![preview](./data/images/screenshots/todo.png)
 ![More screenshots](https://github.com/zagortenay333/cronomix/tree/master/data/images/screenshots)
 
+## Desktop App
+
+Check out the desktop app (in alpha) at: https://github.com/zagortenay333/kronomi
+
 ## Installation
 
 - The latest version supports gnome-shell 48.
