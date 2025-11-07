@@ -11,7 +11,7 @@ Check out the desktop app (in alpha) at: https://github.com/zagortenay333/kronom
 
 ## Installation
 
-- The latest version supports gnome-shell 48.
+- The latest version supports gnome-shell 49.
 - The latest and older versions of the extension can be installed from
   the [gnome website](https://extensions.gnome.org/extension/6003/cronomix/).
 - The latest version can also be installed manually:
