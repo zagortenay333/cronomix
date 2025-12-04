@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-18 22:06+0200\n"
+"POT-Creation-Date: 2025-11-07 11:19+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,12 +17,213 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-msgid ""
-"Tasks are sorted by the first attribute in this list.\n"
-"In case of a tie, by the second attribute, and so on..."
+msgid "Confirm"
+msgstr ""
+
+msgid "Select folder"
+msgstr ""
+
+msgid "Select file"
+msgstr ""
+
+msgid "Tip"
+msgstr ""
+
+msgid "Note"
+msgstr ""
+
+msgid "Warning"
+msgstr ""
+
+msgid "Important"
+msgstr ""
+
+msgid "Set shortcut"
+msgstr ""
+
+msgid "Type shortcut (backspace to reset)"
 msgstr ""
 
 msgid "Ok"
+msgstr ""
+
+msgid ""
+"Right click any of the extension panel items to access the global settings."
+msgstr ""
+
+msgid "Show more"
+msgstr ""
+
+msgid "Image not found"
+msgstr ""
+
+msgid "Sun"
+msgstr ""
+
+msgid "Mon"
+msgstr ""
+
+msgid "Tue"
+msgstr ""
+
+msgid "Wed"
+msgstr ""
+
+msgid "Thu"
+msgstr ""
+
+msgid "Fri"
+msgstr ""
+
+msgid "Sat"
+msgstr ""
+
+msgid "Today"
+msgstr ""
+
+msgid "Week"
+msgstr ""
+
+msgid "Month"
+msgstr ""
+
+msgid "Year"
+msgstr ""
+
+msgid ""
+"Number of items shown each time you press \"show more\" in a scroll list.\n"
+"Making this number very large can cause performance issues."
+msgstr ""
+
+msgid "Todo"
+msgstr ""
+
+msgid "Alarm"
+msgstr ""
+
+msgid "Timer"
+msgstr ""
+
+msgid "Pomodoro"
+msgstr ""
+
+msgid "Stopwatch"
+msgstr ""
+
+msgid "Flashcards"
+msgstr ""
+
+msgid "Theme css (empty for auto selection)"
+msgstr ""
+
+msgid "Lazy list page size"
+msgstr ""
+
+msgid "Import file"
+msgstr ""
+
+msgid "Export file"
+msgstr ""
+
+msgid ""
+"Import and/or export your tasks to the **``todo.txt``** format.\n"
+"\n"
+"The import/export files are optional and must be in the **``todo.txt``** "
+"format.\n"
+"\n"
+"First the tasks from the import file (if there is one) get appended to your "
+"todo file,\n"
+"then all tasks get exported to the export file (if there is one)."
+msgstr ""
+
+msgid "Panel position"
+msgstr ""
+
+msgid "Open"
+msgstr ""
+
+msgid "Add task"
+msgstr ""
+
+msgid "Search tasks"
+msgstr ""
+
+msgid "Todo file"
+msgstr ""
+
+msgid "Open time tracker"
+msgstr ""
+
+msgid "Open todo file"
+msgstr ""
+
+msgid "Pin"
+msgstr ""
+
+msgid "Priority"
+msgstr ""
+
+msgid "Due"
+msgstr ""
+
+msgid "Done"
+msgstr ""
+
+msgid "Hide"
+msgstr ""
+
+msgid "Ascending"
+msgstr ""
+
+msgid "Descending"
+msgstr ""
+
+msgid "You must select a todo file."
+msgstr ""
+
+msgid "A todo file is a text file containing markup."
+msgstr ""
+
+msgid "To learn about the markup, open the built-in editor and press F1."
+msgstr ""
+
+msgid "Select time tracker file"
+msgstr ""
+
+msgid "Filter expression"
+msgstr ""
+
+msgid "Date (e.g., 2000-01-24)"
+msgstr ""
+
+msgid "Since"
+msgstr ""
+
+msgid "Until"
+msgstr ""
+
+msgid "Copy"
+msgstr ""
+
+msgid "Stop"
+msgstr ""
+
+msgid "Close"
+msgstr ""
+
+msgid "Totals"
+msgstr ""
+
+msgid "Search results copied to clipboard!"
+msgstr ""
+
+msgid "All Time"
+msgstr ""
+
+msgid "Per Slot Totals"
+msgstr ""
+
+msgid "Task text copied to clipboard!"
 msgstr ""
 
 msgid "Add Task"
@@ -53,24 +254,30 @@ msgstr ""
 msgid "Comma separated list of filters."
 msgstr ""
 
-msgid "Import file"
-msgstr ""
-
-msgid "Export file"
-msgstr ""
-
 msgid ""
-"Import and/or export your tasks to the **``todo.txt``** format.\n"
-"\n"
-"The import/export files are optional and must be in the **``todo.txt``** "
-"format.\n"
-"\n"
-"First the tasks from the import file (if there is one) get appended to your "
-"todo file,\n"
-"then all tasks get exported to the export file (if there is one)."
+"Tasks are sorted by the first attribute in this list.\n"
+"In case of a tie, by the second attribute, and so on..."
 msgstr ""
 
-msgid "Due"
+msgid "Delete selected tasks"
+msgstr ""
+
+msgid "Copy selected tasks to file"
+msgstr ""
+
+msgid "Modify attributes of selected tasks"
+msgstr ""
+
+msgid "Space separated list of task attributes"
+msgstr ""
+
+msgid "Delete"
+msgstr ""
+
+msgid "Add"
+msgstr ""
+
+msgid "Apply"
 msgstr ""
 
 msgid "Created"
@@ -118,114 +325,6 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-msgid "Ascending"
-msgstr ""
-
-msgid "Descending"
-msgstr ""
-
-msgid "Select time tracker file"
-msgstr ""
-
-msgid "Filter expression"
-msgstr ""
-
-msgid "Date (e.g., 2000-01-24)"
-msgstr ""
-
-msgid "Since"
-msgstr ""
-
-msgid "Until"
-msgstr ""
-
-msgid "Copy"
-msgstr ""
-
-msgid "Stop"
-msgstr ""
-
-msgid "Close"
-msgstr ""
-
-msgid "Totals"
-msgstr ""
-
-msgid "Search results copied to clipboard!"
-msgstr ""
-
-msgid "All Time"
-msgstr ""
-
-msgid "Per Slot Totals"
-msgstr ""
-
-msgid "Task text copied to clipboard!"
-msgstr ""
-
-msgid "Delete selected tasks"
-msgstr ""
-
-msgid "Copy selected tasks to file"
-msgstr ""
-
-msgid "Modify attributes of selected tasks"
-msgstr ""
-
-msgid "Space separated list of task attributes"
-msgstr ""
-
-msgid "Delete"
-msgstr ""
-
-msgid "Add"
-msgstr ""
-
-msgid "Apply"
-msgstr ""
-
-msgid "Panel position"
-msgstr ""
-
-msgid "Open"
-msgstr ""
-
-msgid "Add task"
-msgstr ""
-
-msgid "Search tasks"
-msgstr ""
-
-msgid "Todo file"
-msgstr ""
-
-msgid "Open time tracker"
-msgstr ""
-
-msgid "Open todo file"
-msgstr ""
-
-msgid "Pin"
-msgstr ""
-
-msgid "Priority"
-msgstr ""
-
-msgid "Done"
-msgstr ""
-
-msgid "Hide"
-msgstr ""
-
-msgid "You must select a todo file."
-msgstr ""
-
-msgid "A todo file is a text file containing markup."
-msgstr ""
-
-msgid "To learn about the markup, open the built-in editor and press F1."
-msgstr ""
-
 msgid "Notification sound"
 msgstr ""
 
@@ -239,9 +338,6 @@ msgid "Time"
 msgstr ""
 
 msgid "Snooze n minutes"
-msgstr ""
-
-msgid "Alarm"
 msgstr ""
 
 msgid "Snooze"
@@ -262,67 +358,16 @@ msgstr ""
 msgid "Clock size"
 msgstr ""
 
-msgid "Show presets"
-msgstr ""
-
-msgid "Timer elapsed."
-msgstr ""
-
 msgid "Start"
 msgstr ""
 
 msgid "Pause"
 msgstr ""
 
-msgid "Reset"
-msgstr ""
-
-msgid "Add Preset"
-msgstr ""
-
-msgid "Invalid time selected."
-msgstr ""
-
-msgid "Timer Elapsed!"
-msgstr ""
-
-msgid "Restart"
-msgstr ""
-
-msgid "Pomodoro"
-msgstr ""
-
-msgid "Long Break"
-msgstr ""
-
-msgid "Short Break"
-msgstr ""
-
-msgid "Pomodoro phase change."
-msgstr ""
-
-msgid "Phase"
-msgstr ""
-
-msgid "Completed pomodoros"
-msgstr ""
-
-msgid "Pomodoros until long break"
-msgstr ""
-
-msgid "Pomodoro length"
-msgstr ""
-
-msgid "Short break length"
-msgstr ""
-
-msgid "Long break length"
-msgstr ""
-
-msgid "Long break every n pomodoros"
-msgstr ""
-
 msgid "Resume"
+msgstr ""
+
+msgid "Reset"
 msgstr ""
 
 msgid "Lap"
@@ -353,6 +398,42 @@ msgid "Settings"
 msgstr ""
 
 msgid "Website"
+msgstr ""
+
+msgid "Long Break"
+msgstr ""
+
+msgid "Short Break"
+msgstr ""
+
+msgid "Show presets"
+msgstr ""
+
+msgid "Pomodoro phase change."
+msgstr ""
+
+msgid "Phase"
+msgstr ""
+
+msgid "Completed pomodoros"
+msgstr ""
+
+msgid "Pomodoros until long break"
+msgstr ""
+
+msgid "Add Preset"
+msgstr ""
+
+msgid "Pomodoro length"
+msgstr ""
+
+msgid "Short break length"
+msgstr ""
+
+msgid "Long break length"
+msgstr ""
+
+msgid "Long break every n pomodoros"
 msgstr ""
 
 msgid "Add card"
@@ -433,95 +514,14 @@ msgstr ""
 msgid "Remove selected decks"
 msgstr ""
 
-msgid "Tip"
+msgid "Timer elapsed."
 msgstr ""
 
-msgid "Note"
+msgid "Invalid time selected."
 msgstr ""
 
-msgid "Warning"
+msgid "Timer Elapsed!"
 msgstr ""
 
-msgid "Important"
-msgstr ""
-
-msgid "Confirm"
-msgstr ""
-
-msgid "Sun"
-msgstr ""
-
-msgid "Mon"
-msgstr ""
-
-msgid "Tue"
-msgstr ""
-
-msgid "Wed"
-msgstr ""
-
-msgid "Thu"
-msgstr ""
-
-msgid "Fri"
-msgstr ""
-
-msgid "Sat"
-msgstr ""
-
-msgid "Today"
-msgstr ""
-
-msgid "Week"
-msgstr ""
-
-msgid "Month"
-msgstr ""
-
-msgid "Year"
-msgstr ""
-
-msgid "Show more"
-msgstr ""
-
-msgid "Image not found"
-msgstr ""
-
-msgid ""
-"Right click any of the extension panel items to access the global settings."
-msgstr ""
-
-msgid "Set shortcut"
-msgstr ""
-
-msgid "Type shortcut (backspace to reset)"
-msgstr ""
-
-msgid "Select folder"
-msgstr ""
-
-msgid "Select file"
-msgstr ""
-
-msgid ""
-"Number of items shown each time you press \"show more\" in a scroll list.\n"
-"Making this number very large can cause performance issues."
-msgstr ""
-
-msgid "Todo"
-msgstr ""
-
-msgid "Timer"
-msgstr ""
-
-msgid "Stopwatch"
-msgstr ""
-
-msgid "Flashcards"
-msgstr ""
-
-msgid "Theme css (empty for auto selection)"
-msgstr ""
-
-msgid "Lazy list page size"
+msgid "Restart"
 msgstr ""
