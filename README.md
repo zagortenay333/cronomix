@@ -7,7 +7,7 @@
 
 ## Desktop App
 
-Check out the desktop app (in alpha) at: https://github.com/zagortenay333/kronomi
+Check out the desktop app at: https://github.com/zagortenay333/chronomi
 
 ## Installation
 
