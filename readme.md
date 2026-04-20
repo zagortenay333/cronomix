@@ -1,17 +1,13 @@
-# <img height=44 src="./data/images/cronomix.png"> <sup>Cronomix<sup/>
+# Cronomix
 
-**All-in-one timer, stopwatch, pomodoro, alarm, todo, time tracker and flashcards gnome-shell extension**
+**All-in-one timer, stopwatch, pomodoro, alarm, todo, time tracker and flashcards gnome-shell extension.**
 
 ![preview](./data/images/screenshots/todo.png)
 ![More screenshots](https://github.com/zagortenay333/cronomix/tree/master/data/images/screenshots)
 
-## Desktop App
-
-Check out the desktop app at: https://github.com/zagortenay333/chronomi
-
 ## Installation
 
-- The latest version supports gnome-shell 49.
+- The latest version supports gnome-shell 49 and 50.
 - The latest and older versions of the extension can be installed from
   the [gnome website](https://extensions.gnome.org/extension/6003/cronomix/).
 - The latest version can also be installed manually:
@@ -25,3 +21,7 @@ Check out the desktop app at: https://github.com/zagortenay333/chronomi
 - Please avoid making feature requests.
 - Before reporting a bug, check you have the right gnome-shell version.
 - If you want to build the project, read the comment in `scripts/build`.
+
+## Desktop App
+
+Check out the desktop app at: https://github.com/zagortenay333/chronomi

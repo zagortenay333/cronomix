@@ -26,8 +26,6 @@ done
 ./scripts/build
 
 tsc
-wait
-sleep 10
 
 # ==============================================================================
 # Now replace the special comment with a blank line
@@ -49,6 +47,5 @@ wait
 # Finish up.
 # ==============================================================================
 cd "$ext_dir"
-rm tsconfig.tsbuildinfo
 rm "$proj_dir/data/$uuid.zip"
 zip -q -r "$proj_dir/data/$uuid.zip" .

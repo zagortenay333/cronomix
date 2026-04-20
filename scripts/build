@@ -24,6 +24,7 @@ cat > "tsconfig.json" << EOF
     "compilerOptions": {
         "target": "es2022",
         "lib": [ "es2022" ],
+        "rootDir": "./src",
         "outDir": "$ext_dir",
         "strict": true,
         "pretty": true,
@@ -31,7 +32,6 @@ cat > "tsconfig.json" << EOF
         "noUnusedLocals": true,
         "noImplicitReturns": true,
         "noUnusedParameters": true,
-        "downlevelIteration": true,
         "skipDefaultLibCheck": true,
         "exactOptionalPropertyTypes": true,
         "forceConsistentCasingInFileNames": true

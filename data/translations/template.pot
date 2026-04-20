@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-07 11:19+0000\n"
+"POT-Creation-Date: 2026-04-20 19:15+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,13 +17,14 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-msgid "Confirm"
+msgid "Image not found"
 msgstr ""
 
-msgid "Select folder"
+msgid "Ok"
 msgstr ""
 
-msgid "Select file"
+msgid ""
+"Right click any of the extension panel items to access the global settings."
 msgstr ""
 
 msgid "Tip"
@@ -42,19 +43,6 @@ msgid "Set shortcut"
 msgstr ""
 
 msgid "Type shortcut (backspace to reset)"
-msgstr ""
-
-msgid "Ok"
-msgstr ""
-
-msgid ""
-"Right click any of the extension panel items to access the global settings."
-msgstr ""
-
-msgid "Show more"
-msgstr ""
-
-msgid "Image not found"
 msgstr ""
 
 msgid "Sun"
@@ -90,6 +78,18 @@ msgstr ""
 msgid "Year"
 msgstr ""
 
+msgid "Confirm"
+msgstr ""
+
+msgid "Select folder"
+msgstr ""
+
+msgid "Select file"
+msgstr ""
+
+msgid "Show more"
+msgstr ""
+
 msgid ""
 "Number of items shown each time you press \"show more\" in a scroll list.\n"
 "Making this number very large can cause performance issues."
@@ -119,272 +119,6 @@ msgstr ""
 msgid "Lazy list page size"
 msgstr ""
 
-msgid "Import file"
-msgstr ""
-
-msgid "Export file"
-msgstr ""
-
-msgid ""
-"Import and/or export your tasks to the **``todo.txt``** format.\n"
-"\n"
-"The import/export files are optional and must be in the **``todo.txt``** "
-"format.\n"
-"\n"
-"First the tasks from the import file (if there is one) get appended to your "
-"todo file,\n"
-"then all tasks get exported to the export file (if there is one)."
-msgstr ""
-
-msgid "Panel position"
-msgstr ""
-
-msgid "Open"
-msgstr ""
-
-msgid "Add task"
-msgstr ""
-
-msgid "Search tasks"
-msgstr ""
-
-msgid "Todo file"
-msgstr ""
-
-msgid "Open time tracker"
-msgstr ""
-
-msgid "Open todo file"
-msgstr ""
-
-msgid "Pin"
-msgstr ""
-
-msgid "Priority"
-msgstr ""
-
-msgid "Due"
-msgstr ""
-
-msgid "Done"
-msgstr ""
-
-msgid "Hide"
-msgstr ""
-
-msgid "Ascending"
-msgstr ""
-
-msgid "Descending"
-msgstr ""
-
-msgid "You must select a todo file."
-msgstr ""
-
-msgid "A todo file is a text file containing markup."
-msgstr ""
-
-msgid "To learn about the markup, open the built-in editor and press F1."
-msgstr ""
-
-msgid "Select time tracker file"
-msgstr ""
-
-msgid "Filter expression"
-msgstr ""
-
-msgid "Date (e.g., 2000-01-24)"
-msgstr ""
-
-msgid "Since"
-msgstr ""
-
-msgid "Until"
-msgstr ""
-
-msgid "Copy"
-msgstr ""
-
-msgid "Stop"
-msgstr ""
-
-msgid "Close"
-msgstr ""
-
-msgid "Totals"
-msgstr ""
-
-msgid "Search results copied to clipboard!"
-msgstr ""
-
-msgid "All Time"
-msgstr ""
-
-msgid "Per Slot Totals"
-msgstr ""
-
-msgid "Task text copied to clipboard!"
-msgstr ""
-
-msgid "Add Task"
-msgstr ""
-
-msgid "Add Filter"
-msgstr ""
-
-msgid "## Filter Groups"
-msgstr ""
-
-msgid "Each filter in a group creates a column of tasks in the main view."
-msgstr ""
-
-msgid ""
-"If no group is selected, a group with 1 ``* & !hide`` filter is created."
-msgstr ""
-
-msgid "Tasks go into the first column from the left whose filter they pass."
-msgstr ""
-
-msgid "Hidden tasks only pass filters of the form ``hide`` or ``hide & expr``."
-msgstr ""
-
-msgid "Title"
-msgstr ""
-
-msgid "Comma separated list of filters."
-msgstr ""
-
-msgid ""
-"Tasks are sorted by the first attribute in this list.\n"
-"In case of a tie, by the second attribute, and so on..."
-msgstr ""
-
-msgid "Delete selected tasks"
-msgstr ""
-
-msgid "Copy selected tasks to file"
-msgstr ""
-
-msgid "Modify attributes of selected tasks"
-msgstr ""
-
-msgid "Space separated list of task attributes"
-msgstr ""
-
-msgid "Delete"
-msgstr ""
-
-msgid "Add"
-msgstr ""
-
-msgid "Apply"
-msgstr ""
-
-msgid "Created"
-msgstr ""
-
-msgid "Completed"
-msgstr ""
-
-msgid "No time tracker file selected."
-msgstr ""
-
-msgid "Open time tracker settings"
-msgstr ""
-
-msgid "The text of the corresponding tracker slot does not match this task."
-msgstr ""
-
-msgid "Here is what the text in the slot currently looks like:"
-msgstr ""
-
-msgid "You can do one of the following:"
-msgstr ""
-
-msgid "Create a new slot leaving the old one in the tracker."
-msgstr ""
-
-msgid "Update the current slot to match with this task."
-msgstr ""
-
-msgid "Create new slot"
-msgstr ""
-
-msgid "Update current slot"
-msgstr ""
-
-msgid "Stop tracking"
-msgstr ""
-
-msgid "Stats"
-msgstr ""
-
-msgid "Start tracking"
-msgstr ""
-
-msgid "Cancel"
-msgstr ""
-
-msgid "Notification sound"
-msgstr ""
-
-msgid "Add Alarm"
-msgstr ""
-
-msgid "Alarm."
-msgstr ""
-
-msgid "Time"
-msgstr ""
-
-msgid "Snooze n minutes"
-msgstr ""
-
-msgid "Snooze"
-msgstr ""
-
-msgid "Dismiss"
-msgstr ""
-
-msgid ""
-"Set to 0 for default font size.\n"
-"You can also adjust the font size by scrolling the mouse wheel over the "
-"clock label."
-msgstr ""
-
-msgid "Show time in panel"
-msgstr ""
-
-msgid "Clock size"
-msgstr ""
-
-msgid "Start"
-msgstr ""
-
-msgid "Pause"
-msgstr ""
-
-msgid "Resume"
-msgstr ""
-
-msgid "Reset"
-msgstr ""
-
-msgid "Lap"
-msgstr ""
-
-msgid "Lap Time"
-msgstr ""
-
-msgid "Overall Time"
-msgstr ""
-
-msgid "Lap Times"
-msgstr ""
-
-msgid "Laps table copied to clipboard!"
-msgstr ""
-
 msgid "Left"
 msgstr ""
 
@@ -400,40 +134,34 @@ msgstr ""
 msgid "Website"
 msgstr ""
 
-msgid "Long Break"
+msgid "Panel position"
 msgstr ""
 
-msgid "Short Break"
+msgid "Notification sound"
 msgstr ""
 
-msgid "Show presets"
+msgid "Open"
 msgstr ""
 
-msgid "Pomodoro phase change."
+msgid "Add Alarm"
 msgstr ""
 
-msgid "Phase"
+msgid "Alarm."
 msgstr ""
 
-msgid "Completed pomodoros"
+msgid "Time"
 msgstr ""
 
-msgid "Pomodoros until long break"
+msgid "Snooze n minutes"
 msgstr ""
 
-msgid "Add Preset"
+msgid "Cancel"
 msgstr ""
 
-msgid "Pomodoro length"
+msgid "Snooze"
 msgstr ""
 
-msgid "Short break length"
-msgstr ""
-
-msgid "Long break length"
-msgstr ""
-
-msgid "Long break every n pomodoros"
+msgid "Dismiss"
 msgstr ""
 
 msgid "Add card"
@@ -490,6 +218,9 @@ msgstr ""
 msgid "Wrong"
 msgstr ""
 
+msgid "Close"
+msgstr ""
+
 msgid "Do fuzzy search"
 msgstr ""
 
@@ -500,6 +231,9 @@ msgid "Move cards to bucket (-1 for no move)"
 msgstr ""
 
 msgid "Delete selected cards"
+msgstr ""
+
+msgid "Apply"
 msgstr ""
 
 msgid "Search decks"
@@ -514,7 +248,55 @@ msgstr ""
 msgid "Remove selected decks"
 msgstr ""
 
+msgid ""
+"Set to 0 for default font size.\n"
+"You can also adjust the font size by scrolling the mouse wheel over the "
+"clock label."
+msgstr ""
+
+msgid "Show time in panel"
+msgstr ""
+
+msgid "Clock size"
+msgstr ""
+
+msgid "Start"
+msgstr ""
+
+msgid "Pause"
+msgstr ""
+
+msgid "Resume"
+msgstr ""
+
+msgid "Reset"
+msgstr ""
+
+msgid "Lap"
+msgstr ""
+
+msgid "Copy"
+msgstr ""
+
+msgid "Lap Time"
+msgstr ""
+
+msgid "Overall Time"
+msgstr ""
+
+msgid "Lap Times"
+msgstr ""
+
+msgid "Laps table copied to clipboard!"
+msgstr ""
+
+msgid "Show presets"
+msgstr ""
+
 msgid "Timer elapsed."
+msgstr ""
+
+msgid "Add Preset"
 msgstr ""
 
 msgid "Invalid time selected."
@@ -524,4 +306,222 @@ msgid "Timer Elapsed!"
 msgstr ""
 
 msgid "Restart"
+msgstr ""
+
+msgid "Filter expression"
+msgstr ""
+
+msgid "Delete selected tasks"
+msgstr ""
+
+msgid "Copy selected tasks to file"
+msgstr ""
+
+msgid "Modify attributes of selected tasks"
+msgstr ""
+
+msgid "Space separated list of task attributes"
+msgstr ""
+
+msgid "Delete"
+msgstr ""
+
+msgid "Add"
+msgstr ""
+
+msgid "Add task"
+msgstr ""
+
+msgid "Search tasks"
+msgstr ""
+
+msgid "Todo file"
+msgstr ""
+
+msgid "Open time tracker"
+msgstr ""
+
+msgid "Open todo file"
+msgstr ""
+
+msgid "Pin"
+msgstr ""
+
+msgid "Priority"
+msgstr ""
+
+msgid "Due"
+msgstr ""
+
+msgid "Done"
+msgstr ""
+
+msgid "Hide"
+msgstr ""
+
+msgid "Ascending"
+msgstr ""
+
+msgid "Descending"
+msgstr ""
+
+msgid "You must select a todo file."
+msgstr ""
+
+msgid "A todo file is a text file containing markup."
+msgstr ""
+
+msgid "To learn about the markup, open the built-in editor and press F1."
+msgstr ""
+
+msgid ""
+"Tasks are sorted by the first attribute in this list.\n"
+"In case of a tie, by the second attribute, and so on..."
+msgstr ""
+
+msgid "Add Task"
+msgstr ""
+
+msgid "Add Filter"
+msgstr ""
+
+msgid "## Filter Groups"
+msgstr ""
+
+msgid "Each filter in a group creates a column of tasks in the main view."
+msgstr ""
+
+msgid ""
+"If no group is selected, a group with 1 ``* & !hide`` filter is created."
+msgstr ""
+
+msgid "Tasks go into the first column from the left whose filter they pass."
+msgstr ""
+
+msgid "Hidden tasks only pass filters of the form ``hide`` or ``hide & expr``."
+msgstr ""
+
+msgid "Title"
+msgstr ""
+
+msgid "Comma separated list of filters."
+msgstr ""
+
+msgid "Import file"
+msgstr ""
+
+msgid "Export file"
+msgstr ""
+
+msgid ""
+"Import and/or export your tasks to the **``todo.txt``** format.\n"
+"\n"
+"The import/export files are optional and must be in the **``todo.txt``** "
+"format.\n"
+"\n"
+"First the tasks from the import file (if there is one) get appended to your "
+"todo file,\n"
+"then all tasks get exported to the export file (if there is one)."
+msgstr ""
+
+msgid "Select time tracker file"
+msgstr ""
+
+msgid "Date (e.g., 2000-01-24)"
+msgstr ""
+
+msgid "Since"
+msgstr ""
+
+msgid "Until"
+msgstr ""
+
+msgid "Stop"
+msgstr ""
+
+msgid "Totals"
+msgstr ""
+
+msgid "Search results copied to clipboard!"
+msgstr ""
+
+msgid "All Time"
+msgstr ""
+
+msgid "Per Slot Totals"
+msgstr ""
+
+msgid "Task text copied to clipboard!"
+msgstr ""
+
+msgid "Created"
+msgstr ""
+
+msgid "Completed"
+msgstr ""
+
+msgid "No time tracker file selected."
+msgstr ""
+
+msgid "Open time tracker settings"
+msgstr ""
+
+msgid "The text of the corresponding tracker slot does not match this task."
+msgstr ""
+
+msgid "Here is what the text in the slot currently looks like:"
+msgstr ""
+
+msgid "You can do one of the following:"
+msgstr ""
+
+msgid "Create a new slot leaving the old one in the tracker."
+msgstr ""
+
+msgid "Update the current slot to match with this task."
+msgstr ""
+
+msgid "Create new slot"
+msgstr ""
+
+msgid "Update current slot"
+msgstr ""
+
+msgid "Stop tracking"
+msgstr ""
+
+msgid "Stats"
+msgstr ""
+
+msgid "Start tracking"
+msgstr ""
+
+msgid "Long Break"
+msgstr ""
+
+msgid "Short Break"
+msgstr ""
+
+msgid "Pomodoro phase change."
+msgstr ""
+
+msgid "Phase"
+msgstr ""
+
+msgid "Completed pomodoros"
+msgstr ""
+
+msgid "Pomodoros until long break"
+msgstr ""
+
+msgid "Pomodoro length"
+msgstr ""
+
+msgid "Short break length"
+msgstr ""
+
+msgid "Long break length"
+msgstr ""
+
+msgid "Long break every n pomodoros"
 msgstr ""
